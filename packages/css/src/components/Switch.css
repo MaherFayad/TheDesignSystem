@@ -64,13 +64,26 @@
  *                                 distance.nudge; 0px turns it off
  *   --_switch-lean-now            working: 0, or the lean while hovered
  *   --_switch-duration-color      the cross fade of the thumb color, duration.quick
+ *   --_switch-thumb-size          the drawn thumb, apart from the track height; by default
+ *                                 the height less the two insets
+ *   --_switch-travel-max          how far the thumb travels: the width less the thumb and
+ *                                 the two insets
+ *   --_switch-sweep               1: the fill sweeps behind the thumb; 0: it shows whole at once
+ *   --_switch-thumb-opacity-pressed the lens part's opacity while pressed, 1; the default
+ *                                 of --_switch-thumb-highlight-opacity-pressed
+ *   --_switch-thumb-icon-opacity  the thumb-icon part (the thumbIcon prop), 0: hidden; a
+ *                                 platform sets 1 to show it
+ *   --_switch-thumb-icon-off-opacity  the cross of the thumb icon while off, 0: nothing
+ *   --_switch-thumb-icon-color    the icon's stroke, the on fill color
  *   --_switch-cut                 working, on the fill layer: how much of the track past
  *                                 the thumb the fill clip cuts away
  *   --_switch-drag-progress       set inline by Switch.tsx while dragging: 0 off, 1 on,
  *                                 a little past either end with the rubber band
  *
  * The parts: the thumb holds the thumb-lens part, an aria-hidden layer a
- * style paints as a highlight or a glass lens. Root state `data-dragging`
+ * style paints as a highlight or a glass lens, and, with the thumbIcon
+ * prop, the thumb-icon part (an aria-hidden svg: a check drawn while on and
+ * a cross while off). Root state `data-dragging`
  * marks a drag.
  *
  * The thumb moves with transform only. The focus ring shows at once: its
@@ -151,7 +164,6 @@
     --_switch-thumb-backdrop: none;
     --_switch-thumb-highlight: none;
     --_switch-thumb-highlight-opacity: 1;
-    --_switch-thumb-highlight-opacity-pressed: 1;
     --_switch-thumb-solid: 1;
     --_switch-thumb-solid-pressed: 1;
     --_switch-thumb-solid-now: var(--_switch-thumb-solid);
@@ -159,6 +171,14 @@
     --_switch-lean-now: 0px;
     --_switch-duration-color: var(--ds-duration-quick);
     --_switch-drag-progress: 0;
+    --_switch-thumb-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
+    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-thumb-size) - var(--_switch-inset) * 2);
+    --_switch-sweep: 1;
+    --_switch-thumb-opacity-pressed: 1;
+    --_switch-thumb-highlight-opacity-pressed: var(--_switch-thumb-opacity-pressed);
+    --_switch-thumb-icon-opacity: 0;
+    --_switch-thumb-icon-off-opacity: 0;
+    --_switch-thumb-icon-color: var(--_switch-fill);
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -257,7 +277,7 @@
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
     --_switch-cut: max(
       0px,
-      var(--_switch-width) - var(--_switch-inset) * 2 - var(--_switch-travel) - (var(--_switch-height) - var(--_switch-inset) * 2) *
+      var(--_switch-width) - var(--_switch-inset) * 2 - var(--_switch-travel) - var(--_switch-thumb-size) *
         var(--_switch-thumb-size-now) * var(--_switch-stretch-now)
     );
 
@@ -267,7 +287,8 @@
     background-color: var(--_switch-fill);
     opacity: var(--_switch-fill-now);
     clip-path: inset(
-      0 calc(var(--_switch-cut) * (1 + var(--_switch-dir)) / 2) 0 calc(var(--_switch-cut) * (1 - var(--_switch-dir)) / 2) round
+      0 calc(var(--_switch-cut) * var(--_switch-sweep) * (1 + var(--_switch-dir)) / 2) 0
+        calc(var(--_switch-cut) * var(--_switch-sweep) * (1 - var(--_switch-dir)) / 2) round
         var(--ds-radius-pill)
     );
     transform: scaleX(var(--_switch-fill-scale));
@@ -287,8 +308,8 @@
     position: relative;
     display: block;
     flex: none;
-    inline-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
-    block-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
+    inline-size: var(--_switch-thumb-size);
+    block-size: var(--_switch-thumb-size);
     border-radius: var(--ds-radius-pill);
     background-color: color-mix(in srgb, var(--_switch-thumb-bg) calc(var(--_switch-thumb-solid-now) * 100%), transparent);
     box-shadow: var(--_switch-thumb-shadow);
@@ -297,7 +318,7 @@
       translateX(
         calc(
           (var(--_switch-travel) + var(--_switch-lean-now) * var(--_switch-toward)) * var(--_switch-dir) +
-            (var(--_switch-stretch-now) - 1) * (var(--_switch-height) - var(--_switch-inset) * 2) * var(--_switch-thumb-size-now) / 2 *
+            (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-size) * var(--_switch-thumb-size-now) / 2 *
             var(--_switch-toward) * var(--_switch-dir)
         )
       )
@@ -318,6 +339,47 @@
     opacity: var(--_switch-thumb-highlight-opacity);
     pointer-events: none;
     transition: opacity calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
+  }
+
+  /*
+   * The thumb icon (the thumbIcon prop): a check drawn while on and an
+   * optional cross while off, in the fill color, centred in the thumb.
+   * Hidden unless a style or a platform sets --_switch-thumb-icon-opacity.
+   */
+  [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-icon'] {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    fill: none;
+    stroke: var(--_switch-thumb-icon-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1 2;
+    opacity: var(--_switch-thumb-icon-opacity);
+    pointer-events: none;
+  }
+
+  [data-ds='switch'] [data-part='thumb-icon'] > path:first-child {
+    stroke-dashoffset: 1.05;
+    transition: stroke-dashoffset calc(var(--ds-duration-quick) * var(--_switch-motion)) var(--ds-ease-in);
+  }
+
+  [data-ds='switch'] [data-part='thumb-icon'] > path:last-child {
+    stroke-dashoffset: 0;
+    opacity: var(--_switch-thumb-icon-off-opacity);
+    transition: opacity calc(var(--ds-duration-quick) * var(--_switch-motion)) var(--ds-ease-out);
+  }
+
+  [data-ds='switch'][data-state='checked'] [data-part='thumb-icon'] > path:first-child {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset calc(var(--ds-duration-morph) * var(--_switch-motion)) var(--ds-ease-out)
+      calc(var(--ds-duration-quick) * var(--_switch-motion));
+  }
+
+  [data-ds='switch'][data-state='checked'] [data-part='thumb-icon'] > path:last-child {
+    opacity: 0;
   }
 
   /* Hover: the thumb leans toward the side it would travel to. Not while disabled or read only, not on touch. */
@@ -397,7 +459,7 @@
     --_switch-bg: var(--_switch-fill);
     --_switch-border-color: var(--_switch-fill-border);
     --_switch-thumb-bg: var(--_switch-on-fill);
-    --_switch-travel: calc(var(--_switch-width) - var(--_switch-height));
+    --_switch-travel: var(--_switch-travel-max);
     --_switch-toward: -1;
     --_switch-fill-now: 1;
     --_switch-fill-scale: 1;
@@ -419,11 +481,11 @@
    * state, so the transitions carry the thumb from the pointer to its end.
    */
   [data-ds='switch'][data-dragging] {
-    --_switch-travel: calc((var(--_switch-width) - var(--_switch-height)) * var(--_switch-drag-progress, 0));
-    --_switch-fill-now: clamp(0, var(--_switch-drag-progress, 0), 1);
+    --_switch-travel: calc(var(--_switch-travel-max) * var(--_switch-drag-progress));
+    --_switch-fill-now: clamp(0, var(--_switch-drag-progress), 1);
     --_switch-thumb-bg: color-mix(
       in srgb,
-      var(--_switch-on-fill) calc(clamp(0, var(--_switch-drag-progress, 0), 1) * 100%),
+      var(--_switch-on-fill) calc(clamp(0, var(--_switch-drag-progress), 1) * 100%),
       var(--_switch-thumb-off)
     );
     --_switch-stretch-now: 1;
@@ -530,6 +592,7 @@
       --_switch-track-press: 1;
       --_switch-thumb-size-pressed: var(--_switch-thumb-size-rest);
       --_switch-lean: 0px;
+      --_switch-motion: 0;
     }
 
     [data-ds='switch'] > [data-part='control']::before,
@@ -549,6 +612,7 @@
     --_switch-track-press: 1;
     --_switch-thumb-size-pressed: var(--_switch-thumb-size-rest);
     --_switch-lean: 0px;
+    --_switch-motion: 0;
   }
 
   :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control']::before,
@@ -569,7 +633,7 @@
   @media (forced-colors: active) {
     [data-ds='switch'] > [data-part='control']::before,
     [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]),
-    [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'] {
+    [data-ds='switch'] [data-part='thumb'] > :is([data-part='thumb-lens'], [data-part='thumb-icon']) {
       display: none;
     }
 

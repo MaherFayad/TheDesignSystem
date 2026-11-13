@@ -108,6 +108,8 @@ export function ToggleButton({
     onPressedChange?.(next);
     const layer = own.current?.querySelector(':scope > [data-part="state-layer"]');
     if (!layer || motion.mode('toggle-pop') !== 'full') return;
+    // A style can keep the pool and drop the flood.
+    if (typeof getComputedStyle === 'function' && getComputedStyle(layer).getPropertyValue('--_toggle-button-flood').trim() === '0') return;
     play(layer, toggleLayerSpec(next), 'toggle-pop');
   };
   // The press point, as a share of the box so it holds at any zoom. Keys flood from the centre.

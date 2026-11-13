@@ -23,7 +23,7 @@ import { useMotion } from '../../internal/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { HighlightMarker, drawCheck, useHighlightMarker, CHECK_DRAW_ID } from '../ListBox/highlightMarker';
+import { HighlightMarker, drawCheck, exitGhost, useHighlightMarker, CHECK_DRAW_ID } from '../ListBox/highlightMarker';
 
 /** Space kept between a menu and the viewport edge, in CSS px. Radix measures in px, so this is a number. */
 export const VIEWPORT_GUTTER = 8;
@@ -180,9 +180,13 @@ export function useMenuLayer(open: boolean, kind = '') {
   openRef.current = open;
   // Interaction "highlight-marker" (order 1.23): one marker per menu draws the lit row's fill and slides between rows.
   const markerRef = useHighlightMarker({ rows: ROW_ITEMS, fallback: "[data-part='sub-trigger'][data-state='open']" });
+  // Review B6: the content leaves at once on close and a copy plays the exit (exitGhost).
+  const lastNode = useRef<HTMLElement | null>(null);
   const onContent = useCallback(
     (node: HTMLElement | null) => {
       markerRef(node);
+      if (!node) exitGhost(lastNode.current);
+      lastNode.current = node;
       if (!node && !openRef.current) setMounted(false);
     },
     [markerRef],

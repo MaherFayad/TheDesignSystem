@@ -137,7 +137,7 @@
       "Motion of round 3 (order 1.23, proposed, interaction copy-swap): the copy glyph closes into its centre (a circle clip and scale.morph) while the check wipes in along its strokes (clip-path) and pops on the bouncy spring, in the success text color; the warning pops in and the button shakes once after a failure. The label rolls from the action name to Copied (or the failure words) like a counter and rolls back after delay.feedback. The three words sit in one grid cell, so the button keeps the width of the widest and never changes size.",
       "The icon only form shows a small aria-hidden bubble above the button with the result word; it rises in on the snappy spring and keeps rising as it fades.",
       "A second copy restarts the hold time, draws the check again and replays the bubble. Everything is CSS on data-state: nothing waits for an animation.",
-      "Reduced motion: no roll, turn, rise, wipe or shake; the glyphs and the words cross fade in place."
+      "Reduced motion (the system setting and data-motion reduce): CopyButton.css sets its own durations to 0s and turns every travel off, so each state shows at once; the status still says the result."
     ]
   },
   "content": {

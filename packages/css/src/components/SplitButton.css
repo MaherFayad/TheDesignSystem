@@ -140,6 +140,8 @@
   [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
     --_button-press-scale: 1;
     --_button-part-press: var(--ds-scale-anticipate);
+    --_button-release-ease: var(--ds-ease-spring-bouncy);
+    --_button-release-duration: var(--ds-duration-spring-bouncy);
   }
 
   /* The chevron takes its own drop on press, not the sink of the other parts. */
@@ -176,23 +178,41 @@
     border-inline-end-color: var(--_button-border-color);
   }
 
+  /*
+   * Reduced (review B1, order 1.23): this file's own rule, so it holds even
+   * where the duration tokens are not zeroed. No dip, no sink, no drop, and
+   * every duration of both halves 0s: the chevron points up at once while
+   * the menu is open. The selectors match the motion rules they undo.
+   */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
       --_button-part-press: 1;
+      --_button-press-y: 0px;
+      --_button-motion: 0;
     }
 
     [data-ds='split-button'] {
       --_split-button-drop-press: 0px;
+    }
+
+    [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:is(:hover, :active) {
+      --_split-button-drop: 0px;
     }
   }
 
   /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
   :root[data-motion='reduce'] [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
     --_button-part-press: 1;
+    --_button-press-y: 0px;
+    --_button-motion: 0;
   }
 
   :root[data-motion='reduce'] [data-ds='split-button'] {
     --_split-button-drop-press: 0px;
+  }
+
+  :root[data-motion='reduce'] [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:is(:hover, :active) {
+    --_split-button-drop: 0px;
   }
 
   /*

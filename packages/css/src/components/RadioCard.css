@@ -48,6 +48,8 @@
  *   --_radio-card-motion        1 plays the transitions, 0 turns them all off (a style's off row)
  *   --_radio-card-check         the check's stroke color, the dot color
  *   --_radio-card-stroke-width  the check's stroke, in the 16 unit box of its view box
+ *   --_radio-card-lift-ease     the curve the chosen card rises on, ease.spring-bouncy: its overshoot
+ *   --_radio-card-draw-ease     the curve the check draws on, ease.out
  *   --_radio-card-fill-now      working, on the indicator: the spread of the inset fill
  *   --_radio-card-check-cut     working, on the indicator: the check's stroke-dashoffset,
  *                               0 drawn, 1.05 retracted
@@ -82,6 +84,8 @@
     --_radio-card-motion: 1;
     --_radio-card-check: var(--_radio-card-dot);
     --_radio-card-stroke-width: 2;
+    --_radio-card-lift-ease: var(--ds-ease-spring-bouncy);
+    --_radio-card-draw-ease: var(--ds-ease-out);
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -175,7 +179,7 @@
     --_radio-card-lift-now: var(--_radio-card-lift);
 
     transition:
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-card-motion)) var(--ds-ease-spring-bouncy),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-card-motion)) var(--_radio-card-lift-ease),
       border-color calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out),
       background-color calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out),
       box-shadow calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out);
@@ -279,7 +283,7 @@
   }
 
   [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] > [data-part='badge'] {
-    transition: stroke-dashoffset calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out)
+    transition: stroke-dashoffset calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--_radio-card-draw-ease)
       calc(var(--ds-duration-morph) * 0.25 * var(--_radio-card-motion));
   }
 

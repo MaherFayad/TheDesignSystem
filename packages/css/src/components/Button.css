@@ -92,6 +92,26 @@
  *   --_button-draw                           1 draws the result glyph with
  *                                            stroke-dashoffset, 0 shows it at
  *                                            once (reduced motion, a style)
+ *   --_button-ripple-x, -ripple-y            where the last press started, in px
+ *                                            from the inline start and the block
+ *                                            start (50% until a press), set by
+ *                                            ButtonRoot on pointerdown. Nothing
+ *                                            here draws with it: a platform or a
+ *                                            style draws a ripple from it
+ *   --_button-press-ease                     the curve the parts sink on
+ *   --_button-release-ease, -release-duration the curve and time the parts rise
+ *                                            back on: the snappy spring, so they
+ *                                            pass rest by its overshoot. A style
+ *                                            sets a plain curve for no overshoot
+ *                                            or the bouncy spring for more
+ *   --_button-result-ease                    the curve the result glyph lands on
+ *                                            (its overshoot: the bouncy spring)
+ *   --_button-draw-ease                      the curve the result strokes draw on
+ *
+ * Whether a beat exists is a property too: --_button-press-shade transparent
+ * drops the shade, --_button-press-y 0px the sink, --_button-glow 0 the glow,
+ * --_button-shake 0px the shake, --_button-roll 0px the roll, --_button-draw 0
+ * the drawing.
  *
  * Two layers (convention 3): ::before is the glow, on solid fills only;
  * ::after is the press shade. ::before paints before the parts, so the
@@ -166,6 +186,13 @@
     --_button-shake: var(--ds-distance-nudge);
     --_button-stroke-width: var(--ds-border-width-strong);
     --_button-draw: 1;
+    --_button-ripple-x: 50%;
+    --_button-ripple-y: 50%;
+    --_button-press-ease: var(--_button-ease-in);
+    --_button-release-ease: var(--_button-ease);
+    --_button-release-duration: var(--_button-duration);
+    --_button-result-ease: var(--ds-ease-spring-bouncy);
+    --_button-draw-ease: var(--ds-ease-out);
 
     position: relative;
     isolation: isolate;
@@ -210,7 +237,7 @@
     position: relative;
     transition:
       opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-default),
-      transform calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
+      transform calc(var(--_button-release-duration) * var(--_button-motion)) var(--_button-release-ease);
   }
 
   /*
@@ -701,7 +728,7 @@
    */
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) > [data-part] {
     transition-duration: calc(var(--ds-duration-fast) * var(--_button-motion)), calc(var(--_button-duration-in) * var(--_button-motion));
-    transition-timing-function: var(--ds-ease-default), var(--_button-ease-in);
+    transition-timing-function: var(--ds-ease-default), var(--_button-press-ease);
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
@@ -800,7 +827,7 @@
     transform: none;
     transition:
       opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_button-motion)),
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_button-motion)) var(--ds-ease-spring-bouncy) calc(var(--ds-delay-stagger) * var(--_button-motion));
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_button-motion)) var(--_button-result-ease) calc(var(--ds-delay-stagger) * var(--_button-motion));
   }
 
   [data-ds='button'][data-result] > :is([data-part='start'], [data-part='label'], [data-part='end']) {
@@ -818,7 +845,7 @@
   }
 
   [data-ds='button'][data-result] > [data-part='result'] > svg > * {
-    animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_button-motion) * var(--_button-draw)) backwards;
+    animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--_button-draw-ease) calc(var(--ds-delay-stagger) * var(--_button-motion) * var(--_button-draw)) backwards;
   }
 
   /* The second stroke of the error cross follows the first. */
@@ -920,6 +947,7 @@
       --_button-roll: 0px;
       --_button-glow: 0;
       --_button-draw: 0;
+      --_button-motion: 0;
     }
   }
 
@@ -938,6 +966,7 @@
     --_button-roll: 0px;
     --_button-glow: 0;
     --_button-draw: 0;
+    --_button-motion: 0;
   }
 
   /* More contrast: no highlight over the text of a solid fill. */

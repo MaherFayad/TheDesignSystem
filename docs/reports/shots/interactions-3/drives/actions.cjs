@@ -181,6 +181,8 @@ module.exports = {
 
   // Hover the chevron, hold it (it pulls down), the menu opens and it flips; Escape flips it back.
   'split-chevron': {
+    region: ROW,
+    noOverlay: true,
     drive: async (a) => {
       const t = await centre(a.page, "[data-ds='split-button'] > [data-part='trigger']");
       if (!t) return;

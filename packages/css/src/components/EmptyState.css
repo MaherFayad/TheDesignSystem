@@ -28,6 +28,14 @@
  *   --_empty-state-shift                              how far the text settles from
  * A style turns it off with these at rest, which leaves a fade. Under
  * reduced motion (media query or data-motion="reduce") there is none.
+ *
+ * Round 3 (order 1.23): the timing of state-illustration is private, so a
+ * style can change its kind and not only its length:
+ *   --_empty-state-duration-in, -ease-in   the icon's landing (curve and overshoot come from the ease)
+ *   --_empty-state-text-duration           the run of each text part; a name outside the list: a duration
+ *   --_empty-state-stagger                 the step between parts; 0s lands them together; a name
+ *                                  outside the list: a delay
+ * Under reduced motion all are 0s on the root (review B2).
  */
 @layer ds.base {
   [data-ds='empty-state'] {
@@ -41,6 +49,10 @@
     --_empty-state-body-size: var(--ds-font-size-m);
     --_empty-state-measure: var(--ds-size-measure);
     --_empty-state-lift: calc(-1 * var(--ds-distance-lift));
+    --_empty-state-duration-in: var(--ds-duration-spring-bouncy);
+    --_empty-state-ease-in: var(--ds-ease-spring-bouncy);
+    --_empty-state-text-duration: var(--ds-duration-spring-soft);
+    --_empty-state-stagger: var(--ds-delay-stagger);
     --_empty-state-enter-scale: var(--ds-scale-enter);
     --_empty-state-shift: var(--ds-distance-nudge);
 
@@ -129,19 +141,19 @@
   /* ------------------------------------------------------------ motion: state-illustration */
 
   [data-ds='empty-state'] > [data-part='icon'] {
-    animation: ds-empty-state-art var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+    animation: ds-empty-state-art var(--_empty-state-duration-in) var(--_empty-state-ease-in) backwards;
   }
 
   [data-ds='empty-state'] > :is([data-part='title'], [data-part='body'], [data-part='actions']) {
-    animation: ds-empty-state-text var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--ds-delay-stagger) backwards;
+    animation: ds-empty-state-text var(--_empty-state-text-duration) var(--ds-ease-spring-soft) var(--_empty-state-stagger) backwards;
   }
 
   [data-ds='empty-state'] > [data-part='body'] {
-    animation-delay: min(calc(2 * var(--ds-delay-stagger)), var(--ds-duration-base));
+    animation-delay: min(calc(2 * var(--_empty-state-stagger)), var(--ds-duration-base));
   }
 
   [data-ds='empty-state'] > [data-part='actions'] {
-    animation-delay: min(calc(3 * var(--ds-delay-stagger)), var(--ds-duration-base));
+    animation-delay: min(calc(3 * var(--_empty-state-stagger)), var(--ds-duration-base));
   }
 
   @keyframes ds-empty-state-art {
@@ -168,13 +180,26 @@
     }
   }
 
+  /* Round 3 (review B2): the parts are named, so the reduced rule matches the motion rules in specificity and wins by order; the root zeroes the timing too. */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='empty-state'] > * {
+    [data-ds='empty-state'] {
+      --_empty-state-duration-in: 0s;
+      --_empty-state-text-duration: 0s;
+      --_empty-state-stagger: 0s;
+    }
+
+    [data-ds='empty-state'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions'], *) {
       animation: none;
     }
   }
 
-  :root[data-motion='reduce'] [data-ds='empty-state'] > * {
+  :root[data-motion='reduce'] [data-ds='empty-state'] {
+    --_empty-state-duration-in: 0s;
+    --_empty-state-text-duration: 0s;
+    --_empty-state-stagger: 0s;
+  }
+
+  :root[data-motion='reduce'] [data-ds='empty-state'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions'], *) {
     animation: none;
   }
 

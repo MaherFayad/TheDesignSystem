@@ -141,3 +141,22 @@ describe('switch-drag on the control', () => {
     expect(control.getAttribute('aria-checked')).toBe('false');
   });
 });
+
+describe('Switch thumb icon (platform hook, order 1.23)', () => {
+  it('renders no thumb icon by default, and an aria-hidden check and cross with thumbIcon', () => {
+    const { container, rerender } = render(<Switch label="Wi-Fi" />);
+    expect(container.querySelector('[data-part="thumb-icon"]')).toBeNull();
+    rerender(<Switch label="Wi-Fi" thumbIcon />);
+    const icon = container.querySelector('[data-part="thumb"] > [data-part="thumb-icon"]');
+    expect(icon?.getAttribute('aria-hidden')).toBe('true');
+    expect(icon?.querySelectorAll('path')).toHaveLength(2);
+    // Hidden unless a style or a platform shows it.
+    expect(css).toMatch(/--_switch-thumb-icon-opacity: 0;/);
+    expect(css).toMatch(/--_switch-thumb-size: calc\(var\(--_switch-height\) - var\(--_switch-inset\) \* 2\);/);
+  });
+
+  it('zeroes its motion under the reduced form, by the media query and the page setting', () => {
+    expect(css).toMatch(/:root\[data-motion='reduce'\] \[data-ds='switch'\] \{[^}]*--_switch-motion: 0;/);
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\[data-ds='switch'\] \{[^}]*--_switch-motion: 0;/);
+  });
+});

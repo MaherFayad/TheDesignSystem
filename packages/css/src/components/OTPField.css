@@ -37,7 +37,7 @@
  *   --_otp-field-bloom-invalid  the bloom while invalid (the danger tint)
  *   --_otp-field-bloom-spread   how far the bloom reaches; 0px turns it off
  *   --_otp-field-bloom-now      the working spread the focus rule sets
- *   --_otp-field-duration, --_otp-field-ease   the border color change (focus, hover, invalid)
+ *   --_otp-field-border-duration, --_otp-field-border-ease   the border color change (focus, hover, invalid)
  * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
  * draws back on the out timing. The ring is not on this layer and shows at once.
  */
@@ -64,8 +64,8 @@
     --_otp-field-bloom-invalid: var(--ds-color-state-danger-tint-10);
     --_otp-field-bloom-spread: var(--ds-space-s);
     --_otp-field-bloom-now: 0px;
-    --_otp-field-duration: var(--ds-duration-base);
-    --_otp-field-ease: var(--ds-ease-out);
+    --_otp-field-border-duration: var(--ds-duration-base);
+    --_otp-field-border-ease: var(--ds-ease-out);
     --_otp-field-separator-color: var(--ds-color-border-strong);
     --_otp-field-caret: var(--ds-color-text-default);
     --_otp-field-shift: var(--ds-distance-shift);
@@ -175,7 +175,7 @@
     min-inline-size: var(--ds-size-target-min);
     min-block-size: var(--ds-size-target-min);
     border: var(--ds-border-width-default) solid var(--_otp-field-border-color);
-    transition: border-color var(--_otp-field-duration) var(--_otp-field-ease);
+    transition: border-color var(--_otp-field-border-duration) var(--_otp-field-border-ease);
     border-radius: var(--_otp-field-radius);
     background-color: var(--_otp-field-bg);
     pointer-events: none;
@@ -330,5 +330,27 @@
 
       color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='otp-field'] {
+      --_otp-field-border-duration: 0s;
+      --_otp-field-duration: 0s;
+      --_otp-field-duration-in: 0s;
+      --_otp-field-duration-out: 0s;
+      --_otp-field-shift: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='otp-field'] {
+    --_otp-field-border-duration: 0s;
+    --_otp-field-duration: 0s;
+    --_otp-field-duration-in: 0s;
+    --_otp-field-duration-out: 0s;
+    --_otp-field-shift: 0px;
   }
 }

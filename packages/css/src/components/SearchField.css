@@ -327,4 +327,22 @@
   :root[data-motion='reduce'] [data-ds='search-field'] {
     --_search-field-enter-scale: 1;
   }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='search-field'] {
+      --_search-field-duration: 0s;
+      --_search-field-duration-in: 0s;
+      --_search-field-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='search-field'] {
+    --_search-field-duration: 0s;
+    --_search-field-duration-in: 0s;
+    --_search-field-duration-out: 0s;
+  }
 }

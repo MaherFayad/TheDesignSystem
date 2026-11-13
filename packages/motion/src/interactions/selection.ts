@@ -139,12 +139,20 @@ export const selectionInteractions = [
   {
     id: 'list-stagger',
     components: ['List'],
-    pattern: 'list-stagger',
+    // Order 1.23: played by the stagger primitive with the fade-rise pattern, so Neutral and Studio differ.
+    pattern: 'fade-rise',
     drive: 'waapi',
+    primitive: 'stagger',
     trigger: 'A list paints its rows for the first time.',
     feedback:
-      'Each row rises by space.s over duration.slow on ease.reveal, one delay.stagger after the row before, capped at three steps (Neutral 72ms, Desk 135ms, Studio 0ms); each row is at full opacity by 30% of its run, so every row reads at full contrast within about 200ms. Every row is in the DOM and read at once. It never plays on a re-render, an added row, a reorder or rows hydrated from server HTML.',
-    reduced: 'A fade of each row over duration.base with no delay and no rise.',
+      'Each row rises by distance.enter and fades in on the soft spring, one delay.stagger after the row before, the steps kept inside the 120ms stagger budget; each row is at full opacity early in its run, so every row reads at full contrast within about 200ms. Every row is in the DOM and read at once. It never plays on a re-render, an added row (collection-flip plays then), a reorder or rows hydrated from server HTML.',
+    beats: [
+      'Action: row n rises from distance.enter (6, 12, 4px) and fades in on ease.spring-soft over duration.spring-soft (220, 340, 100ms), after n delay.stagger (24, 45, 0ms), capped within 120ms.',
+      'Settle: the soft spring lands each row without a bounce.',
+    ],
+    styles: { neutral: 'a short cascade', desk: 'a slow cascade', studio: 'the rows rise together, a short lift' },
+    reduced: 'A fade of the rows over duration.base with no delay and no rise.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -258,7 +266,8 @@ export const selectionInteractions = [
   {
     id: 'command-palette-results',
     components: ['CommandPalette'],
-    pattern: 'list-stagger',
+    // Order 1.23: fade-rise, so Neutral and Studio play the cascade their stagger step allows, not a plain fade.
+    pattern: 'fade-rise',
     drive: 'waapi',
     primitive: 'stagger',
     trigger: 'Open the palette, or type in its search box.',
@@ -271,12 +280,12 @@ export const selectionInteractions = [
       'React: rows that stay slide to their new place on ease.spring-snappy over duration.spring-snappy.',
     ],
     styles: {
-      studio: 'played reduced by the list-stagger preset: a fade',
+      studio: 'the rows rise together, a short lift',
       desk: 'a visible cascade and rows that swing into place',
-      neutral: 'played reduced by the list-stagger preset: a fade',
+      neutral: 'a short cascade',
     },
     reduced: 'The new rows fade in with no delay; rows that stay jump to their place.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {

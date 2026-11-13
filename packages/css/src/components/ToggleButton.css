@@ -26,6 +26,8 @@
  *   --_toggle-button-x, -y          set inline by ToggleButton.tsx: the press point,
  *                                   as a share of the box; the centre without one
  *   --_toggle-button-color-duration the cross fade of the fill and the text color
+ *   --_toggle-button-flood          1 floods and drains on a change; 0 keeps only the pool
+ *                                   (read by ToggleButton.tsx); a layer opacity of 0 drops both
  *   --_toggle-button-pool-now       working: the pool's radius now, 0% or the press radius
  * The press dip of Button (--_button-press-scale) is 1 here; a style may set it back.
  */
@@ -36,6 +38,7 @@
     --_toggle-button-press-radius: 60%;
     --_toggle-button-color-duration: var(--ds-duration-quick);
     --_toggle-button-pool-now: 0%;
+    --_toggle-button-flood: 1;
     --_toggle-button-x: 50%;
     --_toggle-button-y: 50%;
     --_button-press-scale: 1;
@@ -81,6 +84,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     [data-ds='toggle-button'][data-size][data-shape] {
+      --_button-motion: 0;
+      --_toggle-button-flood: 0;
+
       transition: none;
     }
 
@@ -90,6 +96,9 @@
   }
 
   :root[data-motion='reduce'] [data-ds='toggle-button'][data-size][data-shape] {
+    --_button-motion: 0;
+    --_toggle-button-flood: 0;
+
     transition: none;
   }
 

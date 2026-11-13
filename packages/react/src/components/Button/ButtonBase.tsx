@@ -233,6 +233,22 @@ export function ButtonRoot({
     el.style.setProperty('--_button-glow-x', share((event.clientX - box.left) / box.width));
     el.style.setProperty('--_button-glow-y', share((event.clientY - box.top) / box.height));
   };
+  // The ripple origin (a platform hook, order 1.23): where a press starts, in
+  // px from the root's inline start and block start, for a style or a
+  // platform that draws a press from the touch point (Android). Every
+  // emphasis. Button.css declares both at 50% and draws nothing with them.
+  // Distances are in the root's own CSS px, so they hold under CSS zoom.
+  const placeRipple = (event: PointerEvent<HTMLButtonElement>) => {
+    const el = event.currentTarget;
+    const box = el.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const fromLeft = (event.clientX - box.left) / box.width;
+    const rtl = getComputedStyle(el).direction === 'rtl';
+    const x = (rtl ? 1 - fromLeft : fromLeft) * el.offsetWidth;
+    const y = ((event.clientY - box.top) / box.height) * el.offsetHeight;
+    el.style.setProperty('--_button-ripple-x', `${Math.round(Math.min(el.offsetWidth, Math.max(0, x)))}px`);
+    el.style.setProperty('--_button-ripple-y', `${Math.round(Math.min(el.offsetHeight, Math.max(0, y)))}px`);
+  };
   const attrs = {
     ...rest,
     ref: setOwn,
@@ -265,6 +281,7 @@ export function ButtonRoot({
     onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
       if (!inert) {
         placeGlow(event);
+        placeRipple(event);
         onPointerDown?.(event);
       }
     },

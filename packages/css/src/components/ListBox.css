@@ -382,4 +382,15 @@
       outline-color: CanvasText;
     }
   }
+
+  /* Order 1.23: the private durations are zeroed under reduced motion too, so no rule relies on zeroed tokens. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='list-box']:has(> [data-part='highlight']) {
+      --_list-box-highlight-duration: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='list-box']:has(> [data-part='highlight']) {
+    --_list-box-highlight-duration: 0s;
+  }
 }

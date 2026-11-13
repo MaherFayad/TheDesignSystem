@@ -58,6 +58,7 @@
  *   --_menu-clip-from, -clip-to   the clip-path the surface opens from (set per side) and to
  *   --_menu-highlight-bg          the fill of the highlight marker (the lit row color)
  *   --_menu-highlight-duration, -highlight-ease   the marker's slide
+ *   --_menu-nudge-duration-in, -nudge-duration-out  the chevron lean and its way back
  *
  * Motion, order 1.22 (proposed). Interaction "menu-origin" (pattern
  * "menu-scale"): the menu comes out of its trigger side (data-side): it
@@ -145,7 +146,10 @@
     --_menu-enter-y: 0px;
     --_menu-item-shift: var(--ds-distance-shift);
     --_menu-item-step: 0;
-    --_menu-nudge: var(--ds-distance-nudge);
+    /* Order 1.23: distance.shift, not distance.nudge (review: a 1 to 3px lean nobody sees). */
+    --_menu-nudge: var(--ds-distance-shift);
+    --_menu-nudge-duration-in: var(--ds-duration-spring-bouncy);
+    --_menu-nudge-duration-out: var(--ds-duration-quick);
     --_menu-duration-in: var(--ds-duration-spring-snappy);
     --_menu-duration-out: var(--ds-duration-quick);
     --_menu-ease-in: var(--ds-ease-spring-snappy);
@@ -471,7 +475,13 @@
     animation: ds-menu-in var(--_menu-duration-in) var(--_menu-ease-in);
   }
 
-  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='closed'] {
+  /*
+   * Review B6 (order 1.23): the real content leaves at once on close (no
+   * exit animation, so Radix unmounts it in the same frame and a press on
+   * the trigger reopens at once). An inert aria-hidden copy, made by
+   * highlightMarker.tsx (exitGhost), plays the exit in its place.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='closed'][inert] {
     animation: ds-menu-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
     pointer-events: none;
   }
@@ -515,12 +525,12 @@
 
   /* The submenu chevron leans toward its submenu while its row is lit or its submenu open, and comes back faster. */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
-    transition: transform var(--ds-duration-quick) var(--ds-ease-exit);
+    transition: transform var(--_menu-nudge-duration-out) var(--ds-ease-exit);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']) > [data-part='end'] {
     transform: translateX(var(--_menu-nudge));
-    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+    transition: transform var(--_menu-nudge-duration-in) var(--ds-ease-spring-bouncy);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']):dir(rtl) > [data-part='end'] {
@@ -569,8 +579,23 @@
     }
   }
 
-  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
+  /*
+   * Reduced motion: the system setting and the page's own setting
+   * (data-motion="reduce" on the root element). Review B2 and B3: the private
+   * durations and the lean are zeroed on the root, so no rule of higher
+   * specificity can keep a transition or a shifted chevron, and nothing
+   * relies on the tokens being zeroed.
+   */
   @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-nudge: 0px;
+      --_menu-nudge-duration-in: 0s;
+      --_menu-nudge-duration-out: 0s;
+      --_menu-highlight-duration: 0s;
+      --_menu-duration-in: 0s;
+      --_menu-duration-out: 0s;
+    }
+
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > :is([data-part='label'], [data-part='separator']),
@@ -582,6 +607,15 @@
     :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-nudge: 0px;
+    --_menu-nudge-duration-in: 0s;
+    --_menu-nudge-duration-out: 0s;
+    --_menu-highlight-duration: 0s;
+    --_menu-duration-in: 0s;
+    --_menu-duration-out: 0s;
   }
 
   :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],

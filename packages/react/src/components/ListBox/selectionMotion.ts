@@ -25,6 +25,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { flipExit, flipPlay, rectOf, settled, staggerGroup, type PatternMode } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
+import { exitGhost } from './highlightMarker';
 
 /** The glide layer of a row: its first unnamed aria-hidden span. */
 export const GLIDE_LAYER = ":scope > span[aria-hidden='true']:not([data-part])";
@@ -269,6 +270,8 @@ const POPUP_OPTIONS = "[data-ds='list-box'] [data-part='option']";
 export function usePopupRows(forward?: (node: HTMLElement | null) => void) {
   const popup = useRef<HTMLElement | null>(null);
   const ref = useStaggerOnOpen(POPUP_OPTIONS, (node) => {
+    // Review B6: the popup leaves at once on close and a copy plays the exit.
+    if (!node) exitGhost(popup.current);
     popup.current = node;
     forward?.(node);
   });

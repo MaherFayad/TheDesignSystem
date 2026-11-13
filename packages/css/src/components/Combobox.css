@@ -286,7 +286,13 @@
     animation: ds-list-popup-in var(--_menu-duration-in) var(--_menu-ease-in);
   }
 
-  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state='closed'] {
+  /*
+   * Review B6 (order 1.23): the real content leaves at once on close (no
+   * exit animation, so Radix unmounts it in the same frame and a press on
+   * the trigger reopens at once). An inert aria-hidden copy, made by
+   * highlightMarker.tsx (exitGhost), plays the exit in its place.
+   */
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state='closed'][inert] {
     animation: ds-list-popup-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
     pointer-events: none;
   }
@@ -409,5 +415,18 @@
       --_menu-item-bg-highlight: Highlight;
       --_menu-item-fg-highlight: HighlightText;
     }
+  }
+
+  /* Order 1.23: the private durations are zeroed under reduced motion too, so no rule relies on zeroed tokens. */
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+      --_menu-duration-in: 0s;
+      --_menu-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+    --_menu-duration-in: 0s;
+    --_menu-duration-out: 0s;
   }
 }

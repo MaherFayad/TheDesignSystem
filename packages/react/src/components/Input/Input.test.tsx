@@ -142,4 +142,12 @@ describe('Input', () => {
     const arabic = container.querySelector('[data-demo-case="long-arabic"]');
     expect(arabic?.querySelector('input[type="email"]')?.closest('[lang]')?.getAttribute('lang')).toBe('ar');
   });
+
+  it('stamps data-variant only when a variant is passed (order 1.23)', () => {
+    const { container, rerender } = render(<Input aria-label="Name" />);
+    const root = () => container.querySelector('[data-ds="input"]');
+    expect(root()?.hasAttribute('data-variant')).toBe(false);
+    rerender(<Input aria-label="Name" variant="filled" />);
+    expect(root()?.getAttribute('data-variant')).toBe('filled');
+  });
 });

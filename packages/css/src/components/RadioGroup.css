@@ -56,6 +56,9 @@
  *                               0px turns the travel off
  *   --_radio-group-side         working, on an item: 1 before the checked item, -1 after, 0 none
  *   --_radio-group-axis-x, -axis-y   working: which way the items run (with the reading direction)
+ *   --_radio-group-dot-ease     the curve the dot lands on, ease.spring-bouncy: its overshoot
+ *   --_radio-group-fill-ease    the curve the fill closes on, ease.out
+ *   --_radio-group-land-ease    the curve the circle comes back from the dip on
  *   --_radio-group-motion       1 plays the transitions, 0 turns them all off (a style's off row)
  */
 @layer ds.base {
@@ -81,6 +84,9 @@
     --_radio-group-axis-x: 0;
     --_radio-group-axis-y: 1;
     --_radio-group-motion: 1;
+    --_radio-group-dot-ease: var(--ds-ease-spring-bouncy);
+    --_radio-group-fill-ease: var(--ds-ease-out);
+    --_radio-group-land-ease: var(--ds-ease-spring-bouncy);
 
     display: flex;
     flex-direction: column;
@@ -224,7 +230,7 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transition:
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--ds-ease-spring-bouncy),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-land-ease),
       border-color calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit),
       box-shadow calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit);
   }
@@ -334,9 +340,9 @@
     --_radio-group-fill-now: calc(var(--_radio-group-control-size) / 2);
 
     transition:
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--ds-ease-spring-bouncy),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-land-ease),
       border-color calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-out),
-      box-shadow calc(var(--ds-duration-spring-snappy) * var(--_radio-group-motion)) var(--ds-ease-out);
+      box-shadow calc(var(--ds-duration-spring-snappy) * var(--_radio-group-motion)) var(--_radio-group-fill-ease);
   }
 
   [data-ds='radio-group'] [data-part='item'][data-state='checked'] [data-part='indicator'] {
@@ -344,7 +350,7 @@
     transform: none;
     transition:
       opacity calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-out),
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--ds-ease-spring-bouncy);
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-dot-ease);
   }
 
   /* Invalid: the danger border on every unchecked circle; the error text says what to do. */

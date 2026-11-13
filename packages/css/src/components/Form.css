@@ -20,6 +20,9 @@
     --_form-mark: var(--ds-color-state-success-border);
     --_form-mark-size: var(--ds-size-icon-lg);
     --_form-mark-wait: var(--ds-duration-quick);
+    --_form-mark-duration: var(--ds-duration-morph);
+    --_form-mark-ease: var(--ds-ease-standard);
+    --_form-mark-land: var(--ds-scale-morph);
 
     display: flex;
     flex-direction: column;
@@ -82,6 +85,8 @@
    *   --_form-mark        the mark color (state success border, 3:1)
    *   --_form-mark-size   its size
    *   --_form-mark-wait   the time between the ring and the tick
+ *   --_form-mark-duration, --_form-mark-ease   the draw of the ring and the tick
+ *   --_form-mark-land   the size the mark lands from; 1 turns the landing off
    */
   [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] {
     inline-size: var(--_form-mark-size);
@@ -98,7 +103,7 @@
 
   [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > * {
     stroke-dasharray: 1;
-    animation: ds-form-mark-draw var(--ds-duration-morph) var(--ds-ease-standard) backwards;
+    animation: ds-form-mark-draw var(--_form-mark-duration) var(--_form-mark-ease) backwards;
   }
 
   [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > path {
@@ -117,7 +122,7 @@
 
   @keyframes ds-form-mark-land {
     from {
-      transform: scale(var(--ds-scale-morph));
+      transform: scale(var(--_form-mark-land));
       opacity: 0;
     }
 

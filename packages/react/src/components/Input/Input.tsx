@@ -9,6 +9,9 @@ import { useErrorShake, type ShakeBox } from './useErrorShake';
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;
 /** Text types only. A checkbox, a date or a file is its own component. */
+/** The box: outlined (a border) or filled (a tint). Unset, the active style and platform choose. */
+export type InputVariant = 'outlined' | 'filled';
+
 export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password' | 'search';
 /** An icon name, a short text such as "px" or "$", or any node. */
 export type InputAdornment = IconName | (string & {}) | ReactNode;
@@ -22,6 +25,12 @@ export interface InputProps
    * Studio and Desk). pill: always fully round.
    */
   shape?: InputShape;
+  /**
+   * outlined: a border all round. filled: a tinted box. Stamped as
+   * data-variant only when passed, so a platform (Android draws filled
+   * fields) can follow it. Default unset.
+   */
+  variant?: InputVariant;
   /** Marks the value invalid. Inside a Field it follows the Field. */
   invalid?: boolean;
   /** Text types only. Default text. */
@@ -78,6 +87,7 @@ function Adornment({ part, value }: { part: 'start' | 'end'; value: InputAdornme
 export function Input({
   size = 'md',
   shape = 'default',
+  variant,
   invalid,
   disabled,
   readOnly,
@@ -143,6 +153,7 @@ export function Input({
       data-ds="input"
       data-size={size}
       data-shape={shape}
+      data-variant={variant}
       data-invalid={control['aria-invalid'] ? '' : undefined}
       data-disabled={control.disabled ? '' : undefined}
       data-readonly={control.readOnly ? '' : undefined}

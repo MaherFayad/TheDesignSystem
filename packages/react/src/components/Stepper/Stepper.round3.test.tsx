@@ -39,16 +39,16 @@ const steps = [{ title: 'Account' }, { title: 'Address' }, { title: 'Payment' }]
 
 describe('stepper-travel, round 3', () => {
   it('draws the check of a step that turns complete, from its end, with stroke-dashoffset', () => {
-    const { rerender } = render(desk(<Stepper label="Checkout" steps={steps} current={0} />));
+    const { rerender } = render(desk(<Stepper aria-label="Checkout" steps={steps} current={0} />));
     expect(calls().filter((c) => c[1].id === 'ds-motion:stepper-check')).toHaveLength(0);
-    rerender(desk(<Stepper label="Checkout" steps={steps} current={1} />));
+    rerender(desk(<Stepper aria-label="Checkout" steps={steps} current={1} />));
     const draws = calls().filter((c) => c[1].id === 'ds-motion:stepper-check');
     expect(draws).toHaveLength(1);
     const [frames] = draws[0] as Call;
     expect(frames[0]?.strokeDashoffset).toBe(-24);
     expect(frames.at(-1)?.strokeDashoffset).toBe(0);
     // Going back draws nothing.
-    rerender(desk(<Stepper label="Checkout" steps={steps} current={0} />));
+    rerender(desk(<Stepper aria-label="Checkout" steps={steps} current={0} />));
     expect(calls().filter((c) => c[1].id === 'ds-motion:stepper-check')).toHaveLength(1);
   });
 });

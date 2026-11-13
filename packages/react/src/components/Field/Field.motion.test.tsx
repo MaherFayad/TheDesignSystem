@@ -129,7 +129,10 @@ describe('field motion, order 1.22', () => {
 
   it('field-label-focus: Field.css lifts the label on focus and keeps it still under both reduced motion settings', () => {
     const field = css('Field');
-    expect(field).toMatch(/\[data-ds='field'\]:focus-within:not\(\[data-disabled\], \[data-readonly\]\) > \[data-part='label'\] \{\s*transform: translateY/);
+    expect(field).toMatch(/\[data-ds='field'\]:not\(\[data-floating\]\):focus-within:not\(\[data-disabled\], \[data-readonly\]\) > \[data-part='label'\] \{\s*transform: translateY/);
+    // Order 1.23: a larger rise, and the label color eases to the focus color.
+    expect(field).toContain('--_field-lift: var(--ds-distance-shift);');
+    expect(field).toMatch(/\[data-ds='field'\]:focus-within:not\(\[data-disabled\], \[data-readonly\]\) \{\s*--_field-fg-now: var\(--_field-fg-focus\);/);
     expect(field).toContain("@media (prefers-reduced-motion: reduce) {\n    [data-ds='field'] {\n      --_field-lift: 0px;");
     expect(field).toContain(":root[data-motion='reduce'] [data-ds='field'] {\n    --_field-lift: 0px;");
   });
@@ -177,7 +180,9 @@ describe('field motion, order 1.22', () => {
       expect(before, file).toContain(`box-shadow: var(--_${c}-shadow-focus), 0 0 0 var(--_${c}-bloom-now) var(--_${c}-bloom)`);
       // Order 1.23: the bloom spreads on box-shadow; the border color eases.
       expect(before, file).toContain(`box-shadow var(--_${c}-duration-out)`);
-      expect(text, file).toContain(`transition: border-color var(--_${c}-duration) var(--_${c}-ease);`);
+      expect(text, file).toMatch(new RegExp(`transition: border-color var\\(--_${c}(-border)?-duration\\) var\\(--_${c}(-border)?-ease\\);`));
+      // Review B1: the component's own timings go to 0s under the page setting.
+      expect(text, file).toMatch(new RegExp(`:root\\[data-motion='reduce'\\] \\[data-ds='${c}'\\] \\{[^}]*--_${c}-duration-in: 0s;`));
       expect(before, file).not.toContain(`--_${c}-ring`);
       expect(text, file).toContain(`box-shadow: var(--_${c}-ring);`);
     }
@@ -326,5 +331,35 @@ describe('field motion, order 1.22', () => {
     } finally {
       restore();
     }
+  });
+
+  it('floating label: the label renders after the control, and the root says when the control has a value (order 1.23)', () => {
+    const { container } = render(
+      <Field label="Email" floating>
+        <Input />
+      </Field>,
+    );
+    const root = container.querySelector<HTMLElement>('[data-ds="field"]')!;
+    expect(root.hasAttribute('data-floating')).toBe(true);
+    expect(root.hasAttribute('data-filled')).toBe(false);
+    const parts = Array.from(root.children).map((c) => c.getAttribute('data-part'));
+    expect(parts.indexOf('label')).toBeGreaterThan(parts.indexOf('control') === -1 ? 0 : parts.indexOf('control'));
+    const input = screen.getByRole('textbox', { name: 'Email' });
+    fireEvent.input(input, { target: { value: 'sara' } });
+    expect(root.hasAttribute('data-filled')).toBe(true);
+    fireEvent.input(input, { target: { value: '' } });
+    expect(root.hasAttribute('data-filled')).toBe(false);
+  });
+
+  it('floating label: off by default, the label stays first', () => {
+    const { container } = render(
+      <Field label="Email">
+        <Input defaultValue="x" />
+      </Field>,
+    );
+    const root = container.querySelector<HTMLElement>('[data-ds="field"]')!;
+    expect(root.hasAttribute('data-floating')).toBe(false);
+    expect(root.hasAttribute('data-filled')).toBe(false);
+    expect(root.firstElementChild?.getAttribute('data-part')).toBe('label');
   });
 });

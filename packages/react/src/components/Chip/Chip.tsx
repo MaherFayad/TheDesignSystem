@@ -32,7 +32,7 @@ import { ButtonRoot } from '../Button/ButtonBase';
 import { CloseButton } from '../CloseButton';
 import { ANIMATION_ID_PREFIX, iconMorph, readDuration, readEasing } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
-import { drawCheck, drawnScale } from '../ListBox/highlightMarker';
+import { drawCheck, drawnScale, setPressPoint } from '../ListBox/highlightMarker';
 
 /** The words of the default remove name by language. Arabic: a noun form. */
 const chipRemoveLabels = { en: 'Remove', ar: 'إزالة' } as const;
@@ -153,6 +153,11 @@ function PressableChip({
     <ButtonRoot
       {...rest}
       ref={ref}
+      // Platform hook: where the press landed, for a ripple from the touch point.
+      onPointerDown={(event) => {
+        setPressPoint(event.currentTarget, 'chip', event.clientX, event.clientY);
+        rest.onPointerDown?.(event);
+      }}
       ds="chip"
       defaultEmphasis="soft"
       size={size}

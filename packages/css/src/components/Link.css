@@ -35,6 +35,17 @@
  *                                                edge hidden, so it leaves the way it drew
  *   --_link-duration-color                       how long the text color takes to move
  *                                                to its hover color
+ *   --_link-press-weight                         how much heavier the drawn line grows
+ *                                                while the link is pressed (a scaleY
+ *                                                from its foot): 1.5; 1 drops the beat
+ *   --_link-press-duration, -release-ease        the press goes in over this and comes
+ *                                                back on this curve (the snappy spring,
+ *                                                so it settles past its weight)
+ *
+ * Curves a style changes for a different kind of draw: --_link-ease-in
+ * (the draw; ease.out, or a spring for a line that runs past and settles),
+ * --_link-ease-out (the erase). Whether the erase runs on or back is
+ * --_link-clip-end: set it to --_link-clip-start for a line that retracts.
  *
  * Round 3 draws the hover line with clip-path in place of the round 2
  * scaleX, so its rounded ends never stretch. --_link-draw and
@@ -83,6 +94,9 @@
     --_link-clip-end: inset(0 0 0 100%);
     --_link-clip-now: var(--_link-clip-end);
     --_link-duration-color: var(--ds-duration-morph);
+    --_link-press-weight: 1.5;
+    --_link-press-duration: var(--ds-duration-instant);
+    --_link-release-ease: var(--ds-ease-spring-snappy);
 
     border-radius: var(--_link-radius);
     color: var(--_link-fg);
@@ -167,8 +181,24 @@
     border-radius: var(--ds-radius-pill);
     background-color: currentColor;
     clip-path: var(--_link-clip-now);
-    transition: clip-path calc(var(--_link-duration-out) * var(--_link-motion)) var(--_link-ease-out);
+    transform-origin: 50% 100%;
+    transition:
+      clip-path calc(var(--_link-duration-out) * var(--_link-motion)) var(--_link-ease-out),
+      transform calc(var(--ds-duration-spring-snappy) * var(--_link-motion)) var(--_link-release-ease);
     pointer-events: none;
+  }
+
+  /*
+   * Press (order 1.23, a beat of its own): while a standalone link is held,
+   * the drawn line grows heavier from its foot (scaleY to --_link-press-weight
+   * over --_link-press-duration) and springs back on release, so a tap on a
+   * phone gets an answer under the finger before the page changes.
+   */
+  [data-ds='link'][data-standalone]:active:not([data-disabled]) > [data-part='label']::after {
+    transform: scaleY(var(--_link-press-weight));
+    transition:
+      clip-path calc(var(--_link-duration-in) * var(--_link-motion)) var(--_link-ease-in),
+      transform calc(var(--_link-press-duration) * var(--_link-motion)) var(--ds-ease-out);
   }
 
   /*
@@ -293,9 +323,12 @@
   /* ------------------------------------------------------------ forced colors */
 
   /* Reduced motion: the line shows at once (the duration tokens are 0ms) and the icon stays put. */
+  /* Review B1 (order 1.23): this file sets its own durations to 0s, so the line never draws under the person's setting even where the duration tokens are not zeroed. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='link'] {
       --_link-shift: 0px;
+      --_link-motion: 0;
+      --_link-press-weight: 1;
     }
   }
 
@@ -303,6 +336,7 @@
   :root[data-motion='reduce'] [data-ds='link'] {
     --_link-shift: 0px;
     --_link-motion: 0;
+    --_link-press-weight: 1;
   }
 
   @media (forced-colors: active) {

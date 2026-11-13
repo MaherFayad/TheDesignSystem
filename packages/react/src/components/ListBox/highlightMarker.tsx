@@ -282,3 +282,57 @@ export function drawCheck(host: Element | null | undefined, mode: PatternMode): 
   out.push(svg.animate([{ transform: 'scale(0.6)' }, { transform: 'none' }], { id, duration: pop, easing: readEasing(svg, 'ease.spring-bouncy') }));
   return out;
 }
+
+/**
+ * Review B6 (order 1.23): a menu or a picker popup leaves the DOM at once on
+ * close, so a press on its trigger during the exit opens it again at once.
+ * Call this with the content node as it is detached (its ref gets null): an
+ * inert, aria-hidden copy of the portal layer, the Radix positioning wrapper
+ * and the content (data-state closed) is put back in <body>, where the
+ * component CSS plays its exit (the `[data-state='closed'][inert]` rule), and
+ * it is removed when that animation finishes or is cancelled. Under reduced
+ * motion there is no exit animation, so no copy stays. Nothing waits on
+ * animationend.
+ */
+export function exitGhost(node: HTMLElement | null | undefined): void {
+  if (!node || !node.isConnected || typeof node.animate !== 'function') return;
+  if (node.getAttribute('data-state') !== 'closed') return;
+  const wrapper = node.parentElement;
+  const layer = wrapper?.parentElement;
+  if (!wrapper || !layer || !layer.matches("[data-ds='theme']")) return;
+  const r = node.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return;
+  const l = layer.cloneNode(false) as HTMLElement;
+  const w = wrapper.cloneNode(false) as HTMLElement;
+  const g = node.cloneNode(true) as HTMLElement;
+  for (const el of [l, w, g, ...Array.from(g.querySelectorAll('[id]'))]) el.removeAttribute('id');
+  g.setAttribute('aria-hidden', 'true');
+  g.setAttribute('inert', '');
+  w.style.pointerEvents = 'none';
+  w.append(g);
+  l.append(w);
+  node.ownerDocument.body.append(l);
+  const running = typeof g.getAnimations === 'function' ? g.getAnimations() : [];
+  if (running.length === 0) {
+    l.remove();
+    return;
+  }
+  const drop = () => l.remove();
+  Promise.all(running.map((a) => a.finished)).then(drop, drop);
+}
+
+/**
+ * Platform hook (order 1.23, for 1.25): where a press landed, in CSS px from
+ * the element's inline start and block start, written on the element as
+ * `--_<name>-press-x` and `--_<name>-press-y` (the component CSS declares both
+ * at 50%), so a platform can grow a ripple from the touch point.
+ */
+export function setPressPoint(el: HTMLElement, name: string, clientX: number, clientY: number): void {
+  const r = el.getBoundingClientRect();
+  const k = drawnScale(el);
+  const rtl = typeof getComputedStyle === 'function' && getComputedStyle(el).direction === 'rtl';
+  const x = (rtl ? r.right - clientX : clientX - r.left) / k;
+  const y = (clientY - r.top) / k;
+  el.style.setProperty(`--_${name}-press-x`, `${Math.round(x * 100) / 100}px`);
+  el.style.setProperty(`--_${name}-press-y`, `${Math.round(y * 100) / 100}px`);
+}

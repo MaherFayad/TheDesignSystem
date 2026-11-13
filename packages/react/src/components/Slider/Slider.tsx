@@ -1,11 +1,10 @@
 'use client';
 // Motion. slider-pull (pattern press, Slider.css): the thumb lifts a little
 // while it is grabbed and settles on release, a CSS transition on the
-// thumb's transform. slider-nudge (pattern shake, one swing toward the end):
-// when a key pushes a thumb past the minimum or the maximum, the thumb
-// nudges toward that end and back once, played through useMotion().play and
-// added on top of the lift (composite add). A held key nudges once, not on
-// every repeat.
+// thumb's transform. slider-nudge: when a key pushes a thumb past the
+// minimum or the maximum, the thumb and the fill pull half way to
+// --_slider-pull-max past that end and spring back (order 1.23; round 2
+// played one shake swing). A held key nudges once, not on every repeat.
 //
 // Order 1.23 (proposed):
 // - slider-fill: the fill is drawn by the track's ::before with a clip-path
@@ -103,22 +102,33 @@ function keyEnd(key: string, dir: 'ltr' | 'rtl'): SliderEnd | null {
   return null;
 }
 
+/** slider-nudge: how far a key at the end pulls the thumb, as a share of --_slider-pull-max. */
+export const KEY_BUMP = 0.5;
+
 /**
- * slider-nudge: plays the shake pattern, one swing toward `end`, on a thumb
- * that cannot go further. Returns a function to call with the thumb.
+ * slider-nudge (order 1.23): a key that pushes a thumb past its end pulls
+ * it, and the fill with it, half of --_slider-pull-max past the end on the
+ * snappy spring, then lets go on the bouncy spring: the rubber band of a
+ * drag, played by a key. The value never changes. A rapid second key
+ * restarts it; unmounting clears it.
  */
-function useEndNudge() {
-  const motion = useMotion();
-  const busyUntil = useRef(0);
-  return (thumb: Element | null | undefined, end: SliderEnd) => {
-    const now = typeof performance === 'undefined' ? Date.now() : performance.now();
-    if (!thumb || now < busyUntil.current) return;
-    const nudge = motion.play(thumb, 'shake', 'slider-nudge', { swings: 1, toward: end });
-    if (!nudge) return;
-    // Added to the lift of a grabbed thumb instead of replacing it.
-    if (nudge.effect && 'composite' in nudge.effect) (nudge.effect as KeyframeEffect).composite = 'add';
-    const duration = nudge.effect?.getTiming().duration;
-    busyUntil.current = now + (typeof duration === 'number' ? duration : 0);
+function useEndBump(root: { current: HTMLElement | null }, setPull: (p: { start: number; end: number }) => void) {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useLayoutEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+  return (end: SliderEnd) => {
+    if (timer.current) clearTimeout(timer.current);
+    setPull({ start: end === 'start' ? KEY_BUMP : 0, end: end === 'end' ? KEY_BUMP : 0 });
+    // Hold the pull for one snappy spring, so it is seen, then let go. A behavior timer, not a wait on an event.
+    const hold = root.current ? readDuration(root.current, 'duration.spring-snappy') : 0;
+    timer.current = setTimeout(() => {
+      timer.current = null;
+      setPull({ start: 0, end: 0 });
+    }, hold);
   };
 }
 
@@ -214,6 +224,8 @@ function useGlide(
     if (!before) return;
     const m = mode(SLIDER_FILL);
     if (m !== 'full') return;
+    // A style turns the glide off with --_slider-glide: 0.
+    if (typeof getComputedStyle === 'function' && getComputedStyle(root).getPropertyValue('--_slider-glide').trim() === '0') return;
     const spring = before.pulled && !pulled ? 'bouncy' : 'snappy';
     const duration = readDuration(root, `duration.spring-${spring}`);
     const easing = readEasing(root, `ease.spring-${spring}`);
@@ -293,7 +305,6 @@ export function SliderBase({
   const [own, setOwn] = useState<number[]>(defaultValue);
   const [dragging, setDragging] = useState(false);
   const values = valueProp ?? own;
-  const nudge = useEndNudge();
   const motion = useMotion();
   /** slider-rubber-band: how far a drag pulls past each end, 0 to 1. */
   const [pull, setPull] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
@@ -301,6 +312,7 @@ export function SliderBase({
   const following = useRef(false);
   const controlRef = useRef<HTMLSpanElement | null>(null);
   const horizontal = orientation === 'horizontal';
+  const bump = useEndBump(controlRef, setPull);
   useGlide(
     controlRef,
     following,
@@ -397,7 +409,7 @@ export function SliderBase({
           // slider-nudge: a key that pushes a thumb past the minimum or the maximum.
           const end = horizontal && !event.repeat && !control.disabled ? keyEnd(event.key, theme.dir) : null;
           const found = end ? focusedThumb(event.currentTarget) : null;
-          if (end && found && values[found[1]] === (end === 'start' ? min : max)) nudge(found[0], end);
+          if (end && found && values[found[1]] === (end === 'start' ? min : max) && motion.mode('slider-nudge') !== 'none') bump(end);
           // Radix sends Home to the start thumb and End to the end thumb, whichever has focus.
           // With two thumbs, move the focused one as far as the other allows instead.
           if (event.defaultPrevented || values.length < 2 || (event.key !== 'Home' && event.key !== 'End')) return;

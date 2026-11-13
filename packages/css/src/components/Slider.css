@@ -63,6 +63,13 @@
  *   --_slider-halo                 the state layer around the thumb (hover, held)
  *   --_slider-halo-spread          how far it reaches; 0px turns it off
  *   --_slider-halo-now             the working spread the hover and held rules set
+ *   --_slider-thumb-bg             the thumb's own fill, apart from the range fill
+ *                                  (a glass thumb in Liquid); default --_slider-fill
+ *   --_slider-stretch              the thumb's scale along the travel while dragged
+ *                                  (one axis, on top of the lift); 1 turns it off
+ *   --_slider-stretch-now          the working value the dragging rule sets
+ *   --_slider-glide                1 lets keys and presses glide the fill and thumb
+ *                                  (slider-fill, read by Slider.tsx); 0 jumps
  * - slider-fill: the fill is the track's ::before, a clip-path over the whole
  *   track. The Radix range stays as the part, with no paint. A clip-path
  *   change is not a layout change, so Slider.tsx glides the fill (and the
@@ -111,6 +118,10 @@
     --_slider-halo: var(--ds-color-primary-tint-hover);
     --_slider-halo-spread: var(--ds-space-xs);
     --_slider-halo-now: 0px;
+    --_slider-thumb-bg: var(--_slider-fill);
+    --_slider-stretch: 1;
+    --_slider-stretch-now: 1;
+    --_slider-glide: 1;
 
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -213,11 +224,11 @@
     block-size: var(--_slider-target);
     padding: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
     border-radius: var(--ds-radius-pill);
-    background-color: var(--_slider-fill);
+    background-color: var(--_slider-thumb-bg);
     background-clip: content-box;
     cursor: grab;
     outline: none;
-    transform: translateX(calc(var(--_slider-pull-now) * var(--_slider-pull-max) * var(--_slider-dir))) scale(var(--_slider-lift-now));
+    transform: translateX(calc(var(--_slider-pull-now) * var(--_slider-pull-max) * var(--_slider-dir))) scale(var(--_slider-lift-now)) scaleX(var(--_slider-stretch-now));
     transition: transform var(--_slider-duration) var(--_slider-ease);
   }
 
@@ -279,6 +290,7 @@
   /* slider-pull: the grabbed thumb is the one Radix focused on pointer down. */
   :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb']:focus {
     --_slider-lift-now: var(--_slider-lift);
+    --_slider-stretch-now: var(--_slider-stretch);
 
     transition: transform var(--_slider-duration-in) var(--_slider-ease-in);
   }
@@ -376,6 +388,11 @@
     block-size: auto;
   }
 
+  /* A vertical slider stretches along its own travel. */
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] [data-part='thumb'] {
+    transform: scale(var(--_slider-lift-now)) scaleY(var(--_slider-stretch-now));
+  }
+
   /* A vertical slider fills from the bottom and does not pull. */
   :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track']::before {
     inset-block: 0;
@@ -408,6 +425,8 @@
       --_slider-enter-scale: 1;
       --_slider-enter-y: 0px;
       --_slider-pull-max: 0px;
+      --_slider-stretch: 1;
+      --_slider-glide: 0;
     }
   }
 
@@ -416,6 +435,8 @@
     --_slider-enter-scale: 1;
     --_slider-enter-y: 0px;
     --_slider-pull-max: 0px;
+    --_slider-stretch: 1;
+    --_slider-glide: 0;
   }
 
   /*
@@ -450,5 +471,21 @@
     :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] > [data-part='control'] > [data-part='track']::before {
       background-color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='slider'], [data-ds='range-slider']) {
+      --_slider-duration: 0s;
+      --_slider-duration-in: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-duration: 0s;
+    --_slider-duration-in: 0s;
   }
 }

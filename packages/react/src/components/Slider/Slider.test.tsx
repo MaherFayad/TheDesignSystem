@@ -1,13 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRef } from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Field } from '../Field/Field';
 import SliderDemo from './Slider.demo';
 import { formatSliderValue, Slider } from './index';
-import { rubberBand } from './Slider';
+import { KEY_BUMP, rubberBand } from './Slider';
 import { RangeSlider } from '../RangeSlider';
 
 // jsdom has no ResizeObserver; Radix Slider measures the thumb with it.
@@ -172,69 +172,52 @@ describe('Slider', () => {
     }
     const call = (animate: ReturnType<typeof vi.fn>, i = 0) => animate.mock.calls[i] as unknown as [Keyframe[], KeyframeAnimationOptions];
 
-    it('nudges the thumb toward the end once when a key pushes past the maximum', () =>
-      withAnimate((animate) => {
-        render(
+    it('slider-nudge: a key past the maximum pulls the thumb and the fill toward the end, then lets go, and the value stays', () => {
+      vi.useFakeTimers();
+      try {
+        const { container } = render(
           <Theme style="desk">
             <Slider aria-label="Volume" defaultValue={100} />
           </Theme>,
         );
+        const el = root(container);
         const thumb = screen.getByRole('slider');
         thumb.focus();
         fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-        expect(animate).toHaveBeenCalledTimes(1);
-        const [frames, timing] = call(animate);
-        expect(timing.id).toBe('ds-motion:shake');
-        expect(frames).toHaveLength(3);
-        expect(String(frames[1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
-        // Added on top of the lift instead of replacing it.
-        expect((animate.mock.results[0]?.value as Animation).effect).toMatchObject({ composite: 'add' });
-        // A held key nudges once.
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(KEY_BUMP);
+        expect(thumb.getAttribute('aria-valuenow')).toBe('100');
+        act(() => {
+          vi.runAllTimers();
+        });
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+        // A held key does not pull again.
         fireEvent.keyDown(thumb, { key: 'ArrowRight', repeat: true });
-        expect(animate).toHaveBeenCalledTimes(1);
-        // A key that moves the value does not nudge, and the value changes at once.
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+        // A key that moves the value does not pull.
         fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
         expect(thumb.getAttribute('aria-valuenow')).toBe('99');
-        expect(animate).toHaveBeenCalledTimes(1);
-      }));
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
 
-    it('nudges toward the start at the minimum, with the keys of the reading direction', () =>
-      withAnimate((animate) => {
-        render(
-          <Theme style="desk" dir="rtl" lang="ar">
-            <Slider aria-label="الصوت" defaultValue={0} />
-          </Theme>,
-        );
-        const thumb = screen.getByRole('slider');
-        thumb.focus();
-        // In right to left text ArrowLeft moves toward the end, so it moves the value.
-        fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-        expect(animate).toHaveBeenCalledTimes(1);
-        fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-        expect(thumb.getAttribute('aria-valuenow')).toBe('1');
-        expect(animate).toHaveBeenCalledTimes(1);
-      }));
-
-    it('plays no nudge under reduced motion and never on a vertical slider', () =>
-      withAnimate((animate) => {
-        const original = window.matchMedia;
-        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
-        try {
-          render(
-            <Theme style="desk">
-              <Slider aria-label="Volume" defaultValue={100} />
-              <Slider aria-label="Level" orientation="vertical" defaultValue={100} />
-            </Theme>,
-          );
-          for (const thumb of screen.getAllByRole('slider')) {
-            thumb.focus();
-            fireEvent.keyDown(thumb, { key: 'ArrowUp' });
-          }
-          expect(animate).not.toHaveBeenCalled();
-        } finally {
-          window.matchMedia = original;
-        }
-      }));
+    it('slider-nudge: in right to left text the start is on the right, and a vertical slider does not pull', () => {
+      const { container } = render(
+        <Theme style="desk" dir="rtl" lang="ar">
+          <Slider aria-label="الصوت" defaultValue={0} />
+          <Slider aria-label="المستوى" orientation="vertical" defaultValue={100} />
+        </Theme>,
+      );
+      const [h, v] = screen.getAllByRole('slider');
+      h!.focus();
+      fireEvent.keyDown(h!, { key: 'ArrowRight' });
+      const roots = container.querySelectorAll<HTMLElement>('[data-ds="slider"]');
+      expect(Number(roots[0]!.style.getPropertyValue('--_slider-pull-start'))).toBe(KEY_BUMP);
+      v!.focus();
+      fireEvent.keyDown(v!, { key: 'ArrowUp' });
+      expect(Number(roots[1]!.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+    });
 
     it('lifts the grabbed thumb in CSS on the catalog timing, and turns it off under reduced motion', () => {
       const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8');

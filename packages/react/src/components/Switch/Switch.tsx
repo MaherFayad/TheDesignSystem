@@ -33,6 +33,12 @@ export interface SwitchProps
    * off.
    */
   stateText?: SwitchStateText;
+  /**
+   * Renders an icon in the thumb: a check while on, a cross while off. It is
+   * drawn only where a style or a platform shows it (Android); hidden from
+   * assistive tech. Default false.
+   */
+  thumbIcon?: boolean;
   /** Inside a Field it follows the Field. */
   invalid?: boolean;
   /** Keeps the value and focus, but ignores clicks, Space and Enter. */
@@ -66,6 +72,7 @@ export function Switch({
   label,
   description,
   stateText,
+  thumbIcon = false,
   invalid,
   disabled,
   readOnly,
@@ -159,6 +166,12 @@ export function Switch({
           <RadixSwitch.Thumb data-part="thumb">
             {/* A highlight layer a style can turn into a glass lens (order 1.23): decorative, styled by Switch.css. */}
             <span data-part="thumb-lens" aria-hidden="true" />
+            {thumbIcon && (
+              <svg data-part="thumb-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength={1} />
+                <path d="M5.5 5.5 10.5 10.5M10.5 5.5 5.5 10.5" />
+              </svg>
+            )}
           </RadixSwitch.Thumb>
         </span>
       </RadixSwitch.Root>

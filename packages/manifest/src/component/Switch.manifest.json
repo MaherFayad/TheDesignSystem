@@ -26,6 +26,7 @@
     "track",
     "thumb",
     "thumb-lens",
+    "thumb-icon",
     "label",
     "description",
     "state-text"
@@ -81,6 +82,11 @@
     "stateText": {
       "type": "object",
       "description": "{ on, off }: words shown after the label for the current state, such as On and Off. Hidden from assistive tech."
+    },
+    "thumbIcon": {
+      "type": "boolean",
+      "default": "false",
+      "description": "Renders the thumb-icon part: a check while on, a cross while off. Hidden unless a style or a platform shows it (--_switch-thumb-icon-opacity). Hidden from assistive tech."
     },
     "name": {
       "type": "string",
@@ -238,7 +244,8 @@
     "optionalParts": [
       "label",
       "description",
-      "state-text"
+      "state-text",
+      "thumb-icon"
     ],
     "keys": {
       "Space": {

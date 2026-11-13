@@ -97,14 +97,14 @@ export const buttonsInteractions = [
     beats: [
       "Press: the parts of the pressed segment dip to scale.anticipate (Neutral 0.95, Desk 0.9, Studio 0.97) and sink by --_button-press-y over duration.instant on ease.out; Button's inner shade fades in over the same time.",
       'Action: the click runs on release, at once.',
-      'Release and settle: the parts spring back on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing rest by 10%, Studio 80ms in two steps) and the shade fades. The box, the seam and the neighbor stay still.',
+      'Release (overshoot): the key comes back up with a bounce: the parts rise on ease.spring-bouncy over duration.spring-bouncy (--_button-group-release-ease and -release-duration; Neutral 220ms passing rest by 6%, Desk 440ms by 25%, Studio 120ms in three steps) and the shade fades. The box, the seam and the neighbor stay still.',
     ],
     styles: {
-      studio: 'the parts shrink a hair and snap back in two steps',
-      desk: 'a deep dip that swings back past rest',
-      neutral: 'a small dip, a one key sink and a quiet return',
+      studio: 'the parts shrink a hair and snap back in steps',
+      desk: 'a deep dip and a key that bounces back past rest',
+      neutral: 'a small dip, a one key sink and a short bounce',
     },
-    reduced: 'No dip and no sink. The pressed fill and the still shade carry the state.',
+    reduced: 'No dip and no sink, every duration of the segment 0s in its own CSS. The pressed fill and the still shade carry the state.',
     off: {
       "[data-ds='button-group'][data-attached] > *": dipOff,
       "[data-ds='split-button'] > *": dipOff,
@@ -187,7 +187,7 @@ export const buttonsInteractions = [
       desk: 'a long roll that swings past its place and a full shake',
       neutral: 'a short wipe and roll',
     },
-    reduced: 'No roll, turn, wipe or shake. The glyphs and the words cross fade in place.',
+    reduced: 'No roll, turn, wipe or shake: CopyButton.css sets its own durations to 0s, so each state shows at once. The status still says the result.',
     off: {
       "[data-ds='copy-button']": { '--_copy-button-motion': '0' },
     },
@@ -213,7 +213,7 @@ export const buttonsInteractions = [
       desk: 'a long rise that swings past its place',
       neutral: 'a short rise',
     },
-    reduced: 'The bubble fades in and out in place.',
+    reduced: 'The bubble shows and goes at once, in place.',
     off: {
       "[data-ds='copy-button']": { '--_copy-button-motion': '0' },
     },
@@ -263,7 +263,7 @@ export const buttonsInteractions = [
       desk: 'a bloom and a turn that swing past and back',
       neutral: 'a short bloom and a quiet turn',
     },
-    reduced: 'The fill shows whole at once; the glyph neither turns nor pinches.',
+    reduced: 'CloseButton.css sets its durations to 0s: the fill shows whole at once; the glyph neither turns nor pinches.',
     off: {
       "[data-ds='close-button']": { '--_close-button-turn': '0deg', '--_close-button-pinch': '1' },
     },
@@ -289,7 +289,7 @@ export const buttonsInteractions = [
       desk: 'a deep pull and a flip that swings past and back',
       neutral: 'a short pull and flip with almost no swing',
     },
-    reduced: 'The chevron points up at once and does not drop.',
+    reduced: 'SplitButton.css sets its durations to 0s: the chevron points up at once and does not drop.',
     off: {
       "[data-ds='split-button'] > [data-part='trigger']": {
         '--_button-motion': '0',
@@ -321,7 +321,7 @@ export const buttonsInteractions = [
       desk: 'a lift and a turn that swing, and a long reveal',
       neutral: 'a small lift, a short turn and a short reveal',
     },
-    reduced: 'No lift and no slide. The plus shows as a close mark at once; the label shows at once.',
+    reduced: 'FloatingActionButton.css sets its durations to 0s: no lift and no slide. The plus shows as a close mark at once; the label shows at once.',
     off: {
       "[data-ds='floating-action-button']": {
         '--_floating-action-button-turn': '0deg',
@@ -345,6 +345,7 @@ export const buttonsInteractions = [
       'Draw: the line clip opens from inset at the inline start to the whole label over duration.morph on ease.out (Neutral 200ms, Desk 320ms, Studio 100ms); the text color eases to the hover color over duration.morph.',
       'Erase: the clip closes toward the inline end over duration.quick on ease.exit, about half the draw.',
       'Secondary: the external icon moves distance.nudge up and toward the inline end on ease.spring-snappy over duration.spring-snappy.',
+      'Press: while held, the drawn line grows heavier from its foot (scaleY to --_link-press-weight, 1.5) over duration.instant and springs back on ease.spring-snappy on release, so a tap answers under the finger.',
       'A hover in the middle of the erase starts a fresh draw from the start edge.',
     ],
     styles: {
@@ -352,7 +353,7 @@ export const buttonsInteractions = [
       desk: 'a long draw and a swinging icon',
       neutral: 'a short draw',
     },
-    reduced: 'The line shows and goes at once; the icon stays still.',
+    reduced: 'Link.css sets its own durations to 0s: the line shows and goes at once, no press weight, the icon stays still.',
     off: {
       "[data-ds='link']": {
         '--_link-motion': '0',

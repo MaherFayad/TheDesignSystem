@@ -30,6 +30,14 @@
  *
  * Retrying dims nothing: the retry Button shows its own loading state, and
  * the copy stays readable.
+ *
+ * Round 3 (order 1.23): the timing of state-illustration is private, so a
+ * style can change its kind and not only its length:
+ *   --_error-state-duration-in, -ease-in   the icon's landing (curve and overshoot come from the ease)
+ *   --_error-state-text-duration           the run of each text part; a name outside the list: a duration
+ *   --_error-state-stagger                 the step between parts; 0s lands them together; a name
+ *                                  outside the list: a delay
+ * Under reduced motion all are 0s on the root (review B2).
  */
 @layer ds.base {
   [data-ds='error-state'] {
@@ -43,6 +51,10 @@
     --_error-state-max: var(--ds-dialog-width-md);
     --_error-state-ring: var(--ds-focus-shadow-ring);
     --_error-state-lift: calc(-1 * var(--ds-distance-lift));
+    --_error-state-duration-in: var(--ds-duration-spring-bouncy);
+    --_error-state-ease-in: var(--ds-ease-spring-bouncy);
+    --_error-state-text-duration: var(--ds-duration-spring-soft);
+    --_error-state-stagger: var(--ds-delay-stagger);
     --_error-state-enter-scale: var(--ds-scale-enter);
     --_error-state-shift: var(--ds-distance-nudge);
     --_error-state-duration: var(--ds-duration-spring-snappy);
@@ -77,23 +89,23 @@
   }
 
   [data-ds='error-state'] > [data-part='icon'] {
-    animation: ds-error-state-art var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+    animation: ds-error-state-art var(--_error-state-duration-in) var(--_error-state-ease-in) backwards;
   }
 
   [data-ds='error-state'] > :is([data-part='title'], [data-part='body'], [data-part='actions'], [data-part='details']) {
-    animation: ds-error-state-text var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--ds-delay-stagger) backwards;
+    animation: ds-error-state-text var(--_error-state-text-duration) var(--ds-ease-spring-soft) var(--_error-state-stagger) backwards;
   }
 
   [data-ds='error-state'] > [data-part='body'] {
-    animation-delay: min(calc(2 * var(--ds-delay-stagger)), var(--ds-duration-base));
+    animation-delay: min(calc(2 * var(--_error-state-stagger)), var(--ds-duration-base));
   }
 
   [data-ds='error-state'] > [data-part='actions'] {
-    animation-delay: min(calc(3 * var(--ds-delay-stagger)), var(--ds-duration-base));
+    animation-delay: min(calc(3 * var(--_error-state-stagger)), var(--ds-duration-base));
   }
 
   [data-ds='error-state'] > [data-part='details'] {
-    animation-delay: min(calc(4 * var(--ds-delay-stagger)), var(--ds-duration-base));
+    animation-delay: min(calc(4 * var(--_error-state-stagger)), var(--ds-duration-base));
   }
 
   @keyframes ds-error-state-art {
@@ -220,16 +232,31 @@
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
+  /* Round 3 (review B2): the parts are named, so the reduced rule matches the motion rules in specificity and wins by order; the root zeroes the timing too. */
   @media (prefers-reduced-motion: reduce) {
+    [data-ds='error-state'] {
+      --_error-state-duration: 0s;
+      --_error-state-duration-in: 0s;
+      --_error-state-text-duration: 0s;
+      --_error-state-stagger: 0s;
+    }
+
     [data-ds='error-state'],
-    [data-ds='error-state'] > *,
+    [data-ds='error-state'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions'], [data-part='details'], *),
     [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon'] {
       animation: none;
       transition: none;
     }
   }
 
-  :root[data-motion='reduce'] :is([data-ds='error-state'], [data-ds='error-state'] > *, [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon']) {
+  :root[data-motion='reduce'] [data-ds='error-state'] {
+    --_error-state-duration: 0s;
+    --_error-state-duration-in: 0s;
+    --_error-state-text-duration: 0s;
+    --_error-state-stagger: 0s;
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='error-state'], [data-ds='error-state'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions'], [data-part='details'], *), [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon']) {
     animation: none;
     transition: none;
   }

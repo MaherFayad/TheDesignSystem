@@ -14,6 +14,7 @@
  *   --_tab-bar-ring               the focus ring
  *
  *   --_tab-bar-duration, -ease    motion plumbing: the pop of tab-bar-pop
+ *   --_tab-bar-stagger            the beat between the icon and the label (0s: no second beat)
  *
  * Items swap their own --_tab-bar-item-* properties for the states (the
  * state is on the item, not the root). Colors swap at once.
@@ -43,6 +44,7 @@
     --_tab-bar-weight-active: var(--ds-font-weight-bold);
     --_tab-bar-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_tab-bar-duration: var(--ds-duration-spring-bouncy);
+    --_tab-bar-stagger: var(--ds-delay-stagger);
     --_tab-bar-ease: var(--ds-ease-spring-bouncy);
 
     display: flex;
@@ -181,7 +183,7 @@
   }
 
   [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-label'] {
-    animation: ds-tab-bar-rise var(--_tab-bar-duration) var(--_tab-bar-ease) var(--ds-delay-stagger) backwards;
+    animation: ds-tab-bar-rise var(--_tab-bar-duration) var(--_tab-bar-ease) var(--_tab-bar-stagger) backwards;
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
@@ -193,14 +195,29 @@
 
   /* ------------------------------------------------------------ reduced motion */
 
+  /*
+   * Round 3 (review B2 of round 2): the reduced selectors carry [data-active]
+   * so they match the motion rules in specificity and win by order, and the
+   * root zeroes the timing the motion rules read.
+   */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='tab-bar'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+    [data-ds='tab-bar'] {
+      --_tab-bar-duration: 0s;
+      --_tab-bar-stagger: 0s;
+    }
+
+    [data-ds='tab-bar'] > [data-part='item'][data-active] > :is([data-part='item-icon'], [data-part='item-label']) {
       animation: none;
     }
   }
 
-  /* The same under the page setting (review B2). */
-  :root[data-motion='reduce'] [data-ds='tab-bar'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+  /* The same under the page setting. */
+  :root[data-motion='reduce'] [data-ds='tab-bar'] {
+    --_tab-bar-duration: 0s;
+    --_tab-bar-stagger: 0s;
+  }
+
+  :root[data-motion='reduce'] [data-ds='tab-bar'] > [data-part='item'][data-active] > :is([data-part='item-icon'], [data-part='item-label']) {
     animation: none;
   }
 

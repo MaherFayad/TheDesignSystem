@@ -26,12 +26,12 @@
 // only fades: it is wiped away with clip-path from the inline start toward
 // the inline end, the way the shimmer band runs, over duration.morph on
 // ease.reveal, so the content shows in reading order where the placeholder
-// was. Reduced motion keeps the fade of round 2.
+// was. Reduced motion swaps at once, with no ghost (review B1).
 import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
 import { play, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
-import { fadeAway, ghostOf, placeOf } from '../Alert/ghost';
+import { ghostOf, placeOf } from '../Alert/ghost';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -52,7 +52,7 @@ export interface SkeletonProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'ti
 function wipeAway(ghost: HTMLElement | null, mode: PatternMode): void {
   if (!ghost) return;
   if (mode !== 'full') {
-    fadeAway(ghost, mode);
+    ghost.remove();
     return;
   }
   const rtl = typeof getComputedStyle === 'function' && getComputedStyle(ghost).direction === 'rtl';
@@ -87,7 +87,8 @@ export function Skeleton({ variant = 'text', size = 'md', width, height, style, 
   useLayoutEffect(() => {
     const el = own.current;
     return () => {
-      if (!el || !el.isConnected || modeRef.current === 'none' || typeof requestAnimationFrame !== 'function') return;
+      // Round 3 (review B1): only the full mode draws a ghost; reduced motion swaps at once.
+      if (!el || !el.isConnected || modeRef.current !== 'full' || typeof requestAnimationFrame !== 'function') return;
       const place = placeOf(el);
       requestAnimationFrame(() => {
         if (!el.isConnected) wipeAway(ghostOf(place), modeRef.current);

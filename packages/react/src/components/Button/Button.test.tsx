@@ -479,6 +479,19 @@ describe('Button glow (interaction button-glow, order 1.23)', () => {
     expect(el.style.getPropertyValue('--_button-glow-x')).toBe('100%');
   });
 
+  it('sets the ripple origin of any emphasis on pointer down, in px from the inline start (a platform hook)', () => {
+    const { container } = render(<Button>Save</Button>);
+    const el = root(container);
+    rect(el);
+    Object.defineProperty(el, 'offsetWidth', { configurable: true, value: 200 });
+    Object.defineProperty(el, 'offsetHeight', { configurable: true, value: 40 });
+    fireEvent.pointerDown(el, { clientX: 150, clientY: 60 });
+    expect(el.style.getPropertyValue('--_button-ripple-x')).toBe('50px');
+    expect(el.style.getPropertyValue('--_button-ripple-y')).toBe('10px');
+    // The glow stays on solid fills only.
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('');
+  });
+
   it('leaves other emphases and inert buttons alone', () => {
     const { container, rerender } = render(<Button>Save</Button>);
     const el = root(container);

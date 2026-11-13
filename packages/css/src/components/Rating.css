@@ -32,6 +32,8 @@
  *   --_rating-index        on each item, set by Rating.tsx: 0 for the first star
  *   --_rating-sweep        the time between two stars of the sweep (delay.stagger)
  *   --_rating-sweep-now    the working clip of the fill part, set by the state rules
+ *   --_rating-sweep-duration, --_rating-sweep-ease   the wipe of one star (a style may
+ *                          step it, or give it a spring); 0s cuts it
  * Each interactive star holds a filled glyph, the fill part (aria-hidden),
  * over its icon in the hover color, clipped away toward the inline start at
  * rest. When a star joins the preview its clip opens toward the inline end
@@ -58,6 +60,8 @@
     --_rating-ease: var(--ds-ease-spring-bouncy);
     --_rating-enter-scale: var(--ds-scale-anticipate);
     --_rating-sweep: var(--ds-delay-stagger);
+    --_rating-sweep-duration: var(--ds-duration-base);
+    --_rating-sweep-ease: var(--ds-ease-out);
 
     display: inline-flex;
     flex-wrap: wrap;
@@ -165,7 +169,7 @@
     color: var(--_rating-fg-hover);
     clip-path: var(--_rating-sweep-now);
     pointer-events: none;
-    transition: clip-path var(--ds-duration-base) var(--ds-ease-out);
+    transition: clip-path var(--_rating-sweep-duration) var(--_rating-sweep-ease);
   }
 
   [data-ds='rating'] > [data-part='item'] > [data-part='fill']:dir(rtl) {
@@ -293,5 +297,21 @@
     [data-ds='rating'][data-disabled] [data-part='item'] {
       color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='rating'] {
+      --_rating-duration: 0s;
+      --_rating-sweep: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='rating'] {
+    --_rating-duration: 0s;
+    --_rating-sweep: 0s;
   }
 }

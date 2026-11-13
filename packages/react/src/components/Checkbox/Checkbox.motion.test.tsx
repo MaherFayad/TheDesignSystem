@@ -21,8 +21,9 @@ describe('Checkbox motion (order 1.22)', () => {
     expect(code).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\[data-ds='checkbox'\] \{\s*--_checkbox-press-scale: 1;/);
   });
 
-  it('N10: no raw 0s in the motion', () => {
-    expect(code).not.toMatch(/\b0s\b/);
+  it('N10: no raw 0s in the motion, except the reduced form that zeroes the private durations (order 1.23)', () => {
+    expect(code.replace(/--_checkbox-duration(-out)?: 0s;/g, '')).not.toMatch(/\b0s\b/);
+    expect(code).toMatch(/:root\[data-motion='reduce'\] \[data-ds='checkbox'\] \{[^}]*--_checkbox-duration: 0s;[^}]*--_checkbox-motion: 0;/);
   });
 
   it('check-draw: the box dips while pressed, the fill grows from the centre and the mark is drawn (order 1.23)', () => {
@@ -37,6 +38,6 @@ describe('Checkbox motion (order 1.22)', () => {
     expect(rule("[data-ds='checkbox'] [data-part='mark'][data-glyph='minus']")).toMatch(/--_checkbox-long-turn: 0deg;/);
     expect(code).toMatch(/:active\)\) > \[data-part='control'\] > \[data-part='indicator'\] \{\s*transform: scale\(var\(--_checkbox-press-scale\)\);/);
     // The select all cascade waits the box's step.
-    expect(code).toMatch(/calc\(var\(--ds-delay-stagger\) \* var\(--_checkbox-step\)\)/);
+    expect(code).toMatch(/calc\(var\(--_checkbox-stagger\) \* var\(--_checkbox-step\) \* var\(--_checkbox-motion\)\)/);
   });
 });

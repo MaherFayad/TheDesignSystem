@@ -297,7 +297,13 @@
     animation: ds-tag-field-popup-in var(--_menu-duration-in) var(--_menu-ease-in);
   }
 
-  [data-ds='tag-field'][data-part='popup'][data-state='closed'] {
+  /*
+   * Review B6 (order 1.23): the real content leaves at once on close (no
+   * exit animation, so Radix unmounts it in the same frame and a press on
+   * the trigger reopens at once). An inert aria-hidden copy, made by
+   * highlightMarker.tsx (exitGhost), plays the exit in its place.
+   */
+  [data-ds='tag-field'][data-part='popup'][data-state='closed'][inert] {
     animation: ds-tag-field-popup-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
     pointer-events: none;
   }
@@ -450,5 +456,18 @@
     [data-ds='tag-field'][data-part='popup'] > [data-ds='list-box'] {
       --_list-box-border-color: Canvas;
     }
+  }
+
+  /* Order 1.23: the private durations are zeroed under reduced motion too, so no rule relies on zeroed tokens. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='tag-field'][data-part='popup'] {
+      --_menu-duration-in: 0s;
+      --_menu-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='tag-field'][data-part='popup'] {
+    --_menu-duration-in: 0s;
+    --_menu-duration-out: 0s;
   }
 }

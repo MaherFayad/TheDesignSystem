@@ -212,7 +212,7 @@ export const stages: Record<string, () => ReactNode> = {
     </Row>
   ),
   'split-chevron': () => (
-    <>
+    <div data-stage-region="" style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: 8, paddingBlockEnd: 140 }}>
       <SplitButton label="Publish page" menuLabel="More publish options" tone="accent" emphasis="solid">
         <DropdownMenuItem start="clock">Schedule publish</DropdownMenuItem>
         <DropdownMenuItem start="upload">Publish to staging</DropdownMenuItem>
@@ -224,7 +224,7 @@ export const stages: Record<string, () => ReactNode> = {
           <DropdownMenuItem start="file">الحفظ كمسودة</DropdownMenuItem>
         </SplitButton>
       </Theme>
-    </>
+    </div>
   ),
   'fab-morph': () => <FabStage />,
   'link-underline': () => (

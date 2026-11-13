@@ -164,7 +164,9 @@ export function Pagination({
     if (!root) return;
     const mode = motion.mode('pagination-roll');
     const pages = Array.from(root.querySelectorAll<HTMLElement>(PAGE));
-    const texts = pages.map((el) => el.querySelector(HOST)?.textContent ?? '');
+    // Round 3 (review B5): the text of each slot comes from the data, never from the
+    // DOM, which holds a roll's columns and leaving copies while it plays.
+    const texts = range.filter((item) => !isEllipsis(item)).map((item) => n(item as number));
     const before = slots.current;
     if (before && before.page !== page && before.texts.length === texts.length) {
       const direction = page > before.page ? 'up' : 'down';
@@ -255,8 +257,9 @@ export function Pagination({
             </span>
           ) : null;
         // The number is drawn in an aria-hidden host the roll owns; aria-label names the page.
+        // Keyed by its text, so React replaces the host instead of writing into one the roll owns (review B5).
         const digitsHost = (
-          <span aria-hidden="true">
+          <span key={text} aria-hidden="true">
             {text}
           </span>
         );

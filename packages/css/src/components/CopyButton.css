@@ -22,6 +22,14 @@
  *                             its inline end edge, the way it drew
  *   --_copy-button-shrink     the scale a glyph closes to and grows from,
  *                             scale.morph
+ *   --_copy-button-ease-in    the curve a word rolls in and the bubble rises on
+ *                             (the snappy spring)
+ *   --_copy-button-ease-out   the curve a word and a glyph leave on
+ *   --_copy-button-pop-ease   the curve the check and the warning grow on (the
+ *                             bouncy spring: its overshoot)
+ *   --_copy-button-overshoot  how far an arriving word runs past its place
+ *                             before it settles back (a beat of its own): 0px,
+ *                             no such beat; Desk might set distance.nudge
  *   --_copy-button-fade       the check's opacity where its wipe starts: 1,
  *                             so the wipe carries it; 0 under reduced motion,
  *                             where it fades in place
@@ -61,8 +69,10 @@
  * widest word and never changes size. The label part clips to the button's
  * height band, so a rolling word shows only inside the button.
  *
- * Reduced (the system setting and data-motion="reduce"): no roll, no turn,
- * no rise, no wipe, no shake. The glyphs and the words cross fade in place.
+ * Reduced (the system setting and data-motion="reduce", review B1): this
+ * file sets its own durations to 0s through --_copy-button-motion, so no
+ * roll, turn, rise, wipe or shake plays even where the duration tokens are
+ * not zeroed. Each state shows at once; the status still says it.
  */
 @layer ds.base {
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
@@ -83,6 +93,10 @@
     --_copy-button-erase: inset(0 0 0 100%);
     --_copy-button-shrink: var(--ds-scale-morph);
     --_copy-button-fade: 1;
+    --_copy-button-ease-in: var(--ds-ease-spring-snappy);
+    --_copy-button-ease-out: var(--ds-ease-exit);
+    --_copy-button-pop-ease: var(--ds-ease-spring-bouncy);
+    --_copy-button-overshoot: 0px;
     --_copy-button-rise: var(--ds-distance-enter);
     --_copy-button-bubble-bg: var(--ds-color-bg-surface);
     --_copy-button-bubble-fg: var(--ds-color-text-bright);
@@ -108,8 +122,8 @@
   [data-ds='copy-button'] > [data-part='icon'] > [data-copy-glyph='idle'] {
     clip-path: circle(75% at 50% 50%);
     transition:
-      clip-path calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
-      transform calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
+      clip-path calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--_copy-button-ease-in) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
+      transform calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--_copy-button-ease-in) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
       opacity calc(var(--ds-duration-fast) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
   }
 
@@ -118,9 +132,9 @@
     opacity: 0;
     transform: rotate(var(--_copy-button-turn)) scale(var(--_copy-button-shrink));
     transition:
-      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
-      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
-      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out);
   }
 
   /* The check: erased toward its end at rest, wiped in along its strokes after a copy. */
@@ -128,8 +142,8 @@
     clip-path: var(--_copy-button-erase);
     opacity: 0;
     transition:
-      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
-      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out);
   }
 
   [data-ds='copy-button'][data-state='copied'] > [data-part='icon'] > [data-copy-glyph='copied'] {
@@ -140,7 +154,7 @@
   }
 
   [data-ds='copy-button'][data-state='copied'] > [data-part='icon'] > [data-copy-glyph='copied'] > * {
-    animation: ds-copy-button-pop calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--ds-ease-spring-bouncy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+    animation: ds-copy-button-pop calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--_copy-button-pop-ease) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
   }
 
   /* The warning: small and clear at rest, popped in after a failure. */
@@ -148,8 +162,8 @@
     opacity: 0;
     transform: scale(var(--_copy-button-shrink));
     transition:
-      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
-      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out);
   }
 
   [data-ds='copy-button'][data-state='failed'] > [data-part='icon'] > [data-copy-glyph='failed'] {
@@ -157,7 +171,7 @@
     transform: none;
     transition:
       opacity calc(var(--ds-duration-fast) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
-      transform calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--ds-ease-spring-bouncy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--_copy-button-pop-ease) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
   }
 
   /* One shake after a failure (the keyframes are Button.css's; --_button-shake is 0px under reduced motion). */
@@ -212,8 +226,8 @@
     opacity: 0;
     transform: translateY(calc(-1 * var(--_copy-button-roll)));
     transition:
-      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
-      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out);
   }
 
   /* The word of the state shows. It arrives through the roll below, so it takes no transition of its own. */
@@ -224,7 +238,7 @@
   }
 
   [data-ds='copy-button'] > [data-part='label'] > [data-copy-label][data-roll] {
-    animation: ds-copy-button-roll calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+    animation: ds-copy-button-roll calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--_copy-button-ease-in) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
   }
 
   /* Opacity is whole early, so the word is readable for nearly all of its roll. */
@@ -236,6 +250,10 @@
 
     35% {
       opacity: 1;
+    }
+
+    75% {
+      transform: translateY(calc(-1 * var(--_copy-button-overshoot)));
     }
 
     100% {
@@ -265,14 +283,14 @@
     opacity: 0;
     transform: translateX(calc(-50% * var(--_button-dir))) translateY(calc(-1 * var(--_copy-button-rise)));
     transition:
-      opacity calc(var(--ds-duration-base) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      opacity calc(var(--ds-duration-base) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
       transform calc(var(--ds-duration-morph) * var(--_copy-button-motion)) var(--ds-ease-out);
   }
 
   [data-ds='copy-button']:not([data-state='idle']) > [data-part='bubble'] {
     opacity: 1;
     transform: translateX(calc(-50% * var(--_button-dir)));
-    animation: ds-copy-button-bubble calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+    animation: ds-copy-button-bubble calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--_copy-button-ease-in) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
   }
 
   @keyframes ds-copy-button-bubble {
@@ -293,18 +311,20 @@
 
   /* ------------------------------------------------------------ reduced motion */
 
-  /* The glyphs and the words cross fade in place. The duration tokens are 0ms under the system setting, so it is a swap there. */
+  /* Each state shows at once: no travel, and every duration here 0s. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='copy-button'] {
       --_copy-button-roll: 0px;
       --_copy-button-wipe: inset(0);
       --_copy-button-turn: 0deg;
       --_copy-button-rise: 0px;
-    }
       --_copy-button-close: circle(75% at 50% 50%);
       --_copy-button-erase: inset(0);
       --_copy-button-shrink: 1;
       --_copy-button-fade: 0;
+      --_copy-button-overshoot: 0px;
+      --_copy-button-motion: 0;
+    }
   }
 
   :root[data-motion='reduce'] [data-ds='copy-button'] {
@@ -316,6 +336,8 @@
     --_copy-button-erase: inset(0);
     --_copy-button-shrink: 1;
     --_copy-button-fade: 0;
+    --_copy-button-overshoot: 0px;
+    --_copy-button-motion: 0;
   }
 
   /* Forced colors: the bubble draws in system colors with its border; the clips draw the same. */

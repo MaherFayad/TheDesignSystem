@@ -11,7 +11,8 @@ describe('radio-pop and radio-card-lift (order 1.22)', () => {
   it('RadioGroup: the fill closes in, the dot lands on the bouncy spring from the old option, the ring shows at once (order 1.23)', () => {
     const css = read('RadioGroup');
     expect(css).toMatch(/scale\(var\(--_radio-group-dot-from\)\);/);
-    expect(css).toMatch(/transform calc\(var\(--ds-duration-spring-bouncy\) \* var\(--_radio-group-motion\)\) var\(--ds-ease-spring-bouncy\)/);
+    expect(css).toMatch(/transform calc\(var\(--ds-duration-spring-bouncy\) \* var\(--_radio-group-motion\)\) var\(--_radio-group-dot-ease\)/);
+    expect(css).toMatch(/--_radio-group-dot-ease: var\(--ds-ease-spring-bouncy\);/);
     expect(css).toMatch(/box-shadow: inset 0 0 0 var\(--_radio-group-fill-now\) var\(--_radio-group-bg-checked\);/);
     // The travel: hidden dots lean toward the checked option, by sibling selectors.
     expect(css).toMatch(/\[data-part='item'\]:has\(~ \[data-part='item'\]\[data-state='checked'\]\) \{\s*--_radio-group-side: 1;/);
