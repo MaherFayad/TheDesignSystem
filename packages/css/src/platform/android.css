@@ -39,15 +39,19 @@
  * children, and only the hit area and the press feedback reach them.
  * Logical properties only.
  *
- * The ripple is a ::after layer filled with the text color that grows
- * from the centre of the control while it is pressed and fades on release
- * (transform and opacity). The motion ruling of 2026-11-12 allows a
- * clip-path circle from the touch point, the closer match; it waits for
- * the lint rule of order 1.23 and for a component hook that hands the
- * pointer position to CSS (see docs/reports/platforms.md). The hit area of a
- * control drawn under 48dp is a transparent ::before. Under reduced motion
- * the ripple shows at full size at once, with no growth. Under forced
- * colors the ripple and the drawn handle are hidden or take system colors.
+ * The ripple is a ::after layer filled with the text color, clipped to a
+ * circle that grows from the touch point while the control is pressed and
+ * fades on release (clip-path and opacity, order 1.28). The touch point is
+ * the press hook each component writes on pointerdown: --_button-ripple-x
+ * and -y for the Button family, --_chip-press-*, --_list-press-*,
+ * --_pagination-press-*; until a press it is the centre. The press shade,
+ * the sink and the pointer glow of order 1.23 are off: the ripple is the
+ * only press feedback. Checkbox and radio get a 40dp state layer that the
+ * same circle grows into on a touch. The hit area of a control drawn under
+ * 48dp is a transparent ::before (the glow's layer, emptied). Durations
+ * are tokens only, so the component's reduced zeroing and the reduced
+ * tokens still hold. Under reduced motion the ripple shows whole at once.
+ * Under forced colors the ripple and the state layers are hidden.
  *
  * Known limit: a Theme with another data-platform nested inside an android
  * one still matches these descendant selectors.
@@ -105,10 +109,28 @@
     --_button-part-press: 1;
   }
 
+  /*
+   * Press feedback is the ripple alone: no inner shade, no sink, no pointer
+   * glow (the glow's ::before layer is the 48dp hit area here), and the
+   * ToggleButton's own pool and flood give way to the same ripple.
+   */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
+    --_button-press-shade: transparent;
+    --_button-press-y: 0px;
+  }
+
+  [data-platform='android'] [data-ds='toggle-button'] {
+    --_toggle-button-layer-opacity: 0;
+    --_toggle-button-flood: 0;
+  }
+
   /* The 48dp hit area of a control drawn smaller: a transparent layer around it (the target size check counts it). */
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
     content: '';
     position: absolute;
+    background-image: none;
     /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
     inset-block: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
     inset-inline: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
@@ -125,13 +147,14 @@
     inset: 0;
     border-radius: inherit;
     background-color: currentColor;
+    box-shadow: none;
     opacity: 0;
-    transform: scale(0);
+    clip-path: circle(0% at 50% 50%);
     pointer-events: none;
-    /* On release: the layer fades, then shrinks back to nothing, unseen. */
+    /* On release: the layer fades, then the circle closes, unseen (step-end: at the end of the fade). */
     transition:
       opacity var(--ds-duration-celebrate) var(--ds-ease-out),
-      transform 0s linear var(--ds-duration-celebrate);
+      clip-path var(--ds-duration-celebrate) step-end;
   }
 
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after,
@@ -139,10 +162,76 @@
   [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled])::after,
   [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after {
     opacity: 0.12;
-    transform: scale(1);
+    /* 142% of the reference radius is the full diagonal: the circle covers the box from any corner. */
+    clip-path: circle(142% at 50% 50%);
     transition:
-      opacity 0s,
-      transform var(--ds-duration-window-open) var(--ds-ease-standard);
+      opacity var(--ds-duration-instant) step-start,
+      clip-path var(--ds-duration-window-open) var(--ds-ease-standard);
+  }
+
+  /* The circle starts where the finger landed: each component's press hook, from the inline start (mirrored in right to left text). */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::after {
+    clip-path: circle(0% at var(--_button-ripple-x) var(--_button-ripple-y));
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+    clip-path: circle(142% at var(--_button-ripple-x) var(--_button-ripple-y));
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl)::after {
+    clip-path: circle(0% at calc(100% - var(--_button-ripple-x)) var(--_button-ripple-y));
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+    clip-path: circle(142% at calc(100% - var(--_button-ripple-x)) var(--_button-ripple-y));
+  }
+
+  [data-platform='android'] [data-ds='chip']::after {
+    clip-path: circle(0% at var(--_chip-press-x) var(--_chip-press-y));
+  }
+
+  [data-platform='android'] [data-ds='chip']:active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+    clip-path: circle(142% at var(--_chip-press-x) var(--_chip-press-y));
+  }
+
+  [data-platform='android'] [data-ds='chip']:dir(rtl)::after {
+    clip-path: circle(0% at calc(100% - var(--_chip-press-x)) var(--_chip-press-y));
+  }
+
+  [data-platform='android'] [data-ds='chip']:dir(rtl):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+    clip-path: circle(142% at calc(100% - var(--_chip-press-x)) var(--_chip-press-y));
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after {
+    clip-path: circle(0% at var(--_list-press-x) var(--_list-press-y));
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled])::after {
+    clip-path: circle(142% at var(--_list-press-x) var(--_list-press-y));
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl)::after {
+    clip-path: circle(0% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl):active:not([data-disabled])::after {
+    clip-path: circle(142% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
+  }
+
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after {
+    clip-path: circle(0% at var(--_pagination-press-x) var(--_pagination-press-y));
+  }
+
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after {
+    clip-path: circle(142% at var(--_pagination-press-x) var(--_pagination-press-y));
+  }
+
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:dir(rtl)::after {
+    clip-path: circle(0% at calc(100% - var(--_pagination-press-x)) var(--_pagination-press-y));
+  }
+
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:dir(rtl):active::after {
+    clip-path: circle(142% at calc(100% - var(--_pagination-press-x)) var(--_pagination-press-y));
   }
 
   /* The ripple of a tab sits in the pill, not across the whole item. */
@@ -164,29 +253,75 @@
     --_switch-inset: var(--ds-border-width-strong);
     --_switch-bg: var(--ds-color-bg-overlay-10);
     --_switch-thumb-off: var(--ds-color-border-control-hover);
-    --_switch-stretch: 1;
-    --_switch-stretch-now: calc(16 / 28);
     --_switch-track-press: 1;
     --_switch-font-size: var(--ds-font-size-xl);
     --_switch-gap: var(--ds-space-xl);
     --_switch-duration: var(--ds-duration-window-open);
     --_switch-ease: var(--ds-ease-emphasized);
+    --_switch-duration-out: var(--ds-duration-window-open);
+    --_switch-ease-out: var(--ds-ease-emphasized);
+    --_switch-ease-in: var(--ds-ease-emphasized);
+    /* The dot: one uniform scale of the 28dp thumb from its centre, 16dp off, 24dp on, 28dp while held. No sideways stretch, no lean. */
+    --_switch-stretch: 1;
+    --_switch-lean: 0px;
+    --_switch-thumb-size-rest: calc(16 / 28);
+    --_switch-thumb-size-on: calc(24 / 28);
+    --_switch-thumb-size-pressed: 1;
+    /*
+     * The 2dp outline is the track's border and the inset is 1dp, so the
+     * track keeps no padding: the thumb box is the height less the two
+     * outlines and travels the width less the height, centre to centre.
+     */
+    --_switch-inset: var(--ds-border-width-default);
+    --_switch-thumb-size: calc(var(--_switch-height) - var(--ds-border-width-strong) * 2);
+    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height));
+    /* With the thumbIcon part: a check in the on dot. */
+    --_switch-thumb-icon-opacity: 1;
   }
 
   [data-platform='android'] [data-ds='switch'][data-state='checked'] {
     --_switch-bg: var(--_switch-fill);
-    --_switch-stretch-now: calc(24 / 28);
   }
 
-  /* The outline is 2dp. The track keeps no padding, so the 28dp thumb sits 2dp in from the outline. */
   [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
-    padding-inline: 0;
     border-width: var(--ds-border-width-strong);
   }
 
-  /* One uniform scale from the thumb's centre: 16dp off, 24dp on, 28dp while held. */
-  [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    transform: translateX(calc(var(--_switch-travel) * var(--_switch-dir))) scale(var(--_switch-stretch-now));
+  /*
+   * The 40dp state layer round the thumb: a circle in the text color on the
+   * track's ::before, centred on the thumb and moved by the same travel on
+   * the same curve. It paints before the thumb and the fill, so it shows
+   * round the dot. Hover 8%, held 12%.
+   */
+  [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track']::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(var(--_switch-height) / 2 - var(--ds-border-width-strong) - (var(--ds-size-touch-android) - var(--ds-space-fixed-m)) / 2);
+    inset-inline-start: calc(var(--_switch-height) / 2 - var(--ds-border-width-strong) - (var(--ds-size-touch-android) - var(--ds-space-fixed-m)) / 2);
+    inline-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    block-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    border-radius: var(--ds-radius-pill);
+    background-color: currentColor;
+    opacity: 0;
+    transform: translateX(calc(var(--_switch-travel) * var(--_switch-dir)));
+    pointer-events: none;
+    transition:
+      transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
+      opacity var(--ds-duration-celebrate) var(--ds-ease-out);
+  }
+
+  @media (hover: hover) {
+    [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:hover > [data-part='track']::before {
+      opacity: 0.08;
+    }
+  }
+
+  [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']::before {
+    opacity: 0.12;
+  }
+
+  [data-platform='android'] [data-ds='switch'][data-dragging] > [data-part='control'] > [data-part='track']::before {
+    transition: opacity var(--ds-duration-celebrate) var(--ds-ease-out);
   }
 
   /* ------------------------------------------------------------ checkbox and radio: 18dp box, 2dp edge, a 40dp state layer */
@@ -197,6 +332,10 @@
     --_checkbox-radius: var(--ds-radius-xs);
     --_checkbox-font-size: var(--ds-font-size-xl);
     --_checkbox-gap: 0;
+    /* No dip: the state layer answers the press. The drawn check lands on the emphasized ease with no overshoot. */
+    --_checkbox-press-scale: 1;
+    --_checkbox-land-ease: var(--ds-ease-emphasized);
+    --_checkbox-morph-ease: var(--ds-ease-emphasized);
   }
 
   [data-platform='android'] [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
@@ -210,27 +349,67 @@
     border-radius: var(--ds-radius-pill);
     background-color: currentColor;
     opacity: 0;
+    clip-path: circle(0% at 50% 50%);
     pointer-events: none;
-    transition: opacity var(--ds-duration-celebrate) var(--ds-ease-out);
+    transition:
+      opacity var(--ds-duration-celebrate) var(--ds-ease-out),
+      clip-path var(--ds-duration-celebrate) step-end;
   }
 
-  [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:hover::after {
-    opacity: 0.08;
+  /*
+   * The state layer: 8% on hover, shown whole at once; 12% while held. A
+   * touch has no hover, so the press grows the checkbox circle from the
+   * centre: the ripple. The radio's hover veil becomes the same 40dp layer.
+   */
+  @media (hover: hover) {
+    [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:hover::after {
+      opacity: 0.08;
+      clip-path: circle(50% at 50% 50%);
+      transition:
+        opacity var(--ds-duration-celebrate) var(--ds-ease-out),
+        clip-path var(--ds-duration-instant) step-start;
+    }
+
+    [data-platform='android'] [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):hover) > [data-part='control']::after {
+      opacity: 0.08;
+    }
   }
 
   [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:active::after {
     opacity: 0.12;
-    transition-duration: 0s;
+    clip-path: circle(50% at 50% 50%);
+    transition:
+      opacity var(--ds-duration-instant) step-start,
+      clip-path var(--ds-duration-window-open) var(--ds-ease-standard);
   }
 
   [data-platform='android'] [data-ds='radio-group'] {
     --_radio-group-control-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
     --_radio-group-font-size: var(--ds-font-size-xl);
     --_radio-group-gap: 0;
+    /* No dip, no lean of the hidden dot: the dot grows in place on the emphasized ease. */
+    --_radio-group-press-scale: 1;
+    --_radio-group-dot-travel: 0px;
+    --_radio-group-dot-ease: var(--ds-ease-emphasized);
+    --_radio-group-land-ease: var(--ds-ease-emphasized);
   }
 
   [data-platform='android'] [data-ds='radio-group'] [data-part='item'] {
     min-block-size: var(--ds-size-touch-android);
+  }
+
+  /* The veil becomes the 40dp state layer in the text color, over a checked circle too. */
+  [data-platform='android'] [data-ds='radio-group'] [data-part='item'] > [data-part='control']::after {
+    inset: calc((var(--_radio-group-control-size) - (var(--ds-size-touch-android) - var(--ds-space-fixed-m))) / 2 - var(--ds-border-width-strong));
+    background-color: currentColor;
+    opacity: 0;
+    transition: opacity var(--ds-duration-celebrate) var(--ds-ease-out);
+  }
+
+  /* The radio's layer keeps the press area of the veil, so it is not clipped: held, it shows whole at once. */
+  [data-platform='android'] [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):active) > [data-part='control']::after {
+    opacity: 0.12;
+    transition: opacity var(--ds-duration-instant) step-start;
   }
 
   /* ------------------------------------------------------------ slider: a 16dp track and a tall thin handle */
@@ -344,13 +523,17 @@
 
   /* ------------------------------------------------------------ fields: a filled field, 56dp, an active indicator under it */
 
+  /* Every Input is 56dp with 16dp sides. With no variant, or variant filled, it is a filled field; variant outlined keeps the box with a 4dp corner. */
   [data-platform='android'] [data-ds='input'] {
     --_input-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
     --_input-padding-inline: var(--ds-space-3xl);
     --_input-font-size: var(--ds-font-size-2xl);
+    --_input-border-color-focus: var(--ds-color-primary-on-surface);
+  }
+
+  [data-platform='android'] [data-ds='input']:not([data-variant='outlined']) {
     --_input-radius: 0;
     --_input-bg: var(--ds-color-bg-surface-3);
-    --_input-border-color-focus: var(--ds-color-primary-on-surface);
 
     border-width: 0;
     border-block-end-width: var(--ds-border-width-default);
@@ -358,8 +541,23 @@
     border-start-end-radius: var(--ds-radius-xs);
   }
 
-  [data-platform='android'] [data-ds='input']:focus-within {
+  [data-platform='android'] [data-ds='input']:not([data-variant='outlined']):focus-within {
     border-block-end-width: var(--ds-border-width-strong);
+  }
+
+  [data-platform='android'] [data-ds='input'][data-variant='outlined'] {
+    --_input-radius: var(--ds-radius-xs);
+    --_input-bg: transparent;
+  }
+
+  [data-platform='android'] [data-ds='input'][data-variant='outlined']:focus-within {
+    border-width: var(--ds-border-width-strong);
+  }
+
+  /* A floating label rests in the 56dp box at its 16dp side, and rises on focus or with a value. */
+  [data-platform='android'] [data-ds='field'][data-floating] {
+    --_field-float-box: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_field-float-inset: var(--ds-space-3xl);
   }
 
   [data-platform='android'] [data-ds='textarea'] {
@@ -511,15 +709,39 @@
     --_menu-item-gap: var(--ds-space-xl);
     --_menu-item-font-size: var(--ds-font-size-xl);
     --_menu-item-font-weight: var(--ds-font-weight-regular);
-    --_menu-enter-scale: var(--ds-scale-window-enter);
+    /* A short scale and fade from the anchor: no drop, no item cascade. */
+    --_menu-enter-scale: var(--ds-scale-menu-enter);
     --_menu-shift: 0px;
     --_menu-item-shift: 0px;
-    --_menu-duration-in: var(--ds-duration-zoom);
+    --_menu-duration-in: var(--ds-duration-moderate);
     --_menu-ease-in: var(--ds-ease-emphasized);
   }
 
   [data-platform='android'] [data-ds='select'][data-part='content'] {
     --_select-item-height: var(--ds-size-touch-android);
+  }
+
+  /*
+   * The lit row is a tonal fill in the primary tint that moves on the
+   * standard curve with no overshoot (the highlight marker). Forced colors
+   * keeps the component's system colors.
+   */
+  @media (forced-colors: none) {
+    [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content']) {
+      --_menu-item-bg-highlight: var(--ds-color-primary-tint);
+      --_menu-highlight-ease: var(--ds-ease-standard);
+      --_select-highlight-ease: var(--ds-ease-standard);
+    }
+
+    [data-platform='android'] [data-ds='list-box'] {
+      --_list-box-option-bg-highlight: var(--ds-color-primary-tint);
+      --_list-box-highlight-ease: var(--ds-ease-standard);
+    }
+
+    [data-platform='android'] [data-ds='command-palette'] {
+      --_command-palette-item-bg-highlight: var(--ds-color-primary-tint);
+      --_command-palette-highlight-ease: var(--ds-ease-standard);
+    }
   }
 
   /* ------------------------------------------------------------ popover and tooltip */
@@ -611,43 +833,46 @@
   [data-platform='android'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-duration-in: var(--ds-duration-window-open);
     --_dialog-ease-in: var(--ds-ease-emphasized);
-    --_dialog-handle-color: transparent;
   }
 
   [data-platform='android'] [data-ds='sheet'] {
     --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
+    --_dialog-handle-radius: var(--ds-radius-pill);
   }
 
   [data-platform='android'] [data-ds='drawer'] {
     --_dialog-radius: var(--ds-radius-card);
   }
 
-  /* The drag handle: 32 by 4, round, 22dp from the top, inside a 48dp target. */
+  /* The drag handle: a 32 by 4 bar (the handle-bar part, round ended), 22dp from the top, inside a 48dp target. */
   [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
-    position: relative;
     inline-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m) * 2);
     block-size: var(--ds-space-fixed-2xs);
     padding-block: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
   }
 
-  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
-    content: '';
-    position: absolute;
-    inset-block-start: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
-    inset-inline: var(--ds-space-xl);
-    block-size: var(--ds-space-fixed-2xs);
-    border-radius: var(--ds-radius-pill);
-    background-color: var(--ds-color-border-strong);
-    pointer-events: none;
-  }
-
   /* ------------------------------------------------------------ toast: a snackbar at the bottom, start aligned, one row with the action at the end. The surface stays the style's: Material's inverse surface is a surface choice, so a style opts in through its recipe. */
 
   :root:not(:has([data-ds='sheet'] > [data-part='panel'][data-state='open'])) [data-platform='android'] [data-ds='toaster'] {
+    --_toaster-dir: -1;
+    --_toaster-align: end;
+    --_toaster-gap: var(--ds-space-s);
+
     flex-direction: column;
     inset-block: auto var(--_toaster-inset-block-end);
     inset-inline: var(--_toaster-inset-inline) auto;
     margin-inline: 0;
+  }
+
+  /*
+   * Snackbars do not overlap: a stacked toaster lays its toasts out as the
+   * expanded list at all times, each at its offset with the gap, unclipped.
+   * The newest sits at the bottom and older ones step up; from the fourth
+   * back they are hidden as before.
+   */
+  [data-platform='android'] [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
+    --_toast-strip: calc(var(--_toast-shadow-room) * -1);
+    --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * var(--_toast-offset)));
   }
 
   [data-platform='android'] [data-ds='toast'] {
@@ -658,6 +883,10 @@
     --_toast-enter-scale: 1;
     --_toast-duration-in: var(--ds-duration-window-open);
     --_toast-ease-in: var(--ds-ease-emphasized);
+    --_toast-stack-ease: var(--ds-ease-emphasized);
+    --_toast-swipe-ease-out: var(--ds-ease-standard);
+    /* No timer line: a snackbar's time is not drawn. */
+    --_toast-progress-thickness: 0px;
 
     grid-template-columns: auto minmax(0, 1fr) auto auto;
     grid-template-areas:
@@ -681,25 +910,31 @@
     font-weight: var(--ds-font-weight-bold);
   }
 
-  /* ------------------------------------------------------------ reduced motion: the ripple shows at once, nothing grows or travels */
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
-    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
-    [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
-    [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
-    [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
-      transform: none;
-      transition: none;
-    }
+  /*
+   * ------------------------------------------------------------ reduced motion: the ripple shows whole at once, nothing grows or travels.
+   * Under the media query the duration tokens are already 0ms, so every
+   * transition above is instant and the circle is whole as soon as it is
+   * pressed. The page's own setting (data-motion="reduce") leaves the tokens
+   * as they are, so these rules drop the circle and the transitions; the
+   * :active selectors match the specificity of the press rules above.
+   */
+  :root[data-motion='reduce'] [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
+  :root[data-motion='reduce'] [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):active::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:active::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='checkbox'] > [data-part='control']:is(:hover, :active)::after {
+    clip-path: none;
+    transition: none;
   }
 
-  :root[data-motion='reduce'] [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
-    transform: none;
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='radio-group'] [data-part='item'] > [data-part='control']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track']::before,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='switch'][data-dragging] > [data-part='control'] > [data-part='track']::before {
     transition: none;
   }
 
@@ -711,17 +946,15 @@
     [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
     [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
     [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
-    [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
+    [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after,
+    [data-platform='android'] [data-ds='radio-group'] [data-part='item'] > [data-part='control']::after,
+    [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track']::before {
       display: none;
     }
 
     /* A filled field has an edge only under it; forced colors gets the whole box back, so the field is still found. */
     [data-platform='android'] :is([data-ds='input'], [data-ds='textarea'], [data-ds='select']:not([data-part])) {
       border-width: var(--ds-border-width-default);
-    }
-
-    [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
-      background-color: CanvasText;
     }
   }
 }
