@@ -21,10 +21,11 @@
 //   node docs/reports/shots/interactions-3/record.cjs <base url> <style> <scheme> [family] [id,id]
 //
 // Drives: `drives/<family>.cjs` may export
-// `{ [id]: { region?, drive?, zoom?, noOverlay? } }`.
+// `{ [id]: { region?, drive?, zoom?, noOverlay?, grow? } }`.
 // `region` is a CSS selector for what the crop must hold. `zoom` fixes the
 // CSS zoom (1 for popper overlays, which misplace under zoom; the crop is
-// then scaled up). `noOverlay` leaves opened overlays out of the region. `drive(api)` plays
+// then scaled up). `noOverlay` leaves opened overlays out of the region.
+// `grow: {inline, block}` widens the region in px toward the end sides. `drive(api)` plays
 // the interaction and calls `api.mark()` at the start of each beat that the
 // sheet should show; without it the default drive approaches, hovers,
 // presses twice and takes the keyboard path. The api:
@@ -227,7 +228,10 @@ async function measure(browser, row, spec) {
   await ctx.close();
   const core = union([regionBox || tBox || stageBox, ...opened]);
   if (!core) return null;
-  const region = pad(core);
+  // `grow: {inline, block}` widens the region toward the inline end and the
+  // block end, for what the drive opens later (a submenu, a second toast).
+  const g = spec.grow || {};
+  const region = pad({ x: core.x, y: core.y, width: core.width + (g.inline || 0), height: core.height + (g.block || 0) });
   const anchor = tBox ? centreOf(tBox) : centreOf(core);
   const c = centreOf(region);
   return { region, offset: { x: c.x - anchor.x, y: c.y - anchor.y }, opened: opened.length };

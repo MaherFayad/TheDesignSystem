@@ -105,6 +105,7 @@ module.exports = {
 
   'menu-submenu-nudge': {
     zoom: 1,
+    grow: { inline: 240, block: 40 },
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
