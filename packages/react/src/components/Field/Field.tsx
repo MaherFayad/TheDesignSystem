@@ -91,7 +91,7 @@ export function Field({
   useEffect(() => {
     const root = rootRef.current;
     // A Field in a Form: the Form glides all of its rows at once.
-    if (!root || root.parentElement?.matches('[data-ds="form"]')) return undefined;
+    if (!root || root.parentElement?.closest('[data-ds="form"]')) return undefined;
     return new FollowGlide().watch(root);
   }, []);
   const base = useId();

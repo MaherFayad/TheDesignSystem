@@ -217,7 +217,7 @@ export class DsField extends DsFieldContext {
     // A Field in a Form: the Form glides all of its rows at once.
     let stopGlide: (() => void) | undefined;
     afterNextRender(() => {
-      if (!root.parentElement?.matches('[data-ds="form"]')) stopGlide = new FollowGlide().watch(root);
+      if (!root.parentElement?.closest('[data-ds="form"]')) stopGlide = new FollowGlide().watch(root);
     });
     inject(DestroyRef).onDestroy(() => {
       unfloat();
