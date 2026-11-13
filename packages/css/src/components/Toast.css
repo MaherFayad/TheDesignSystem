@@ -39,7 +39,7 @@
  *             the one in front of it, shrinks by --_toast-depth a step, and
  *             is clipped to that strip (clip-path), so nothing of it shows
  *             through a glass front toast. From the fourth one back it is
- *             hidden. translate, scale, clip-path and opacity transition on
+ *             hidden. transform (--_toast-stack-transform), clip-path and opacity transition on
  *             --_toast-stack-duration and --_toast-stack-ease (the snappy
  *             spring), so a toast that joins or leaves pushes the others
  *             back or brings them forward.
@@ -89,7 +89,11 @@
  *                            edge, start at the top; set with --_toaster-dir
  *   --_toast-shadow-room     how far past its box a clipped toast keeps its shadow
  *   --_toast-strip           working value: how much of a toast behind is clipped away
- *   --_toast-swipe-duration-now   working value: 0s while the toast follows the finger
+ *   --_toast-swipe-duration-now, -swipe-ease-now   working values: the transition of the
+ *                            transform now: the stack's, 0s while the toast follows the
+ *                            finger, the spring back's after a swipe let go short
+ *   --_toast-stack-transform working value: the toast's place in the stack, composed
+ *                            after the swipe offset in one transform
  *   --_toast-swipe-duration-out, -swipe-ease-out   the swipe exit, apart from the plain exit,
  *                            so a style can fling (a long ease out) or cut (steps)
  *   --_toast-icon-delay      when the icon beat starts after the card; with
@@ -243,7 +247,10 @@
     /* Room for the shadow around a clipped toast, so the clip only ever cuts the strip edge. */
     --_toast-shadow-room: var(--ds-space-3xl);
     /* Working value: how long the spring back of a swipe takes now; 0s while the toast follows the finger. */
-    --_toast-swipe-duration-now: var(--_toast-duration);
+    --_toast-swipe-duration-now: var(--_toast-stack-duration);
+    --_toast-swipe-ease-now: var(--_toast-stack-ease);
+    --_toast-stack-transform: none;
+    --_toast-life: 0s;
     --_toast-swipe-duration-out: var(--_toast-duration-out);
     --_toast-swipe-ease-out: var(--_toast-ease-out);
     --_toast-icon-delay: var(--ds-delay-stagger);
@@ -283,12 +290,12 @@
     /* From its own edge: up from below at the bottom, down from above at the top. */
     --_toast-enter-y: calc(-100% * var(--_toaster-dir));
 
+    /* One transform holds the swipe offset (the Radix variables) and the place in the stack. */
+    transform: translateX(var(--radix-toast-swipe-move-x, 0px)) translateY(var(--radix-toast-swipe-move-y, 0px)) var(--_toast-stack-transform);
     transition:
-      translate var(--_toast-stack-duration) var(--_toast-stack-ease),
-      scale var(--_toast-stack-duration) var(--_toast-stack-ease),
       clip-path var(--_toast-stack-duration) var(--_toast-stack-ease),
       opacity var(--_toast-stack-duration) var(--_toast-stack-ease),
-      transform var(--_toast-swipe-duration-now) var(--_toast-ease);
+      transform var(--_toast-swipe-duration-now) var(--_toast-swipe-ease-now);
   }
 
   [data-ds='toaster'] > [data-ds='toast'][data-state='open'] {
@@ -319,7 +326,7 @@
   @keyframes ds-toast-in {
     from {
       opacity: 0;
-      transform: translateY(var(--_toast-enter-y)) scale(var(--_toast-enter-scale));
+      transform: translateY(var(--_toast-enter-y)) var(--_toast-stack-transform) scale(var(--_toast-enter-scale));
     }
 
     /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
@@ -331,7 +338,7 @@
   @keyframes ds-toast-out {
     to {
       opacity: 0;
-      transform: scale(var(--_toast-enter-scale));
+      transform: var(--_toast-stack-transform) scale(var(--_toast-enter-scale));
     }
   }
 
@@ -347,8 +354,8 @@
   [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
     --_toast-strip: calc((var(--_toast-height) - var(--_toast-peek)) * min(var(--_toast-index), 1));
 
-    translate: 0 calc(var(--_toaster-dir) * (var(--_toast-front-height) + var(--_toast-index) * var(--_toast-peek) - var(--_toast-height)));
-    scale: calc(1 - var(--_toast-index) * var(--_toast-depth));
+    --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * (var(--_toast-front-height) + var(--_toast-index) * var(--_toast-peek) - var(--_toast-height)))) scale(calc(1 - var(--_toast-index) * var(--_toast-depth)));
+
     /* From the fourth toast back, it is hidden. */
     opacity: clamp(0, calc(3 - var(--_toast-index)), 1);
     /* The edge that peeks: the top one when the stack grows up from the bottom, the bottom one from the top. */
@@ -365,8 +372,7 @@
   [data-ds='toaster'][data-stacked][data-expanded] > [data-ds='toast'] {
     --_toast-strip: calc(var(--_toast-shadow-room) * -1);
 
-    translate: 0 calc(var(--_toaster-dir) * var(--_toast-offset));
-    scale: 1;
+    --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * var(--_toast-offset)));
     opacity: 1;
   }
 
@@ -393,19 +399,22 @@
   [data-ds='toast'][data-swipe='move'] {
     --_toast-swipe-duration-now: 0s;
 
-    transform: translateX(var(--radix-toast-swipe-move-x, 0px)) translateY(var(--radix-toast-swipe-move-y, 0px));
+    transform: translateX(var(--radix-toast-swipe-move-x, 0px)) translateY(var(--radix-toast-swipe-move-y, 0px)) var(--_toast-stack-transform);
   }
 
   /* Let go short: back to rest on the snappy spring (the transition of the toast reads --_toast-duration). */
   [data-ds='toast'][data-swipe='cancel'] {
-    transform: none;
+    --_toast-swipe-duration-now: var(--_toast-duration);
+    --_toast-swipe-ease-now: var(--_toast-ease);
+
+    transform: var(--_toast-stack-transform);
   }
 
   /* Let go past the threshold: held where it was let go until the exit takes it on out. */
   [data-ds='toast'][data-swipe='end'] {
     --_toast-swipe-duration-now: 0s;
 
-    transform: translateX(var(--radix-toast-swipe-end-x, 0px)) translateY(var(--radix-toast-swipe-end-y, 0px));
+    transform: translateX(var(--radix-toast-swipe-end-x, 0px)) translateY(var(--radix-toast-swipe-end-y, 0px)) var(--_toast-stack-transform);
   }
 
   [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
@@ -414,12 +423,12 @@
 
   @keyframes ds-toast-swipe-out {
     from {
-      transform: translateX(var(--radix-toast-swipe-end-x, 0px)) translateY(var(--radix-toast-swipe-end-y, 0px));
+      transform: translateX(var(--radix-toast-swipe-end-x, 0px)) translateY(var(--radix-toast-swipe-end-y, 0px)) var(--_toast-stack-transform);
     }
 
     to {
       opacity: 0;
-      transform: translateX(calc(var(--radix-toast-swipe-end-x, 0px) + var(--_toast-swipe-x))) translateY(calc(var(--radix-toast-swipe-end-y, 0px) + var(--_toast-swipe-y)));
+      transform: translateX(calc(var(--radix-toast-swipe-end-x, 0px) + var(--_toast-swipe-x))) translateY(calc(var(--radix-toast-swipe-end-y, 0px) + var(--_toast-swipe-y))) var(--_toast-stack-transform);
     }
   }
 
@@ -438,7 +447,7 @@
     background-color: var(--_toast-progress);
     transform-origin: 0 50%;
     pointer-events: none;
-    animation: ds-toast-progress var(--_toast-life, 0s) linear forwards;
+    animation: ds-toast-progress var(--_toast-life) linear forwards;
   }
 
   [data-ds='toast'] > [data-part='progress']:dir(rtl) {

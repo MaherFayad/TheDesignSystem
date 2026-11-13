@@ -128,7 +128,7 @@
     --_dialog-stagger: var(--ds-delay-stagger);
     --_dialog-part-duration: var(--ds-duration-spring-soft);
     --_dialog-part-ease: var(--ds-ease-spring-soft);
-    --_dialog-refuse-shift: var(--ds-space-s);
+    --_dialog-refuse-shift: var(--ds-space-m);
     --_dialog-stagger-max: var(--ds-duration-base);
     --_dialog-enter-y: var(--ds-distance-enter);
     --_dialog-enter-scale: var(--ds-scale-dialog-enter);
@@ -817,7 +817,6 @@
   @keyframes ds-dialog-backdrop-in {
     from {
       opacity: 0;
-      -webkit-backdrop-filter: blur(0);
       backdrop-filter: blur(0);
     }
 
@@ -829,7 +828,6 @@
   @keyframes ds-dialog-backdrop-out {
     to {
       opacity: 0;
-      -webkit-backdrop-filter: blur(0);
       backdrop-filter: blur(0);
     }
   }

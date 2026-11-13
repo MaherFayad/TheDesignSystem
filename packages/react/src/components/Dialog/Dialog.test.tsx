@@ -745,7 +745,7 @@ describe('motion (order 1.22): Dialog.css', async () => {
     // A part with focus runs in no time; the name stays, so focus leaving never replays the arrival.
     expect(css).toContain("> :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):focus-within {\n    animation-duration: 0s;\n    animation-delay: 0s;");
     expect(css).not.toContain(':not(:focus-within)');
-    expect(css).toContain("> [data-part='footer'] {\n    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 4), var(--_dialog-stagger-max));");
+    expect(css).toContain("> [data-part='footer'] {\n    --_dialog-part-delay: min(calc(var(--_dialog-stagger) * 4), var(--_dialog-stagger-max));");
   });
 
   it('order 1.23: every part reads within 200ms: the last starts by duration.base and fades in over duration.fast', () => {

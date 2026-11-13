@@ -144,10 +144,10 @@ export const overlaysInteractions = [
     drive: 'waapi',
     trigger: 'Press the backdrop of an alert dialog, or of a dialog set to dismissible false; or press Escape on a dialog set to dismissible false.',
     feedback:
-      'The dialog does not close, and says so: the panel nudges along the inline axis, two swings of space.3xs out and back inside duration.roll (the catalog pattern shake, played on the panel through useMotion). No color or light changes, so it is no flash. A second refusal cancels the first nudge and plays again, so a burst of presses never stacks or leaves the panel off its place. State machine: open, refused, open.',
+      'The dialog does not close, and says so: the panel nudges along the inline axis, out by --_dialog-refuse-shift (space.m), back past its place, a smaller swing and rest, inside duration.roll on ease.out (the shape of the catalog pattern shake, played on the panel with the Web Animations API under the style mode of useMotion). No color or light changes, so it is no flash. A second refusal cancels the first nudge and plays again, so a burst of presses never stacks or leaves the panel off its place. State machine: open, refused, open.',
     beats: [
-      'Action: the panel swings space.3xs (4px) toward the inline end, then back past its place, on ease.out.',
-      'Settle: a smaller second swing and rest, all inside duration.roll (300ms).',
+      'Action: the panel swings --_dialog-refuse-shift (space.m) toward the inline end, then back past its place by 0.7 of that, on ease.out.',
+      'Settle: a 0.35 swing and rest, all inside duration.roll (300ms).',
     ],
     styles: {
       studio: 'the same two swings, Studio timing',

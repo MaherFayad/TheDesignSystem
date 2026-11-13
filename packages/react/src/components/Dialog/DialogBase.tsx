@@ -27,7 +27,7 @@
 // with dismissible false, and Escape on a dialog with dismissible false, do
 // not close it. The panel nudges instead: a shake along the inline axis
 // (the catalog pattern "shake" in its shape: out, back past its place, a
-// smaller swing, rest) of --_dialog-refuse-shift (space.s, a panel is large,
+// smaller swing, rest) of --_dialog-refuse-shift (space.m, a panel is large,
 // so the catalog's space.3xs would not read) inside duration.roll on
 // ease.out, no change of light, played with the Web Animations API. The
 // style's mode for "dialog-refuse" (useMotion) applies: none or reduced

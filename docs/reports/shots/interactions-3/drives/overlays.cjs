@@ -48,6 +48,14 @@ async function away(a) {
 
 const TOAST_REGION = { region: '[data-toast-stage]', noOverlay: true };
 
+/**
+ * The whole frame at zoom 1. The recorder draws the page larger with CSS
+ * zoom on the root, and Radix (floating ui) places popovers, tooltips and the
+ * tour ring in the wrong spot under that zoom; a fixed sheet at the bottom
+ * edge also falls outside a measured crop. These record at 1x, unzoomed.
+ */
+const WHOLE = { region: 'body', noOverlay: true };
+
 module.exports = {
   // The default path, with the toaster on the dock: press, wait, press again.
   'toast-enter': {
@@ -179,8 +187,35 @@ module.exports = {
     },
   },
 
+  'popover-spring': { ...WHOLE },
+  'sheet-spring': { ...WHOLE },
+  'lightbox-zoom': { ...WHOLE },
+  // The window lives in the stage's window layer, under the buttons.
+  'window-settle': { region: '[data-interaction-stage]', noOverlay: true },
+  // The list under the buttons is what changes.
+  'notification-change': { region: '[data-interaction-stage]', noOverlay: true },
+
+  // Rest on the trigger past the open delay, leave, then the focus path and Escape.
+  'tooltip-rise': {
+    ...WHOLE,
+    drive: async (a) => {
+      await a.hover(a.at, 8);
+      a.mark();
+      await a.wait(1300);
+      a.mark();
+      await away(a);
+      await a.wait(700);
+      a.mark();
+      await a.loc.focus();
+      await a.wait(900);
+      await a.key('Escape');
+      await a.wait(500);
+    },
+  },
+
   // The pointer runs along the toolbar: one tooltip seems to follow it.
   'tooltip-follow': {
+    ...WHOLE,
     drive: async (a) => {
       const page = a.page;
       const stage = page.locator('[data-interaction-stage] [data-ds="icon-button"]');
@@ -191,7 +226,7 @@ module.exports = {
       if (!first) return;
       await a.hover({ x: first.x + first.width / 2, y: first.y + first.height / 2 }, 10);
       a.mark();
-      await a.wait(1000);
+      await a.wait(1300);
       for (const b of boxes.slice(1)) {
         if (!b) continue;
         a.mark();
@@ -205,6 +240,7 @@ module.exports = {
 
   // The tour starts, then Next twice: the ring travels and the panel follows.
   'tour-spotlight': {
+    ...WHOLE,
     drive: async (a) => {
       await a.press(a.at, 100);
       await a.wait(900);
