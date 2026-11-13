@@ -219,13 +219,14 @@ export function ButtonRoot({
   const sh = shape ?? group?.shape ?? 'default';
   const groupEmphasis = group?.emphasis && !(iconOnly && (group.emphasis as string) === 'link') ? group.emphasis : undefined;
   const em = emphasis ?? groupEmphasis ?? defaultEmphasis;
-  // The glow that follows the pointer on a solid fill (interaction
-  // button-glow, order 1.23): the pointer's place as a share of the box, so
+  // The glow that follows the pointer (interaction button-glow, order 1.23;
+  // drawn on solid fills, and on others where a style turns it on): the
+  // pointer's place as a share of the box, so
   // it holds at any zoom. A custom property on the element, not React state:
   // no render per move. A touch sets it on pointer down, so the press lights
   // up under the finger. Button.css decides whether the glow shows.
   const placeGlow = (event: PointerEvent<HTMLButtonElement>) => {
-    if (em !== 'solid') return;
+    if (em === 'link') return;
     const el = event.currentTarget;
     const box = el.getBoundingClientRect();
     if (!(box.width > 0 && box.height > 0)) return;

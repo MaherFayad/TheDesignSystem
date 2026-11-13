@@ -1,6 +1,6 @@
 export { Toast, toastIcons, toastLabels, type ToastAction, type ToastProps, type ToastTone } from './Toast';
 export { isInsideToaster, TOASTER_LAYER_ATTRIBUTE } from './isInsideToaster';
-export { Toaster, type ToasterPosition, type ToasterProps } from './Toaster';
+export { Toaster, resolveToasterPosition, type ToasterPosition, type ToasterPositionProp, type ToasterProps } from './Toaster';
 export {
   createToastFunction,
   createToastStore,

@@ -314,7 +314,8 @@
     line-height: var(--ds-font-leading-snug);
     text-align: center;
     white-space: nowrap;
-    unicode-bidi: isolate;
+    /* As the value output's bdi: the first strong letter sets the order, so 206% and 2,070 SAR read as in the output (review B4). */
+    unicode-bidi: plaintext;
     pointer-events: none;
     opacity: 0;
     transform: translateX(calc(-50% * var(--_slider-dir))) translateY(var(--_slider-enter-y)) scale(var(--_slider-enter-scale));

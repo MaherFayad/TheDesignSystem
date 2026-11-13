@@ -158,6 +158,8 @@
     --_menu-clip-to: inset(calc(var(--_menu-clip-room) * -1));
     --_menu-clip-from: var(--_menu-clip-to);
     --_menu-highlight-bg: var(--_menu-item-bg-highlight);
+    /* The rim of the lit row, drawn by the highlight marker (a style sets it, for example a glass lens). */
+    --_menu-item-shadow: 0 0 transparent;
     --_menu-highlight-duration: var(--ds-duration-spring-snappy);
     --_menu-highlight-ease: var(--ds-ease-spring-snappy);
 
@@ -314,6 +316,7 @@
     box-sizing: border-box;
     border-radius: var(--_menu-item-radius);
     background-color: var(--_menu-highlight-bg);
+    box-shadow: var(--_menu-item-shadow);
     opacity: 0;
     pointer-events: none;
     transition:

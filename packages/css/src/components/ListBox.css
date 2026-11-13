@@ -192,6 +192,8 @@
    */
   [data-ds='list-box']:has(> [data-part='highlight']) {
     --_list-box-highlight-bg: var(--_list-box-option-bg-highlight);
+    /* The rim of the lit row, drawn by the highlight marker (a style sets it, for example a glass lens). */
+    --_list-box-option-shadow: 0 0 transparent;
     --_list-box-highlight-duration: var(--ds-duration-spring-snappy);
     --_list-box-highlight-ease: var(--ds-ease-spring-snappy);
 
@@ -206,6 +208,7 @@
     box-sizing: border-box;
     border-radius: var(--_list-box-option-radius);
     background-color: var(--_list-box-highlight-bg);
+    box-shadow: var(--_list-box-option-shadow);
     opacity: 0;
     pointer-events: none;
     transition:

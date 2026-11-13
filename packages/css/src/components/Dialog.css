@@ -701,16 +701,11 @@
    */
   :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {
     --_toaster-dir: 1;
+    --_toaster-align: start;
 
     flex-direction: column-reverse;
-    align-items: start;
     inset-block-start: var(--_toaster-inset-block-start);
     inset-block-end: auto;
-  }
-
-  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-stacked][data-position^='bottom'] > [data-ds='toast'] {
-    transform-origin: 50% 100%;
-    clip-path: inset(var(--_toast-strip) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1));
   }
 
   [data-ds='sheet'] > [data-part='panel'][data-state='closed'] {

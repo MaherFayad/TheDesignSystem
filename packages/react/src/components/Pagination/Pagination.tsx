@@ -36,8 +36,9 @@
 // - Under breakpoint.phone the compact form keeps the ends and the current
 //   page and the last page (CSS), with a compact-only ellipsis (data-compact)
 //   between them when pages are hidden, and the summary wraps above.
-import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type ReactElement, type Ref } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type PointerEvent, type ReactElement, type Ref } from 'react';
 import { rollDigits } from '@the-system/motion';
+import { pressOrigin } from '../TabBar/pressOrigin';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
@@ -279,6 +280,7 @@ export function Pagination({
             disabled={disabled}
             tabIndex={disabled && link !== undefined ? 0 : undefined}
             onClick={go(item)}
+            onPointerDown={(event: PointerEvent<HTMLElement>) => pressOrigin(event, 'pagination')}
             asChild={link !== undefined}
             render={(content) => (
               <>

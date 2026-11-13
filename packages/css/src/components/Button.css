@@ -72,10 +72,15 @@
  *   --_button-press-layer                    the shade's opacity now: 0, or 1
  *                                            while pressed
  *   --_button-glow                           the strength of the highlight
- *                                            that follows the pointer on a
- *                                            solid fill (button-glow): 1 on
- *                                            solid, 0 elsewhere; a style sets 0
- *                                            to turn it off
+ *                                            that follows the pointer
+ *                                            (button-glow): 1 on solid, 0 on
+ *                                            the other fills (a style may set 1
+ *                                            on soft); a style sets 0 to turn
+ *                                            it off. Never on link
+ *   --_button-glow-rest                      the highlight's opacity at rest: 0;
+ *                                            a style with a standing sheen (Liquid)
+ *                                            sets it, and hover and press still
+ *                                            raise it
  *   --_button-glow-now                       the highlight's opacity now
  *   --_button-glow-x, -glow-y                where the highlight sits, set from
  *                                            pointermove by ButtonRoot, as a
@@ -113,7 +118,8 @@
  * --_button-shake 0px the shake, --_button-roll 0px the roll, --_button-draw 0
  * the drawing.
  *
- * Two layers (convention 3): ::before is the glow, on solid fills only;
+ * Two layers (convention 3): ::before is the glow (every fill but link,
+ * strength 0 off solid);
  * ::after is the press shade. ::before paints before the parts, so the
  * glow sits under the content and over the fill; ::after paints after
  * them, but it is only an inner shadow along the edge with a clear middle.
@@ -177,7 +183,8 @@
     --_button-press-shade: var(--ds-color-bg-scrim-20);
     --_button-press-layer: 0;
     --_button-glow: 0;
-    --_button-glow-now: 0;
+    --_button-glow-rest: 0;
+    --_button-glow-now: var(--_button-glow-rest);
     --_button-glow-x: 50%;
     --_button-glow-y: 50%;
     --_button-glow-color: color-mix(in srgb, var(--_button-fg) 38%, transparent);
@@ -280,7 +287,7 @@
     transition: opacity calc(var(--_button-duration-out) * var(--_button-motion)) var(--ds-ease-out);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis='solid']::before {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='link'])::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -756,7 +763,7 @@
     }
 
     /* The glow shows while the pointer is over a solid fill, and grows stronger under a press (above). */
-    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis='solid']:hover:not([data-disabled], [data-loading]) {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
       --_button-glow-now: calc(var(--_button-glow) * 0.8);
     }
   }

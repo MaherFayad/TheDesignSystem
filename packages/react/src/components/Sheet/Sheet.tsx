@@ -27,6 +27,10 @@
 // transition off. On release past a quarter of the panel's height, or on a
 // quick flick down, the sheet closes and its exit plays from where it is;
 // otherwise it snaps back. With dismissible false it always snaps back.
+// Order 1.23: a rubber band. Above its open place the panel follows a
+// third of the pointer travel (RUBBER_SHARE), so the sheet gives a little
+// and springs back instead of not moving; with dismissible false, a drag
+// down gives the same third, so a refused close is felt as well.
 import {
   createContext,
   use,
@@ -175,6 +179,9 @@ export function SheetFooter(props: SheetFooterProps) {
 
 // ------------------------------------------------------------------ handle
 
+/** The share of the pointer travel the panel follows past where it may go. */
+export const RUBBER_SHARE = 1 / 3;
+
 interface Drag {
   id: number;
   startY: number;
@@ -225,8 +232,9 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
       onPointerMove={(event) => {
         const d = drag.current;
         if (!d || d.id !== event.pointerId) return;
-        // Down only: the panel never rises above its open place.
-        d.dy = Math.max(0, event.clientY - d.startY);
+        // Down follows the pointer; up, and down on a sheet that will not close, give a third (the rubber band).
+        const raw = event.clientY - d.startY;
+        d.dy = raw < 0 || !dismissible ? raw * RUBBER_SHARE : raw;
         // Speed over the last move only: a slow start and a quick flick still count as a flick.
         d.speed = (event.clientY - d.lastY) / Math.max(1, event.timeStamp - d.lastTime);
         d.lastY = event.clientY;

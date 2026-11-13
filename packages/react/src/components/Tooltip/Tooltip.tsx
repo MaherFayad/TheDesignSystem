@@ -43,6 +43,13 @@
 // tooltip was to its own place, and the last one is hidden at once, so one
 // tooltip seems to move along the toolbar. Only the drawing moves; the
 // tooltip is open and described from its first frame.
+//
+// Touch (order 1.23): Radix opens on hover and focus only, so a finger never
+// sees a hint. A press with pointerType touch that rests for LONG_PRESS_MS
+// in place opens it (a hint for those who hold); it shows while the finger
+// stays and closes as Radix closes it when the finger lifts. Moving the
+// finger more than LONG_PRESS_SLOP px, or lifting it earlier, cancels. The
+// focus path is unchanged.
 import {
   Children,
   cloneElement,
@@ -68,6 +75,11 @@ import { useMotion } from '../../internal/motion';
 
 export type TooltipSide = FloatingSide;
 export type TooltipAlign = FloatingAlign;
+
+/** How long a finger rests on a trigger before its hint opens, in ms. */
+export const LONG_PRESS_MS = 500;
+/** How far a resting finger may drift, in px. */
+export const LONG_PRESS_SLOP = 8;
 
 /** Open delay on hover, in ms. Focus opens at once. */
 export const TOOLTIP_DELAY = 500;
@@ -278,10 +290,41 @@ export function Tooltip({
     children
   );
 
+  // Long press for touch (see the header).
+  const press = useRef<{ timer: ReturnType<typeof setTimeout>; x: number; y: number; id: number } | null>(null);
+  const cancelPress = useCallback(() => {
+    if (press.current) clearTimeout(press.current.timer);
+    press.current = null;
+  }, []);
+  useEffect(() => cancelPress, [cancelPress]);
+
   // Root and Trigger always render, also when disabled, so the trigger is never remounted and keeps focus.
   const tooltip = (
     <RadixTooltip.Root open={shown} onOpenChange={(next) => !disabled && setOpen(next)} delayDuration={delayDuration}>
-      <RadixTooltip.Trigger asChild>{trigger}</RadixTooltip.Trigger>
+      <RadixTooltip.Trigger
+        asChild
+        onPointerDown={(event) => {
+          cancelPress();
+          if (event.pointerType !== 'touch' || disabled) return;
+          press.current = {
+            x: event.clientX,
+            y: event.clientY,
+            id: event.pointerId,
+            timer: setTimeout(() => {
+              press.current = null;
+              setOpen(true);
+            }, LONG_PRESS_MS),
+          };
+        }}
+        onPointerMove={(event) => {
+          const p = press.current;
+          if (p && p.id === event.pointerId && Math.hypot(event.clientX - p.x, event.clientY - p.y) > LONG_PRESS_SLOP) cancelPress();
+        }}
+        onPointerUp={cancelPress}
+        onPointerCancel={cancelPress}
+      >
+        {trigger}
+      </RadixTooltip.Trigger>
       {mounted && !disabled && (
         <ThemedPortal layer="tooltip">
           <RadixTooltip.Content

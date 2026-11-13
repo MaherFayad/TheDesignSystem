@@ -76,6 +76,8 @@
 @layer ds.base {
   [data-ds='command-palette'] {
     --_command-palette-highlight-bg: var(--_command-palette-item-bg-highlight);
+    /* The rim of the lit row, drawn by the highlight marker (a style sets it, for example a glass lens). */
+    --_command-palette-item-shadow: 0 0 transparent;
     --_command-palette-highlight-duration: var(--ds-duration-spring-snappy);
     --_command-palette-highlight-ease: var(--ds-ease-spring-snappy);
     --_command-palette-width: var(--ds-dialog-width-lg);
@@ -279,6 +281,7 @@
     box-sizing: border-box;
     border-radius: var(--_command-palette-item-radius);
     background-color: var(--_command-palette-highlight-bg);
+    box-shadow: var(--_command-palette-item-shadow);
     opacity: 0;
     pointer-events: none;
     transition:

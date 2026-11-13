@@ -235,6 +235,8 @@
     --_menu-clip-to: inset(calc(var(--_menu-clip-room) * -1));
     --_menu-clip-from: var(--_menu-clip-to);
     --_select-highlight-bg: var(--_menu-item-bg-highlight);
+    /* The rim of the lit row, drawn by the highlight marker (a style sets it, for example a glass lens). */
+    --_select-item-shadow: 0 0 transparent;
     --_select-highlight-duration: var(--ds-duration-spring-snappy);
     --_select-highlight-ease: var(--ds-ease-spring-snappy);
     /* The rows: the ListBox option values. */
@@ -350,6 +352,7 @@
     box-sizing: border-box;
     border-radius: var(--_select-item-radius);
     background-color: var(--_select-highlight-bg);
+    box-shadow: var(--_select-item-shadow);
     opacity: 0;
     pointer-events: none;
     transition:

@@ -164,7 +164,7 @@ export const selectionInteractions = [
     feedback:
       'The surface comes out of its trigger side, read from the Radix side and origin: it travels distance.shift from the trigger, grows from scale.menu-enter out of the trigger corner, fades in, and a clip-path opens it from the trigger edge (the top edge for a list below its trigger, the inline start edge for a submenu), on the snappy spring. ' +
       'Then the inside of each menu row (icon, text, shortcut, chevron), the labels and the separators rise distance.shift one delay.stagger step apart, capped at six steps; picker rows play menu-rows. ' +
-      'The row itself, the highlight marker and the focus ring are there from the first frame. Closing is faster and all at once: the clip closes back toward the trigger while it shrinks and fades, and it takes no pointer. ' +
+      'The row itself, the highlight marker and the focus ring are there from the first frame. Closing is faster and all at once: the real content leaves the DOM at once (a press on the trigger reopens at once, review B6) and an inert aria-hidden copy plays the exit: the clip closes back toward the trigger while it shrinks and fades. ' +
       'In right to left layouts the menu grows from the corner at its trigger (the Radix origin is mirrored in DropdownMenu.css). Radix Select has no exit presence: its list leaves at once.',
     beats: [
       'Closed: nothing drawn.',
@@ -219,7 +219,7 @@ export const selectionInteractions = [
     drive: 'css',
     trigger: 'Light a row that opens a submenu with the pointer or the arrow keys, or open its submenu.',
     feedback:
-      'The chevron at the end of the row leans distance.nudge toward its submenu on the bouncy spring, mirrored in right to left layouts, and comes back over duration.quick when the row goes dark. The submenu then opens from that side with menu-origin.',
+      'The chevron at the end of the row leans distance.shift toward its submenu on the bouncy spring, mirrored in right to left layouts, and comes back over duration.quick when the row goes dark. The submenu then opens from that side with menu-origin.',
     beats: [
       'Action: the chevron moves distance.nudge (Neutral 2px, Desk 3px, Studio 1px) toward the submenu on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms passing its place by 25%, Studio 120ms in three steps).',
       'React: the submenu opens from its trigger side, its rows staggered.',
@@ -230,12 +230,12 @@ export const selectionInteractions = [
       desk: 'a bouncy lean toward the submenu',
       neutral: 'a small lean',
     },
-    reduced: 'The chevron stays still.',
+    reduced: 'The chevron stays still: --_menu-nudge and its durations are 0 under reduced motion (review B2, B3).',
     off: {
       "[data-ds='dropdown-menu']": { '--_menu-nudge': '0px' },
       "[data-ds='context-menu']": { '--_menu-nudge': '0px' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {

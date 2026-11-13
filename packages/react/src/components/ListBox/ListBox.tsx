@@ -493,7 +493,7 @@ export function ListBox(props: ListBoxProps) {
 }
 
 /** The marker's colors when the list holds focus itself: the lit fill, and the hover veil. */
-const MARKER_COLORS = { lit: 'var(--_list-box-option-bg-highlight)', hover: 'var(--_list-box-option-bg-hover)' };
+const MARKER_COLORS = { lit: 'var(--_list-box-highlight-bg)', hover: 'var(--_list-box-option-bg-hover)' };
 
 /**
  * The items that match `query`, groups kept, best matches first inside each

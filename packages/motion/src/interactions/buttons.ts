@@ -60,10 +60,10 @@ export const buttonsInteractions = [
     components: ['Button', 'IconButton', 'ToggleButton', 'CopyButton', 'FloatingActionButton'],
     pattern: 'press',
     drive: 'css',
-    trigger: 'The pointer moves over a solid button, or a finger presses it.',
+    trigger: 'The pointer moves over a solid button (or any fill but link where a style sets --_button-glow), or a finger presses it.',
     feedback:
       'A soft round highlight in the fill sits under the pointer and follows it across the face, so the fill reads as a lit surface. ButtonRoot writes the pointer place as a share of the box into two private properties on pointermove and pointerdown; no render runs per move. ' +
-      'It shows at 80% of --_button-glow while the pointer is over the button and fully while it is pressed, so a tap lights up under the finger.',
+      'It shows at 80% of --_button-glow while the pointer is over the button and fully while it is pressed, so a tap lights up under the finger; --_button-glow-rest gives a standing sheen at rest for a style that wants one (Liquid).',
     beats: [
       'Hover: the ::before glow (a radial gradient of the fill text color, mixed thin, one and a half button heights across) fades in over duration.morph on ease.out at the pointer.',
       'Move: the glow centre follows --_button-glow-x and -y at once, frame by frame.',

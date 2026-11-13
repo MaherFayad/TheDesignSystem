@@ -107,6 +107,34 @@ describe('Tooltip', () => {
     }
   });
 
+  it('opens on a touch long press, and a moving or short touch does not open it', () => {
+    vi.useFakeTimers();
+    try {
+      render(
+        <TooltipProvider>
+          <Tooltip content="Copy link">
+            <IconButton icon="link" label="Copy link" />
+          </Tooltip>
+        </TooltipProvider>,
+      );
+      const trigger = screen.getByRole('button', { name: 'Copy link' });
+      fireEvent.pointerDown(trigger, { pointerType: 'touch', pointerId: 1, clientX: 10, clientY: 10 });
+      act(() => vi.advanceTimersByTime(300));
+      fireEvent.pointerUp(trigger, { pointerType: 'touch', pointerId: 1 });
+      act(() => vi.advanceTimersByTime(400));
+      expect(rootEl()).toBeNull();
+      fireEvent.pointerDown(trigger, { pointerType: 'touch', pointerId: 2, clientX: 10, clientY: 10 });
+      fireEvent.pointerMove(trigger, { pointerType: 'touch', pointerId: 2, clientX: 40, clientY: 10 });
+      act(() => vi.advanceTimersByTime(600));
+      expect(rootEl()).toBeNull();
+      fireEvent.pointerDown(trigger, { pointerType: 'touch', pointerId: 3, clientX: 10, clientY: 10 });
+      act(() => vi.advanceTimersByTime(500));
+      expect(rootEl()).not.toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('is controlled through open and onOpenChange', async () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(<Basic open={false} onOpenChange={onOpenChange} />);

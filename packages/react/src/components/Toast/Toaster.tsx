@@ -90,9 +90,23 @@ import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
 export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
 
+/**
+ * The positions a Toaster takes: one of `ToasterPosition`, or `auto`, which
+ * follows the platform axis of the Theme: top-center on ios (a banner from
+ * the top), bottom-end elsewhere (android.css then places the snackbar at
+ * the start). The root carries the resolved value in data-position.
+ */
+export type ToasterPositionProp = ToasterPosition | 'auto';
+
+/** The position `auto` resolves to on a platform. */
+export function resolveToasterPosition(position: ToasterPositionProp, platform: string | undefined): ToasterPosition {
+  if (position !== 'auto') return position;
+  return platform === 'ios' ? 'top-center' : 'bottom-end';
+}
+
 export interface ToasterProps {
-  /** Default bottom-end. */
-  position?: ToasterPosition;
+  /** Default bottom-end. `auto` follows the platform axis (see `ToasterPositionProp`). */
+  position?: ToasterPositionProp;
   /**
    * The name of the notifications region. Default "Notifications" (Arabic
    * under lang ar). `{hotkey}` in it is replaced by the hotkey, for example
@@ -136,8 +150,9 @@ function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): SwipeDirection
 }
 
 /** Mount once near the root, inside the root Theme. Renders the toasts of `toast()`. */
-export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
+export function Toaster({ position: positionProp = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
   const theme = useTheme();
+  const position = resolveToasterPosition(positionProp, theme.platform);
   const words = toastLabelsFor(theme.lang);
   const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
   const [body, setBody] = useState<HTMLElement | null>(null);

@@ -260,9 +260,25 @@
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
   }
 
-  /* With the tint layer, the layer draws the on fill, so the fill can sweep in. */
+  /*
+   * With the tint layer, the layer draws the on fill while it sweeps: the
+   * track keeps its off color (a platform's or a style's --_switch-bg) under
+   * the sweep and takes the on fill only once the sweep ends (step-end);
+   * turning off it takes the off color back at once (step-start) while the
+   * layer retracts over it. Without the layer the track fills at once.
+   */
   [data-ds='switch'] > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
-    background-color: transparent;
+    transition:
+      transform calc(var(--_switch-duration-out) * var(--_switch-motion)) var(--_switch-ease-out),
+      border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
+      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-start;
+  }
+
+  [data-ds='switch'][data-state='checked'] > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    transition:
+      transform calc(var(--_switch-duration-out) * var(--_switch-motion)) var(--_switch-ease-out),
+      border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
+      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-end;
   }
 
   /*
@@ -414,6 +430,13 @@
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
+  }
+
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']:has(> span:not([data-part])) {
+    transition:
+      transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
+      border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
+      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-end;
   }
 
   [data-ds='switch'] > :is([data-part='label'], [data-part='state-text']) {

@@ -488,12 +488,12 @@ describe('Button glow (interaction button-glow, order 1.23)', () => {
     fireEvent.pointerDown(el, { clientX: 150, clientY: 60 });
     expect(el.style.getPropertyValue('--_button-ripple-x')).toBe('50px');
     expect(el.style.getPropertyValue('--_button-ripple-y')).toBe('10px');
-    // The glow stays on solid fills only.
-    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('');
+    // The glow place is written too (a style may light a soft fill); Button.css shows it on solid only by default.
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('25%');
   });
 
-  it('leaves other emphases and inert buttons alone', () => {
-    const { container, rerender } = render(<Button>Save</Button>);
+  it('leaves link buttons and inert buttons alone', () => {
+    const { container, rerender } = render(<Button emphasis="link">Save</Button>);
     const el = root(container);
     rect(el);
     fireEvent.pointerMove(el, { clientX: 150, clientY: 60 });
