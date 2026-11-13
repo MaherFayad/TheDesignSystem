@@ -1,0 +1,119 @@
+{
+ "id": "status-pulse",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  }
+ ],
+ "extra": {
+  "off.status-pulse.desk": {
+   "moving": [
+    "span[status] transform 480 none>scale(var(--ds-scale-anticipate))>scale(var(--ds-scale-pop))>none",
+    "span[dot] boxShadow+opacity+backgroundColor+transform 1400 none>scale(2.5)"
+   ],
+   "held": null
+  },
+  "off.status-pulse.neutral": {
+   "moving": [
+    "span[status] transform 200 none>scale(var(--ds-scale-anticipate))>scale(var(--ds-scale-pop))>none",
+    "span[dot] boxShadow+opacity+backgroundColor+transform 1400 none>scale(2.5)"
+   ],
+   "held": null
+  }
+ }
+}

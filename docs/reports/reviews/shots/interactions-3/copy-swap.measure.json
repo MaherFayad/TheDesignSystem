@@ -1,0 +1,2141 @@
+{
+ "reviewer": "qa-toggles-actions",
+ "id": "copy-swap",
+ "note": "sweep: probe.cjs per style x motion (full, media, attr), light, LTR; anims are document.getAnimations() records with computed timing. Frames: paused and seeked.",
+ "sweep": [
+  {
+   "style": "studio",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 111,
+   "longest": 120,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 18,
+   "nMoving": 10,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 111,
+     "last": 197
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "linear",
+     "first": 111,
+     "last": 197,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 120,
+     "dl": 0,
+     "e": "linear",
+     "first": 111,
+     "last": 233,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "steps(3)",
+       "composite": "auto",
+       "transform": "scale(1)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "steps(3)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 70,
+     "dl": 0,
+     "e": "linear",
+     "first": 111,
+     "last": 180,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 16px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2109,
+     "last": 2212
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 70,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 2109,
+     "last": 2184
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2109,
+     "last": 2184
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 2109,
+     "last": 2184
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2109,
+     "last": 2212
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2109,
+     "last": 2212
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2109,
+     "last": 2212
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2109,
+     "last": 2212
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 70,
+     "dl": 0,
+     "e": "linear",
+     "first": 2109,
+     "last": 2184,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 16px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "studio",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "studio",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 277,
+   "longest": 425,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 18,
+   "nMoving": 10,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 277,
+     "last": 611
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 277,
+     "last": 381
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 277,
+     "last": 381
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 277,
+     "last": 381
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 277,
+     "last": 381
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 277,
+     "last": 381
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 320,
+     "dl": 45,
+     "e": "linear",
+     "first": 277,
+     "last": 646,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 380,
+     "dl": 45,
+     "e": "linear",
+     "first": 277,
+     "last": 721,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177 25%, 1.215 30%, 1.182 35%, 1.115 40%, 1.044 45%, 0.991 50%, 0.961 55%, 0.954 60%, 0.961 65%, 0.976 70%, 0.991 75%, 1.002 80%, 1.009 85%, 1.01 90%, 1.008 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.3)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177 25%, 1.215 30%, 1.182 35%, 1.115 40%, 1.044 45%, 0.991 50%, 0.961 55%, 0.954 60%, 0.961 65%, 0.976 70%, 0.991 75%, 1.002 80%, 1.009 85%, 1.01 90%, 1.008 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 300,
+     "dl": 45,
+     "e": "linear",
+     "first": 277,
+     "last": 630,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 17.7722px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2263,
+     "last": 2596
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 300,
+     "dl": 45,
+     "e": "linear(0 0%, 0.087 5%, 0.2",
+     "first": 2263,
+     "last": 2612
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 45,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2263,
+     "last": 2395
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 300,
+     "dl": 45,
+     "e": "linear(0 0%, 0.087 5%, 0.2",
+     "first": 2263,
+     "last": 2612
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2263,
+     "last": 2379
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2263,
+     "last": 2379
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2263,
+     "last": 2379
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2263,
+     "last": 2379
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 300,
+     "dl": 45,
+     "e": "linear",
+     "first": 2263,
+     "last": 2612,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 17.7722px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "desk",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 107,
+   "longest": 224,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 19,
+   "nMoving": 10,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 107,
+     "last": 114
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 134,
+     "last": 340
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 134,
+     "last": 271
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 134,
+     "last": 271
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 134,
+     "last": 271
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 134,
+     "last": 271
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 134,
+     "last": 271
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 180,
+     "dl": 24,
+     "e": "linear",
+     "first": 134,
+     "last": 370,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 200,
+     "dl": 24,
+     "e": "linear",
+     "first": 134,
+     "last": 387,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.5)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 158,
+     "dl": 24,
+     "e": "linear",
+     "first": 134,
+     "last": 340,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 18px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2119,
+     "last": 2372
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 158,
+     "dl": 24,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 2119,
+     "last": 2372
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 24,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2119,
+     "last": 2304
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 158,
+     "dl": 24,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 2119,
+     "last": 2372
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2119,
+     "last": 2304
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2119,
+     "last": 2304
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2119,
+     "last": 2304
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2119,
+     "last": 2304
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 158,
+     "dl": 24,
+     "e": "linear",
+     "first": 2119,
+     "last": 2372,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 18px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "neutral",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 1,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 155,
+   "longest": 536,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 19,
+   "nMoving": 10,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "button[copy-button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 155,
+     "last": 433
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 181,
+     "last": 521
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 181,
+     "last": 301
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 181,
+     "last": 301
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 181,
+     "last": 301
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 181,
+     "last": 301
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 181,
+     "last": 301
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 320,
+     "dl": 40,
+     "e": "linear",
+     "first": 181,
+     "last": 548,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 496,
+     "dl": 40,
+     "e": "linear",
+     "first": 181,
+     "last": 731,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.883 25%, 0.998 30%, 1.065 35%, 1.093 40%, 1.095 45%, 1.081 50%, 1.06 55%, 1.038 60%, 1.02 65%, 1.006 70%, 0.997 75%, 0.992 80%, 0.991 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.4)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.883 25%, 0.998 30%, 1.065 35%, 1.093 40%, 1.095 45%, 1.081 50%, 1.06 55%, 1.038 60%, 1.02 65%, 1.006 70%, 0.997 75%, 0.992 80%, 0.991 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 296,
+     "dl": 40,
+     "e": "linear",
+     "first": 181,
+     "last": 532,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 18px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2164,
+     "last": 2482
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 296,
+     "dl": 40,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 2164,
+     "last": 2504
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 40,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2164,
+     "last": 2282
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 296,
+     "dl": 40,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 2164,
+     "last": 2504
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2164,
+     "last": 2259
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2164,
+     "last": 2259
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2164,
+     "last": 2259
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2164,
+     "last": 2259
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "opacity+transform",
+     "d": 296,
+     "dl": 40,
+     "e": "linear",
+     "first": 2164,
+     "last": 2504,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(50% + 18px))",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.35,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.35
+      },
+      {
+       "offset": 0.75,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "translateY(0px)",
+       "computedOffset": 0.75
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "liquid",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 1,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy link"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  }
+ ],
+ "frames": {
+  "copy": [
+   {
+    "style": "studio",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause"
+     ]
+    ],
+    "state": {
+     "data-state": "copied",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 100,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 120,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 70,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "desk",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause"
+     ]
+    ],
+    "state": {
+     "data-state": "copied",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 320,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 320,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 380,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 300,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "neutral",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause"
+     ]
+    ],
+    "state": {
+     "data-state": "copied",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 180,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 180,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 200,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 158,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "liquid",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause"
+     ]
+    ],
+    "state": {
+     "data-state": "copied",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 320,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 320,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 496,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 296,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   }
+  ],
+  "ar": [
+   {
+    "style": "studio",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause",
+      "[data-stage-region] [lang=ar] [data-ds=copy-button], [data-stage-region] [dir=rtl] [data-ds=copy-button]"
+     ]
+    ],
+    "state": {
+     "data-state": "idle",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 100,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 120,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 70,
+      "dl": 0,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "desk",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause",
+      "[data-stage-region] [lang=ar] [data-ds=copy-button], [data-stage-region] [dir=rtl] [data-ds=copy-button]"
+     ]
+    ],
+    "state": {
+     "data-state": "idle",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 320,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 320,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 380,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 300,
+      "dl": 45,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "neutral",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause",
+      "[data-stage-region] [lang=ar] [data-ds=copy-button], [data-stage-region] [dir=rtl] [data-ds=copy-button]"
+     ]
+    ],
+    "state": {
+     "data-state": "idle",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 180,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 180,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 200,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 158,
+      "dl": 24,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   },
+   {
+    "style": "liquid",
+    "scheme": "light",
+    "dir": "ltr",
+    "steps": [
+     [
+      "clickpause",
+      "[data-stage-region] [lang=ar] [data-ds=copy-button], [data-stage-region] [dir=rtl] [data-ds=copy-button]"
+     ]
+    ],
+    "state": {
+     "data-state": "idle",
+     "aria-label": "Copy link"
+    },
+    "anims": [
+     {
+      "tgt": "icon",
+      "p": "color",
+      "d": 320,
+      "dl": 0,
+      "e": "cubic-bezier(0, 0, 0.58,",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "clip-path",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "transform",
+      "d": 100,
+      "dl": 0,
+      "e": "cubic-bezier(0.4, 0, 1, ",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-wipe",
+      "d": 320,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "icon",
+      "p": "ds-copy-button-pop",
+      "d": 496,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     },
+     {
+      "tgt": "span",
+      "p": "ds-copy-button-roll",
+      "d": 296,
+      "dl": 40,
+      "e": "linear",
+      "ct": 0
+     }
+    ]
+   }
+  ]
+ }
+}

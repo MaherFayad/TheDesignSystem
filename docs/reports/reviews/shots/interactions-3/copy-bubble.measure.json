@@ -1,0 +1,1152 @@
+{
+ "reviewer": "qa-toggles-actions",
+ "id": "copy-bubble",
+ "note": "sweep: probe.cjs per style x motion (full, media, attr), light, LTR; anims are document.getAnimations() records with computed timing. Frames: paused and seeked.",
+ "sweep": [
+  {
+   "style": "studio",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 96,
+   "longest": 120,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 15,
+   "nMoving": 8,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 96,
+     "last": 213
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 96,
+     "last": 213
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 96,
+     "last": 213
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 96,
+     "last": 213
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "linear",
+     "first": 96,
+     "last": 213,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 120,
+     "dl": 0,
+     "e": "linear",
+     "first": 96,
+     "last": 230,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "steps(3)",
+       "composite": "auto",
+       "transform": "scale(1)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "steps(3)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span[bubble]",
+     "p": "opacity+transform",
+     "d": 70,
+     "dl": 0,
+     "e": "linear",
+     "first": 96,
+     "last": 179,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateX(-50%) translateY(0px) scale(1)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.4,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.4
+      },
+      {
+       "offset": 1,
+       "easing": "steps(2)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "translateX(-50%)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 70,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2086,
+     "last": 2146
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "opacity",
+     "d": 120,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2086,
+     "last": 2199
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2086,
+     "last": 2146
+    }
+   ]
+  },
+  {
+   "style": "studio",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "studio",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 236,
+   "longest": 425,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 15,
+   "nMoving": 8,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 236,
+     "last": 580
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 236,
+     "last": 362
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 236,
+     "last": 362
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 236,
+     "last": 362
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 320,
+     "dl": 45,
+     "e": "linear",
+     "first": 236,
+     "last": 611,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 380,
+     "dl": 45,
+     "e": "linear",
+     "first": 236,
+     "last": 677,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177 25%, 1.215 30%, 1.182 35%, 1.115 40%, 1.044 45%, 0.991 50%, 0.961 55%, 0.954 60%, 0.961 65%, 0.976 70%, 0.991 75%, 1.002 80%, 1.009 85%, 1.01 90%, 1.008 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.3)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177 25%, 1.215 30%, 1.182 35%, 1.115 40%, 1.044 45%, 0.991 50%, 0.961 55%, 0.954 60%, 0.961 65%, 0.976 70%, 0.991 75%, 1.002 80%, 1.009 85%, 1.01 90%, 1.008 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span[bubble]",
+     "p": "opacity+transform",
+     "d": 300,
+     "dl": 45,
+     "e": "linear",
+     "first": 236,
+     "last": 595,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateX(-50%) translateY(12px) scale(0.9)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.4,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.4
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898 25%, 1.014 30%, 1.079 35%, 1.105 40%, 1.103 45%, 1.086 50%, 1.062 55%, 1.038 60%, 1.017 65%, 1.003 70%, 0.994 75%, 0.989 80%, 0.989 85%, 0.99 90%, 0.992 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "translateX(-50%)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2227,
+     "last": 2613
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 300,
+     "dl": 45,
+     "e": "linear(0 0%, 0.087 5%, 0.2",
+     "first": 2227,
+     "last": 2613
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 45,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2227,
+     "last": 2412
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 300,
+     "dl": 45,
+     "e": "linear(0 0%, 0.087 5%, 0.2",
+     "first": 2227,
+     "last": 2613
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2227,
+     "last": 2379
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2227,
+     "last": 2379
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "opacity",
+     "d": 120,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2227,
+     "last": 2412
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "transform",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2227,
+     "last": 2613
+    }
+   ]
+  },
+  {
+   "style": "desk",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 66,
+   "longest": 224,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 16,
+   "nMoving": 8,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 66,
+     "last": 66
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 73,
+     "last": 256
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 73,
+     "last": 194
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 73,
+     "last": 194
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 73,
+     "last": 194
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 180,
+     "dl": 24,
+     "e": "linear",
+     "first": 73,
+     "last": 288,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 200,
+     "dl": 24,
+     "e": "linear",
+     "first": 73,
+     "last": 320,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.5)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span[bubble]",
+     "p": "opacity+transform",
+     "d": 158,
+     "dl": 24,
+     "e": "linear",
+     "first": 73,
+     "last": 256,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateX(-50%) translateY(4px) scale(0.98)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.4,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.4
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "translateX(-50%)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2106,
+     "last": 2272
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 158,
+     "dl": 24,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 2106,
+     "last": 2272
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 24,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2106,
+     "last": 2205
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 158,
+     "dl": 24,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 2106,
+     "last": 2272
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2106,
+     "last": 2205
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2106,
+     "last": 2205
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "opacity",
+     "d": 150,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2106,
+     "last": 2256
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "transform",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2106,
+     "last": 2272
+    }
+   ]
+  },
+  {
+   "style": "neutral",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": 75,
+   "longest": 536,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 16,
+   "nMoving": 8,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "button[copy-button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 75,
+     "last": 362
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 88,
+     "last": 439
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 88,
+     "last": 190
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 88,
+     "last": 190
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 88,
+     "last": 190
+    },
+    {
+     "k": "A",
+     "tgt": "span",
+     "p": "clipPath+opacity",
+     "d": 320,
+     "dl": 40,
+     "e": "linear",
+     "first": 88,
+     "last": 458,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "opacity": "1",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "svg[icon]",
+     "p": "transform",
+     "d": 496,
+     "dl": 40,
+     "e": "linear",
+     "first": 88,
+     "last": 640,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.883 25%, 0.998 30%, 1.065 35%, 1.093 40%, 1.095 45%, 1.081 50%, 1.06 55%, 1.038 60%, 1.02 65%, 1.006 70%, 0.997 75%, 0.992 80%, 0.991 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "scale(0.4)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.883 25%, 0.998 30%, 1.065 35%, 1.093 40%, 1.095 45%, 1.081 50%, 1.06 55%, 1.038 60%, 1.02 65%, 1.006 70%, 0.997 75%, 0.992 80%, 0.991 85%, 0.991 90%, 0.993 95%, 1 100%)",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "A",
+     "tgt": "span[bubble]",
+     "p": "opacity+transform",
+     "d": 296,
+     "dl": 40,
+     "e": "linear",
+     "first": 88,
+     "last": 439,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateX(-50%) translateY(12px) scale(0.92)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.4,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "computedOffset": 0.4
+      },
+      {
+       "offset": 1,
+       "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.615 25%, 0.73 30%, 0.821 35%, 0.889 40%, 0.939 45%, 0.973 50%, 0.994 55%, 1.007 60%, 1.014 65%, 1.016 70%, 1.016 75%, 1.014 80%, 1.012 85%, 1.009 90%, 1.007 95%, 1 100%)",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "translateX(-50%)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[icon]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2090,
+     "last": 2430
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 296,
+     "dl": 40,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 2090,
+     "last": 2439
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 80,
+     "dl": 40,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2090,
+     "last": 2223
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "transform",
+     "d": 296,
+     "dl": 40,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 2090,
+     "last": 2439
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "clip-path",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2090,
+     "last": 2207
+    },
+    {
+     "k": "T",
+     "tgt": "span",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2090,
+     "last": 2207
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "opacity",
+     "d": 150,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 2090,
+     "last": 2240
+    },
+    {
+     "k": "T",
+     "tgt": "span[bubble]",
+     "p": "transform",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 2090,
+     "last": 2430
+    }
+   ]
+  },
+  {
+   "style": "liquid",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": 1,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "finalState": {
+    "data-state": "idle",
+    "aria-label": "Copy command"
+   },
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  }
+ ],
+ "frames": null
+}

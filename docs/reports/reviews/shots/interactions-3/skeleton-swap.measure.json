@@ -1,0 +1,1321 @@
+{
+ "id": "skeleton-swap",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 149,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 149,
+     "l": 286
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 149,
+     "l": 286
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 149,
+     "l": 286
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 149,
+     "l": 286
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 149,
+     "l": 286
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 149,
+     "l": 286
+    }
+   ],
+   "lastFrame": {
+    "t": 1207,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 67,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 67,
+     "l": 173
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 67,
+     "l": 173
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 67,
+     "l": 173
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 67,
+     "l": 173
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 67,
+     "l": 173
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 67,
+     "l": 173
+    }
+   ],
+   "lastFrame": {
+    "t": 1206,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1217,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1208,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 86,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[label]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 86,
+     "l": 438
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 129,
+     "l": 438
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 129,
+     "l": 438
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 129,
+     "l": 438
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 129,
+     "l": 438
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 129,
+     "l": 438
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 129,
+     "l": 438
+    }
+   ],
+   "lastFrame": {
+    "t": 1207,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 132,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[label]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 132,
+     "l": 478
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 189,
+     "l": 511
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 189,
+     "l": 511
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 189,
+     "l": 511
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 189,
+     "l": 511
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 189,
+     "l": 511
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 189,
+     "l": 511
+    }
+   ],
+   "lastFrame": {
+    "t": 1211,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1211,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1213,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 74,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 74,
+     "l": 237
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 74,
+     "l": 237
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 74,
+     "l": 237
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 74,
+     "l": 237
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 74,
+     "l": 237
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 74,
+     "l": 237
+    }
+   ],
+   "lastFrame": {
+    "t": 1209,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 125,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 125,
+     "l": 292
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 125,
+     "l": 292
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 125,
+     "l": 292
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 125,
+     "l": 292
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 125,
+     "l": 292
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 125,
+     "l": 292
+    }
+   ],
+   "lastFrame": {
+    "t": 1215,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1219,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1231,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 78,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "opacity",
+     "t": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 78,
+     "l": 449
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 171,
+     "l": 495
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 171,
+     "l": 495
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 171,
+     "l": 495
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 171,
+     "l": 495
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 171,
+     "l": 495
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 171,
+     "l": 495
+    }
+   ],
+   "lastFrame": {
+    "t": 1214,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 94,
+   "longest": 4200,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "opacity",
+     "t": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 94,
+     "l": 431
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 121,
+     "l": 442
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 121,
+     "l": 442
+    },
+    {
+     "k": "A",
+     "n": "ds-skeleton-shimmer",
+     "t": "span[skeleton]::before",
+     "p": "transform",
+     "d": 1400,
+     "dl": 0,
+     "it": 3,
+     "e": "linear",
+     "f": 121,
+     "l": 442
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 121,
+     "l": 442
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 121,
+     "l": 442
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:skeleton-wipe",
+     "t": "span[skeleton]",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 121,
+     "l": 442
+    }
+   ],
+   "lastFrame": {
+    "t": 1200,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1314,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1276,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  }
+ ],
+ "extra": {
+  "off.skeleton-swap.desk": {
+   "moving": [
+    "span[skeleton] clipPath 320 inset(0px)>inset(0px 0px 0px 100%)",
+    "span[skeleton] clipPath 320 inset(0px)>inset(0px 0px 0px 100%)",
+    "span[skeleton] clipPath 320 inset(0px)>inset(0px 0px 0px 100%)"
+   ],
+   "held": null
+  },
+  "off.skeleton-swap.neutral": {
+   "moving": [
+    "span[skeleton] clipPath 180 inset(0px)>inset(0px 0px 0px 100%)",
+    "span[skeleton] clipPath 180 inset(0px)>inset(0px 0px 0px 100%)",
+    "span[skeleton] clipPath 180 inset(0px)>inset(0px 0px 0px 100%)"
+   ],
+   "held": null
+  },
+  "second.skeleton-swap.studio.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 80,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.studio.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 103,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.desk.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 133,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.desk.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 75,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.neutral.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 99,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.neutral.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 90,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.liquid.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 51,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0.8"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0.8"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.skeleton-swap.liquid.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 52,
+   "longest": 4200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0.8"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0.8"
+   },
+   "active": "button[button]",
+   "anims": [
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400",
+    "span[skeleton]::before transform 1400"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  }
+ }
+}

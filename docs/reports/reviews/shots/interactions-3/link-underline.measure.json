@@ -1,0 +1,348 @@
+{
+ "reviewer": "qa-toggles-actions",
+ "id": "link-underline",
+ "note": "sweep: probe.cjs per style x motion (full, media, attr), light, LTR; anims are document.getAnimations() records with computed timing. Frames: paused and seeked.",
+ "sweep": [
+  {
+   "style": "studio",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 122,
+   "longest": 100,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 1,
+   "nMoving": 0,
+   "anims": [
+    {
+     "k": "A",
+     "tgt": "span[label]::after",
+     "p": "clipPath",
+     "d": 100,
+     "dl": 0,
+     "e": "linear",
+     "first": 122,
+     "last": 221,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "studio",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "studio",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 153,
+   "longest": 320,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 1,
+   "nMoving": 0,
+   "anims": [
+    {
+     "k": "A",
+     "tgt": "span[label]::after",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "e": "linear",
+     "first": 153,
+     "last": 468,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "desk",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 83,
+   "longest": 180,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 2,
+   "nMoving": 0,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "a[link]",
+     "p": "color",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 83,
+     "last": 242
+    },
+    {
+     "k": "A",
+     "tgt": "span[label]::after",
+     "p": "clipPath",
+     "d": 180,
+     "dl": 0,
+     "e": "linear",
+     "first": 83,
+     "last": 242,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "neutral",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 104,
+   "longest": 320,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 2,
+   "nMoving": 0,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "a[link]",
+     "p": "color",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 104,
+     "last": 419
+    },
+    {
+     "k": "A",
+     "tgt": "span[label]::after",
+     "p": "clipPath",
+     "d": 320,
+     "dl": 0,
+     "e": "linear",
+     "first": 104,
+     "last": 419,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px 100% 0px 0px)",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "composite": "auto",
+       "clipPath": "inset(0px)",
+       "computedOffset": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "style": "liquid",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  }
+ ],
+ "frames": null
+}

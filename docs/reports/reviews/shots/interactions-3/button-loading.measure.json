@@ -1,0 +1,1096 @@
+{
+ "reviewer": "qa-toggles-actions",
+ "id": "button-loading",
+ "note": "sweep: probe.cjs per style x motion (full, media, attr), light, LTR; anims are document.getAnimations() records with computed timing. Frames: paused and seeked.",
+ "sweep": [
+  {
+   "style": "studio",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 109,
+   "longest": 800,
+   "badProps": [],
+   "infinite": [
+    "span[spinner] ds-button-spin",
+    "span[spinner] ds-button-spin"
+   ],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 10,
+   "nMoving": 7,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 109,
+     "last": 192
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 109,
+     "last": 1472,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 109,
+     "last": 207,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 120,
+     "dl": 0,
+     "e": "steps(3)",
+     "first": 109,
+     "last": 230,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "button[button]",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 109,
+     "last": 192,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.3,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))",
+       "computedOffset": 0.3
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "button[button]::before",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 1508,
+     "last": 1606
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 1508,
+     "last": 1623,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 1508,
+     "last": 1606,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "steps(2)",
+     "first": 1508,
+     "last": 1606,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 1639,
+     "last": 1709
+    }
+   ]
+  },
+  {
+   "style": "studio",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "studio",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 76,
+   "longest": 800,
+   "badProps": [],
+   "infinite": [
+    "span[spinner] ds-button-spin",
+    "span[spinner] ds-button-spin"
+   ],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 10,
+   "nMoving": 7,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 76,
+     "last": 138
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 76,
+     "last": 1453,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 76,
+     "last": 171,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 380,
+     "dl": 45,
+     "e": "linear(0 0%, 0.142 5%, 0.4",
+     "first": 76,
+     "last": 491,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "button[button]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "e": "linear(0 0%, 0.087 5%, 0.2",
+     "first": 76,
+     "last": 374,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.3,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))",
+       "computedOffset": 0.3
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "button[button]::before",
+     "p": "opacity",
+     "d": 320,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 1472,
+     "last": 1809
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 1472,
+     "last": 1619,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 1472,
+     "last": 1618,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 340,
+     "dl": 45,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 1472,
+     "last": 1619,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 1636,
+     "last": 1703
+    }
+   ]
+  },
+  {
+   "style": "desk",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "desk",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 61,
+   "longest": 800,
+   "badProps": [],
+   "infinite": [
+    "span[spinner] ds-button-spin",
+    "span[spinner] ds-button-spin"
+   ],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 10,
+   "nMoving": 7,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 61,
+     "last": 137
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 61,
+     "last": 1437,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 61,
+     "last": 147,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 200,
+     "dl": 24,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 61,
+     "last": 277,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "button[button]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 61,
+     "last": 211,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.3,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))",
+       "computedOffset": 0.3
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "button[button]::before",
+     "p": "opacity",
+     "d": 180,
+     "dl": 0,
+     "e": "cubic-bezier(0, 0, 0.58, 1",
+     "first": 1471,
+     "last": 1647
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 1471,
+     "last": 1597,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 1471,
+     "last": 1582,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 200,
+     "dl": 24,
+     "e": "linear(0 0%, 0.056 5%, 0.1",
+     "first": 1471,
+     "last": 1597,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 1610,
+     "last": 1677
+    }
+   ]
+  },
+  {
+   "style": "neutral",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "neutral",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "full",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": 47,
+   "longest": 800,
+   "badProps": [],
+   "infinite": [
+    "span[spinner] ds-button-spin",
+    "span[spinner] ds-button-spin"
+   ],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 10,
+   "nMoving": 7,
+   "anims": [
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 47,
+     "last": 120
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 47,
+     "last": 1435,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 47,
+     "last": 137,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 496,
+     "dl": 40,
+     "e": "linear(0 0%, 0.086 5%, 0.2",
+     "first": 47,
+     "last": 588,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "button[button]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 47,
+     "last": 337,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 0.3,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))",
+       "computedOffset": 0.3
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "e": "linear(0 0%, 0.054 5%, 0.1",
+     "first": 1498,
+     "last": 1847
+    },
+    {
+     "k": "A",
+     "tgt": "span[spinner]",
+     "p": "transform",
+     "d": 800,
+     "dl": 0,
+     "e": "linear",
+     "first": 1498,
+     "last": 1707,
+     "kf": [
+      {
+       "offset": 0,
+       "easing": "linear",
+       "composite": "replace",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "offset": 1,
+       "easing": "linear",
+       "composite": "auto",
+       "transform": "rotate(360deg)",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[spinner]",
+     "p": "opacity+transform",
+     "d": 100,
+     "dl": 0,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "first": 1498,
+     "last": 1619,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "m",
+     "tgt": "span[label]",
+     "p": "opacity+transform",
+     "d": 375,
+     "dl": 40,
+     "e": "linear(0 0%, 0.055 5%, 0.1",
+     "first": 1498,
+     "last": 1707,
+     "kf": [
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))",
+       "computedOffset": 0
+      },
+      {
+       "easing": "linear",
+       "composite": "auto",
+       "opacity": "1",
+       "transform": "none",
+       "computedOffset": 1
+      }
+     ]
+    },
+    {
+     "k": "T",
+     "tgt": "span[label]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "e": "cubic-bezier(0.25, 0.1, 0.",
+     "first": 1754,
+     "last": 1799
+    }
+   ]
+  },
+  {
+   "style": "liquid",
+   "motion": "media",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  },
+  {
+   "style": "liquid",
+   "motion": "attr",
+   "dir": "ltr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "layoutBefore": [],
+   "layoutAfter": [],
+   "before": {},
+   "finalState": {},
+   "nAnims": 0,
+   "nMoving": 0,
+   "anims": []
+  }
+ ],
+ "frames": null
+}

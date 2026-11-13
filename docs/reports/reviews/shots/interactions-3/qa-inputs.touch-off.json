@@ -1,0 +1,935 @@
+{
+ "off|focus-glow|neutral": {
+  "timedMoves": [],
+  "nonClipMoves": []
+ },
+ "off|field-label-focus|neutral": {
+  "timedMoves": [
+   "div[input]::before transform 200ms"
+  ],
+  "nonClipMoves": [
+   "div[input]::before transform 200 [{\"offset\":0,\"transform\":\"scale(0.98)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|otp-caret|neutral": {
+  "timedMoves": [
+   "span[cell]::before transform 200ms",
+   "span[cell]::before transform 56.5ms",
+   "span[cell]::before transform 200ms",
+   "span ds-motion:otp-fill 200ms"
+  ],
+  "nonClipMoves": [
+   "span[cell]::before transform 200 [{\"offset\":0,\"transform\":\"scale(0.98)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span[cell]::before transform 56.5 [{\"offset\":0,\"transform\":\"scale(0.991295)\"},{\"offset\":1,\"transform\":\"scale(0.98)\"}]",
+   "span[cell]::before transform 200 [{\"offset\":0,\"transform\":\"scale(0.98)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:otp-fill 200 [{\"offset\":0,\"opacity\":\"0\",\"transform\":\"scale(var(--ds-scale-morph, 0.5))\"},{\"offset\":0.3,\"opacity\":\"1\"},{\"offset\":1,\"opacity\":\"1\",\"transform\":\"none\"}]"
+  ]
+ },
+ "off|scrub-roll|neutral": {
+  "timedMoves": [
+   "div[scrub-input]::before transform 200ms",
+   "span ds-motion:digit-roll 158ms",
+   "span ds-motion:digit-roll-out 158ms"
+  ],
+  "nonClipMoves": [
+   "div[scrub-input]::before transform 200 [{\"offset\":0,\"transform\":\"scale(0.98)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll 158 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 158 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]"
+  ]
+ },
+ "off|rating-preview|neutral": {
+  "timedMoves": [
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 200ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 200ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 200ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 200ms"
+  ],
+  "nonClipMoves": [
+   "svg[icon] ds-rating-preview 200 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 200 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 200 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 200 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|slider-pull|neutral": {
+  "timedMoves": [
+   "span transform 200ms",
+   "span transform 100ms"
+  ],
+  "nonClipMoves": [
+   "span transform 200 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(10px) scale(0.5)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span transform 100 [{\"offset\":0,\"transform\":\"translateX(-50%)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(10px) scale(0.5)\"}]"
+  ]
+ },
+ "off|slider-nudge|neutral": {
+  "timedMoves": [
+   "span[track]::before ds-motion:slider-fill 158ms",
+   "span[track]::before ds-motion:slider-fill 200ms"
+  ],
+  "nonClipMoves": []
+ },
+ "off|slider-rubber-band|neutral": {
+  "timedMoves": [
+   "span[thumb] transform 158ms",
+   "span transform 200ms",
+   "span[track]::before ds-motion:slider-fill 158ms",
+   "span ds-motion:digit-roll 158ms",
+   "span ds-motion:digit-roll-out 158ms",
+   "span ds-motion:digit-roll 158ms",
+   "span ds-motion:digit-roll-out 158ms",
+   "span ds-motion:digit-roll 158ms",
+   "span ds-motion:digit-roll-out 158ms",
+   "span ds-motion:digit-roll 158ms",
+   "span[thumb] transform 200ms",
+   "span transform 100ms"
+  ],
+  "nonClipMoves": [
+   "span[thumb] transform 158 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1.15) scaleX(1)\"}]",
+   "span transform 200 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(10px) scale(0.5)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span ds-motion:digit-roll 158 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 158 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]",
+   "span ds-motion:digit-roll 158 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 158 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]",
+   "span ds-motion:digit-roll 158 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 158 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]",
+   "span ds-motion:digit-roll 158 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span[thumb] transform 200 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1.15) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"}]",
+   "span transform 100 [{\"offset\":0,\"transform\":\"translateX(-50%)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(10px) scale(0.5)\"}]"
+  ]
+ },
+ "off|focus-glow|desk": {
+  "timedMoves": [],
+  "nonClipMoves": []
+ },
+ "off|field-label-focus|desk": {
+  "timedMoves": [
+   "div[input]::before transform 340ms"
+  ],
+  "nonClipMoves": [
+   "div[input]::before transform 340 [{\"offset\":0,\"transform\":\"scale(0.9)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|otp-caret|desk": {
+  "timedMoves": [
+   "span[cell]::before transform 340ms",
+   "span ds-motion:otp-fill 380ms"
+  ],
+  "nonClipMoves": [
+   "span[cell]::before transform 340 [{\"offset\":0,\"transform\":\"scale(0.9)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:otp-fill 380 [{\"offset\":0,\"opacity\":\"0\",\"transform\":\"scale(var(--ds-scale-morph, 0.5))\"},{\"offset\":0.3,\"opacity\":\"1\"},{\"offset\":1,\"opacity\":\"1\",\"transform\":\"none\"}]"
+  ]
+ },
+ "off|scrub-roll|desk": {
+  "timedMoves": [
+   "div[scrub-input]::before transform 340ms",
+   "span ds-motion:digit-roll 300ms",
+   "span ds-motion:digit-roll-out 300ms"
+  ],
+  "nonClipMoves": [
+   "div[scrub-input]::before transform 340 [{\"offset\":0,\"transform\":\"scale(0.9)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll 300 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 300 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]"
+  ]
+ },
+ "off|rating-preview|desk": {
+  "timedMoves": [
+   "svg[fill] clip-path 120ms",
+   "svg[icon] ds-rating-preview 380ms",
+   "svg[fill] clip-path 120ms",
+   "svg[icon] ds-rating-preview 380ms",
+   "svg[fill] clip-path 120ms",
+   "svg[icon] ds-rating-preview 380ms",
+   "svg[fill] clip-path 120ms",
+   "svg[icon] ds-rating-preview 380ms"
+  ],
+  "nonClipMoves": [
+   "svg[icon] ds-rating-preview 380 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 380 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 380 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 380 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|slider-pull|desk": {
+  "timedMoves": [
+   "span transform 380ms",
+   "span transform 100ms"
+  ],
+  "nonClipMoves": [
+   "span transform 380 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(30px) scale(0.3)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span transform 100 [{\"offset\":0,\"transform\":\"translateX(-50%)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(30px) scale(0.3)\"}]"
+  ]
+ },
+ "off|slider-nudge|desk": {
+  "timedMoves": [
+   "span[track]::before ds-motion:slider-fill 300ms",
+   "span[track]::before ds-motion:slider-fill 380ms"
+  ],
+  "nonClipMoves": []
+ },
+ "off|slider-rubber-band|desk": {
+  "timedMoves": [
+   "span[thumb] transform 300ms",
+   "span transform 380ms",
+   "span[track]::before ds-motion:slider-fill 300ms",
+   "span ds-motion:digit-roll 300ms",
+   "span ds-motion:digit-roll-out 300ms",
+   "span[thumb] transform 380ms",
+   "span transform 100ms"
+  ],
+  "nonClipMoves": [
+   "span[thumb] transform 300 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1.3) scaleX(1)\"}]",
+   "span transform 380 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(30px) scale(0.3)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span ds-motion:digit-roll 300 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 300 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]",
+   "span[thumb] transform 380 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1.3) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"}]",
+   "span transform 100 [{\"offset\":0,\"transform\":\"translateX(-50%)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(30px) scale(0.3)\"}]"
+  ]
+ },
+ "off|focus-glow|liquid": {
+  "timedMoves": [],
+  "nonClipMoves": []
+ },
+ "off|field-label-focus|liquid": {
+  "timedMoves": [
+   "div[input]::before transform 375ms"
+  ],
+  "nonClipMoves": [
+   "div[input]::before transform 375 [{\"offset\":0,\"transform\":\"scale(0.92)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|otp-caret|liquid": {
+  "timedMoves": [
+   "span[cell]::before transform 375ms",
+   "span[cell]::before transform 375ms",
+   "span ds-motion:otp-fill 496ms"
+  ],
+  "nonClipMoves": [
+   "span[cell]::before transform 375 [{\"offset\":0,\"transform\":\"scale(0.92)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span[cell]::before transform 375 [{\"offset\":0,\"transform\":\"scale(0.92)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:otp-fill 496 [{\"offset\":0,\"opacity\":\"0\",\"transform\":\"scale(var(--ds-scale-morph, 0.5))\"},{\"offset\":0.3,\"opacity\":\"1\"},{\"offset\":1,\"opacity\":\"1\",\"transform\":\"none\"}]"
+  ]
+ },
+ "off|scrub-roll|liquid": {
+  "timedMoves": [
+   "div[scrub-input]::before transform 375ms",
+   "span ds-motion:digit-roll 296ms",
+   "span ds-motion:digit-roll-out 296ms"
+  ],
+  "nonClipMoves": [
+   "div[scrub-input]::before transform 375 [{\"offset\":0,\"transform\":\"scale(0.92)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll 296 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 296 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]"
+  ]
+ },
+ "off|rating-preview|liquid": {
+  "timedMoves": [
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 496ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 496ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 496ms",
+   "svg[fill] clip-path 150ms",
+   "svg[icon] ds-rating-preview 496ms"
+  ],
+  "nonClipMoves": [
+   "svg[icon] ds-rating-preview 496 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 496 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 496 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]",
+   "svg[icon] ds-rating-preview 496 [{\"offset\":0,\"transform\":\"scale(1)\"},{\"offset\":1,\"transform\":\"none\"}]"
+  ]
+ },
+ "off|slider-pull|liquid": {
+  "timedMoves": [
+   "span transform 496ms",
+   "span transform 99.3ms"
+  ],
+  "nonClipMoves": [
+   "span transform 496 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(30px) scale(0.4)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span transform 99.3 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(0.221175px) scale(0.995577)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(30px) scale(0.4)\"}]"
+  ]
+ },
+ "off|slider-nudge|liquid": {
+  "timedMoves": [
+   "span[track]::before ds-motion:slider-fill 296ms",
+   "span[track]::before ds-motion:slider-fill 496ms"
+  ],
+  "nonClipMoves": []
+ },
+ "off|slider-rubber-band|liquid": {
+  "timedMoves": [
+   "span[thumb] transform 496ms",
+   "span transform 496ms",
+   "span[track]::before ds-motion:slider-fill 296ms",
+   "span ds-motion:digit-roll 296ms",
+   "span ds-motion:digit-roll-out 296ms",
+   "span[thumb] transform 496ms",
+   "span transform 100ms"
+  ],
+  "nonClipMoves": [
+   "span[thumb] transform 496 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1.28) scaleX(1)\"}]",
+   "span transform 496 [{\"offset\":0,\"transform\":\"translateX(-50%) translateY(30px) scale(0.4)\"},{\"offset\":1,\"transform\":\"translateX(-50%)\"}]",
+   "span ds-motion:digit-roll 296 [{\"opacity\":\"0\",\"transform\":\"translateY(100%)\"},{\"opacity\":\"1\",\"transform\":\"none\"}]",
+   "span ds-motion:digit-roll-out 296 [{\"opacity\":\"1\",\"transform\":\"none\"},{\"opacity\":\"0\",\"transform\":\"translateY(-100%)\"}]",
+   "span[thumb] transform 496 [{\"offset\":0,\"transform\":\"translateX(0px) scale(1.29016) scaleX(1)\"},{\"offset\":1,\"transform\":\"translateX(0px) scale(1) scaleX(1)\"}]",
+   "span transform 100 [{\"offset\":0,\"transform\":\"translateX(-50%)\"},{\"offset\":1,\"transform\":\"translateX(-50%) translateY(30px) scale(0.4)\"}]"
+  ]
+ },
+ "touch|password-reveal|studio": {
+  "anims": [
+   "span ds-motion:password-reveal-out 100",
+   "svg[icon] ds-motion:password-reveal-in 100",
+   "input[control]#_r_0_ ds-motion:fade 120"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 120
+ },
+ "touch|consent-check|studio": {
+  "anims": [
+   "span[indicator] transform 70",
+   "span[indicator] border-bottom-color 50",
+   "span[indicator] border-left-color 50",
+   "span[indicator] border-right-color 50",
+   "span[indicator] border-top-color 50",
+   "span clip-path 50",
+   "path stroke-dashoffset 40",
+   "path stroke-dashoffset 60",
+   "span[indicator] transform 120"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 125
+ },
+ "touch|rating-fill|studio": {
+  "anims": [
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 120",
+   "svg[icon] ds-rating-preview 120",
+   "svg[icon] ds-motion:rating-fill 120",
+   "svg[icon] ds-motion:rating-fill 120"
+  ],
+  "stateAt": 0,
+  "after": "false",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 120
+ },
+ "touch|rating-preview|studio": {
+  "anims": [
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 120",
+   "svg[icon] ds-rating-preview 120",
+   "svg[icon] ds-motion:rating-fill 120",
+   "svg[icon] ds-motion:rating-fill 120",
+   "svg[icon] ds-motion:rating-fill 120"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 120
+ },
+ "touch|otp-fill|studio": {
+  "anims": [
+   "span[cell] border-bottom-color 120",
+   "span[cell] border-left-color 120",
+   "span[cell] border-right-color 120",
+   "span[cell] border-top-color 120",
+   "span[cell]::before box-shadow 100",
+   "span[cell]::before opacity 100",
+   "span[cell]::before transform 100",
+   "span[cell]::after opacity 70",
+   "span[cell]::after transform 70",
+   "span[cell] border-bottom-color 120",
+   "span[cell] border-left-color 120",
+   "span[cell] border-right-color 120",
+   "span[cell] border-top-color 120",
+   "span[cell]::before box-shadow 100",
+   "span[cell]::before opacity 100",
+   "span[cell]::before transform 100",
+   "span ds-motion:otp-fill 120",
+   "span ds-motion:otp-fill 120",
+   "span ds-motion:otp-fill 120",
+   "span ds-motion:otp-fill 120",
+   "span ds-motion:otp-fill 120",
+   "span ds-motion:otp-fill 120"
+  ],
+  "stateAt": 0,
+  "after": "482913",
+  "sticky": null,
+  "longest": 120
+ },
+ "touch|search-clear|studio": {
+  "anims": [
+   "div[search-field] border-bottom-color 120",
+   "div[search-field] border-left-color 120",
+   "div[search-field] border-right-color 120",
+   "div[search-field] border-top-color 120",
+   "div[search-field]::before box-shadow 100",
+   "div[search-field]::before opacity 100",
+   "div[search-field]::before transform 100",
+   "div[control]::before opacity 100",
+   "div[control]::before transform 100",
+   "button[icon-button] ds-motion:search-clear-out 100"
+  ],
+  "stateAt": 0,
+  "after": "",
+  "sticky": null,
+  "longest": 120
+ },
+ "touch|field-step|studio": {
+  "anims": [
+   "div[number-field] border-bottom-color 120",
+   "div[number-field] border-left-color 120",
+   "div[number-field] border-right-color 120",
+   "div[number-field] border-top-color 120",
+   "div[number-field]::before box-shadow 100",
+   "div[number-field]::before opacity 100",
+   "div[number-field]::before transform 100",
+   "button[increment]#react-aria3235426633-_r_a_::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:digit-roll 120",
+   "button[increment]#react-aria3235426633-_r_a_::after opacity 120",
+   "span[icon] transform 70"
+  ],
+  "stateAt": 0,
+  "after": "99",
+  "sticky": null,
+  "longest": 120
+ },
+ "touch|slider-bubble|studio": {
+  "dragging": true,
+  "thumbT": "matrix(1, 0, 0, 1, 0, 0)",
+  "bubbleOpacity": "1",
+  "bubbleText": "194%",
+  "bubbleAboveThumb": true,
+  "bubbleTop": 341.9375,
+  "value": "194"
+ },
+ "touch|password-reveal|desk": {
+  "anims": [
+   "button[toggle] transform 70",
+   "button[toggle]::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:password-reveal-out 320",
+   "svg[icon] ds-motion:password-reveal-in 320",
+   "input[control]#_r_0_ ds-motion:fade 120",
+   "button[toggle] transform 380",
+   "button[toggle]::after opacity 380",
+   "span[icon] transform 300"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 380
+ },
+ "touch|consent-check|desk": {
+  "anims": [
+   "span[indicator] transform 70",
+   "span[indicator] border-bottom-color 160",
+   "span[indicator] border-left-color 160",
+   "span[indicator] border-right-color 160",
+   "span[indicator] border-top-color 160",
+   "span clip-path 160",
+   "path stroke-dashoffset 128",
+   "path stroke-dashoffset 192",
+   "svg[mark] ds-motion:consent-check 380",
+   "span[indicator] transform 380"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 400
+ },
+ "touch|rating-fill|desk": {
+  "anims": [
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 120",
+   "svg[icon] ds-rating-preview 380",
+   "svg[icon] ds-motion:rating-fill 380",
+   "svg[icon] ds-motion:rating-fill 380",
+   "svg[icon] ds-motion:rating-fill 300",
+   "svg[icon] ds-motion:rating-fill 380"
+  ],
+  "stateAt": 0,
+  "after": "false",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 515
+ },
+ "touch|rating-preview|desk": {
+  "anims": [
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "svg[fill] clip-path 120",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 120",
+   "svg[icon] ds-rating-preview 380",
+   "svg[icon] ds-motion:rating-fill 380",
+   "svg[icon] ds-motion:rating-fill 300",
+   "svg[icon] ds-motion:rating-fill 300",
+   "svg[icon] ds-motion:rating-fill 380"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 515
+ },
+ "touch|otp-fill|desk": {
+  "anims": [
+   "span[cell] border-bottom-color 120",
+   "span[cell] border-left-color 120",
+   "span[cell] border-right-color 120",
+   "span[cell] border-top-color 120",
+   "span[cell]::before box-shadow 340",
+   "span[cell]::before opacity 340",
+   "span[cell]::before transform 340",
+   "span[cell]::after opacity 300",
+   "span[cell]::after transform 300",
+   "span[label] transform 300",
+   "span[cell] border-bottom-color 120",
+   "span[cell] border-left-color 120",
+   "span[cell] border-right-color 120",
+   "span[cell] border-top-color 120",
+   "span[cell]::before box-shadow 340",
+   "span[cell]::before opacity 340",
+   "span[cell]::before transform 340",
+   "span ds-motion:otp-fill 300",
+   "span ds-motion:otp-fill 300",
+   "span ds-motion:otp-fill 300",
+   "span ds-motion:otp-fill 300",
+   "span ds-motion:otp-fill 300",
+   "span ds-motion:otp-fill 300",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480"
+  ],
+  "stateAt": 0,
+  "after": "482913",
+  "sticky": null,
+  "longest": 570
+ },
+ "touch|search-clear|desk": {
+  "anims": [
+   "div[search-field] border-bottom-color 120",
+   "div[search-field] border-left-color 120",
+   "div[search-field] border-right-color 120",
+   "div[search-field] border-top-color 120",
+   "div[search-field]::before box-shadow 340",
+   "div[search-field]::before opacity 340",
+   "div[search-field]::before transform 340",
+   "div[control]::before opacity 340",
+   "div[control]::before transform 340",
+   "button[icon-button] ds-motion:search-clear-out 320"
+  ],
+  "stateAt": 0,
+  "after": "",
+  "sticky": null,
+  "longest": 340
+ },
+ "touch|field-step|desk": {
+  "anims": [
+   "div[number-field] border-bottom-color 120",
+   "div[number-field] border-left-color 120",
+   "div[number-field] border-right-color 120",
+   "div[number-field] border-top-color 120",
+   "div[number-field]::before box-shadow 340",
+   "div[number-field]::before opacity 340",
+   "div[number-field]::before transform 340",
+   "button[increment]#react-aria3653116138-_r_a_ transform 70",
+   "button[increment]#react-aria3653116138-_r_a_::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:digit-roll 300",
+   "span ds-motion:digit-roll-out 300",
+   "button[increment]#react-aria3653116138-_r_a_ transform 380",
+   "button[increment]#react-aria3653116138-_r_a_::after opacity 380",
+   "span[icon] transform 300"
+  ],
+  "stateAt": 0,
+  "after": "99",
+  "sticky": null,
+  "longest": 380
+ },
+ "touch|slider-bubble|desk": {
+  "dragging": true,
+  "thumbT": "matrix(1.3, 0, 0, 1.3, 0, 0)",
+  "bubbleOpacity": "1",
+  "bubbleText": "1982%",
+  "bubbleAboveThumb": true,
+  "bubbleTop": 332.51251220703125,
+  "value": "192"
+ },
+ "touch|password-reveal|neutral": {
+  "anims": [
+   "button[toggle] transform 70",
+   "button[toggle]::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:password-reveal-out 180",
+   "svg[icon] ds-motion:password-reveal-in 180",
+   "input[control]#_r_0_ ds-motion:fade 150",
+   "button[toggle] transform 200",
+   "button[toggle]::after opacity 200",
+   "span[icon] transform 158"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 200
+ },
+ "touch|consent-check|neutral": {
+  "anims": [
+   "span[indicator] transform 70",
+   "span[indicator] border-bottom-color 90",
+   "span[indicator] border-left-color 90",
+   "span[indicator] border-right-color 90",
+   "span[indicator] border-top-color 90",
+   "span clip-path 90",
+   "path stroke-dashoffset 72",
+   "path stroke-dashoffset 108",
+   "svg[mark] ds-motion:consent-check 200",
+   "span[indicator] transform 200"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 225
+ },
+ "touch|rating-fill|neutral": {
+  "anims": [
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 150",
+   "svg[icon] ds-rating-preview 200",
+   "svg[icon] ds-motion:rating-fill 200",
+   "svg[icon] ds-motion:rating-fill 200",
+   "svg[icon] ds-motion:rating-fill 158",
+   "svg[icon] ds-motion:rating-fill 200"
+  ],
+  "stateAt": 0,
+  "after": "false",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 272
+ },
+ "touch|rating-preview|neutral": {
+  "anims": [
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 150",
+   "svg[icon] ds-rating-preview 200",
+   "svg[icon] ds-motion:rating-fill 200",
+   "svg[icon] ds-motion:rating-fill 158",
+   "svg[icon] ds-motion:rating-fill 158",
+   "svg[icon] ds-motion:rating-fill 200"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 272
+ },
+ "touch|otp-fill|neutral": {
+  "anims": [
+   "span[cell] border-bottom-color 150",
+   "span[cell] border-left-color 150",
+   "span[cell] border-right-color 150",
+   "span[cell] border-top-color 150",
+   "span[cell]::before box-shadow 200",
+   "span[cell]::before opacity 200",
+   "span[cell]::before transform 200",
+   "span[cell]::after opacity 158",
+   "span[cell]::after transform 158",
+   "span[cell] border-bottom-color 150",
+   "span[cell] border-left-color 150",
+   "span[cell] border-right-color 150",
+   "span[cell] border-top-color 150",
+   "span[cell]::before box-shadow 200",
+   "span[cell]::before opacity 200",
+   "span[cell]::before transform 200",
+   "span ds-motion:otp-fill 158",
+   "span ds-motion:otp-fill 158",
+   "span ds-motion:otp-fill 158",
+   "span ds-motion:otp-fill 158",
+   "span ds-motion:otp-fill 158",
+   "span ds-motion:otp-fill 158"
+  ],
+  "stateAt": 0,
+  "after": "482913",
+  "sticky": null,
+  "longest": 206
+ },
+ "touch|search-clear|neutral": {
+  "anims": [
+   "div[search-field] border-bottom-color 150",
+   "div[search-field] border-left-color 150",
+   "div[search-field] border-right-color 150",
+   "div[search-field] border-top-color 150",
+   "div[search-field]::before box-shadow 200",
+   "div[search-field]::before opacity 200",
+   "div[search-field]::before transform 200",
+   "div[control]::before opacity 200",
+   "div[control]::before transform 200",
+   "button[icon-button] ds-motion:search-clear-out 180"
+  ],
+  "stateAt": 0,
+  "after": "",
+  "sticky": null,
+  "longest": 200
+ },
+ "touch|field-step|neutral": {
+  "anims": [
+   "div[number-field] border-bottom-color 150",
+   "div[number-field] border-left-color 150",
+   "div[number-field] border-right-color 150",
+   "div[number-field] border-top-color 150",
+   "div[number-field]::before box-shadow 200",
+   "div[number-field]::before opacity 200",
+   "div[number-field]::before transform 200",
+   "button[increment]#react-aria5326942863-_r_a_ transform 70",
+   "button[increment]#react-aria5326942863-_r_a_::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:digit-roll 158",
+   "span ds-motion:digit-roll-out 158",
+   "button[increment]#react-aria5326942863-_r_a_ transform 200",
+   "button[increment]#react-aria5326942863-_r_a_::after opacity 200",
+   "span[icon] transform 158"
+  ],
+  "stateAt": 0,
+  "after": "99",
+  "sticky": null,
+  "longest": 200
+ },
+ "touch|slider-bubble|neutral": {
+  "dragging": true,
+  "thumbT": "matrix(1.15, 0, 0, 1.15, 0, 0)",
+  "bubbleOpacity": "1",
+  "bubbleText": "192%",
+  "bubbleAboveThumb": true,
+  "bubbleTop": 343.71759033203125,
+  "value": "192"
+ },
+ "touch|password-reveal|liquid": {
+  "anims": [
+   "button[toggle] transform 70",
+   "button[toggle]::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:password-reveal-out 320",
+   "svg[icon] ds-motion:password-reveal-in 320",
+   "input[control]#_r_0_ ds-motion:fade 150",
+   "button[toggle] transform 296",
+   "button[toggle]::after opacity 296",
+   "span[icon] transform 296"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 320
+ },
+ "touch|consent-check|liquid": {
+  "anims": [
+   "span[indicator] transform 70",
+   "span[indicator] border-bottom-color 160",
+   "span[indicator] border-left-color 160",
+   "span[indicator] border-right-color 160",
+   "span[indicator] border-top-color 160",
+   "span clip-path 160",
+   "path stroke-dashoffset 128",
+   "path stroke-dashoffset 192",
+   "svg[mark] ds-motion:consent-check 496",
+   "span[indicator] transform 496"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": null,
+  "longest": 496
+ },
+ "touch|rating-fill|liquid": {
+  "anims": [
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 150",
+   "svg[icon] ds-rating-preview 496",
+   "svg[icon] ds-motion:rating-fill 496",
+   "svg[icon] ds-motion:rating-fill 496",
+   "svg[icon] ds-motion:rating-fill 296",
+   "svg[icon] ds-motion:rating-fill 496"
+  ],
+  "stateAt": 0,
+  "after": "false",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 616
+ },
+ "touch|rating-preview|liquid": {
+  "anims": [
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "svg[fill] clip-path 150",
+   "button[item]::after opacity 80",
+   "svg[fill] clip-path 150",
+   "svg[icon] ds-rating-preview 496",
+   "svg[icon] ds-motion:rating-fill 496",
+   "svg[icon] ds-motion:rating-fill 296",
+   "svg[icon] ds-motion:rating-fill 296",
+   "svg[icon] ds-motion:rating-fill 496"
+  ],
+  "stateAt": 0,
+  "after": "true",
+  "sticky": [
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px)",
+   "inset(0px 100% 0px 0px)"
+  ],
+  "longest": 616
+ },
+ "touch|otp-fill|liquid": {
+  "anims": [
+   "span[cell] border-bottom-color 150",
+   "span[cell] border-left-color 150",
+   "span[cell] border-right-color 150",
+   "span[cell] border-top-color 150",
+   "span[cell]::before box-shadow 375",
+   "span[cell]::before opacity 375",
+   "span[cell]::before transform 375",
+   "span[cell]::after opacity 296",
+   "span[cell]::after transform 296",
+   "button[button]::before opacity 296",
+   "span[cell] border-bottom-color 150",
+   "span[cell] border-left-color 150",
+   "span[cell] border-right-color 150",
+   "span[cell] border-top-color 150",
+   "span[cell]::before box-shadow 375",
+   "span[cell]::before opacity 375",
+   "span[cell]::before transform 375",
+   "span ds-motion:otp-fill 296",
+   "span ds-motion:otp-fill 296",
+   "span ds-motion:otp-fill 296",
+   "span ds-motion:otp-fill 296",
+   "span ds-motion:otp-fill 296",
+   "span ds-motion:otp-fill 296",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480",
+   "span[cell] ds-motion:otp-complete 480"
+  ],
+  "stateAt": 0,
+  "after": "482913",
+  "sticky": null,
+  "longest": 560
+ },
+ "touch|search-clear|liquid": {
+  "anims": [
+   "div[search-field] border-bottom-color 150",
+   "div[search-field] border-left-color 150",
+   "div[search-field] border-right-color 150",
+   "div[search-field] border-top-color 150",
+   "div[search-field]::before box-shadow 375",
+   "div[search-field]::before opacity 375",
+   "div[search-field]::before transform 375",
+   "div[control]::before opacity 375",
+   "div[control]::before transform 375",
+   "button[icon-button] ds-motion:search-clear-out 320"
+  ],
+  "stateAt": 0,
+  "after": "",
+  "sticky": null,
+  "longest": 375
+ },
+ "touch|field-step|liquid": {
+  "anims": [
+   "div[number-field] border-bottom-color 150",
+   "div[number-field] border-left-color 150",
+   "div[number-field] border-right-color 150",
+   "div[number-field] border-top-color 150",
+   "div[number-field]::before box-shadow 375",
+   "div[number-field]::before opacity 375",
+   "div[number-field]::before transform 375",
+   "button[increment]#react-aria3307645066-_r_a_ transform 70",
+   "button[increment]#react-aria3307645066-_r_a_::after opacity 70",
+   "span[icon] transform 70",
+   "span ds-motion:digit-roll 296",
+   "span ds-motion:digit-roll-out 296",
+   "button[increment]#react-aria3307645066-_r_a_ transform 296",
+   "button[increment]#react-aria3307645066-_r_a_::after opacity 296",
+   "span[icon] transform 296"
+  ],
+  "stateAt": 0,
+  "after": "99",
+  "sticky": null,
+  "longest": 375
+ },
+ "touch|slider-bubble|liquid": {
+  "dragging": true,
+  "thumbT": "matrix(1.28, 0, 0, 1.28, 0, 0)",
+  "bubbleOpacity": "1",
+  "bubbleText": "191%",
+  "bubbleAboveThumb": true,
+  "bubbleTop": 342.0199890136719,
+  "value": "191"
+ }
+}

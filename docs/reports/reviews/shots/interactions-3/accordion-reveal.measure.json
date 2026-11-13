@@ -1,0 +1,1476 @@
+{
+ "id": "accordion-reveal",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": 96,
+   "firstMotionAt": 96,
+   "longest": 220,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 96,
+     "l": 187
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 96,
+     "l": 187
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 96,
+     "l": 327
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 96,
+     "l": 327
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 96,
+     "l": 327
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 96,
+     "l": 327
+    }
+   ],
+   "lastFrame": {
+    "t": 1216,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": 98,
+   "firstMotionAt": 98,
+   "longest": 220,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 98,
+     "l": 164
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 98,
+     "l": 164
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 98,
+     "l": 317
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 98,
+     "l": 317
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 98,
+     "l": 317
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 98,
+     "l": 317
+    }
+   ],
+   "lastFrame": {
+    "t": 1202,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": 93,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1228,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": 79,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1203,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": 87,
+   "firstMotionAt": 87,
+   "longest": 340,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 87,
+     "l": 387
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 87,
+     "l": 145
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 87,
+     "l": 387
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 87,
+     "l": 386
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 45,
+     "it": 1,
+     "e": "linear",
+     "f": 87,
+     "l": 386
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 90,
+     "it": 1,
+     "e": "linear",
+     "f": 87,
+     "l": 399
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "f": 87,
+     "l": 432
+    }
+   ],
+   "lastFrame": {
+    "t": 1210,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": 115,
+   "firstMotionAt": 115,
+   "longest": 340,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 115,
+     "l": 442
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 115,
+     "l": 215
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 115,
+     "l": 442
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 115,
+     "l": 431
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 45,
+     "it": 1,
+     "e": "linear",
+     "f": 115,
+     "l": 431
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 90,
+     "it": 1,
+     "e": "linear",
+     "f": 115,
+     "l": 442
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "f": 115,
+     "l": 442
+    }
+   ],
+   "lastFrame": {
+    "t": 1207,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": 164,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1211,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": 187,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1200,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": 104,
+   "firstMotionAt": 104,
+   "longest": 292,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 104,
+     "l": 286
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 104,
+     "l": 193
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 104,
+     "l": 286
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 104,
+     "l": 346
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "f": 104,
+     "l": 360
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 48,
+     "it": 1,
+     "e": "linear",
+     "f": 104,
+     "l": 395
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 72,
+     "it": 1,
+     "e": "linear",
+     "f": 104,
+     "l": 410
+    }
+   ],
+   "lastFrame": {
+    "t": 1213,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": 85,
+   "firstMotionAt": 85,
+   "longest": 292,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 85,
+     "l": 254
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 85,
+     "l": 159
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 85,
+     "l": 254
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 85,
+     "l": 306
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "f": 85,
+     "l": 325
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 48,
+     "it": 1,
+     "e": "linear",
+     "f": 85,
+     "l": 357
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 72,
+     "it": 1,
+     "e": "linear",
+     "f": 85,
+     "l": 373
+    }
+   ],
+   "lastFrame": {
+    "t": 1206,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": 103,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1206,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": 151,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1210,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": 208,
+   "firstMotionAt": 208,
+   "longest": 340,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 208,
+     "l": 573
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 208,
+     "l": 348
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 208,
+     "l": 573
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 208,
+     "l": 507
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 40,
+     "it": 1,
+     "e": "linear",
+     "f": 208,
+     "l": 531
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 80,
+     "it": 1,
+     "e": "linear",
+     "f": 208,
+     "l": 581
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "f": 208,
+     "l": 616
+    }
+   ],
+   "lastFrame": {
+    "t": 1205,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": 145,
+   "firstMotionAt": 145,
+   "longest": 340,
+   "badProps": [
+    "clipPath"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 145,
+     "l": 457
+    },
+    {
+     "k": "T",
+     "n": "color",
+     "t": "svg[icon]",
+     "p": "color",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "f": 145,
+     "l": 238
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "svg[icon]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 145,
+     "l": 457
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-reveal",
+     "t": "div",
+     "p": "clipPath+transform",
+     "d": 220,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "f": 145,
+     "l": 380
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 40,
+     "it": 1,
+     "e": "linear",
+     "f": 145,
+     "l": 418
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "ul",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 80,
+     "it": 1,
+     "e": "linear",
+     "f": 145,
+     "l": 457
+    },
+    {
+     "k": "A",
+     "n": "ds-accordion-child",
+     "t": "p",
+     "p": "opacity+transform",
+     "d": 220,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "f": 145,
+     "l": 497
+    }
+   ],
+   "lastFrame": {
+    "t": 1213,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": 86,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1202,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": 94,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1212,
+    "state": {
+     "aria-expanded": "true",
+     "data-state": "open",
+     "value": ""
+    },
+    "active": "button[trigger]#radix-_r_0_",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  }
+ ],
+ "extra": {
+  "touch.accordion-reveal.studio": {
+   "stateAt": 64,
+   "firstMotionAt": 64,
+   "longest": 220,
+   "ring0": null,
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 70",
+    "div clipPath+transform 220",
+    "p opacity+transform 220",
+    "ul opacity+transform 220",
+    "p opacity+transform 220",
+    "svg[icon] color 80",
+    "svg[icon] color 80"
+   ],
+   "hits": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "touch.accordion-reveal.desk": {
+   "stateAt": 74,
+   "firstMotionAt": 74,
+   "longest": 340,
+   "ring0": null,
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 300",
+    "div clipPath+transform 220",
+    "p opacity+transform 220+45",
+    "ul opacity+transform 220+90",
+    "p opacity+transform 220+120",
+    "svg[icon] color 80",
+    "svg[icon] transform 300",
+    "svg[icon] color 80",
+    "svg[icon] transform 300"
+   ],
+   "hits": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "touch.accordion-reveal.neutral": {
+   "stateAt": 44,
+   "firstMotionAt": 44,
+   "longest": 292,
+   "ring0": null,
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 158",
+    "div clipPath+transform 220",
+    "p opacity+transform 220+24",
+    "ul opacity+transform 220+48",
+    "p opacity+transform 220+72",
+    "svg[icon] color 80",
+    "svg[icon] transform 158",
+    "svg[icon] color 80",
+    "svg[icon] transform 158"
+   ],
+   "hits": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "touch.accordion-reveal.liquid": {
+   "stateAt": 72,
+   "firstMotionAt": 72,
+   "longest": 340,
+   "ring0": null,
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 296",
+    "div clipPath+transform 220",
+    "p opacity+transform 220+40",
+    "ul opacity+transform 220+80",
+    "p opacity+transform 220+120",
+    "svg[icon] color 80",
+    "svg[icon] transform 296",
+    "svg[icon] color 80",
+    "svg[icon] transform 296"
+   ],
+   "hits": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "off.accordion-reveal.desk": {
+   "moving": [],
+   "held": null
+  },
+  "off.accordion-reveal.neutral": {
+   "moving": [],
+   "held": null
+  },
+  "second.accordion-reveal.studio.ltr": {
+   "stateAt": 0,
+   "firstMotionAt": 47,
+   "longest": 70,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "button[trigger]#radix-_r_0_::after opacity 70",
+    "svg[icon] transform 70"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.studio.rtl": {
+   "stateAt": 0,
+   "firstMotionAt": 84,
+   "longest": 70,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 70"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.desk.ltr": {
+   "stateAt": 0,
+   "firstMotionAt": 90,
+   "longest": 300,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 300"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.desk.rtl": {
+   "stateAt": 0,
+   "firstMotionAt": 96,
+   "longest": 300,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 300"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.neutral.ltr": {
+   "stateAt": 0,
+   "firstMotionAt": 51,
+   "longest": 158,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 158"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.neutral.rtl": {
+   "stateAt": 0,
+   "firstMotionAt": 56,
+   "longest": 158,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 158"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.liquid.ltr": {
+   "stateAt": 0,
+   "firstMotionAt": 83,
+   "longest": 296,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 296"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  },
+  "second.accordion-reveal.liquid.rtl": {
+   "stateAt": 0,
+   "firstMotionAt": 65,
+   "longest": 296,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": true,
+    "before": "0"
+   },
+   "active": "button[trigger]#radix-_r_0_",
+   "anims": [
+    "svg[icon] transform 296"
+   ],
+   "kf": [],
+   "layoutTrans": []
+  }
+ }
+}
