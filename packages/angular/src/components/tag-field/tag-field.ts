@@ -64,7 +64,7 @@ import { ListHighlight } from '../../internal/list-highlight';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { injectMotion } from '../../internal/motion';
-import { POPUP_LIST_ROWS, injectFlipGroup, openStaggered } from '../../internal/motion-selection';
+import { POPUP_LIST_ROWS, injectFlipGroup, injectPopupResults, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -326,6 +326,8 @@ export class DsTagField implements ControlValueAccessor {
       // menu-rows: the suggestions arrive one stagger step after the popup surface, each time it opens.
       untracked(() => (open ? openStaggered(this.layer, POPUP_LIST_ROWS, () => this.motion.mode('menu-rows')) : this.layer.close()));
     });
+    // combobox-results: on a new query the rows that stay slide and new rows rise. The exit copy is the layer's (B6).
+    injectPopupResults(this.layer);
 
     effect(() => {
       const side = this.layer.side();

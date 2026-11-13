@@ -17,6 +17,9 @@
 // it enter the viewport. Until then an inline scaleX(0) holds the fill empty
 // (set after the first render, before the paint). A value change before
 // that shows the value at once. Reduced and none: the value at once.
+// Round 3 (order 1.23, review N28): the inline transition reads the private
+// --_meter-reveal-duration and --_meter-reveal-ease, and a second beat
+// lands the value text at --_meter-value-at of the reveal (landValue).
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,12 +36,33 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
-import { readDuration } from '@the-system/motion';
+import { readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
 import { DsThemeService } from '../../theme';
 import { formatPercent, validMax } from '../progress-bar/format';
 import type { ProgressLabelContent } from '../progress-bar/progress-bar';
+
+/**
+ * Round 3 (review N28), as React's landValue: the second beat of
+ * meter-fill. As the fill nears its value (at --_meter-value-at of the
+ * reveal), the value text settles from distance.nudge below and its colour
+ * comes up from the muted text, so the number lands with the fill. Opaque
+ * at once: only its place and colour move. Full mode only (the caller
+ * checks).
+ */
+export function landValue(value: Element | null | undefined, fill: HTMLElement): void {
+  if (!value || typeof value.animate !== 'function') return;
+  const total = readDuration(fill, 'duration.reveal');
+  const at = Number.parseFloat(getComputedStyle(fill).getPropertyValue('--_meter-value-at')) || 0.6;
+  value.animate([{ transform: 'translateY(var(--ds-distance-nudge))', color: 'var(--ds-color-text-muted)' }, { transform: 'none' }], {
+    id: 'ds-motion:meter-value',
+    duration: readDuration(fill, 'duration.spring-bouncy'),
+    easing: readEasing(fill, 'ease.spring-bouncy'),
+    delay: total * at,
+    fill: 'backwards',
+  });
+}
 
 export type MeterSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type { MeterLevel, MeterTone };
@@ -175,7 +199,7 @@ export class DsMeter {
    * inline scaleX(0) with no transition, a style and not a paused animation,
    * so nothing waits on an animation that never ends. On view the inline
    * transform goes and the indicator's transition, set inline to
-   * ease.spring-soft over duration.reveal for that one change, plays the
+   * --_meter-reveal-ease over --_meter-reveal-duration for that one change, plays the
    * fill. The inline transition is dropped after that duration, so later
    * changes use the CSS.
    */
@@ -200,9 +224,14 @@ export class DsMeter {
           observer?.disconnect();
           // Flush the held frame, so the change below starts a transition from it.
           void getComputedStyle(node).transform;
-          node.style.transition = animate ? 'transform var(--ds-duration-reveal) var(--ds-ease-spring-soft)' : '';
+          // Round 3 (review N28): the timing is private, so a style changes its kind (--_meter-reveal-duration, -reveal-ease).
+          node.style.transition = animate ? 'transform var(--_meter-reveal-duration) var(--_meter-reveal-ease)' : '';
           node.style.removeProperty('transform');
-          if (animate) timer = setTimeout(() => node.style.removeProperty('transition'), readDuration(node, 'duration.reveal') + 50);
+          if (animate) {
+            const ms = readDuration(node, 'duration.reveal');
+            timer = setTimeout(() => node.style.removeProperty('transition'), ms + 50);
+            landValue(node.closest('[data-ds="meter"]')?.querySelector(':scope > [data-part="value"]'), node);
+          }
         };
         release = () => show(false);
         observer = new IntersectionObserver((entries) => {

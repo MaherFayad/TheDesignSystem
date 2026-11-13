@@ -5,7 +5,10 @@
 // thumb, then the label with the optional state text, then the description.
 // The first child of the track is an aria-hidden span: the on tint that
 // crosses in behind the thumb (interaction switch-stretch), styled by
-// Switch.css.
+// Switch.css. The thumb holds the thumb-lens part and, with `thumbIcon`, the
+// thumb-icon svg. A sideways drag moves the thumb and snaps on release
+// (interaction switch-drag, internal/toggles-switch-drag.ts); the root then
+// carries `data-dragging` and `--_switch-drag-progress`.
 //
 //   <div dsSwitch label="Auto save" [(checked)]="autoSave"></div>
 //   <div dsSwitch label="Show rulers" [formControl]="rulers"></div>
@@ -46,6 +49,7 @@ import { DsNativeButton } from '../../internal/native-button';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { DsOrderedStyle, type OrderedStyle } from '../../internal/ordered-style';
 import { DsFieldContext, fieldControl } from '../field/field-context';
+import { SwitchDrag } from '../../internal/toggles-switch-drag';
 
 export type SwitchSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SwitchTone = Extract<Tone, 'accent'>;
@@ -73,6 +77,7 @@ let nextId = 0;
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
     '[attr.data-readonly]': 'isReadOnly() ? "" : null',
+    '[attr.data-dragging]': 'drag.dragging() ? "" : null',
   },
   template: `<button dsNativeButton #control
       type="button"
@@ -83,15 +88,20 @@ let nextId = 0;
       [attr.data-disabled]="isDisabled() ? '' : null"
       [disabled]="isDisabled()"
       [attr.value]="value() ?? 'on'"
-      [attr.id]="controlId()"
       [attr.aria-label]="ariaLabel() ?? null"
       [attr.aria-labelledby]="ariaLabelledby() ?? null"
+      [attr.id]="controlId()"
       [attr.aria-describedby]="describedBy() ?? null"
       [attr.aria-invalid]="isInvalid() ? 'true' : null"
       [attr.aria-readonly]="isReadOnly() ? 'true' : null"
       data-part="control"
       (click)="onClick($event)"
-      (blur)="onTouched()"><span data-part="track"><span aria-hidden="true"></span><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"></span></span></button>@if (isFormControl()) {<input #bubble
+      (pointerdown)="drag.pointerDown($event)"
+      (pointermove)="drag.pointerMove($event)"
+      (pointerup)="drag.pointerUp($event)"
+      (pointercancel)="drag.pointerCancel($event)"
+      (lostpointercapture)="drag.lostPointerCapture($event)"
+      (blur)="onTouched()"><span data-part="track"><span aria-hidden="true"></span><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"><span data-part="thumb-lens" aria-hidden="true"></span>@if (thumbIcon()) {<svg data-part="thumb-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength="1" /><path d="M5.5 5.5 10.5 10.5M10.5 5.5 5.5 10.5" /></svg>}</span></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
       [attr.checked]="initialChecked() ? '' : null"
@@ -114,6 +124,12 @@ export class DsSwitch implements ControlValueAccessor {
   readonly description = input<string | undefined>(undefined);
   /** Optional words for the two states, shown after the label. Hidden from assistive tech. */
   readonly stateText = input<SwitchStateText | undefined>(undefined);
+  /**
+   * Renders an icon in the thumb: a check while on, a cross while off. It is
+   * drawn only where a style or a platform shows it (Android); hidden from
+   * assistive tech. Default false.
+   */
+  readonly thumbIcon = input(false, { transform: (v: unknown) => optionalBoolean(v) ?? false });
   /** Inside a Field it follows the Field. */
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly disabled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
@@ -134,7 +150,7 @@ export class DsSwitch implements ControlValueAccessor {
 
   private readonly field = inject(DsFieldContext, { optional: true });
   private readonly host = consumeHostAttributes([
-    'dsSwitch', 'size', 'tone', 'label', 'description', 'stateText', 'invalid', 'disabled', 'readOnly', 'required',
+    'dsSwitch', 'size', 'tone', 'label', 'description', 'stateText', 'thumbIcon', 'invalid', 'disabled', 'readOnly', 'required',
     'checked', 'defaultChecked', 'value', 'name', 'id', 'aria-label', 'aria-labelledby', 'aria-describedby',
   ]);
   private readonly control = viewChild.required<ElementRef<HTMLButtonElement>>('control');
@@ -170,6 +186,13 @@ export class DsSwitch implements ControlValueAccessor {
 
   private onChange: (value: boolean) => void = () => {};
   protected onTouched: () => void = () => {};
+
+  /** switch-drag (order 1.23): the thumb follows a drag and snaps on release. A tap still toggles through the click. */
+  protected readonly drag = new SwitchDrag({
+    checked: () => this.current(),
+    disabled: () => Boolean(this.isDisabled()) || Boolean(this.isReadOnly()),
+    onToggle: (next) => this.commit(next),
+  });
 
   constructor() {
     // A control with its own id tells the Field, so the Field label points at it, as React's useFieldControl.
@@ -228,12 +251,18 @@ export class DsSwitch implements ControlValueAccessor {
   }
 
   protected onClick(event: MouseEvent): void {
-    // Space and Enter on a button are clicks too.
-    if (this.isReadOnly()) {
+    // Space and Enter on a button are clicks too. A drag already decided the
+    // state on release, so the click that ends it toggles nothing.
+    if (this.isReadOnly() || this.drag.consumeClick()) {
       event.preventDefault();
       return;
     }
-    const next = !this.current();
+    this.commit(!this.current());
+  }
+
+  /** A change from the person: the state, the model and the form, once. */
+  private commit(next: boolean): void {
+    if (this.isReadOnly()) return;
     this.own.set(next);
     this.checked.set(next);
     this.onChange(next);

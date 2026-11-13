@@ -5,7 +5,7 @@ import { Component, ElementRef, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../theme/theme';
-import { errorShake, landPop, playBeat, runStep, shakeBeat, token } from './motion-fields';
+import { diagonalWipe, emerge, errorShake, fadeOutBeat, landPop, playBeat, runStep, shakeBeat, token } from './motion-fields';
 
 interface Recorded {
   target: Element;
@@ -89,6 +89,29 @@ describe('motion-fields', () => {
     expect(beat.keyframes.map((k) => k.offset)).toEqual([0, 0.14, 0.34, 0.54, 0.74, 1]);
     expect(beat.keyframes[1]?.transform).toBe(`translateX(calc(1 * ${token.shift}))`);
     expect(shakeBeat(-1).keyframes[1]?.transform).toBe(`translateX(calc(-1 * ${token.shift}))`);
+  });
+
+  it('emerges from under the control on the soft spring, as React emerge() (order 1.23)', () => {
+    const beat = emerge();
+    expect(beat.keyframes).toEqual([
+      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0, offset: 0 },
+      { opacity: 1, offset: 0.3 },
+      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1, offset: 1 },
+    ]);
+    expect(beat.duration).toBe('duration.spring-soft');
+    expect(beat.easing).toBe('ease.spring-soft');
+    expect(fadeOutBeat.keyframes).toEqual([{ opacity: 1 }, { opacity: 0 }]);
+  });
+
+  it('wipes along a 45 degree line with five point polygons, as React diagonalWipe() (order 1.23)', () => {
+    const into = diagonalWipe('behind');
+    expect(into.duration).toBe('duration.morph');
+    expect(into.easing).toBe('ease.standard');
+    expect(into.keyframes.map((f) => f['offset'])).toEqual([0, 0.5, 1]);
+    expect(into.keyframes[1]?.['clipPath']).toBe('polygon(0% 0%, 100% 0%, 100% 0%, 0% 100%, 0% 100%)');
+    expect(diagonalWipe('ahead').keyframes[0]?.['clipPath']).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)');
+    // back runs from the bottom right corner.
+    expect(diagonalWipe('behind', true).keyframes[1]?.['clipPath']).toBe('polygon(100% 100%, 0% 100%, 0% 100%, 100% 0%, 100% 0%)');
   });
 
   it('spreads a run over two stagger steps', () => {

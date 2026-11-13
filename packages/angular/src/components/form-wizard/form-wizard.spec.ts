@@ -143,6 +143,11 @@ describe('DsFormWizard', () => {
     expect(host.submit).toHaveBeenCalledWith({ name: 'Sara', postal: '12271' }, q('form'));
     expect(q('[data-ds="form-wizard"]').getAttribute('data-state')).toBe('done');
     expect(q('[data-part="panel"] > h2').textContent).toBe('Order placed');
+    // wizard-done (order 1.23): a decorative mark draws before the done title and adds no words.
+    const mark = q('[data-part="panel"] > h2').querySelector(':scope > [data-part="success-mark"]');
+    expect(mark?.getAttribute('aria-hidden')).toBe('true');
+    expect(q('[data-part="panel"] > h2').firstElementChild).toBe(mark);
+    expect(mark?.querySelectorAll('[pathLength="1"]')).toHaveLength(2);
     expect(q('[data-part="actions"]')).toBeNull();
     expect(q('[data-part="status"][role="status"]').textContent).toBe('Order placed');
     fixture.nativeElement.remove();

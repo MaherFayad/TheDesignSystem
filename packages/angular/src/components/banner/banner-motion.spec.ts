@@ -97,11 +97,12 @@ describe('DsBanner motion', () => {
     expect(played[1]!.options.id).toBe('ds-motion:flip');
   });
 
-  it('reduced motion: a fade of the ghost only', async () => {
+  it('reduced motion: no ghost and nothing moves, the banner goes at once (round 3, review B1)', async () => {
     document.documentElement.setAttribute('data-motion', 'reduce');
     await dismiss();
     s.take();
     s.flush();
-    expect(s.take().map((p) => p.options.id)).toEqual(['ds-motion:flip-exit']);
+    expect(s.take()).toEqual([]);
+    expect(document.querySelector('[data-ds="banner"][inert]')).toBeNull();
   });
 });

@@ -23,7 +23,7 @@
 // Every helper reads the style's mode through injectMotion().mode(id), so a
 // style tunes or turns it off, and the person's reduced motion wins. Nothing
 // waits on transitionend or animationend.
-import { DestroyRef, inject } from '@angular/core';
+import { DestroyRef, afterEveryRender, inject, untracked } from '@angular/core';
 import { flipExit, flipPlay, rectOf, settled, staggerGroup, type PatternMode } from '@the-system/motion';
 import { injectMotion } from './motion';
 
@@ -144,6 +144,12 @@ export interface FlipGroupOptions {
   interaction?: string;
   /** Draw a removed item shrinking out. Default true. */
   ghosts?: boolean;
+  /**
+   * An item that moved farther than the container is tall (it was out of
+   * view in a list that scrolls) arrives like a new item instead of flying
+   * across the list. Default false. Order 1.23.
+   */
+  nearOnly?: boolean;
 }
 
 /**
@@ -161,7 +167,7 @@ export class FlipGroup {
 
   /** Measures the items of `el` and plays what changed since the last update. */
   update(el: Element | null | undefined): void {
-    const { items, interaction = 'collection-flip', ghosts = true } = this.options;
+    const { items, interaction = 'collection-flip', ghosts = true, nearOnly = false } = this.options;
     if (!el) {
       this.last = null;
       return;
@@ -185,7 +191,12 @@ export class FlipGroup {
     if (ghosts) for (const item of gone) ghostOut(el, item, before.get(item)!, mode);
     const o = origin(el);
     const rects = new Map<Element, { x: number; y: number; width: number; height: number }>();
-    for (const [item, s] of before) if (spots.has(item)) rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    const far = nearOnly ? el.clientHeight : Infinity;
+    for (const [item, s] of before) {
+      const at = spots.get(item);
+      if (!at || Math.abs(at.y - s.y) > far) continue;
+      rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    }
     flipPlay({ rects }, { items: now, mode, spring: 'snappy', enter: 'pop' });
   }
 }
@@ -225,4 +236,39 @@ export function openStaggered(layer: StaggerLayer, rows: string, mode: () => Pat
   const fresh = !layer.mounted();
   layer.open();
   return fresh ? staggerRows(layer.content, rows, mode()) : [];
+}
+
+/** The part of a popup layer the results flip needs. */
+export interface ResultsLayer {
+  mounted(): boolean;
+  readonly content: HTMLElement | null;
+}
+
+/**
+ * Interaction "combobox-results" (order 1.23), as React's usePopupRows in
+ * selectionMotion.ts: while the popup of a picker stays open and its results
+ * change (a query), the rows that stay slide to their new place and the new
+ * ones rise one short stagger step apart; a row that was out of view arrives
+ * as new. Measured on the ListBox inside the popup, not the popup, so a scroll
+ * of the list is not read as a move. Call in an injection context. The open stagger
+ * (openStaggered) and the exit copy (PopupLayer.close) are the other two
+ * parts of React's usePopupRows.
+ */
+export function injectPopupResults(layer: ResultsLayer): FlipGroup {
+  const flip = injectFlipGroup({
+    items: (el) => Array.from(el.querySelectorAll("[data-part='option']")),
+    interaction: 'combobox-results',
+    ghosts: false,
+    nearOnly: true,
+  });
+  // After every render while it is mounted, as React's layout effect with no dependencies runs on every
+  // commit of the picker: a row that moved since the last render (a new query) flips.
+  let was = false;
+  afterEveryRender(() => {
+    const mounted = untracked(() => layer.mounted());
+    if (!mounted && !was) return;
+    was = mounted;
+    flip.update(mounted ? (layer.content?.querySelector("[data-ds='list-box']") ?? null) : null);
+  });
+  return flip;
 }

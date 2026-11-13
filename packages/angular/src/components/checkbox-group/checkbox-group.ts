@@ -154,13 +154,15 @@ export class DsCheckboxGroup implements ControlValueAccessor {
     this.onChange(next);
   }
 
-  // check-draw stagger (capped at three steps, as list-stagger, so every mark shows within about 200ms):
-  // select all draws the boxes one delay.stagger apart (capped); one box alone draws at once. As React.
-  private setSteps(run: boolean): void {
+  // check-draw stagger (orders 1.22 and 1.23), capped at three steps as list-stagger so every mark shows
+  // within about 200ms: select all draws the boxes one delay.stagger apart, from the last box when it
+  // unchecks; one box alone draws at once. As React.
+  private setSteps(run: boolean, reverse = false): void {
     const items = this.host.querySelector?.(":scope > [data-part='items']");
     const boxes = items?.querySelectorAll<HTMLElement>("[data-ds='checkbox']:not([data-part='select-all'])") ?? [];
     boxes.forEach((box, i) => {
-      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(i + 1, CASCADE_MAX_STEPS)));
+      const order = reverse ? boxes.length - i : i + 1;
+      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(order, CASCADE_MAX_STEPS)));
       else box.style.removeProperty('--_checkbox-step');
     });
   }
@@ -177,7 +179,8 @@ export class DsCheckboxGroup implements ControlValueAccessor {
   }
 
   protected onSelectAll(): void {
-    this.setSteps(true);
+    // Checking cascades in reading order; unchecking runs back from the last box.
+    this.setSteps(true, this.allState() === true);
     const value = this.own();
     const registered = this.registered();
     if (this.allState() === true) this.commit(value.filter((v) => !registered.includes(v)));

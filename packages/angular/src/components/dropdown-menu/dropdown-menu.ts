@@ -35,6 +35,7 @@
 //     <div data-ds="theme" data-menu-layer>             the portal theme (the layer component's host)
 //       <div data-radix-popper-content-wrapper>         fixed, translate (behavior/popper.ts)
 //         <div data-ds="dropdown-menu" role="menu">     the root, then the items from the template
+//           <span data-part="highlight" aria-hidden>  the marker of the lit row, last child (order 1.23)
 //
 // Why not Angular Aria Menu or the CDK Menu: both own the trigger and the
 // menu element and stamp their own attributes and classes (cdk-menu,
@@ -43,10 +44,14 @@
 // installs it). So the behavior is written here, the way the Dialog port does
 // it, with the CDK Portal for the layer.
 //
-// Motion: menu-origin and menu-submenu-nudge are CSS (DropdownMenu.css) and
-// play on this DOM as is. menu-row-slide (the lit fill, a row's ::after,
-// travels from the last lit row) plays from the layer's focusin and
-// focusout, see ./row-slide.ts.
+// Motion: menu-origin (with its per side clip) and menu-submenu-nudge are
+// CSS (DropdownMenu.css) and play on this DOM as is. Order 1.23: one marker
+// per menu draws the lit row's fill and slides between rows
+// (highlight-marker); a checkbox item checked while the menu is open draws
+// its check (check-draw-pick); on close the menu leaves at once and an inert
+// copy plays the exit (review B6). All three from
+// internal/selection-marker.ts. menu-row-slide (./row-slide.ts) gives way to
+// the marker in a menu that has one, as React's slideHighlight.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -58,6 +63,7 @@ import {
   Injector,
   TemplateRef,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -79,12 +85,16 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers } from '../../behavior';
+import { hideOthers } from '../../behavior';
 import { autoPlace, computePopper, writePopper, type PopperAlign, type PopperSide } from '../../behavior/popper';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { isIconName, type ButtonSlotContent } from '../button/button-base';
+import { CHECK_DRAW_ID, drawCheck, exitGhost, injectHighlightMarker } from '../../internal/selection-marker';
 import { ROW_SLIDE_ID, rowSlide } from './row-slide';
+
+/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). */
+const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']";
 
 /** Menu sizes: sm rows are 24px, md rows follow menu.item.height (28px at default density). */
 export type DropdownMenuSize = Extract<Size, 'sm' | 'md'>;
@@ -420,7 +430,7 @@ const MENU_LAYER = new InjectionToken<LayerData>('DS_MENU_LAYER');
         [attr.aria-labelledby]="panel.labelledBy" aria-orientation="vertical" data-orientation="vertical"
         data-radix-menu-content="" [attr.data-state]="state()" [attr.data-side]="side()" [attr.data-align]="align()"
         [attr.data-size]="data.size()" [attr.dir]="attrs().dir" tabindex="-1" (keydown)="panel.onKeyDown($event)">
-        <ng-container [ngTemplateOutlet]="panel.template" />
+        <ng-container [ngTemplateOutlet]="panel.template" /><span data-part="highlight" aria-hidden="true"></span>
       </div>
     </div>
   `,
@@ -458,6 +468,8 @@ abstract class MenuPanelHost extends MenuPanel {
   private replace: (() => void) | null = null;
   private undo: (() => void)[] = [];
   private generation = 0;
+  // Interaction "highlight-marker" (order 1.23): one marker per menu draws the lit row's fill and slides between rows.
+  private readonly marker = injectHighlightMarker({ rows: ROW_ITEMS, fallback: "[data-part='sub-trigger'][data-state='open']" });
 
   /** The element the menu opens from. */
   protected abstract anchor(): HTMLElement | null;
@@ -528,7 +540,8 @@ abstract class MenuPanelHost extends MenuPanel {
       ref.changeDetectorRef.detectChanges();
     };
     this.replace = place;
-    this.undo = [autoPlace(anchor ?? wrapper, wrapper, place), ...this.listen(menu)];
+    this.undo = [autoPlace(anchor ?? wrapper, wrapper, place), ...this.listen(menu), () => this.marker(null)];
+    this.marker(menu);
     if (this.root.modal() && this.partName() !== 'sub-content') this.undo.push(hideOthers(ref.location.nativeElement as Element));
     this.opened(menu);
   }
@@ -539,11 +552,13 @@ abstract class MenuPanelHost extends MenuPanel {
     this.closed();
     const generation = this.generation;
     layer.closing.set(true);
+    // Review B6 (order 1.23): once the menu shows data-state="closed" it leaves the DOM at once and an
+    // inert aria-hidden copy plays the exit, so a press on the trigger during the exit reopens at once.
     afterNextRender(
       () => {
-        void animationsDone([layer.menu().nativeElement]).then(() => {
-          if (generation === this.generation && this.layer === layer) this.dispose();
-        });
+        if (generation !== this.generation || this.layer !== layer) return;
+        exitGhost(layer.menu().nativeElement);
+        this.dispose();
       },
       { injector: this.injector },
     );
@@ -1011,6 +1026,22 @@ export class DsDropdownMenuCheckboxItem extends MenuItemBase {
   constructor() {
     super();
     consumeHostAttributes(['dsDropdownMenuCheckboxItem', 'checked']);
+    // Interaction "check-draw-pick", as React's IndicatorGlyph: a check that appears while the menu is open
+    // (an item that keeps the menu open) draws itself; one that is there as the menu opens does not.
+    const motion = injectMotion();
+    let shown = false;
+    afterRenderEffect(() => {
+      const state = this.state();
+      untracked(() => {
+        const mounts = !shown && state !== 'unchecked';
+        shown = state !== 'unchecked';
+        if (!mounts || state === 'indeterminate') return;
+        const svg = this.host.querySelector(":scope > [data-part='indicator'] svg");
+        const menu = svg?.closest('[role="menu"]');
+        const fresh = menu && typeof menu.getAnimations === 'function' ? menu.getAnimations().some((a) => a.playState === 'running') : false;
+        if (svg && !fresh) drawCheck(svg, motion.mode(CHECK_DRAW_ID));
+      });
+    });
   }
 
   protected override beforeSelect(): void {

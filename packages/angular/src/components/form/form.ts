@@ -411,8 +411,9 @@ let nextId = 0;
       </div>
     }
     <div data-part="body"><ng-content /></div>
+    <!-- form-submit-success (order 1.23): once sent, a decorative ring and tick after the buttons draw themselves (Form.css). -->
     @if (actions(); as a) {
-      <div data-part="actions"><ng-container [ngTemplateOutlet]="a" [ngTemplateOutletInjector]="injector" /></div>
+      <div data-part="actions"><ng-container [ngTemplateOutlet]="a" [ngTemplateOutletInjector]="injector" />@if (state() === 'submitted') {<svg data-part="success-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" pathLength="1" /><path d="M7.5 12.5l3 3 6-6.5" pathLength="1" /></svg>}</div>
     }
   `,
 })
@@ -645,8 +646,9 @@ export class DsForm extends DsFormContext {
   /**
    * The form turns submitted. form-submit-success: when it was not already,
    * the actions take one celebrate beat once drawn: each button rises to
-   * scale.pop and springs back, as one short run from the first. The form
-   * is already sent; nothing waits.
+   * scale.pop and springs back, as one short run from the first. Since order
+   * 1.23 a success mark after the buttons draws its ring, then its tick
+   * (Form.css). The form is already sent; nothing waits.
    */
   private markSubmitted(): void {
     const before = this.state();
@@ -654,7 +656,7 @@ export class DsForm extends DsFormContext {
     if (before === 'submitted') return;
     afterNextRender(
       () => {
-        const buttons = [...this.host.querySelectorAll(':scope > [data-part="actions"] > *')];
+        const buttons = [...this.host.querySelectorAll(':scope > [data-part="actions"] > :not([data-part="success-mark"])')];
         const mode = this.motion.mode('form-submit-success');
         buttons.forEach((el, i) =>
           playBeat(

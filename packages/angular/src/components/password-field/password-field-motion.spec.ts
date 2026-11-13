@@ -1,12 +1,12 @@
 // The motion of PasswordField, as React's PasswordField.tsx plays it: a
-// press on the toggle morphs the eye (password-reveal, iconMorph, the
-// leaving glyph in an unnamed aria-hidden span inside the toggle icon) and
+// press on the toggle morphs the eye (password-reveal: since order 1.23 the
+// two glyphs trade places along a 45 degree clip-path wipe, the leaving
+// glyph in an unnamed aria-hidden span inside the toggle icon) and
 // fades the text back in; the box shakes when it turns invalid (error-shake).
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { iconInFrames, iconOutFrames } from '@the-system/motion';
 import { afterEach, describe, expect, it } from 'vitest';
-import { shakeBeat } from '../../internal/motion-fields';
+import { diagonalWipe, shakeBeat } from '../../internal/motion-fields';
 import { DsTheme } from '../../theme/theme';
 import { DsPasswordField } from './password-field';
 
@@ -86,31 +86,36 @@ describe('PasswordField motion', () => {
       expect(leaving.getAttribute('aria-hidden')).toBe('true');
       expect(leaving.hasAttribute('data-part')).toBe(false);
       expect(leaving.firstElementChild?.getAttribute('data-icon')).toBe('eye');
-      // iconMorph({ from: leaving span, to: new glyph, turn: 90 }), as React calls it.
-      const out = byId(rec.calls, 'icon-morph-out');
-      const into = byId(rec.calls, 'icon-morph-in');
+      // diagonalWipe('ahead') on the leaving span and diagonalWipe('behind') on the new glyph, as React calls it.
+      const out = byId(rec.calls, 'password-reveal-out');
+      const into = byId(rec.calls, 'password-reveal-in');
       expect(out.map((c) => c.target)).toEqual([leaving]);
-      expect(out[0]?.keyframes).toEqual(iconOutFrames(90));
+      expect(out[0]?.keyframes).toEqual(diagonalWipe('ahead').keyframes);
+      expect(String(out[0]?.keyframes[2]?.['clipPath'])).toBe('polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%)');
       expect(into.map((c) => c.target)).toEqual([incoming]);
-      expect(into[0]?.keyframes).toEqual(iconInFrames(90));
+      expect(String(into[0]?.keyframes[0]?.['clipPath'])).toBe('polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%)');
+      expect(String(into[0]?.keyframes[2]?.['clipPath'])).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)');
+      expect(into[0]?.options.duration).toBeTypeOf('number');
+      for (const c of rec.calls) expect(JSON.stringify(c.keyframes)).not.toContain('rotate');
       expect(byId(rec.calls, 'fade').map((c) => c.target)).toEqual([input]);
       // The leaving glyph goes once the morph settles.
       for (const c of rec.calls) c.finish();
       await new Promise((r) => setTimeout(r));
       await fixture.whenStable();
       expect(icon.querySelector(':scope > span')).toBeNull();
-      // Hiding again turns the other way.
+      // Hiding again wipes from the other corner.
       rec.take();
       (root.querySelector('[data-part="toggle"]') as HTMLElement).click();
       await fixture.whenStable();
       expect(input.type).toBe('password');
-      expect(byId(rec.calls, 'icon-morph-in')[0]?.keyframes).toEqual(iconInFrames(-90));
+      expect(byId(rec.calls, 'password-reveal-in')[0]?.keyframes).toEqual(diagonalWipe('behind', true).keyframes);
+      expect(String(byId(rec.calls, 'password-reveal-in')[0]?.keyframes[0]?.['clipPath'])).toBe('polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%)');
     } finally {
       rec.restore();
     }
   });
 
-  it('cross fades with no turn under reduced motion', async () => {
+  it('cross fades with no wipe under reduced motion', async () => {
     const rec = recordAnimate();
     try {
       document.documentElement.setAttribute('data-motion', 'reduce');
@@ -120,8 +125,9 @@ describe('PasswordField motion', () => {
       (root.querySelector('[data-part="toggle"]') as HTMLElement).click();
       await fixture.whenStable();
       const frames = rec.calls.flatMap((c) => c.keyframes);
-      expect(rec.calls.length).toBeGreaterThan(0);
-      expect(frames.some((f) => 'transform' in f)).toBe(false);
+      // The leaving glyph fades out, the new one fades in, the text fades in: opacity only.
+      expect(rec.calls).toHaveLength(3);
+      expect(frames.some((f) => 'transform' in f || 'clipPath' in f)).toBe(false);
     } finally {
       rec.restore();
     }

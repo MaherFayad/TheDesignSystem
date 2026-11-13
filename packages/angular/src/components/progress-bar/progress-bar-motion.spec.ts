@@ -5,7 +5,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { popMark } from '../../internal/motion-feedback';
+import { haloBurst, popMark } from '../../internal/motion-feedback';
 import { DsProgressBar } from './progress-bar';
 
 interface Call {
@@ -67,7 +67,7 @@ describe('DsProgressBar motion', () => {
   beforeEach(() => (s = stage()));
   afterEach(() => s.restore());
 
-  it('pops the track once when the value reaches max, as React', async () => {
+  it('pops the track once and sends one halo from it when the value reaches max, as React', async () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();
     expect(s.take()).toEqual([]);
@@ -76,8 +76,9 @@ describe('DsProgressBar motion', () => {
     const played = s.take();
     const track = fixture.nativeElement.querySelector('[data-part="track"]');
     popMark(track, 'full', 'block');
+    haloBurst(track, 'full');
     expect(played).toEqual(s.take());
-    expect(played.map((p) => [p.target, p.options.id])).toEqual([[track, 'ds-motion:pop-mark']]);
+    expect(played.map((p) => [p.target, p.options.id])).toEqual([[track, 'ds-motion:pop-mark'], [track, 'ds-motion:progress-halo']]);
     fixture.componentInstance.v.set(100);
     await fixture.whenStable();
     expect(s.take()).toEqual([]);

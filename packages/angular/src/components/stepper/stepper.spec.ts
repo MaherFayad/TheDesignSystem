@@ -84,6 +84,51 @@ describe('DsStepper', () => {
     }
   });
 
+  it('stepper-travel, round 3: a step that turns complete draws its check from its end with stroke-dashoffset; back and reduced draw nothing', async () => {
+    const animate = vi.fn(() => ({ playState: 'running', finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
+    // Own descriptors on every prototype a stub lands on, so cleanup leaves nothing that hides later stubs.
+    const protos = [Element.prototype, HTMLElement.prototype, SVGElement.prototype] as const;
+    const own = protos.flatMap((p) => (['animate', 'getAnimations'] as const).map((k) => [p, k, Object.getOwnPropertyDescriptor(p, k)] as const));
+    for (const p of [HTMLElement.prototype, SVGElement.prototype]) {
+      Object.defineProperty(p, 'animate', { value: animate, configurable: true, writable: true });
+      Object.defineProperty(p, 'getAnimations', { value: () => [], configurable: true, writable: true });
+    }
+    document.documentElement.style.setProperty('--ds-duration-spring-soft', '220ms');
+    try {
+      const { fixture, host } = await setup();
+      const draws = () => (animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][]).filter(([, o]) => o.id === 'ds-motion:stepper-check');
+      expect(draws()).toHaveLength(0);
+      host.current.set(3);
+      await fixture.whenStable();
+      expect(draws()).toHaveLength(1);
+      const [frames, options] = draws()[0]!;
+      expect(frames).toEqual([
+        { strokeDasharray: '24 24', strokeDashoffset: -24 },
+        { strokeDasharray: '24 24', strokeDashoffset: 0 },
+      ]);
+      expect(options).toMatchObject({ duration: 220, id: 'ds-motion:stepper-check' });
+      const target = (animate.mock.contexts as Element[])[animate.mock.calls.findIndex((c) => (c as unknown as [unknown, KeyframeAnimationOptions])[1].id === 'ds-motion:stepper-check')];
+      expect(target?.tagName.toLowerCase()).toBe('path');
+      expect(target?.closest('[data-part="step"]')).toBe(document.querySelectorAll('#nav > [data-part="step"]')[2]);
+      // Going back draws nothing.
+      host.current.set(1);
+      await fixture.whenStable();
+      expect(draws()).toHaveLength(1);
+      // Reduced: the check is whole at once.
+      document.documentElement.setAttribute('data-motion', 'reduce');
+      host.current.set(3);
+      await fixture.whenStable();
+      expect(draws()).toHaveLength(1);
+    } finally {
+      document.documentElement.removeAttribute('data-motion');
+      document.documentElement.style.removeProperty('--ds-duration-spring-soft');
+      for (const [p, k, d] of own) {
+        if (d) Object.defineProperty(p, k, d);
+        else delete (p as unknown as Record<string, unknown>)[k];
+      }
+    }
+  });
+
   it('renders an ordered list with complete, current and upcoming steps, and plain titles without a handler', async () => {
     const { q, qa } = await setup();
     const list = q('#static');

@@ -154,6 +154,50 @@ export abstract class DsButtonBase {
     for (const type of BLOCKED) this.host.addEventListener(type, block, { capture: true });
     this.pressOnEnter();
     this.morphOnLoading();
+    this.trackPointer();
+  }
+
+  /**
+   * The glow that follows the pointer (interaction button-glow) and the
+   * ripple origin (a platform hook), as placeGlow and placeRipple in React's
+   * ButtonRoot. Both are custom properties on the host, written in the
+   * event: no change detection per move. Button.css decides whether the
+   * glow shows; the ripple origin is drawn only by a style or a platform
+   * that asks for it.
+   */
+  private trackPointer(): void {
+    const el = this.host;
+    // The pointer's place as a share of the box, so it holds at any zoom. A
+    // touch sets it on pointer down, so the press lights up under the finger.
+    const placeGlow = (event: PointerEvent) => {
+      if (this.resolvedEmphasis() === 'link') return;
+      const box = el.getBoundingClientRect();
+      if (!(box.width > 0 && box.height > 0)) return;
+      const share = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
+      el.style.setProperty('--_button-glow-x', share((event.clientX - box.left) / box.width));
+      el.style.setProperty('--_button-glow-y', share((event.clientY - box.top) / box.height));
+    };
+    // Where a press starts, in px from the root's inline start and block
+    // start, in the root's own CSS px, so they hold under CSS zoom. Every
+    // emphasis.
+    const placeRipple = (event: PointerEvent) => {
+      const box = el.getBoundingClientRect();
+      if (!(box.width > 0 && box.height > 0)) return;
+      const fromLeft = (event.clientX - box.left) / box.width;
+      const rtl = getComputedStyle(el).direction === 'rtl';
+      const x = (rtl ? 1 - fromLeft : fromLeft) * el.offsetWidth;
+      const y = ((event.clientY - box.top) / box.height) * el.offsetHeight;
+      el.style.setProperty('--_button-ripple-x', `${Math.round(Math.min(el.offsetWidth, Math.max(0, x)))}px`);
+      el.style.setProperty('--_button-ripple-y', `${Math.round(Math.min(el.offsetHeight, Math.max(0, y)))}px`);
+    };
+    el.addEventListener('pointerdown', (event) => {
+      if (this.inert()) return;
+      placeGlow(event);
+      placeRipple(event);
+    });
+    el.addEventListener('pointermove', (event) => {
+      if (!this.inert()) placeGlow(event);
+    });
   }
 
   /**
@@ -205,7 +249,12 @@ export abstract class DsButtonBase {
         last = loading;
         if (first) return;
         const el = this.host;
-        const label = el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]');
+        // When loading ends straight into a result (Button's data-result),
+        // the label stays out under the result glyph: only the spinner leaves.
+        const label =
+          !loading && el.hasAttribute('data-result')
+            ? null
+            : (el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]'));
         const spinner = el.querySelector(':scope > [data-part="spinner"]');
         const mode = untracked(() => this.motion.mode('button-morph'));
         const played = buttonMorph({ root: el, label, spinner }, loading ? 'idle' : 'loading', loading ? 'loading' : 'idle', { mode });

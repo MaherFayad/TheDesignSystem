@@ -100,8 +100,22 @@ async function setup() {
 }
 
 describe('DsToggleGroup', () => {
-  it('tab-slide: the on fill slides from the item it leaves, the labels answer; none in a multiple group or when reduced', async () => {
-    const animate = vi.fn(() => ({ playState: 'running', cancel: vi.fn() }) as unknown as Animation);
+  it('tab-slide: the on fill slides from the item it leaves and the labels take the ink, with no dip; none in a multiple group or when reduced', async () => {
+    // A slide carries its keyframes and timing, so the ink can read them; finished never settles, so twins stay to be read.
+    const animate = vi.fn(
+      (frames: Keyframe[], opts?: KeyframeAnimationOptions) =>
+        ({
+          playState: 'running',
+          startTime: 0,
+          finished: new Promise(() => undefined),
+          cancel: vi.fn(),
+          effect: {
+            getKeyframes: () => frames.map((f, i) => ({ ...f, computedOffset: f.offset ?? i / Math.max(1, frames.length - 1) })),
+            getTiming: () => ({ duration: opts?.duration ?? 0, easing: opts?.easing ?? 'linear' }),
+            getComputedTiming: () => ({ duration: opts?.duration ?? 0 }),
+          },
+        }) as unknown as Animation,
+    );
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
     // Own descriptors, so cleanup removes the stubs instead of leaving own properties that hide later stubs on Element.prototype.
     const own = (['animate', 'getAnimations', 'getBoundingClientRect'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
@@ -122,20 +136,36 @@ describe('DsToggleGroup', () => {
       multiple[0]!.click();
       await settle();
       expect(animate).not.toHaveBeenCalled();
+      // The spring time the slide reads (the token CSS is not loaded here), so the ink has a duration to follow.
+      document.documentElement.style.setProperty('--ds-duration-spring-snappy', '180ms');
+      // Two colors, as the CSS gives the off and on labels, so the ink has something to cross.
+      const parts = items('single').map((i) => i.querySelector<HTMLElement>(':scope > [data-part="label"], :scope > [data-part="icon"]')!);
+      parts.forEach((p, i) => (p.style.color = i === 1 ? 'rgb(2, 2, 2)' : 'rgb(1, 1, 1)'));
       items('single')[1]!.click();
       await settle();
       const calls = animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][];
-      expect(calls.length).toBe(3);
       expect(calls[0]![0][0]?.transform).toBe('translate(-60px, 0px) scale(1, 1)');
       expect(calls[0]![1]).toMatchObject({ id: 'ds-motion:indicator-slide' });
-      expect(calls[1]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
-      expect(calls[2]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
+      expect(calls.some(([, o]) => o.id === 'ds-motion:indicator-answer')).toBe(false);
+      const group = items('single')[0]!.parentElement!;
+      const twins = group.querySelectorAll<HTMLElement>('[data-part="label-ink"]');
+      expect(twins.length).toBeGreaterThan(0);
+      for (const t of twins) {
+        expect(t.getAttribute('aria-hidden')).toBe('true');
+        expect(t.style.color).toBe('rgb(2, 2, 2)');
+      }
+      const clips = calls.filter(([f, o]) => o.id === 'ds-motion:indicator-ink' && 'clipPath' in (f[0] ?? {}));
+      expect(clips).toHaveLength(twins.length);
+      expect(clips[0]![1]).toMatchObject({ duration: calls[0]![1].duration, easing: calls[0]![1].easing, fill: 'forwards' });
+      const total = calls.length;
       document.documentElement.setAttribute('data-motion', 'reduce');
       items('single')[0]!.click();
       await settle();
-      expect(animate).toHaveBeenCalledTimes(3);
+      expect(animate).toHaveBeenCalledTimes(total);
+      expect(group.querySelectorAll('[data-part="label-ink"]')).toHaveLength(0);
     } finally {
       document.documentElement.removeAttribute('data-motion');
+      document.documentElement.style.removeProperty('--ds-duration-spring-snappy');
       for (const [k, d] of own) {
         if (d) Object.defineProperty(HTMLElement.prototype, k, d);
         else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];

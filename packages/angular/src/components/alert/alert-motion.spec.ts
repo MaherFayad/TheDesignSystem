@@ -104,13 +104,12 @@ describe('DsAlert motion', () => {
     expect(moved[1]!.keyframes[0]!.transform).toBe('translate(0px, 50px)');
   });
 
-  it('reduced motion fades the ghost and moves nothing', async () => {
+  it('reduced motion: no ghost and nothing moves, the alert goes at once (round 3, review B1)', async () => {
     document.documentElement.setAttribute('data-motion', 'reduce');
     await dismissFirst();
     s.take();
     s.flush();
-    const played = s.take();
-    expect(played.map((p) => p.options.id)).toEqual(['ds-motion:flip-exit']);
-    expect(played[0]!.keyframes.every((k) => k.transform === undefined)).toBe(true);
+    expect(s.take()).toEqual([]);
+    expect(document.querySelector('[data-ds="alert"][inert]')).toBeNull();
   });
 });

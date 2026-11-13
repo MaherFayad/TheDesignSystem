@@ -1,11 +1,12 @@
 // progress-spring and progress-celebrate on ProgressCircle, as React plays
-// them: the arc turns back by the change and into place (progress-sweep),
-// the value rolls digit by digit, and reaching max pops the ring.
+// them (round 3): the arc is an SVG circle the CSS draws with
+// stroke-dashoffset (no script turn), the value rolls digit by digit, and
+// reaching max pops the ring and sends a halo from the indicator.
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { popMark, sweepRing } from '../../internal/motion-feedback';
+import { haloBurst, popMark } from '../../internal/motion-feedback';
 import { DsProgressCircle } from './progress-circle';
 
 interface Call {
@@ -67,26 +68,32 @@ describe('DsProgressCircle motion', () => {
   beforeEach(() => (s = stage()));
   afterEach(() => s.restore());
 
-  it('turns the arc, rolls the value, and pops on completion, as React', async () => {
+  it('renders the arc svg, rolls the value with no turn, and pops with a halo on completion, as React', async () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();
     expect(s.take()).toEqual([]);
     const root = fixture.nativeElement.querySelector('[data-ds="progress-circle"]');
-    const indicator = root.querySelector('[data-part="indicator"]');
+    const indicator = root.querySelector(':scope > [data-part="indicator"]');
+    const arc = indicator.querySelector(':scope > svg[data-part="arc"]');
+    expect(arc.getAttribute('aria-hidden')).toBe('true');
+    expect(arc.getAttribute('focusable')).toBe('false');
+    expect(arc.querySelector(':scope > circle').getAttribute('pathLength')).toBe('100');
     fixture.componentInstance.v.set(60);
     await fixture.whenStable();
     let played = s.take();
-    sweepRing(indicator, 0.2, 0.6);
-    expect(played[0]).toEqual(s.take()[0]);
-    expect(played[0]!.keyframes[0]!.transform).toBe('rotate(-144deg)');
-    expect(played.slice(1).every((p) => String(p.options.id).startsWith('ds-motion:digit-roll'))).toBe(true);
+    expect(played.length).toBeGreaterThan(0);
+    expect(played.every((p) => String(p.options.id).startsWith('ds-motion:digit-roll'))).toBe(true);
     expect(root.querySelector('[data-part="value"]').textContent).toBe('60%');
     fixture.componentInstance.v.set(100);
     await fixture.whenStable();
     played = s.take();
     popMark(root, 'full', 'both');
-    expect(played[0]).toEqual(s.take()[0]);
-    expect(played[1]!.options.id).toBe('ds-motion:progress-sweep');
+    haloBurst(indicator, 'full');
+    const [pop, halo] = s.take();
+    expect(played[0]).toEqual(pop);
+    expect(played[1]).toEqual(halo);
+    expect(played[1]!.target).toBe(indicator);
+    expect(played.some((p) => p.options.id === 'ds-motion:progress-sweep')).toBe(false);
   });
 
   it('reduced motion: no turn and no pop; the value fades in', async () => {
@@ -98,5 +105,6 @@ describe('DsProgressCircle motion', () => {
     const ids = s.take().map((p) => p.options.id);
     expect(ids.includes('ds-motion:progress-sweep')).toBe(false);
     expect(ids.includes('ds-motion:pop-mark')).toBe(false);
+    expect(ids.includes('ds-motion:progress-halo')).toBe(false);
   });
 });

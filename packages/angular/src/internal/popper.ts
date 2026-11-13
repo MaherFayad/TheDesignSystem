@@ -33,7 +33,7 @@ import {
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
-import { animationsDone } from '../behavior/dialog-behavior';
+import { exitGhost } from './selection-marker';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../theme';
 import type { ThemeValue } from '../theme';
 
@@ -351,7 +351,10 @@ export interface PopupLayerOptions {
 /**
  * Mounts a popup in a themed layer at the end of body, places it like Radix
  * Popper, keeps it placed while the page scrolls or resizes, and removes it
- * after its exit animation. Create one per owner, in an injection context.
+ * on close. Review B6 (order 1.23): the real popup leaves the DOM at once on
+ * close (once it has rendered data-state="closed") and an inert aria-hidden
+ * copy plays the exit (exitGhost), so a press on the trigger during the exit
+ * opens it again at once. Create one per owner, in an injection context.
  */
 export class PopupLayer {
   private readonly injector = inject(Injector);
@@ -480,18 +483,18 @@ export class PopupLayer {
     this.align.set(result.align);
   }
 
-  /** Plays the exit (the owner's data-state="closed" drives it) and removes the layer. */
+  /** Removes the layer; an inert copy plays the exit (the owner's data-state="closed" and inert drive it). */
   close(): void {
     const layer = this.layer;
     if (!layer) return;
     const generation = this.generation;
     this.closing.set(true);
-    // Let the owner render data-state="closed" first, then wait for its exit animation.
+    // Let the owner render data-state="closed" first, then leave at once and leave the exit to a copy.
     afterNextRender(
       () => {
-        void animationsDone([layer.content]).then(() => {
-          if (generation === this.generation && this.layer === layer) this.dispose();
-        });
+        if (generation !== this.generation || this.layer !== layer) return;
+        exitGhost(layer.content);
+        this.dispose();
       },
       { injector: this.injector },
     );

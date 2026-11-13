@@ -8,14 +8,43 @@
 // The twin of packages/react/src/components/Skeleton/Skeleton.tsx. Width and
 // height reach the CSS through the private properties --_skeleton-width and
 // --_skeleton-height, set as inline styles as in React.
+//
+// Round 3 (order 1.23, skeleton-swap): the ghost no longer only fades: it is
+// wiped away with clip-path from the inline start toward the inline end,
+// over duration.morph on ease.reveal, so the content shows in reading order
+// where the placeholder was. Reduced motion swaps at once, with no ghost
+// (review B1: the mode is checked here, not left to tokens).
 import { ChangeDetectionStrategy, Component, computed, input, type AnimationCallbackEvent } from '@angular/core';
+import { play, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { fadeAway, ghostOf, placeOf } from '../../internal/motion-feedback';
+import { ghostOf, placeOf } from '../../internal/motion-feedback';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+
+/** Round 3, as React's wipeAway: the ghost of a skeleton is wiped off toward the inline end; any other mode drops it. */
+export function wipeAway(ghost: HTMLElement | null, mode: PatternMode): void {
+  if (!ghost) return;
+  if (mode !== 'full') {
+    ghost.remove();
+    return;
+  }
+  const rtl = typeof getComputedStyle === 'function' && getComputedStyle(ghost).direction === 'rtl';
+  const gone = rtl ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)';
+  const a = play(
+    ghost,
+    { keyframes: [{ clipPath: 'inset(0)' }, { clipPath: gone }], duration: 'duration.morph', easing: 'ease.reveal', fill: 'forwards', origin: '50% 50%' },
+    'skeleton-wipe',
+  );
+  if (!a) {
+    ghost.remove();
+    return;
+  }
+  const drop = () => ghost.remove();
+  a.finished.then(drop, drop);
+}
 
 function toLength(value: string | number | undefined): string | null {
   if (value === undefined) return null;
@@ -57,19 +86,21 @@ export class DsSkeleton {
   }
 
   /**
-   * skeleton-swap (order 1.22): Angular calls this while the node is still
-   * in the document. Record where it is drawn and let it go at once (nothing
-   * waits); just before the next paint, if it is really gone, its ghost fades
-   * out over the content that took its place, as React plays it.
+   * skeleton-swap: Angular calls this while the node is still in the
+   * document. Record where it is drawn and let it go at once (nothing
+   * waits); just before the next paint, if it is really gone, its ghost is
+   * wiped off toward the inline end over the content that took its place,
+   * as React plays it. Round 3 (review B1): only the full mode draws a
+   * ghost; reduced motion swaps at once.
    */
   protected leave(event: AnimationCallbackEvent): void {
     const el = event.target;
     const mode = this.motion.mode('skeleton-swap');
-    const place = el.isConnected && mode !== 'none' && typeof requestAnimationFrame === 'function' ? placeOf(el) : null;
+    const place = el.isConnected && mode === 'full' && typeof requestAnimationFrame === 'function' ? placeOf(el) : null;
     event.animationComplete();
     if (!place) return;
     requestAnimationFrame(() => {
-      if (!el.isConnected) fadeAway(ghostOf(place), mode);
+      if (!el.isConnected) wipeAway(ghostOf(place), this.motion.mode('skeleton-swap'));
     });
   }
 }

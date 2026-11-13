@@ -15,6 +15,13 @@
 // (`[(value)]`), whose valueChange fires on save only. onEditingChange is the
 // editingChange output. validate is a function input. error takes a string
 // or a TemplateRef. It implements ControlValueAccessor: a save is a change.
+//
+// Motion (interaction inline-edit-morph, order 1.22, proposed), as React:
+// starting to edit morphs the edit glyph into the save check (iconMorph) and
+// the cancel mark lands one stagger step later (iconParts). Saving morphs
+// the check back into the pencil; cancelling morphs the close mark into it.
+// The leaving glyph is kept for one morph in an unnamed aria-hidden span
+// after the new one, in the same icon part, so the button keeps its size.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -23,6 +30,7 @@ import {
   ElementRef,
   Injector,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   forwardRef,
@@ -34,11 +42,14 @@ import {
   viewChild,
   type OnInit,
   type TemplateRef,
+  untracked,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
+import { iconMorph, iconParts, settled } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { DsButton } from '../button/button';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';
@@ -50,6 +61,11 @@ export type InlineEditState = 'viewing' | 'editing';
 export type InlineEditError = string | TemplateRef<unknown>;
 
 let nextId = 0;
+
+/** The interaction id of the glyph morph in the registry and the style presets. */
+const INLINE_EDIT_MORPH = 'inline-edit-morph';
+
+type MorphIcon = 'edit' | 'check' | 'close';
 
 const ATTRIBUTES = [
   'dsInlineEdit',
@@ -97,7 +113,7 @@ const ATTRIBUTES = [
         [invalid]="isInvalid()"
         [aria-describedby]="describedBy()"
       ></div>
-      <button dsIconButton data-part="save" icon="check" [label]="saveLabel()" [size]="iconSize()" (mousedown)="$event.preventDefault()" (click)="save(true)"></button>
+      <button dsIconButton data-part="save" [icon]="saveIcon" [label]="saveLabel()" [size]="iconSize()" (mousedown)="$event.preventDefault()" (click)="save(true)"></button>
       <button dsIconButton data-part="cancel" icon="close" [label]="cancelLabel()" [size]="iconSize()" (mousedown)="$event.preventDefault()" (click)="cancel()"></button>
     } @else {
       <button
@@ -106,7 +122,7 @@ const ATTRIBUTES = [
         data-part="display"
         emphasis="ghost"
         [size]="size()"
-        end="edit"
+        [end]="displayEnd"
         [disabled]="isDisabled()"
         [attr.aria-label]="name()"
         [attr.aria-describedby]="describedBy() ?? null"
@@ -126,6 +142,18 @@ const ATTRIBUTES = [
       </p>
     }
     <span data-part="status" role="status">{{ status() }}</span>
+    <ng-template #saveIcon>
+      <svg dsIcon name="check" size="md"></svg>
+      @for (l of leavingFrom('edit'); track l.id) {
+        <span aria-hidden="true"><svg dsIcon name="edit" size="md"></svg></span>
+      }
+    </ng-template>
+    <ng-template #displayEnd>
+      <svg dsIcon name="edit" size="md"></svg>
+      @for (l of leavingFrom('check', 'close'); track l.id) {
+        <span aria-hidden="true"><svg dsIcon [name]="l.icon" size="md"></svg></span>
+      }
+    </ng-template>
   `,
 })
 export class DsInlineEdit implements ControlValueAccessor, OnInit {
@@ -189,7 +217,55 @@ export class DsInlineEdit implements ControlValueAccessor, OnInit {
   protected readonly describedBy = computed(() => (this.message() !== null ? this.errorId : undefined));
   protected readonly iconSize = computed(() => (this.size() === 'lg' ? 'sm' : 'xs'));
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly motion = injectMotion();
+  /** The glyph that leaves on the last change of state, kept for one morph. */
+  private readonly leaving = signal<{ id: number; icon: MorphIcon } | null>(null);
+  private morphs = 0;
+
+  /** The leaving glyph as a list of zero or one, when it is one of `icons`, so each morph gets a new span. */
+  protected leavingFrom(...icons: MorphIcon[]): { id: number; icon: MorphIcon }[] {
+    const l = this.leaving();
+    return l && icons.includes(l.icon) ? [l] : [];
+  }
+
+  private morphFrom(icon: MorphIcon): void {
+    if (typeof this.host.animate !== 'function' || this.motion.mode(INLINE_EDIT_MORPH) === 'none') return;
+    this.morphs += 1;
+    this.leaving.set({ id: this.morphs, icon });
+  }
+
   constructor() {
+    // inline-edit-morph: plays on the glyphs just drawn, before the next paint.
+    afterRenderEffect((onCleanup) => {
+      const leaving = this.leaving();
+      if (!leaving) return;
+      untracked(() => {
+        const root = this.host;
+        const mode = this.motion.mode(INLINE_EDIT_MORPH);
+        const anims: Animation[] = [];
+        if (leaving.icon === 'edit') {
+          const part = root.querySelector(':scope > [data-part="save"] > [data-part="icon"]');
+          anims.push(...iconMorph({ from: part?.querySelector(':scope > span[aria-hidden="true"]'), to: part?.firstElementChild, turn: 90, mode }));
+          anims.push(...iconParts([null, root.querySelector(':scope > [data-part="cancel"] > [data-part="icon"]')], { mode }));
+        } else {
+          const part = root.querySelector(':scope > [data-part="display"] > [data-part="end"]');
+          anims.push(
+            ...iconMorph({
+              from: part?.querySelector(':scope > span[aria-hidden="true"]'),
+              to: part?.firstElementChild,
+              turn: leaving.icon === 'check' ? -90 : 90,
+              mode,
+            }),
+          );
+        }
+        let live = true;
+        onCleanup(() => (live = false));
+        void Promise.all(anims.map((a) => settled(a))).then(() => {
+          if (live) this.leaving.update((l) => (l?.id === leaving.id ? null : l));
+        });
+      });
+    });
     // Escape cancels. Overlays listen for Escape on the document; a window
     // capture listener comes first, cancels and marks the key handled, so a
     // dialog around the editor stays open.
@@ -247,6 +323,7 @@ export class DsInlineEdit implements ControlValueAccessor, OnInit {
     this.draft.set(this.current());
     this.ownError.set(null);
     this.status.set('');
+    this.morphFrom('edit');
     this.setEditing(true, 'input');
   }
 
@@ -269,6 +346,7 @@ export class DsInlineEdit implements ControlValueAccessor, OnInit {
       this.onChange(draft);
       this.status.set(this.savedLabel());
     }
+    this.morphFrom('check');
     this.setEditing(false, focusBack ? 'display' : 'none');
     return true;
   }
@@ -276,6 +354,7 @@ export class DsInlineEdit implements ControlValueAccessor, OnInit {
   /** Drops the draft and returns focus to the display. */
   cancel(): void {
     this.ownError.set(null);
+    this.morphFrom('close');
     this.setEditing(false, 'display');
   }
 

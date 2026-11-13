@@ -118,7 +118,7 @@ class Live {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Variants: md and sm, unread and read, every tone, grouped by day">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr));">
         <div style="max-inline-size: 24rem; ${PANEL}">
           <section dsNotificationCenter lang="en" [now]="now" [items]="en.items()" [onMarkAllRead]="en.markAll"></section>
         </div>

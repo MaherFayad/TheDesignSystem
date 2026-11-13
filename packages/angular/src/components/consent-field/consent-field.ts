@@ -308,7 +308,8 @@ export class DsConsentField implements ControlValueAccessor, OnInit {
     afterNextRender(
       () => {
         if (!this.granted()) return;
-        const mark = this.hostEl.querySelector(':scope > [data-part="control"] [data-part="indicator"] [data-ds="icon"]');
+        // The Checkbox mark: its drawn strokes since order 1.23 (the mark part), or an icon glyph.
+        const mark = this.hostEl.querySelector(':scope > [data-part="control"] [data-part="indicator"] :is([data-part="mark"], [data-ds="icon"])');
         playBeat(
           mark,
           { ...landPop(), keyframes: [{ transform: `scale(${token.morph})` }, { transform: 'scale(1)' }], composite: 'add' },

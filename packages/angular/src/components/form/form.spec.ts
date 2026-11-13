@@ -383,10 +383,19 @@ describe('DsForm', () => {
     const form = fixture.nativeElement.querySelector('#plain') as HTMLFormElement;
     (form.querySelector('input[name="name"]') as HTMLInputElement).value = 'Sara';
     (form.querySelector('input[name="email"]') as HTMLInputElement).value = 'sara@example.com';
+    expect(form.querySelector('[data-part="success-mark"]')).toBeNull();
     submit(form);
     await settle(fixture);
     expect(form.getAttribute('data-state')).toBe('submitted');
     expect(form.querySelector('[role="status"]')?.textContent?.trim()).toBe('The form was sent.');
+    // form-submit-success (order 1.23): a decorative mark draws after the buttons.
+    const mark = form.querySelector('[data-part="actions"] > [data-part="success-mark"]');
+    expect(mark?.previousElementSibling?.textContent?.trim()).toBe('Send request');
+    expect(mark?.getAttribute('aria-hidden')).toBe('true');
+    expect(mark?.getAttribute('focusable')).toBe('false');
+    expect(mark?.getAttribute('viewBox')).toBe('0 0 24 24');
+    expect(mark?.querySelectorAll('[pathLength="1"]')).toHaveLength(2);
+    expect(mark?.namespaceURI).toBe('http://www.w3.org/2000/svg');
   });
 
   it('the demo postal code says which format it wants', async () => {

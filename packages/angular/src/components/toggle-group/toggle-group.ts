@@ -29,8 +29,13 @@
 // that draws the on fill of the on item (ToggleGroup.css). When the value
 // changes, the shared pill (internal/indicator.ts) slides that fill from the
 // item it leaves to the item it reaches on the snappy spring, stretched
-// along its travel, and the labels dip and pop. A multiple group has no
-// pill. It plays from afterRenderEffect, after the items show the new state.
+// along its travel. Round 3 (order 1.23): the labels no longer dip and pop;
+// the text under the pill takes the on color where the pill is, with the
+// aria-hidden `label-ink` twins of internal/nav-ink.ts. React's ToggleGroup
+// still dips the label it leaves (its track keeps the label, so
+// followIndicator answers it); that is a leftover of round 2 and is not
+// copied here. A multiple group has no pill. It plays from
+// afterRenderEffect, after the items show the new state.
 //
 // Names that differ from React: `onValueChange` is the `valueChange` output
 // of `[(value)]`. `start`, `end` and `icon` take an icon name or a
@@ -58,7 +63,8 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { createTrack, followIndicator } from '../../internal/indicator';
+import { createTrack, followIndicator, fromLocal } from '../../internal/indicator';
+import { playInk } from '../../internal/nav-ink';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis, ButtonSlotContent } from '../button/button-base';
@@ -71,6 +77,10 @@ export type ToggleGroupShape = Extract<Shape, 'default' | 'pill' | 'square'>;
 export type ToggleGroupOrientation = 'horizontal' | 'vertical';
 /** A string for single ('' for none), a list for multiple. */
 export type ToggleGroupValue = string | string[];
+
+/** The parts whose color crosses under the pill, of one item and of the whole group. */
+const INKED_OWN = ':scope > :is([data-part="label"], [data-part="start"], [data-part="icon"], [data-part="end"])';
+const INKED = ':scope > [data-part="item"] > :is([data-part="label"], [data-part="start"], [data-part="icon"], [data-part="end"])';
 
 function toList(value: ToggleGroupValue | null | undefined): string[] {
   if (value === undefined || value === null || value === '') return [];
@@ -185,6 +195,8 @@ export class DsToggleGroup implements ControlValueAccessor {
   private onTouched: () => void = () => {};
   /** Where the on fill was last drawn, so the next change slides from there. */
   private readonly track = createTrack();
+  /** The label under the pill: its color is the rest color once the pill leaves it. */
+  private lastLabel: Element | null = null;
   private readonly motion = injectMotion();
 
   constructor() {
@@ -207,10 +219,21 @@ export class DsToggleGroup implements ControlValueAccessor {
       this.track.key = null;
       return;
     }
-    followIndicator(this.track, key, { el: pill }, {
-      mode: this.motion.mode('tab-slide'),
+    const lastLabel = this.lastLabel;
+    const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+    const slide = followIndicator(this.track, key, { el: pill }, { mode: this.motion.mode('tab-slide'), anchor: root });
+    this.lastLabel = label;
+    // Round 3: the text under the pill takes the on color where the pill is.
+    playInk({
+      switch: '--_toggle-group-ink',
+      slide,
+      to: this.track.rect ? fromLocal(this.track.rect, root) : pill.getBoundingClientRect(),
       anchor: root,
-      label: item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]'),
+      parts: Array.from(root.querySelectorAll(INKED)),
+      reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+      restFrom: lastLabel,
+      inkFrom: label,
+      axis: untracked(this.orientation) === 'vertical' ? 'y' : 'x',
     });
   }
 

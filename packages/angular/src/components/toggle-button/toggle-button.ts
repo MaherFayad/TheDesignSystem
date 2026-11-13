@@ -9,11 +9,19 @@
 //
 // The twin of packages/react/src/components/ToggleButton/ToggleButton.tsx.
 // `onPressedChange` is the `pressedChange` output of `[(pressed)]`.
+//
+// The flood (interaction toggle-pop, round 3, order 1.23): the state-layer
+// part, aria-hidden under the content, pools under the pointer while the
+// button is held (ToggleButton.css). Pointer down writes the press point
+// (`--_toggle-button-x`, `-y`) on the host; Space and Enter clear it, so keys
+// flood from the centre. Turning on floods the layer from that point across
+// the button; turning off drains it back, faster. Only the layer moves, so a
+// toggle in an attached ButtonGroup keeps its seams. The state never waits.
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, linkedSignal, model } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
 import { play } from '@the-system/motion';
-import { TOGGLE_POP_PARTS, toggleLandSpec } from '../../internal/motion-actions';
+import { pressShare, toggleLayerSpec } from '../../internal/toggles-motion';
 import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
@@ -28,6 +36,8 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
     'data-ds': 'toggle-button',
     '[attr.aria-pressed]': 'on() ? "true" : "false"',
     '[attr.data-state]': 'on() ? "on" : "off"',
+    '(pointerdown)': 'placePoint($event)',
+    '(keydown)': 'centrePoint($event)',
   },
   template: `
     <ng-template #slot let-content>
@@ -37,6 +47,7 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
         <ng-container [ngTemplateOutlet]="content" />
       }
     </ng-template>
+    <span data-part="state-layer" aria-hidden="true"></span>
     @if (icon(); as content) {
       <span data-part="icon"><ng-container [ngTemplateOutlet]="slot" [ngTemplateOutletContext]="{ $implicit: content }" /></span>
     } @else {
@@ -97,12 +108,30 @@ export class DsToggleButton extends DsButtonBase {
   }
 
   /**
-   * The pressed pop (interaction toggle-pop): on a change from the person,
-   * the content pops past rest when on, or sinks a little when off, one
-   * stagger step apart. Only the parts move. The state never waits for it.
+   * The flood (interaction toggle-pop): on a change from the person, the
+   * state layer floods from the press point when on, or drains back to it
+   * when off. A style can keep the pool and drop the flood
+   * (`--_toggle-button-flood: 0`). The state never waits for it.
    */
   private pop(on: boolean): void {
-    if (this.motion.mode('toggle-pop') !== 'full') return;
-    this.host.querySelectorAll(TOGGLE_POP_PARTS).forEach((part, i) => play(part, toggleLandSpec(on, i), 'toggle-pop'));
+    const layer = this.host.querySelector(':scope > [data-part="state-layer"]');
+    if (!layer || this.motion.mode('toggle-pop') !== 'full') return;
+    if (typeof getComputedStyle === 'function' && getComputedStyle(layer).getPropertyValue('--_toggle-button-flood').trim() === '0') return;
+    play(layer, toggleLayerSpec(on), 'toggle-pop');
+  }
+
+  /** The press point, as a share of the box so it holds at any zoom. */
+  protected placePoint(event: PointerEvent): void {
+    const box = this.host.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    this.host.style.setProperty('--_toggle-button-x', pressShare((event.clientX - box.left) / box.width));
+    this.host.style.setProperty('--_toggle-button-y', pressShare((event.clientY - box.top) / box.height));
+  }
+
+  /** Keys flood from the centre. */
+  protected centrePoint(event: KeyboardEvent): void {
+    if (event.key !== ' ' && event.key !== 'Enter') return;
+    this.host.style.removeProperty('--_toggle-button-x');
+    this.host.style.removeProperty('--_toggle-button-y');
   }
 }

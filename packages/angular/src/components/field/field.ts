@@ -13,7 +13,8 @@
 //
 // The field provides itself as DsFieldContext. A control (dsInput,
 // dsTextarea and the rest) reads its ids and state through DI, so it needs
-// no extra input. Order in the DOM: label, control, description, error. The
+// no extra input. Order in the DOM: label, control, description, error (a
+// floating field puts the label after the control, order 1.23). The
 // description and the error join the control's aria-describedby only while
 // they exist.
 import { NgTemplateOutlet } from '@angular/common';
@@ -23,6 +24,7 @@ import {
   DestroyRef,
   Directive,
   ElementRef,
+  afterEveryRender,
   afterNextRender,
   booleanAttribute,
   forwardRef,
@@ -87,17 +89,25 @@ export class DsFieldDescription {
   host: {
     'data-ds': 'field',
     '[attr.data-orientation]': 'orientation()',
+    '[attr.data-floating]': 'floating() ? "" : null',
+    '[attr.data-filled]': 'floating() && filled() ? "" : null',
     '[attr.data-invalid]': 'invalid() ? "" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-readonly]': 'readOnly() ? "" : null',
+    '(input)': 'onInput($event)',
   },
   template: `
-    @if (label() !== undefined && label() !== null) {
+    @if (!floating() && label() !== undefined && label() !== null) {
       <label dsFieldLabel>
         <ng-container *ngTemplateOutlet="textTemplate; context: { $implicit: label() }" />
       </label>
     }
     <ng-content />
+    @if (floating() && label() !== undefined && label() !== null) {
+      <label dsFieldLabel>
+        <ng-container *ngTemplateOutlet="textTemplate; context: { $implicit: label() }" />
+      </label>
+    }
     @if (description() !== undefined && description() !== null) {
       <p dsFieldDescription>
         <ng-container *ngTemplateOutlet="textTemplate; context: { $implicit: description() }" />
@@ -133,6 +143,18 @@ export class DsField extends DsFieldContext {
   readonly description = input<FieldText | null | undefined>(undefined);
   /** One line API: renders a field error with this text after the content. Empty text renders nothing. */
   readonly error = input<FieldText | null | undefined>(undefined);
+  /**
+   * A floating label (order 1.23): the `label` rests inside the control's box
+   * while the control is empty and has no focus, and rises to its place
+   * above the box on focus or once there is a value. The label renders after
+   * the control in the DOM (its paint order) and the CSS draws it first; the
+   * root carries `data-floating`, and `data-filled` while the control has a
+   * value. Use it with the `label` input and one single line control.
+   */
+  readonly floating = input(false, { transform: booleanAttribute });
+
+  /** True while the control of a floating field has a value. */
+  protected readonly filled = signal(false);
 
   private readonly base = `ds-field-${++nextId}-`;
   private readonly ownControlId = signal<string | undefined>(undefined);
@@ -159,7 +181,21 @@ export class DsField extends DsFieldContext {
   constructor() {
     super();
     settleAfterFirstRender(this);
-    consumeHostAttributes(['dsField', 'invalid', 'disabled', 'readOnly', 'required', 'orientation', 'label', 'description', 'error']);
+    consumeHostAttributes(['dsField', 'invalid', 'disabled', 'readOnly', 'required', 'orientation', 'label', 'description', 'error', 'floating']);
+    // A floating label rests in the box only while the control is empty. A value written by code
+    // (a model, a form control) changes without an input event, so read it after every render too.
+    const root = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    afterEveryRender({
+      read: () => {
+        if (!this.floating()) return;
+        const control = root.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select');
+        this.filled.set(Boolean(control?.value));
+      },
+    });
+  }
+
+  protected onInput(event: Event): void {
+    if (this.floating()) this.filled.set(Boolean((event.target as HTMLInputElement | null)?.value));
   }
 
   register(part: FieldPart): () => void {

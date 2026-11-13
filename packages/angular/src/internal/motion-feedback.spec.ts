@@ -4,7 +4,7 @@
 // function with the same arguments as React.
 import { flipExit, flipPlay, rectOf } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Celebrate, DigitRoller, dismissWithExit, FlipList, popMark, shiftToast, watchStackShift } from './motion-feedback';
+import { Celebrate, DigitRoller, dismissWithExit, fadeAway, FlipList, haloBurst, popMark, shiftToast, watchStackShift } from './motion-feedback';
 
 interface Call {
   target: Element;
@@ -95,14 +95,26 @@ describe('motion-feedback', () => {
     expect(played.map((p) => p.options.id)).toEqual(['ds-motion:flip-exit', 'ds-motion:flip', 'ds-motion:flip']);
   });
 
-  it('dismissWithExit under reduced motion fades the ghost and moves nothing', () => {
-    const { items } = list();
+  it('dismissWithExit under reduced motion closes at once with no ghost and moves nothing (round 3, review B1)', () => {
+    const { root, items } = list();
     const a = items[0]!;
-    dismissWithExit(a, 'reduced', () => a.remove());
+    let closed = false;
+    dismissWithExit(a, 'reduced', () => {
+      closed = true;
+      a.remove();
+    });
+    expect(closed).toBe(true);
     s.flush();
-    const played = s.take();
-    expect(played.map((p) => p.options.id)).toEqual(['ds-motion:flip-exit']);
-    expect(played[0]!.keyframes.every((k) => k.transform === undefined)).toBe(true);
+    expect(s.take()).toEqual([]);
+    expect(root.querySelector('[inert]')).toBeNull();
+  });
+
+  it('fadeAway drops the ghost at once under reduced motion (round 3, review B1)', () => {
+    const ghost = document.createElement('span');
+    document.body.append(ghost);
+    fadeAway(ghost, 'reduced');
+    expect(ghost.isConnected).toBe(false);
+    expect(s.take()).toEqual([]);
   });
 
   it('dismissWithExit plays nothing when the consumer keeps the element, or in mode none', () => {
@@ -170,10 +182,29 @@ describe('motion-feedback', () => {
     expect(done.update(el, true, 'full')).toBeNull();
     done.update(el, false, 'full');
     done.update(el, true, 'full');
-    const [call] = s.take();
+    const [call, halo] = s.take();
     expect(call!.options.id).toBe('ds-motion:pop-mark');
     expect(call!.keyframes.map((k) => k.transform)).toEqual(['none', 'scale(1, var(--ds-scale-anticipate))', 'scale(1, var(--ds-scale-pop))', 'none']);
+    // Round 3: one halo from the same element, in the fill color, fading out over duration.celebrate.
+    expect(halo!.target).toBe(el);
+    expect(halo!.options).toMatchObject({ id: 'ds-motion:progress-halo', fill: 'none' });
+    expect(halo!.keyframes.map((k) => k.boxShadow)).toEqual(['0 0 0 0 var(--_progress-bar-fill, var(--_progress-circle-fill))', '0 0 0 var(--ds-distance-shift) transparent']);
     expect(popMark(el, 'reduced')).toBeNull();
+    expect(haloBurst(el, 'reduced')).toBeNull();
+  });
+
+  it('Celebrate sends the halo from the part a selector names (ProgressCircle: its indicator)', () => {
+    const el = document.createElement('div');
+    const ring = document.createElement('span');
+    ring.setAttribute('data-part', 'indicator');
+    el.append(ring);
+    const done = new Celebrate();
+    done.update(el, false, 'full', 'both', ':scope > [data-part="indicator"]');
+    done.update(el, true, 'full', 'both', ':scope > [data-part="indicator"]');
+    const [pop, halo] = s.take();
+    expect(pop!.target).toBe(el);
+    expect(halo!.target).toBe(ring);
+    expect(halo!.options.id).toBe('ds-motion:progress-halo');
   });
 
   it('watchStackShift plays the flip of each toast the stack moved (shiftToast, snappy)', async () => {

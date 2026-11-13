@@ -116,7 +116,8 @@ describe('DsToaster', () => {
     expect(el?.getAttribute('data-swipe-direction')).toBe('right');
     expect(el?.getAttribute('tabindex')).toBe('0');
     expect(el?.hasAttribute('role')).toBe(false);
-    expect(Array.from(el?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'title', 'description', 'close']);
+    // A timed toast ends with its progress line (toast-timer).
+    expect(Array.from(el?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'title', 'description', 'close', 'progress']);
     const close = el?.querySelector('[data-part="close"]') as HTMLElement;
     expect(close.getAttribute('data-ds')).toBe('close-button');
     expect(close.getAttribute('aria-label')).toBe('Close notification');

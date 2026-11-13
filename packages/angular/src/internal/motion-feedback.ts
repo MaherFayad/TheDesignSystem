@@ -7,6 +7,8 @@
 // - the stack shift: packages/react/src/components/Toast/stackShift.ts
 // - the digit roll and the pop: packages/react/src/components/Stat/useDigitRoll.ts
 //   (the hook state is a small class here, `DigitRoller`)
+// - the completion beat: useCelebrate and haloBurst of
+//   packages/react/src/components/ProgressBar/ProgressBar.tsx (`Celebrate`)
 // - the FLIP list: packages/react/src/components/AvatarGroup/useFlipList.ts
 //   (the measure and the play are split, `FlipList`, since Angular measures
 //   in an effect before the template refresh and plays after the render)
@@ -39,9 +41,13 @@ export interface LeavingPlace {
   next: Node | null;
 }
 
-/** Records where an element is drawn now. */
+/**
+ * Records where an element is drawn now. The next sibling is the next
+ * element: Angular puts a comment anchor after a block's element, which
+ * leaves with it, so the ghost lands before the same element as in React.
+ */
 export function placeOf(el: Element): LeavingPlace {
-  return { el, rect: rectOf(el), parent: el.parentNode, next: el.nextSibling };
+  return { el, rect: rectOf(el), parent: el.parentNode, next: el.nextElementSibling };
 }
 
 const canAnimate = (el: Element | null | undefined): el is HTMLElement => Boolean(el && typeof (el as HTMLElement).animate === 'function');
@@ -302,25 +308,45 @@ export function popMark(el: Element | null | undefined, mode: PatternMode, axis:
 
 /**
  * progress-celebrate: the state of useCelebrate for one element. `update`
- * pops the element once each time `done` turns true after the first call.
+ * pops the element once each time `done` turns true after the first call,
+ * and (round 3) sends out one halo from the element, or from its descendant
+ * that `halo` selects (ProgressCircle: its indicator).
  */
 export class Celebrate {
   private was: boolean | undefined;
 
-  update(el: Element | null | undefined, done: boolean, mode: PatternMode, axis: 'both' | 'block' = 'block'): Animation | null {
+  update(el: Element | null | undefined, done: boolean, mode: PatternMode, axis: 'both' | 'block' = 'block', halo?: string): Animation | null {
     const before = this.was ?? done;
     this.was = done;
-    return done && !before ? popMark(el, mode, axis) : null;
+    if (!done || before) return null;
+    const pop = popMark(el, mode, axis);
+    const ring = halo ? el?.querySelector(halo) : el;
+    haloBurst(ring, mode);
+    return pop;
   }
 }
 
-/** The turn of a ProgressCircle ring from the old fraction to the new one, as React plays it (progress-sweep). */
-export function sweepRing(indicator: Element, before: number, after: number): Animation | null {
-  const turn = Math.round((before - after) * 360);
+/**
+ * Round 3 (ProgressBar.tsx haloBurst): the completion beat's halo. A
+ * box-shadow ring in the fill color grows from the element by
+ * distance.shift and fades, once, over duration.celebrate on ease.out. Full
+ * mode only.
+ */
+export function haloBurst(el: Element | null | undefined, mode: PatternMode): Animation | null {
+  if (!el || mode !== 'full') return null;
   return play(
-    indicator,
-    { keyframes: [{ transform: `rotate(${turn}deg)` }, { transform: 'none' }], duration: 'duration.spring-soft', easing: 'ease.spring-soft', fill: 'none', origin: '50% 50%' },
-    'progress-sweep',
+    el,
+    {
+      keyframes: [
+        { boxShadow: '0 0 0 0 var(--_progress-bar-fill, var(--_progress-circle-fill))' },
+        { boxShadow: '0 0 0 var(--ds-distance-shift) transparent' },
+      ],
+      duration: 'duration.celebrate',
+      easing: 'ease.out',
+      fill: 'none',
+      origin: '50% 50%',
+    },
+    'progress-halo',
   );
 }
 
