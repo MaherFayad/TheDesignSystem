@@ -67,7 +67,7 @@ import {
   type FormValidators,
   type FormValues,
 } from '@the-system/shared';
-import { playBeat, runStep, staggerGroup, token } from '@the-system/motion';
+import { FollowGlide, playBeat, runStep, staggerGroup, token } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
 import { VISUALLY_HIDDEN } from '../../internal/visually-hidden';
@@ -476,7 +476,13 @@ export class DsForm extends DsFormContext {
 
   constructor() {
     super();
-    inject(DestroyRef).onDestroy(() => (this.destroyed = true));
+    // Review N12: a summary or a message that enters moves what is under it; each row glides there, no jump.
+    let stopGlide: (() => void) | undefined;
+    afterNextRender(() => (stopGlide = new FollowGlide().watchChildren(this.host)));
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      stopGlide?.();
+    });
     consumeHostAttributes(['dsForm', 'size', 'orientation', 'validators', 'onSubmit', 'serverErrors', 'actions', 'labels']);
 
     // Errors from outside: applied when their content changes, before the view renders, so they show on the first paint.

@@ -59,6 +59,7 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
         <span data-part="end"><ng-container [ngTemplateOutlet]="slot" [ngTemplateOutletContext]="{ $implicit: content }" /></span>
       }
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsToggleButton extends DsButtonBase {

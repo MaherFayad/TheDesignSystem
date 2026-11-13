@@ -15,7 +15,7 @@
 // where the placeholder was. Reduced motion swaps at once, with no ghost
 // (review B1: the mode is checked here, not left to tokens).
 import { ChangeDetectionStrategy, Component, computed, input, type AnimationCallbackEvent } from '@angular/core';
-import { ghostOf, placeOf, wipeAway } from '@the-system/motion';
+import { ghostOf, placeOf, styleTurnsOff, wipeAway } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
@@ -73,7 +73,8 @@ export class DsSkeleton {
   protected leave(event: AnimationCallbackEvent): void {
     const el = event.target;
     const mode = this.motion.mode('skeleton-swap');
-    const place = el.isConnected && mode === 'full' && typeof requestAnimationFrame === 'function' ? placeOf(el) : null;
+    // The skeleton-swap off row (--_skeleton-swap: none) swaps at once too (review N31).
+    const place = el.isConnected && mode === 'full' && !styleTurnsOff(el, '--_skeleton-swap') && typeof requestAnimationFrame === 'function' ? placeOf(el) : null;
     event.animationComplete();
     if (!place) return;
     requestAnimationFrame(() => {

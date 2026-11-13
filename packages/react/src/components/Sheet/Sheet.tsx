@@ -72,6 +72,7 @@ import {
 import { Dialog as RadixDialog } from 'radix-ui';
 import type { OverlaySize } from '@the-system/shared';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
+import { ButtonRoot } from '../Button/ButtonBase';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
@@ -385,11 +386,16 @@ function SheetHandle({
   }
 
   const count = detents.heights.length;
+  // The system button base (lint ds/button-primitive), as CloseButton and
+  // the Pagination pages use it: ghost, the bar its only content, so no
+  // label part wraps it. Dialog.css keeps the handle look over the Button one.
   return (
-    <button
-      type="button"
+    <ButtonRoot
+      ds="button"
+      defaultEmphasis="ghost"
       data-part="handle"
       aria-label={detents.label}
+      render={() => <span data-part="handle-bar" />}
       {...pointerProps}
       onClick={() => {
         // A drag that moved is not a click; a press without one, Enter and Space step.
@@ -407,9 +413,7 @@ function SheetHandle({
         event.preventDefault();
         detents.onSettle(next);
       }}
-    >
-      <span data-part="handle-bar" />
-    </button>
+    />
   );
 }
 

@@ -7,9 +7,9 @@
  * soft window shadow with its light edge (elevation.window-soft).
  *
  * Order 1.24 (proposed), what tokens cannot say:
- * - the tone is an accent edge: a bar in the tone color on the inline start,
- *   drawn as an inset shadow so it follows the rounded corner (mirrored in
- *   right to left text); the base border edge takes the hairline color;
+ * - the tone is an accent edge: a bar in the tone color on the inline start
+ *   (order 1.29: the base edge at --_toast-edge-width, so it follows the
+ *   rounded corner and the text direction with no inset shadow);
  * - the icon sits in an icon tile: a small rounded square tinted with the
  *   tone at 18%, the icon in the tone color;
  * - the title is medium and closes up to the display tracking, the
@@ -24,6 +24,10 @@
  * shrinks only a little, so the pile reads as cards; the pile moves on the
  * bouncy spring. The timer line is the yellow primary, as thick as the tone
  * edge.
+ *
+ * Order 1.29 (proposed): the card's columns and the edge width are the
+ * hooks --_toast-columns and --_toast-edge-width, so a platform's own toast
+ * layout (the android snackbar, the ios banner) wins over this file.
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
@@ -40,15 +44,14 @@
     --_toast-border-color: var(--ds-color-material-glass-border);
     --_toast-radius: var(--ds-radius-panel);
     --_toast-blur: var(--ds-blur-window);
-    --_toast-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--_toast-edge), var(--ds-elevation-window-soft);
+    --_toast-shadow: var(--ds-elevation-window-soft);
+    --_toast-columns: var(--ds-size-control-xs) minmax(0, 1fr) auto;
+    --_toast-edge-width: calc(var(--ds-border-width-strong) * 1.5);
 
-    grid-template-columns: var(--ds-size-control-xs) minmax(0, 1fr) auto;
     align-items: center;
     column-gap: var(--ds-space-m);
     padding-block: var(--ds-space-m);
     padding-inline: var(--ds-space-l) var(--ds-space-s);
-    border-inline-start-width: var(--ds-border-width-default);
-    border-inline-start-color: var(--_toast-border-color);
     -webkit-backdrop-filter: blur(var(--_toast-blur)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--_toast-blur)) saturate(var(--ds-blur-window-saturation));
   }
@@ -57,10 +60,6 @@
   [data-style='desk'] [data-ds='toast']:not([data-tone='info'], [data-tone='success'], [data-tone='warning'], [data-tone='danger']) {
     --_toast-edge: var(--ds-color-bg-overlay-40);
     --_toast-icon: var(--ds-color-text-bright);
-  }
-
-  [data-style='desk'] [data-ds='toast']:dir(rtl) {
-    --_toast-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--_toast-edge), var(--ds-elevation-window-soft);
   }
 
   /* The icon tile: the tone at 18% under the icon in the tone color. */
@@ -149,13 +148,8 @@
     --_toast-border-color: var(--ds-color-border-strong);
   }
 
-  /* Forced colors draw no shadow: the tone edge goes back to the base border, in the system color. */
+  /* Forced colors: the base draws the edge in the system color. */
   @media (forced-colors: active) {
-    [data-style='desk'] [data-ds='toast'] {
-      border-inline-start-width: var(--ds-border-width-strong);
-      border-inline-start-color: CanvasText;
-    }
-
     [data-style='desk'] [data-ds='toast'] > [data-part='icon'] {
       background-color: Canvas;
     }

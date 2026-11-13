@@ -304,6 +304,7 @@ export class DsToggleGroup implements ControlValueAccessor {
         <span data-part="end"><ng-container [ngTemplateOutlet]="slot" [ngTemplateOutletContext]="{ $implicit: content }" /></span>
       }
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsToggleGroupItem extends DsGroupItemBase {

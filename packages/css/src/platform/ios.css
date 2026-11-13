@@ -732,6 +732,11 @@
     padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
   }
 
+  /* With detents the handle is on the Button base: the grabber does not take the button dim while it is pressed or dragged. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle']:active {
+    opacity: 1;
+  }
+
   /* The Drawer leaves its side and rises like a sheet. */
   [data-platform='ios'] [data-ds='drawer'] {
     align-items: flex-end;

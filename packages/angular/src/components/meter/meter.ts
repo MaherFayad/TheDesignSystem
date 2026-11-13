@@ -14,12 +14,13 @@
 // Motion (order 1.22, meter-fill), as React plays it: the fill plays from
 // the inline start to the value once, the first time the meter is seen: at
 // once when it is on screen at mount, else when an IntersectionObserver sees
-// it enter the viewport. Until then an inline scaleX(0) holds the fill empty
-// (set after the first render, before the paint). A value change before
+// it enter the viewport. Until then the indicator's data-held holds the fill
+// empty (set after the first render, before the paint). A value change before
 // that shows the value at once. Reduced and none: the value at once.
-// Round 3 (order 1.23, review N28): the inline transition reads the private
-// --_meter-reveal-duration and --_meter-reveal-ease, and a second beat
-// lands the value text at --_meter-value-at of the reveal (landValue).
+// Round 3 (order 1.23, review N28): the reveal reads the private
+// --_meter-reveal-duration and --_meter-reveal-ease (through data-revealing,
+// order 1.29, review N33), and a second beat lands the value text at
+// --_meter-value-at of the reveal (landValue).
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +37,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
-import { landValue, readDuration } from '@the-system/motion';
+import { landValue } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
 import { DsThemeService } from '../../theme';
@@ -174,19 +175,20 @@ export class DsMeter {
   }
 
   /**
-   * meter-fill: fills the indicator once on first view. The hold is an
-   * inline scaleX(0) with no transition, a style and not a paused animation,
-   * so nothing waits on an animation that never ends. On view the inline
-   * transform goes and the indicator's transition, set inline to
-   * --_meter-reveal-ease over --_meter-reveal-duration for that one change, plays the
-   * fill. The inline transition is dropped after that duration, so later
-   * changes use the CSS.
+   * meter-fill: fills the indicator once on first view. The hold is the
+   * indicator's `data-held` attribute, set before the first paint; Meter.css
+   * draws it empty with no transition, and print draws the value (review
+   * N33: never an inline transform that outlives the view). On view the
+   * attribute goes and `data-revealing` comes, so the fill plays on
+   * --_meter-reveal-duration and --_meter-reveal-ease. `data-revealing`
+   * stays until the next value change, which drops it before the browser
+   * styles the change, so that change uses the CSS timing. No timer, as
+   * useFillOnView in React's Meter.
    */
   private fillOnView(): void {
     let seen = false;
     let release: () => void = () => undefined;
     let observer: IntersectionObserver | undefined;
-    let timer: ReturnType<typeof setTimeout> | undefined;
     let el: HTMLElement | undefined;
     afterNextRender({
       write: () => {
@@ -196,21 +198,15 @@ export class DsMeter {
           seen = true;
           return;
         }
-        node.style.transition = 'none';
-        node.style.transform = 'scaleX(0)';
+        node.setAttribute('data-held', '');
         const show = (animate: boolean) => {
           seen = true;
           observer?.disconnect();
           // Flush the held frame, so the change below starts a transition from it.
           void getComputedStyle(node).transform;
-          // Round 3 (review N28): the timing is private, so a style changes its kind (--_meter-reveal-duration, -reveal-ease).
-          node.style.transition = animate ? 'transform var(--_meter-reveal-duration) var(--_meter-reveal-ease)' : '';
-          node.style.removeProperty('transform');
-          if (animate) {
-            const ms = readDuration(node, 'duration.reveal');
-            timer = setTimeout(() => node.style.removeProperty('transition'), ms + 50);
-            landValue(node.closest('[data-ds="meter"]')?.querySelector(':scope > [data-part="value"]'), node);
-          }
+          if (animate) node.setAttribute('data-revealing', '');
+          node.removeAttribute('data-held');
+          if (animate) landValue(node.closest('[data-ds="meter"]')?.querySelector(':scope > [data-part="value"]'), node);
         };
         release = () => show(false);
         observer = new IntersectionObserver((entries) => {
@@ -221,24 +217,25 @@ export class DsMeter {
         else observer.observe(node);
       },
     });
-    // A new value before the first view: show it, the fill is no longer news.
+    // A new value: before the first view, show it (the fill is no longer
+    // news); after it, the change takes the CSS timing, not the reveal's.
     let first: number | undefined;
-    afterRenderEffect(() => {
-      const fraction = this.fraction();
-      if (first === undefined) {
+    afterRenderEffect({
+      earlyRead: () => {
+        const fraction = this.fraction();
+        if (first === undefined) {
+          first = fraction;
+          return;
+        }
+        if (fraction === first) return;
         first = fraction;
-        return;
-      }
-      if (fraction === first || seen) return;
-      release();
+        if (!seen) release();
+        else el?.removeAttribute('data-revealing');
+      },
     });
     inject(DestroyRef).onDestroy(() => {
       observer?.disconnect();
-      if (timer) clearTimeout(timer);
-      if (!seen && el) {
-        el.style.removeProperty('transform');
-        el.style.removeProperty('transition');
-      }
+      if (!seen && el) el.removeAttribute('data-held');
     });
   }
 }

@@ -36,7 +36,7 @@ import {
 } from '@angular/core';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { playBeat, slideIn } from '@the-system/motion';
+import { FollowGlide, placeFloatingLabel, playBeat, slideIn } from '@the-system/motion';
 import { DsFieldError } from '../field-error/field-error';
 import { DsLabel } from '../label/label';
 import { DsFieldContext, settleAfterFirstRender, type FieldPart } from './field-context';
@@ -191,6 +191,37 @@ export class DsField extends DsFieldContext {
         const control = root.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select');
         this.filled.set(Boolean(control?.value));
       },
+      // The resting label sits in the control's box: its height and text inset (review B6).
+      write: () => {
+        if (this.floating()) placeFloatingLabel(root);
+      },
+    });
+    // A style, a platform or a density that resizes the box after the first paint moves the label with it.
+    let ro: ResizeObserver | null = null;
+    const unfloat = () => {
+      if (!ro) return;
+      ro.disconnect();
+      ro = null;
+      root.style.removeProperty('--_field-float-box');
+      root.style.removeProperty('--_field-float-inset');
+    };
+    afterEveryRender({
+      write: () => {
+        if (!this.floating()) return unfloat();
+        if (ro || typeof ResizeObserver === 'undefined') return;
+        ro = new ResizeObserver(() => placeFloatingLabel(root));
+        for (const child of Array.from(root.children)) ro.observe(child);
+      },
+    });
+    // A message that enters or leaves resizes the field: what follows it glides to its new place, no jump (review N12).
+    // A Field in a Form: the Form glides all of its rows at once.
+    let stopGlide: (() => void) | undefined;
+    afterNextRender(() => {
+      if (!root.parentElement?.matches('[data-ds="form"]')) stopGlide = new FollowGlide().watch(root);
+    });
+    inject(DestroyRef).onDestroy(() => {
+      unfloat();
+      stopGlide?.();
     });
   }
 

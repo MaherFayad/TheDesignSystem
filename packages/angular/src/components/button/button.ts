@@ -63,6 +63,9 @@ const resultStrokes: Record<ButtonResult, readonly string[]> = {
             }
           </svg>
         }
+        @if (resultLabel() !== undefined) {
+          <span data-result-label="">{{ resultLabel() }}</span>
+        }
       </span>
     }
     @if (loading()) {
@@ -75,6 +78,7 @@ const resultStrokes: Record<ButtonResult, readonly string[]> = {
     @if (spinnerLeaving()) {
       <span data-part="spinner" aria-hidden="true"></span>
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsButton extends DsButtonBase {

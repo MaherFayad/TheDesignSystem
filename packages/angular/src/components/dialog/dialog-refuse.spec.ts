@@ -156,3 +156,29 @@ describe('dialog-refuse', () => {
     expect(refusals()).toEqual([]);
   });
 });
+
+// Order 1.29 (review 3, B8), as React's Dialog.test.tsx: a refused press keeps focus where it was.
+describe('dialog-refuse keeps focus', () => {
+  const cancelable = (type: string) => new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 });
+
+  it('prevents the pointerdown and mousedown defaults of a refused backdrop press', async () => {
+    await open();
+    const down = cancelable('pointerdown');
+    backdrop().dispatchEvent(down);
+    const mouse = cancelable('mousedown');
+    backdrop().dispatchEvent(mouse);
+    expect(down.defaultPrevented).toBe(true);
+    expect(mouse.defaultPrevented).toBe(true);
+    expect(refusals()).toHaveLength(1);
+  });
+
+  it('leaves the defaults of a press that closes a dismissible dialog', async () => {
+    await open(true);
+    const down = cancelable('pointerdown');
+    backdrop().dispatchEvent(down);
+    const mouse = cancelable('mousedown');
+    backdrop().dispatchEvent(mouse);
+    expect(down.defaultPrevented).toBe(false);
+    expect(mouse.defaultPrevented).toBe(false);
+  });
+});

@@ -26,7 +26,7 @@ export const closeButtonLabels = { en: 'Close', ar: 'إغلاق' } as const;
     'data-ds': 'close-button',
     '[attr.aria-label]': 'name()',
   },
-  template: `<span data-part="icon"><svg dsIcon name="close" size="md"></svg></span>`,
+  template: `<span data-part="icon"><svg dsIcon name="close" size="md"></svg></span><span data-part="hit" aria-hidden="true"></span>`,
 })
 export class DsCloseButton extends DsButtonBase {
   /**

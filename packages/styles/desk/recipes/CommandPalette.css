@@ -58,6 +58,7 @@
   @media (prefers-contrast: more) {
     [data-style='desk'] [data-ds='command-palette'] {
       --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
       --_command-palette-border-color: var(--ds-color-border-strong);
       --_command-palette-divider-color: var(--ds-color-border-strong);
     }
@@ -65,6 +66,7 @@
 
   [data-style='desk'][data-contrast='more'] [data-ds='command-palette'] {
     --_command-palette-backdrop: none;
+    --_command-palette-scrim-filter: none;
     --_command-palette-border-color: var(--ds-color-border-strong);
     --_command-palette-divider-color: var(--ds-color-border-strong);
   }
@@ -73,6 +75,7 @@
     [data-style='desk'] [data-ds='command-palette'] {
       --_command-palette-bg: Canvas;
       --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
       --_command-palette-border-color: CanvasText;
       --_command-palette-divider-color: CanvasText;
       --_command-palette-item-bg-highlight: Highlight;

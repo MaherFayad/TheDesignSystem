@@ -602,7 +602,7 @@
    */
   [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] {
     position: absolute;
-    z-index: 1;
+    z-index: var(--ds-z-raised);
     inset-block: 0;
     inset-inline-start: 0;
     display: flex;
@@ -855,11 +855,22 @@
   }
 
   /*
-   * Order 1.29: with detents the handle is a native button (the key and the
-   * button path through the detents, WCAG 2.5.7). It keeps the look of the
-   * handle and takes the focus ring of the system.
+   * Order 1.29: with detents the handle is a button of the system (the key
+   * and the button path through the detents, WCAG 2.5.7), on the Button
+   * base with ghost emphasis. It keeps the look of the handle, not of a
+   * Button: no minimum size, no press dip, shade or glow, and it takes the
+   * focus ring of the system.
    */
   [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle'] {
+    --_button-press-scale: 1;
+    --_button-press-y: 0px;
+    --_button-press-shade: transparent;
+    --_button-glow: 0;
+    --_button-shadow: 0 0 transparent;
+
+    display: block;
+    min-block-size: 0;
+    min-inline-size: 0;
     appearance: none;
     margin: 0;
     border: 0;
