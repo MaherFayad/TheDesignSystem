@@ -3,17 +3,18 @@
  * of the dialog recipe, a 1px default border and the soft dialog shadow;
  * the search band on the white panel (no gray band) under a 1px line that
  * turns blue on focus; rows of size.control.md (36px) with 6px corners,
- * lit on surface-3, the soft gray of the menus; the scrim the soft slate
- * dim, unblurred. Why not tokens: CommandPalette.css sets the border to
- * transparent, the band to surface-2 and the lit row to an overlay step.
+ * lit on the brand tint (primary.tint), the soft blue marker of the menus
+ * (order 1.28; the highlight part reads it through
+ * --_command-palette-highlight-bg); the scrim the soft slate dim under the
+ * light blur.backdrop. Why not tokens: CommandPalette.css sets the border
+ * to transparent, the band to surface-2 and the lit row to an overlay step.
  */
 @layer ds.recipes {
   [data-style='neutral'] [data-ds='command-palette'] {
     --_command-palette-border-color: var(--ds-color-border-default);
     --_command-palette-band-bg: var(--ds-color-bg-surface);
-    --_command-palette-item-bg-highlight: var(--ds-color-bg-surface-3);
+    --_command-palette-item-bg-highlight: var(--ds-color-primary-tint);
     --_command-palette-meta-fg: var(--ds-color-text-subtle);
-    --_command-palette-scrim-filter: none;
   }
 
   @media (prefers-contrast: more) {

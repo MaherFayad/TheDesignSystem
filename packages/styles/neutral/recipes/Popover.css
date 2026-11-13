@@ -1,0 +1,18 @@
+/*
+ * Neutral recipe for Popover and HoverCard (order 1.28, proposed): calm
+ * white cards. They take the soft panel shadow (a wider, lighter shadow than
+ * the menu one) and open with a plain grow from scale.enter (0.98), the same
+ * on both axes: no stretch away from the trigger, no anticipation. Why not
+ * tokens: the stretch is a private product of two scale tokens in each file.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='popover'] {
+    --_popover-shadow: var(--ds-elevation-panel);
+    --_popover-enter-stretch: var(--_popover-enter-scale);
+  }
+
+  [data-style='neutral'] [data-ds='hover-card'] {
+    --_hover-card-shadow: var(--ds-elevation-panel);
+    --_hover-card-enter-stretch: var(--_hover-card-enter-scale);
+  }
+}

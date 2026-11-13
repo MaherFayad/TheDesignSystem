@@ -19,6 +19,8 @@
     --_tooltip-muted: var(--ds-color-bg-surface-4);
     --_tooltip-border-color: var(--ds-color-bg-inverse);
     --_tooltip-radius: var(--ds-radius-sm);
+    /* Order 1.28: a plain grow on both axes, no stretch. */
+    --_tooltip-enter-stretch: var(--_tooltip-enter-scale);
   }
 
   [data-style='neutral'][data-scheme='dark'] [data-ds='tooltip'] {

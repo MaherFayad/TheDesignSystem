@@ -1,0 +1,59 @@
+/*
+ * Neutral recipe for Switch (order 1.28, proposed). The everyday product
+ * switch: a filled gray track while off (no outline ring), the brand fill
+ * while on, and a white thumb with a soft shadow in both states and both
+ * schemes. No glass, no lens, no lean, no growth.
+ *
+ * Motion: the thumb travels on the snappy spring, which Neutral's token files
+ * make critically damped (158ms, no overshoot). The press barely stretches
+ * the thumb (scale.pop, 1.02) and the track does not dip. That is the
+ * difference in kind: Studio steps, Desk overshoots, Liquid stretches a lens.
+ *
+ * Why not tokens: the off track fill, the thumb colors and the thumb shadow
+ * are private properties Switch.css defaults to an outline track and a gray
+ * thumb in every style.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='switch'] {
+    --_switch-bg: var(--ds-color-border-control);
+    --_switch-thumb-off: var(--ds-color-primary-text);
+    --_switch-on-fill: var(--ds-color-primary-text);
+    --_switch-thumb-shadow: var(--ds-elevation-card-hover);
+    --_switch-duration: var(--ds-duration-spring-snappy);
+    --_switch-ease: var(--ds-ease-spring-snappy);
+    --_switch-duration-out: var(--ds-duration-spring-snappy);
+    --_switch-ease-out: var(--ds-ease-spring-snappy);
+    --_switch-track-press: 1;
+    --_switch-lean: 0px;
+  }
+
+  /* Hover lifts the off track one step, the way a gray control darkens on hover. */
+  [data-style='neutral'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-state='checked']):hover {
+    --_switch-bg: var(--ds-color-border-control-hover);
+  }
+
+  /* On: the same swap as Switch.css, repeated in this layer so the off fill above does not hold. */
+  [data-style='neutral'] [data-ds='switch'][data-state='checked'] {
+    --_switch-bg: var(--_switch-fill);
+  }
+
+  /* Reduced motion: the thumb does not stretch (this layer wins over the zeroing in Switch.css). */
+  /* The press shape is the platform's on ios and android (packages/css/src/platform),
+     and recipes beat that layer, so the style sets it only on the web platform. */
+  [data-style='neutral'][data-platform='web'] [data-ds='switch'] {
+    --_switch-stretch: var(--ds-scale-pop);
+    --_switch-thumb-size-pressed: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='neutral'] [data-ds='switch'] {
+      --_switch-stretch: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] [data-ds='switch'] {
+    --_switch-stretch: 1;
+  }
+
+  /* Forced colors: Switch.css paints the thumb and the track in system colors and drops the shadow. */
+}

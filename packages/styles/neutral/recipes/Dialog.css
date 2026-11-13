@@ -4,7 +4,10 @@
  * corners (radius.panel), a 1px border, the soft dialog shadow, roomy 24px
  * padding, a semibold title on the white panel with no band and no line,
  * and a footer band on surface-2 under a 1px line. The scrim is the soft
- * slate dim of the token file, with no blur.
+ * slate dim of the token file under a light blur (blur.backdrop, 4px since
+ * order 1.28, through --_dialog-backdrop-blur; Dialog.css drops it where
+ * unsupported, under reduced transparency and more contrast). When a close
+ * is refused the panel swings only distance.shift (4px), a calm shake.
  *
  * What tokens cannot say:
  * - the header band and the line under the title go (the title part keeps
@@ -31,7 +34,7 @@
     --_dialog-padding: var(--ds-space-4xl);
     --_dialog-band-padding-block: var(--ds-space-4xl);
     --_dialog-band-padding-inline: var(--ds-space-4xl);
-    --_dialog-scrim-filter: none;
+    --_dialog-refuse-shift: var(--ds-distance-shift);
   }
 
   /* The question stays in the ink in every tone: the icon and the red action say danger. */

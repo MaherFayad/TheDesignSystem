@@ -1,0 +1,91 @@
+/*
+ * Neutral recipe for the selection marks (order 1.28, proposed): Checkbox,
+ * RadioGroup and RadioCard. One file, because they share one look and one
+ * motion.
+ *
+ * The look: a white box or circle on the page (surface, the field fill of
+ * Neutral's inputs), the control border, the brand fill when checked, and a
+ * thin 1.5 unit stroke for the check, matching the 1.5px line icons.
+ *
+ * The motion: a quick clean draw. The fill, the land and the bend of the
+ * mark all run on ease out, so nothing overshoots; the press dips only to
+ * scale.press (0.98). A radio dot grows in place instead of travelling from
+ * the previous choice; a radio card does not lift.
+ *
+ * Why not tokens: the fills, the stroke width and the motion curves are
+ * private properties the component files default to transparent boxes, a
+ * 2 unit stroke and the bouncy spring in every style.
+ */
+@layer ds.recipes {
+  /* ------------------------------------------------------------ checkbox */
+
+  [data-style='neutral'] [data-ds='checkbox'] {
+    --_checkbox-stroke-width: 1.5;
+    --_checkbox-press-scale: var(--ds-scale-press);
+    --_checkbox-fill-ease: var(--ds-ease-out);
+    --_checkbox-land-ease: var(--ds-ease-out);
+    --_checkbox-morph-ease: var(--ds-ease-out);
+  }
+
+  [data-style='neutral'] [data-ds='checkbox']:not([data-readonly]) {
+    --_checkbox-bg: var(--ds-color-bg-surface);
+  }
+
+  /* ------------------------------------------------------------ radio group */
+
+  [data-style='neutral'] [data-ds='radio-group'] {
+    --_radio-group-bg: var(--ds-color-bg-surface);
+    --_radio-group-press-scale: var(--ds-scale-press);
+    --_radio-group-dot-travel: 0px;
+    --_radio-group-dot-ease: var(--ds-ease-out);
+    --_radio-group-fill-ease: var(--ds-ease-out);
+    --_radio-group-land-ease: var(--ds-ease-out);
+  }
+
+  /* ------------------------------------------------------------ radio card */
+
+  [data-style='neutral'] [data-ds='radio-card'] {
+    --_radio-card-bg: var(--ds-color-bg-surface);
+    --_radio-card-bg-checked: var(--ds-color-primary-tint);
+    --_radio-card-stroke-width: 1.5;
+    --_radio-card-lift: 0px;
+    --_radio-card-lift-ease: var(--ds-ease-out);
+    --_radio-card-draw-ease: var(--ds-ease-out);
+  }
+
+  /* ------------------------------------------------------------ reduced motion */
+
+  /* This layer wins over the zeroing in the component files, so the press dip is turned off here too. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='neutral'] [data-ds='checkbox'] {
+      --_checkbox-press-scale: 1;
+    }
+
+    [data-style='neutral'] [data-ds='radio-group'] {
+      --_radio-group-press-scale: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] [data-ds='checkbox'] {
+    --_checkbox-press-scale: 1;
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] [data-ds='radio-group'] {
+    --_radio-group-press-scale: 1;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-style='neutral'] [data-ds='checkbox']:not([data-readonly]) {
+      --_checkbox-bg: Canvas;
+    }
+
+    [data-style='neutral'] [data-ds='radio-group'],
+    [data-style='neutral'] [data-ds='radio-card'] {
+      --_radio-group-bg: Canvas;
+      --_radio-card-bg: Canvas;
+      --_radio-card-bg-checked: Canvas;
+    }
+  }
+}

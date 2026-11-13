@@ -15,6 +15,15 @@
  *   first line of the title;
  * - the title weight and the nested action and close Buttons
  *   (--_button-* properties, every rest color with its hover).
+ *
+ * Order 1.28 (proposed): the stack and the timer.
+ * - A gap stack: the toasts behind the front one peek a small step
+ *   (space.xs) and barely shrink (one scale.press step each), and the open
+ *   list keeps a space.m gap between white cards, so each card reads on its
+ *   own soft shadow. The stack moves on the snappy spring, critically damped
+ *   in Neutral.
+ * - The timer is a thin line (border.width.default) in the tone color of
+ *   the icon, on the block end edge of the card.
  */
 @layer ds.recipes {
   [data-style='neutral'] [data-ds='toast'] {
@@ -24,6 +33,13 @@
     --_toast-radius: var(--ds-radius-card);
     --_toast-shadow: var(--ds-elevation-panel);
     --_toast-blur: 0;
+    --_toast-peek: var(--ds-space-xs);
+    --_toast-depth: calc(1 - var(--ds-scale-press));
+    --_toast-progress: var(--_toast-icon);
+  }
+
+  [data-style='neutral'] [data-ds='toaster'] {
+    --_toaster-gap: var(--ds-space-m);
   }
 
   [data-style='neutral'] [data-ds='toast'] > [data-part='icon'] {
@@ -90,6 +106,7 @@
     [data-style='neutral'] [data-ds='toast'] {
       --_toast-border-color: CanvasText;
       --_toast-edge: CanvasText;
+      --_toast-progress: CanvasText;
       --_toast-shadow: none;
     }
 
@@ -108,5 +125,11 @@
   [data-style='neutral'][data-contrast='more'] [data-ds='toast'] {
     --_toast-border-color: var(--ds-color-border-strong);
     --_toast-edge: var(--ds-color-border-strong);
+  }
+
+  /* The ios banner and the android snackbar draw no timer line (packages/css/src/platform),
+     and recipes beat that layer, so the style draws its line on the web platform only. */
+  [data-style='neutral'][data-platform='web'] [data-ds='toast'] {
+    --_toast-progress-thickness: var(--ds-border-width-default);
   }
 }

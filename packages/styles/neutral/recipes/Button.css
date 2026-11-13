@@ -20,6 +20,15 @@
  * Every rest color comes with its hover color, as Button.css asks, and the
  * hover and press swaps are repeated in this layer (a recipe value wins over
  * the swaps in ds.base).
+ *
+ * Order 1.28 (proposed), the press: restrained. No glow and no highlight on
+ * a filled button, no dark press shade (the press color swap above carries
+ * it), a shallow sink of border.width.default (1px) with the scale.press
+ * dip, and the release on the snappy spring, which Neutral's token files
+ * make critically damped. The result glyph lands on ease out and does not
+ * roll. CopyButton cross fades: the words fade in place (no roll), the copy
+ * glyph fades without a turn or a shrink, and the check draws in along its
+ * stroke on ease out, with no overshoot.
  */
 @layer ds.recipes {
   [data-style='neutral'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-size='xs'], [data-size='sm']) {
@@ -66,5 +75,66 @@
   [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']):active:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
+  }
+
+  /* ------------------------------------------------------------ press and release (order 1.28) */
+
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
+    --_button-press-y: var(--ds-border-width-default);
+    --_button-press-shade: transparent;
+    --_button-release-ease: var(--ds-ease-spring-snappy);
+    --_button-release-duration: var(--ds-duration-spring-snappy);
+    --_button-roll: 0px;
+    --_button-result-ease: var(--ds-ease-out);
+  }
+
+  /* ToggleButton keeps the pool of its state layer and does not flood; SplitButton's chevron drops a nudge. */
+  [data-style='neutral'] [data-ds='toggle-button'] {
+    --_toggle-button-flood: 0;
+  }
+
+  [data-style='neutral'] [data-ds='split-button'] {
+    --_split-button-drop-press: var(--ds-distance-nudge);
+  }
+
+  /* CopyButton: a quick cross fade and a check that draws. */
+  [data-style='neutral'] [data-ds='copy-button'] {
+    --_copy-button-roll: 0px;
+    --_copy-button-turn: 0deg;
+    --_copy-button-shrink: 1;
+    --_copy-button-close: circle(75% at 50% 50%);
+    --_copy-button-overshoot: 0px;
+    --_copy-button-rise: var(--ds-distance-nudge);
+    --_copy-button-ease-in: var(--ds-ease-out);
+    --_copy-button-pop-ease: var(--ds-ease-out);
+  }
+
+  /* Reduced motion: no sink and no rise (this layer wins over the zeroing in Button.css and CopyButton.css). */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+      --_button-press-y: 0px;
+    }
+
+    [data-style='neutral'] [data-ds='copy-button'] {
+      --_copy-button-rise: 0px;
+    }
+
+    [data-style='neutral'] [data-ds='split-button'] {
+      --_split-button-drop-press: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-press-y: 0px;
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] [data-ds='copy-button'] {
+    --_copy-button-rise: 0px;
+  }
+
+  :root[data-motion='reduce'] [data-style='neutral'] [data-ds='split-button'] {
+    --_split-button-drop-press: 0px;
   }
 }
