@@ -125,14 +125,14 @@
   /* ------------------------------------------------------------ footer actions */
 
   /* The footer: a row of cells with 1px rules between them, edge to edge. */
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
     gap: var(--ds-space-px);
     padding: 0;
     background-color: var(--_dialog-divider-color);
   }
 
   /* Every footer button is a square cell that grows to share the row. The neutral one: a plain cell. */
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'] {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'] {
     --_button-radius: 0;
     --_button-height: var(--ds-size-control-lg);
     --_button-bg: var(--_dialog-footer-bg);
@@ -147,7 +147,7 @@
     flex: 1 1 0;
   }
   /* The main action: the inverted cell, white in dark and black in light; pressed, it turns back. */
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] :is([data-ds='button'][data-tone='accent'], [data-ds='button'][data-part='action']:not([data-tone='danger'])) {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] :is([data-ds='button'][data-tone='accent'], [data-ds='button'][data-part='action']:not([data-tone='danger'])) {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -160,7 +160,7 @@
   }
 
   /* A destructive main action: the flat red cell. */
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger'] {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger'] {
     --_button-bg: var(--ds-color-state-danger-solid);
     --_button-fg: var(--ds-color-state-danger-on-solid);
     --_button-border-color: var(--ds-color-state-danger-solid);
@@ -173,13 +173,13 @@
   }
 
   /* This layer wins over the base state rules: the swaps again, for the footer buttons. */
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:hover:not([data-disabled], [data-loading]) {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:hover:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-hover);
     --_button-fg: var(--_button-fg-hover);
     --_button-border-color: var(--_button-border-color-hover);
   }
 
-  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:active:not([data-disabled], [data-loading]) {
+  [data-style='studio'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:active:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
   }
