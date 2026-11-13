@@ -1,4 +1,4 @@
-// Round 2 motion of Rating (order 1.22): rating-fill, with React's beats.
+// Motion of Rating: rating-fill (order 1.23 form) and the rating-preview parts, with React's beats.
 // jsdom has no Web Animations API, so Element.animate is a stand in that
 // records each call.
 import { Component } from '@angular/core';
@@ -53,23 +53,40 @@ async function setup() {
   return { fixture, stars, pick, icon };
 }
 
-describe('rating motion, order 1.22', () => {
-  it('rating-fill: only the stars that fill land from scale.morph; the ones that empty dip; kept stars never move', async () => {
+describe('rating motion, order 1.23', () => {
+  it('rating-fill: the chosen star and every star before it pop as one run; filled stars bounce, new stars land, emptied stars dip', async () => {
     const { pick, icon } = await setup();
     await pick(4);
     let played = ids('rating-fill');
-    expect(played.map((c) => c.el)).toEqual([icon(3), icon(4)]);
-    expect(played.every((c) => c.frames[0]?.transform === `scale(${token.morph})` && c.frames[0]?.opacity === 0)).toBe(true);
+    expect(played.map((c) => c.el)).toEqual([icon(1), icon(2), icon(3), icon(4)]);
+    // Stars 1 and 2 were filled: they dip and bounce with no fade, so they never blink.
+    for (const c of played.slice(0, 2)) expect(JSON.stringify(c.frames)).not.toContain('opacity');
+    expect(played[0]?.frames.map((f) => f.transform)).toEqual(['none', `scale(${token.anticipate})`, 'none']);
+    // Stars 3 and 4 land from scale.morph; the run spreads over two stagger steps from the first.
+    expect(played.slice(2).every((c) => c.frames[0]?.transform === `scale(${token.morph})` && c.frames[0]?.opacity === 0)).toBe(true);
+    expect(played[0]?.opts.delay).toBe(0);
 
     calls = [];
     await pick(1);
     played = ids('rating-fill');
-    expect(played.map((c) => c.el)).toEqual([icon(2), icon(3), icon(4)]);
-    expect(played[0]?.frames.map((f) => f.transform)).toEqual(['none', `scale(${token.anticipate})`, 'none']);
+    // Star 1 bounces; 2 to 4 empty and dip together, with no fade.
+    expect(played.map((c) => c.el)).toEqual([icon(1), icon(2), icon(3), icon(4)]);
+    for (const c of played) expect(JSON.stringify(c.frames)).not.toContain('opacity');
 
     calls = [];
     await pick(1);
     expect(ids('rating-fill')).toHaveLength(0);
+  });
+
+  it('rating-preview: each star holds an aria-hidden fill glyph and its index for the sweep', async () => {
+    const { stars } = await setup();
+    stars.forEach((star, i) => {
+      const fill = star.querySelector('[data-part="fill"]');
+      expect(fill?.getAttribute('aria-hidden')).toBe('true');
+      expect(fill?.getAttribute('data-icon')).toBe('star-filled');
+      expect(star.style.getPropertyValue('--_rating-index')).toBe(String(i));
+    });
+    expect(stars[0]?.getAttribute('aria-label')).toBe('1 of 5 stars');
   });
 
   it('rating-fill reduced: the new stars fade in, the stars that empty change at once', async () => {

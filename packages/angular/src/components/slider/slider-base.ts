@@ -17,10 +17,23 @@
 //
 // Motion, as React: slider-pull is CSS on the thumb (data-dragging).
 // slider-bubble: each thumb holds an unnamed aria-hidden span, the value
-// bubble, whose digits roll (rollDigits) while a pointer holds the slider.
-// slider-nudge (pattern shake, one swing toward the end): a key or a drag
-// that pushes a thumb past the minimum or the maximum of a horizontal slider
-// nudges it toward that end and back once. A held key nudges once.
+// bubble, whose digits roll (rollDigits) while a pointer holds the slider;
+// the bubble takes its direction from its own text (CSS, review B4).
+//
+// Order 1.23 (proposed), as React:
+// - slider-fill: the fill is the track's ::before, clipped from
+//   --_slider-from to --_slider-to, written here on the host in React's
+//   order with --_slider-pull-start and --_slider-pull-end. While a pointer
+//   drags, the fill and the thumb follow it at once. Any other change (a key,
+//   a press on the track, a new controlled value) glides the fill's clip-path
+//   and the thumb's wrapper (composite add on its own transform) on the
+//   snappy spring (internal/slider-fill.ts).
+// - slider-rubber-band: a drag past an end pulls the outer thumb, and the
+//   fill with it, with resistance 1 - 1/(1 + d/thumb), times
+//   --_slider-pull-max; on release both spring back on the bouncy spring.
+// - slider-nudge: a key that pushes a thumb past its end pulls it half way
+//   (KEY_BUMP), holds one snappy spring and lets go. The value never
+//   changes. A held key nudges once. A vertical slider does not nudge or pull.
 import {
   Directive,
   ElementRef,
@@ -38,11 +51,12 @@ import {
   type WritableSignal,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
-import { renderDigits, rollDigits } from '@the-system/motion';
+import { readDuration, renderDigits, rollDigits } from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
 import { BubbleEvent } from '../../internal/bubble-event';
 import { injectMotion } from '../../internal/motion';
 import { optionalBoolean } from '../../internal/optional-boolean';
+import { KEY_BUMP, NO_PULL, glide, rubberBand, type GlideState, type SliderPull } from '../../internal/slider-fill';
 import type { OrderedStyle } from '../../internal/ordered-style';
 import { DsThemeService } from '../../theme/theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -262,10 +276,15 @@ export abstract class DsSliderBase {
   /** The value bubble of each thumb (slider-bubble). */
   private readonly digitHosts = viewChildren<ElementRef<HTMLSpanElement>>('digits');
   private readonly motion = injectMotion();
-  /** slider-nudge: no new nudge while one plays. */
-  private nudgeBusyUntil = 0;
-  /** The end the pointer went past during this drag, so a drag nudges once per excursion. */
-  private pastEnd: SliderEnd | null = null;
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  /** slider-rubber-band: how far a drag pulls past each end, 0 to 1. */
+  readonly pull = signal<SliderPull>(NO_PULL);
+  /** True while a pointer drag has moved since it went down: the fill and the thumb follow at once. */
+  private following = false;
+  /** slider-nudge: the timer that lets go of a key pull. */
+  private bumpTimer: ReturnType<typeof setTimeout> | null = null;
+  /** slider-fill: what the glide saw at the last render. */
+  private glideState: GlideState | null = null;
   /** slider-bubble: the value and text each bubble shows, and when the last roll started. */
   private shownDigits: { value: number; text: string }[] = [];
   private lastRoll = -Infinity;
@@ -432,6 +451,28 @@ export abstract class DsSliderBase {
       const values = this.values();
       this.bubbles().forEach((ref, i) => bubbleInput.update(ref.nativeElement, String(values[i])));
     });
+    // slider-fill: the fill's ends and the pull on the host, in React's order, then the glide.
+    afterRenderEffect(() => {
+      const values = this.values();
+      const min = this.min();
+      const span = this.max() - min || 1;
+      const pull = this.pull();
+      const control = this.control()[0]?.nativeElement;
+      untracked(() => {
+        const fraction = (v: number) => Math.min(1, Math.max(0, (v - min) / span));
+        const style = this.host.style;
+        style.setProperty('--_slider-from', String(values.length > 1 ? fraction(values[0] ?? min) : 0));
+        style.setProperty('--_slider-to', String(fraction(values[values.length - 1] ?? min)));
+        style.setProperty('--_slider-pull-start', String(pull.start));
+        style.setProperty('--_slider-pull-end', String(pull.end));
+        if (!control) return;
+        const places = values.map((v) => (v - min) / span);
+        this.glideState = glide(control, this.following, places, pull.start > 0 || pull.end > 0, this.glideState, this.motion.mode);
+      });
+    });
+    destroyRef.onDestroy(() => {
+      if (this.bumpTimer) clearTimeout(this.bumpTimer);
+    });
   }
 
   private syncBubbles(values: readonly number[], format: (v: number) => string, dragging: boolean, hosts: HTMLSpanElement[]): void {
@@ -453,16 +494,28 @@ export abstract class DsSliderBase {
     });
   }
 
-  /** slider-nudge: plays the shake pattern, one swing toward `end`, on a thumb that cannot go further. */
-  private nudge(thumb: Element | null | undefined, end: SliderEnd): void {
-    const t = now();
-    if (!thumb || t < this.nudgeBusyUntil) return;
-    const nudge = this.motion.play(thumb, 'shake', 'slider-nudge', { swings: 1, toward: end });
-    if (!nudge) return;
-    // Added to the lift of a grabbed thumb instead of replacing it.
-    if (nudge.effect && 'composite' in nudge.effect) (nudge.effect as KeyframeEffect).composite = 'add';
-    const duration = nudge.effect?.getTiming().duration;
-    this.nudgeBusyUntil = t + (typeof duration === 'number' ? duration : 0);
+  /**
+   * slider-nudge (order 1.23): a key that pushes a thumb past its end pulls
+   * it, and the fill with it, KEY_BUMP of --_slider-pull-max past the end,
+   * holds one snappy spring, then lets go: the rubber band of a drag, played
+   * by a key. A rapid second key restarts it.
+   */
+  private bump(end: SliderEnd): void {
+    if (this.bumpTimer) clearTimeout(this.bumpTimer);
+    this.pull.set({ start: end === 'start' ? KEY_BUMP : 0, end: end === 'end' ? KEY_BUMP : 0 });
+    // Hold the pull for one snappy spring, so it is seen, then let go. A behavior timer, not a wait on an event.
+    const hold = readDuration(this.host, 'duration.spring-snappy');
+    this.bumpTimer = setTimeout(() => {
+      this.bumpTimer = null;
+      this.pull.set(NO_PULL);
+    }, hold);
+  }
+
+  /** The end of a drag or a commit: the drag state, the follow and any pull go. */
+  private release(): void {
+    this.dragging.set(false);
+    this.following = false;
+    if (this.pull().start !== 0 || this.pull().end !== 0) this.pull.set(NO_PULL);
   }
 
   /** The thumb that has focus in this slider, and its index. */
@@ -474,8 +527,7 @@ export abstract class DsSliderBase {
   }
 
   protected onLostPointerCapture(): void {
-    this.dragging.set(false);
-    this.pastEnd = null;
+    this.release();
   }
 
   /** The thumb elements, start first. */
@@ -493,8 +545,7 @@ export abstract class DsSliderBase {
   }
 
   private commit(next: number[]): void {
-    this.dragging.set(false);
-    this.pastEnd = null;
+    this.release();
     this.emitCommit(next);
   }
 
@@ -539,7 +590,7 @@ export abstract class DsSliderBase {
     // slider-nudge: a key that pushes a thumb past the minimum or the maximum.
     const end = this.orientation() === 'horizontal' && !event.repeat && !this.isDisabled() ? keyEnd(event.key, this.dir()) : null;
     const found = end ? this.focusedThumb() : null;
-    if (end && found && values[found[1]] === (end === 'start' ? min : max)) this.nudge(found[0], end);
+    if (end && found && values[found[1]] === (end === 'start' ? min : max) && this.motion.mode('slider-nudge') !== 'none') this.bump(end);
     // React SliderBase: with two thumbs, Home and End move the focused thumb as far as the other allows.
     if (values.length >= 2 && (event.key === 'Home' || event.key === 'End')) {
       const index = (event.target as HTMLElement).getAttribute('data-thumb') === 'end' ? 1 : 0;
@@ -596,6 +647,7 @@ export abstract class DsSliderBase {
 
   protected onPointerDown(event: PointerEvent): void {
     const disabled = this.isDisabled();
+    this.following = false;
     if (!disabled) {
       this.dragging.set(true);
       this.valuesBeforeSlideStart = this.values();
@@ -618,26 +670,33 @@ export abstract class DsSliderBase {
   }
 
   protected onPointerMove(event: PointerEvent): void {
-    this.nudgePastEnd(event);
+    // From the first move of a drag, the fill and the thumb follow the pointer with no glide.
+    if (this.dragging()) this.following = true;
+    this.pullPastEnd(event);
     const target = event.target as HTMLElement;
     if (this.isDisabled() || !target.hasPointerCapture?.(event.pointerId)) return;
     this.changedByPointer = true;
     this.updateValues(this.valueFromPointer(event), this.valueIndexToChange, false);
   }
 
-  /** slider-nudge: the pointer went past the start or the end of the track. */
-  private nudgePastEnd(event: PointerEvent): void {
+  /** slider-rubber-band: the pointer went past the start or the end of the track. */
+  private pullPastEnd(event: PointerEvent): void {
     if (!this.dragging() || this.orientation() !== 'horizontal') return;
     const track = this.control()[0]?.nativeElement.querySelector('[data-part="track"]')?.getBoundingClientRect();
     if (!track) return;
-    const beforeLeft = event.clientX < track.left;
-    const pastRight = event.clientX > track.right;
-    const end: SliderEnd | null = beforeLeft || pastRight ? (beforeLeft === (this.dir() === 'rtl') ? 'end' : 'start') : null;
-    if (end === this.pastEnd) return;
-    this.pastEnd = end;
+    const beforeLeft = Math.max(0, track.left - event.clientX);
+    const pastRight = Math.max(0, event.clientX - track.right);
+    const end: SliderEnd | null = beforeLeft > 0 || pastRight > 0 ? (beforeLeft > 0 === (this.dir() === 'rtl') ? 'end' : 'start') : null;
     const found = end ? this.focusedThumb() : null;
     // Only the outer thumb of that end: the start thumb of a range stops at the end thumb, not at the maximum.
-    if (end && found && found[1] === (end === 'start' ? 0 : this.values().length - 1)) this.nudge(found[0], end);
+    const outer = Boolean(end && found && found[1] === (end === 'start' ? 0 : this.values().length - 1));
+    // The resistance scale is the thumb's own target, so a larger slider pulls further. Measured in the
+    // same space as the pointer (a zoomed ancestor scales both), so the pull does not change with zoom.
+    const scale = found?.[0] ? found[0].getBoundingClientRect().width : 0;
+    const amount = outer ? rubberBand(Math.max(beforeLeft, pastRight), scale) : 0;
+    const next = { start: end === 'start' ? amount : 0, end: end === 'end' ? amount : 0 };
+    const p = this.pull();
+    if (p.start !== next.start || p.end !== next.end) this.pull.set(next);
   }
 
   protected onPointerUp(event: PointerEvent): void {
