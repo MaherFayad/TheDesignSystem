@@ -65,6 +65,29 @@ describe('DsProgressCircle', () => {
     expect(parts(q('plain'))).toEqual(['track', 'indicator']);
   });
 
+  it('B11 (review interactions-3): the indicator holds the arc part with a value and when indeterminate, as React', async () => {
+    const { q, host, fixture } = await setup();
+    const arc = (id: string) => {
+      const indicator = q(id).querySelector(':scope > [data-part="indicator"]') as HTMLElement;
+      expect(Array.from(indicator.children).map((c) => `${c.localName}[${c.getAttribute('data-part')}]`)).toEqual(['svg[arc]']);
+      const svg = indicator.firstElementChild as SVGElement;
+      expect(svg.getAttribute('aria-hidden')).toBe('true');
+      expect(svg.getAttribute('focusable')).toBe('false');
+      expect(Array.from(svg.children).map((c) => `${c.localName} ${c.getAttribute('pathLength')}`)).toEqual(['circle 100']);
+    };
+    arc('plain');
+    arc('small');
+    arc('busy');
+    expect(q('busy').getAttribute('data-state')).toBe('indeterminate');
+    host.value.set(null);
+    await fixture.whenStable();
+    arc('plain');
+    host.value.set(100);
+    await fixture.whenStable();
+    expect(q('plain').getAttribute('data-state')).toBe('complete');
+    arc('plain');
+  });
+
   it('valueText and max', async () => {
     const { q } = await setup();
     const el = q('slash');
