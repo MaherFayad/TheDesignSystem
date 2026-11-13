@@ -741,6 +741,17 @@ check` green, axe clean on the sample pages, screenshots in
 `docs/reports/shots/docs-redesign/`, report `docs/reports/docs-redesign.md`.
 The lead deploys.
 
+### 1.29 Fix round after the round 3 review (ds-component with ds-style and ds-angular)
+
+Added on 2026-11-13. One session owns components, styles, platforms and
+Angular together, with subagents on distinct files. Inputs: the 14 blockers,
+the ten weakest and the notes of `docs/reports/reviews/interactions-3.md`;
+"Hooks still needed" in `docs/reports/hook-wiring.md`; "Changes needed from
+the lead" in `docs/reports/lanes/angular-sync-3.md` (one shared copy of the
+motion helpers in `packages/motion`). Accept: `npm run check` green; both
+contract suites green; each blocker has a test; report
+`docs/reports/fixes/interactions-3.md`. This is fix round 1 of 3 for round 3.
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs

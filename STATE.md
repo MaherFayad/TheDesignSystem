@@ -160,7 +160,7 @@ Review sessions (findings only, no source edits), reports in
 | Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | merged, 18 blockers |
 | Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | merged: 52 of 55 fixed, 1 not, 2 regressed, 3 new blockers |
 | Interaction round and late fix recheck | claude/ds-review-interactions | session_01ErLBsZpFBNp9CcbADZHPc5 | merged: 3 interaction blockers, 3 late blockers, all handed to order 1.22 |
-| Interaction round 3: rules, craft, performance, regressions | claude/ds-review-interactions-3 | session_01ErLBsdgbg4DQ3sNzfuCapR | running |
+| Interaction round 3: rules, craft, performance, regressions | claude/ds-review-interactions-3 | session_01ErLBsdgbg4DQ3sNzfuCapR | merged: 14 blockers, 48 notes; fix order 1.29 |
 | Interaction round 2: rules, richness, regressions | claude/ds-review-interactions-2 | session_01ErLBsde1tvdsrWdFmLUiCC | merged; blockers go to order 1.23 |
 | Angular A3, A4, late ports, recheck of angular-1 | claude/ds-review-angular-2 | session_01ErLBsbZDc249xJd2nXyVxA | merged: 20 blockers in 12 components |
 | Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | merged, blockers in 6 components, 4 not ported |
