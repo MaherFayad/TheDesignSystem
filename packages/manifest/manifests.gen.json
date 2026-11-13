@@ -652,7 +652,8 @@
         "The page behind does not scroll while it is open (Radix scroll lock).",
         "Toasts sit above it and stay readable and clickable, as with Dialog.",
         "The icon is decoration and hidden from assistive tech; the title carries the meaning.",
-        "No native title attribute."
+        "No native title attribute.",
+        "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms."
       ],
       "native": {
         "accessibilityRole": "alert",
@@ -2646,7 +2647,7 @@
           "success",
           "error"
         ],
-        "description": "The ending of an action (interaction button-result): while set, the label rolls out and a check (success) or a mark (error) draws in its place, and an error shakes the button once. Sets data-result. The caller clears it to go back, for example after delay.feedback. The width holds."
+        "description": "The ending of an action (interaction button-result): while set, the label rolls out and a check (success) or a cross (error) draws in its place, and an error shakes the button once. Sets data-result. The caller clears it to go back, for example after delay.feedback. The width holds."
       },
       "resultLabel": {
         "type": "string",
@@ -2683,7 +2684,8 @@
         "No native title attribute. Hints come from Tooltip (wave 1).",
         "Motion of round 3 (order 1.23, proposed). Press: the root dips to scale.press, the parts sink by --_button-press-y (1px at xs and sm, distance.nudge at md, one more pixel at lg and on a FloatingActionButton) and an inner shade at the top edge (::after) comes in over duration.instant; release springs back on the bouncy spring. Glow: on a solid fill a soft highlight (::before) follows the pointer, set from pointermove as a share of the box; --_button-glow: 0 turns it off. Result: the label rolls up and out, the glyph draws with stroke-dashoffset, an error shakes once by distance.nudge over duration.celebrate.",
         "Hover looks apply only under @media (hover: hover), so a tap on a phone never leaves a hover look; press works on touch through :active.",
-        "Reduced motion (the system setting and data-motion reduce): no sink, no shake, no roll, no glow, and the result glyph shows whole at once. Forced colors: the glow and the shade layers are hidden."
+        "Reduced motion (the system setting and data-motion reduce): no sink, no shake, no roll, no glow, and the result glyph shows whole at once. Forced colors: the glow and the shade layers are hidden.",
+        "Hooks for styles and platforms: on pointerdown ButtonRoot writes --_button-ripple-x and --_button-ripple-y (px from the inline start and the block start, 50% until a press) for a ripple a platform draws; --_button-press-ease, --_button-release-ease, --_button-release-duration, --_button-result-ease and --_button-draw-ease set the curve of each beat; --_button-press-shade transparent, --_button-press-y 0px, --_button-glow 0, --_button-shake 0px, --_button-roll 0px and --_button-draw 0 each drop one beat."
       ]
     },
     "content": {
@@ -3534,6 +3536,7 @@
       "root",
       "control",
       "indicator",
+      "mark",
       "label",
       "description"
     ],
@@ -3656,7 +3659,8 @@
         "The box is 16px inside a 24px target. The label is a native label bound to the control, so it extends the target.",
         "A checked box shows a check and an indeterminate box a minus, so the state never relies on color alone.",
         "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the box draws dashed.",
-        "Indeterminate is a display state. The next click checks the box."
+        "Indeterminate is a display state. The next click checks the box.",
+        "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once."
       ]
     },
     "content": {
@@ -3703,9 +3707,15 @@
       "focus.shadow.ring",
       "duration.base",
       "ease.default",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.morph",
+      "duration.quick",
+      "ease.in",
+      "ease.exit",
+      "ease.spring-snappy",
+      "delay.stagger"
     ],
-    "motion": "fade",
+    "motion": "chart-draw",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -3898,7 +3908,8 @@
         "Items are Checkbox components with a value. They read checked, size, name, disabled, invalid and read only from the group.",
         "The error is not a live region and never role alert. A form that checks on submit moves focus to the first item of the invalid group.",
         "Arrow keys do not move between items: that is a RadioGroup. Each checkbox is its own tab stop, as native checkboxes are.",
-        "checked, unchecked and indeterminate are on the select all part, a Checkbox root that carries the group's select-all part. The group root has no data-state."
+        "checked, unchecked and indeterminate are on the select all part, a Checkbox root that carries the group's select-all part. The group root has no data-state.",
+        "Motion, round 3: select all cascades the draw of the boxes one delay.stagger apart, capped at three steps, in reading order when it checks and from the last box when it unchecks."
       ]
     },
     "content": {
@@ -3930,7 +3941,7 @@
       "color.text.muted",
       "color.state.danger.text"
     ],
-    "motion": "fade",
+    "motion": "chart-draw",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -4819,7 +4830,8 @@
       "empty",
       "status",
       "footer",
-      "hint"
+      "hint",
+      "highlight"
     ],
     "parts": {
       "SearchField": "search",
@@ -5109,7 +5121,8 @@
         "list",
         "item",
         "hint",
-        "footer"
+        "footer",
+        "highlight"
       ]
     },
     "uses": [
@@ -5601,7 +5614,8 @@
       "group",
       "separator",
       "sub-trigger",
-      "sub-content"
+      "sub-content",
+      "highlight"
     ],
     "parts": {
       "ContextMenuContent": "root",
@@ -5913,7 +5927,8 @@
         "group",
         "separator",
         "sub-trigger",
-        "sub-content"
+        "sub-content",
+        "highlight"
       ],
       "keys": {
         "Shift+F10": {
@@ -6069,7 +6084,7 @@
         "Motion of round 3 (order 1.23, proposed, interaction copy-swap): the copy glyph closes into its centre (a circle clip and scale.morph) while the check wipes in along its strokes (clip-path) and pops on the bouncy spring, in the success text color; the warning pops in and the button shakes once after a failure. The label rolls from the action name to Copied (or the failure words) like a counter and rolls back after delay.feedback. The three words sit in one grid cell, so the button keeps the width of the widest and never changes size.",
         "The icon only form shows a small aria-hidden bubble above the button with the result word; it rises in on the snappy spring and keeps rising as it fades.",
         "A second copy restarts the hold time, draws the check again and replays the bubble. Everything is CSS on data-state: nothing waits for an animation.",
-        "Reduced motion: no roll, turn, rise, wipe or shake; the glyphs and the words cross fade in place."
+        "Reduced motion (the system setting and data-motion reduce): CopyButton.css sets its own durations to 0s and turns every travel off, so each state shows at once; the status still says the result."
       ]
     },
     "content": {
@@ -6556,7 +6571,8 @@
         "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
         "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio CloseButton or the Desk close light) is aria-disabled and stays focusable.",
         "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
-        "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
+        "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button.",
+        "Order 1.23 motion: the backdrop blurs the page in (backdrop-filter, a solid scrim where it is missing, under reduced transparency and more contrast); the parts read within 200ms. With dismissible false a backdrop press or Escape is refused: the panel nudges once along the inline axis (interaction dialog-refuse), never under reduced motion."
       ]
     },
     "content": {
@@ -7077,7 +7093,8 @@
         "A body taller than the screen scrolls inside and joins the tab order while it scrolls. The header and the footer stay in view.",
         "Toasts sit above an open drawer and stay readable and clickable, as with Dialog.",
         "Non modal: Tab leaves the drawer for the page, as for any region. Escape from inside the drawer closes it; an Escape in a page field stays with that field. When the drawer closes while the person works on the page, focus stays where it is.",
-        "No native title attribute."
+        "No native title attribute.",
+        "Order 1.23 motion: the backdrop blurs the page in as a dialog does. Swipe to dismiss is not built: the close control and Escape close it."
       ]
     },
     "content": {
@@ -7233,7 +7250,8 @@
       "group",
       "separator",
       "sub-trigger",
-      "sub-content"
+      "sub-content",
+      "highlight"
     ],
     "parts": {
       "DropdownMenuContent": "root",
@@ -7586,7 +7604,8 @@
         "group",
         "separator",
         "sub-trigger",
-        "sub-content"
+        "sub-content",
+        "highlight"
       ],
       "keys": {
         "ArrowDown": {
@@ -8178,13 +8197,20 @@
       "error": {
         "type": "node",
         "description": "One line API: renders the system FieldError with data-part error."
+      },
+      "floating": {
+        "type": "boolean",
+        "default": false,
+        "description": "A floating label: the label rests inside the control's box while it is empty and has no focus, and rises above it on focus or with a value. The label renders after the control. Use with the label prop and one single line control."
       }
     },
     "states": [
       "data-invalid",
       "data-disabled",
       "data-readonly",
-      "data-orientation"
+      "data-orientation",
+      "data-floating",
+      "data-filled"
     ],
     "a11y": {
       "role": "none on the root. The label is a native label bound to the control with for and id.",
@@ -9955,7 +9981,8 @@
         "WCAG 1.4.13: hoverable (the pointer can move onto the card), dismissable with Escape, persistent until the pointer leaves both or focus leaves the link.",
         "The root carries data-side and data-align from Radix; data-side is physical after the logical side prop is mapped by direction.",
         "The gallery demo sets openDelay 0 so the contract suite and screenshots open a card with one hover; products keep the 500 ms default.",
-        "A card short of room scrolls inside, and the keyboard cannot scroll it (the card takes no focus). That is acceptable only because the link target repeats the content; keep cards short."
+        "A card short of room scrolls inside, and the keyboard cannot scroll it (the card takes no focus). That is acceptable only because the link target repeats the content; keep cards short.",
+        "Order 1.23 motion: the card unfolds out of its trigger side, more along the axis away from the trigger (--_hover-card-enter-stretch) than across it."
       ]
     },
     "content": {
@@ -10874,6 +10901,13 @@
       "rootProps": {
         "type": "object",
         "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
+      },
+      "variant": {
+        "type": [
+          "outlined",
+          "filled"
+        ],
+        "description": "outlined: a border all round. filled: a tinted box. Stamped as data-variant only when passed, so a style or platform can follow it."
       }
     },
     "states": [
@@ -12078,7 +12112,7 @@
         "The external icon is hidden from assistive tech; the hidden words carry the meaning.",
         "Under forced colors the system link color applies, the underline takes the text color and the focus outline uses Highlight.",
         "No native title attribute. Hints come from Tooltip.",
-        "Motion of round 3 (order 1.23, proposed, interaction link-underline): on a standalone link a stronger line draws over the rest underline with clip-path from the inline start (right to left in Arabic) on hover, keyboard focus and press, and is erased toward the inline end when the state ends; the external icon nudges toward where it leads; the text color eases to its hover color. Hover only where the device can hover; a tap shows the drawn line while held. Reduced motion: the line shows and goes at once."
+        "Motion of round 3 (order 1.23, proposed, interaction link-underline): on a standalone link a stronger line draws over the rest underline with clip-path from the inline start (right to left in Arabic) on hover, keyboard focus and press, and is erased toward the inline end when the state ends; the external icon nudges toward where it leads; the text color eases to its hover color. Hover only where the device can hover; a tap shows the drawn line while held. A press makes the drawn line heavier from its foot and it springs back on release. Reduced motion: Link.css sets its own durations to 0s, so the line shows and goes at once."
       ]
     },
     "content": {
@@ -12473,7 +12507,8 @@
       "group",
       "group-label",
       "separator",
-      "empty"
+      "empty",
+      "highlight"
     ],
     "parts": {
       "ListBox": "root"
@@ -12733,7 +12768,8 @@
         "option-description",
         "group",
         "group-label",
-        "separator"
+        "separator",
+        "highlight"
       ],
       "keys": {
         "ArrowDown": {
@@ -12742,7 +12778,7 @@
           "expect": "focus-moves"
         },
         "ArrowUp": {
-          "focus": "[data-part='option']:last-child",
+          "focus": "div[data-part='option']:last-of-type",
           "case": "many",
           "expect": "focus-moves"
         },
@@ -12752,7 +12788,7 @@
           "expect": "focus-moves"
         },
         "Home": {
-          "focus": "[data-part='option']:last-child",
+          "focus": "div[data-part='option']:last-of-type",
           "case": "many",
           "expect": "focus-moves"
         }
@@ -13741,7 +13777,8 @@
       "viewport",
       "end",
       "menu-button",
-      "mobile"
+      "mobile",
+      "label-ink"
     ],
     "slots": {
       "brand": {
@@ -13964,7 +14001,8 @@
         "viewport",
         "mobile",
         "trigger",
-        "menu-button"
+        "menu-button",
+        "label-ink"
       ],
       "keys": {
         "Enter": {
@@ -15877,7 +15915,8 @@
         "No native title attribute.",
         "The root also carries data-side and data-align from Radix. data-side is physical (top, right, bottom, left) after the logical side prop is mapped by direction: side start is data-side right in Arabic.",
         "Focus returns to the trigger on close. A popover with only a PopoverAnchor returns focus to the element that had it when it opened.",
-        "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false)."
+        "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false).",
+        "Order 1.23 motion: the surface unfolds out of its trigger side, more along the axis away from the trigger (--_popover-enter-stretch) than across it. A part that holds focus runs its arrival in no time, so focus leaving it never replays the arrival."
       ]
     },
     "content": {
@@ -16198,7 +16237,8 @@
       "root",
       "track",
       "indicator",
-      "value"
+      "value",
+      "arc"
     ],
     "props": {
       "value": {
@@ -16376,6 +16416,7 @@
       "root",
       "item",
       "indicator",
+      "badge",
       "icon",
       "title",
       "description",
@@ -16512,7 +16553,8 @@
         "A card holds text only. No link, button or input inside a card: the card is a button.",
         "Disabled uses native disabled: a disabled card leaves the arrow order and draws with opacity.disabled.",
         "Read only does not apply: show the chosen card as text instead.",
-        "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label."
+        "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label.",
+        "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw."
       ]
     },
     "content": {
@@ -16568,9 +16610,14 @@
       "opacity.disabled",
       "duration.base",
       "duration.fast",
-      "ease.default"
+      "ease.default",
+      "duration.morph",
+      "duration.quick",
+      "duration.spring-snappy",
+      "ease.exit",
+      "ease.in"
     ],
-    "motion": "fade",
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -16809,7 +16856,8 @@
         "The 16px circle sits in a 24px press area (WCAG 2.5.8): the hover veil is that area, and the label is bound to the control, so the text extends it.",
         "The checked state is a filled circle with a dot, never color alone. Invalid adds the danger border to the unchecked circles and an error with an icon.",
         "The error is not a live region. On submit, move focus to the checked option or the first option.",
-        "data-invalid is on the root and on each item; the unchecked circles take the danger border."
+        "data-invalid is on the root and on each item; the unchecked circles take the danger border.",
+        "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once."
       ]
     },
     "content": {
@@ -16863,9 +16911,13 @@
       "opacity.disabled",
       "duration.base",
       "duration.fast",
-      "ease.default"
+      "ease.default",
+      "duration.quick",
+      "duration.spring-snappy",
+      "ease.exit",
+      "ease.out"
     ],
-    "motion": "fade",
+    "motion": "pop",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -18972,7 +19024,8 @@
     "anatomy": [
       "root",
       "item",
-      "indicator"
+      "indicator",
+      "label-ink"
     ],
     "parts": {
       "SegmentedControlItem": "item"
@@ -19191,7 +19244,10 @@
           "case": "many",
           "expect": "focus-moves"
         }
-      }
+      },
+      "optionalParts": [
+        "label-ink"
+      ]
     },
     "since": "0.2.0"
   },
@@ -19235,7 +19291,8 @@
       "group",
       "label",
       "separator",
-      "scroll-down"
+      "scroll-down",
+      "highlight"
     ],
     "parts": {
       "Select": "root"
@@ -19526,7 +19583,8 @@
         "item-description",
         "group",
         "label",
-        "separator"
+        "separator",
+        "highlight"
       ],
       "keys": {
         "Enter": {
@@ -19718,6 +19776,7 @@
       "backdrop",
       "panel",
       "handle",
+      "handle-bar",
       "header",
       "title",
       "description",
@@ -19829,7 +19888,8 @@
         "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
         "Detents are wave 2.",
         "No native title attribute.",
-        "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays."
+        "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays.",
+        "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back. Detents are not built yet."
       ]
     },
     "content": {
@@ -19942,7 +20002,8 @@
       "optionalParts": [
         "description",
         "body",
-        "footer"
+        "footer",
+        "handle-bar"
       ]
     },
     "since": "0.1.0"
@@ -22678,6 +22739,8 @@
       "control",
       "track",
       "thumb",
+      "thumb-lens",
+      "thumb-icon",
       "label",
       "description",
       "state-text"
@@ -22734,6 +22797,11 @@
         "type": "object",
         "description": "{ on, off }: words shown after the label for the current state, such as On and Off. Hidden from assistive tech."
       },
+      "thumbIcon": {
+        "type": "boolean",
+        "default": "false",
+        "description": "Renders the thumb-icon part: a check while on, a cross while off. Hidden unless a style or a platform shows it (--_switch-thumb-icon-opacity). Hidden from assistive tech."
+      },
       "name": {
         "type": "string",
         "description": "The form name, when the switch sits in a form."
@@ -22764,7 +22832,8 @@
       "unchecked",
       "data-disabled",
       "data-invalid",
-      "data-readonly"
+      "data-readonly",
+      "data-dragging"
     ],
     "a11y": {
       "role": "switch, on the control (a Radix button). aria-checked is true or false.",
@@ -22773,7 +22842,8 @@
         "Tab": "Moves focus to the control, and on to the next control",
         "Shift+Tab": "Moves focus back",
         "Space": "Toggles the switch",
-        "Enter": "Toggles the switch"
+        "Enter": "Toggles the switch",
+        "Pointer drag": "Drags the thumb; on release it snaps by velocity, else to the nearer end. A tap toggles."
       },
       "announce": "Name from the label (or aria-label), the state as on or off, the description through aria-describedby. The state text is hidden, so it is not read twice.",
       "native": {
@@ -22787,7 +22857,9 @@
         "The anatomy adds a control part to the order's list: the 24px target that holds the track, so a 16px track still meets WCAG 2.5.8.",
         "On: the thumb moves to the inline end and the track fills. Two signals, so the state never relies on color alone. In right to left text the thumb moves to the left.",
         "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the track draws dashed.",
-        "A switch applies its setting at once. If the change fails, set it back and say why in a Toast."
+        "A switch applies its setting at once. If the change fails, set it back and say why in a Toast.",
+        "Motion, round 3 (switch-stretch and switch-drag, proposed): the thumb leans on hover, grows and stretches while pressed and travels on the bouncy spring; the on fill sweeps behind it with a clip that rides the thumb, so the track under the thumb is filled on every frame. A drag moves the thumb with the pointer (data-dragging) and snaps on release; the click that ends a drag toggles nothing; Space and Enter still toggle. Reduced motion: the thumb jumps and the fill shows at once.",
+        "The thumb-lens part is an aria-hidden layer inside the thumb. A style makes a glass thumb with --_switch-thumb-backdrop, --_switch-thumb-highlight and --_switch-thumb-solid-pressed, or a growing dot with --_switch-thumb-size-rest, -on and -pressed (transform only). The glass falls back to a solid thumb without backdrop-filter, under reduced transparency and under more contrast."
       ]
     },
     "content": {
@@ -22837,7 +22909,11 @@
       "ease.spring-soft",
       "scale.press",
       "scale.stretch",
-      "scale.morph"
+      "scale.morph",
+      "scale.pop",
+      "distance.nudge",
+      "duration.quick",
+      "ease.in"
     ],
     "motion": "press",
     "frameworks": {
@@ -22882,7 +22958,8 @@
       "optionalParts": [
         "label",
         "description",
-        "state-text"
+        "state-text",
+        "thumb-icon"
       ],
       "keys": {
         "Space": {
@@ -23342,7 +23419,8 @@
       "start",
       "label",
       "count",
-      "panel"
+      "panel",
+      "label-ink"
     ],
     "parts": {
       "TabsList": "list",
@@ -23584,7 +23662,8 @@
     "contract": {
       "optionalParts": [
         "start",
-        "count"
+        "count",
+        "label-ink"
       ],
       "keys": {
         "ArrowRight": {
@@ -24757,7 +24836,8 @@
       "count",
       "description",
       "action",
-      "close"
+      "close",
+      "progress"
     ],
     "parts": {
       "Toaster": "viewport, data-ds=\"toaster\" with data-position",
@@ -24841,10 +24921,11 @@
           "bottom-end",
           "bottom-center",
           "top-end",
-          "top-center"
+          "top-center",
+          "auto"
         ],
         "default": "bottom-end",
-        "description": "Toaster prop. end is the inline end: right in English, left in Arabic."
+        "description": "Toaster prop. end is the inline end: right in English, left in Arabic. auto follows the platform axis: top-center on ios, bottom-end elsewhere (android.css places the snackbar at the start). The toaster carries the resolved value in data-position."
       },
       "label": {
         "type": "string",
@@ -24864,7 +24945,10 @@
     "states": [
       "open",
       "closed",
-      "data-swipe=start|move|cancel|end"
+      "data-swipe=start|move|cancel|end",
+      "data-stacked",
+      "data-expanded",
+      "data-paused"
     ],
     "a11y": {
       "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
@@ -25009,14 +25093,19 @@
       {
         "wrong": "toast({ type: \"success\", message: \"Draft saved\" }), or a toast component rendered by hand for a one off notice",
         "right": "toast.success(\"Draft saved\"), or toast(\"Draft saved\", { tone: \"success\", lang: \"en\" }); keep the id to call toast.update(id, patch) or toast.dismiss(id)"
+      },
+      {
+        "wrong": "Rebuilding the swipe with the Radix swipe props, or a timer bar with its own setTimeout",
+        "right": "The Toaster runs the swipe (rubber band against the edge, distance or flick to close) and the progress line is a CSS animation that pauses with the store (data-paused on the toaster), so the line and the timer never drift apart"
       }
     ],
     "contract": {
       "trigger": "[data-demo-trigger]",
       "optionalParts": [
-        "count",
         "action",
+        "count",
         "description",
+        "progress",
         "title"
       ]
     },
@@ -25045,6 +25134,7 @@
     },
     "anatomy": [
       "root",
+      "state-layer",
       "start",
       "label",
       "end",
@@ -25179,7 +25269,8 @@
         "Pressed is not told by color alone: an on toggle also gets a 2px inner ring.",
         "In forced colors an on toggle is drawn in Highlight and HighlightText.",
         "Keep the label the same in both states. Do not swap Show to Hide: aria-pressed carries the state.",
-        "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins."
+        "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins.",
+        "Motion, round 3 (toggle-pop, proposed): the state-layer part, aria-hidden, pools under the pointer while pressed; turning on, it floods from the press point across the button while the on fill crosses in; turning off, it drains back, faster. From the keyboard it floods from the centre. The button does not dip and the content does not scale. Reduced motion: no layer and no cross fade."
       ]
     },
     "content": {
@@ -25291,9 +25382,12 @@
       "delay.stagger",
       "scale.press",
       "scale.pop",
-      "scale.anticipate"
+      "scale.anticipate",
+      "duration.morph",
+      "duration.quick",
+      "ease.exit"
     ],
-    "motion": "press",
+    "motion": "pop",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -25361,7 +25455,8 @@
     },
     "anatomy": [
       "root",
-      "item"
+      "item",
+      "label-ink"
     ],
     "parts": {
       "ToggleGroupItem": "item"
@@ -25615,7 +25710,10 @@
           "case": "one",
           "expect": "state-changes"
         }
-      }
+      },
+      "optionalParts": [
+        "label-ink"
+      ]
     },
     "since": "0.2.0"
   },
@@ -26029,7 +26127,8 @@
         "The root carries data-side and data-align from Radix; data-side is physical after the logical side prop is mapped by direction.",
         "Pointer down on the trigger hides the tooltip, so a click never leaves it covering what the click opened. On a disabled Button the press is swallowed, so the tooltip stays and keeps saying why.",
         "The gallery shows some tooltips open with the open prop, so the contract suite and screenshots can read them; a tooltip is never open on load in a product.",
-        "disabled true keeps the trigger mounted (focus stays) and closes the tooltip."
+        "disabled true keeps the trigger mounted (focus stays) and closes the tooltip.",
+        "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch)."
       ]
     },
     "content": {

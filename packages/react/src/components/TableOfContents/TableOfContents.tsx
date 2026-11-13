@@ -273,13 +273,15 @@ export function TableOfContents({
     const shown = Number.parseFloat(bar.style.getPropertyValue('--_toc-indicator-size')) > 0;
     // Round 3 (review N18): where the bar is drawn now, a running travel included, so a second change starts there.
     const drawn = bar.getBoundingClientRect();
-    const fromTop = drawn.top - rootBox.top + root.scrollTop;
-    const fromSize = drawn.height;
-    const offset = box.top - rootBox.top + root.scrollTop;
+    // CSS px per box px: boxes are measured after any CSS zoom, offsets and styles before it.
+    const k = rootBox.height > 0 && root.offsetHeight > 0 ? root.offsetHeight / rootBox.height : 1;
+    const fromTop = (drawn.top - rootBox.top) * k + root.scrollTop;
+    const fromSize = drawn.height * k;
+    const offset = (box.top - rootBox.top) * k + root.scrollTop;
     bar.style.setProperty('--_toc-indicator-offset', `${offset}px`);
-    bar.style.setProperty('--_toc-indicator-size', `${box.height}px`);
+    bar.style.setProperty('--_toc-indicator-size', `${box.height * k}px`);
     // toc-travel: the bar travels from where it is to the active link and stretches on the way.
-    if (shown && fromSize > 0 && Math.abs(offset - fromTop) >= 1) travelBar(bar, fromTop, fromSize, offset, box.height, motion.mode('toc-travel'));
+    if (shown && fromSize > 0 && Math.abs(offset - fromTop) >= 1) travelBar(bar, fromTop, fromSize, offset, box.height * k, motion.mode('toc-travel'));
     if (sticky && root.scrollHeight > root.clientHeight) {
       if (box.top < rootBox.top) root.scrollTop -= rootBox.top - box.top;
       else if (box.bottom > rootBox.bottom) root.scrollTop += box.bottom - rootBox.bottom;

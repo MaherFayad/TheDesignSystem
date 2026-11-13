@@ -217,7 +217,8 @@ describe('meter-fill', () => {
     expect(animate).not.toHaveBeenCalled();
     act(() => seen([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
     expect(fill.style.transform).toBe('');
-    expect(fill.style.transition).toContain('--ds-duration-reveal');
+    // Round 3: the reveal reads the meter's private timing, which defaults to duration.reveal.
+    expect(fill.style.transition).toContain('--_meter-reveal-duration');
   });
 });
 

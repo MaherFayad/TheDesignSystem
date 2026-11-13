@@ -155,11 +155,10 @@ export const navigationInteractions = [
     pattern: 'tab-indicator',
     drive: 'waapi',
     trigger: 'Scroll to another section, or choose a link.',
-    feedback:
-      'The bar beside the active link moves on the snappy spring (a CSS transition) and stretches along its travel with its trailing edge still, so it leans in the direction of the change (a WAAPI stretch added to the transition).',
+    feedback: 'Round 3 (review N18): the bar travels from where it is drawn to the active link and stretches on the way, as one Web Animations run (translateY and scaleY from its top edge); the CSS no longer transitions it, so it never jumps. A change mid travel starts from where the bar is drawn.',
     beats: [
-      'Action: the bar travels on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
-      'Stretch: it grows to scale.stretch from its trailing edge at 40% of the move and settles on ease.standard.',
+      'Action: the bar moves from its drawn top and size to the active link on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
+      'Stretch: at 45% of the run it is longer by scale.stretch over the mean of both sizes, centred on the midpoint, then settles to the size of the link.',
     ],
     styles: {
       studio: 'a stepped move',
@@ -167,7 +166,7 @@ export const navigationInteractions = [
       neutral: 'a quick move',
     },
     reduced: 'The bar jumps to the active link.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -186,9 +185,9 @@ export const navigationInteractions = [
       desk: 'a big bouncy pop',
       neutral: 'a small pop',
     },
-    reduced: 'Nothing moves.',
-    off: { "[data-ds='tab-bar']": { '--_tab-bar-duration': '0ms' } },
-    round: 2,
+    reduced: 'Nothing moves. Round 3 (review B2): the reduced rules carry [data-active], so they win over the motion rules, and the root sets --_tab-bar-duration and --_tab-bar-stagger to 0s under the media query and the page setting.',
+    off: { "[data-ds='tab-bar']": { '--_tab-bar-duration': '0ms', '--_tab-bar-stagger': '0s' } },
+    round: 3,
     status: 'proposed',
   },
   {
@@ -232,9 +231,9 @@ export const navigationInteractions = [
       desk: 'a deep gather and a swinging release',
       neutral: 'a light tap',
     },
-    reduced: 'No scale; the on fill carries the state.',
+    reduced: 'No scale; the on fill carries the state. Round 3 (review B2): the reduced rule carries the on state and wins by order; the root sets --_toolbar-duration to 0s.',
     off: { "[data-ds='toolbar']": { '--_toolbar-duration': '0ms' }, "[data-ds='toolbar'] [data-part='item']": { '--_button-part-press': '1' } },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {

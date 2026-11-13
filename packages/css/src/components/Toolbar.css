@@ -151,6 +151,7 @@
     animation-composition: add;
   }
 
+  /* Round 3: the icon rule carries [data-state='on'], so it matches the motion rule and wins by order (review B2). */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='toolbar'] [data-part='item'] {
       --_button-part-press: 1;
@@ -160,7 +161,6 @@
       --_toolbar-duration: 0s;
     }
 
-    /* [data-state='on'] matches the motion rule, so this wins by order (review B2). */
     [data-ds='toolbar'] [data-part='item'][data-state='on'] > [data-part='icon'] {
       animation: none;
     }
