@@ -1,0 +1,550 @@
+{
+ "id": "field-message-enter",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 100,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 60,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 100ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 340,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 126,
+   "properties": [
+    "transform",
+    "opacity"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[label] transform 300ms",
+    "p[description]#_r_0_description ds-motion:field-message-enter 340ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[label]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(0px) scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-70px)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 91,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 375,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 71,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 375ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0.35"
+      },
+      {
+       "offset": 1,
+       "opacity": "0.8"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 100,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 57,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 100ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 340,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 62,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 340ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 80,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 375,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 102,
+   "properties": [
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "p[description]#_r_0_description ds-motion:field-message-enter 375ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0.35"
+      },
+      {
+       "offset": 1,
+       "opacity": "0.8"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-message-enter",
+     "target": "p[description]#_r_0_description",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

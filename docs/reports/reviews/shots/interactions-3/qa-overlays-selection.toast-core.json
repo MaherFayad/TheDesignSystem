@@ -1,0 +1,3350 @@
+{
+ "studio": {
+  "enter": {
+   "anims": [
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 120,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "translateY(0px) translateY(0px) scale(1) scale(1)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "translateX(0px) translateY(0px) translateY(0px) scale(1)"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 120,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "scale(1)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "none"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "tf": "scaleX(1)"
+      },
+      {
+       "o": 1,
+       "tf": "scaleX(0)"
+      }
+     ]
+    }
+   ],
+   "bad": []
+  },
+  "enterRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    491,
+    420,
+    33
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      491,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.783351, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "stack": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "opacity",
+     "target": "button[button]::after",
+     "props": [
+      "opacity"
+     ],
+     "dur": 70,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 70,
+     "easing": "steps(2)"
+    },
+    {
+     "name": "clip-path",
+     "target": "li[toast]",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 70,
+     "easing": "steps(2)"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 70,
+     "easing": "steps(2)"
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 120,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 120,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    }
+   ],
+   "bad": []
+  },
+  "stackRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    491,
+    420,
+    33
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      477,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.3417, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      484,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.625022, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      491,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.820848, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "expand": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 70
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 70
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 70
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 70
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 70
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 70
+    }
+   ],
+   "bad": [],
+   "hits": [
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved"
+   ]
+  },
+  "expandRest": {
+   "pos": "bottom-end",
+   "expanded": true,
+   "paused": true,
+   "rect": [
+    524,
+    423,
+    420,
+    101
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -68)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      423,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.329192, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -34)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      457,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.612513, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      491,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.808339, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "collapseRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    491,
+    420,
+    33
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      477,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.158358, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      484,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.44168, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      491,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.637506, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "f8": {
+   "focus": "toaster",
+   "t": {
+    "pos": "bottom-end",
+    "expanded": true,
+    "paused": true,
+    "rect": [
+     524,
+     423,
+     420,
+     101
+    ],
+    "dir": "-1",
+    "list": [
+     {
+      "title": "Draft 1 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "2",
+      "tf": "matrix(1, 0, 0, 1, 0, -68)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       423,
+       420,
+       33
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.154205, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 2 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "1",
+      "tf": "matrix(1, 0, 0, 1, 0, -34)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       457,
+       420,
+       33
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.437527, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 3 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "0",
+      "tf": "matrix(1, 0, 0, 1, 0, 0)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       491,
+       420,
+       33
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.633353, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     }
+    ]
+   }
+  },
+  "f8tab": {
+   "focus": "toast:Draft 3 saved",
+   "expanded": true
+  },
+  "f8leave": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    491,
+    420,
+    33
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      477,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.0292235, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 25.9026px)",
+     "op": "1",
+     "rect": [
+      524,
+      484,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.312546, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      491,
+      420,
+      33
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.508371, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "timerPointer": {
+   "log": [
+    {
+     "t": 1006,
+     "scale": 0.75,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1031,
+     "scale": 0.746,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2034,
+     "scale": 0.742,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3039,
+     "scale": 0.742,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3064,
+     "scale": 0.742,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3066,
+     "scale": 0.742,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3588,
+     "scale": 0.613,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4111,
+     "scale": 0.479,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4628,
+     "scale": 0.35,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5145,
+     "scale": 0.221,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5661,
+     "scale": 0.092,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6076,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6076,
+   "expect": "4000 + about 2000 paused"
+  },
+  "timerKeyboard": {
+   "log": [
+    {
+     "t": 1004,
+     "scale": 0.75,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1031,
+     "scale": 0.746,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2034,
+     "scale": 0.746,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3050,
+     "scale": 0.746,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "focus": "toast"
+    },
+    {
+     "t": 3066,
+     "scale": 0.746,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6072,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6072,
+   "expect": "4000 + about 2000 paused"
+  }
+ },
+ "desk": {
+  "enter": {
+   "anims": [
+    {
+     "name": "transform",
+     "target": "span[label]",
+     "props": [
+      "transform"
+     ],
+     "dur": 300,
+     "delay": 0,
+     "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "kf": [
+      {
+       "o": 0,
+       "tf": "translateY(0px) scale(1)"
+      },
+      {
+       "o": 1,
+       "tf": "translateY(-63.9799px)"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 380,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "translateY(100%) translateY(0px) scale(1) scale(0.9)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "translateX(0px) translateY(0px) translateY(0px) scale(1)"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 380,
+     "delay": 45,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "scale(0.3)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "none"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "tf": "scaleX(1)"
+      },
+      {
+       "o": 1,
+       "tf": "scaleX(0)"
+      }
+     ]
+    }
+   ],
+   "bad": []
+  },
+  "enterRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    465,
+    420,
+    59
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      465,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.820839, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "stack": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 300,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 1"
+    },
+    {
+     "name": "clip-path",
+     "target": "li[toast]",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 300,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 1"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 300,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 1"
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 380,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 380,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    }
+   ],
+   "bad": []
+  },
+  "stackRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    465,
+    420,
+    59
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.8, 0, 0, 0.8, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      566,
+      451,
+      336,
+      47
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.441705, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      458,
+      378,
+      53
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.637531, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      465,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.81669, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "expand": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 300
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 300
+    }
+   ],
+   "bad": [],
+   "hits": [
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved"
+   ]
+  },
+  "expandRest": {
+   "pos": "bottom-end",
+   "expanded": true,
+   "paused": true,
+   "rect": [
+    524,
+    347,
+    420,
+    177
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -118)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      347,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.433347, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -59)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      406,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.629172, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      465,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.808331, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "collapseRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    465,
+    420,
+    59
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.8, 0, 0, 0.8, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      566,
+      451,
+      336,
+      47
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.262515, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      458,
+      378,
+      53
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.45834, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      465,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.6375, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "f8": {
+   "focus": "toaster",
+   "t": {
+    "pos": "bottom-end",
+    "expanded": true,
+    "paused": true,
+    "rect": [
+     524,
+     347,
+     420,
+     177
+    ],
+    "dir": "-1",
+    "list": [
+     {
+      "title": "Draft 1 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "2",
+      "tf": "matrix(1, 0, 0, 1, 0, -118)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       347,
+       420,
+       59
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.258361, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 2 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "1",
+      "tf": "matrix(1, 0, 0, 1, 0, -59)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       406,
+       420,
+       59
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.454186, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 3 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "0",
+      "tf": "matrix(1, 0, 0, 1, 0, 0)",
+      "clip": "inset(-17.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       465,
+       420,
+       59
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.633346, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     }
+    ]
+   }
+  },
+  "f8tab": {
+   "focus": "toast:Draft 3 saved",
+   "expanded": true
+  },
+  "f8leave": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    465,
+    420,
+    59
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.8, 0, 0, 0.8, 0, -14.1948)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      566,
+      451,
+      336,
+      47
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.112544, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -7.0974)",
+     "clip": "inset(-17.0974px -17.0974px 51.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      458,
+      378,
+      53
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.308369, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-17.0974px -17.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      465,
+      420,
+      59
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.487529, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "timerPointer": {
+   "log": [
+    {
+     "t": 1005,
+     "scale": 0.742,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1093,
+     "scale": 0.721,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2100,
+     "scale": 0.717,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3107,
+     "scale": 0.717,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3133,
+     "scale": 0.717,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3136,
+     "scale": 0.717,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3670,
+     "scale": 0.583,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4290,
+     "scale": 0.429,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4834,
+     "scale": 0.292,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5385,
+     "scale": 0.158,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5917,
+     "scale": 0.021,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6054,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6054,
+   "expect": "4000 + about 2000 paused"
+  },
+  "timerKeyboard": {
+   "log": [
+    {
+     "t": 1003,
+     "scale": 0.733,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1060,
+     "scale": 0.725,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2068,
+     "scale": 0.725,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3097,
+     "scale": 0.725,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "focus": "toast"
+    },
+    {
+     "t": 3188,
+     "scale": 0.725,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5937,
+     "scale": 0.038,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 5937,
+   "expect": "4000 + about 2000 paused"
+  }
+ },
+ "neutral": {
+  "enter": {
+   "anims": [
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 200,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "translateY(100%) translateY(0px) scale(1) scale(0.98)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "translateX(0px) translateY(0px) translateY(0px) scale(1)"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 200,
+     "delay": 24,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "scale(0.5)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "none"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "tf": "scaleX(1)"
+      },
+      {
+       "o": 1,
+       "tf": "scaleX(0)"
+      }
+     ]
+    }
+   ],
+   "bad": []
+  },
+  "enterRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    461,
+    420,
+    63
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      461,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.787508, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "stack": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 158,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 1"
+    },
+    {
+     "name": "clip-path",
+     "target": "li[toast]",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 158,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 1"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 158,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 1"
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 200,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 200,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    }
+   ],
+   "bad": []
+  },
+  "stackRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    461,
+    420,
+    63
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      443,
+      378,
+      57
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.354175, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.95, 0, 0, 0.95, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      535,
+      452,
+      399,
+      60
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.616665, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      461,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.79999, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "expand": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 158
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 158
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 158
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 158
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 158
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 158
+    }
+   ],
+   "bad": [],
+   "hits": [
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved"
+   ]
+  },
+  "expandRest": {
+   "pos": "bottom-end",
+   "expanded": true,
+   "paused": true,
+   "rect": [
+    524,
+    317,
+    420,
+    207
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -144.19)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      317,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.341691, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -72.1)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      389,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.604181, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      461,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.787507, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "collapseRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    461,
+    420,
+    63
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      443,
+      378,
+      57
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.183357, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.95, 0, 0, 0.95, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      535,
+      452,
+      399,
+      60
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.445846, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      461,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.629173, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "f8": {
+   "focus": "toaster",
+   "t": {
+    "pos": "bottom-end",
+    "expanded": true,
+    "paused": true,
+    "rect": [
+     524,
+     317,
+     420,
+     207
+    ],
+    "dir": "-1",
+    "list": [
+     {
+      "title": "Draft 1 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "2",
+      "tf": "matrix(1, 0, 0, 1, 0, -144.19)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       317,
+       420,
+       63
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.179195, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 2 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "1",
+      "tf": "matrix(1, 0, 0, 1, 0, -72.1)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       389,
+       420,
+       63
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.441685, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 3 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "0",
+      "tf": "matrix(1, 0, 0, 1, 0, 0)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       461,
+       420,
+       63
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.625011, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     }
+    ]
+   }
+  },
+  "f8tab": {
+   "focus": "toast:Draft 3 saved",
+   "expanded": true
+  },
+  "f8leave": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    461,
+    420,
+    63
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.9, 0, 0, 0.9, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      545,
+      443,
+      378,
+      57
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.0541955, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.95, 0, 0, 0.95, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 53.9026px)",
+     "op": "1",
+     "rect": [
+      535,
+      452,
+      399,
+      60
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.316685, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      461,
+      420,
+      63
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.500011, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "timerPointer": {
+   "log": [
+    {
+     "t": 1005,
+     "scale": 0.746,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1034,
+     "scale": 0.738,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2038,
+     "scale": 0.733,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3041,
+     "scale": 0.733,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3070,
+     "scale": 0.733,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3081,
+     "scale": 0.733,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3687,
+     "scale": 0.583,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4251,
+     "scale": 0.442,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4789,
+     "scale": 0.308,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5318,
+     "scale": 0.175,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5915,
+     "scale": 0.025,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6017,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6017,
+   "expect": "4000 + about 2000 paused"
+  },
+  "timerKeyboard": {
+   "log": [
+    {
+     "t": 1004,
+     "scale": 0.746,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1024,
+     "scale": 0.742,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2036,
+     "scale": 0.742,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3062,
+     "scale": 0.742,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "focus": "toast"
+    },
+    {
+     "t": 3083,
+     "scale": 0.742,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6115,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6115,
+   "expect": "4000 + about 2000 paused"
+  }
+ },
+ "liquid": {
+  "enter": {
+   "anims": [
+    {
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "dur": 296,
+     "delay": 0,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 1",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0.35"
+      },
+      {
+       "o": 1,
+       "op": "0.8"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 496,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "translateY(-12px) translateY(0px) scale(1) scale(0.92)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "translateX(0px) translateY(0px) translateY(0px) scale(1)"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 496,
+     "delay": 40,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "op": "0",
+       "tf": "scale(0.4)"
+      },
+      {
+       "o": 0.3,
+       "op": "1"
+      },
+      {
+       "o": 1,
+       "op": "1",
+       "tf": "none"
+      }
+     ]
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "delay": 0,
+     "easing": "linear",
+     "kf": [
+      {
+       "o": 0,
+       "tf": "scaleX(1)"
+      },
+      {
+       "o": 1,
+       "tf": "scaleX(0)"
+      }
+     ]
+    }
+   ],
+   "bad": []
+  },
+  "enterRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    459,
+    420,
+    66
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      459,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.783326, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "stack": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 496,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 296,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 1"
+    },
+    {
+     "name": "clip-path",
+     "target": "li[toast]",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 296,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 1"
+    },
+    {
+     "name": "transform",
+     "target": "li[toast]",
+     "props": [
+      "transform"
+     ],
+     "dur": 296,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 1"
+    },
+    {
+     "name": "ds-toast-in",
+     "target": "li[toast]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 496,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "dur": 496,
+     "easing": "linear"
+    },
+    {
+     "name": "ds-toast-progress",
+     "target": "span[progress]",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000,
+     "easing": "linear"
+    }
+   ],
+   "bad": []
+  },
+  "stackRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    459,
+    420,
+    66
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.88, 0, 0, 0.88, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "1",
+     "rect": [
+      549,
+      440,
+      370,
+      58
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.316686, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.94, 0, 0, 0.94, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "1",
+     "rect": [
+      537,
+      449,
+      395,
+      62
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.591675, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      459,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.770834, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "expand": {
+   "anims": [
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "ds-toast-progress",
+     "props": [
+      "transform"
+     ],
+     "dur": 4000
+    },
+    {
+     "name": "opacity",
+     "props": [
+      "opacity"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "clip-path",
+     "props": [
+      "clip-path"
+     ],
+     "dur": 296
+    },
+    {
+     "name": "transform",
+     "props": [
+      "transform"
+     ],
+     "dur": 296
+    }
+   ],
+   "bad": [],
+   "hits": [
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved",
+    "Draft 3 saved"
+   ]
+  },
+  "expandRest": {
+   "pos": "bottom-end",
+   "expanded": true,
+   "paused": true,
+   "rect": [
+    524,
+    315,
+    420,
+    209
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(1, 0, 0, 1, 0, -143.09)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      315,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.300042, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(1, 0, 0, 1, 0, -71.54)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      387,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.575031, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px)",
+     "op": "1",
+     "rect": [
+      524,
+      459,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:paused"
+     ],
+     "prog": {
+      "tf": "matrix(0.754191, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "collapseRest": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    459,
+    420,
+    66
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.88, 0, 0, 0.88, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "1",
+     "rect": [
+      549,
+      440,
+      370,
+      58
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.162556, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.94, 0, 0, 0.94, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "1",
+     "rect": [
+      537,
+      449,
+      395,
+      62
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.437545, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      459,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.616705, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "f8": {
+   "focus": "toaster",
+   "t": {
+    "pos": "bottom-end",
+    "expanded": true,
+    "paused": true,
+    "rect": [
+     524,
+     315,
+     420,
+     209
+    ],
+    "dir": "-1",
+    "list": [
+     {
+      "title": "Draft 1 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "2",
+      "tf": "matrix(1, 0, 0, 1, 0, -143.09)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       315,
+       420,
+       66
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.158387, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 2 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "1",
+      "tf": "matrix(1, 0, 0, 1, 0, -71.54)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       387,
+       420,
+       66
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.433376, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     },
+     {
+      "title": "Draft 3 saved",
+      "state": "open",
+      "swipe": null,
+      "sdir": "right",
+      "idx": "0",
+      "tf": "matrix(1, 0, 0, 1, 0, 0)",
+      "clip": "inset(-19.0974px)",
+      "op": "1",
+      "rect": [
+       524,
+       459,
+       420,
+       66
+      ],
+      "anims": [
+       "ds-toast-progress:paused"
+      ],
+      "prog": {
+       "tf": "matrix(0.612535, 0, 0, 1, 0, 0)",
+       "disp": "block"
+      }
+     }
+    ]
+   }
+  },
+  "f8tab": {
+   "focus": "toast:Draft 3 saved",
+   "expanded": true
+  },
+  "f8leave": {
+   "pos": "bottom-end",
+   "expanded": false,
+   "paused": false,
+   "rect": [
+    524,
+    459,
+    420,
+    66
+   ],
+   "dir": "-1",
+   "list": [
+    {
+     "title": "Draft 1 saved",
+     "state": "closed",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "2",
+     "tf": "matrix(0.843361, 0, 0, 0.843361, 0, -18.1948)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "0.479563",
+     "rect": [
+      557,
+      440,
+      354,
+      55
+     ],
+     "anims": [
+      "ds-toast-out:running",
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.0375587, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 2 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "1",
+     "tf": "matrix(0.94, 0, 0, 0.94, 0, -9.0974)",
+     "clip": "inset(-19.0974px -19.0974px 56.9026px)",
+     "op": "1",
+     "rect": [
+      537,
+      449,
+      395,
+      62
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.312548, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    },
+    {
+     "title": "Draft 3 saved",
+     "state": "open",
+     "swipe": null,
+     "sdir": "right",
+     "idx": "0",
+     "tf": "matrix(1, 0, 0, 1, 0, 0)",
+     "clip": "inset(-19.0974px -19.0974px 0px)",
+     "op": "1",
+     "rect": [
+      524,
+      459,
+      420,
+      66
+     ],
+     "anims": [
+      "ds-toast-progress:running"
+     ],
+     "prog": {
+      "tf": "matrix(0.491707, 0, 0, 1, 0, 0)",
+      "disp": "block"
+     }
+    }
+   ]
+  },
+  "timerPointer": {
+   "log": [
+    {
+     "t": 1025,
+     "scale": 0.729,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1098,
+     "scale": 0.713,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2102,
+     "scale": 0.713,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3121,
+     "scale": 0.713,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3209,
+     "scale": 0.713,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3213,
+     "scale": 0.704,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 3816,
+     "scale": 0.554,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4409,
+     "scale": 0.404,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 4990,
+     "scale": 0.263,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 5534,
+     "scale": 0.125,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6060,
+     "scale": 0,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6060,
+   "expect": "4000 + about 2000 paused"
+  },
+  "timerKeyboard": {
+   "log": [
+    {
+     "t": 1005,
+     "scale": 0.742,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 1027,
+     "scale": 0.738,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 2033,
+     "scale": 0.738,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "t": 3080,
+     "scale": 0.738,
+     "paused": true,
+     "state": "open"
+    },
+    {
+     "focus": "toast"
+    },
+    {
+     "t": 3112,
+     "scale": 0.738,
+     "paused": false,
+     "state": "open"
+    },
+    {
+     "t": 6043,
+     "scale": 0.008,
+     "paused": false,
+     "state": "closed"
+    }
+   ],
+   "closedAt": 6043,
+   "expect": "4000 + about 2000 paused"
+  }
+ }
+}

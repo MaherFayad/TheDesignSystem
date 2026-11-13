@@ -1,0 +1,1963 @@
+{
+ "id": "inline-edit-morph",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 61,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 100ms",
+    "span ds-motion:icon-morph-out 100ms",
+    "svg[icon] ds-motion:icon-morph-in 120ms",
+    "span[icon] ds-motion:icon-morph-part 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 425,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 74,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 340ms",
+    "span ds-motion:icon-morph-out 320ms",
+    "svg[icon] ds-motion:icon-morph-in 380ms",
+    "span[icon] ds-motion:icon-morph-part 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 224,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 68,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 200ms",
+    "span ds-motion:icon-morph-out 180ms",
+    "svg[icon] ds-motion:icon-morph-in 200ms",
+    "span[icon] ds-motion:icon-morph-part 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 180,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 536,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 314,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 375ms",
+    "span ds-motion:icon-morph-out 320ms",
+    "svg[icon] ds-motion:icon-morph-in 496ms",
+    "span[icon] ds-motion:icon-morph-part 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 74,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 100ms",
+    "span ds-motion:icon-morph-out 100ms",
+    "svg[icon] ds-motion:icon-morph-in 120ms",
+    "span[icon] ds-motion:icon-morph-part 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 425,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 65,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 340ms",
+    "span ds-motion:icon-morph-out 320ms",
+    "svg[icon] ds-motion:icon-morph-in 380ms",
+    "span[icon] ds-motion:icon-morph-part 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 224,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 125,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 200ms",
+    "span ds-motion:icon-morph-out 180ms",
+    "svg[icon] ds-motion:icon-morph-in 200ms",
+    "span[icon] ds-motion:icon-morph-part 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(37, 99, 235)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 180,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 536,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 138,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[control]::before transform 375ms",
+    "span ds-motion:icon-morph-out 320ms",
+    "svg[icon] ds-motion:icon-morph-in 496ms",
+    "span[icon] ds-motion:icon-morph-part 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[control]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[control]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[control]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[control]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "rotate(90deg) scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-in",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-90deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:icon-morph-part",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

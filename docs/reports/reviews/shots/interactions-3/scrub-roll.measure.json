@@ -1,0 +1,1115 @@
+{
+ "id": "scrub-roll",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 149,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 100ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 340,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 55,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 340ms",
+    "span ds-motion:digit-roll 300ms",
+    "span ds-motion:digit-roll-out 300ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": 1,
+   "firstMotionAtMs": 105,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 200ms",
+    "span ds-motion:digit-roll 158ms",
+    "span ds-motion:digit-roll-out 158ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 375,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 61,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 375ms",
+    "span ds-motion:digit-roll 296ms",
+    "span ds-motion:digit-roll-out 296ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 35,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 100ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 340,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 57,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 340ms",
+    "span ds-motion:digit-roll 300ms",
+    "span ds-motion:digit-roll-out 300ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": 1,
+   "firstMotionAtMs": 17,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 200ms",
+    "span ds-motion:digit-roll 158ms",
+    "span ds-motion:digit-roll-out 158ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 375,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 26,
+   "properties": [
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[scrub-input]::before transform 375ms",
+    "span ds-motion:digit-roll 296ms",
+    "span ds-motion:digit-roll-out 296ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[scrub-input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(100%)"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:digit-roll-out",
+     "target": "span",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

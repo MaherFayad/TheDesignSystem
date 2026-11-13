@@ -1,0 +1,103 @@
+Shared brief for the reviewers of the ds-qa review of order 1.23 (interaction round 3).
+(Kept as evidence of the method. Not a work order.)
+
+Repo /home/user/TheDesignSystem, branch claude/ds-review-interactions-3 (cut from
+claude/relaxed-hypatia-7gseap at 0747686, which merges claude/ds-order-1-23 at f686e32).
+You report; you never edit component source, CSS, tokens, manifests, tests or the gallery.
+You write only files under docs/reports/reviews/shots/interactions-3/ whose names start
+with your prefix, plus scratch files in your own /tmp/claude-0/... scratch folder.
+Contact sheets (png) and JSON only. No video files in the repo. Do not commit or push.
+Never run `playwright install`. Chromium and Playwright are preinstalled: require('playwright').
+Writing rules for anything you write: no em dash or en dash, plain words, sentence case.
+
+Servers (already running, do not restart unless down):
+- React gallery: http://127.0.0.1:5191
+  (restart: cd apps/gallery-react && nohup ../../node_modules/.bin/vite --host 127.0.0.1 --port 5191 --strictPort &)
+- Angular gallery: http://127.0.0.1:4291 (restart: cd apps/gallery-angular && nohup node dev.mjs --port 4291 &)
+Stage only page: /interactions?focus=<id>&style=<studio|desk|neutral|liquid>&scheme=<light|dark>&chrome=0
+Arabic RTL: add &dir=rtl&lang=ar. Platform: &platform=ios|android. Full list: /interactions?style=...&chrome=0
+(it has the reduce switch [data-interactions-reduce] and per card [data-interaction-replay]).
+Each stage marks its main control with [data-interaction-trigger].
+Component pages: /c/<component-kebab>?style=&scheme=&dir=&lang=&chrome=0 (same in Angular).
+
+Probe: docs/reports/reviews/shots/interactions-3/probe.cjs (open, sample, install).
+open(browser, { id, style, scheme, dir, motion, viewport, touch, extra }).
+motion: 'full' | 'media' (emulated prefers-reduced-motion) | 'attr' (data-motion="reduce" on <html>).
+touch: true gives hasTouch and isMobile; use a phone viewport { width: 390, height: 844 } then.
+It samples document.getAnimations() per frame and the trigger's state attributes.
+res.badProps lists any animated property outside the ruling. Read it; extend it in your own
+script (copy it under your prefix) if you need more, do not edit probe.cjs.
+Note: getAnimations() does not show a CSS transition whose duration is 0, and a transition of
+`all` is listed by its real property. Also read getComputedStyle(el).transitionProperty and
+transitionDuration on the parts before and after a trigger, so a layout property that would
+transition (width, height, inset, margin, padding, gap, font-size, grid tracks, top/left)
+is caught even if no frame shows it.
+
+Registry: packages/motion/src/interactions/<file>.ts (beats, styles, reduced, off, round).
+Stages: apps/gallery-react/src/interactions/<family>.tsx. Style presets:
+packages/styles/<id>/motion.ts and packages/styles/<id>/recipes/*.css.
+Component CSS: packages/css/src/components/<Name>.css. React: packages/react/src/components/<Name>/.
+Contracts: docs/contracts/anatomy.md (the motion line), frameworks.md (never wait on
+transitionend or animationend). Ruling in DECISIONS.md "Motion may use paint properties":
+transform, opacity, clip-path, stroke-dashoffset, stroke-dasharray, filter, backdrop-filter,
+color, background-color, border-color, outline-color, box-shadow may animate.
+Layout properties never animate.
+Round 2 review (method, blockers B1 to B9, notes N1 to N33): docs/reports/reviews/interactions-2.md.
+Do NOT read the builder's report docs/reports/interactions-3.md until your findings are formed.
+
+Rules to check for each interaction you own, in Studio, Desk, Neutral and Liquid (light;
+one dark run per style where color matters), LTR and Arabic RTL, with a pointer, with touch
+(phone viewport, hasTouch, page.tap / touchscreen), and with the keyboard:
+ 1. Only allowed properties animate; no layout property animates or is listed in a transition.
+ 2. Durations and eases match motion tokens (read --ds-duration-*, --ds-ease-* on the theme
+    element and compare); report raw values with file and line.
+ 3. A reduced form exists and is used under both 'media' and 'attr'. Nothing timed over 0ms
+    that moves (travel, scale, turn, clip growth) under either; a fade or color change may stay
+    only if the registry's reduced text says so.
+ 4. No flash over three a second (WCAG 2.3.1); nothing moves past 5s without a pause path (2.2.2).
+ 5. State, value and focus change at once; motion never delays the action, never moves the
+    target from under the pointer (hit test at the rest centre during the motion), never
+    blocks input.
+ 6. A rapid second trigger (30ms) and an interrupted one (reverse before the end) leave no
+    stuck state: right final state, transforms and opacity at rest, no held fill, no leftover node.
+ 7. The state indicator keeps contrast on every frame (sample frames 0 to 500ms every 20ms with
+    paused, seeked animations: document.getAnimations().forEach(a => { a.pause(); a.currentTime = t; }),
+    then screenshot and measure the indicator against what is behind it).
+ 8. The focus ring shows at once after Tab (opacity 1 on the first frame) (WCAG 2.4.7).
+ 9. Staggered text reaches opacity 0.9 within about 200ms.
+10. filter and backdrop-filter have a fallback (@supports not, prefers-reduced-transparency,
+    prefers-contrast: more, [data-contrast='more']); emulate reduced transparency with
+    page.emulateMedia is not available for it, so set it through CDP:
+    const cdp = await ctx.newCDPSession(page); await cdp.send('Emulation.setEmulatedMedia',
+    { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+11. forced-colors works: page.emulateMedia({ forcedColors: 'active' }); state still visible.
+12. No code waits on transitionend or animationend (grep the component source).
+13. A drag interaction has a non drag path (WCAG 2.5.7).
+14. A style can turn it off: inject the registry's `off` row under @layer ds.recipes and
+    confirm the travel and scale stop.
+
+Craft: for the components your brief names, write what a person feels at each state (rest,
+hover, press, release, selected, back) with measured timings per style, and say plainly
+whether it is good, ordinary or wrong, against the owner's words: "checkbox and toggle can be
+much better: a glass thumb as on iOS, a thumb dot that grows as on Android, a check that is
+drawn"; "go through every interaction and improve the motion and the feedback"; "the copy
+control should animate from the icon to the word Copied"; "toasts and popups (dialog, menu)
+need a better look and feel in every style". Look at the frames yourself (Read the png).
+
+Contact sheets: rows are Studio, Desk, Neutral, Liquid; columns are frames after the trigger
+(paused and seeked). Crop each tile to the stage box at 480px wide or more, zoom so a small
+control is at least 120px wide (the stage only mode draws at zoom 2.5 already).
+
+The machine has 4 cores and five reviewers share it. Use the duration the animation carries
+(getComputedTiming) for timings; use wall clock only for the order of events. Close browsers
+you open. Keep one browser per script.
+
+What to return (your final message, plain text, it goes into the report):
+A. One row per interaction: id | states or beats measured | duration Studio / Desk / Neutral /
+   Liquid in ms | properties | reduced media / attr | rules verdict (pass or the finding) |
+   craft verdict (good, ordinary, wrong, with three to ten words).
+B. Craft paragraphs for the components named in your brief.
+C. Findings, each with file and line, marked blocker or note, with the evidence file names.
+   A blocker breaks a rule above, a WCAG criterion, or the order, or shows the wrong state.
+D. Your candidates for the ten weakest interactions of the round, with what would fix each.
+E. What you could not run.

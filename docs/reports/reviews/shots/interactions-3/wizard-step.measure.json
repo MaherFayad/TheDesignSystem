@@ -1,0 +1,3008 @@
+{
+ "id": "wizard-step",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 147,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 100ms",
+    "div[body] transform 120ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 70ms",
+    "span[indicator] ds-motion:indicator-answer 120ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 100ms",
+    "svg[icon] ds-motion:wizard-step-check 120ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 100ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(10.5898px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "transform": "scale(1)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 303,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 340ms",
+    "div[body] transform 120ms",
+    "span[label] transform 300ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 300ms",
+    "span[indicator] ds-motion:indicator-answer 380ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 340ms",
+    "svg[icon] ds-motion:wizard-step-check 380ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 340ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(10.0908px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[label]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(0px) scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-50.96px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "transform": "scale(0.9)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 124,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 200ms",
+    "div[body] transform 150ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 158ms",
+    "span[indicator] ds-motion:indicator-answer 200ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 200ms",
+    "svg[icon] ds-motion:wizard-step-check 200ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 200ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(11.9236px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "transform": "scale(0.95)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 258,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 375ms",
+    "div[body] transform 150ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 296ms",
+    "span[indicator] ds-motion:indicator-answer 496ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 375ms",
+    "svg[icon] ds-motion:wizard-step-check 496ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 375ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(11.5688px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0.35"
+      },
+      {
+       "offset": 1,
+       "opacity": "0.8"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "transform": "scale(0.94)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 145,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 100ms",
+    "div[body] transform 120ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 70ms",
+    "span[indicator] ds-motion:indicator-answer 120ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 100ms",
+    "svg[icon] ds-motion:wizard-step-check 120ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 100ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(10.368px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "transform": "scale(1)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 98,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 340ms",
+    "div[body] transform 120ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 300ms",
+    "span[indicator] ds-motion:indicator-answer 380ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 340ms",
+    "svg[icon] ds-motion:wizard-step-check 380ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 340ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(9.86903px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "transform": "scale(0.9)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 95,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 200ms",
+    "div[body] transform 150ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 158ms",
+    "span[indicator] ds-motion:indicator-answer 200ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 200ms",
+    "svg[icon] ds-motion:wizard-step-check 200ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 200ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(11.2849px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "transform": "scale(0.95)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 800,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 114,
+   "properties": [
+    "transform",
+    "opacity",
+    "stroke-dasharray",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[connector]::before transform 375ms",
+    "div[body] transform 150ms",
+    "span[spinner] ds-button-spin 800ms",
+    "button[next] ds-motion:button-morph-root 296ms",
+    "span[indicator] ds-motion:indicator-answer 496ms",
+    "div ds-motion:wizard-step-out 100ms",
+    "div[body] ds-motion:wizard-step 375ms",
+    "svg[icon] ds-motion:wizard-step-check 496ms",
+    "span[spinner] ds-motion:button-morph-out 100ms",
+    "span[label] ds-motion:button-morph-in 375ms"
+   ],
+   "infinite": [
+    "span[spinner]"
+   ],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[connector]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0, 1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[body]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[body]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(11.0719px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[spinner]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-button-spin",
+     "target": "span[spinner]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 800,
+     "delayMs": 0,
+     "iterations": null,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-root",
+     "target": "button[next]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:indicator-answer",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "transform": "scale(0.94)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stepper-check",
+     "target": "path",
+     "props": [
+      "stroke-dasharray",
+      "stroke-dashoffset"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "-24"
+      },
+      {
+       "strokeDasharray": "24, 24",
+       "strokeDashoffset": "0"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-out",
+     "target": "div",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateX(calc(1 * var(--ds-distance-enter, 6px)))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-enter, 6px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-step-check",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-out",
+     "target": "span[spinner]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "opacity": "1",
+       "transform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:button-morph-in",
+     "target": "span[label]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "span[label]",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 80,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

@@ -1,0 +1,1111 @@
+{
+ "id": "wizard-done",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 84,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 470,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 267,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.3)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 280,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 131,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.5)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 180,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 180,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 576,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 289,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.4)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 140,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 100,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 470,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 164,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms",
+    "span[indicator] ds-motion:wizard-done 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.3)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 280,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 181,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.5)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 180,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 180,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 576,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 117,
+   "properties": [
+    "opacity",
+    "transform",
+    "stroke-dashoffset"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "svg[success-mark] ds-form-wizard-mark-land 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms",
+    "span[indicator] ds-motion:wizard-done 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-land",
+     "target": "svg[success-mark]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.4)"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "circle",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-form-wizard-mark-draw",
+     "target": "path",
+     "props": [
+      "stroke-dashoffset"
+     ],
+     "durationMs": 320,
+     "delayMs": 100,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "strokeDashoffset": "1px"
+      },
+      {
+       "offset": 1,
+       "strokeDashoffset": "0px"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:wizard-done",
+     "target": "span[indicator]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

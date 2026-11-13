@@ -1,0 +1,1008 @@
+{
+ "id": "stepper-travel",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 124,
+   "longest": 120,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 124,
+     "l": 247
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 124,
+     "l": 214
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(3)",
+     "f": 124,
+     "l": 267
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 124,
+     "l": 247
+    }
+   ],
+   "lastFrame": {
+    "t": 1224,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 232,
+   "longest": 120,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 232,
+     "l": 319
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "f": 232,
+     "l": 302
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(3)",
+     "f": 232,
+     "l": 352
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 232,
+     "l": 319
+    }
+   ],
+   "lastFrame": {
+    "t": 1204,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1204,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1202,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 149,
+   "longest": 380,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[label]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 149,
+     "l": 456
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 149,
+     "l": 456
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 15%, 0.49 20%, 0.629",
+     "f": 149,
+     "l": 488
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 149,
+     "l": 456
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 380,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177",
+     "f": 149,
+     "l": 524
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 149,
+     "l": 488
+    }
+   ],
+   "lastFrame": {
+    "t": 1206,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 79,
+   "longest": 380,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[label]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.36, 1)",
+     "f": 79,
+     "l": 376
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 79,
+     "l": 376
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 15%, 0.49 20%, 0.629",
+     "f": 79,
+     "l": 392
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 15%, 0.73 20%, 0.898",
+     "f": 79,
+     "l": 376
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 380,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 15%, 1.034 20%, 1.177",
+     "f": 79,
+     "l": 448
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 79,
+     "l": 392
+    }
+   ],
+   "lastFrame": {
+    "t": 1218,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1211,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1210,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 78,
+   "longest": 200,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 78,
+     "l": 233
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 15%, 0.447 20%, 0.56",
+     "f": 78,
+     "l": 267
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 78,
+     "l": 233
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.55",
+     "f": 78,
+     "l": 267
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 78,
+     "l": 267
+    }
+   ],
+   "lastFrame": {
+    "t": 1201,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 123,
+   "longest": 200,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 123,
+     "l": 279
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 15%, 0.447 20%, 0.56",
+     "f": 123,
+     "l": 328
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 123,
+     "l": 279
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.55",
+     "f": 123,
+     "l": 328
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 123,
+     "l": 328
+    }
+   ],
+   "lastFrame": {
+    "t": 1224,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1209,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1208,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 107,
+   "longest": 496,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "opacity",
+     "t": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 107,
+     "l": 397
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 107,
+     "l": 397
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 107,
+     "l": 484
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 107,
+     "l": 397
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 496,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.88",
+     "f": 107,
+     "l": 597
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 107,
+     "l": 484
+    }
+   ],
+   "lastFrame": {
+    "t": 1213,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "stateAt": null,
+   "firstMotionAt": 77,
+   "longest": 496,
+   "badProps": [
+    "strokeDasharray",
+    "strokeDashoffset"
+   ],
+   "infinite": [],
+   "anims": [
+    {
+     "k": "T",
+     "n": "opacity",
+     "t": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 77,
+     "l": 368
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[end]",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 77,
+     "l": 368
+    },
+    {
+     "k": "T",
+     "n": "transform",
+     "t": "span[connector]::before",
+     "p": "transform",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559",
+     "f": 77,
+     "l": 438
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-slide",
+     "t": "span[indicator]::after",
+     "p": "opacity+transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 15%, 0.479 20%, 0.61",
+     "f": 77,
+     "l": 368
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:indicator-answer",
+     "t": "span[indicator]",
+     "p": "transform",
+     "d": 496,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 15%, 0.717 20%, 0.88",
+     "f": 77,
+     "l": 555
+    },
+    {
+     "k": "m",
+     "n": "ds-motion:stepper-check",
+     "t": "path",
+     "p": "strokeDasharray+strokeDashoffset",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58, 1)",
+     "f": 77,
+     "l": 438
+    }
+   ],
+   "lastFrame": {
+    "t": 1208,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1201,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "badProps": [],
+   "infinite": [],
+   "anims": [],
+   "lastFrame": {
+    "t": 1203,
+    "state": {
+     "value": ""
+    },
+    "active": "button[button]",
+    "ring": {
+     "outline": "none",
+     "boxShadow": true,
+     "before": "0.8"
+    }
+   },
+   "transBefore": [],
+   "transAfter": [],
+   "rest": {
+    "running": [],
+    "ghosts": 0
+   }
+  }
+ ],
+ "extra": {}
+}

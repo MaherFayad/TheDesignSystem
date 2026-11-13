@@ -1,0 +1,362 @@
+{
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "runs": [
+  {
+   "run": 1,
+   "note": "freeze 60ms after replay all",
+   "rows": [
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 8,
+     "violations": []
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 64,
+     "violations": []
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 1,
+       "targets": [
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.12 (foreground color: #65635e, background color: #d7d6d1, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ],
+     "stages": 109
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 72,
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 2,
+       "targets": [
+        "#_r_c1_control",
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.39 (foreground color: #62615d, background color: #dbd9d5, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ]
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 1,
+       "targets": [
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.12 (foreground color: #65635e, background color: #d7d6d1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ],
+     "stages": 109
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 75,
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 2,
+       "targets": [
+        "#_r_c1_control",
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.39 (foreground color: #62615d, background color: #dbd9d5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ]
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 71,
+     "violations": []
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 57,
+     "violations": []
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 72,
+     "violations": []
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 76,
+     "violations": []
+    }
+   ]
+  },
+  {
+   "run": 2,
+   "note": "freeze when the animation count stops growing",
+   "rows": [
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 61,
+     "violations": []
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "studio",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 8,
+     "violations": []
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 1,
+       "targets": [
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.12 (foreground color: #65635e, background color: #d7d6d1, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ],
+     "stages": 109
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 72,
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 2,
+       "targets": [
+        "#_r_c1_control",
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.39 (foreground color: #62615d, background color: #dbd9d5, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ]
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 1,
+       "targets": [
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.12 (foreground color: #65635e, background color: #d7d6d1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ],
+     "stages": 109
+    },
+    {
+     "style": "desk",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 71,
+     "violations": [
+      {
+       "id": "color-contrast",
+       "impact": "serious",
+       "nodes": 1,
+       "targets": [
+        "button[data-placeholder=\"\"] > span[data-part=\"value\"]"
+       ],
+       "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.12 (foreground color: #65635e, background color: #d7d6d1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+      }
+     ]
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 8,
+     "violations": []
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "neutral",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 57,
+     "violations": []
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "ltr",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 72,
+     "violations": []
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "rest",
+     "violations": [],
+     "stages": 109
+    },
+    {
+     "style": "liquid",
+     "scheme": "light",
+     "dir": "rtl",
+     "when": "replay all, paused at 50%",
+     "pausedAnimations": 72,
+     "violations": []
+    }
+   ]
+  }
+ ],
+ "coverage": "every style and direction has a mid motion run with 57 or more paused animations in run 1 or run 2; runs with 8 paused animations caught only the endless loops"
+}

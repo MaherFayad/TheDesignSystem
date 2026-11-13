@@ -1,0 +1,119 @@
+{
+ "id": "card-lift",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  }
+ ],
+ "extra": {
+  "off.card-lift.desk": {
+   "moving": [
+    "div[card] box-shadow 340 rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(255, 255, 255, 0.9) 0px 1px 0px 0px inset",
+    "div[card] transform 340 none>translateY(0px) scale(1)"
+   ],
+   "held": null
+  },
+  "off.card-lift.neutral": {
+   "moving": [
+    "div[card] box-shadow 200 rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(15, 23, 41, 0.05) 0px 1px 2px 0px>rgba(0,",
+    "div[card] transform 200 none>translateY(0px) scale(1)"
+   ],
+   "held": null
+  }
+ }
+}

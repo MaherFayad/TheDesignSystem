@@ -1,0 +1,278 @@
+{
+ "id": "window-settle",
+ "runs": {
+  "studio.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:window-grow",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "opacity",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.2, 0.8, 0",
+     "first": 112,
+     "kf": [
+      [
+       "0"
+      ],
+      [
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 112,
+   "longest": 120,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "desk.ltr.full": {
+   "anims": [
+    {
+     "n": "transform",
+     "tg": "span[label]",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.22, 1, 0.",
+     "first": 141,
+     "kf": [
+      [
+       0,
+       "translateY(0px) scale(1)"
+      ],
+      [
+       1,
+       "translateY(-56.871px)"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:window-grow",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "opacity,transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.2, 0.8, 0",
+     "first": 141,
+     "kf": [
+      [
+       "translate(-58.2px, -129.61px) scale(0.6956, 0.235)",
+       "0.35"
+      ],
+      [
+       0.35,
+       "1"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:window-settle",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "transform",
+     "d": 380,
+     "dl": 165,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 141,
+     "kf": [
+      [
+       "scale(1)"
+      ],
+      [
+       0.35,
+       "scale(var(--ds-scale-lift, 1.01))"
+      ],
+      [
+       "scale(1)"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 141,
+   "longest": 545,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:window-grow",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "opacity",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.2, 0.8, 0",
+     "first": 188,
+     "kf": [
+      [
+       "0"
+      ],
+      [
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 188,
+   "longest": 150,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.full": {
+   "anims": [
+    {
+     "n": "opacity",
+     "tg": "button[button]::before",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 215,
+     "kf": [
+      [
+       0,
+       "0.35"
+      ],
+      [
+       1,
+       "0.8"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:window-grow",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "opacity",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.2, 0.8, 0",
+     "first": 215,
+     "kf": [
+      [
+       "0"
+      ],
+      [
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 215,
+   "longest": 296,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "neutral.rtl.full": {
+   "anims": [
+    {
+     "n": "ds-motion:window-grow",
+     "tg": "div[window]#ds-window_r_0_",
+     "p": "opacity",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0.2, 0.8, 0",
+     "first": 110,
+     "kf": [
+      [
+       "0"
+      ],
+      [
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 110,
+   "longest": 150,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "desk.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "desk.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "div[window]#ds-window_r_0_",
+   "layoutTransitions": []
+  }
+ }
+}

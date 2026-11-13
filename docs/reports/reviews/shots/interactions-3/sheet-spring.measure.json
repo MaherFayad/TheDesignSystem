@@ -1,0 +1,1124 @@
+{
+ "id": "sheet-spring",
+ "runs": {
+  "studio.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-dialog-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity,backdropFilter",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 198,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-sheet-in-y",
+     "tg": "div[panel]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 198,
+     "kf": [
+      [
+       0,
+       "translateY(0%)",
+       "0"
+      ],
+      [
+       1,
+       "translateY(0px)",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-fade",
+     "tg": "div[body]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 198,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-in",
+     "tg": "div[body]",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 198,
+     "kf": [
+      [
+       0,
+       "translateY(0px)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [
+    "backdropFilter"
+   ],
+   "stateAt": 1,
+   "firstMotionAt": 198,
+   "longest": 100,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "clip-path",
+      "tg": "button[close]::before",
+      "p": "clip-path",
+      "d": 70,
+      "dl": 0,
+      "it": 1,
+      "e": "steps(2)",
+      "first": 22,
+      "kf": [
+       [
+        0,
+        "circle(0% at 50% 50%)"
+       ],
+       [
+        1,
+        "circle(75% at 50% 50%)"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[icon]",
+      "p": "transform",
+      "d": 70,
+      "dl": 0,
+      "it": 1,
+      "e": "steps(2)",
+      "first": 22,
+      "kf": [
+       [
+        0,
+        "translateY(0px) rotate(0deg) scale(1)"
+       ],
+       [
+        1,
+        "translateY(0px) rotate(90deg) scale(1)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-dialog-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity,backdropFilter",
+      "d": 70,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 22,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-sheet-out-y",
+      "tg": "div[panel]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 70,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 22,
+      "kf": [
+       [
+        0,
+        "translateY(0px)",
+        "1"
+       ],
+       [
+        1,
+        "translateY(0%)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [
+     "backdropFilter"
+    ],
+    "stateAt": 0,
+    "firstMotionAt": 22,
+    "longest": 70,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-dialog-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity,backdropFilter",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 225,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-sheet-in-y",
+     "tg": "div[panel]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 225,
+     "kf": [
+      [
+       0,
+       "translateY(100%)",
+       "1"
+      ],
+      [
+       1,
+       "translateY(0px)",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-fade",
+     "tg": "div[body]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "first": 225,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-in",
+     "tg": "div[body]",
+     "p": "transform",
+     "d": 340,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "first": 225,
+     "kf": [
+      [
+       0,
+       "translateY(6px)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [
+    "backdropFilter"
+   ],
+   "stateAt": 1,
+   "firstMotionAt": 225,
+   "longest": 460,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "clip-path",
+      "tg": "button[close]::before",
+      "p": "clip-path",
+      "d": 300,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.087 5%, 0",
+      "first": 21,
+      "kf": [
+       [
+        0,
+        "circle(0% at 50% 50%)"
+       ],
+       [
+        1,
+        "circle(75% at 50% 50%)"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[icon]",
+      "p": "transform",
+      "d": 300,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.087 5%, 0",
+      "first": 21,
+      "kf": [
+       [
+        0,
+        "translateY(0px) rotate(0deg) scale(1)"
+       ],
+       [
+        1,
+        "translateY(0px) rotate(90deg) scale(1)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-dialog-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity,backdropFilter",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 21,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-sheet-out-y",
+      "tg": "div[panel]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 21,
+      "kf": [
+       [
+        0,
+        "translateY(0px)",
+        "1"
+       ],
+       [
+        1,
+        "translateY(100%)",
+        "1"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[label]",
+      "p": "transform",
+      "d": 300,
+      "dl": 0,
+      "it": 1,
+      "e": "cubic-bezier(0.22, 1, 0.",
+      "first": 318,
+      "kf": [
+       [
+        0,
+        "translateY(0px) scale(1)"
+       ],
+       [
+        1,
+        "translateY(-88.861px)"
+       ]
+      ]
+     }
+    ],
+    "bad": [
+     "backdropFilter"
+    ],
+    "stateAt": 0,
+    "firstMotionAt": 21,
+    "longest": 300,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-dialog-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity,backdropFilter",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 374,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-sheet-in-y",
+     "tg": "div[panel]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 374,
+     "kf": [
+      [
+       0,
+       "translateY(100%)",
+       "1"
+      ],
+      [
+       1,
+       "translateY(0px)",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-fade",
+     "tg": "div[body]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 72.00000000000001,
+     "it": 1,
+     "e": "linear",
+     "first": 374,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-in",
+     "tg": "div[body]",
+     "p": "transform",
+     "d": 200,
+     "dl": 72.00000000000001,
+     "it": 1,
+     "e": "linear",
+     "first": 374,
+     "kf": [
+      [
+       0,
+       "translateY(4px)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [
+    "backdropFilter"
+   ],
+   "stateAt": 0,
+   "firstMotionAt": 374,
+   "longest": 272,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "clip-path",
+      "tg": "button[close]::before",
+      "p": "clip-path",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "circle(0% at 50% 50%)"
+       ],
+       [
+        1,
+        "circle(75% at 50% 50%)"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[icon]",
+      "p": "transform",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "translateY(0px) rotate(0deg) scale(1)"
+       ],
+       [
+        1,
+        "translateY(0px) rotate(90deg) scale(1)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-dialog-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity,backdropFilter",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-sheet-out-y",
+      "tg": "div[panel]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "translateY(0px)",
+        "1"
+       ],
+       [
+        1,
+        "translateY(100%)",
+        "1"
+       ]
+      ]
+     }
+    ],
+    "bad": [
+     "backdropFilter"
+    ],
+    "stateAt": 0,
+    "firstMotionAt": 19,
+    "longest": 158,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-dialog-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity,backdropFilter",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 95,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-sheet-in-y",
+     "tg": "div[panel]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 95,
+     "kf": [
+      [
+       0,
+       "translateY(100%)",
+       "1"
+      ],
+      [
+       1,
+       "translateY(0px)",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-fade",
+     "tg": "div[body]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "first": 95,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-in",
+     "tg": "div[body]",
+     "p": "transform",
+     "d": 375,
+     "dl": 120,
+     "it": 1,
+     "e": "linear",
+     "first": 95,
+     "kf": [
+      [
+       0,
+       "translateY(6px)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [
+    "backdropFilter"
+   ],
+   "stateAt": 0,
+   "firstMotionAt": 95,
+   "longest": 495,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "clip-path",
+      "tg": "button[close]::before",
+      "p": "clip-path",
+      "d": 296,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 30,
+      "kf": [
+       [
+        0,
+        "circle(0% at 50% 50%)"
+       ],
+       [
+        1,
+        "circle(75% at 50% 50%)"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[icon]",
+      "p": "transform",
+      "d": 296,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 30,
+      "kf": [
+       [
+        0,
+        "translateY(0px) rotate(0deg) scale(1)"
+       ],
+       [
+        1,
+        "translateY(0px) rotate(90deg) scale(1)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-dialog-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity,backdropFilter",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 30,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-sheet-out-y",
+      "tg": "div[panel]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 30,
+      "kf": [
+       [
+        0,
+        "translateY(0px)",
+        "1"
+       ],
+       [
+        1,
+        "translateY(100%)",
+        "1"
+       ]
+      ]
+     },
+     {
+      "n": "opacity",
+      "tg": "button[button]::before",
+      "p": "opacity",
+      "d": 296,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 239,
+      "kf": [
+       [
+        0,
+        "0.35"
+       ],
+       [
+        1,
+        "0.8"
+       ]
+      ]
+     }
+    ],
+    "bad": [
+     "backdropFilter"
+    ],
+    "stateAt": 0,
+    "firstMotionAt": 30,
+    "longest": 296,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.rtl.full": {
+   "anims": [
+    {
+     "n": "ds-dialog-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity,backdropFilter",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 200,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-sheet-in-y",
+     "tg": "div[panel]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 200,
+     "kf": [
+      [
+       0,
+       "translateY(100%)",
+       "1"
+      ],
+      [
+       1,
+       "translateY(0px)",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-fade",
+     "tg": "div[body]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 72.00000000000001,
+     "it": 1,
+     "e": "linear",
+     "first": 200,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-dialog-part-in",
+     "tg": "div[body]",
+     "p": "transform",
+     "d": 200,
+     "dl": 72.00000000000001,
+     "it": 1,
+     "e": "linear",
+     "first": 200,
+     "kf": [
+      [
+       0,
+       "translateY(4px)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [
+    "backdropFilter"
+   ],
+   "stateAt": 0,
+   "firstMotionAt": 200,
+   "longest": 272,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "clip-path",
+      "tg": "button[close]::before",
+      "p": "clip-path",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "circle(0% at 50% 50%)"
+       ],
+       [
+        1,
+        "circle(75% at 50% 50%)"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[icon]",
+      "p": "transform",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "translateY(0px) rotate(0deg) scale(1)"
+       ],
+       [
+        1,
+        "translateY(0px) rotate(90deg) scale(1)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-dialog-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity,backdropFilter",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-sheet-out-y",
+      "tg": "div[panel]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "translateY(0px)",
+        "1"
+       ],
+       [
+        1,
+        "translateY(100%)",
+        "1"
+       ]
+      ]
+     }
+    ],
+    "bad": [
+     "backdropFilter"
+    ],
+    "stateAt": 0,
+    "firstMotionAt": 19,
+    "longest": 158,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[close]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  }
+ }
+}

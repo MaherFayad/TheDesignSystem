@@ -1,0 +1,2486 @@
+{
+ "id": "command-palette-row-slide",
+ "runs": {
+  "studio.ltr.full": {
+   "anims": [
+    {
+     "n": "border-bottom-color",
+     "tg": "div[search]",
+     "p": "border-bottom-color",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 306,
+     "kf": [
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[search]::before",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[search]::before",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "scale(1)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[control]::before",
+     "p": "opacity",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[control]::before",
+     "p": "transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "scale(1)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "span[highlight]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-in",
+     "tg": "div[panel]#radix-_r_1_",
+     "p": "opacity,transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(0px) scale(1)",
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-part-in",
+     "tg": "div[footer]",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(0px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-open-board",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-duplicate-board",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-export-pdf",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-invite",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-share",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-settings",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 306,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 306,
+   "longest": 120,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "transform",
+      "tg": "span[highlight]",
+      "p": "transform",
+      "d": 80,
+      "dl": 0,
+      "it": 1,
+      "e": "steps(2)",
+      "first": 0,
+      "kf": [
+       [
+        0,
+        "translate(0px, 51px)"
+       ],
+       [
+        1,
+        "translate(0px, 79px)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 52,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-out",
+      "tg": "div[panel]#radix-_r_1_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 52,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translateY(0px) scale(1)",
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 70,
+      "dl": 0,
+      "it": 1,
+      "e": "steps(2)",
+      "first": 52,
+      "kf": [
+       [
+        "none"
+       ],
+       [
+        "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 120,
+      "dl": 0,
+      "it": 1,
+      "e": "steps(3)",
+      "first": 106,
+      "kf": [
+       [
+        "matrix(1, 0, 0, 1, 0, 0)"
+       ],
+       [
+        "none"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 0,
+    "longest": 120,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.full": {
+   "anims": [
+    {
+     "n": "border-bottom-color",
+     "tg": "div[search]",
+     "p": "border-bottom-color",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 292,
+     "kf": [
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[search]::before",
+     "p": "opacity",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[search]::before",
+     "p": "transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "scale(0.9)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[control]::before",
+     "p": "opacity",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[control]::before",
+     "p": "transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "scale(0.9)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "span[highlight]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-in",
+     "tg": "div[panel]#radix-_r_1_",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(0px) scale(0.92)",
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-part-in",
+     "tg": "div[footer]",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 45,
+     "it": 1,
+     "e": "linear",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(6px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-open-board",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 45,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-duplicate-board",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 90,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-export-pdf",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 90,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-invite",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 90,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-share",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 90,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-settings",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 90,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 292,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "span[highlight]",
+     "p": "transform",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 898,
+     "kf": [
+      [
+       0,
+       "translate(5px, 27px)"
+      ],
+      [
+       1,
+       "translate(5px, 59px)"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "span[highlight]",
+     "p": "transform",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 1047,
+     "kf": [
+      [
+       0,
+       "translate(5px, 62.3387px)"
+      ],
+      [
+       1,
+       "translate(5px, 91px)"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 292,
+   "longest": 430,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-command-palette-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 61,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-out",
+      "tg": "div[panel]#radix-_r_1_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 61,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translateY(0px) scale(0.92)",
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 380,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.142 5%, 0",
+      "first": 61,
+      "kf": [
+       [
+        "matrix(1, 0, 0, 1, 0, 0)"
+       ],
+       [
+        "none"
+       ]
+      ]
+     },
+     {
+      "n": "transform",
+      "tg": "span[label]",
+      "p": "transform",
+      "d": 300,
+      "dl": 0,
+      "it": 1,
+      "e": "cubic-bezier(0.22, 1, 0.",
+      "first": 300,
+      "kf": [
+       [
+        0,
+        "translateY(0px) scale(1)"
+       ],
+       [
+        1,
+        "translateY(-88.861px)"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 61,
+    "longest": 380,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.full": {
+   "anims": [
+    {
+     "n": "border-bottom-color",
+     "tg": "div[search]",
+     "p": "border-bottom-color",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 450,
+     "kf": [
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[search]::before",
+     "p": "opacity",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[search]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "scale(0.98)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[control]::before",
+     "p": "opacity",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[control]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "scale(0.98)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "span[highlight]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-in",
+     "tg": "div[panel]#radix-_r_1_",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(4px) scale(0.98)",
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-part-in",
+     "tg": "div[footer]",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(4px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-open-board",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-duplicate-board",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 48,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-export-pdf",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 72,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-invite",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 96,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-share",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-settings",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 450,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 450,
+   "longest": 320,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-command-palette-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 65,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-out",
+      "tg": "div[panel]#radix-_r_1_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 65,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translateY(4px) scale(0.98)",
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 65,
+      "kf": [
+       [
+        "none"
+       ],
+       [
+        "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 200,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 85,
+      "kf": [
+       [
+        "matrix(1, 0, 0, 1, 0, 0)"
+       ],
+       [
+        "none"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 65,
+    "longest": 200,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.full": {
+   "anims": [
+    {
+     "n": "border-bottom-color",
+     "tg": "div[search]",
+     "p": "border-bottom-color",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 326,
+     "kf": [
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[search]::before",
+     "p": "opacity",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[search]::before",
+     "p": "transform",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "scale(0.92)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[control]::before",
+     "p": "opacity",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[control]::before",
+     "p": "transform",
+     "d": 375,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "scale(0.92)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "span[highlight]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-in",
+     "tg": "div[panel]#radix-_r_1_",
+     "p": "opacity,transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(12px) scale(0.94)",
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-part-in",
+     "tg": "div[footer]",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 40,
+     "it": 1,
+     "e": "linear",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(6px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-open-board",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 40,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-duplicate-board",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 80,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-export-pdf",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-invite",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-share",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-settings",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 326,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "span[highlight]",
+     "p": "transform",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 1188,
+     "kf": [
+      [
+       0,
+       "translate(6px, 31px)"
+      ],
+      [
+       1,
+       "translate(6px, 67px)"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 1,
+   "firstMotionAt": 326,
+   "longest": 495,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "transform",
+      "tg": "span[highlight]",
+      "p": "transform",
+      "d": 80,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 0,
+      "kf": [
+       [
+        0,
+        "translate(6px, 67px)"
+       ],
+       [
+        1,
+        "translate(6px, 103px)"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 93,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-out",
+      "tg": "div[panel]#radix-_r_1_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 93,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translateY(12px) scale(0.94)",
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 296,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 93,
+      "kf": [
+       [
+        "none"
+       ],
+       [
+        "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 496,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.086 5%, 0",
+      "first": 204,
+      "kf": [
+       [
+        "matrix(1, 0, 0, 1, 0, 0)"
+       ],
+       [
+        "none"
+       ]
+      ]
+     },
+     {
+      "n": "opacity",
+      "tg": "button[button]::before",
+      "p": "opacity",
+      "d": 296,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 490,
+      "kf": [
+       [
+        0,
+        "0.35"
+       ],
+       [
+        1,
+        "0.8"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 0,
+    "longest": 496,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.rtl.full": {
+   "anims": [
+    {
+     "n": "border-bottom-color",
+     "tg": "div[search]",
+     "p": "border-bottom-color",
+     "d": 150,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 223,
+     "kf": [
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[search]::before",
+     "p": "opacity",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[search]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "scale(0.98)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "div[control]::before",
+     "p": "opacity",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "div[control]::before",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "scale(0.98)"
+      ],
+      [
+       1,
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "opacity",
+     "tg": "span[highlight]",
+     "p": "opacity",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-backdrop-in",
+     "tg": "div[backdrop]",
+     "p": "opacity",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "0"
+      ],
+      [
+       1,
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-in",
+     "tg": "div[panel]#radix-_r_1_",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(4px) scale(0.98)",
+       "0"
+      ],
+      [
+       0.33,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-command-palette-part-in",
+     "tg": "div[footer]",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(4px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-open-board",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-duplicate-board",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 48,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-export-pdf",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 72,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-invite",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 96,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-share",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:stagger",
+     "tg": "div[item]#ds-command-palette-_r_0_-list-option-settings",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 120,
+     "it": 1,
+     "e": "linear(0 0%, 0.056 5%, 0",
+     "first": 223,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-enter, 6px))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "transform",
+     "tg": "span[highlight]",
+     "p": "transform",
+     "d": 80,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 980,
+     "kf": [
+      [
+       0,
+       "translate(-5px, 32px)"
+      ],
+      [
+       1,
+       "translate(-5px, 68px)"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 223,
+   "longest": 320,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-command-palette-backdrop-out",
+      "tg": "div[backdrop]",
+      "p": "opacity",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 174,
+      "kf": [
+       [
+        0,
+        "1"
+       ],
+       [
+        1,
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-command-palette-out",
+      "tg": "div[panel]#radix-_r_1_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 174,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translateY(4px) scale(0.98)",
+        "0"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.055 5%, 0",
+      "first": 174,
+      "kf": [
+       [
+        "none"
+       ],
+       [
+        "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       ]
+      ]
+     },
+     {
+      "n": "ds-motion:kbd-press",
+      "tg": "kbd[key]",
+      "p": "transform",
+      "d": 200,
+      "dl": 0,
+      "it": 1,
+      "e": "linear(0 0%, 0.054 5%, 0",
+      "first": 286,
+      "kf": [
+       [
+        "matrix(1, 0, 0, 1, 0, 0)"
+       ],
+       [
+        "none"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 174,
+    "longest": 200,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "desk.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "neutral.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  },
+  "liquid.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "input[control]",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "button[button]"
+   }
+  }
+ }
+}

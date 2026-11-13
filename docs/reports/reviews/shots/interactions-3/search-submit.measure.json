@@ -1,0 +1,2083 @@
+{
+ "id": "search-submit",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 10,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 100ms",
+    "div[control]::before transform 100ms",
+    "span[icon] ds-motion:search-submit 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 380,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 88,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 340ms",
+    "div[control]::before transform 340ms",
+    "span[icon] ds-motion:search-submit 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 23,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 200ms",
+    "div[control]::before transform 200ms",
+    "span[icon] ds-motion:search-submit 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 496,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 50,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 375ms",
+    "div[control]::before transform 375ms",
+    "span[icon] ds-motion:search-submit 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 39,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 100ms",
+    "div[control]::before transform 100ms",
+    "span[icon] ds-motion:search-submit 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(10, 10, 10, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 380,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 35,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 340ms",
+    "div[control]::before transform 340ms",
+    "span[icon] ds-motion:search-submit 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgba(18, 18, 17, 0.7)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 21,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 200ms",
+    "div[control]::before transform 200ms",
+    "span[icon] ds-motion:search-submit 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(95, 103, 116)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 496,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 25,
+   "properties": [
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "opacity",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "div[search-field]::before transform 375ms",
+    "div[control]::before transform 375ms",
+    "span[icon] ds-motion:search-submit 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[search-field]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(85, 88, 98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[search-field]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[search-field]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[search-field]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[control]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[control]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:search-submit",
+     "target": "span[icon]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.25,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95)) rotate(-12deg)"
+      },
+      {
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

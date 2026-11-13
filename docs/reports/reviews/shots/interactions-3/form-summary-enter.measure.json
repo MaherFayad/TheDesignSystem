@@ -1,0 +1,5951 @@
+{
+ "id": "form-summary-enter",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 131,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 70ms",
+    "div[input]::before transform 100ms",
+    "div[summary]#_r_0_summary ds-alert-in 100ms",
+    "span[icon] ds-alert-icon-in 120ms",
+    "div[title] ds-alert-text-in 100ms",
+    "div[body] ds-alert-text-in 100ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 100ms",
+    "svg[icon] ds-motion:field-error-enter-icon 120ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 100ms",
+    "svg[icon] ds-motion:field-error-enter-icon 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(26, 26, 26)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(26, 26, 26)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 100% 0px 0px round 6px)",
+       "opacity": "0",
+       "transform": "translateY(0px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 6px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(0px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(0px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.ltr.full": {
+   "longestMs": 430,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 131,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 300ms",
+    "div[input]::before transform 340ms",
+    "div[summary]#_r_0_summary ds-alert-in 340ms",
+    "span[icon] ds-alert-icon-in 380ms",
+    "div[title] ds-alert-text-in 340ms",
+    "div[body] ds-alert-text-in 340ms",
+    "li ds-motion:stagger 340ms",
+    "li ds-motion:stagger 340ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 340ms",
+    "svg[icon] ds-motion:field-error-enter-icon 380ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 340ms",
+    "svg[icon] ds-motion:field-error-enter-icon 380ms",
+    "div[input] ds-motion:error-shake 380ms",
+    "div[input] ds-motion:error-shake 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-14.1px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(38, 37, 34)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(38, 37, 34)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 100% 0px 0px round 16px)",
+       "opacity": "0",
+       "transform": "translateY(12px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 16px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.3)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 6px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 248,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 45,
+   "properties": [
+    "transform",
+    "opacity",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "button[button] transform 70ms",
+    "span[label] transform 70ms",
+    "label[label]#_r_1_label transform 158ms",
+    "div[input]::before transform 200ms",
+    "div[summary]#_r_0_summary ds-alert-in 200ms",
+    "span[icon] ds-alert-icon-in 200ms",
+    "div[title] ds-alert-text-in 200ms",
+    "div[body] ds-alert-text-in 200ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 200ms",
+    "svg[icon] ds-motion:field-error-enter-icon 200ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 200ms",
+    "svg[icon] ds-motion:field-error-enter-icon 200ms",
+    "div[input] ds-motion:error-shake 200ms",
+    "div[input] ds-motion:error-shake 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "button[button]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.98)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 180,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "0.8"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::after",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[label]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateY(0px) scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(4.42px) scale(1)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-8.84px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 36, 51)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 36, 51)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "button[button]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 26.8,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0.119097"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 100% 0px 0px round 12px)",
+       "opacity": "0",
+       "transform": "translateY(4px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 12px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.5)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 4px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 48,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 48,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 536,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 139,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 296ms",
+    "div[input]::before transform 375ms",
+    "div[summary]#_r_0_summary ds-alert-in 375ms",
+    "span[icon] ds-alert-icon-in 496ms",
+    "div[title] ds-alert-text-in 375ms",
+    "div[body] ds-alert-text-in 375ms",
+    "li ds-motion:stagger 375ms",
+    "li ds-motion:stagger 375ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 375ms",
+    "svg[icon] ds-motion:field-error-enter-icon 496ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 375ms",
+    "svg[icon] ds-motion:field-error-enter-icon 496ms",
+    "div[input] ds-motion:error-shake 496ms",
+    "div[input] ds-motion:error-shake 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-13.08px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 29, 35)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 29, 35)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 100% 0px 0px round 20px)",
+       "opacity": "0",
+       "transform": "translateY(12px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 20px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.4)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 6px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 120,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 102,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 70ms",
+    "div[input]::before transform 100ms",
+    "div[summary]#_r_0_summary ds-alert-in 100ms",
+    "span[icon] ds-alert-icon-in 120ms",
+    "div[title] ds-alert-text-in 100ms",
+    "div[body] ds-alert-text-in 100ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 100ms",
+    "svg[icon] ds-motion:field-error-enter-icon 120ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 100ms",
+    "svg[icon] ds-motion:field-error-enter-icon 120ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(26, 26, 26)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 7.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(26, 26, 26)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(10, 10, 10, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 10, 10, 0.2) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 0px 0px 100% round 6px)",
+       "opacity": "0",
+       "transform": "translateY(0px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 6px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(0px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(0px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(3)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 430,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 155,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 300ms",
+    "div[input]::before transform 340ms",
+    "div[summary]#_r_0_summary ds-alert-in 340ms",
+    "span[icon] ds-alert-icon-in 380ms",
+    "div[title] ds-alert-text-in 340ms",
+    "div[body] ds-alert-text-in 340ms",
+    "li ds-motion:stagger 340ms",
+    "li ds-motion:stagger 340ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 340ms",
+    "svg[icon] ds-motion:field-error-enter-icon 380ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 340ms",
+    "svg[icon] ds-motion:field-error-enter-icon 380ms",
+    "div[input] ds-motion:error-shake 380ms",
+    "div[input] ds-motion:error-shake 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-13.62px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(38, 37, 34)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(38, 37, 34)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 120,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgba(18, 18, 17, 0.52)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(26, 29, 36, 0.06) 0px 0px 4px 0px inset, rgba(255, 255, 255, 0.6) 0px -4px 8px 0px in"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 0px 0px 100% round 16px)",
+       "opacity": "0",
+       "transform": "translateY(12px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 16px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.3)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 6px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 90,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 340,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.182 10%, 0.336 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 45,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 248,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 203,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 158ms",
+    "div[input]::before transform 200ms",
+    "div[summary]#_r_0_summary ds-alert-in 200ms",
+    "span[icon] ds-alert-icon-in 200ms",
+    "div[title] ds-alert-text-in 200ms",
+    "div[body] ds-alert-text-in 200ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 200ms",
+    "svg[icon] ds-motion:field-error-enter-icon 200ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 200ms",
+    "svg[icon] ds-motion:field-error-enter-icon 200ms",
+    "div[input] ds-motion:error-shake 200ms",
+    "div[input] ds-motion:error-shake 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-8.56px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 36, 51)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.98)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 36, 51)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(127, 135, 148)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(37, 99, 235, 0.14) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 0px 0px 100% round 12px)",
+       "opacity": "0",
+       "transform": "translateY(4px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 12px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.5)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 4px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 48,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 48,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 24,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 536,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": 349,
+   "properties": [
+    "transform",
+    "color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-right-color",
+    "border-top-color",
+    "opacity",
+    "box-shadow",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "label[label]#_r_1_label transform 296ms",
+    "div[input]::before transform 375ms",
+    "div[summary]#_r_0_summary ds-alert-in 375ms",
+    "span[icon] ds-alert-icon-in 496ms",
+    "div[title] ds-alert-text-in 375ms",
+    "div[body] ds-alert-text-in 375ms",
+    "li ds-motion:stagger 375ms",
+    "li ds-motion:stagger 375ms",
+    "p[error]#_r_1_error ds-motion:field-error-enter 375ms",
+    "svg[icon] ds-motion:field-error-enter-icon 496ms",
+    "p[error]#_r_2_error ds-motion:field-error-enter 375ms",
+    "svg[icon] ds-motion:field-error-enter-icon 496ms",
+    "div[input] ds-motion:error-shake 496ms",
+    "div[input] ds-motion:error-shake 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-12.66px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_1_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 29, 35)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "opacity",
+     "target": "div[input]::before",
+     "props": [
+      "opacity"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "div[input]::before",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "scale(0.92)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 9.0974px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "color",
+     "target": "label[label]#_r_2_label",
+     "props": [
+      "color"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "color": "rgb(28, 29, 35)"
+      },
+      {
+       "offset": 1,
+       "color": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-bottom-color",
+     "target": "div[input]",
+     "props": [
+      "border-bottom-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderBottomColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderBottomColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-left-color",
+     "target": "div[input]",
+     "props": [
+      "border-left-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderLeftColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderLeftColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-right-color",
+     "target": "div[input]",
+     "props": [
+      "border-right-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderRightColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderRightColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "border-top-color",
+     "target": "div[input]",
+     "props": [
+      "border-top-color"
+     ],
+     "durationMs": 150,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "borderTopColor": "rgb(112, 115, 126)"
+      },
+      {
+       "offset": 1,
+       "borderTopColor": "rgb(185, 28, 28)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "box-shadow",
+     "target": "div[input]::before",
+     "props": [
+      "box-shadow"
+     ],
+     "durationMs": 100,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0.4, 0, 1, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(10, 102, 214, 0.16) 0px 0px 0px 0px"
+      },
+      {
+       "offset": 1,
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(239, 68, 68, 0.1) 0px 0px 0px 0px"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-in",
+     "target": "div[summary]#_r_0_summary",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(0px 0px 0px 100% round 20px)",
+       "opacity": "0",
+       "transform": "translateY(12px) scale(1)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px round 20px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-icon-in",
+     "target": "span[icon]",
+     "props": [
+      "opacity",
+      "box-shadow",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "boxShadow": "rgb(185, 28, 28) 0px 0px 0px 0px",
+       "transform": "scale(0.4)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 6px",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[title]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "CSSAnimation",
+     "name": "ds-alert-text-in",
+     "target": "div[body]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 80,
+     "iterations": 1,
+     "easing": "linear",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:stagger",
+     "target": "li",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_1_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter",
+     "target": "p[error]#_r_2_error",
+     "props": [
+      "clip-path",
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 375,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "clipPath": "inset(100% 0px 0px)",
+       "opacity": "0",
+       "transform": "translateY(-100%)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "clipPath": "inset(0px)",
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:field-error-enter-icon",
+     "target": "svg[icon]",
+     "props": [
+      "opacity",
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 40,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:error-shake",
+     "target": "div[input]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "cubic-bezier(0, 0, 0.58, 1)",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.34,
+       "transform": "translateX(calc(-1 * -0.65 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.54,
+       "transform": "translateX(calc(-1 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": null,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

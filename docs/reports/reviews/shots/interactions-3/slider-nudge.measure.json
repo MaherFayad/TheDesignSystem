@@ -1,0 +1,670 @@
+{
+ "id": "slider-nudge",
+ "reviewer": "qa-inputs",
+ "method": "probe sampler per frame; runs style.dir.motion; React gallery stage only page",
+ "runs": {
+  "studio.ltr.full": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.full": {
+   "longestMs": 380,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 42,
+   "properties": [
+    "transform",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[thumb] transform 380ms",
+    "span[track]::before ds-motion:slider-fill 300ms",
+    "span[thumb] transform 379.9ms",
+    "span[track]::before ds-motion:slider-fill 380ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(45px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 18px) 0px calc(0% + 36px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 379.9,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(44.9859px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 380,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.142 5%, 0.452 10%, 0.78 1",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 18px) 0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.ltr.full": {
+   "longestMs": 200,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 54,
+   "properties": [
+    "transform",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[thumb] transform 200ms",
+    "span[track]::before ds-motion:slider-fill 158ms",
+    "span[thumb] transform 195ms",
+    "span[track]::before ds-motion:slider-fill 200ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(15px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 12px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 6px) 0px calc(0% + 12px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 195,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(14.6243px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 200,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 6.04223px) 0px calc(0% + 12px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 12px) round 999px)"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.ltr.full": {
+   "longestMs": 496,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 16,
+   "properties": [
+    "transform",
+    "clip-path"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[thumb] transform 496ms",
+    "span[track]::before ds-motion:slider-fill 296ms",
+    "span[thumb] transform 496ms",
+    "span[track]::before ds-motion:slider-fill 496ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(45px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 18px) 0px calc(0% + 36px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "CSSTransition",
+     "name": "transform",
+     "target": "span[thumb]",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "offset": 0,
+       "transform": "translateX(47.2811px) scale(1) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(0px) scale(1) scaleX(1)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 496,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.086 5%, 0.281 10%, 0.508 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 17.8918px) 0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.rtl.full": {
+   "longestMs": 70,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 27,
+   "properties": [
+    "clip-path",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[track]::before ds-motion:slider-fill 70ms",
+    "span ds-motion:slider-fill 70ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px 0% round 999px)"
+      },
+      {
+       "clipPath": "inset(0px 0% 0px 1% round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 70,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "steps(2)",
+     "keyframes": [
+      {
+       "transform": "translateX(-0.6px)"
+      },
+      {
+       "transform": "translateX(0px)"
+      }
+     ]
+    }
+   ]
+  },
+  "desk.rtl.full": {
+   "longestMs": 300,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 38,
+   "properties": [
+    "clip-path",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[track]::before ds-motion:slider-fill 300ms",
+    "span ds-motion:slider-fill 300ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 36px) 0px calc(1% + 35.28px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 300,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.087 5%, 0.285 10%, 0.516 ",
+     "keyframes": [
+      {
+       "transform": "translateX(-0.6px)"
+      },
+      {
+       "transform": "translateX(0px)"
+      }
+     ]
+    }
+   ]
+  },
+  "neutral.rtl.full": {
+   "longestMs": 158,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 24,
+   "properties": [
+    "clip-path",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[track]::before ds-motion:slider-fill 158ms",
+    "span ds-motion:slider-fill 158ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 12px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 12px) 0px calc(1% + 11.76px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 158,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+     "keyframes": [
+      {
+       "transform": "translateX(-0.7px)"
+      },
+      {
+       "transform": "translateX(0px)"
+      }
+     ]
+    }
+   ]
+  },
+  "liquid.rtl.full": {
+   "longestMs": 296,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": 24,
+   "properties": [
+    "clip-path",
+    "transform"
+   ],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [
+    "span[track]::before ds-motion:slider-fill 296ms",
+    "span ds-motion:slider-fill 296ms"
+   ],
+   "infinite": [],
+   "animations": [
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span[track]::before",
+     "props": [
+      "clip-path"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "clipPath": "inset(0px calc(0% + 36px) round 999px)"
+      },
+      {
+       "clipPath": "inset(0px calc(0% + 36px) 0px calc(1% + 35.28px) round 999px)"
+      }
+     ]
+    },
+    {
+     "kind": "Animation",
+     "name": "ds-motion:slider-fill",
+     "target": "span",
+     "props": [
+      "transform"
+     ],
+     "durationMs": 296,
+     "delayMs": 0,
+     "iterations": 1,
+     "easing": "linear(0 0%, 0.054 5%, 0.178 10%, 0.328 ",
+     "keyframes": [
+      {
+       "transform": "translateX(-0.8px)"
+      },
+      {
+       "transform": "translateX(0px)"
+      }
+     ]
+    }
+   ]
+  },
+  "studio.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.media": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "studio.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "desk.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "neutral.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  },
+  "liquid.ltr.attr": {
+   "longestMs": 0,
+   "stateChangedAtMs": 0,
+   "firstMotionAtMs": null,
+   "properties": [],
+   "layoutPropertiesAnimated": [],
+   "layoutTransitionsListed": [],
+   "timedMovesOver0ms": [],
+   "infinite": [],
+   "animations": []
+  }
+ },
+ "rapidAndInterrupted": {
+  "neutral": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  },
+  "desk": {
+   "rapid30": [],
+   "interrupt90": [],
+   "liveAfter": {
+    "fast": [],
+    "mid": [],
+    "slow": []
+   }
+  }
+ }
+}

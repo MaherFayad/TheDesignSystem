@@ -1,0 +1,297 @@
+{
+ "id": "split-view-pane",
+ "reviewer": "qa-navigation-content",
+ "method": "probe.cjs sample per style; dir ltr and rtl full; ltr media and attr; transitionProperty scan of every stage element before and after (layout props)",
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "rtl",
+   "motion": "full",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "media",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  },
+  {
+   "style": "liquid",
+   "dir": "ltr",
+   "motion": "attr",
+   "error": "Error: browser.newContext: Target page, context or browser has been closed"
+  }
+ ],
+ "extra": {
+  "off.split-view-pane.desk": {
+   "moving": [],
+   "held": null
+  },
+  "off.split-view-pane.neutral": {
+   "moving": [],
+   "held": null
+  },
+  "second.split-view-pane.studio.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 56,
+   "longest": 100,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 100"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 100% 0px 0px) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.studio.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 224,
+   "longest": 100,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 100"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 0px 0px 100%) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.desk.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 57,
+   "longest": 340,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 340"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 100% 0px 0px) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.desk.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 78,
+   "longest": 340,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 340"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 0px 0px 100%) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.neutral.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 121,
+   "longest": 200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 200"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 100% 0px 0px) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.neutral.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 81,
+   "longest": 200,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 200"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 0px 0px 100%) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.liquid.ltr": {
+   "stateAt": null,
+   "firstMotionAt": 140,
+   "longest": 375,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 375"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 100% 0px 0px) > inset(0px)"
+   ],
+   "layoutTrans": []
+  },
+  "second.split-view-pane.liquid.rtl": {
+   "stateAt": null,
+   "firstMotionAt": 60,
+   "longest": 375,
+   "ring0": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "ringFirst": {
+    "outline": "none",
+    "boxShadow": false,
+    "before": "1"
+   },
+   "active": "button[button]",
+   "anims": [
+    "div[primary]#_r_0_-panel-0 clipPath+transform 375"
+   ],
+   "kf": [
+    "div[primary]#_r_0_-panel-0 inset(0px 0px 0px 100%) > inset(0px)"
+   ],
+   "layoutTrans": []
+  }
+ }
+}

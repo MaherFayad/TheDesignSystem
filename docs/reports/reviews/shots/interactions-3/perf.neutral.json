@@ -1,0 +1,560 @@
+{
+  "viewport": "390x844 touch",
+  "cpuThrottle": 4,
+  "window": "trigger plus 1200ms",
+  "rows": [
+    {
+      "id": "button-press",
+      "style": "neutral",
+      "animProps": [],
+      "frames": 87,
+      "presented": 1,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 81,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 5
+      },
+      "dropped": 5,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        114
+      ],
+      "longTaskObserver": [
+        114
+      ],
+      "rafFrames": 87,
+      "rafOver33ms": 1,
+      "rafMaxMs": 100
+    },
+    {
+      "id": "switch-stretch",
+      "style": "neutral",
+      "animProps": [
+        "background-color",
+        "border-bottom-color",
+        "border-left-color",
+        "border-right-color",
+        "border-top-color",
+        "clip-path",
+        "opacity",
+        "transform"
+      ],
+      "frames": 85,
+      "presented": 15,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 64,
+        "STATE_PRESENTED_ALL": 15,
+        "STATE_DROPPED": 6
+      },
+      "dropped": 6,
+      "droppedSmooth": 6,
+      "longTasksMain": [
+        77
+      ],
+      "longTaskObserver": [
+        76
+      ],
+      "rafFrames": 93,
+      "rafOver33ms": 1,
+      "rafMaxMs": 117
+    },
+    {
+      "id": "switch-drag",
+      "style": "neutral",
+      "animProps": [
+        "background-color",
+        "border-bottom-color",
+        "border-left-color",
+        "border-right-color",
+        "border-top-color",
+        "transform"
+      ],
+      "frames": 121,
+      "presented": 28,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 89,
+        "STATE_PRESENTED_ALL": 28,
+        "STATE_DROPPED": 2,
+        "STATE_PRESENTED_PARTIAL": 2
+      },
+      "dropped": 4,
+      "droppedSmooth": 2,
+      "longTasksMain": [],
+      "longTaskObserver": [],
+      "rafFrames": 132,
+      "rafOver33ms": 0,
+      "rafMaxMs": 33
+    },
+    {
+      "id": "dialog-spring",
+      "style": "neutral",
+      "animProps": [
+        "opacity",
+        "backdropFilter",
+        "transform"
+      ],
+      "frames": 105,
+      "presented": 13,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 13,
+        "STATE_DROPPED": 21,
+        "STATE_PRESENTED_PARTIAL": 2
+      },
+      "dropped": 23,
+      "droppedSmooth": 21,
+      "longTasksMain": [
+        325
+      ],
+      "longTaskObserver": [
+        325
+      ],
+      "rafFrames": 98,
+      "rafOver33ms": 2,
+      "rafMaxMs": 367
+    },
+    {
+      "id": "sheet-spring",
+      "style": "neutral",
+      "animProps": [
+        "opacity",
+        "backdropFilter",
+        "transform"
+      ],
+      "frames": 103,
+      "presented": 16,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 16,
+        "STATE_DROPPED": 20,
+        "STATE_PRESENTED_PARTIAL": 1
+      },
+      "dropped": 21,
+      "droppedSmooth": 20,
+      "longTasksMain": [
+        344
+      ],
+      "longTaskObserver": [
+        344
+      ],
+      "rafFrames": 91,
+      "rafOver33ms": 1,
+      "rafMaxMs": 350
+    },
+    {
+      "id": "popover-spring",
+      "style": "neutral",
+      "animProps": [
+        "opacity",
+        "transform"
+      ],
+      "frames": 107,
+      "presented": 17,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 65,
+        "STATE_PRESENTED_ALL": 17,
+        "STATE_DROPPED": 23,
+        "STATE_PRESENTED_PARTIAL": 2
+      },
+      "dropped": 25,
+      "droppedSmooth": 15,
+      "longTasksMain": [
+        145,
+        259
+      ],
+      "longTaskObserver": [
+        144,
+        259
+      ],
+      "rafFrames": 91,
+      "rafOver33ms": 2,
+      "rafMaxMs": 267
+    },
+    {
+      "id": "toast-enter",
+      "style": "neutral",
+      "animProps": [
+        "opacity",
+        "transform"
+      ],
+      "frames": 100,
+      "presented": 68,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 9,
+        "STATE_PRESENTED_ALL": 68,
+        "STATE_DROPPED": 17,
+        "STATE_PRESENTED_PARTIAL": 6
+      },
+      "dropped": 23,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        313
+      ],
+      "longTaskObserver": [
+        312
+      ],
+      "rafFrames": 92,
+      "rafOver33ms": 2,
+      "rafMaxMs": 300
+    },
+    {
+      "id": "toast-stack",
+      "style": "neutral",
+      "animProps": [
+        "transform",
+        "clip-path",
+        "opacity"
+      ],
+      "frames": 169,
+      "presented": 90,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 14,
+        "STATE_PRESENTED_ALL": 90,
+        "STATE_DROPPED": 17,
+        "STATE_PRESENTED_PARTIAL": 48
+      },
+      "dropped": 65,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        296,
+        62,
+        253,
+        57,
+        270,
+        55
+      ],
+      "longTaskObserver": [
+        296,
+        62,
+        252,
+        56,
+        270,
+        55
+      ],
+      "rafFrames": 138,
+      "rafOver33ms": 7,
+      "rafMaxMs": 300
+    },
+    {
+      "id": "toast-expand",
+      "style": "neutral",
+      "animProps": [
+        "clip-path",
+        "transform"
+      ],
+      "frames": 877,
+      "presented": 565,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 95,
+        "STATE_PRESENTED_ALL": 565,
+        "STATE_DROPPED": 28,
+        "STATE_PRESENTED_PARTIAL": 189
+      },
+      "dropped": 217,
+      "droppedSmooth": 1,
+      "longTasksMain": [
+        471,
+        55,
+        55,
+        114,
+        86,
+        407,
+        193,
+        62,
+        60,
+        72,
+        56,
+        275,
+        61,
+        51,
+        329,
+        53,
+        291,
+        61,
+        51,
+        92,
+        272,
+        111,
+        59,
+        56,
+        79
+      ],
+      "longTaskObserver": [
+        470,
+        55,
+        54,
+        113,
+        86,
+        407,
+        192,
+        61,
+        59,
+        71,
+        56,
+        275,
+        61,
+        50,
+        329,
+        54,
+        290,
+        60,
+        50,
+        91,
+        270,
+        111,
+        58,
+        56,
+        80
+      ],
+      "rafFrames": 797,
+      "rafOver33ms": 27,
+      "rafMaxMs": 467
+    },
+    {
+      "id": "menu-origin",
+      "style": "neutral",
+      "animProps": [
+        "clipPath",
+        "opacity",
+        "transform"
+      ],
+      "frames": 114,
+      "presented": 21,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 61,
+        "STATE_PRESENTED_ALL": 21,
+        "STATE_DROPPED": 31,
+        "STATE_PRESENTED_PARTIAL": 1
+      },
+      "dropped": 32,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        489
+      ],
+      "longTaskObserver": [
+        489
+      ],
+      "rafFrames": 94,
+      "rafOver33ms": 1,
+      "rafMaxMs": 533
+    },
+    {
+      "id": "command-palette-open",
+      "style": "neutral",
+      "animProps": [
+        "border-bottom-color",
+        "opacity",
+        "transform"
+      ],
+      "frames": 123,
+      "presented": 15,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 61,
+        "STATE_PRESENTED_ALL": 15,
+        "STATE_DROPPED": 37,
+        "STATE_PRESENTED_PARTIAL": 10
+      },
+      "dropped": 47,
+      "droppedSmooth": 37,
+      "longTasksMain": [
+        597,
+        60,
+        51
+      ],
+      "longTaskObserver": [
+        596,
+        59,
+        50
+      ],
+      "rafFrames": 90,
+      "rafOver33ms": 3,
+      "rafMaxMs": 617
+    },
+    {
+      "id": "accordion-reveal",
+      "style": "neutral",
+      "animProps": [
+        "color",
+        "transform",
+        "clipPath",
+        "opacity"
+      ],
+      "frames": 91,
+      "presented": 19,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 62,
+        "STATE_PRESENTED_ALL": 19,
+        "STATE_DROPPED": 10
+      },
+      "dropped": 10,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        151
+      ],
+      "longTaskObserver": [
+        151
+      ],
+      "rafFrames": 92,
+      "rafOver33ms": 1,
+      "rafMaxMs": 183
+    },
+    {
+      "id": "alert-entrance",
+      "style": "neutral",
+      "animProps": [
+        "clipPath",
+        "opacity",
+        "transform",
+        "boxShadow"
+      ],
+      "frames": 89,
+      "presented": 16,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 64,
+        "STATE_PRESENTED_ALL": 16,
+        "STATE_DROPPED": 8,
+        "STATE_PRESENTED_PARTIAL": 1
+      },
+      "dropped": 9,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        158
+      ],
+      "longTaskObserver": [
+        158
+      ],
+      "rafFrames": 90,
+      "rafOver33ms": 1,
+      "rafMaxMs": 150
+    },
+    {
+      "id": "tab-slide",
+      "style": "neutral",
+      "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+      ],
+      "frames": 141,
+      "presented": 9,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 65,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 61,
+        "STATE_PRESENTED_PARTIAL": 6
+      },
+      "dropped": 67,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        1030
+      ],
+      "longTaskObserver": [
+        1029
+      ],
+      "rafFrames": 86,
+      "rafOver33ms": 2,
+      "rafMaxMs": 1033
+    },
+    {
+      "id": "focus-glow",
+      "style": "neutral",
+      "animProps": [
+        "border-bottom-color",
+        "border-left-color",
+        "border-right-color",
+        "border-top-color",
+        "box-shadow",
+        "opacity",
+        "transform"
+      ],
+      "frames": 77,
+      "presented": 15,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 62,
+        "STATE_PRESENTED_ALL": 15
+      },
+      "dropped": 0,
+      "droppedSmooth": 0,
+      "longTasksMain": [],
+      "longTaskObserver": [],
+      "rafFrames": 86,
+      "rafOver33ms": 0,
+      "rafMaxMs": 17
+    },
+    {
+      "id": "card-lift",
+      "style": "neutral",
+      "animProps": [
+        "box-shadow",
+        "transform",
+        "opacity"
+      ],
+      "frames": 86,
+      "presented": 15,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 65,
+        "STATE_PRESENTED_ALL": 15,
+        "STATE_DROPPED": 6
+      },
+      "dropped": 6,
+      "droppedSmooth": 0,
+      "longTasksMain": [
+        78
+      ],
+      "longTaskObserver": [
+        78
+      ],
+      "rafFrames": 90,
+      "rafOver33ms": 1,
+      "rafMaxMs": 117
+    },
+    {
+      "id": "slider-fill",
+      "style": "neutral",
+      "animProps": [
+        "opacity",
+        "transform",
+        "clipPath"
+      ],
+      "frames": 105,
+      "presented": 22,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 56,
+        "STATE_PRESENTED_ALL": 22,
+        "STATE_DROPPED": 23,
+        "STATE_PRESENTED_PARTIAL": 4
+      },
+      "dropped": 27,
+      "droppedSmooth": 23,
+      "longTasksMain": [
+        404
+      ],
+      "longTaskObserver": [
+        403
+      ],
+      "rafFrames": 89,
+      "rafOver33ms": 3,
+      "rafMaxMs": 400
+    },
+    {
+      "id": "link-underline",
+      "style": "neutral",
+      "animProps": [],
+      "frames": 80,
+      "presented": 2,
+      "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 1
+      },
+      "dropped": 1,
+      "droppedSmooth": 0,
+      "longTasksMain": [],
+      "longTaskObserver": [],
+      "rafFrames": 86,
+      "rafOver33ms": 0,
+      "rafMaxMs": 33
+    }
+  ]
+}

@@ -1,0 +1,648 @@
+{
+ "id": "tooltip-rise",
+ "runs": {
+  "studio.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-tooltip-in",
+     "tg": "div[tooltip]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 663,
+     "kf": [
+      [
+       0,
+       "translate(0px) scale(1)",
+       "0"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-tooltip-part-in",
+     "tg": "span[shortcut]",
+     "p": "opacity,transform",
+     "d": 100,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 663,
+     "kf": [
+      [
+       0,
+       "translateY(0px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 1,
+   "firstMotionAt": 663,
+   "longest": 100,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-tooltip-out",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 17,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translate(0px) scale(1)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 17,
+    "longest": 100,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "desk.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-tooltip-in",
+     "tg": "div[tooltip]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 645,
+     "kf": [
+      [
+       0,
+       "translate(0px, 6px) scale(0.9, 0.81)",
+       "0"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-tooltip-part-in",
+     "tg": "span[shortcut]",
+     "p": "opacity,transform",
+     "d": 340,
+     "dl": 45,
+     "it": 1,
+     "e": "linear",
+     "first": 645,
+     "kf": [
+      [
+       0,
+       "translateY(6px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 645,
+   "longest": 385,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-tooltip-out",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 19,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translate(0px, 6px) scale(0.9, 0.81)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 19,
+    "longest": 100,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "neutral.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-tooltip-in",
+     "tg": "div[tooltip]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 864,
+     "kf": [
+      [
+       0,
+       "translate(0px, 4px) scale(0.98, 0.931)",
+       "0"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-tooltip-part-in",
+     "tg": "span[shortcut]",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "first": 864,
+     "kf": [
+      [
+       0,
+       "translateY(4px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 1,
+   "firstMotionAt": 864,
+   "longest": 224,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-tooltip-in",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 158,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 0,
+      "kf": [
+       [
+        0,
+        "translate(0px, 4px) scale(0.98, 0.931)",
+        "0"
+       ],
+       [
+        1,
+        "none",
+        "1"
+       ]
+      ]
+     },
+     {
+      "n": "ds-tooltip-part-in",
+      "tg": "span[shortcut]",
+      "p": "opacity,transform",
+      "d": 200,
+      "dl": 24,
+      "it": 1,
+      "e": "linear",
+      "first": 0,
+      "kf": [
+       [
+        0,
+        "translateY(4px)",
+        "0"
+       ],
+       [
+        0.3,
+        "1"
+       ],
+       [
+        1,
+        "none",
+        "1"
+       ]
+      ]
+     },
+     {
+      "n": "ds-tooltip-out",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 18,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translate(0px, 4px) scale(0.98, 0.931)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 0,
+    "longest": 224,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "liquid.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-tooltip-in",
+     "tg": "div[tooltip]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 635,
+     "kf": [
+      [
+       0,
+       "translate(0px, 6px) scale(0.92, 0.8648)",
+       "0"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-tooltip-part-in",
+     "tg": "span[shortcut]",
+     "p": "opacity,transform",
+     "d": 375,
+     "dl": 40,
+     "it": 1,
+     "e": "linear",
+     "first": 635,
+     "kf": [
+      [
+       0,
+       "translateY(6px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 635,
+   "longest": 415,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-tooltip-part-in",
+      "tg": "span[shortcut]",
+      "p": "opacity,transform",
+      "d": 375,
+      "dl": 40,
+      "it": 1,
+      "e": "linear",
+      "first": 0,
+      "kf": [
+       [
+        0,
+        "translateY(6px)",
+        "0"
+       ],
+       [
+        0.3,
+        "1"
+       ],
+       [
+        1,
+        "none",
+        "1"
+       ]
+      ]
+     },
+     {
+      "n": "ds-tooltip-out",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 61,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translate(0px, 6px) scale(0.92, 0.8648)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 0,
+    "longest": 415,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "neutral.rtl.full": {
+   "anims": [
+    {
+     "n": "ds-tooltip-in",
+     "tg": "div[tooltip]#radix-_r_0_",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear",
+     "first": 611,
+     "kf": [
+      [
+       0,
+       "translate(0px, 4px) scale(0.98, 0.931)",
+       "0"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-tooltip-part-in",
+     "tg": "span[shortcut]",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 24,
+     "it": 1,
+     "e": "linear",
+     "first": 611,
+     "kf": [
+      [
+       0,
+       "translateY(4px)",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": 611,
+   "longest": 224,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [
+     {
+      "n": "ds-tooltip-out",
+      "tg": "div[tooltip]#radix-_r_0_",
+      "p": "opacity,transform",
+      "d": 100,
+      "dl": 0,
+      "it": 1,
+      "e": "linear",
+      "first": 18,
+      "kf": [
+       [
+        0,
+        "none",
+        "1"
+       ],
+       [
+        1,
+        "translate(0px, 4px) scale(0.98, 0.931)",
+        "0"
+       ]
+      ]
+     }
+    ],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": 18,
+    "longest": 100,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "desk.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "neutral.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "liquid.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "desk.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "neutral.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  },
+  "liquid.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": 0,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "body",
+   "layoutTransitions": [],
+   "exit": {
+    "anims": [],
+    "bad": [],
+    "stateAt": 0,
+    "firstMotionAt": null,
+    "longest": 0,
+    "infinite": [],
+    "focus": "body"
+   }
+  }
+ }
+}

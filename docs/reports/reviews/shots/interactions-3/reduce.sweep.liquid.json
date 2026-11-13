@@ -1,0 +1,1973 @@
+{
+ "style": "liquid",
+ "method": "stage only page, light, LTR, 960x540; press and hold [data-interaction-trigger] 180ms at its centre, then release (extra steps for menu-submenu-nudge, window-lights, tour-spotlight); sample getAnimations every frame for 900ms; moving = duration over 0ms and keyframes differ on a travel, scale, turn, clip or layout property",
+ "runs": [
+  {
+   "id": "button-press",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "No scale and no sink. The pressed fill and the still inner shade carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-glow",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "No glow. The hover fill carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "segment-press",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "No dip and no sink, every duration of the segment 0s in its own CSS. The pressed fill and the still shade carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-loading",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "The label and the spinner cross fade over duration.base. The button does not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-result",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "No roll, no shake, no draw: the glyph shows whole and the label fades.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "copy-swap",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "No roll, turn, wipe or shake: CopyButton.css sets its own durations to 0s, so each state shows at once. The status still says the result.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "copy-bubble",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "The bubble shows and goes at once, in place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-nudge",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "The end part stays still. The hover color carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "close-turn",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "CloseButton.css sets its durations to 0s: the fill shows whole at once; the glyph neither turns nor pinches.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "split-chevron",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "SplitButton.css sets its durations to 0s: the chevron points up at once and does not drop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "fab-morph",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "FloatingActionButton.css sets its durations to 0s: no lift and no slide. The plus shows as a close mark at once; the label shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "link-underline",
+   "family": "actions",
+   "motion": "media",
+   "reduced": "Link.css sets its own durations to 0s: the line shows and goes at once, no press weight, the icon stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toggle-pop",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "No layer and no cross fade. The on fill and the ring change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "switch-stretch",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "The thumb jumps to the other side and does not lean, grow or stretch; the track does not dip; the fill shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "switch-drag",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "The thumb still follows the pointer; on release it lands at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-draw",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "The fill and the mark appear and leave at once; the box does not dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-mixed",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "The dash and the check swap at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "radio-pop",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "The fill and the dot appear and leave at once; the circle does not dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "radio-card-lift",
+   "family": "toggles",
+   "motion": "media",
+   "reduced": "No lift, no dip and no draw; the border, the fill and the check change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "focus-glow",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The ring, the border color and the halo show at once (every duration token is 0ms); the glow does not grow.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "error-shake",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No motion. The error color and the Field message carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-label-focus",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The label does not move; its color changes at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-message-enter",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The description fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-error-enter",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The message fades in; the icon does not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "password-reveal",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The glyphs cross fade, with no wipe.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "search-clear",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The glyph fades in; the copy fades out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "search-submit",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No motion.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-fill",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The characters fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-caret",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The caret shows at once in its cell.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-complete",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No motion.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-step",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The new digits fade in, with no travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "scrub-roll",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The digits fade in; the handle does not grow.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "inline-edit-morph",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The glyphs cross fade.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "form-summary-enter",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The rows fade in together.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "form-submit-success",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The mark shows at once, drawn; the buttons do not move. The status message says the form was sent.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "wizard-step",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The steps cross fade, with no travel; the marks do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "wizard-done",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The mark shows at once, drawn; the Stepper marks do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "consent-check",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No pop. The mark shows as the Checkbox draws it.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "rating-fill",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The new stars fade in; the others change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "rating-preview",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The preview color shows at once, with no sweep and no dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-pull",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The thumb keeps its size; the halo shows at once; the grab cursor and the focus ring carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-bubble",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The bubble shows at once, without travel; the digits change in place with a fade.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-nudge",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No motion: --_slider-pull-max is 0px, the value stays at its end and the focus ring carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-fill",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "The fill and the thumb land at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-rubber-band",
+   "family": "inputs",
+   "motion": "media",
+   "reduced": "No pull: the thumb stops at the end (--_slider-pull-max is 0px).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "picker-chevron-turn",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The icon turns at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-rows",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The rows fade in together with no delay.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "picker-value-roll",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The new label fades in; the old one is gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "row-glide",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The fill moves at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "collection-flip",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "Nothing travels; new items fade in, removed items fade out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "chip-check-pop",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The check fades in; the label is at its place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "filter-count-roll",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The changed characters fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "list-stagger",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "A fade of the rows over duration.base with no delay and no rise.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-origin",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "A fade in and out, with no travel, scale, clip or stagger. Under reduced motion the menu is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-row-slide",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "No slide: the fill is on the new title at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-submenu-nudge",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The chevron stays still: --_menu-nudge and its durations are 0 under reduced motion (review B2, B3).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-open",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "A fade with no travel. Under reduced motion it is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-results",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The new rows fade in with no delay; rows that stay jump to their place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-row-slide",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "No slide: the marker is on the new row at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "highlight-marker",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The marker jumps to the lit row with no travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-draw-pick",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "The check fades in over duration.base.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "combobox-results",
+   "family": "selection",
+   "motion": "media",
+   "reduced": "Nothing travels; new rows fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "popover-spring",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "A fade with no travel, scale or stagger. Under reduced motion it is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tooltip-rise",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "A fade with no travel. Under reduced motion the tooltip is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tooltip-follow",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No slide: the next tooltip is there at once and the last one goes, as in round 1.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dialog-spring",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The panel and the backdrop fade in and out with no travel, scale, blur or stagger. Under reduced motion they are there and gone at once. Without backdrop-filter, under reduced transparency and under more contrast the backdrop is a solid scrim with no blur.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dialog-refuse",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No motion: the dialog stays open and still; its own actions are the way out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "sheet-spring",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The panel fades in and out where it rests, with no slide or stagger, and a released sheet is back in place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "lightbox-zoom",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The viewer fades in and out; the image does not travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tour-spotlight",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No travel: the ring and the panel are at the new target at once; the new text fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "window-settle",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The window fades; no settle.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "window-lights",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The colors and glyphs are there at once; no dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-enter",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No motion: the toast is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-stack",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No motion: the toasts take their places in the stack at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-expand",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "No motion: the list is open at once and folds at once; the pause is the same.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-swipe",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The toast still follows the finger. Let go, it is back in place at once, or it is gone where it was let go.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-timer",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "The timer runs and pauses the same; the line is not drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "notification-change",
+   "family": "overlays",
+   "motion": "media",
+   "reduced": "New entries fade in; the rest take their place at once; the new count fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tab-slide",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "No motion: the pill and the selected colour are on the new item at once; no twin is drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "nav-current-slide",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "No motion: the bar appears on the new item at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "nav-hover-follow",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "The pill fades in place; nothing slides and the separator stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "pagination-roll",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "The new numbers fade in; nothing travels.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "sidebar-collapse",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "The labels fade in with no travel and no delay; the panel is not clipped and the icons do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "stepper-travel",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "Nothing travels; the current step and the fill change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toc-travel",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "The bar jumps to the active link.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tab-bar-pop",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "Nothing moves. Round 3 (review B2): the reduced rules carry [data-active], so they win over the motion rules, and the root sets --_tab-bar-duration and --_tab-bar-stagger to 0s under the media query and the page setting.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dock-lift",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "No lift, no magnify, no pop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toolbar-press",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "No scale; the on fill carries the state. Round 3 (review B2): the reduced rule carries the on state and wins by order; the root sets --_toolbar-duration to 0s.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "language-roll",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "The new name fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "skip-link-slide",
+   "family": "navigation",
+   "motion": "media",
+   "reduced": "It appears in place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "alert-entrance",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the message is there at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "alert-dismiss",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "A fade of the ghost; the content below takes its place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "state-illustration",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: every part is there at once. Round 3 (review B2): the reduced rules name the parts, so they win over the motion rules, and the root zeroes the duration-in, text-duration and stagger properties.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "error-state-details",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the chevron points the new way at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "accordion-reveal",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the content shows at once, the chevron points the new way at once and does not lean.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "skeleton-swap",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No band; the ghost fades out over duration.morph (the round 2 cross fade).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "stat-roll",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "The changed digits fade in, with no travel and no nudge.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "progress-spring",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the new value shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "progress-celebrate",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the bar or ring reads done at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "meter-fill",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the value shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "avatar-status",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the new status shape shows at once. A first paint never pulses.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "status-pulse",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: a still dot with its label.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "avatar-group-change",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "New avatars fade in; the rest take their place at once; the count fades.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "badge-count",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "The new digits fade in; no pop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "card-lift",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the card changes tone only and no highlight is drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "spinner-loop",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: a still ring with its arc; the label still says what is busy.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "kbd-press",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the keycap stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "handle-grip",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the grip shows at its length at once and does not stretch.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "split-view-pane",
+   "family": "feedback",
+   "motion": "media",
+   "reduced": "No motion: the pane is there at once. Round 3 (review B2): the reduced rule carries [data-state] and wins; the root sets --_split-view-duration to 0s.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-press",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "No scale and no sink. The pressed fill and the still inner shade carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-glow",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "No glow. The hover fill carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "segment-press",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "No dip and no sink, every duration of the segment 0s in its own CSS. The pressed fill and the still shade carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-loading",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "The label and the spinner cross fade over duration.base. The button does not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-result",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "No roll, no shake, no draw: the glyph shows whole and the label fades.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "copy-swap",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "No roll, turn, wipe or shake: CopyButton.css sets its own durations to 0s, so each state shows at once. The status still says the result.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "copy-bubble",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "The bubble shows and goes at once, in place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "button-nudge",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "The end part stays still. The hover color carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "close-turn",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "CloseButton.css sets its durations to 0s: the fill shows whole at once; the glyph neither turns nor pinches.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "split-chevron",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "SplitButton.css sets its durations to 0s: the chevron points up at once and does not drop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "fab-morph",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "FloatingActionButton.css sets its durations to 0s: no lift and no slide. The plus shows as a close mark at once; the label shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "link-underline",
+   "family": "actions",
+   "motion": "attr",
+   "reduced": "Link.css sets its own durations to 0s: the line shows and goes at once, no press weight, the icon stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toggle-pop",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "No layer and no cross fade. The on fill and the ring change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "switch-stretch",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "The thumb jumps to the other side and does not lean, grow or stretch; the track does not dip; the fill shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "switch-drag",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "The thumb still follows the pointer; on release it lands at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-draw",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "The fill and the mark appear and leave at once; the box does not dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-mixed",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "The dash and the check swap at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "radio-pop",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "The fill and the dot appear and leave at once; the circle does not dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "radio-card-lift",
+   "family": "toggles",
+   "motion": "attr",
+   "reduced": "No lift, no dip and no draw; the border, the fill and the check change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "focus-glow",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The ring, the border color and the halo show at once (every duration token is 0ms); the glow does not grow.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "error-shake",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No motion. The error color and the Field message carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-label-focus",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The label does not move; its color changes at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-message-enter",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The description fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-error-enter",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The message fades in; the icon does not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "password-reveal",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The glyphs cross fade, with no wipe.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "search-clear",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The glyph fades in; the copy fades out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "search-submit",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No motion.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-fill",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The characters fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-caret",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The caret shows at once in its cell.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "otp-complete",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No motion.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "field-step",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The new digits fade in, with no travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "scrub-roll",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The digits fade in; the handle does not grow.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "inline-edit-morph",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The glyphs cross fade.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "form-summary-enter",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The rows fade in together.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "form-submit-success",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The mark shows at once, drawn; the buttons do not move. The status message says the form was sent.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "wizard-step",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The steps cross fade, with no travel; the marks do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "wizard-done",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The mark shows at once, drawn; the Stepper marks do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "consent-check",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No pop. The mark shows as the Checkbox draws it.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "rating-fill",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The new stars fade in; the others change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "rating-preview",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The preview color shows at once, with no sweep and no dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-pull",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The thumb keeps its size; the halo shows at once; the grab cursor and the focus ring carry the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-bubble",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The bubble shows at once, without travel; the digits change in place with a fade.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-nudge",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No motion: --_slider-pull-max is 0px, the value stays at its end and the focus ring carries the state.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-fill",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "The fill and the thumb land at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "slider-rubber-band",
+   "family": "inputs",
+   "motion": "attr",
+   "reduced": "No pull: the thumb stops at the end (--_slider-pull-max is 0px).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "picker-chevron-turn",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The icon turns at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-rows",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The rows fade in together with no delay.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "picker-value-roll",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The new label fades in; the old one is gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "row-glide",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The fill moves at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "collection-flip",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "Nothing travels; new items fade in, removed items fade out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "chip-check-pop",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The check fades in; the label is at its place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "filter-count-roll",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The changed characters fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "list-stagger",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "A fade of the rows over duration.base with no delay and no rise.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-origin",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "A fade in and out, with no travel, scale, clip or stagger. Under reduced motion the menu is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-row-slide",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "No slide: the fill is on the new title at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "menu-submenu-nudge",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The chevron stays still: --_menu-nudge and its durations are 0 under reduced motion (review B2, B3).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-open",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "A fade with no travel. Under reduced motion it is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-results",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The new rows fade in with no delay; rows that stay jump to their place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "command-palette-row-slide",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "No slide: the marker is on the new row at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "highlight-marker",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The marker jumps to the lit row with no travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "check-draw-pick",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "The check fades in over duration.base.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "combobox-results",
+   "family": "selection",
+   "motion": "attr",
+   "reduced": "Nothing travels; new rows fade in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "popover-spring",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "A fade with no travel, scale or stagger. Under reduced motion it is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tooltip-rise",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "A fade with no travel. Under reduced motion the tooltip is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tooltip-follow",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No slide: the next tooltip is there at once and the last one goes, as in round 1.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dialog-spring",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The panel and the backdrop fade in and out with no travel, scale, blur or stagger. Under reduced motion they are there and gone at once. Without backdrop-filter, under reduced transparency and under more contrast the backdrop is a solid scrim with no blur.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dialog-refuse",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No motion: the dialog stays open and still; its own actions are the way out.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "sheet-spring",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The panel fades in and out where it rests, with no slide or stagger, and a released sheet is back in place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "lightbox-zoom",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The viewer fades in and out; the image does not travel.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tour-spotlight",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No travel: the ring and the panel are at the new target at once; the new text fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "window-settle",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The window fades; no settle.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "window-lights",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The colors and glyphs are there at once; no dip.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-enter",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No motion: the toast is there and gone at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-stack",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No motion: the toasts take their places in the stack at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-expand",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "No motion: the list is open at once and folds at once; the pause is the same.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-swipe",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The toast still follows the finger. Let go, it is back in place at once, or it is gone where it was let go.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toast-timer",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "The timer runs and pauses the same; the line is not drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "notification-change",
+   "family": "overlays",
+   "motion": "attr",
+   "reduced": "New entries fade in; the rest take their place at once; the new count fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tab-slide",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "No motion: the pill and the selected colour are on the new item at once; no twin is drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "nav-current-slide",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "No motion: the bar appears on the new item at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "nav-hover-follow",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "The pill fades in place; nothing slides and the separator stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "pagination-roll",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "The new numbers fade in; nothing travels.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "sidebar-collapse",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "The labels fade in with no travel and no delay; the panel is not clipped and the icons do not move.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "stepper-travel",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "Nothing travels; the current step and the fill change at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toc-travel",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "The bar jumps to the active link.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "tab-bar-pop",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "Nothing moves. Round 3 (review B2): the reduced rules carry [data-active], so they win over the motion rules, and the root sets --_tab-bar-duration and --_tab-bar-stagger to 0s under the media query and the page setting.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "dock-lift",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "No lift, no magnify, no pop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "toolbar-press",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "No scale; the on fill carries the state. Round 3 (review B2): the reduced rule carries the on state and wins by order; the root sets --_toolbar-duration to 0s.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "language-roll",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "The new name fades in.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "skip-link-slide",
+   "family": "navigation",
+   "motion": "attr",
+   "reduced": "It appears in place.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "alert-entrance",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the message is there at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "alert-dismiss",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "A fade of the ghost; the content below takes its place at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "state-illustration",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: every part is there at once. Round 3 (review B2): the reduced rules name the parts, so they win over the motion rules, and the root zeroes the duration-in, text-duration and stagger properties.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "error-state-details",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the chevron points the new way at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "accordion-reveal",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the content shows at once, the chevron points the new way at once and does not lean.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "skeleton-swap",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No band; the ghost fades out over duration.morph (the round 2 cross fade).",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "stat-roll",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "The changed digits fade in, with no travel and no nudge.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "progress-spring",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the new value shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "progress-celebrate",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the bar or ring reads done at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "meter-fill",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the value shows at once.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "avatar-status",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the new status shape shows at once. A first paint never pulses.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "status-pulse",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: a still dot with its label.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "avatar-group-change",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "New avatars fade in; the rest take their place at once; the count fades.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "badge-count",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "The new digits fade in; no pop.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "card-lift",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the card changes tone only and no highlight is drawn.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "spinner-loop",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: a still ring with its arc; the label still says what is busy.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "kbd-press",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the keycap stays still.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "handle-grip",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the grip shows at its length at once and does not stretch.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  },
+  {
+   "id": "split-view-pane",
+   "family": "feedback",
+   "motion": "attr",
+   "reduced": "No motion: the pane is there at once. Round 3 (review B2): the reduced rule carries [data-state] and wins; the root sets --_split-view-duration to 0s.",
+   "timed": 0,
+   "moving": [],
+   "timedOther": []
+  }
+ ],
+ "summary": {
+  "media": [],
+  "attr": [],
+  "errors": []
+ }
+}
