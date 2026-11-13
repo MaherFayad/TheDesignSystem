@@ -1,5 +1,5 @@
 // Stages of the Angular /interactions page for the selection family (orders
-// 1.21 and 1.22), the twin of apps/gallery-react/src/interactions/selection.tsx.
+// 1.21 to 1.23), the twin of apps/gallery-react/src/interactions/selection.tsx.
 // One standalone component per interaction id. Each stage marks the control
 // that plays it with data-interaction-trigger, so the page's replay control
 // can press it again. Same copy as React.
@@ -9,10 +9,15 @@
 // its attributes on the root, so those stages stamp the mark on the same
 // inner element after first render, to keep the DOM the same.
 //
-// No stage yet for list-stagger and chip-check-pop: List and Chip have no
-// Angular port. row-glide and collection-flip leave out their List part.
+// No stage yet for list-stagger, row-glide and chip-check-pop: List and Chip
+// have no Angular port (order 1.23 moved the ListBox to highlight-marker, so
+// row-glide is List only now). collection-flip leaves out its List part. The
+// menu-origin, menu-row-slide and menu-submenu-nudge stages live in
+// overlays.ts.
 import { ChangeDetectionStrategy, Component, ElementRef, afterNextRender, inject, signal, type Type } from '@angular/core';
 import {
+  DS_DROPDOWN_MENU,
+  DsButton,
   DsCheckbox,
   DsCheckboxGroup,
   DsCombobox,
@@ -36,6 +41,17 @@ const fruit = [
   { value: 'date', label: 'Date' },
   { value: 'fig', label: 'Fig' },
   { value: 'grape', label: 'Grape' },
+];
+
+const more = [
+  { value: 'kiwi', label: 'Kiwi' },
+  { value: 'lemon', label: 'Lemon' },
+  { value: 'lime', label: 'Lime' },
+  { value: 'mango', label: 'Mango' },
+  { value: 'melon', label: 'Melon' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'peach', label: 'Peach' },
+  { value: 'pear', label: 'Pear' },
 ];
 
 const stack = 'display: grid; gap: var(--ds-space-m); inline-size: 100%;';
@@ -204,19 +220,50 @@ class PickerValueRollStage {
 }
 
 @Component({
-  selector: 'ds-stage-row-glide',
-  imports: [DsListBox],
+  selector: 'ds-stage-highlight-marker',
+  imports: [DS_DROPDOWN_MENU, DsButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
   template: `
-    <div [attr.style]="stack">
-      <div dsListBox aria-label="Fruit" [items]="items" style="inline-size: 16rem;" data-interaction-trigger=""></div>
-    </div>
+    <ng-container dsDropdownMenu>
+      <button dsButton dsDropdownMenuTrigger data-interaction-trigger="">Open menu</button>
+      <ng-template dsDropdownMenuContent>
+        <div dsDropdownMenuItem start="edit" shortcut="F2">Rename board</div>
+        <div dsDropdownMenuItem start="copy">Duplicate board</div>
+        <div dsDropdownMenuItem start="link">Copy link</div>
+        <div dsDropdownMenuItem start="download">Export board</div>
+        <div dsDropdownMenuSeparator></div>
+        <div dsDropdownMenuItem start="trash" tone="danger">Delete board</div>
+      </ng-template>
+    </ng-container>
   `,
 })
-class RowGlideStage {
-  protected readonly stack = stack;
-  protected readonly items = fruit.slice(0, 4);
+class HighlightMarkerStage {}
+
+@Component({
+  selector: 'ds-stage-check-draw-pick',
+  imports: [DsListBox],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { style: 'display: contents' },
+  template: `<div dsListBox aria-label="Toppings" selectionMode="multiple" [items]="items" [defaultValue]="['apple']" style="inline-size: 16rem;" data-interaction-trigger=""></div>`,
+})
+class CheckDrawPickStage {
+  protected readonly items = fruit.slice(0, 5);
+}
+
+@Component({
+  selector: 'ds-stage-combobox-results',
+  imports: [DsCombobox],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { style: 'display: contents' },
+  template: `<div dsCombobox aria-label="Fruit search" [items]="items" placeholder="Find a fruit"></div>`,
+})
+class ComboboxResultsStage {
+  protected readonly items = [...fruit, ...more];
+  constructor() {
+    // React spreads data-interaction-trigger on the input.
+    markTrigger("input[role='combobox']");
+  }
 }
 
 @Component({
@@ -263,7 +310,9 @@ export const stages: Record<string, Type<unknown>> = {
   'picker-chevron-turn': PickerChevronTurnStage,
   'menu-rows': MenuRowsStage,
   'picker-value-roll': PickerValueRollStage,
-  'row-glide': RowGlideStage,
+  'highlight-marker': HighlightMarkerStage,
+  'check-draw-pick': CheckDrawPickStage,
+  'combobox-results': ComboboxResultsStage,
   'collection-flip': CollectionFlipStage,
   'filter-count-roll': FilterCountRollStage,
 };
