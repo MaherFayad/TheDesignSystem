@@ -1,0 +1,3463 @@
+{
+ "method": "Read every --ds-duration-* and --ds-delay-* custom property on the themed element ([data-style][data-scheme]) and on html, under emulated prefers-reduced-motion (media) and under data-motion=reduce on html (attr), plus private --_*duration*/--_*delay* properties on component roots of /interactions",
+ "runs": [
+  {
+   "style": "studio",
+   "scheme": "light",
+   "motion": "full",
+   "themed": "studio/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "120ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "100ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "220ms",
+    "--ds-duration-roll": "140ms",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "120ms",
+    "--ds-duration-spring-snappy": "70ms",
+    "--ds-duration-spring-soft": "100ms",
+    "--ds-duration-toast-enter": "80ms",
+    "--ds-duration-toast-exit": "70ms",
+    "--ds-duration-window-close": "70ms",
+    "--ds-duration-window-minimize": "140ms",
+    "--ds-duration-window-open": "120ms",
+    "--ds-duration-window-zoom": "140ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-release-duration": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "120ms",
+     "icon": "120ms",
+     "icon-button": "120ms",
+     "toggle-button": "120ms",
+     "close-button": "120ms",
+     "floating-action-button": "120ms",
+     "copy-button": "120ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "120ms",
+     "button": "120ms",
+     "toggle-button": "120ms"
+    },
+    "--_link-duration-in": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "120ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "120ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_input-duration-in": {
+     "input": "100ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "120ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "120ms",
+     "icon": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "120ms"
+    },
+    "--_field-duration": {
+     "field": "70ms",
+     "label": "70ms",
+     "input": "70ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "120ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "70ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_form-mark-duration": {
+     "form": "100ms",
+     "field": "100ms",
+     "label": "100ms",
+     "input": "100ms",
+     "button": "100ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "100ms",
+     "stepper": "100ms",
+     "field": "100ms",
+     "label": "100ms",
+     "input": "100ms",
+     "button": "100ms",
+     "icon": "100ms"
+    },
+    "--_rating-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_slider-duration": {
+     "slider": "120ms",
+     "range-slider": "120ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "70ms",
+     "range-slider": "70ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "70ms",
+     "icon": "70ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "70ms",
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "120ms",
+     "icon": "120ms"
+    },
+    "--_dock-duration": {
+     "dock": "120ms",
+     "icon": "120ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "120ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "100ms",
+     "icon": "100ms",
+     "button": "100ms",
+     "close-button": "100ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "100ms",
+     "icon": "100ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "120ms",
+     "icon": "120ms",
+     "button": "120ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "100ms",
+     "icon": "100ms",
+     "button": "100ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "120ms",
+     "icon": "120ms",
+     "button": "120ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "100ms",
+     "icon": "100ms",
+     "button": "100ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "70ms",
+     "icon": "70ms",
+     "button": "70ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "70ms",
+     "button": "70ms",
+     "icon": "70ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "100ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "100ms"
+    },
+    "--_meter-duration": {
+     "meter": "100ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "220ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "100ms"
+    },
+    "--_tile-duration": {
+     "tile": "100ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "100ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "100ms",
+     "button": "100ms",
+     "icon": "100ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "0ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "120ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "100ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "220ms",
+    "--ds-duration-roll": "140ms",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "120ms",
+    "--ds-duration-spring-snappy": "70ms",
+    "--ds-duration-spring-soft": "100ms",
+    "--ds-duration-toast-enter": "80ms",
+    "--ds-duration-toast-exit": "70ms",
+    "--ds-duration-window-close": "70ms",
+    "--ds-duration-window-minimize": "140ms",
+    "--ds-duration-window-open": "120ms",
+    "--ds-duration-window-zoom": "140ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "studio",
+   "scheme": "light",
+   "motion": "media",
+   "themed": "studio/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "studio",
+   "scheme": "light",
+   "motion": "attr",
+   "themed": "studio/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "studio",
+   "scheme": "dark",
+   "motion": "full",
+   "themed": "studio/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "120ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "100ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "220ms",
+    "--ds-duration-roll": "140ms",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "120ms",
+    "--ds-duration-spring-snappy": "70ms",
+    "--ds-duration-spring-soft": "100ms",
+    "--ds-duration-toast-enter": "80ms",
+    "--ds-duration-toast-exit": "70ms",
+    "--ds-duration-window-close": "70ms",
+    "--ds-duration-window-minimize": "140ms",
+    "--ds-duration-window-open": "120ms",
+    "--ds-duration-window-zoom": "140ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-release-duration": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "120ms",
+     "icon": "120ms",
+     "icon-button": "120ms",
+     "toggle-button": "120ms",
+     "close-button": "120ms",
+     "floating-action-button": "120ms",
+     "copy-button": "120ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "120ms",
+     "button": "120ms",
+     "toggle-button": "120ms"
+    },
+    "--_link-duration-in": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "120ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "120ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_input-duration-in": {
+     "input": "100ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "120ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "120ms",
+     "icon": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "120ms"
+    },
+    "--_field-duration": {
+     "field": "70ms",
+     "label": "70ms",
+     "input": "70ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "120ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "70ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_form-mark-duration": {
+     "form": "100ms",
+     "field": "100ms",
+     "label": "100ms",
+     "input": "100ms",
+     "button": "100ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "100ms",
+     "stepper": "100ms",
+     "field": "100ms",
+     "label": "100ms",
+     "input": "100ms",
+     "button": "100ms",
+     "icon": "100ms"
+    },
+    "--_rating-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_slider-duration": {
+     "slider": "120ms",
+     "range-slider": "120ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "70ms",
+     "range-slider": "70ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "70ms",
+     "icon": "70ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "70ms",
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "120ms",
+     "icon": "120ms"
+    },
+    "--_dock-duration": {
+     "dock": "120ms",
+     "icon": "120ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "120ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "100ms",
+     "icon": "100ms",
+     "button": "100ms",
+     "close-button": "100ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "100ms",
+     "icon": "100ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "120ms",
+     "icon": "120ms",
+     "button": "120ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "100ms",
+     "icon": "100ms",
+     "button": "100ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "120ms",
+     "icon": "120ms",
+     "button": "120ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "100ms",
+     "icon": "100ms",
+     "button": "100ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "70ms",
+     "icon": "70ms",
+     "button": "70ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "70ms",
+     "button": "70ms",
+     "icon": "70ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "100ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "100ms"
+    },
+    "--_meter-duration": {
+     "meter": "100ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "220ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "100ms"
+    },
+    "--_tile-duration": {
+     "tile": "100ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "100ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "100ms",
+     "button": "100ms",
+     "icon": "100ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "0ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "120ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "100ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "220ms",
+    "--ds-duration-roll": "140ms",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "120ms",
+    "--ds-duration-spring-snappy": "70ms",
+    "--ds-duration-spring-soft": "100ms",
+    "--ds-duration-toast-enter": "80ms",
+    "--ds-duration-toast-exit": "70ms",
+    "--ds-duration-window-close": "70ms",
+    "--ds-duration-window-minimize": "140ms",
+    "--ds-duration-window-open": "120ms",
+    "--ds-duration-window-zoom": "140ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "studio",
+   "scheme": "dark",
+   "motion": "media",
+   "themed": "studio/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "studio",
+   "scheme": "dark",
+   "motion": "attr",
+   "themed": "studio/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "desk",
+   "scheme": "light",
+   "motion": "full",
+   "themed": "desk/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "45ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "380ms",
+    "--ds-duration-spring-snappy": "300ms",
+    "--ds-duration-spring-soft": "340ms",
+    "--ds-duration-toast-enter": "140ms",
+    "--ds-duration-toast-exit": "120ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "300ms",
+     "icon": "300ms",
+     "icon-button": "300ms",
+     "toggle-button": "300ms",
+     "close-button": "300ms",
+     "floating-action-button": "300ms",
+     "copy-button": "300ms"
+    },
+    "--_button-release-duration": {
+     "button": "300ms",
+     "icon": "300ms",
+     "icon-button": "300ms",
+     "toggle-button": "300ms",
+     "close-button": "300ms",
+     "floating-action-button": "300ms",
+     "copy-button": "300ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "380ms",
+     "icon": "380ms",
+     "icon-button": "380ms",
+     "toggle-button": "380ms",
+     "close-button": "380ms",
+     "floating-action-button": "380ms",
+     "copy-button": "380ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "380ms",
+     "button": "380ms",
+     "toggle-button": "380ms"
+    },
+    "--_link-duration-in": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "380ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "380ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "320ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "45ms"
+    },
+    "--_input-duration-in": {
+     "input": "340ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "120ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "340ms",
+     "icon": "340ms",
+     "input": "340ms",
+     "icon-button": "340ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "120ms",
+     "icon": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "340ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "120ms"
+    },
+    "--_field-duration": {
+     "field": "300ms",
+     "label": "300ms",
+     "input": "300ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "340ms",
+     "input": "340ms",
+     "icon-button": "340ms",
+     "icon": "340ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "340ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "120ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "300ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "340ms",
+     "icon-button": "340ms",
+     "icon": "340ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "340ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "380ms"
+    },
+    "--_form-mark-duration": {
+     "form": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "320ms",
+     "stepper": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms",
+     "icon": "320ms"
+    },
+    "--_rating-duration": {
+     "rating": "380ms",
+     "icon": "380ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_slider-duration": {
+     "slider": "380ms",
+     "range-slider": "380ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "300ms",
+     "range-slider": "300ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "300ms",
+     "icon": "300ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "300ms",
+     "link": "300ms",
+     "icon": "300ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "380ms",
+     "icon": "380ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "45ms",
+     "icon": "45ms"
+    },
+    "--_dock-duration": {
+     "dock": "380ms",
+     "icon": "380ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "380ms",
+     "icon-button": "380ms",
+     "icon": "380ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "380ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "340ms",
+     "icon": "340ms",
+     "button": "340ms",
+     "close-button": "340ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "340ms",
+     "icon": "340ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "380ms",
+     "icon": "380ms",
+     "button": "380ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "340ms",
+     "icon": "340ms",
+     "button": "340ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "45ms",
+     "icon": "45ms",
+     "button": "45ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "380ms",
+     "icon": "380ms",
+     "button": "380ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "340ms",
+     "icon": "340ms",
+     "button": "340ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "45ms",
+     "icon": "45ms",
+     "button": "45ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "300ms",
+     "icon": "300ms",
+     "button": "300ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "300ms",
+     "button": "300ms",
+     "icon": "300ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "45ms",
+     "button": "45ms",
+     "icon": "45ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "340ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "340ms"
+    },
+    "--_meter-duration": {
+     "meter": "340ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "340ms"
+    },
+    "--_tile-duration": {
+     "tile": "340ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "340ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "380ms",
+     "split-view": "380ms",
+     "button": "380ms",
+     "icon": "380ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "340ms",
+     "button": "340ms",
+     "icon": "340ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "45ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "380ms",
+    "--ds-duration-spring-snappy": "300ms",
+    "--ds-duration-spring-soft": "340ms",
+    "--ds-duration-toast-enter": "140ms",
+    "--ds-duration-toast-exit": "120ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "desk",
+   "scheme": "light",
+   "motion": "media",
+   "themed": "desk/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "desk",
+   "scheme": "light",
+   "motion": "attr",
+   "themed": "desk/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "desk",
+   "scheme": "dark",
+   "motion": "full",
+   "themed": "desk/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "45ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "380ms",
+    "--ds-duration-spring-snappy": "300ms",
+    "--ds-duration-spring-soft": "340ms",
+    "--ds-duration-toast-enter": "140ms",
+    "--ds-duration-toast-exit": "120ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "300ms",
+     "icon": "300ms",
+     "icon-button": "300ms",
+     "toggle-button": "300ms",
+     "close-button": "300ms",
+     "floating-action-button": "300ms",
+     "copy-button": "300ms"
+    },
+    "--_button-release-duration": {
+     "button": "300ms",
+     "icon": "300ms",
+     "icon-button": "300ms",
+     "toggle-button": "300ms",
+     "close-button": "300ms",
+     "floating-action-button": "300ms",
+     "copy-button": "300ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "380ms",
+     "icon": "380ms",
+     "icon-button": "380ms",
+     "toggle-button": "380ms",
+     "close-button": "380ms",
+     "floating-action-button": "380ms",
+     "copy-button": "380ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "380ms",
+     "button": "380ms",
+     "toggle-button": "380ms"
+    },
+    "--_link-duration-in": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "380ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "380ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "320ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "45ms"
+    },
+    "--_input-duration-in": {
+     "input": "340ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "120ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "340ms",
+     "icon": "340ms",
+     "input": "340ms",
+     "icon-button": "340ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "120ms",
+     "icon": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "340ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "120ms"
+    },
+    "--_field-duration": {
+     "field": "300ms",
+     "label": "300ms",
+     "input": "300ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "340ms",
+     "input": "340ms",
+     "icon-button": "340ms",
+     "icon": "340ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "120ms",
+     "input": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "340ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "120ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "300ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "340ms",
+     "icon-button": "340ms",
+     "icon": "340ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "120ms",
+     "icon-button": "120ms",
+     "icon": "120ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "340ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "120ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "380ms"
+    },
+    "--_form-mark-duration": {
+     "form": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "320ms",
+     "stepper": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms",
+     "icon": "320ms"
+    },
+    "--_rating-duration": {
+     "rating": "380ms",
+     "icon": "380ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "120ms",
+     "icon": "120ms"
+    },
+    "--_slider-duration": {
+     "slider": "380ms",
+     "range-slider": "380ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "300ms",
+     "range-slider": "300ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "300ms",
+     "icon": "300ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "300ms",
+     "link": "300ms",
+     "icon": "300ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "380ms",
+     "icon": "380ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "45ms",
+     "icon": "45ms"
+    },
+    "--_dock-duration": {
+     "dock": "380ms",
+     "icon": "380ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "380ms",
+     "icon-button": "380ms",
+     "icon": "380ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "380ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "340ms",
+     "icon": "340ms",
+     "button": "340ms",
+     "close-button": "340ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "340ms",
+     "icon": "340ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "380ms",
+     "icon": "380ms",
+     "button": "380ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "340ms",
+     "icon": "340ms",
+     "button": "340ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "45ms",
+     "icon": "45ms",
+     "button": "45ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "380ms",
+     "icon": "380ms",
+     "button": "380ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "340ms",
+     "icon": "340ms",
+     "button": "340ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "45ms",
+     "icon": "45ms",
+     "button": "45ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "300ms",
+     "icon": "300ms",
+     "button": "300ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "300ms",
+     "button": "300ms",
+     "icon": "300ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "45ms",
+     "button": "45ms",
+     "icon": "45ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "340ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "340ms"
+    },
+    "--_meter-duration": {
+     "meter": "340ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "340ms"
+    },
+    "--_tile-duration": {
+     "tile": "340ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "340ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "380ms",
+     "split-view": "380ms",
+     "button": "380ms",
+     "icon": "380ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "120ms",
+     "split-view": "120ms",
+     "button": "120ms",
+     "icon": "120ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "340ms",
+     "button": "340ms",
+     "icon": "340ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "45ms",
+    "--ds-duration-base": "120ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "140ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "380ms",
+    "--ds-duration-spring-snappy": "300ms",
+    "--ds-duration-spring-soft": "340ms",
+    "--ds-duration-toast-enter": "140ms",
+    "--ds-duration-toast-exit": "120ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "desk",
+   "scheme": "dark",
+   "motion": "media",
+   "themed": "desk/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "desk",
+   "scheme": "dark",
+   "motion": "attr",
+   "themed": "desk/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "neutral",
+   "scheme": "light",
+   "motion": "full",
+   "themed": "neutral/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "24ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "200ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "180ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "200ms",
+    "--ds-duration-spring-snappy": "158ms",
+    "--ds-duration-spring-soft": "200ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "158ms",
+     "icon": "158ms",
+     "icon-button": "158ms",
+     "toggle-button": "158ms",
+     "close-button": "158ms",
+     "floating-action-button": "158ms",
+     "copy-button": "158ms"
+    },
+    "--_button-release-duration": {
+     "button": "158ms",
+     "icon": "158ms",
+     "icon-button": "158ms",
+     "toggle-button": "158ms",
+     "close-button": "158ms",
+     "floating-action-button": "158ms",
+     "copy-button": "158ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "200ms",
+     "icon": "200ms",
+     "icon-button": "200ms",
+     "toggle-button": "200ms",
+     "close-button": "200ms",
+     "floating-action-button": "200ms",
+     "copy-button": "200ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "200ms",
+     "button": "200ms",
+     "toggle-button": "200ms"
+    },
+    "--_link-duration-in": {
+     "link": "180ms",
+     "icon": "180ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "180ms",
+     "icon": "180ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "200ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "200ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "180ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "24ms"
+    },
+    "--_input-duration-in": {
+     "input": "200ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "150ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "200ms",
+     "icon": "200ms",
+     "input": "200ms",
+     "icon-button": "200ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "150ms",
+     "icon": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "200ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "150ms"
+    },
+    "--_field-duration": {
+     "field": "158ms",
+     "label": "158ms",
+     "input": "158ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "200ms",
+     "input": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "200ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "150ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "158ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "200ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "150ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "200ms"
+    },
+    "--_form-mark-duration": {
+     "form": "180ms",
+     "field": "180ms",
+     "label": "180ms",
+     "input": "180ms",
+     "button": "180ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "180ms",
+     "stepper": "180ms",
+     "field": "180ms",
+     "label": "180ms",
+     "input": "180ms",
+     "button": "180ms",
+     "icon": "180ms"
+    },
+    "--_rating-duration": {
+     "rating": "200ms",
+     "icon": "200ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "150ms",
+     "icon": "150ms"
+    },
+    "--_slider-duration": {
+     "slider": "200ms",
+     "range-slider": "200ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "158ms",
+     "range-slider": "158ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "158ms",
+     "icon": "158ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "158ms",
+     "link": "158ms",
+     "icon": "158ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "200ms",
+     "icon": "200ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "24ms",
+     "icon": "24ms"
+    },
+    "--_dock-duration": {
+     "dock": "200ms",
+     "icon": "200ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "200ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "200ms",
+     "icon": "200ms",
+     "button": "200ms",
+     "close-button": "200ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "200ms",
+     "icon": "200ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "24ms",
+     "icon": "24ms",
+     "button": "24ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "24ms",
+     "icon": "24ms",
+     "button": "24ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "158ms",
+     "icon": "158ms",
+     "button": "158ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "158ms",
+     "button": "158ms",
+     "icon": "158ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "24ms",
+     "button": "24ms",
+     "icon": "24ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "200ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "200ms"
+    },
+    "--_meter-duration": {
+     "meter": "200ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "200ms"
+    },
+    "--_tile-duration": {
+     "tile": "200ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "200ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "200ms",
+     "split-view": "200ms",
+     "button": "200ms",
+     "icon": "200ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "150ms",
+     "split-view": "150ms",
+     "button": "150ms",
+     "icon": "150ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "200ms",
+     "button": "200ms",
+     "icon": "200ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "24ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "200ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "180ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "200ms",
+    "--ds-duration-spring-snappy": "158ms",
+    "--ds-duration-spring-soft": "200ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "neutral",
+   "scheme": "light",
+   "motion": "media",
+   "themed": "neutral/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "neutral",
+   "scheme": "light",
+   "motion": "attr",
+   "themed": "neutral/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "neutral",
+   "scheme": "dark",
+   "motion": "full",
+   "themed": "neutral/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "24ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "200ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "180ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "200ms",
+    "--ds-duration-spring-snappy": "158ms",
+    "--ds-duration-spring-soft": "200ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "158ms",
+     "icon": "158ms",
+     "icon-button": "158ms",
+     "toggle-button": "158ms",
+     "close-button": "158ms",
+     "floating-action-button": "158ms",
+     "copy-button": "158ms"
+    },
+    "--_button-release-duration": {
+     "button": "158ms",
+     "icon": "158ms",
+     "icon-button": "158ms",
+     "toggle-button": "158ms",
+     "close-button": "158ms",
+     "floating-action-button": "158ms",
+     "copy-button": "158ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "200ms",
+     "icon": "200ms",
+     "icon-button": "200ms",
+     "toggle-button": "200ms",
+     "close-button": "200ms",
+     "floating-action-button": "200ms",
+     "copy-button": "200ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "200ms",
+     "button": "200ms",
+     "toggle-button": "200ms"
+    },
+    "--_link-duration-in": {
+     "link": "180ms",
+     "icon": "180ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "180ms",
+     "icon": "180ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "200ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "200ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "180ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "24ms"
+    },
+    "--_input-duration-in": {
+     "input": "200ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "150ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "200ms",
+     "icon": "200ms",
+     "input": "200ms",
+     "icon-button": "200ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "150ms",
+     "icon": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "200ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "150ms"
+    },
+    "--_field-duration": {
+     "field": "158ms",
+     "label": "158ms",
+     "input": "158ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "200ms",
+     "input": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "200ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "150ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "158ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "200ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "150ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "200ms"
+    },
+    "--_form-mark-duration": {
+     "form": "180ms",
+     "field": "180ms",
+     "label": "180ms",
+     "input": "180ms",
+     "button": "180ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "180ms",
+     "stepper": "180ms",
+     "field": "180ms",
+     "label": "180ms",
+     "input": "180ms",
+     "button": "180ms",
+     "icon": "180ms"
+    },
+    "--_rating-duration": {
+     "rating": "200ms",
+     "icon": "200ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "150ms",
+     "icon": "150ms"
+    },
+    "--_slider-duration": {
+     "slider": "200ms",
+     "range-slider": "200ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "158ms",
+     "range-slider": "158ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "158ms",
+     "icon": "158ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "158ms",
+     "link": "158ms",
+     "icon": "158ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "200ms",
+     "icon": "200ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "24ms",
+     "icon": "24ms"
+    },
+    "--_dock-duration": {
+     "dock": "200ms",
+     "icon": "200ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "200ms",
+     "icon-button": "200ms",
+     "icon": "200ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "200ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "200ms",
+     "icon": "200ms",
+     "button": "200ms",
+     "close-button": "200ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "200ms",
+     "icon": "200ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "24ms",
+     "icon": "24ms",
+     "button": "24ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "200ms",
+     "icon": "200ms",
+     "button": "200ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "24ms",
+     "icon": "24ms",
+     "button": "24ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "158ms",
+     "icon": "158ms",
+     "button": "158ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "158ms",
+     "button": "158ms",
+     "icon": "158ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "24ms",
+     "button": "24ms",
+     "icon": "24ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "200ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "200ms"
+    },
+    "--_meter-duration": {
+     "meter": "200ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "200ms"
+    },
+    "--_tile-duration": {
+     "tile": "200ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "200ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "200ms",
+     "split-view": "200ms",
+     "button": "200ms",
+     "icon": "200ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "150ms",
+     "split-view": "150ms",
+     "button": "150ms",
+     "icon": "150ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "200ms",
+     "button": "200ms",
+     "icon": "200ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "24ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "200ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "180ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "200ms",
+    "--ds-duration-spring-snappy": "158ms",
+    "--ds-duration-spring-soft": "200ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "neutral",
+   "scheme": "dark",
+   "motion": "media",
+   "themed": "neutral/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "neutral",
+   "scheme": "dark",
+   "motion": "attr",
+   "themed": "neutral/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "liquid",
+   "scheme": "light",
+   "motion": "full",
+   "themed": "liquid/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "40ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "496ms",
+    "--ds-duration-spring-snappy": "296ms",
+    "--ds-duration-spring-soft": "375ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_button-release-duration": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "496ms",
+     "button": "496ms",
+     "toggle-button": "496ms"
+    },
+    "--_link-duration-in": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "496ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "496ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "320ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "40ms"
+    },
+    "--_input-duration-in": {
+     "input": "375ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "150ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "375ms",
+     "icon": "375ms",
+     "input": "375ms",
+     "icon-button": "375ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "150ms",
+     "icon": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "375ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "150ms"
+    },
+    "--_field-duration": {
+     "field": "296ms",
+     "label": "296ms",
+     "input": "296ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "375ms",
+     "input": "375ms",
+     "icon-button": "375ms",
+     "icon": "375ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "375ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "150ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "296ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "375ms",
+     "icon-button": "375ms",
+     "icon": "375ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "375ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "150ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "496ms"
+    },
+    "--_form-mark-duration": {
+     "form": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "320ms",
+     "stepper": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms",
+     "icon": "320ms"
+    },
+    "--_rating-duration": {
+     "rating": "496ms",
+     "icon": "496ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "150ms",
+     "icon": "150ms"
+    },
+    "--_slider-duration": {
+     "slider": "496ms",
+     "range-slider": "496ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "296ms",
+     "range-slider": "296ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "296ms",
+     "icon": "296ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "296ms",
+     "link": "296ms",
+     "icon": "296ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "496ms",
+     "icon": "496ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "40ms",
+     "icon": "40ms"
+    },
+    "--_dock-duration": {
+     "dock": "496ms",
+     "icon": "496ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "496ms",
+     "icon-button": "496ms",
+     "icon": "496ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "496ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "375ms",
+     "icon": "375ms",
+     "button": "375ms",
+     "close-button": "375ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "375ms",
+     "icon": "375ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "496ms",
+     "icon": "496ms",
+     "button": "496ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "375ms",
+     "icon": "375ms",
+     "button": "375ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "40ms",
+     "icon": "40ms",
+     "button": "40ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "496ms",
+     "icon": "496ms",
+     "button": "496ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "375ms",
+     "icon": "375ms",
+     "button": "375ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "40ms",
+     "icon": "40ms",
+     "button": "40ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "296ms",
+     "icon": "296ms",
+     "button": "296ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "296ms",
+     "button": "296ms",
+     "icon": "296ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "40ms",
+     "button": "40ms",
+     "icon": "40ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "375ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "375ms"
+    },
+    "--_meter-duration": {
+     "meter": "375ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "375ms"
+    },
+    "--_tile-duration": {
+     "tile": "375ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "375ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "496ms",
+     "split-view": "496ms",
+     "button": "496ms",
+     "icon": "496ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "150ms",
+     "split-view": "150ms",
+     "button": "150ms",
+     "icon": "150ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "375ms",
+     "button": "375ms",
+     "icon": "375ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "40ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "496ms",
+    "--ds-duration-spring-snappy": "296ms",
+    "--ds-duration-spring-soft": "375ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "liquid",
+   "scheme": "light",
+   "motion": "media",
+   "themed": "liquid/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "liquid",
+   "scheme": "light",
+   "motion": "attr",
+   "themed": "liquid/light",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "liquid",
+   "scheme": "dark",
+   "motion": "full",
+   "themed": "liquid/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "40ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "496ms",
+    "--ds-duration-spring-snappy": "296ms",
+    "--ds-duration-spring-soft": "375ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   },
+   "privateNonzero": {
+    "--_button-duration": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_button-release-duration": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_button-duration-in": {
+     "button": "70ms",
+     "icon": "70ms",
+     "icon-button": "70ms",
+     "toggle-button": "70ms",
+     "close-button": "70ms",
+     "floating-action-button": "70ms",
+     "copy-button": "70ms"
+    },
+    "--_button-duration-out": {
+     "button": "296ms",
+     "icon": "296ms",
+     "icon-button": "296ms",
+     "toggle-button": "296ms",
+     "close-button": "296ms",
+     "floating-action-button": "296ms",
+     "copy-button": "296ms"
+    },
+    "--_toggle-button-color-duration": {
+     "toggle-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_button-group-release-duration": {
+     "button-group": "496ms",
+     "button": "496ms",
+     "toggle-button": "496ms"
+    },
+    "--_link-duration-in": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-duration-out": {
+     "link": "100ms",
+     "icon": "100ms"
+    },
+    "--_link-duration-color": {
+     "link": "320ms",
+     "icon": "320ms"
+    },
+    "--_link-press-duration": {
+     "link": "70ms",
+     "icon": "70ms"
+    },
+    "--_switch-duration": {
+     "switch": "496ms"
+    },
+    "--_switch-duration-out": {
+     "switch": "496ms"
+    },
+    "--_switch-duration-in": {
+     "switch": "70ms"
+    },
+    "--_switch-duration-color": {
+     "switch": "100ms"
+    },
+    "--_checkbox-duration": {
+     "checkbox": "320ms"
+    },
+    "--_checkbox-duration-out": {
+     "checkbox": "100ms"
+    },
+    "--_checkbox-stagger": {
+     "checkbox": "40ms"
+    },
+    "--_input-duration-in": {
+     "input": "375ms"
+    },
+    "--_input-duration-out": {
+     "input": "100ms"
+    },
+    "--_input-duration": {
+     "input": "150ms"
+    },
+    "--_search-field-duration-in": {
+     "search-field": "375ms",
+     "icon": "375ms",
+     "input": "375ms",
+     "icon-button": "375ms"
+    },
+    "--_search-field-duration-out": {
+     "search-field": "100ms",
+     "icon": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms"
+    },
+    "--_search-field-duration": {
+     "search-field": "150ms",
+     "icon": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms"
+    },
+    "--_textarea-duration-in": {
+     "textarea": "375ms"
+    },
+    "--_textarea-duration-out": {
+     "textarea": "100ms"
+    },
+    "--_textarea-duration": {
+     "textarea": "150ms"
+    },
+    "--_field-duration": {
+     "field": "296ms",
+     "label": "296ms",
+     "input": "296ms"
+    },
+    "--_password-field-duration-in": {
+     "password-field": "375ms",
+     "input": "375ms",
+     "icon-button": "375ms",
+     "icon": "375ms"
+    },
+    "--_password-field-duration-out": {
+     "password-field": "100ms",
+     "input": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_password-field-duration": {
+     "password-field": "150ms",
+     "input": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_otp-field-duration-in": {
+     "otp-field": "375ms"
+    },
+    "--_otp-field-duration-out": {
+     "otp-field": "100ms"
+    },
+    "--_otp-field-border-duration": {
+     "otp-field": "150ms"
+    },
+    "--_otp-field-duration": {
+     "otp-field": "296ms"
+    },
+    "--_number-field-duration-in": {
+     "number-field": "375ms",
+     "icon-button": "375ms",
+     "icon": "375ms"
+    },
+    "--_number-field-duration-out": {
+     "number-field": "100ms",
+     "icon-button": "100ms",
+     "icon": "100ms"
+    },
+    "--_number-field-duration": {
+     "number-field": "150ms",
+     "icon-button": "150ms",
+     "icon": "150ms"
+    },
+    "--_scrub-input-duration-in": {
+     "scrub-input": "375ms"
+    },
+    "--_scrub-input-duration-out": {
+     "scrub-input": "100ms"
+    },
+    "--_scrub-input-border-duration": {
+     "scrub-input": "150ms"
+    },
+    "--_scrub-input-duration": {
+     "scrub-input": "496ms"
+    },
+    "--_form-mark-duration": {
+     "form": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms"
+    },
+    "--_form-wizard-mark-duration": {
+     "form-wizard": "320ms",
+     "stepper": "320ms",
+     "field": "320ms",
+     "label": "320ms",
+     "input": "320ms",
+     "button": "320ms",
+     "icon": "320ms"
+    },
+    "--_rating-duration": {
+     "rating": "496ms",
+     "icon": "496ms"
+    },
+    "--_rating-sweep-duration": {
+     "rating": "150ms",
+     "icon": "150ms"
+    },
+    "--_slider-duration": {
+     "slider": "496ms",
+     "range-slider": "496ms"
+    },
+    "--_slider-duration-in": {
+     "slider": "296ms",
+     "range-slider": "296ms"
+    },
+    "--_list-box-highlight-duration": {
+     "list-box": "296ms",
+     "icon": "296ms"
+    },
+    "--_breadcrumbs-duration": {
+     "breadcrumbs": "296ms",
+     "link": "296ms",
+     "icon": "296ms"
+    },
+    "--_tab-bar-duration": {
+     "tab-bar": "496ms",
+     "icon": "496ms"
+    },
+    "--_tab-bar-stagger": {
+     "tab-bar": "40ms",
+     "icon": "40ms"
+    },
+    "--_dock-duration": {
+     "dock": "496ms",
+     "icon": "496ms"
+    },
+    "--_toolbar-duration": {
+     "toolbar": "496ms",
+     "icon-button": "496ms",
+     "icon": "496ms"
+    },
+    "--_skip-link-duration": {
+     "skip-link": "496ms"
+    },
+    "--_alert-duration-in": {
+     "alert": "375ms",
+     "icon": "375ms",
+     "button": "375ms",
+     "close-button": "375ms"
+    },
+    "--_banner-duration-in": {
+     "banner": "375ms",
+     "icon": "375ms"
+    },
+    "--_empty-state-duration-in": {
+     "empty-state": "496ms",
+     "icon": "496ms",
+     "button": "496ms"
+    },
+    "--_empty-state-text-duration": {
+     "empty-state": "375ms",
+     "icon": "375ms",
+     "button": "375ms"
+    },
+    "--_empty-state-stagger": {
+     "empty-state": "40ms",
+     "icon": "40ms",
+     "button": "40ms"
+    },
+    "--_error-state-duration-in": {
+     "error-state": "496ms",
+     "icon": "496ms",
+     "button": "496ms"
+    },
+    "--_error-state-text-duration": {
+     "error-state": "375ms",
+     "icon": "375ms",
+     "button": "375ms"
+    },
+    "--_error-state-stagger": {
+     "error-state": "40ms",
+     "icon": "40ms",
+     "button": "40ms"
+    },
+    "--_error-state-duration": {
+     "error-state": "296ms",
+     "icon": "296ms",
+     "button": "296ms"
+    },
+    "--_accordion-duration": {
+     "accordion": "220ms",
+     "button": "220ms",
+     "icon": "220ms"
+    },
+    "--_accordion-icon-duration": {
+     "accordion": "296ms",
+     "button": "296ms",
+     "icon": "296ms"
+    },
+    "--_accordion-stagger": {
+     "accordion": "40ms",
+     "button": "40ms",
+     "icon": "40ms"
+    },
+    "--_skeleton-duration": {
+     "skeleton": "1.4s"
+    },
+    "--_progress-bar-duration": {
+     "progress-bar": "375ms"
+    },
+    "--_progress-circle-duration": {
+     "progress-circle": "375ms"
+    },
+    "--_meter-duration": {
+     "meter": "375ms"
+    },
+    "--_meter-reveal-duration": {
+     "meter": "640ms"
+    },
+    "--_status-dot-duration": {
+     "status-dot": "1.4s"
+    },
+    "--_card-duration": {
+     "card": "375ms"
+    },
+    "--_tile-duration": {
+     "tile": "375ms"
+    },
+    "--_spinner-duration-in": {
+     "spinner": "375ms"
+    },
+    "--_resizable-panels-grip-duration": {
+     "resizable-panels": "496ms",
+     "split-view": "496ms",
+     "button": "496ms",
+     "icon": "496ms"
+    },
+    "--_resizable-panels-duration": {
+     "resizable-panels": "150ms",
+     "split-view": "150ms",
+     "button": "150ms",
+     "icon": "150ms"
+    },
+    "--_split-view-duration": {
+     "split-view": "375ms",
+     "button": "375ms",
+     "icon": "375ms"
+    }
+   },
+   "tokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms",
+    "--ds-delay-reveal-step": "80ms",
+    "--ds-delay-stagger": "40ms",
+    "--ds-duration-base": "150ms",
+    "--ds-duration-celebrate": "480ms",
+    "--ds-duration-fast": "80ms",
+    "--ds-duration-instant": "70ms",
+    "--ds-duration-medium": "180ms",
+    "--ds-duration-moderate": "150ms",
+    "--ds-duration-morph": "320ms",
+    "--ds-duration-pulse": "1.4s",
+    "--ds-duration-quick": "100ms",
+    "--ds-duration-reveal": "640ms",
+    "--ds-duration-roll": "0.3s",
+    "--ds-duration-shimmer": "1.4s",
+    "--ds-duration-slow": "180ms",
+    "--ds-duration-spin": "0.8s",
+    "--ds-duration-spring-bouncy": "496ms",
+    "--ds-duration-spring-snappy": "296ms",
+    "--ds-duration-spring-soft": "375ms",
+    "--ds-duration-toast-enter": "180ms",
+    "--ds-duration-toast-exit": "150ms",
+    "--ds-duration-window-close": "220ms",
+    "--ds-duration-window-minimize": "320ms",
+    "--ds-duration-window-open": "300ms",
+    "--ds-duration-window-zoom": "280ms",
+    "--ds-duration-zoom": "220ms"
+   }
+  },
+  {
+   "style": "liquid",
+   "scheme": "dark",
+   "motion": "media",
+   "themed": "liquid/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  },
+  {
+   "style": "liquid",
+   "scheme": "dark",
+   "motion": "attr",
+   "themed": "liquid/dark",
+   "tokenCount": 28,
+   "nonzeroTokens": {
+    "--ds-delay-feedback": "2000ms",
+    "--ds-delay-peek-hide": "600ms"
+   },
+   "privateNonzero": {}
+  }
+ ]
+}
