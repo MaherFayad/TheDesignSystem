@@ -14,10 +14,12 @@ describe('style motion presets', () => {
     }
   });
 
-  it('Studio is flat: windows fade, zoom is still, numbers change in place', () => {
-    expect(patternPreset(studio, 'window-grow').mode).toBe('reduced');
-    expect(patternPreset(studio, 'window-minimize').mode).toBe('reduced');
-    expect(patternPreset(studio, 'window-zoom').mode).toBe('none');
+  it('Studio is hard: windows settle in steps (order 1.28), numbers change in place', () => {
+    for (const id of ['window-grow', 'window-minimize', 'window-zoom'] as const) {
+      expect(patternPreset(studio, id).mode).toBe('full');
+      // Studio's spring-bouncy token is steps(3) (tokens.dark.json), so the settle is a hard cut.
+      expect(patternPreset(studio, id).easing).toBe('ease.spring-bouncy');
+    }
     expect(patternPreset(studio, 'number-roll').mode).toBe('reduced');
     expect(patternPreset(studio, 'dialog').mode).toBe('full');
   });

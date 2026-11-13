@@ -1,0 +1,61 @@
+/*
+ * Studio recipe for Switch (order 1.28, proposed). A flat bit, not a pill:
+ * a near square track with a 1px rule and a square thumb, no glass, no
+ * shadow, no lean. On is an inverted fill: the bright track with a body
+ * colored thumb. The thumb moves in hard steps (Studio's bouncy spring is
+ * three steps, no overshoot) and the fill cuts in whole when the state
+ * changes instead of sweeping behind it (--_switch-sweep: 0). Press does
+ * not grow or stretch the thumb: scale.pop and scale.stretch are 1 here.
+ *
+ * The component draws its track, thumb and fill with radius.pill and has
+ * no radius property, so the corners are set on the parts here, and the
+ * fill's rounded clip is turned off (the sweep is off, so it clips nothing).
+ * Colors swap only where forced colors are off. The track rule keeps the
+ * component's state swaps (this layer would win over them), so only the
+ * hover rule and the off thumb are set.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='switch'] {
+    --_switch-sweep: 0;
+    --_switch-lean: 0px;
+    --_switch-thumb-shadow: 0 0 transparent;
+    --_switch-thumb-backdrop: none;
+    --_switch-thumb-highlight: none;
+    --_switch-track-press: 1;
+
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='switch'] {
+      --_switch-border-color-hover: var(--ds-color-text-bright);
+      --_switch-thumb-off: var(--ds-color-text-muted);
+    }
+
+    /* Hover on an off switch: the thumb takes the bright rule color too. */
+    [data-style='studio'] [data-ds='switch'][data-state='unchecked']:not([data-disabled]):has(> [data-part='control']:hover) {
+      --_switch-thumb-off: var(--ds-color-text-bright);
+    }
+  }
+
+  [data-style='studio'] [data-ds='switch'] > [data-part='control'],
+  [data-style='studio'] [data-ds='switch'] > [data-part='control']::before,
+  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > :is(span:not([data-part]), [data-part='thumb']) {
+    border-radius: 0;
+  }
+
+  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
+    clip-path: none;
+  }
+  /* The press shape is the platform's on ios and android (packages/css/src/platform),
+     and recipes beat that layer, so the style sets it only on the web platform. */
+  [data-style='studio'][data-platform='web'] [data-ds='switch'] {
+    --_switch-thumb-size-pressed: 1;
+    --_switch-stretch: 1;
+  }
+
+}
