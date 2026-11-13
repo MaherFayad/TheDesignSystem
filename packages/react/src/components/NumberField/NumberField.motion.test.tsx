@@ -61,6 +61,36 @@ describe('NumberField motion (interaction field-step)', () => {
     }
   });
 
+  it('places the layer on the input from layout offsets, physical sides, in any direction', () => {
+    // A zoom or a transform on an ancestor scales the drawn box; layout
+    // offsets stay true. The layer is direction ltr, so it is placed with
+    // physical left and top (a logical inset would resolve against its own direction).
+    const { calls, restore } = mockAnimate();
+    const props = ['offsetLeft', 'offsetTop', 'offsetWidth', 'offsetHeight', 'offsetParent'] as const;
+    try {
+      const { container } = render(
+        <div dir="rtl">
+          <NumberField aria-label="Guests" defaultValue={2} />
+        </div>,
+      );
+      const root = container.querySelector('[data-ds="number-field"]') as HTMLElement;
+      const input = screen.getByRole('textbox', { name: 'Guests' }) as HTMLInputElement;
+      const box = { offsetLeft: 36, offsetTop: 2, offsetWidth: 120, offsetHeight: 40, offsetParent: root };
+      for (const k of props) Object.defineProperty(input, k, { configurable: true, get: () => box[k] });
+      input.getBoundingClientRect = () => ({ x: 90, y: 5, left: 90, top: 5, right: 390, bottom: 105, width: 300, height: 100, toJSON() {} }) as DOMRect;
+      fireEvent.keyDown(input, { key: 'ArrowUp' });
+      const layer = root.querySelector(':scope > span[aria-hidden="true"]:not([data-part])') as HTMLElement;
+      expect(rolls(calls).length).toBeGreaterThan(0);
+      expect(layer.style.left).toBe('36px');
+      expect(layer.style.top).toBe('2px');
+      expect(layer.style.inlineSize).toBe('120px');
+      expect(layer.style.blockSize).toBe('40px');
+      expect(layer.style.insetInlineStart).toBe('');
+    } finally {
+      restore();
+    }
+  });
+
   it('rolls on from the digits as drawn on a held key, and typing empties the layer', () => {
     const { calls, restore } = mockAnimate();
     try {

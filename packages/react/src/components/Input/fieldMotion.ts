@@ -189,6 +189,9 @@ export function snapshot(node: HTMLElement | null | undefined, host: HTMLElement
   const h = host.getBoundingClientRect();
   if (n.width === 0 && n.height === 0) return null;
   const rtl = readDir(host) === 'rtl';
+  // The boxes are drawn pixels; the copy is placed in CSS pixels. They differ
+  // under a zoom or a scale on an ancestor (a dialog while it scales in).
+  const k = host.offsetWidth > 0 && h.width > 0 ? h.width / host.offsetWidth : 1;
   const copy = node.cloneNode(true) as HTMLElement;
   // A clone keeps the value attributes, not what the person typed: copy the live values.
   const from = node.querySelectorAll('input, textarea, select');
@@ -202,10 +205,10 @@ export function snapshot(node: HTMLElement | null | undefined, host: HTMLElement
   });
   return {
     node: copy,
-    inlineStart: (rtl ? h.right - n.right : n.left - h.left) - host.clientLeft,
-    blockStart: n.top - h.top - host.clientTop,
-    inlineSize: n.width,
-    blockSize: n.height,
+    inlineStart: (rtl ? h.right - n.right : n.left - h.left) / k - host.clientLeft,
+    blockStart: (n.top - h.top) / k - host.clientTop,
+    inlineSize: n.width / k,
+    blockSize: n.height / k,
   };
 }
 

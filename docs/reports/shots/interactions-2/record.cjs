@@ -23,6 +23,9 @@ const TMP = process.env.RECORD_TMP || path.join(os.tmpdir(), 'ds-record');
 const SIZE = { width: 960, height: 540 };
 const FRAME_STEP_MS = 60;
 const FRAMES = 8;
+// The marks are taken once the pointer is down, and some controls answer on
+// pointer down: each row starts two steps before its mark.
+const LEAD_MS = 2 * FRAME_STEP_MS;
 const wait = (p, ms) => p.waitForTimeout(ms);
 
 async function listInteractions(browser) {
@@ -48,7 +51,19 @@ async function target(page) {
   for (const s of sel) {
     const all = page.locator(s);
     const n = await all.count();
-    for (let i = 0; i < n; i++) if (await all.nth(i).isVisible()) return all.nth(i);
+    for (let i = 0; i < n; i++) {
+      const el = all.nth(i);
+      if (!(await el.isVisible())) continue;
+      // A control already on (a checked radio, a selected tab) shows no change
+      // when pressed: drive the next one of its role that is off.
+      const on = await el.evaluate((e) => e.getAttribute('aria-checked') === 'true' || e.getAttribute('aria-selected') === 'true');
+      if (on) {
+        const role = await el.getAttribute('role');
+        const off = page.locator(`[data-interaction-stage] [role='${role}']:not([aria-checked='true']):not([aria-selected='true'])`);
+        if (await off.count()) return off.first();
+      }
+      return el;
+    }
   }
   return null;
 }
@@ -138,6 +153,36 @@ async function recordOne(browser, row) {
   return { ...row, file, marks, errs, found: Boolean(at) };
 }
 
+// The video clock runs about 600ms behind the logged marks (the recording
+// starts on the first frame after the page loads, and the marks count from
+// before), so a row is not placed by its mark alone. It reads small gray
+// frames from 900ms before the mark to 300ms after, finds the strongest
+// change between two frames, and starts one step before the first frame that
+// reaches 30% of it: the start of the answer to the press. No change found:
+// the row starts LEAD_MS before the mark.
+const SCAN = { w: 96, h: 54, fps: 50, beforeMs: 900, afterMs: 300 };
+function changeAt(file, m) {
+  const from = Math.max(0, m - SCAN.beforeMs);
+  let raw;
+  try {
+    raw = execFileSync('ffmpeg', ['-v', 'error', '-ss', (from / 1000).toFixed(3), '-t', ((m - from + SCAN.afterMs) / 1000).toFixed(3), '-i', file, '-vf', `fps=${SCAN.fps},scale=${SCAN.w}:${SCAN.h},format=gray`, '-f', 'rawvideo', '-'], { maxBuffer: 64 << 20 });
+  } catch {
+    return Math.max(0, m - LEAD_MS);
+  }
+  const size = SCAN.w * SCAN.h;
+  const n = Math.floor(raw.length / size);
+  const moved = [0];
+  for (let i = 1; i < n; i++) {
+    let c = 0;
+    for (let j = 0; j < size; j++) if (Math.abs(raw[i * size + j] - raw[(i - 1) * size + j]) > 24) c++;
+    moved.push(c);
+  }
+  const peak = Math.max(...moved);
+  if (peak < 2) return Math.max(0, m - LEAD_MS);
+  const first = moved.findIndex((c) => c >= Math.max(2, peak * 0.3));
+  return from + Math.max(0, first * (1000 / SCAN.fps) - FRAME_STEP_MS);
+}
+
 function sheet(rec) {
   const dir = path.join(TMP, style, 'frames', rec.id);
   fs.mkdirSync(dir, { recursive: true });
@@ -145,8 +190,9 @@ function sheet(rec) {
   const marks = rec.marks.slice(0, 4);
   const rows = [];
   marks.forEach((m, r) => {
+    const start = changeAt(rec.file, m);
     for (let k = 0; k < FRAMES; k++) {
-      const t = (m + k * FRAME_STEP_MS) / 1000;
+      const t = (start + k * FRAME_STEP_MS) / 1000;
       const f = path.join(dir, `${r}-${k}.png`);
       try {
         execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', t.toFixed(3), '-i', rec.file, '-frames:v', '1', '-vf', 'crop=iw*0.8:ih*0.8,scale=240:135', f]);
@@ -186,12 +232,24 @@ function stitch(family, recs) {
 (async () => {
   // Sheets only: rebuild the sheets of a finished run from its log
   // (SHEETS_FROM=<log of this script>), with the clips still in RECORD_TMP.
+  // With STITCH=1 it also stitches the family clips again from those clips;
+  // a family argument (comma separated) limits both.
   if (process.env.SHEETS_FROM) {
+    const recs = [];
     for (const line of fs.readFileSync(process.env.SHEETS_FROM, 'utf8').split('\n')) {
       if (!line.startsWith('{"id"')) continue;
       const rec = JSON.parse(line);
+      if (onlyFamily && !onlyFamily.split(',').includes(rec.family)) continue;
       rec.file = path.join(TMP, style, 'raw', `${rec.id}.webm`);
-      if (fs.existsSync(rec.file)) sheet(rec);
+      if (!fs.existsSync(rec.file)) continue;
+      sheet(rec);
+      recs.push(rec);
+    }
+    if (process.env.STITCH) {
+      for (const f of [...new Set(recs.map((r) => r.family))]) {
+        const out = stitch(f, recs.filter((r) => r.family === f));
+        console.log(JSON.stringify({ family: f, out, bytes: fs.statSync(out).size }));
+      }
     }
     return;
   }
