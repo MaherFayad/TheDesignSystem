@@ -104,7 +104,7 @@ module.exports = {
           await a.wait(160);
           await a.page.mouse.up();
         }
-        await a.wait(820);
+        await a.wait(1000);
         a.mark();
         await away(a, 4);
         await a.wait(1850);

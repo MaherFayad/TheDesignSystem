@@ -169,7 +169,7 @@ describe('AlertDialog', () => {
       expect(animate).toHaveBeenCalledTimes(1);
       expect(animate.mock.contexts[0]).toBe(panel);
       const [, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-      expect(timing.id).toBe('ds-motion:shake');
+      expect(timing.id).toBe('ds-motion:dialog-refuse');
       // A press inside the panel is not a refusal.
       fireEvent.pointerDown(panel, { button: 0 });
       expect(animate).toHaveBeenCalledTimes(1);

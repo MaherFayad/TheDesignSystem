@@ -73,9 +73,9 @@ export function slideBoxes(anim: Animation, to: MotionRect): { offset: number; b
 }
 
 /** clip-path inset() that keeps only the part of `r` inside `box` along the axis. Negative insets are kept, so frames interpolate in a straight line. */
-export function insetFor(r: MotionRect, box: MotionRect, axis: 'x' | 'y'): string {
-  const round = (n: number) => Math.round(n * 100) / 100;
-  const pad = Math.max(r.width, r.height);
+export function insetFor(r: MotionRect, box: MotionRect, axis: 'x' | 'y', k = 1): string {
+  const round = (n: number) => Math.round(n * k * 100) / 100;
+  const pad = round(Math.max(r.width, r.height));
   if (axis === 'x') {
     const left = box.x - r.x;
     const right = r.x + r.width - (box.x + box.width);
@@ -127,7 +127,6 @@ export function playInk(opts: InkOptions): Animation[] {
     if (!parent || typeof host.animate !== 'function') continue;
     const r = host.getBoundingClientRect();
     if (r.width < 1 || r.height < 1) continue;
-    const pr = parent.getBoundingClientRect();
     const cs = getComputedStyle(host);
     const twin = host.cloneNode(true) as HTMLElement;
     for (const el of [twin, ...twin.querySelectorAll('[id]')]) el.removeAttribute('id');
@@ -137,12 +136,16 @@ export function playInk(opts: InkOptions): Animation[] {
     twin.setAttribute('data-part', INK_PART);
     for (const a of ['data-state', 'data-active', 'role', 'tabindex', 'aria-current', 'aria-selected']) twin.removeAttribute(a);
     const s = twin.style;
-    // Placed in the containing block of the part, from both boxes, so it lands on the part whatever positions it.
+    // Placed in the containing block of the part with offsets, which are CSS px even when a page zooms, so it lands on the part.
+    const own = host.offsetParent === parent;
+    const pr = parent.getBoundingClientRect();
+    // CSS px per box px: boxes are measured after any zoom, offsets and styles before it.
+    const k = host.offsetWidth > 0 && r.width > 0 ? host.offsetWidth / r.width : 1;
     s.position = 'absolute';
-    s.left = `${r.left - pr.left - parent.clientLeft + parent.scrollLeft}px`;
-    s.top = `${r.top - pr.top - parent.clientTop + parent.scrollTop}px`;
-    s.width = `${r.width}px`;
-    s.height = `${r.height}px`;
+    s.left = `${own ? host.offsetLeft : (r.left - pr.left) * k - parent.clientLeft + parent.scrollLeft}px`;
+    s.top = `${own ? host.offsetTop : (r.top - pr.top) * k - parent.clientTop + parent.scrollTop}px`;
+    s.width = `${host.offsetWidth || r.width}px`;
+    s.height = `${host.offsetHeight || r.height}px`;
     s.margin = '0';
     s.boxSizing = 'border-box';
     // The layout of the part is copied, so a part drawn by its own data-part rules keeps its text where it was.
@@ -167,7 +170,7 @@ export function playInk(opts: InkOptions): Animation[] {
     s.transform = 'none';
     parent.append(twin);
     state.twins.push(twin);
-    const frames: Keyframe[] = boxes.map(({ offset, box }) => ({ offset, clipPath: insetFor(r, box, opts.axis) }));
+    const frames: Keyframe[] = boxes.map(({ offset, box }) => ({ offset, clipPath: insetFor(r, box, opts.axis, k) }));
     const a = twin.animate(frames, { id: INK_ID, duration, easing, fill: 'forwards' });
     if (slide.startTime !== null) a.startTime = slide.startTime;
     const drop = () => twin.remove();

@@ -351,8 +351,9 @@ function SplitStage() {
 }
 
 function AccordionStage() {
+  // Round 3: the stage keeps the room of the open section, so the recorder's crop holds the reveal.
   return (
-    <div style={{ inlineSize: '100%' }}>
+    <div style={{ inlineSize: '22rem', maxInlineSize: '100%', minBlockSize: '13rem' }} data-stage-region="">
       <Accordion>
         <AccordionItem value="billing">
           <AccordionTrigger data-interaction-trigger="">Billing</AccordionTrigger>

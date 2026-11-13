@@ -203,7 +203,7 @@ describe('Dialog', () => {
       animate.mockClear();
       await user.keyboard('{Escape}');
       fireEvent.pointerDown(part('backdrop') as HTMLElement, { button: 0 });
-      const shakes = animate.mock.calls.filter((c) => (c as unknown as [unknown, KeyframeAnimationOptions])[1]?.id === 'ds-motion:shake');
+      const shakes = animate.mock.calls.filter((c) => (c as unknown as [unknown, KeyframeAnimationOptions])[1]?.id === 'ds-motion:dialog-refuse');
       expect(shakes).toHaveLength(2);
       expect(animate.mock.contexts.every((el) => el === panel)).toBe(true);
       view.unmount();
@@ -211,7 +211,7 @@ describe('Dialog', () => {
       await open(user);
       animate.mockClear();
       fireEvent.pointerDown(part('backdrop') as HTMLElement, { button: 0 });
-      expect(animate.mock.calls.filter((c) => (c as unknown as [unknown, KeyframeAnimationOptions])[1]?.id === 'ds-motion:shake')).toHaveLength(0);
+      expect(animate.mock.calls.filter((c) => (c as unknown as [unknown, KeyframeAnimationOptions])[1]?.id === 'ds-motion:dialog-refuse')).toHaveLength(0);
     } finally {
       if (had) proto.animate = undefined;
       else delete proto.animate;
@@ -742,8 +742,10 @@ describe('motion (order 1.22): Dialog.css', async () => {
   });
 
   it('staggers the parts, but a part that holds focus is there at once', () => {
-    expect(css).toContain("> :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):not(:focus-within) {");
-    expect(css).toContain("> [data-part='footer']:not(:focus-within) {\n    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 4), var(--_dialog-stagger-max));");
+    // A part with focus runs in no time; the name stays, so focus leaving never replays the arrival.
+    expect(css).toContain("> :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):focus-within {\n    animation-duration: 0s;\n    animation-delay: 0s;");
+    expect(css).not.toContain(':not(:focus-within)');
+    expect(css).toContain("> [data-part='footer'] {\n    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 4), var(--_dialog-stagger-max));");
   });
 
   it('order 1.23: every part reads within 200ms: the last starts by duration.base and fades in over duration.fast', () => {

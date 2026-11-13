@@ -148,7 +148,7 @@ export const buttonsInteractions = [
     beats: [
       'Out: the start, label and end parts roll up by --_button-roll (distance.shift) and fade over duration.quick on ease.exit.',
       'Land: one delay.stagger step later the result part grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy and fades in over duration.fast.',
-      'Draw: two stagger steps in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) over duration.morph on ease.out: the check from its short stroke to its long one; the error cross one stroke, then the other one duration.morph later.',
+      'Draw: one stagger step in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) over duration.morph on ease.out: the check from its short stroke to its long one; the error cross one stroke, then the other one duration.morph later.',
       'Error: the button shakes along the inline axis by --_button-shake (distance.nudge) over duration.celebrate: out, back past rest, half out, rest. Two swings, far under three flashes a second.',
       'Back: the glyph shrinks to scale.morph and fades over duration.quick; the parts drop in from above on the snappy spring.',
     ],

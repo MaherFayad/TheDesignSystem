@@ -38,6 +38,12 @@
 // list (its scroll included), so RTL needs nothing. useMotion().mode lets
 // the style tune or turn it off; under reduced motion the indicator jumps.
 // Nothing waits for an animation event.
+//
+// Round 3 (order 1.23, proposed): the labels no longer dip and pop. The text
+// under the pill takes the active color exactly where the pill is (./ink.ts):
+// aria-hidden twins (part label-ink) in the active color are cut to the
+// pill with clip-path, keyframe for keyframe with the slide, and removed
+// when it ends.
 import {
   createContext,
   use,

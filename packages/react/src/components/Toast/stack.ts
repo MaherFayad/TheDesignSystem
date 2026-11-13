@@ -78,6 +78,8 @@ export function writeStack(viewport: HTMLElement): StackLayout {
     el.style.setProperty('--_toast-index', String(place.index));
     el.style.setProperty('--_toast-offset', px(place.offset));
     el.style.setProperty('--_toast-height', px(el.offsetHeight));
+    // The front height as this toast last saw it, so a toast playing its exit stays where it was.
+    el.style.setProperty('--_toast-front-height', px(layout.front));
   }
   viewport.style.setProperty('--_toaster-front-height', px(layout.front));
   viewport.style.setProperty('--_toaster-height', px(layout.total));

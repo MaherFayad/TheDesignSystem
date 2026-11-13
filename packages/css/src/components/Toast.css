@@ -77,7 +77,9 @@
  *   --_toast-stack-duration, -stack-ease   the stack transition
  *   --_toast-progress        the color of the progress line
  *   --_toast-progress-thickness   its thickness
- *   --_toast-index, -height, -offset, --_toaster-front-height, -height,
+ *   --_toast-index, -height, -offset, -front-height (the front toast's height
+ *   as this toast last saw it, so a leaving toast stays put),
+ *   --_toaster-front-height, -height,
  *   --_toaster-dir           working values: Toaster.tsx writes the first
  *                            five; --_toaster-dir is -1 when the stack grows
  *                            up from the bottom edge and 1 from the top
@@ -232,6 +234,7 @@
     --_toast-index: 0;
     --_toast-height: 0px;
     --_toast-offset: 0px;
+    --_toast-front-height: 0px;
     /* Room for the shadow around a clipped toast, so the clip only ever cuts the strip edge. */
     --_toast-shadow-room: var(--ds-space-3xl);
     /* Working value: how long the spring back of a swipe takes now; 0s while the toast follows the finger. */
@@ -336,7 +339,7 @@
   [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
     --_toast-strip: calc((var(--_toast-height) - var(--_toast-peek)) * min(var(--_toast-index), 1));
 
-    translate: 0 calc(var(--_toaster-dir) * (var(--_toaster-front-height) + var(--_toast-index) * var(--_toast-peek) - var(--_toast-height)));
+    translate: 0 calc(var(--_toaster-dir) * (var(--_toast-front-height) + var(--_toast-index) * var(--_toast-peek) - var(--_toast-height)));
     scale: calc(1 - var(--_toast-index) * var(--_toast-depth));
     /* From the fourth toast back, it is hidden. */
     opacity: clamp(0, calc(3 - var(--_toast-index)), 1);

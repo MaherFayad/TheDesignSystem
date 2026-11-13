@@ -818,12 +818,12 @@
   }
 
   [data-ds='button'][data-result] > [data-part='result'] > svg > * {
-    animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * 2 * var(--_button-motion) * var(--_button-draw)) backwards;
+    animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_button-motion) * var(--_button-draw)) backwards;
   }
 
   /* The second stroke of the error cross follows the first. */
   [data-ds='button'][data-result] > [data-part='result'] > svg > :nth-child(2) {
-    animation-delay: calc((var(--ds-duration-morph) + var(--ds-delay-stagger) * 2) * var(--_button-motion) * var(--_button-draw));
+    animation-delay: calc((var(--ds-duration-morph) + var(--ds-delay-stagger)) * var(--_button-motion) * var(--_button-draw));
   }
 
   @keyframes ds-button-draw {

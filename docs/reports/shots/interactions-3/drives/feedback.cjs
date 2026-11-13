@@ -23,7 +23,7 @@ module.exports = {
   'state-illustration': staged(2, 1000),
   'error-state-details': staged(3, 700),
   'accordion-reveal': {
-    region: STAGE,
+    region: '[data-stage-region]',
     drive: async (a) => {
       await a.hover(a.at, 10);
       a.mark();

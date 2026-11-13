@@ -25,10 +25,13 @@
 // Refused (order 1.23, interaction "dialog-refuse"): a press on the backdrop
 // of an AlertDialog (which never closes on an outside click) or of a dialog
 // with dismissible false, and Escape on a dialog with dismissible false, do
-// not close it. The panel nudges instead: the catalog pattern "shake" (two
-// swings of space.3xs inside duration.roll, no change of light), played with
-// the Web Animations API through useMotion, so a style can tune or turn it
-// off and reduced motion leaves it still. A second refusal cancels the first
+// not close it. The panel nudges instead: a shake along the inline axis
+// (the catalog pattern "shake" in its shape: out, back past its place, a
+// smaller swing, rest) of --_dialog-refuse-shift (space.s, a panel is large,
+// so the catalog's space.3xs would not read) inside duration.roll on
+// ease.out, no change of light, played with the Web Animations API. The
+// style's mode for "dialog-refuse" (useMotion) applies: none or reduced
+// motion leaves it still. A second refusal cancels the first
 // and plays again, so a rapid series never stacks or sticks.
 import {
   createContext,
@@ -55,6 +58,7 @@ import {
 } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
+import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from '../Toast/isInsideToaster';
 
@@ -208,7 +212,20 @@ export function DialogBase({
   const refusal = useRef<Animation | null>(null);
   const refuse = useCallback(() => {
     refusal.current?.cancel();
-    refusal.current = motion.play(panelRef.current, 'shake', 'dialog-refuse', { dir: theme.dir });
+    refusal.current = null;
+    const panel = panelRef.current;
+    if (!panel || typeof panel.animate !== 'function' || motion.mode('dialog-refuse') !== 'full') return;
+    // Without the token (a page with no token CSS) the base value; under reduced motion the token is 0.
+    const set = typeof getComputedStyle === 'function' && getComputedStyle(panel).getPropertyValue('--ds-duration-roll').trim() !== '';
+    const duration = set ? readDuration(panel, 'duration.roll') : durationMs['duration.roll'];
+    if (duration <= 0) return;
+    const sign = theme.dir === 'rtl' ? -1 : 1;
+    const at = (k: number) => ({ transform: `translateX(calc(var(--_dialog-refuse-shift) * ${sign * k}))` });
+    refusal.current = panel.animate([{ transform: 'none' }, at(1), at(-0.7), at(0.35), { transform: 'none' }], {
+      duration,
+      easing: readEasing(panel, 'ease.out'),
+      id: 'ds-motion:dialog-refuse',
+    });
   }, [motion, theme.dir]);
   const refusesOutside = kind === 'alert-dialog' || !state.dismissible;
 
