@@ -5,7 +5,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { staggerGroup } from '@the-system/motion';
+import { staggerRows } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DsTagField } from './tag-field';
 
@@ -79,7 +79,7 @@ async function setup() {
 
 describe('tag-field motion, order 1.22', () => {
   for (const reduced of [false, true]) {
-    it(`menu-rows: the options stagger in after the surface with React's staggerGroup arguments${reduced ? ' (reduced)' : ''}`, async () => {
+    it(`menu-rows: the options stagger in after the surface with React's staggerRows arguments${reduced ? ' (reduced)' : ''}`, async () => {
       if (reduced) document.documentElement.setAttribute('data-motion', 'reduce');
       const { root, settle, rows, motion } = await setup();
       take();
@@ -89,8 +89,9 @@ describe('tag-field motion, order 1.22', () => {
       await settle();
       const got = ids(take(), 'stagger');
       expect(rows().length).toBeGreaterThan(0);
-      expect(got).toHaveLength(rows().length);
-      staggerGroup(rows(), { phase: 'enter', offset: 1, spring: 'soft', mode: motion.mode('menu-rows') });
+      expect(got).toHaveLength(rows().length * (motion.mode('menu-rows') === 'full' ? 2 : 1));
+      // Order 1.29 (ten weakest #9): every row fades with the surface and only the rise staggers (staggerRows).
+      staggerRows(document.querySelector('[data-menu-layer]'), "[data-ds='list-box'] [data-part='option']", motion.mode('menu-rows'));
       expect(got).toEqual(take());
       // Order 1.23: no fill layer in the rows; the list's highlight marker is its last child.
       for (const row of rows()) expect(row.querySelector(":scope > span[aria-hidden='true']:not([data-part])")).toBeNull();

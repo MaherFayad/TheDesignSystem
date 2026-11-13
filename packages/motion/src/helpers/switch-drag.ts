@@ -142,3 +142,18 @@ export function releaseSpeed(run: SwitchDragRun, timeStamp: number): number {
 export function releaseChecked(run: SwitchDragRun, timeStamp: number): boolean {
   return snapChecked(Math.min(1, Math.max(0, run.raw)), releaseSpeed(run, timeStamp));
 }
+
+/** The root flag from a pointer release to the next press (order 1.29, review N1). */
+export const RELEASED_ATTR = 'data-released';
+
+/**
+ * Marks the switch root released (a pointer came up or was cancelled) or not
+ * (a pointer or a key went down). Switch.css times the thumb's transform on
+ * the press's timing only while `:active` holds and the root is not released:
+ * on touch `:active` stays on 150 to 250ms after a tap, and the travel that
+ * follows the tap keeps the state's spring. `control` is the switch control
+ * (the root's child).
+ */
+export function markReleased(control: Element, released: boolean): void {
+  control.parentElement?.toggleAttribute(RELEASED_ATTR, released);
+}

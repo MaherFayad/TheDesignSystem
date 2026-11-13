@@ -67,8 +67,12 @@ Gallery on port 5183. Every probe is a Playwright script in this folder
   without `--_dialog-scrim-saturate: 1.3` set on the root as a recipe would.
   - Before (`overlays-toasts.b9-before.json`, Desk): blur none in every
     fallback mode (pass), the hook not honoured (`.hook` default rows fail).
-  - After (`overlays-toasts.b9-after.json`): see the final run below.
-    Studio sets `--_dialog-scrim-filter: none` in its recipe (a flat scrim),
+  - After (`overlays-toasts.b9-after.json`), the final run (gallery on
+    5183, after the lint fixes): 120 of 120 rows pass, 4 styles x 3
+    overlays x 5 modes x hook on and off. Desk, Neutral and Liquid draw
+    `blur(..) saturate(1)` by default and `saturate(1.3)` with the hook;
+    every fallback mode (both contrast forms, forced colors, reduced
+    transparency) computes `none`, with and without the hook. Studio sets `--_dialog-scrim-filter: none` in its recipe (a flat scrim),
     so the hook has nothing to join there; the JSON notes it.
 
 ## Ten weakest
@@ -142,11 +146,17 @@ Gallery on port 5183. Every probe is a Playwright script in this folder
   speed times 200ms; when dismissible, closed is one more place. Below the
   smallest it follows down when dismissible and gives the rubber band when
   not.
-- With detents the handle part is a native `<button type="button">` named
-  "Sheet size, 1 of 2" (Arabic too): ArrowUp, ArrowDown, Home, End step,
+- With detents the handle part is a system button (`ButtonRoot` from
+  `Button/ButtonBase`, `data-ds="button"`, ghost emphasis, as CloseButton
+  and the Pagination pages use it; lint `ds/button-primitive`) named
+  "Sheet size, 1 of 2" (Arabic too), the handle-bar its only content: ArrowUp, ArrowDown, Home, End step,
   and Enter, Space and a press take the next one, round to the smallest
-  (the button path, WCAG 2.5.7). Without detents the handle is the same
-  `aria-hidden` div as before.
+  (the button path, WCAG 2.5.7). `Dialog.css` keeps the handle look over
+  the Button one (no minimum size, no press dip, shade or glow; display
+  block) and `ios.css` keeps the grabber from the iOS button dim while it
+  is pressed. Measured on ios in 4 styles: a 36 by 5 bar in a 24px strip,
+  transparent, no shadow, as before. Without detents the handle is the
+  same `aria-hidden` div as before.
 - The math is `packages/motion/src/helpers/sheet-detents.ts`
   (`detentHeights`, `detentDragOffset`, `settleDetent`, `detentForKey`,
   `dragVelocity`, `dragCloses`, `detentRubberBand`), tested in
@@ -265,8 +275,10 @@ them:
   `mousedown` defaults (B8).
 - Sheet: with `detents`, `data-detent` on the root, inline
   `--_dialog-detent-height` and `--_dialog-detent-max`, and the handle part
-  is a `<button type="button" aria-label="Sheet size, n of m">` with the
-  keys above; without detents it stays the `aria-hidden` div. Optional
+  is `<button dsButton emphasis="ghost" data-part="handle" aria-label="Sheet size, n of m">`
+  (the React DOM carries the Button base attributes `data-ds="button"`,
+  `data-size`, `data-tone`, `data-emphasis="ghost"`, `data-shape`, and
+  the `hit` part after the handle-bar) with the keys above; without detents it stays the `aria-hidden` div. Optional
   `titlebar` replaces the header, then the description as a panel part.
 - Drawer: `<div data-part="handle" aria-hidden="true"><span data-part="handle-bar"></span></div>`
   first in the panel; `data-dragging` on the root while dragged.
@@ -296,7 +308,7 @@ them:
   (`splitHeader` also returns the parts apart), `Popover/Popover.tsx`,
   `Tooltip/Tooltip.tsx`, `Toast/Toaster.tsx`, and the tests of each.
 - CSS: `Dialog.css`, `Toast.css`, `Popover.css`, `Tooltip.css`,
-  `HoverCard.css`; `platform/ios.css` (the Drawer grabber on the handle
+  `HoverCard.css`; `platform/ios.css` (no button dim on the Sheet detent handle; the Drawer grabber on the handle
   part, the Sheet comment).
 - Manifests: Sheet, Drawer, AlertDialog, Popover.
 - Motion: `helpers/toast-stack.ts`, `helpers/toast-swipe.ts`,
@@ -311,8 +323,8 @@ them:
 
 - B7 is solved in the shared helper, so the Toaster mount and the default
   `position` stay as they were; on ios every position is the top centre.
-- The detent handle is a native button with the state in its name, not a
-  slider: the order asks for a button path, and a press cycles.
+- The detent handle is a system button (the Button base) with the state
+  in its name, not a slider: the order asks for a button path, and a press cycles.
 - The Drawer strip is as wide as the band padding, not 24px, so it never
   covers content; the close control is the equivalent target.
 - The Sheet's enter scale defaults to 1 on the Sheet so the family default

@@ -540,6 +540,11 @@
           "target": "@components/ds/styles/desk/style.json"
         },
         {
+          "path": "packages/styles/liquid/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/liquid/motion.ts"
+        },
+        {
           "path": "packages/styles/liquid/style.json",
           "type": "registry:lib",
           "target": "@components/ds/styles/liquid/style.json"
@@ -1195,6 +1200,11 @@
           "path": "packages/styles/studio/recipes/DropdownMenu.css",
           "type": "registry:file",
           "target": "@components/ds/styles/studio/recipes/DropdownMenu.css"
+        },
+        {
+          "path": "packages/styles/studio/recipes/Field.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/recipes/Field.css"
         },
         {
           "path": "packages/styles/studio/recipes/Lightbox.css",
@@ -4397,6 +4407,7 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/button",
         "@ds/core",
         "@ds/dialog",
         "@ds/drawer",

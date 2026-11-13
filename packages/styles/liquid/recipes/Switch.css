@@ -17,6 +17,8 @@
  *   --_switch-lean                distance.shift: on hover the thumb leans further than
  *                                 the base nudge, a drop about to move
  *   --_switch-ease, -ease-out     the soft spring: the lens glides and settles, no bounce
+ *   --_switch-thumb-width         order 1.29: a capsule lens, about a third wider than it is
+ *                                 high, on the longer track (web; ios draws its own)
  * Fallbacks: Switch.css itself drops the backdrop and makes the thumb solid
  * where backdrop-filter is unsupported, under reduced transparency and more
  * contrast; this file also drops the highlight and the rim there. Reduced
@@ -53,9 +55,13 @@
     background-color: var(--ds-color-bg-surface-4);
   }
 
-  /* White on the light off track is under 3:1, so the off thumb carries the control edge in light. */
+  /*
+   * White on the light off track is under 3:1 (about 1.3:1), so the off
+   * thumb carries the control edge in light, at the strong border width so
+   * the edge reads as the thumb's own outline (review N6).
+   */
   [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked'] {
-    --_switch-thumb-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control), var(--ds-elevation-tooltip);
+    --_switch-thumb-shadow: 0 0 0 var(--ds-border-width-strong) var(--ds-color-border-control), var(--ds-elevation-tooltip);
   }
 
   /* Held: the lens takes a bright rim around its edge, over the lift. */
@@ -67,7 +73,7 @@
 
   [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
     --_switch-thumb-shadow:
-      0 0 0 var(--ds-border-width-default) var(--ds-color-border-control),
+      0 0 0 var(--ds-border-width-strong) var(--ds-color-border-control),
       inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
       var(--ds-elevation-tooltip);
   }
@@ -120,6 +126,8 @@
     --_switch-stretch: var(--ds-scale-stretch);
     /* A longer capsule than Neutral's 1.75: the lens has room to glide (order 1.28). */
     --_switch-width: calc(var(--_switch-height) * 2);
+    /* Order 1.29: the thumb is a capsule lens, about a third wider than high, so Liquid differs from Neutral at rest. */
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.3);
   }
 
 }

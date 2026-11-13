@@ -101,12 +101,17 @@
  *   --_switch-bg-ease             working: the timing of the track's own color with the tint
  *                                 layer: step-end turning on, step-start turning off, pressed
  *                                 or not (N1)
+ *   --_switch-fill-reach          how far the on fill's clip reaches past the thumb's far
+ *                                 edge, measured from the fill layer's own edge: the inset. A
+ *                                 platform with a thicker track border sets more, so the
+ *                                 track under the thumb stays filled (B3)
  * The thumb color is the thumb's `color`; its paint, its ring and the fallbacks
  * read currentColor, so the color moves on the state's timing and the lens on
- * the press's. The travel is the thumb's `translate`, on the state's timing even
- * while the control is pressed: on touch `:active` stays on after a tap, and the
- * press timing no longer carries the travel (N1). The press times `transform`
- * only (the growth and the stretch).
+ * the press's. The travel, the growth and the stretch are one `transform` (the
+ * motion ruling animates no `translate` property). The press times it only while
+ * the pointer or the key is down: the framework marks the root data-released
+ * from a pointer release to the next press, so on touch, where `:active` stays
+ * on after a tap, the travel keeps the state's timing (N1).
  * While dragging the thumb color and the on fill step at progress 0.5, and the
  * fill stays opaque under the thumb with only its clip following (B4). The
  * root's data-state shows the side the thumb is on while a drag runs
@@ -116,7 +121,8 @@
  * style paints as a highlight or a glass lens, and, with the thumbIcon
  * prop, the thumb-icon part (an aria-hidden svg: a check drawn while on and
  * a cross while off). Root state `data-dragging`
- * marks a drag.
+ * marks a drag; `data-released` (order 1.29) marks the time from a pointer
+ * release to the next press (a pointerdown or a key), set by the framework.
  *
  * The thumb moves with transform only. The focus ring shows at once: its
  * layer has no transition (WCAG 2.4.7).
@@ -217,6 +223,7 @@
     --_switch-thumb-ring-width: var(--ds-border-width-strong);
     --_switch-color-ease: steps(2, jump-none);
     --_switch-bg-ease: step-start;
+    --_switch-fill-reach: var(--_switch-inset);
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -317,7 +324,7 @@
    * the travel and the lean now, half the thumb's width and half its drawn
    * width (grown), and the whole stretch whichever way it points (the press
    * turns it on its own timing, so the fill leaves room for it either way).
-   * The clip and the thumb's translate read the same properties on the same
+   * The clip and the thumb's transform read the same properties on the same
    * transition, so the fill sweeps with the thumb, overshoot and steps
    * included, and the track under the thumb is filled on every frame, a
    * scaled dot and a leaning or stretched thumb included (order 1.29). Past
@@ -329,7 +336,7 @@
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
     --_switch-cut: max(
       0px,
-      var(--_switch-width) - var(--_switch-inset) * 2 - var(--_switch-travel) - var(--_switch-lean-now) * var(--_switch-toward) -
+      var(--_switch-width) - var(--_switch-inset) - var(--_switch-fill-reach) - var(--_switch-travel) - var(--_switch-lean-now) * var(--_switch-toward) -
         var(--_switch-thumb-width) * (1 + var(--_switch-thumb-size-now)) / 2 -
         (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-width) * var(--_switch-thumb-size-now)
     );
@@ -354,7 +361,7 @@
 
   /*
    * The thumb travels the track width less its own width and the two insets
-   * (translate, on the state's timing). It grows to its size now from its
+   * (the first translateX, on the state's timing). It grows to its size now from its
    * center, stretches toward its travel from its trailing edge (transform, on
    * the press's timing while pressed), and leans on hover. Its color is
    * `color`, on --_switch-color-ease; the paint thins to a lens by
@@ -374,8 +381,8 @@
       var(--_switch-thumb-shadow),
       inset 0 0 0 var(--_switch-thumb-ring-width) currentColor;
     backdrop-filter: var(--_switch-thumb-backdrop);
-    translate: calc((var(--_switch-travel) + var(--_switch-lean-now) * var(--_switch-toward)) * var(--_switch-dir)) 0;
     transform:
+      translateX(calc((var(--_switch-travel) + var(--_switch-lean-now) * var(--_switch-toward)) * var(--_switch-dir)))
       translateX(
         calc(
           (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-width) * var(--_switch-thumb-size-now) / 2 *
@@ -385,7 +392,6 @@
       scale(var(--_switch-thumb-size-now))
       scaleX(var(--_switch-stretch-now));
     transition:
-      translate calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
@@ -458,10 +464,15 @@
     --_switch-thumb-solid-now: var(--_switch-thumb-solid-pressed);
   }
 
-  /* The press times the growth, the stretch and the lens; the travel and the color keep the state's timing (N1). */
-  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+  /*
+   * The press times the growth, the stretch and the lens while the pointer or
+   * the key is down. Once the pointer is up the framework marks the root
+   * data-released, and the thumb's transform (the travel with it) is back on
+   * the state's timing: on touch `:active` stays on after a tap, and the press
+   * timing no longer carries the travel (N1). The color keeps the state's timing.
+   */
+  [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
     transition:
-      translate calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
@@ -677,7 +688,7 @@
     [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
     [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'],
     [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
-    [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
       transition: none;
     }
   }
@@ -697,7 +708,7 @@
   :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
   :root[data-motion='reduce'] [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'],
   :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
-  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
     transition: none;
   }
 

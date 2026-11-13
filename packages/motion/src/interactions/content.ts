@@ -6,7 +6,7 @@
 // private properties a style recipe sets to turn them off.
 //
 // Timings in the beats are the base values per style: Neutral, Desk, Studio.
-// soft spring 220, 340, 100ms; snappy 180, 300, 80ms; bouncy 220, 440, 120ms;
+// soft spring 200, 340, 100ms; snappy 158, 300, 70ms; bouncy 200, 380, 120ms;
 // stagger step 24, 45, 0ms; celebrate 220, 480, 120ms; morph 200, 320, 100ms.
 // Studio's springs are steps, so its parts land in hard cuts and together.
 import type { Interaction } from './types';
@@ -20,9 +20,9 @@ export const contentInteractions = [
     trigger: 'An Alert, a Banner or a Callout mounts.',
     feedback: 'Three beats: the surface is uncovered, the icon lands with a halo one stagger step later, the text settles two steps later. Round 3: the surface of an Alert or a Banner is wiped in from the inline start with clip-path (mirrored in RTL) while it rises, and no longer grows; the icon pop adds a ring (box-shadow) in the icon colour that grows from it and fades, once. A Callout only fades its box and gets the icon halo.',
     beats: [
-      'Action: the surface rises distance.enter (an Alert from below, a Banner from above) and its clip opens from inset(0 100% 0 0) to none (an Alert keeps its round corners in the clip), on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms in steps); opaque by 30% of the run.',
-      'Overshoot: one delay.stagger later (24, 45, 0ms) the icon pops from scale.morph on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms), and a box-shadow ring in the icon colour grows from 0 to distance.shift and fades over the same run.',
-      'Settle: two steps later the title, the body and the actions rise distance.nudge (2, 3, 1px) and fade in on the soft spring.',
+      'Action: the surface rises distance.enter (an Alert from below, a Banner from above) and its clip opens from inset(0 100% 0 0) to none (an Alert keeps its round corners in the clip), on ease.spring-soft over duration.spring-soft (Neutral 200ms, Desk 340ms, Studio 100ms in steps); opaque by 30% of the run.',
+      'Overshoot: one delay.stagger later (24, 45, 0ms) the icon pops from scale.morph on ease.spring-bouncy over duration.spring-bouncy (200, 380, 120ms), and a box-shadow ring in the icon colour grows from 0 to distance.shift and fades over the same run.',
+      'Settle: two steps later the title, the body and the actions rise distance.nudge (2, 3, 0px) and fade in on the soft spring.',
     ],
     styles: { studio: 'hard cuts, every part at once', desk: 'a bouncy icon, a long settle', neutral: 'a quick rise, a small icon pop' },
     reduced: 'No motion: the message is there at once.',
@@ -45,7 +45,7 @@ export const contentInteractions = [
       'onClose runs at once and the message leaves the DOM. Before the next paint a decorative ghost of it shrinks to scale.enter and fades, faster than the entrance, while the content under it slides up into the gap.',
     beats: [
       'Action: the ghost (aria-hidden, inert) shrinks to scale.enter and fades on ease.exit over duration.quick (100ms in every style), about half the entrance (flipExit).',
-      'Secondary: the neighbours that moved travel from their old place on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms; flipPlay), so the page closes the gap instead of jumping.',
+      'Secondary: the neighbours that moved travel from their old place on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms; flipPlay), so the page closes the gap instead of jumping.',
     ],
     styles: { studio: 'a fast fade, the gap closes in steps', desk: 'the page below springs up with an overshoot', neutral: 'a quick shrink, a short slide' },
     reduced: 'A fade of the ghost; the content below takes its place at once.',
@@ -79,7 +79,7 @@ export const contentInteractions = [
     drive: 'css',
     trigger: 'Open or close the details of an ErrorState.',
     feedback: 'The chevron turns half a turn on the snappy spring; the details show at once.',
-    beats: ['Action and overshoot: the chevron turns 180 degrees on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms), past its angle in Desk, then settles.'],
+    beats: ['Action and overshoot: the chevron turns 180 degrees on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms), past its angle in Desk, then settles.'],
     styles: { studio: 'a stepped turn', desk: 'a turn that swings past and back', neutral: 'a quick turn' },
     reduced: 'No motion: the chevron points the new way at once.',
     off: { "[data-ds='error-state']": { '--_error-state-duration': '0s' } },
@@ -114,7 +114,7 @@ export const contentInteractions = [
     feedback: 'A band sweeps across the placeholder toward the inline end three times and stops before five seconds. Round 3: when the content replaces it, a ghost of the skeleton is wiped off with clip-path from the inline start toward the inline end, the way the band runs, so the content shows in reading order.',
     beats: [
       'Loop: the band sweeps linear over duration.shimmer, three times (4.2s), then the placeholder holds still, so it needs no pause control.',
-      'Swap: the skeleton leaves the DOM at once; a decorative ghost of it, put back where it was drawn, is cut from inset(0) to inset(0 0 0 100%) (mirrored in RTL) over duration.morph (200, 320, 100ms) on ease.reveal on top of the content.',
+      'Swap: the skeleton leaves the DOM at once; a decorative ghost of it, put back where it was drawn, is cut from inset(0) to inset(0 0 0 100%) (mirrored in RTL) over duration.morph (180, 320, 100ms) on ease.reveal on top of the content.',
     ],
     styles: { studio: 'a 100ms cut to the content', desk: 'a slow wipe', neutral: 'a short wipe' },
     reduced: 'No band; the ghost fades out over duration.morph (the round 2 cross fade).',
@@ -132,7 +132,7 @@ export const contentInteractions = [
     feedback:
       'The number rolls digit by digit, the last digit first, up when it grew and down when it fell; unchanged digits stay still; the trend mark nudges the same way. No number rolls more than three times a second.',
     beats: [
-      'Action: each changed digit rolls in its own column, 100% of its height, on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms), the old digit rolling out the other way (rollDigits).',
+      'Action: each changed digit rolls in its own column, 100% of its height, on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms), the old digit rolling out the other way (rollDigits).',
       'Stagger: the columns start one delay.stagger apart from the last digit toward the first, so a carry ripples like an odometer.',
       'Secondary: one step after the digits start, the trend mark nudges distance.nudge in the direction of the change and comes back, over duration.spring-bouncy.',
       'Limit: a change less than 333ms (or one roll, if longer) after the last roll changes in place, so a fast counter changes at most three times a second in every style.',
@@ -150,7 +150,7 @@ export const contentInteractions = [
     trigger: 'The value of a ProgressBar or a ProgressCircle changes.',
     feedback: 'Round 3: a bar is cut to its value with clip-path inset() with round ends (it was scaled), so its leading end stays round as it eases to the new value on the soft spring. A ring is an SVG circle in the indicator (part arc) drawn with stroke-dashoffset on a pathLength of 100: a change draws the arc forward or back from where it was on the soft spring, while its value rolls digit by digit.',
     beats: [
-      'Action: the bar clip-path transitions on ease.spring-soft over duration.spring-soft (220, 340, 100ms), landing a little past the value in Desk.',
+      'Action: the bar clip-path transitions on ease.spring-soft over duration.spring-soft (200, 340, 100ms), landing a little past the value in Desk.',
       'Action: the ring stroke-dashoffset transitions from 100 - 100 * old to 100 - 100 * new on the same spring; the arc starts at 12 o\'clock and runs clockwise in both directions.',
       'Secondary: the value inside the ring rolls digit by digit (rollDigits).',
     ],
@@ -169,7 +169,7 @@ export const contentInteractions = [
     feedback: 'Once per completion: the bar track dips and pops on the block axis, the ring dips and pops, and round 3 adds a halo, a box-shadow ring in the fill colour that grows from the track or the ring by distance.shift and fades. The beat waits for the fill to land (its own --_progress-bar-duration or --_progress-circle-duration), and a ring that reaches full draws on ease.out, so the arc never runs past 12 o\'clock.',
     beats: [
       'Anticipation: a dip to scale.anticipate (0.95, 0.9, 0.97) in the first fifth.',
-      'Overshoot: a pop to scale.pop (1.05, 1.14, 1) at about half, then rest, over duration.celebrate (220, 480, 120ms) on ease.out.',
+      'Overshoot: a pop to scale.pop (1.05, 1.14, 1) at about half, then rest, over duration.celebrate (200, 480, 120ms) on ease.out.',
       'Secondary: over the same run the halo grows from 0 to distance.shift in the fill colour and fades to transparent, once.',
     ],
     styles: { studio: 'none (pop is reduced in Studio)', desk: 'a big, slow pop', neutral: 'a small pop' },
@@ -343,7 +343,7 @@ export const contentInteractions = [
     trigger: 'Open a detail, or go back to the list, while a SplitView is stacked.',
     feedback: 'Round 3: the pane that shows is uncovered with clip-path from the side it comes from (the detail from the inline end, the list from the inline start) while it settles distance.enter, so it reads as a page laid over the other. The switch is at once.',
     beats: [
-      'Action: the pane clip opens from --_split-view-reveal-end (or -start) to none while it slides distance.enter (6, 12, 4px), on --_split-view-ease over --_split-view-duration (the soft spring). Focus moves into the pane and its ring shows at once.',
+      'Action: the pane clip opens from --_split-view-reveal-end (or -start) to none while it slides distance.enter (4, 12, 0px), on --_split-view-ease over --_split-view-duration (the soft spring). Focus moves into the pane and its ring shows at once.',
     ],
     styles: { studio: 'a 4px stepped slide', desk: 'a 12px slide with a settle', neutral: 'a 6px slide' },
     reduced: 'No motion: the pane is there at once. Round 3 (review B2): the reduced rule carries [data-state] and wins; the root sets --_split-view-duration to 0s.',

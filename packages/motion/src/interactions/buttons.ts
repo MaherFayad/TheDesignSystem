@@ -35,7 +35,7 @@ export const buttonsInteractions = [
       'Rest: the face at scale 1, the content at rest, no shade.',
       'Press (anticipation): over duration.instant on ease.out the root dips to scale.press (0.97), the parts sink by --_button-press-y (xs and sm 1px, md distance.nudge 2px, lg and the FloatingActionButton distance.nudge plus 1px) and the ::after shade (inset 0 depth, blur twice the depth, color.bg.scrim-20) fades in.',
       'Action: the click runs on release, at once; nothing waits for the motion.',
-      'Release (overshoot and settle): the root springs back on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms passing rest by 6% of the dip, Desk 440ms by 25%, Studio 120ms in three steps); the parts rise on the snappy spring and the shade fades over the same time.',
+      'Release (overshoot and settle): the root springs back on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms passing rest by 6% of the dip, Desk 380ms by 25%, Studio 120ms in three steps); the parts rise on the snappy spring and the shade fades over the same time.',
       'A rapid second press starts from wherever the spring is: the transitions pick up the live values.',
     ],
     styles: {
@@ -97,7 +97,7 @@ export const buttonsInteractions = [
     beats: [
       "Press: the parts of the pressed segment dip to scale.anticipate (Neutral 0.95, Desk 0.9, Studio 0.97) and sink by --_button-press-y over duration.instant on ease.out; Button's inner shade fades in over the same time.",
       'Action: the click runs on release, at once.',
-      'Release (overshoot): the key comes back up with a bounce: the parts rise on ease.spring-bouncy over duration.spring-bouncy (--_button-group-release-ease and -release-duration; Neutral 220ms passing rest by 6%, Desk 440ms by 25%, Studio 120ms in three steps) and the shade fades. The box, the seam and the neighbor stay still.',
+      'Release (overshoot): the key comes back up with a bounce: the parts rise on ease.spring-bouncy over duration.spring-bouncy (--_button-group-release-ease and -release-duration; Neutral 200ms passing rest by 6%, Desk 380ms by 25%, Studio 120ms in three steps) and the shade fades. The box, the seam and the neighbor stay still.',
     ],
     styles: {
       studio: 'the parts shrink a hair and snap back in steps',
@@ -124,7 +124,7 @@ export const buttonsInteractions = [
     beats: [
       'Anticipation: the button dips to scale.anticipate and springs back on ease.spring-snappy over duration.spring-snappy.',
       'Action: the label (or the icon of an icon only button) rolls up and out by distance.shift over duration.quick on ease.exit.',
-      'Overshoot: one delay.stagger step later the spinner grows in from scale.morph on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms passing its size by 25%, Studio 120ms in three steps).',
+      'Overshoot: one delay.stagger step later the spinner grows in from scale.morph on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms passing its size by 25%, Studio 120ms in three steps).',
       'Back to idle: the spinner shrinks to scale.morph and fades over duration.quick; one stagger step later the label rolls back in from above on ease.spring-soft over duration.spring-soft. The leaving spinner stays only for its exit and rests at opacity 0.',
     ],
     styles: {
@@ -178,7 +178,7 @@ export const buttonsInteractions = [
     beats: [
       'Close: the copy glyph closes into its centre (clip-path circle 75% to 0), turns by --_copy-button-turn (minus 45 degrees) and shrinks to scale.morph over duration.quick on ease.exit.',
       'Draw: one delay.stagger step later the check wipes in from its inline start edge (clip-path inset) over duration.morph on ease.out while it grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy; the icon color eases to the success text color over duration.morph.',
-      'Roll: the name rolls up and out of the button over duration.quick on ease.exit; one stagger step later "Copied" rolls up into place from below the button on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing its place by 10%), whole in opacity by a third of the way.',
+      'Roll: the name rolls up and out of the button over duration.quick on ease.exit; one stagger step later "Copied" rolls up into place from below the button on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms passing its place by 10%), whole in opacity by a third of the way.',
       'Failure: the warning pops in from scale.morph on the bouncy spring, the label rolls to "Could not copy", and the button shakes once (distance.nudge over duration.celebrate).',
       'Back: after delay.feedback the check is erased toward its end edge and the warning shrinks over duration.quick; the copy glyph opens on the snappy spring one stagger step later; the result word rolls up and out and the name rolls up from below.',
       'A second copy restarts the hold, draws the check again and says the result again.',
@@ -230,7 +230,7 @@ export const buttonsInteractions = [
     feedback:
       'The end part (an arrow, a chevron) moves distance.nudge toward the inline end, the way the action goes, on the snappy spring, and springs back when the pointer leaves. It flips in right to left text. Only the decorative part moves: the target stays under the pointer. Hover only where the device can hover.',
     beats: [
-      'Action: the end part moves distance.nudge (Neutral 2px, Desk 3px, Studio 1px) toward the inline end on ease.spring-snappy over duration.spring-snappy.',
+      'Action: the end part moves distance.nudge (Neutral 2px, Desk 3px, Studio 0px) toward the inline end on ease.spring-snappy over duration.spring-snappy.',
       'Overshoot and settle: it passes the mark by the spring overshoot (Desk 10%) and settles; leaving plays the same spring back.',
     ],
     styles: {
@@ -254,7 +254,7 @@ export const buttonsInteractions = [
     feedback:
       'A round fill opens from the cross like a bloom while the cross turns a quarter turn on the snappy spring. A press pinches the cross and the button dips; release springs the cross back. The fill closes back into the centre when the pointer leaves. A cross looks the same after a quarter turn, so a quick pass never leaves it crooked.',
     beats: [
-      'Hover: the ::before fill opens from the centre (clip-path circle 0 to 75%) on ease.spring-snappy over duration.spring-snappy while the glyph turns a quarter turn on the same spring (Neutral 180ms, Desk 300ms passing the turn by 10%, Studio 80ms in two steps).',
+      'Hover: the ::before fill opens from the centre (clip-path circle 0 to 75%) on ease.spring-snappy over duration.spring-snappy while the glyph turns a quarter turn on the same spring (Neutral 158ms, Desk 300ms passing the turn by 10%, Studio 70ms in two steps).',
       'Press: the glyph pinches to --_close-button-pinch (scale.anticipate) over duration.instant and the button dips (button-press); the pressed fill shows at once.',
       'Release: the glyph springs back to full size on the snappy spring.',
       'Leave: the fill closes into the centre over duration.quick on ease.exit and the glyph turns back.',
@@ -282,7 +282,7 @@ export const buttonsInteractions = [
     beats: [
       'Hover (anticipation): the chevron drops distance.nudge toward the menu on ease.spring-snappy (hover capable devices only).',
       'Press: it drops --_split-button-drop-press (distance.shift) over duration.instant while the trigger is held; the trigger keeps its box.',
-      'Open: it flips half a turn from that low point on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in two steps) while the menu scales in from the trigger (menu-scale), and rises back to its line.',
+      'Open: it flips half a turn from that low point on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in two steps) while the menu scales in from the trigger (menu-scale), and rises back to its line.',
       'Settle and close: it passes the half turn by the spring overshoot (Desk 10%) and settles pointing up; close turns it back the same way.',
     ],
     styles: {
@@ -314,7 +314,7 @@ export const buttonsInteractions = [
     beats: [
       'Hover: the button rises by --_floating-action-button-lift (distance.lift) on the bouncy spring; the glow follows the pointer (button-glow). Hover capable devices only.',
       'Press: it comes down to scale.press, the icon sinks and the shade comes in (button-press).',
-      'Open: the plus turns an eighth of a turn on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in two steps), passing the eighth by the spring overshoot and settling as a close mark; it turns back on close.',
+      'Open: the plus turns an eighth of a turn on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in two steps), passing the eighth by the spring overshoot and settling as a close mark; it turns back on close.',
       'Extended label: its clip opens from the icon side to the inline end over duration.morph on ease.out while it slides from distance.shift behind the icon on the snappy spring and fades in over duration.fast.',
     ],
     styles: {
@@ -343,7 +343,7 @@ export const buttonsInteractions = [
     feedback:
       'A second, stronger line draws over the thin rest underline from the inline start, so it runs right to left in Arabic, and is erased toward the inline end, faster, when the state ends: the line runs on in the reading direction and leaves the way it came. Drawn with clip-path, so its rounded ends never stretch. The text eases to its hover color and the external icon nudges toward where it leads. The rest underline never goes.',
     beats: [
-      'Draw: the line clip opens from inset at the inline start to the whole label over duration.morph on ease.out (Neutral 200ms, Desk 320ms, Studio 100ms); the text color eases to the hover color over duration.morph.',
+      'Draw: the line clip opens from inset at the inline start to the whole label over duration.morph on ease.out (Neutral 180ms, Desk 320ms, Studio 100ms); the text color eases to the hover color over duration.morph.',
       'Erase: the clip closes toward the inline end over duration.quick on ease.exit, about half the draw.',
       'Secondary: the external icon moves distance.nudge up and toward the inline end on ease.spring-snappy over duration.spring-snappy.',
       'Press: while held, the drawn line grows heavier from its foot (scaleY to --_link-press-weight, 1.5) over duration.instant and springs back on ease.spring-snappy on release, so a tap answers under the finger.',

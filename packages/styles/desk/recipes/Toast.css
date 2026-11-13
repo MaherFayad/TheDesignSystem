@@ -121,10 +121,7 @@
     margin-block: 0;
   }
 
-  /* The open list: the cards sit close, as on a desk. */
-  [data-style='desk'] [data-ds='toaster'] {
-    --_toaster-gap: var(--ds-space-xs);
-  }
+  /* The open list keeps the base gap (space.s): each glass card stands apart on its own shadow (review N24). */
 
   /*
    * The recipe layer wins over the base layer, so the blur is dropped here

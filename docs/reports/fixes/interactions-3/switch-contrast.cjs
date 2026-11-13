@@ -14,10 +14,11 @@
 // pixels around it:
 //
 // - toggle runs: on and off, each from a plain click (no pointer on the
-//   control, as from the keyboard) and from a held press (`:active` and
-//   `:hover` forced on the control through the DevTools protocol while the
-//   state changes, as `:active` stays on for 150 to 250ms after a tap on
-//   touch; a real press would be cleared by the click). Right after the change every
+//   control, as from the keyboard) and from a tap whose press lingers (a
+//   touch pointerdown, `:active` and `:hover` forced on the control through
+//   the DevTools protocol, then a pointerup and the click while they hold, as
+//   `:active` stays on for 150 to 250ms after a tap on touch; a real press
+//   would be cleared by the click). Right after the change every
 //   animation in the document is paused, then seeked every `--step` ms to the
 //   end of the longest one.
 // - drag runs: from off and from on, the pointer drags the thumb and holds
@@ -252,13 +253,19 @@ async function toggleRun(page, to, mode) {
   await setState(page, to === 'checked' ? 'unchecked' : 'checked');
   await page.mouse.move(2, 2);
   if (mode === 'held') {
+    await page.evaluate(() => {
+      const ctl = document.querySelector('[data-interaction-trigger]');
+      ctl.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 7, isPrimary: true, button: 0, pointerType: 'touch' }));
+    });
     await forcePress(page, true);
     await page.waitForTimeout(250);
     await finishAll(page);
   }
-  const end = await page.evaluate(async () => {
+  const end = await page.evaluate(async (held) => {
     const ctl = document.querySelector('[data-interaction-trigger]');
     const before = ctl.getAttribute('data-state');
+    // A tap: the finger comes up (the framework marks the root data-released) while :active lingers, then the click.
+    if (held) ctl.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 7, isPrimary: true, button: 0, pointerType: 'touch' }));
     ctl.click();
     await Promise.resolve();
     if (ctl.getAttribute('data-state') === before) await new Promise((r) => setTimeout(r, 0));
@@ -271,7 +278,7 @@ async function toggleRun(page, to, mode) {
     }
     window.__switchAnims = anims;
     return last;
-  });
+  }, mode === 'held');
   const frames = [];
   for (let t = 0; t <= end + STEP; t += STEP) {
     await page.evaluate((tt) => {

@@ -171,4 +171,48 @@ describe('DsFormWizard', () => {
     expect(q('form').getAttribute('aria-describedby')).toBe(error.id);
     fixture.nativeElement.remove();
   });
+
+  // Order 1.29 (review N13, ten weakest #8), as React's FormWizard.test.tsx.
+  it('shows no loading on Next for a check that answers within a frame', async () => {
+    const { fixture, q, settle } = await setup();
+    type(q('input[name="name"]') as HTMLInputElement, 'Sara');
+    const seen: string[] = [];
+    const watch = new MutationObserver((records) => {
+      for (const r of records) {
+        const el = r.target as HTMLElement;
+        if (r.attributeName === 'data-loading' && el.hasAttribute('data-loading')) seen.push('loading');
+        if (r.attributeName === 'aria-busy' && el.getAttribute('aria-busy') === 'true') seen.push('busy');
+      }
+    });
+    watch.observe(q('[data-ds="form-wizard"]'), { attributes: true, subtree: true, attributeFilter: ['data-loading', 'aria-busy'] });
+    q('[data-part="next"]').click();
+    await settle();
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+    await settle();
+    watch.disconnect();
+    expect(q('[data-part="panel"] > h2').textContent).toBe('Address');
+    expect(seen).toEqual([]);
+    fixture.nativeElement.remove();
+  });
+
+  it('shows the loading on Next once a check is still pending two frames after it starts', async () => {
+    const { fixture, host, q, settle } = await setup();
+    let answer: () => void = () => undefined;
+    host.steps()![0] = { ...host.steps()![0]!, validate: () => new Promise<undefined>((r) => (answer = () => r(undefined))) };
+    type(q('input[name="name"]') as HTMLInputElement, 'Sara');
+    const next = q('[data-part="next"]');
+    next.click();
+    await fixture.whenStable();
+    // Not at once: the busy look waits two frames.
+    expect(next.hasAttribute('data-loading')).toBe(false);
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+    await settle();
+    expect(next.hasAttribute('data-loading')).toBe(true);
+    expect(q('[data-ds="form-wizard"] form').getAttribute('aria-busy')).toBe('true');
+    answer();
+    await settle();
+    expect(q('[data-part="panel"] > h2').textContent).toBe('Address');
+    expect(next.hasAttribute('data-loading')).toBe(false);
+    fixture.nativeElement.remove();
+  });
 });

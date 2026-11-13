@@ -55,7 +55,7 @@ describe('DsButton', () => {
     expect(el.getAttribute('data-full-width')).toBe('');
     expect(el.getAttribute('data-wrap')).toBe('');
     const parts = Array.from(el.children).map((c) => c.getAttribute('data-part'));
-    expect(parts).toEqual(['start', 'label', 'end']);
+    expect(parts).toEqual(['start', 'label', 'end', 'hit']);
     expect(el.querySelector('[data-part="start"] > svg')?.getAttribute('data-icon')).toBe('plus');
   });
 
@@ -94,7 +94,7 @@ describe('DsButton', () => {
     expect(el.getAttribute('data-loading')).toBe('');
     expect(el.getAttribute('aria-busy')).toBe('true');
     expect(el.getAttribute('aria-disabled')).toBe('true');
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'spinner', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'spinner', 'status', 'hit']);
     expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Saving name');
     el.click();
     expect(host.clicks()).toBe(1);

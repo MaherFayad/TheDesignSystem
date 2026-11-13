@@ -132,7 +132,7 @@ describe('DsToggleGroup', () => {
       const { items, settle } = await setup();
       expect(animate).not.toHaveBeenCalled();
       const multiple = items('style');
-      expect(multiple[0]!.querySelector(':scope > span[aria-hidden="true"]')).toBeNull();
+      expect(multiple[0]!.querySelector(':scope > span[aria-hidden="true"]:not([data-part])')).toBeNull();
       multiple[0]!.click();
       await settle();
       expect(animate).not.toHaveBeenCalled();
@@ -208,7 +208,7 @@ describe('DsToggleGroup', () => {
       expect(item.hasAttribute('dstogglegroupitem')).toBe(false);
     }
     // A single group draws the on fill in an empty aria-hidden span first, as React (tab-slide).
-    expect(Array.from(list[0]!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'label']);
+    expect(Array.from(list[0]!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'label', 'hit']);
     expect(list[0]!.firstElementChild?.outerHTML).toBe('<span aria-hidden="true"></span>');
   });
 
@@ -349,7 +349,7 @@ describe('DsToggleGroup', () => {
     expect(grid!.getAttribute('aria-label')).toBe('Grid view');
     expect(grid!.hasAttribute('label')).toBe(false);
     expect(grid!.hasAttribute('icon')).toBe(false);
-    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon']);
+    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon', 'hit']);
     expect(bold!.getAttribute('aria-label')).toBe('Bold text');
   });
 

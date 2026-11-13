@@ -10,9 +10,9 @@
 import type { Interaction } from './types';
 
 const SLIDE_BEATS = [
-  'Action: the pill moves from the box of the item it leaves to the box of the item it reaches on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps). The new state is set at once; the pill only draws the way.',
+  'Action: the pill moves from the box of the item it leaves to the box of the item it reaches on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with a 10% overshoot, Studio 70ms in two steps). The new state is set at once; the pill only draws the way.',
   'Stretch: halfway the pill is longer along its travel by up to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08), less for a short hop, then settles to its own size.',
-  'Secondary: the label it leaves dips to scale.anticipate and back on ease.out over duration.spring-soft; the label it reaches pops from scale.anticipate past rest on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms).',
+  'Secondary: the label it leaves dips to scale.anticipate and back on ease.out over duration.spring-soft; the label it reaches pops from scale.anticipate past rest on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms, Studio 120ms).',
   'A second change mid travel starts from where the pill is drawn, not from where it was headed.',
 ] as const;
 
@@ -32,7 +32,7 @@ export const navigationInteractions = [
     feedback: 'The shared pill slides from the old item to the new one and stretches along its travel (a transform with the center origin, measured from both boxes). Round 3: the label colour crosses with clip-path, so the text under the pill takes the selected colour exactly where the pill is: each label gets an aria-hidden twin in the selected colour (part label-ink), cut to the pill box keyframe for keyframe with the slide, and the label the pill reaches holds the rest colour under it. The dip and pop of the labels of round 2 are gone. Weight changes at once.',
     beats: [
       'Press: the item takes its hover fill at once; the value changes on the press (Radix), so the pill never waits for release.',
-      'Action: the pill moves from the box of the item it leaves to the box of the item it reaches on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
+      'Action: the pill moves from the box of the item it leaves to the box of the item it reaches on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with a 10% overshoot, Studio 70ms in two steps).',
       'Stretch: at 45% of the run the pill is longer along its travel by up to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08), less for a short hop, then settles to its own size.',
       'Ink: over the same run, on the same easing and keyframes, the twins of every label are cut with clip-path inset() to the pill along the travel axis, so a label half under the pill is half in each colour; the twins are removed when the run ends.',
       'Back: a second change mid travel starts from where the pill is drawn; the twins of the first change are removed first.',
@@ -65,9 +65,9 @@ export const navigationInteractions = [
       'The hover pill (Breadcrumbs: a new pill on the link ::before; Navbar, Sidebar and Rail: their hover veil) fades in on hover, and when the pointer came from a neighbour within duration.slow it slides from that neighbour and stretches, so one pill seems to follow the pointer. ' +
       'In Breadcrumbs the separator after the hovered step nudges toward the next step by distance.nudge on the snappy spring (CSS). Touch does nothing.',
     beats: [
-      'Action: the pill fades in over duration.fast (CSS) while it slides from the neighbour on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in two steps).',
+      'Action: the pill fades in over duration.fast (CSS) while it slides from the neighbour on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in two steps).',
       'Stretch: halfway it is longer along the travel by up to scale.stretch.',
-      'Secondary: the Breadcrumbs separator leans toward the next step by distance.nudge (Neutral 2px, Desk 3px, Studio 1px) on the snappy spring, and back when the pointer leaves.',
+      'Secondary: the Breadcrumbs separator leans toward the next step by distance.nudge (Neutral 2px, Desk 3px, Studio 0px) on the snappy spring, and back when the pointer leaves.',
     ],
     styles: {
       studio: 'a stepped hop and a 1px lean',
@@ -90,8 +90,8 @@ export const navigationInteractions = [
       'Each page slot whose number changed rolls digit by digit (rollDigits, up for a later page, down for an earlier one) in an aria-hidden host; the page keeps its aria-label. ' +
       'The current fill (an aria-hidden span inside the page part) slides to the new current slot when it moves, and the number it reaches pops. When the list wraps and the new slot sits on another line, the fill fades in at its new place instead of flying across the lines (review N35).',
     beats: [
-      'Anticipation: the arrow icon draws back by distance.nudge (Neutral 2px, Desk 3px, Studio 1px) in the first quarter, against its direction.',
-      'Action: the page changes on the click; the icon goes forward by distance.shift and home on ease.out over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms).',
+      'Anticipation: the arrow icon draws back by distance.nudge (Neutral 2px, Desk 3px, Studio 0px) in the first quarter, against its direction.',
+      'Action: the page changes on the click; the icon goes forward by distance.shift and home on ease.out over duration.spring-bouncy (Neutral 200ms, Desk 380ms, Studio 120ms).',
       'Secondary: the numbers that changed roll one column at a time from the last digit, delay.stagger apart (Neutral 24ms, Desk 45ms, Studio 0ms), on ease.spring-snappy over duration.spring-snappy.',
       'Overshoot and settle: the current fill slides with the shared pill when its slot moves on the same line (the first and the last pages), or fades in over duration.base when the new slot is on another wrapped line, and the number it reaches pops on the bouncy spring.',
     ],
@@ -114,7 +114,7 @@ export const navigationInteractions = [
     feedback: 'The width changes at once (layout never animates). Round 3, expand: the panel is uncovered from its collapsed width to its new width with clip-path on the soft spring, so it reads as a panel opening, and each label, count and group title wipes in from the inline start with clip-path, delay.stagger apart after two steps, capped at six. Collapse: the icons pop from scale.anticipate. In the Rail the icons travel to their new places (flipPlay) and the labels rise in after them.',
     beats: [
       'Action: the panel takes its new width at once.',
-      'Expand: the panel clip opens from inset(the width it gained) at the inline end to none on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
+      'Expand: the panel clip opens from inset(the width it gained) at the inline end to none on ease.spring-soft over duration.spring-soft (Neutral 200ms, Desk 340ms, Studio 100ms).',
       'Secondary, expand: the labels wipe in from the inline start (clip-path inset from 100% at the inline end to none) on the soft spring, delay.stagger apart starting two steps late, capped at six steps, with the stagger and the wipe both compressed so the last label is whole within 400ms whatever the style spring (review N34).',
       'Secondary, collapse: the icons pop from scale.anticipate past rest on the bouncy spring. Rail: the icons travel on the snappy spring.',
     ],
@@ -135,7 +135,7 @@ export const navigationInteractions = [
     trigger: 'Move to another step (next, back, or a reachable step title).',
     feedback: 'A ring (the indicator ::after, drawn only while it travels) slides from the old current indicator to the new one in the direction of the change, stretches along the way and fades as it lands. The new current indicator pops. The connector fill grows or shrinks on the soft spring (CSS). Round 3: a step that turns complete draws its check with stroke-dashoffset, the short stroke first.',
     beats: [
-      'Action: the ring travels on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms), stretched by up to scale.stretch, from opacity 1 to 0 as it lands.',
+      'Action: the ring travels on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms), stretched by up to scale.stretch, from opacity 1 to 0 as it lands.',
       'Overshoot and settle: the new current indicator pops from scale.anticipate on the bouncy spring.',
       'Secondary: the connector after a step that turns complete fills on ease.spring-soft over duration.spring-soft; going back it empties the same way.',
       'Done: the check of each step that turned complete draws from its end to its start (stroke-dasharray 24, stroke-dashoffset from -24 to 0 in its 24 unit box) on ease.out over duration.spring-soft; going back the check is simply gone.',
@@ -157,7 +157,7 @@ export const navigationInteractions = [
     trigger: 'Scroll to another section, or choose a link.',
     feedback: 'Round 3 (review N18): the bar travels from where it is drawn to the active link and stretches on the way, as one Web Animations run (translateY and scaleY from its top edge); the CSS no longer transitions it, so it never jumps. A change mid travel starts from where the bar is drawn.',
     beats: [
-      'Action: the bar moves from its drawn top and size to the active link on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
+      'Action: the bar moves from its drawn top and size to the active link on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with a 10% overshoot, Studio 70ms in two steps).',
       'Stretch: at 45% of the run it is longer by scale.stretch over the mean of both sizes, centred on the midpoint, then settles to the size of the link.',
     ],
     styles: {
@@ -177,7 +177,7 @@ export const navigationInteractions = [
     trigger: 'A destination becomes current (or the bar mounts on a new page).',
     feedback: 'The icon and its pill pop from scale.anticipate past rest and settle; the label rises by distance.nudge a stagger step later. Colors and weight change at once.',
     beats: [
-      'Overshoot and settle: the icon box pops on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms with a 6% overshoot, Desk 440ms with 25%, Studio 120ms in three steps).',
+      'Overshoot and settle: the icon box pops on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms with a 6% overshoot, Desk 380ms with 25%, Studio 120ms in three steps).',
       'Secondary: the label rises by distance.nudge on the same spring, delay.stagger later.',
     ],
     styles: {
@@ -199,7 +199,7 @@ export const navigationInteractions = [
     feedback:
       'The hovered tile lifts toward the pointer by --_dock-lift and grows to --_dock-scale on the bouncy spring; the next tile on each side follows at half the lift, the one after at a quarter. The current tile pops when it becomes current.',
     beats: [
-      'Action: the tile lifts (base distance.lift and scale.lift; Desk magnifies to 1.25 and lifts space.xs) on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms with a 25% overshoot, Studio 120ms).',
+      'Action: the tile lifts (base distance.lift and scale.lift; Desk magnifies to 1.25 and lifts space.xs) on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms with a 25% overshoot, Studio 120ms).',
       'Secondary: the neighbours lift by half and a quarter, so the row swells around the pointer.',
       'Overshoot and settle: a tile that becomes current pops from scale.anticipate past rest, added to its hover transform.',
     ],
@@ -223,7 +223,7 @@ export const navigationInteractions = [
       "On top of Button's press, a pressed item dips its parts to scale.anticipate (Button's --_button-part-press) and springs back on release. A toggle item that turns on pops its icon from scale.anticipate past rest.",
     beats: [
       'Anticipation: the item dips to scale.press and its icon gathers to scale.anticipate while held (duration.instant).',
-      'Overshoot and settle: on release both spring back on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms).',
+      'Overshoot and settle: on release both spring back on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms, Studio 120ms).',
       'Secondary: an item that turns on pops its icon on the same spring.',
     ],
     styles: {
@@ -245,7 +245,7 @@ export const navigationInteractions = [
     feedback:
       'The menu trigger rolls its name: the old name rolls up and out in an aria-hidden copy while the new one rolls in from below. In the link pair the name it leaves dips and the name it reaches pops.',
     beats: [
-      'Action: both names roll a full line on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in two steps), fading as they go.',
+      'Action: both names roll a full line on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in two steps), fading as they go.',
       'Secondary, the pair: the leaving name dips to scale.anticipate, the reached name pops past rest on the bouncy spring.',
     ],
     styles: {
@@ -266,7 +266,7 @@ export const navigationInteractions = [
     feedback: 'The link is drawn at once with its focus ring, and slides down into place from distance.enter above, passing its place and settling. The ring never fades or scales.',
     beats: [
       'Action: drawn at once, ring included.',
-      'Overshoot and settle: it slides by distance.enter (Neutral 6px, Desk 12px, Studio 4px) on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms in three steps).',
+      'Overshoot and settle: it slides by distance.enter (Neutral 4px, Desk 12px, Studio 0px) on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms, Studio 120ms in three steps).',
     ],
     styles: {
       studio: 'a short stepped drop',

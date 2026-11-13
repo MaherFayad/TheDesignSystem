@@ -18,16 +18,22 @@
 // against the track's own box on screen, so page zoom and right to left text
 // need no special case.
 //
+// From a pointer release to the next press (a pointerdown or a key) the root
+// carries `data-released` (order 1.29, review N1): on touch `:active` stays on
+// after a tap, and Switch.css then times the travel on the state's spring, not
+// on the press.
+//
 // The run itself (the slop, the rubber band, the snap) is the switch drag
 // core of @the-system/motion (helpers/switch-drag.ts), one copy for both
 // frameworks; this hook keeps the pointer wiring and the `dragging` flag.
-import { useRef, useState, type PointerEvent, type PointerEventHandler } from 'react';
+import { useRef, useState, type KeyboardEvent, type KeyboardEventHandler, type PointerEvent, type PointerEventHandler } from 'react';
 import {
   SWALLOW_CLICK_MS,
   beginSwitchDrag,
   clearDragProgress,
   dragOnSide,
   followPointer,
+  markReleased,
   pastSlop,
   releaseChecked,
   type SwitchDragRun,
@@ -39,6 +45,7 @@ type Handlers = {
   onPointerUp?: PointerEventHandler<HTMLButtonElement>;
   onPointerCancel?: PointerEventHandler<HTMLButtonElement>;
   onLostPointerCapture?: PointerEventHandler<HTMLButtonElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
 export interface SwitchDrag {
@@ -86,6 +93,8 @@ export function useSwitchDrag({
   const handlers = (own: Handlers): Required<Handlers> => ({
     onPointerDown: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerDown?.(e);
+      // A new press: the press timing carries the growth and the stretch again (N1).
+      markReleased(e.currentTarget, false);
       swallowUntil.current = 0;
       if (disabled || e.defaultPrevented || e.button !== 0 || !e.isPrimary) return;
       run.current = beginSwitchDrag(e.currentTarget, checked, e.pointerId, e.clientX, e.timeStamp);
@@ -106,16 +115,24 @@ export function useSwitchDrag({
     },
     onPointerUp: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerUp?.(e);
+      // On touch `:active` outlasts the tap: from here the travel keeps the state's spring (N1).
+      markReleased(e.currentTarget, true);
       if (run.current && e.pointerId === run.current.pointerId) finish(true, e.timeStamp);
     },
     onPointerCancel: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerCancel?.(e);
+      markReleased(e.currentTarget, true);
       if (run.current && e.pointerId === run.current.pointerId) finish(false, e.timeStamp);
     },
     onLostPointerCapture: (e: PointerEvent<HTMLButtonElement>) => {
       own.onLostPointerCapture?.(e);
       // Capture is lost after the release too; by then the run is over.
       if (run.current && e.pointerId === run.current.pointerId && run.current.moved) finish(false, e.timeStamp);
+    },
+    onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+      own.onKeyDown?.(e);
+      // Space presses the control too: the press timing applies again.
+      markReleased(e.currentTarget, false);
     },
   });
 

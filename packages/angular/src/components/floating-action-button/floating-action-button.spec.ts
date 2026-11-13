@@ -30,7 +30,7 @@ describe('DsFloatingActionButton', () => {
     expect(el.getAttribute('data-position')).toBe('fixed');
     expect(el.getAttribute('aria-label')).toBe('Create board');
     expect(el.hasAttribute('data-extended')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'hit']);
   });
 
   it('extended shows the label and drops aria-label', async () => {
@@ -48,6 +48,6 @@ describe('DsFloatingActionButton', () => {
     const q = await setup();
     const el = q('loading');
     expect(el.getAttribute('aria-busy')).toBe('true');
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'spinner', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'spinner', 'status', 'hit']);
   });
 });

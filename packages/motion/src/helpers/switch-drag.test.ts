@@ -9,6 +9,7 @@ import {
   clearDragProgress,
   dragOnSide,
   followPointer,
+  markReleased,
   pastSlop,
   releaseChecked,
   releaseSpeed,
@@ -103,5 +104,17 @@ describe('switch-drag run', () => {
   it('no run without a root or a travel', () => {
     const lone = document.createElement('button');
     expect(beginSwitchDrag(lone, false, 1, 0, 0)).toBeNull();
+  });
+});
+
+describe('markReleased (order 1.29, N1)', () => {
+  it('flags the root from a release to the next press', () => {
+    const root = document.createElement('div');
+    const control = document.createElement('button');
+    root.append(control);
+    markReleased(control, true);
+    expect(root.hasAttribute('data-released')).toBe(true);
+    markReleased(control, false);
+    expect(root.hasAttribute('data-released')).toBe(false);
   });
 });

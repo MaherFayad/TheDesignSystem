@@ -54,6 +54,11 @@ const motion: StyleMotionPreset = {
     'pagination-roll': 'full',
     'tab-bar-pop': 'full',
     'dock-lift': 'full',
+    // Order 1.29 (review N3): the radio plays as the row promises, a flat cut
+    // in steps. The pattern `pop` is reduced above, which turned the radio's
+    // dip, veil and fill motion off, while Studio's RadioCard animates.
+    // scale.pop and scale.anticipate leave it flat; the steps are the eases.
+    'radio-pop': 'full',
   },
 };
 

@@ -189,6 +189,19 @@
     transform: translateY(calc(var(--_button-part-y) - var(--_button-height)));
   }
 
+  /*
+   * Order 1.29 (review N18): a press never plays the roll. While the button
+   * is held, and while its form takes the submitted beat (the celebrate pop
+   * of form-submit-success), the label does not transition its transform: a
+   * roll that would start in the same frame as the press lands at once. The
+   * rolled label looks the same as the one at rest (the copy takes its
+   * place), so only the frames in between were seen, as a jump and a clip.
+   */
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]):active > [data-part='label'],
+  [data-style='desk'] [data-ds='form'][data-state='submitted'] > [data-part='actions'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
   /* Off under reduced motion, the system setting and the page's own (data-motion="reduce" on the root, WCAG 2.3.3): duration.roll is 0ms there, and the label does not move at all. The fallbacks repeat the roll selectors so they match their specificity. */
   @media (prefers-reduced-motion: reduce) {
     [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {

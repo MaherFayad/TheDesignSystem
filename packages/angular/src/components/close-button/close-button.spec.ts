@@ -31,6 +31,9 @@ describe('DsCloseButton', () => {
     expect(el.getAttribute('data-emphasis')).toBe('ghost');
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.querySelector('[data-part="icon"] svg')?.getAttribute('data-icon')).toBe('close');
+    // Order 1.29 (review B10): the platform hit area is an empty aria-hidden last child, as React's ButtonRoot.
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'hit']);
+    expect(el.lastElementChild?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('takes a label, size and shape', async () => {

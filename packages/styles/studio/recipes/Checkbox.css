@@ -7,8 +7,9 @@
  * strokes in three, the dot lands in place with no travel and no pop, and
  * the box never dips (scale.anticipate is 1 here).
  *
- * The radio circle, its veil, its dot and the RadioCard circle are drawn with radius.pill and
- * have no radius property, so their corners are set on the parts here.
+ * Order 1.29: the square radio is the radius hooks --_radio-group-radius
+ * (the circle and its veil), --_radio-group-dot-radius and
+ * --_radio-card-indicator-radius, not rules on the parts.
  */
 @layer ds.recipes {
   [data-style='studio'] [data-ds='checkbox'] {
@@ -30,20 +31,13 @@
     --_radio-group-dot-ease: var(--ds-ease-spring-snappy);
     --_radio-group-fill-ease: var(--ds-ease-spring-snappy);
     --_radio-group-land-ease: var(--ds-ease-spring-snappy);
-  }
-
-  [data-style='studio'] [data-ds='radio-group'] [data-part='item'] > [data-part='control'],
-  [data-style='studio'] [data-ds='radio-group'] [data-part='control']::after,
-  [data-style='studio'] [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] {
-    border-radius: var(--ds-radius-xs);
-  }
-
-  [data-style='studio'] [data-ds='radio-group'] [data-part='indicator'] {
-    border-radius: 0;
+    --_radio-group-radius: var(--ds-radius-xs);
+    --_radio-group-dot-radius: 0;
   }
 
   [data-style='studio'] [data-ds='radio-card'] {
     --_radio-card-radius: 0;
+    --_radio-card-indicator-radius: var(--ds-radius-xs);
     --_radio-card-stroke-width: 3;
     --_radio-card-lift-ease: var(--ds-ease-spring-snappy);
     --_radio-card-draw-ease: var(--ds-ease-spring-bouncy);

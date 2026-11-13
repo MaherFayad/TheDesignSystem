@@ -80,7 +80,17 @@ describe('DsButton result (interaction button-result, round 3)', () => {
     expect(paths[0]?.getAttribute('pathLength')).toBe('1');
     expect(el.querySelectorAll('[role="status"]')).toHaveLength(1);
     expect(el.querySelector('[role="status"]')?.textContent).toBe('Saved');
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'result', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'result', 'status', 'hit']);
+    // Order 1.29 (review N7): the ending in words beside the glyph, inside the aria-hidden result part, as React.
+    const word = glyph?.querySelector(':scope > [data-result-label]');
+    expect(word?.tagName).toBe('SPAN');
+    expect(word?.getAttribute('data-result-label')).toBe('');
+    expect(word?.textContent).toBe('Saved');
+    expect(Array.from(glyph?.children ?? []).map((c) => c.tagName.toLowerCase())).toEqual(['svg', 'span']);
+    // The hit part (review B10): the last child, empty and aria-hidden.
+    const hit = el.lastElementChild;
+    expect(hit?.getAttribute('aria-hidden')).toBe('true');
+    expect(hit?.childNodes).toHaveLength(0);
   });
 
   it('draws the error mark in two strokes and goes back, keeping the glyph for the exit', async () => {

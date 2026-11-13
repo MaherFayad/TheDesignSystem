@@ -54,7 +54,6 @@ function stage() {
   };
 }
 
-const FILL = 'transform var(--_meter-reveal-duration) var(--_meter-reveal-ease)';
 let seen: ((entries: { isIntersecting: boolean }[]) => void) | null = null;
 class FakeObserver {
   constructor(cb: (entries: { isIntersecting: boolean }[]) => void) {
@@ -87,7 +86,7 @@ describe('DsMeter motion', () => {
 
   const indicator = (f: { nativeElement: HTMLElement }) => f.nativeElement.querySelector('[data-part="indicator"]') as HTMLElement;
 
-  it('on screen at mount: the fill transitions from 0 on the private reveal timing, and the value lands on the bouncy spring', async () => {
+  it('on screen at mount: the fill reveals through data-revealing (no inline style), and the value lands on the bouncy spring', async () => {
     const root = document.documentElement.style;
     root.setProperty('--ds-duration-reveal', '640ms');
     root.setProperty('--ds-duration-spring-bouncy', '220ms');
@@ -95,7 +94,10 @@ describe('DsMeter motion', () => {
       const fixture = TestBed.createComponent(Host);
       await fixture.whenStable();
       const el = indicator(fixture);
-      expect(el.style.transition).toBe(FILL);
+      // Order 1.29 (review N33): attributes, never an inline transform or transition (Meter.css reads them).
+      expect(el.hasAttribute('data-revealing')).toBe(true);
+      expect(el.hasAttribute('data-held')).toBe(false);
+      expect(el.style.transition).toBe('');
       expect(el.style.transform).toBe('');
       const [land, ...rest] = s.take();
       expect(rest).toEqual([]);
@@ -109,7 +111,7 @@ describe('DsMeter motion', () => {
     }
   });
 
-  it('off screen: held at scaleX(0) until seen, then fills', async () => {
+  it('off screen: held by data-held until seen, then fills through data-revealing', async () => {
     const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
     const rect = proto['getBoundingClientRect'];
     proto['getBoundingClientRect'] = () => ({ top: 5000, bottom: 5040 }) as DOMRect;
@@ -117,11 +119,24 @@ describe('DsMeter motion', () => {
     await fixture.whenStable();
     proto['getBoundingClientRect'] = rect;
     const el = indicator(fixture);
-    expect(el.style.transform).toBe('scaleX(0)');
-    expect(el.style.transition).toBe('none');
-    seen?.([{ isIntersecting: true }]);
+    expect(el.hasAttribute('data-held')).toBe(true);
+    expect(el.hasAttribute('data-revealing')).toBe(false);
     expect(el.style.transform).toBe('');
-    expect(el.style.transition).toBe(FILL);
+    seen?.([{ isIntersecting: true }]);
+    expect(el.hasAttribute('data-held')).toBe(false);
+    expect(el.hasAttribute('data-revealing')).toBe(true);
+    expect(el.style.transition).toBe('');
+  });
+
+  it('the next value change drops data-revealing, so it takes the CSS timing (as React)', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const el = indicator(fixture);
+    expect(el.hasAttribute('data-revealing')).toBe(true);
+    fixture.componentInstance.v.set(30);
+    await fixture.whenStable();
+    expect(el.hasAttribute('data-revealing')).toBe(false);
+    expect(el.hasAttribute('data-held')).toBe(false);
   });
 
   it('reduced motion: the value at once, no hold and no transition', async () => {
@@ -131,6 +146,8 @@ describe('DsMeter motion', () => {
     const el = indicator(fixture);
     expect(el.style.transform).toBe('');
     expect(el.style.transition).toBe('');
+    expect(el.hasAttribute('data-held')).toBe(false);
+    expect(el.hasAttribute('data-revealing')).toBe(false);
     expect(s.take()).toEqual([]);
   });
 });

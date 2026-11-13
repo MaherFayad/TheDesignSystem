@@ -96,6 +96,18 @@ describe('DsProgressCircle motion', () => {
     expect(played.some((p) => p.options.id === 'ds-motion:progress-sweep')).toBe(false);
   });
 
+  it('the progress-spring off row (--_progress-circle-duration: 0s) changes the text with no roll, as React (order 1.29, N31)', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    s.take();
+    const value = fixture.nativeElement.querySelector('[data-ds="progress-circle"] [data-part="value"]') as HTMLElement;
+    value.style.setProperty('--_progress-circle-duration', '0s');
+    fixture.componentInstance.v.set(60);
+    await fixture.whenStable();
+    expect(s.take().filter((p) => String(p.options.id).startsWith('ds-motion:digit-roll'))).toEqual([]);
+    expect(value.textContent).toBe('60%');
+  });
+
   it('reduced motion: no turn and no pop; the value fades in', async () => {
     document.documentElement.setAttribute('data-motion', 'reduce');
     const fixture = TestBed.createComponent(Host);

@@ -73,7 +73,8 @@ describe('menu-rows', () => {
     let mounted = false;
     const layer = { mounted: () => mounted, open: () => (mounted = true), content: list };
     openStaggered(layer, "[data-part='option']", () => 'full');
-    expect(take()).toHaveLength(2);
+    // Order 1.29 (ten weakest #9): each row fades with the surface and rises one step later: two animations a row.
+    expect(take()).toHaveLength(4);
     openStaggered(layer, "[data-part='option']", () => 'full');
     expect(take()).toEqual([]);
   });

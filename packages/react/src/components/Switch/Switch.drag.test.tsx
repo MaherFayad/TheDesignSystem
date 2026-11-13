@@ -147,6 +147,26 @@ describe('switch-drag on the control', () => {
     expect(control.getAttribute('aria-checked')).toBe('false');
   });
 
+  it('N1 (order 1.29): the root is data-released from a pointer release to the next press', () => {
+    const { container } = render(<Switch label="Wi-Fi" />);
+    const control = screen.getByRole('switch');
+    const root = container.querySelector<HTMLElement>('[data-ds="switch"]');
+    expect(root?.hasAttribute('data-released')).toBe(false);
+    fireEvent.pointerDown(control, { pointerId: 1, clientX: 10, button: 0, isPrimary: true });
+    expect(root?.hasAttribute('data-released')).toBe(false);
+    fireEvent.pointerUp(control, { pointerId: 1, clientX: 10 });
+    expect(root?.hasAttribute('data-released')).toBe(true);
+    fireEvent.click(control);
+    // The tap toggles; the flag holds while a lingering :active would.
+    expect(control.getAttribute('aria-checked')).toBe('true');
+    expect(root?.hasAttribute('data-released')).toBe(true);
+    fireEvent.keyDown(control, { key: ' ' });
+    expect(root?.hasAttribute('data-released')).toBe(false);
+    fireEvent.pointerDown(control, { pointerId: 2, clientX: 10, button: 0, isPrimary: true });
+    fireEvent.pointerCancel(control, { pointerId: 2 });
+    expect(root?.hasAttribute('data-released')).toBe(true);
+  });
+
   it('does not drag while disabled or read only', () => {
     const { container } = render(<Switch label="Wi-Fi" readOnly />);
     const control = screen.getByRole('switch');
@@ -205,11 +225,16 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
     expect(drag).not.toMatch(/calc\(clamp\(0, var\(--_switch-drag-progress\), 1\) \* 100%\)/);
   });
 
-  it('N1: the travel is the translate, on the state timing even while pressed; the press times the transform', () => {
-    const pressed = rule(`[data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']`);
-    expect(pressed).toMatch(/translate calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-ease\)/);
+  it('N1: the travel is in the transform, which the press times only until the pointer is released', () => {
+    const pressed = rule(
+      `[data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']`,
+    );
     expect(pressed).toMatch(/transform calc\(var\(--_switch-duration-in\) \* var\(--_switch-motion\)\) var\(--_switch-ease-in\)/);
-    expect(rule(thumb)).toMatch(/translate: calc\(\(var\(--_switch-travel\)/);
+    expect(rule(thumb)).toMatch(/transform:\s*translateX\(calc\(\(var\(--_switch-travel\) \+ var\(--_switch-lean-now\)/);
+    expect(rule(thumb)).toMatch(/transform calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-ease\)/);
+    // The motion ruling (ds/animate-transform-opacity-only) animates no translate property.
+    expect(code).not.toMatch(/^\s*translate:/m);
+    expect(code).not.toMatch(/(transition:|,)\s*translate calc/);
     expect(code).not.toMatch(/background-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) step-end;/);
   });
 

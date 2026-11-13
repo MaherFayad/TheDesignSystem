@@ -287,6 +287,8 @@
     --_switch-inset: var(--ds-border-width-default);
     --_switch-thumb-size: calc(var(--_switch-height) - var(--ds-border-width-strong) * 2);
     --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height));
+    /* The fill layer sits 1px inside the 2dp outline, so its clip reaches 1dp past the dot's far edge only with both (order 1.29, B3). */
+    --_switch-fill-reach: calc(var(--ds-border-width-strong) + var(--ds-border-width-default));
     /* With the thumbIcon part: a check in the on dot. */
     --_switch-thumb-icon-opacity: 1;
   }
@@ -297,6 +299,16 @@
 
   [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
     border-width: var(--ds-border-width-strong);
+  }
+
+  /*
+   * The off dot keeps a 1dp edge in the track's border color inside its own
+   * edge, 1dp whatever the dot's scale, so a light handle a style sets keeps
+   * 3:1 against a light track (order 1.29, B3). On a gray handle it does not show.
+   */
+  [data-platform='android'] [data-ds='switch'][data-state='unchecked'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    outline: calc(var(--ds-border-width-default) / var(--_switch-thumb-size-now)) solid var(--_switch-border-color);
+    outline-offset: calc(-1 * var(--ds-border-width-default) / var(--_switch-thumb-size-now));
   }
 
   /*
@@ -852,9 +864,11 @@
     --_dialog-ease-in: var(--ds-ease-emphasized);
   }
 
+  /* Order 1.29: the bottom sheet rises and grows from scale.window-enter (0.92), as the android dialog does; Dialog.css honours the scale on the Sheet. */
   [data-platform='android'] [data-ds='sheet'] {
     --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
     --_dialog-handle-radius: var(--ds-radius-pill);
+    --_dialog-enter-scale: var(--ds-scale-window-enter);
   }
 
   [data-platform='android'] [data-ds='drawer'] {
