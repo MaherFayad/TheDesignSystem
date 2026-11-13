@@ -29,7 +29,8 @@
     --_switch-thumb-shadow: var(--ds-elevation-tooltip);
     --_switch-thumb-backdrop: brightness(1.12) saturate(1.6);
     --_switch-thumb-highlight: radial-gradient(90% 70% at 30% 10%, var(--ds-color-glass-highlight), transparent 70%);
-    --_switch-thumb-highlight-opacity: 0;
+    /* A standing sheen on the thumb at rest, so the glass reads before it is touched (order 1.28). */
+    --_switch-thumb-highlight-opacity: 0.6;
     --_switch-thumb-highlight-opacity-pressed: 1;
     --_switch-thumb-solid-pressed: 0.2;
     --_switch-lean: var(--ds-distance-shift);
@@ -117,6 +118,8 @@
   [data-style='liquid'][data-platform='web'] [data-ds='switch'] {
     --_switch-thumb-size-pressed: var(--ds-scale-pop);
     --_switch-stretch: var(--ds-scale-stretch);
+    /* A longer capsule than Neutral's 1.75: the lens has room to glide (order 1.28). */
+    --_switch-width: calc(var(--_switch-height) * 2);
   }
 
 }
