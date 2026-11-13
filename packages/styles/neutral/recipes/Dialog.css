@@ -4,7 +4,10 @@
  * corners (radius.panel), a 1px border, the soft dialog shadow, roomy 24px
  * padding, a semibold title on the white panel with no band and no line,
  * and a footer band on surface-2 under a 1px line. The scrim is the soft
- * slate dim of the token file, with no blur.
+ * slate dim of the token file under a light blur (blur.backdrop, 4px since
+ * order 1.28, through --_dialog-backdrop-blur; Dialog.css drops it where
+ * unsupported, under reduced transparency and more contrast). When a close
+ * is refused the panel swings only distance.shift (4px), a calm shake.
  *
  * What tokens cannot say:
  * - the header band and the line under the title go (the title part keeps
@@ -22,6 +25,11 @@
  * - Drawer is a square edged panel with a border on its inner edge; Sheet
  *   keeps radius.sheet at its top corners.
  */
+/*
+ * Order 1.28: the footer rules hold on the web platform only. On ios and
+ * android the platform lays out the actions (split text actions, text actions
+ * at the end), and recipes beat that layer, so they step aside there.
+ */
 @layer ds.recipes {
   [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-border-color: var(--ds-color-border-default);
@@ -31,7 +39,7 @@
     --_dialog-padding: var(--ds-space-4xl);
     --_dialog-band-padding-block: var(--ds-space-4xl);
     --_dialog-band-padding-inline: var(--ds-space-4xl);
-    --_dialog-scrim-filter: none;
+    --_dialog-refuse-shift: var(--ds-distance-shift);
   }
 
   /* The question stays in the ink in every tone: the icon and the red action say danger. */
@@ -65,18 +73,18 @@
 
   /* ------------------------------------------------------------ footer band */
 
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
     padding-block: var(--ds-space-xl);
   }
 
   @media (width < 30rem) { /* breakpoint.phone */
-    [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+    [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
       padding-block: var(--ds-space-m);
     }
   }
 
   /* Every footer button starts as the secondary: white, the strong border, the tiny shadow. */
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']) {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-bg-surface);
     --_button-fg: var(--ds-color-text-default);
     --_button-border-color: var(--ds-color-border-strong);
@@ -90,7 +98,7 @@
   }
 
   /* The main action: an accent button, or the AlertDialog action, is the filled blue. */
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:is([data-tone='accent'], [data-part='action']):not([data-emphasis='link']) {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:is([data-tone='accent'], [data-part='action']):not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -103,7 +111,7 @@
   }
 
   /* A destructive main action is the filled red. */
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='link']) {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-state-danger-solid);
     --_button-fg: var(--ds-color-state-danger-on-solid);
     --_button-border-color: var(--ds-color-state-danger-solid);
@@ -116,13 +124,13 @@
   }
 
   /* The hover and press swaps of Button.css, repeated in this layer so the footer values above still change on hover. */
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-hover);
     --_button-fg: var(--_button-fg-hover);
     --_button-border-color: var(--_button-border-color-hover);
   }
 
-  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):active:not([data-disabled], [data-loading]) {
+  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):active:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
   }

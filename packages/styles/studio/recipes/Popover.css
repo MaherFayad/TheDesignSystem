@@ -1,13 +1,13 @@
 /*
  * Studio recipe for Popover and HoverCard (order 1.24, proposed): a flat
- * tile with a 1px hairline and a near square corner, no shadow, no blur,
+ * tile framed by a 1px rule in the bright text color, square, no shadow, no blur,
  * no arrow, dense padding. It appears by an opacity step in place: no
  * travel, no scale, the parts arrive with it. Colors swap only where
  * forced colors are off.
  */
 @layer ds.recipes {
   [data-style='studio'] [data-ds='popover'] {
-    --_popover-radius: var(--ds-radius-xs);
+    --_popover-radius: 0;
     --_popover-shadow: 0 0 transparent;
     --_popover-blur: 0;
     --_popover-padding: var(--ds-space-l);
@@ -21,7 +21,7 @@
   }
 
   [data-style='studio'] [data-ds='hover-card'] {
-    --_hover-card-radius: var(--ds-radius-xs);
+    --_hover-card-radius: 0;
     --_hover-card-shadow: none;
     --_hover-card-blur: 0;
     --_hover-card-padding: var(--ds-space-l);
@@ -36,12 +36,12 @@
   @media (forced-colors: none) {
     [data-style='studio'] [data-ds='popover'] {
       --_popover-bg: var(--ds-color-bg-surface-2);
-      --_popover-border-color: var(--ds-color-border-strong);
+      --_popover-border-color: var(--ds-color-text-bright);
     }
 
     [data-style='studio'] [data-ds='hover-card'] {
       --_hover-card-bg: var(--ds-color-bg-surface-2);
-      --_hover-card-border-color: var(--ds-color-border-strong);
+      --_hover-card-border-color: var(--ds-color-text-bright);
     }
   }
 

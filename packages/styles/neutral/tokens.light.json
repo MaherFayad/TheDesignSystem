@@ -2804,10 +2804,10 @@
     "backdrop": {
       "$type": "dimension",
       "$value": {
-        "value": 0,
+        "value": 4,
         "unit": "px"
       },
-      "$description": "The dialog scrim is a plain dim, no blur. Proposed, Neutral."
+      "$description": "Order 1.28: a light 4px blur behind the dialog and palette scrims; Dialog.css drops it where unsupported and under reduced transparency. Proposed, Neutral."
     },
     "window": {
       "$type": "dimension",
@@ -3394,6 +3394,38 @@
   },
   "$description": "Neutral, light scheme. The everyday product look: white and soft gray, one brand color, 1px borders, small soft shadows. Values not set by the Neutral generator keep the Studio value of the same scheme (accents, states, charts, canvas). Proposed, Neutral.",
   "duration": {
+    "window-open": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      },
+      "$description": "Order 1.28: a window opens from scale.window-enter in 180ms on ease.window, then settles. Proposed, Neutral."
+    },
+    "window-close": {
+      "$type": "duration",
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      },
+      "$description": "Order 1.28: a window closes in 150ms. Proposed, Neutral."
+    },
+    "window-minimize": {
+      "$type": "duration",
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      },
+      "$description": "Order 1.28: a window minimizes in 200ms. Proposed, Neutral."
+    },
+    "window-zoom": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      },
+      "$description": "Order 1.28: a window zooms in 180ms. Proposed, Neutral."
+    },
     "base": {
       "$type": "duration",
       "$value": "{duration.moderate}",
@@ -3517,6 +3549,11 @@
     }
   },
   "scale": {
+    "window-enter": {
+      "$type": "number",
+      "$value": 0.97,
+      "$description": "Order 1.28: a window grows from 97%, a small restrained settle. Proposed, Neutral."
+    },
     "pop": {
       "$type": "number",
       "$value": 1.02,

@@ -1,0 +1,65 @@
+/*
+ * Studio recipe for Checkbox, RadioGroup and RadioCard (order 1.28,
+ * proposed). Pixel marks: square boxes, a thick check with square ends and
+ * a mitred joint, and a square radio with a square dot. Checked is an
+ * inverted fill (the bright fill, the mark in the body color; the tokens
+ * already say it). Nothing eases out: the fill cuts in two steps, the check
+ * strokes in three, the dot lands in place with no travel and no pop, and
+ * the box never dips (scale.anticipate is 1 here).
+ *
+ * The radio circle, its veil, its dot and the RadioCard circle are drawn with radius.pill and
+ * have no radius property, so their corners are set on the parts here.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='checkbox'] {
+    --_checkbox-radius: 0;
+    --_checkbox-stroke-width: 3;
+    --_checkbox-ease: var(--ds-ease-spring-bouncy);
+    --_checkbox-fill-ease: var(--ds-ease-spring-snappy);
+    --_checkbox-morph-ease: var(--ds-ease-spring-snappy);
+    --_checkbox-land-ease: var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='studio'] :is([data-ds='checkbox'] [data-part='mark'], [data-ds='radio-card'] [data-part='badge']) {
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+
+  [data-style='studio'] [data-ds='radio-group'] {
+    --_radio-group-dot-travel: 0px;
+    --_radio-group-dot-ease: var(--ds-ease-spring-snappy);
+    --_radio-group-fill-ease: var(--ds-ease-spring-snappy);
+    --_radio-group-land-ease: var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='studio'] [data-ds='radio-group'] [data-part='item'] > [data-part='control'],
+  [data-style='studio'] [data-ds='radio-group'] [data-part='control']::after,
+  [data-style='studio'] [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] {
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='radio-group'] [data-part='indicator'] {
+    border-radius: 0;
+  }
+
+  [data-style='studio'] [data-ds='radio-card'] {
+    --_radio-card-radius: 0;
+    --_radio-card-stroke-width: 3;
+    --_radio-card-lift-ease: var(--ds-ease-spring-snappy);
+    --_radio-card-draw-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='checkbox'] {
+      --_checkbox-border-color-hover: var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] [data-ds='radio-group'] {
+      --_radio-group-border-color-hover: var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] [data-ds='radio-card'] {
+      --_radio-card-border-color-hover: var(--ds-color-text-bright);
+    }
+  }
+}

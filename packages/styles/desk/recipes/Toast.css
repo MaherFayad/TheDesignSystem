@@ -15,8 +15,15 @@
  * - the title is medium and closes up to the display tracking, the
  *   description stays muted;
  * - the action is a small yellow pill, the close a small round glass button;
- * - stacked toasts overlap a little, so they read as cards lying on each
- *   other; the overlap stays inside the padding and never covers text.
+ * - stacked toasts overlap as cards lying on each other.
+ *
+ * Order 1.28 (proposed), the hooks of order 1.23: the stack is the
+ * toaster's own (--_toaster-gap for the open list, --_toast-peek and
+ * --_toast-depth for the cards behind), so the direct gap and the negative
+ * margins of order 1.24 are gone. Each card behind peeks a full step and
+ * shrinks only a little, so the pile reads as cards; the pile moves on the
+ * bouncy spring. The timer line is the yellow primary, as thick as the tone
+ * edge.
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
@@ -24,6 +31,11 @@
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='toast'] {
+    --_toast-peek: var(--ds-space-m);
+    --_toast-depth: calc((1 - var(--ds-scale-anticipate)) / 2);
+    --_toast-stack-duration: var(--ds-duration-spring-bouncy);
+    --_toast-stack-ease: var(--ds-ease-spring-bouncy);
+    --_toast-progress: var(--ds-color-primary-on-surface);
     --_toast-bg: var(--ds-color-material-glass-strong);
     --_toast-border-color: var(--ds-color-material-glass-border);
     --_toast-radius: var(--ds-radius-panel);
@@ -110,17 +122,9 @@
     margin-block: 0;
   }
 
-  /* Stacked cards: each toast tucks a little under the one after it. The newest is drawn on top. */
+  /* The open list: the cards sit close, as on a desk. */
   [data-style='desk'] [data-ds='toaster'] {
-    gap: 0;
-  }
-
-  [data-style='desk'] [data-ds='toaster']:not([data-position^='top']) > [data-ds='toast'] + [data-ds='toast'] {
-    margin-block-start: calc(-1 * var(--ds-space-3xs));
-  }
-
-  [data-style='desk'] [data-ds='toaster'][data-position^='top'] > [data-ds='toast'] + [data-ds='toast'] {
-    margin-block-end: calc(-1 * var(--ds-space-3xs));
+    --_toaster-gap: var(--ds-space-xs);
   }
 
   /*
@@ -162,5 +166,11 @@
     [data-style='desk'] [data-ds='toast'] {
       --_toast-bg: var(--ds-color-material-glass-solid);
     }
+  }
+
+  /* The ios banner and the android snackbar draw no timer line (packages/css/src/platform),
+     and recipes beat that layer, so the style draws its line on the web platform only. */
+  [data-style='desk'][data-platform='web'] [data-ds='toast'] {
+    --_toast-progress-thickness: calc(var(--ds-border-width-strong) * 1.5);
   }
 }

@@ -1,42 +1,85 @@
 /*
- * Studio recipe for Button and the controls on its base (order 1.24,
- * proposed). Studio controls are bordered transparent pills: the neutral
- * button at rest is no fill and a 1px control border, the primary is the
- * flat white pill (black in light, from the primary tokens). Labels are
- * medium weight with tabular figures, a tool's type, not a poster's. Every
- * size stays a pill: the base gives xs the field radius, which is small
- * and square in Studio.
+ * Studio recipe for Button and the controls on its base (orders 1.24 and
+ * 1.28, proposed). Studio controls are flat, near square cells
+ * (radius.control is radius.xs here): the neutral button at rest is no fill
+ * and a 1px control border, the primary the flat bright cell (white in
+ * dark, black in light, from the primary tokens). Labels are medium weight
+ * with tabular figures, a tool's type, not a poster's.
+ *
+ * Press is an inversion, not a shade: no pointer glow, no inner shade, the
+ * parts sink by exactly 1px, and the neutral button turns into the bright
+ * fill with body colored text while held; the primary turns into its own
+ * outline. Press and release cut in steps (Studio's springs are steps).
+ * CopyButton swaps glyph and word in two hard steps with no pop, and its
+ * bubble is an inverted chip.
  */
 @layer ds.recipes {
+  [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button'], [data-ds='floating-action-button']) {
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
+    --_button-press-shade: transparent;
+    --_button-press-y: var(--ds-border-width-default);
+    --_button-press-ease: var(--ds-ease-spring-snappy);
+    --_button-release-ease: var(--ds-ease-spring-snappy);
+    --_button-result-ease: var(--ds-ease-spring-snappy);
+    --_button-draw-ease: var(--ds-ease-spring-bouncy);
+  }
+
   [data-style='studio'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
     font-weight: var(--ds-font-weight-medium);
     font-variant-numeric: tabular-nums;
   }
 
-  [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-size='xs'][data-shape='default'] {
-    --_button-radius: var(--ds-radius-pill);
+  /* A toggle turns on as a flat swap, no flood from the press point. */
+  [data-style='studio'] [data-ds='toggle-button'] {
+    --_toggle-button-flood: 0;
   }
 
-  /* The neutral soft button, the default one: transparent, a 1px control border. */
-  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft'] {
-    --_button-bg: transparent;
-    --_button-fg: var(--ds-color-text-default);
-    --_button-border-color: var(--ds-color-border-control);
-    --_button-border-color-hover: var(--ds-color-border-control-hover);
-    --_button-bg-hover: var(--ds-color-bg-overlay-5);
-    --_button-bg-active: var(--ds-color-bg-overlay-10);
+  [data-style='studio'] [data-ds='copy-button'] {
+    --_copy-button-ease-in: var(--ds-ease-spring-snappy);
+    --_copy-button-ease-out: var(--ds-ease-spring-snappy);
+    --_copy-button-pop-ease: var(--ds-ease-spring-snappy);
+    --_copy-button-overshoot: 0px;
   }
 
-  /*
-   * This layer wins over the base state rules, so the swaps are repeated
-   * here for the properties set above.
-   */
-  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:hover:not([data-disabled], [data-loading]) {
-    --_button-bg: var(--_button-bg-hover);
-    --_button-border-color: var(--_button-border-color-hover);
-  }
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='copy-button'] {
+      --_copy-button-bubble-bg: var(--ds-color-text-bright);
+      --_copy-button-bubble-fg: var(--ds-color-bg-body);
+      --_copy-button-bubble-border-color: var(--ds-color-text-bright);
+      --_copy-button-bubble-shadow: none;
+    }
 
-  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:active:not([data-disabled], [data-loading]) {
-    --_button-bg: var(--_button-bg-active);
+    /* The neutral soft button, the default one: transparent, a 1px control border; pressed, inverted. */
+    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft'] {
+      --_button-bg: transparent;
+      --_button-fg: var(--ds-color-text-default);
+      --_button-border-color: var(--ds-color-border-control);
+      --_button-border-color-hover: var(--ds-color-text-bright);
+      --_button-bg-hover: var(--ds-color-bg-overlay-5);
+      --_button-bg-active: var(--ds-color-text-bright);
+      --_button-fg-active: var(--ds-color-bg-body);
+    }
+
+    /*
+     * This layer wins over the base state rules, so the swaps are repeated
+     * here for the properties set above.
+     */
+    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:hover:not([data-disabled], [data-loading]) {
+      --_button-bg: var(--_button-bg-hover);
+      --_button-border-color: var(--_button-border-color-hover);
+    }
+
+    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:active:not([data-disabled], [data-loading]) {
+      --_button-bg: var(--_button-bg-active);
+      --_button-fg: var(--_button-fg-active);
+      --_button-border-color: var(--_button-bg-active);
+    }
+
+    /* The primary, pressed: its own outline, the fill cut out. */
+    [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='solid'] {
+      --_button-bg-active: var(--ds-color-bg-body);
+      --_button-fg-active: var(--ds-color-text-bright);
+    }
   }
 }

@@ -2,8 +2,10 @@
  * Liquid recipe for CommandPalette: a modal glass panel with a lens for the
  * lit row. Why not tokens alone: the panel takes its fill, edge, filter and
  * bands from private properties, the glass is a blur plus a saturation boost
- * with a light edge on the top and start sides, and the lens (a bright rim
- * and a small lift shadow on the row's ::after) has no token.
+ * with a light edge on the top and start sides, and the lens is the
+ * palette's sliding highlight marker (order 1.23): the glass hover fill
+ * (--_command-palette-highlight-bg), a bright top rim over a small lift
+ * (--_command-palette-item-shadow), gliding on the soft spring.
  *
  * It holds reading text over a scrim, so it takes the strong glass at every
  * glass level, as Dialog does. Radius: radius.panel (22px) outside,
@@ -25,17 +27,15 @@
     --_command-palette-padding: calc(var(--ds-radius-panel) - var(--ds-menu-item-radius));
     --_command-palette-item-radius: var(--ds-menu-item-radius);
     --_command-palette-item-bg-highlight: var(--ds-color-material-glass-hover);
+    --_command-palette-highlight-bg: var(--ds-color-material-glass-hover);
+    --_command-palette-item-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+    --_command-palette-highlight-ease: var(--ds-ease-spring-soft);
   }
 
   /* The start side edge follows the text direction. */
   [data-style='liquid'] [data-ds='command-palette']:dir(rtl) {
     --_command-palette-shadow: var(--ds-elevation-dialog), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
       inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
-  }
-
-  /* The lit row is a lens: a bright rim on the top edge of its fill and a small lift. */
-  [data-style='liquid'] [data-ds='command-palette'] [data-part='item'][data-highlighted]::after {
-    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
   }
 
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
@@ -51,6 +51,7 @@
     [data-style='liquid'] [data-ds='command-palette']:dir(rtl) {
       --_command-palette-shadow: var(--ds-elevation-dialog);
       --_command-palette-backdrop: none;
+      --_command-palette-item-shadow: none;
     }
   }
 
@@ -65,6 +66,7 @@
   [data-style='liquid'][data-contrast='more'] [data-ds='command-palette']:dir(rtl) {
     --_command-palette-shadow: var(--ds-elevation-dialog);
     --_command-palette-backdrop: none;
+    --_command-palette-item-shadow: none;
     --_command-palette-border-color: var(--ds-color-border-strong);
     --_command-palette-divider-color: var(--ds-color-border-strong);
   }
@@ -74,6 +76,7 @@
       --_command-palette-bg: Canvas;
       --_command-palette-border-color: CanvasText;
       --_command-palette-divider-color: CanvasText;
+      --_command-palette-highlight-bg: Highlight;
     }
   }
 }

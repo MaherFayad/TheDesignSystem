@@ -1,6 +1,6 @@
 // Studio motion preset (style.json `motionPreset: "flat"`): flat and fast,
-// 70 to 220ms. Panels and windows appear with a short opacity fade, nothing
-// grows or flies, zoom has no motion, numbers change in place and long
+// 70 to 220ms. Panels appear with a short opacity fade, nothing grows or
+// flies (windows since order 1.28 land in steps, below), numbers change in place and long
 // reveals are cut to the short end of the scale. Patterns and timing:
 // packages/motion. A pattern left out plays its full form.
 //
@@ -15,11 +15,22 @@
 // and a plain curve (`-soft`), so moves land in hard cuts; its stagger step is
 // 0ms, so parts arrive together; `scale.pop` is 1 and `scale.enter` 1, so
 // nothing overshoots or grows; distances are the shortest of the three.
+//
+// Order 1.28 (proposed): windows no longer only fade. They grow out of the
+// control that opened them, zoom and fall into the dock as the other styles
+// do, but on `ease.spring-bouncy`, which is three hard steps here: the
+// window lands in three cuts, with no ease and no overshoot, and the settle
+// swell is gone because `scale.lift` is 1. (`ease.window` must stay a
+// cubic bezier by the token contract, so the window rows swap the ease.)
+// The same press, toggle and open read as cuts in Studio, as rolls past the
+// end in Desk, as short restrained springs in Neutral and as soft
+// stretching springs in Liquid. Reduced motion still fades (the pattern's
+// reduced form).
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
   id: 'flat',
-  window: 'fade',
+  window: 'grow',
   patterns: {
     sheet: { mode: 'full', duration: 'duration.base' },
     'number-roll': { mode: 'reduced' },
@@ -27,6 +38,9 @@ const motion: StyleMotionPreset = {
     'chart-draw': { mode: 'full', duration: 'duration.zoom' },
     'drag-drop': { mode: 'full', duration: 'duration.base' },
     pop: { mode: 'reduced' },
+    'window-grow': { mode: 'full', easing: 'ease.spring-bouncy' },
+    'window-zoom': { mode: 'full', easing: 'ease.spring-bouncy' },
+    'window-minimize': { mode: 'full', easing: 'ease.spring-bouncy' },
   },
   interactions: {
     'error-shake': 'none',

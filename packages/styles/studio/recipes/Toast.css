@@ -1,20 +1,24 @@
 /*
- * Studio recipe for Toast and the toaster (order 1.24, proposed). A dense
- * one line strip: the icon, the title, the description, the action and the
+ * Studio recipe for Toast and the toaster (orders 1.24 and 1.28,
+ * proposed). A dense one line strip: the icon, the title, the description, the action and the
  * close control on one row, about one control high. Square corners, a 1px
  * hairline, no shadow and no blur, and the tone carried by the 2px bar at
  * the inline start (the base edge) and the icon. The description ends in
  * an ellipsis at rest and wraps in full while the toast is hovered or holds
- * focus (the Toaster pauses then, so it can be read). Stacked toasts sit as
- * a tight list, 1px apart. A toast appears by an opacity step in place:
- * no travel, no scale (the tokens), no icon pop.
+ * focus (the Toaster pauses then, so it can be read). A toast appears by
+ * an opacity step in place: no travel, no scale (the tokens), no icon pop.
  *
- * The row is a layout no private property says, so this file sets the
- * toast's grid and the toaster's gap directly.
+ * Stacked, the toasts behind do not shrink: each shows as one more hard
+ * rule under the front strip, a small step apart. Opened, they sit as a
+ * tight list 1px apart. The stack and a swipe exit move in steps. The time
+ * left is a 1px hairline on the block end edge, in the tone color.
+ *
+ * The one line row is a layout no private property says (the base grid
+ * is three rows), so this file sets the toast's grid directly.
  */
 @layer ds.recipes {
   [data-style='studio'] [data-ds='toaster'] {
-    gap: var(--ds-space-px);
+    --_toaster-gap: var(--ds-space-px);
   }
 
   [data-style='studio'] [data-ds='toast'] {
@@ -26,6 +30,11 @@
     --_toast-icon-enter-scale: 1;
     --_toast-swipe-x: 0%;
     --_toast-swipe-y: 0%;
+    --_toast-peek: var(--ds-space-3xs);
+    --_toast-depth: 0;
+    --_toast-shadow-room: 0px;
+    --_toast-stack-ease: var(--ds-ease-spring-snappy);
+    --_toast-swipe-ease-out: var(--ds-ease-spring-snappy);
 
     grid-template-columns: var(--ds-size-icon-md) minmax(0, max-content) minmax(0, 1fr) auto auto;
     grid-template-areas: 'icon title description action close';
@@ -41,7 +50,7 @@
   @media (forced-colors: none) {
     [data-style='studio'] [data-ds='toast'] {
       --_toast-bg: var(--ds-color-bg-surface-2);
-      --_toast-border-color: var(--ds-color-border-strong);
+      --_toast-border-color: var(--ds-color-text-bright);
     }
   }
 
@@ -82,5 +91,11 @@
     --_button-radius: var(--ds-radius-xs);
 
     margin-block: 0;
+  }
+
+  /* The ios banner and the android snackbar draw no timer line (packages/css/src/platform),
+     and recipes beat that layer, so the style draws its line on the web platform only. */
+  [data-style='studio'][data-platform='web'] [data-ds='toast'] {
+    --_toast-progress-thickness: var(--ds-border-width-default);
   }
 }

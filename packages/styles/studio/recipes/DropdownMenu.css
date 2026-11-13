@@ -3,8 +3,8 @@
  * ContextMenu and Menubar menus, and the list popups of Select, Combobox,
  * Autocomplete, MultiSelect and TagField, which all read the shared
  * --_menu-* properties; and ListBox, whose rows they hold. One look for
- * all: a tight tile list. A flat tile with a 1px hairline and a near square
- * corner, no shadow, no blur, square rows edge to edge at the compact row
+ * all: a tight tile list. A flat tile framed by a 1px bright rule, square
+ * corners, no shadow, no blur, square rows edge to edge at the compact row
  * height. The lit row is inverted (the bright fill, body colored text), a
  * danger row lit in the red fill. A selected or checked row is marked by
  * its check and by medium weight against the regular rows, never by fill
@@ -16,7 +16,7 @@
  */
 @layer ds.recipes {
   [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
-    --_menu-radius: var(--ds-radius-xs);
+    --_menu-radius: 0;
     --_menu-shadow: none;
     --_menu-backdrop: none;
     --_menu-padding: 0;
@@ -33,14 +33,14 @@
   }
 
   [data-style='studio'] [data-ds='list-box'] {
-    --_list-box-radius: var(--ds-radius-xs);
+    --_list-box-radius: 0;
     --_list-box-option-font-weight: var(--ds-font-weight-regular);
   }
 
   @media (forced-colors: none) {
     [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
       --_menu-bg: var(--ds-color-bg-surface-2);
-      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-border-color: var(--ds-color-text-bright);
       --_menu-separator-color: var(--ds-color-border-default);
       --_menu-item-bg-highlight: var(--ds-color-text-bright);
       --_menu-item-fg-highlight: var(--ds-color-bg-body);

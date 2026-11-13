@@ -5,8 +5,9 @@
  * (PLAN.md 3.7, Liquid). Why not tokens alone: Slider.css paints the range
  * and the thumb in one color and has no thumb shadow, and the lens is a
  * translucent fill, a bright rim and a backdrop filter on the drawn circle
- * (the thumb's ::after) only while the thumb is held. The lift while held is
- * Slider.css's own scale.stretch.
+ * (the thumb's ::after) only while the thumb is held. The thumb fill, the
+ * halo and the stretch along the travel are Slider.css's order 1.23 hooks
+ * (--_slider-thumb-bg, --_slider-halo, --_slider-stretch).
  *
  * Fallbacks: where backdrop-filter is unsupported, under reduced
  * transparency, more contrast and forced colors the held thumb stays a
@@ -26,12 +27,24 @@
     --_slider-thumb-border: var(--ds-color-border-control);
   }
 
-  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
-    background-color: var(--ds-color-primary-text);
+  /*
+   * The thumb is white, apart from the tint range (--_slider-thumb-bg). The
+   * halo is the lens's own soft lift: the glass highlight around the circle
+   * instead of the tint state layer. While dragged the lens stretches along
+   * its travel (--_slider-stretch).
+   */
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-thumb-bg: var(--ds-color-primary-text);
+    --_slider-halo: var(--ds-color-glass-highlight);
+    --_slider-halo-spread: var(--ds-space-3xs);
+    --_slider-stretch: var(--ds-scale-stretch);
   }
 
   [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
-    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border), var(--ds-elevation-tooltip);
+    box-shadow:
+      0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
+      0 0 0 var(--_slider-halo-now) var(--_slider-halo),
+      var(--ds-elevation-tooltip);
   }
 
   /* A press on the thumb lifts it at once, before the drag starts. */
@@ -42,7 +55,7 @@
   /* Held: the circle becomes a lens that brightens the track and the page under it. */
   [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active,
   [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus {
-    background-color: transparent;
+    --_slider-thumb-bg: transparent;
   }
 
   [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
@@ -50,6 +63,7 @@
     background-color: var(--ds-color-glass-lens);
     box-shadow:
       0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
+      0 0 0 var(--_slider-halo-now) var(--_slider-halo),
       inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
       var(--ds-elevation-tooltip);
 
@@ -84,18 +98,8 @@
     backdrop-filter: none;
   }
 
-  /* Forced colors: the thumb goes back to Highlight (GrayText while disabled), as in Slider.css, held or not. */
+  /* Forced colors: Slider.css paints the thumb in Highlight itself; the held lens layer drops its fill. */
   @media (forced-colors: active) {
-    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'],
-    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active,
-    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus {
-      background-color: Highlight;
-    }
-
-    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] [data-part='thumb'] {
-      background-color: GrayText;
-    }
-
     [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
     [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
       background-color: transparent;

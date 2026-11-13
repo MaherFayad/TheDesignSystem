@@ -5,54 +5,54 @@
  * tokens alone: the release has to spring back on the snappy spring (the
  * base uses the bouncy one), and the specular highlight is a drawn layer.
  *
- * The highlight: a soft color.glass.highlight sheen at the top start of a
- * filled capsule that brightens under the pointer. CSS cannot read the
- * pointer, so it stays at the top start corner; a highlight that follows the
- * pointer needs a position property written by Button.tsx (see the report).
- * It is the ::before glow layer of anatomy.md, which Button.css leaves free
- * (its ring is a box shadow on the root). It sits under the parts, which are
- * positioned and come later. It is not drawn on outline, ghost and link
- * buttons, and it goes under reduced transparency, more contrast and forced
- * colors.
+ * The highlight is Button.css's glow layer (the ::before of anatomy.md,
+ * order 1.23): a color.glass.highlight sheen that stands at the top start
+ * of a filled capsule at rest (--_button-glow-rest), follows the pointer
+ * while it is over the control (ButtonRoot writes --_button-glow-x and -y)
+ * and brightens under a press. Solid and soft fills take it; outline, ghost
+ * and link do not. It goes under reduced transparency, more contrast and
+ * forced colors (Button.css drops it there too), and under reduced motion
+ * it does not follow the pointer and does not stand.
  */
 @layer ds.recipes {
   [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
     --_button-duration-out: var(--ds-duration-spring-snappy);
     --_button-ease-out: var(--ds-ease-spring-snappy);
+    --_button-release-ease: var(--ds-ease-spring-soft);
   }
 
   /* ------------------------------------------------------------ the specular highlight */
 
-  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link'])::before {
-    content: '';
-    position: absolute;
-    inset: calc(var(--ds-border-width-default) * -1);
-    border-radius: inherit;
-    background-image: radial-gradient(70% 90% at 22% 0%, var(--ds-color-glass-highlight), transparent 70%);
-    opacity: 0.35;
-    pointer-events: none;
-    transition: opacity var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-emphasis='solid'], [data-emphasis='soft']) {
+    --_button-glow: 1;
+    --_button-glow-rest: 0.35;
+    --_button-glow-color: var(--ds-color-glass-highlight);
+    --_button-glow-x: 22%;
+    --_button-glow-y: 0%;
   }
 
-  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']):dir(rtl)::before {
-    background-image: radial-gradient(70% 90% at 78% 0%, var(--ds-color-glass-highlight), transparent 70%);
+  /* A solid fill carries the stronger standing sheen; a soft fill keeps it faint over its tinted text. */
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis='solid'] {
+    --_button-glow-rest: 0.55;
   }
 
-  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link'], [data-disabled], [data-loading]):hover::before {
-    opacity: 0.8;
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-emphasis='solid'], [data-emphasis='soft']):dir(rtl) {
+    --_button-glow-x: 78%;
   }
 
-  :root[data-motion='reduce'] [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
-    transition: none;
-  }
+  /* ------------------------------------------------------------ off: reduced motion, transparency, contrast, forced colors */
 
-  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-    [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
-      display: none;
+  @media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+      --_button-glow: 0;
+      --_button-glow-rest: 0;
     }
   }
 
-  [data-style='liquid'][data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
-    display: none;
+  :root[data-motion='reduce'] [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis],
+  :root[data-motion='reduce'][data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis],
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
   }
 }

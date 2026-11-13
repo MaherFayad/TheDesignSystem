@@ -3,7 +3,7 @@
  * Popover recipe. Why not tokens alone: HoverCard.css takes only a blur
  * length, and Liquid glass is a blur plus a saturation boost, a 1px light
  * edge on the top and start sides and the glass levels. The radius is
- * radius.panel (22px) already, and the motion is the Popover spring.
+ * radius.panel (22px) already, and the motion is the Popover's soft unfold.
  */
 @layer ds.recipes {
   [data-style='liquid'] [data-ds='hover-card'] {
@@ -11,6 +11,10 @@
     --_hover-card-border-color: var(--ds-color-material-glass-border);
     --_hover-card-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
       inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    /* A soft unfold, as the Popover: out of the trigger along the axis away from it, on the soft spring. */
+    --_hover-card-enter-stretch: calc(var(--_hover-card-enter-scale) * var(--ds-scale-morph));
+    --_hover-card-duration-in: var(--ds-duration-spring-soft);
+    --_hover-card-ease-in: var(--ds-ease-spring-soft);
 
     -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));

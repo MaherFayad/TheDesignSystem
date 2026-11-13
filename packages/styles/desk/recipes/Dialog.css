@@ -11,7 +11,7 @@
  * Order 1.24 (proposed), what tokens cannot say:
  * - glass on the panel (a backdrop filter) and no flat bands: the title bar
  *   carries its own material, the footer sits on the glass under a hairline;
- * - the scrim dims the desk and blurs it softly (blur.backdrop);
+ * - the scrim dims the desk and blurs it (the window blur, below);
  * - the footer holds one clear main action: an accent button is the yellow
  *   pill whatever its emphasis, a danger action the red pill, and every
  *   other button the quiet glass pill (the Button recipe), so two soft
@@ -21,6 +21,18 @@
  *   and the icon is a rounded tile, as the toast icons are;
  * - titles close up to the display tracking (-0.04em, none in Arabic);
  * - the window grows from 92% on the soft spring (a small overshoot).
+ *
+ * Order 1.28 (proposed), the hooks of order 1.23 and coloured glass:
+ * - the backdrop blur is --_dialog-backdrop-blur (the window blur, stronger
+ *   than the shared one); the direct scrim filter is gone, so the base
+ *   fallbacks hold, and the blur goes to 0px again below where this layer
+ *   would win over them;
+ * - the title bar and the AlertDialog band are yellow glass (the primary
+ *   tint over the panel's glass), so a Desk window is told by its chrome;
+ *   the Sheet's grip is the yellow pill;
+ * - the window grows on the bouncy spring and its parts land one stagger
+ *   step apart on the same spring: an overshoot and a settle, where Liquid
+ *   floats in on the soft spring.
  */
 @layer ds.recipes {
   [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
@@ -37,21 +49,22 @@
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: var(--ds-color-material-glass-border);
-    --_dialog-scrim: var(--ds-color-bg-scrim);
-    --_dialog-scrim-filter: blur(var(--ds-blur-backdrop)) saturate(var(--ds-blur-window-saturation));
+    --_dialog-backdrop-blur: var(--ds-blur-window);
     --_dialog-band-padding-block: var(--ds-space-m);
     --_dialog-band-padding-inline: var(--ds-space-xl);
-    --_dialog-handle-color: var(--ds-color-bg-overlay-40);
+    --_dialog-handle-color: var(--ds-color-primary-fill);
+    --_dialog-part-duration: var(--ds-duration-spring-bouncy);
+    --_dialog-part-ease: var(--ds-ease-spring-bouncy);
     --_dialog-duration-out: var(--ds-duration-quick); /* Order 1.22: exits faster than entrances (review N4). */
   }
 
-  /* The centered members grow like a window, on the soft spring; Drawer and Sheet keep their slide (pattern "sheet"). */
+  /* The centered members grow like a window, on the bouncy spring; Drawer and Sheet keep their slide (pattern "sheet"). */
   [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
     --_dialog-padding: var(--ds-space-4xl);
     --_dialog-enter-y: 0;
     --_dialog-enter-scale: var(--ds-scale-window-enter);
-    --_dialog-duration-in: var(--ds-duration-spring-soft);
-    --_dialog-ease-in: var(--ds-ease-spring-soft);
+    --_dialog-duration-in: var(--ds-duration-spring-bouncy);
+    --_dialog-ease-in: var(--ds-ease-spring-bouncy);
   }
 
   /* Phones: the base padding for small screens, which this layer would otherwise override. */
@@ -66,9 +79,9 @@
     --_dialog-radius: var(--ds-radius-sheet);
   }
 
-  /* The title bar of a window: its own material and a hairline under it, as the AlertDialog band below. */
+  /* The title bar of a window: yellow glass and a hairline under it, as the AlertDialog band below. */
   [data-style='desk'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] {
-    --_title-bar-bg: var(--ds-color-material-titlebar);
+    --_title-bar-bg: var(--ds-color-primary-tint);
     --_title-bar-border-color: var(--ds-color-material-glass-border);
   }
 
@@ -78,8 +91,8 @@
   }
 
   /*
-   * AlertDialog: the title band. The icon sits in a band of the title bar
-   * material across the top of the panel, with a hairline under it, so the
+   * AlertDialog: the title band. The icon sits in a band of yellow glass
+   * (the title bar color) across the top of the panel, with a hairline under it, so the
    * alert reads as a window like the Dialog. The band is a background layer
    * on the panel: its height is the icon tile and the padding around it.
    */
@@ -96,7 +109,7 @@
   [data-style='desk'] [data-ds='alert-dialog'] > [data-part='panel']:has(> [data-part='icon']) {
     background-image:
       linear-gradient(var(--ds-color-material-glass-border), var(--ds-color-material-glass-border)),
-      linear-gradient(var(--ds-color-material-titlebar), var(--ds-color-material-titlebar));
+      linear-gradient(var(--ds-color-primary-tint), var(--ds-color-primary-tint));
     background-repeat: no-repeat;
     /* The band scrolls with the icon when the whole panel scrolls (a short viewport). */
     background-attachment: local;
@@ -127,7 +140,7 @@
    * (soft by default), and a danger action is the red pill. The others are
    * the glass pills of the Button recipe.
    */
-  [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='accent']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
+  [data-style='desk'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='accent']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -140,7 +153,7 @@
     --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
   }
 
-  [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
+  [data-style='desk'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
     --_button-bg: var(--ds-color-state-danger-solid);
     --_button-fg: var(--ds-color-state-danger-on-solid);
     --_button-border-color: transparent;
@@ -159,13 +172,14 @@
   @media (prefers-reduced-transparency: reduce) {
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
-      --_dialog-scrim-filter: none;
+      --_dialog-backdrop-blur: 0px;
     }
   }
 
   @media (prefers-contrast: more) {
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
+      --_dialog-backdrop-blur: 0px;
       --_dialog-border-color: var(--ds-color-border-strong);
       --_dialog-divider-color: var(--ds-color-border-strong);
     }
@@ -173,6 +187,7 @@
 
   [data-style='desk'][data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-backdrop: none;
+    --_dialog-backdrop-blur: 0px;
     --_dialog-border-color: var(--ds-color-border-strong);
     --_dialog-divider-color: var(--ds-color-border-strong);
   }
@@ -181,6 +196,8 @@
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-bg: Canvas;
       --_dialog-backdrop: none;
+      --_dialog-backdrop-blur: 0px;
+      --_dialog-handle-color: CanvasText;
       --_dialog-border-color: CanvasText;
       --_dialog-divider-color: CanvasText;
     }
@@ -194,6 +211,7 @@
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-bg: var(--ds-color-material-glass-solid);
+      --_dialog-backdrop-blur: 0px;
     }
   }
 }

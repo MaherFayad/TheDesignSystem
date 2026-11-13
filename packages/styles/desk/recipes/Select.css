@@ -7,8 +7,8 @@
  * What tokens cannot say:
  * - the list is glass (the strong material and a backdrop filter), while
  *   Studio draws the flat surface-3;
- * - the lit row is the soft highlight of the Desk menus (overlay-10, the
- *   text bright) with the achromatic keyboard ring, not a yellow fill
+ * - the lit row is the yellow glass of the Desk menus (the primary tint,
+ *   order 1.28, the text bright) with the achromatic keyboard ring, not a yellow fill
  *   (order 1.24, proposed); the selected row has the yellow check and the
  *   medium weight;
  * - the panel radius family: a 12px list with 8px rows inside, regular weight.
@@ -21,7 +21,7 @@
     --_menu-shadow: var(--ds-elevation-menu);
     --_menu-padding: var(--ds-space-2xs);
     --_menu-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
-    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-bg-highlight: var(--ds-color-primary-tint);
     --_menu-item-fg-highlight: var(--ds-color-text-bright);
     --_menu-item-ring-color: var(--ds-color-focus-ring);
     --_menu-separator-color: var(--ds-color-material-glass-border);
@@ -74,5 +74,21 @@
     [data-style='desk'] [data-ds='select'][data-part='content'] {
       --_menu-bg: var(--ds-color-material-glass-solid);
     }
+  }
+  /*
+   * Order 1.28 (proposed): the lit row is a yellow glass marker (the primary
+   * tint) with a yellow bar on its inline start (the primary edge: yellow in
+   * dark, gold in light), and the marker slides from row to row on the
+   * bouncy spring, so it overshoots the row and settles. The bar is an inset
+   * shadow on the highlight part, mirrored in right to left text.
+   */
+  [data-style='desk'] [data-ds='select'][data-part='content'] {
+    --_select-item-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--ds-color-primary-border);
+    --_select-highlight-duration: var(--ds-duration-spring-bouncy);
+    --_select-highlight-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-style='desk'] [data-ds='select'][data-part='content']:dir(rtl) {
+    --_select-item-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--ds-color-primary-border);
   }
 }

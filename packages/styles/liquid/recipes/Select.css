@@ -4,7 +4,9 @@
  * entry. Why not tokens alone: the list takes its fill, edge, filter,
  * padding and motion from private properties, the glass is a blur plus a
  * saturation boost with a light edge on the top and start sides, and the
- * lens (a rim and a small lift on the row's glide layer) has no token.
+ * lens is the list's sliding highlight marker (order 1.23): the glass hover
+ * fill (--_select-highlight-bg), a bright top rim over a small lift
+ * (--_select-item-shadow), gliding between rows on the soft spring.
  *
  * Radius: radius.panel (22px) outside, menu.item.radius (16px) on the rows:
  * the padding is the difference. The chosen row keeps the tint text and its
@@ -22,8 +24,10 @@
     --_menu-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     --_menu-item-bg-highlight: var(--ds-color-material-glass-hover);
     --_menu-separator-color: var(--ds-color-material-glass-border);
-    --_menu-duration-in: var(--ds-duration-spring-snappy);
     --_menu-ease-in: var(--ds-ease-spring-snappy);
+    --_select-highlight-bg: var(--ds-color-material-glass-hover);
+    --_select-item-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+    --_select-highlight-ease: var(--ds-ease-spring-soft);
   }
 
   /* The start side edge follows the text direction. */
@@ -38,33 +42,9 @@
 
   /* Clear glass is for bars over pictures. A list holds reading text, so the clear level keeps the regular glass. */
 
-  /* The lit row is a lens: it lifts a touch on the snappy spring, its fill takes a bright rim on the top edge. */
-  [data-style='liquid'] [data-ds='select'] [data-part='item'] {
-    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
-  }
-
-  [data-style='liquid'] [data-ds='select'] [data-part='item'][data-highlighted] {
-    transform: scale(var(--ds-scale-lift));
-  }
-
-  [data-style='liquid'] [data-ds='select'] [data-part='item'][data-highlighted] > span[aria-hidden='true']:not([data-part]) {
-    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
-  }
-
   /* The chosen row keeps the tint text, lit or not; the check mark stays as well. */
   [data-style='liquid'] [data-ds='select'] [data-part='item'][data-state='checked'] {
     --_select-item-fg: var(--ds-color-primary-on-surface);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-style='liquid'] [data-ds='select'] [data-part='item'] {
-      transition: none;
-    }
-  }
-
-  :root[data-motion='reduce'] [data-style='liquid'] [data-ds='select'] [data-part='item'],
-  :root[data-motion='reduce'][data-style='liquid'] [data-ds='select'] [data-part='item'] {
-    transition: none;
   }
 
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
@@ -80,6 +60,7 @@
     [data-style='liquid'] [data-ds='select'][data-part='content']:dir(rtl) {
       --_menu-shadow: var(--ds-elevation-menu);
       --_menu-backdrop: none;
+      --_select-item-shadow: none;
     }
   }
 
@@ -94,6 +75,7 @@
   [data-style='liquid'][data-contrast='more'] [data-ds='select'][data-part='content']:dir(rtl) {
     --_menu-shadow: var(--ds-elevation-menu);
     --_menu-backdrop: none;
+    --_select-item-shadow: none;
     --_menu-border-color: var(--ds-color-border-strong);
     --_menu-separator-color: var(--ds-color-border-strong);
   }
@@ -104,6 +86,7 @@
       --_menu-border-color: CanvasText;
       --_menu-separator-color: CanvasText;
       --_menu-item-bg-highlight: Highlight;
+      --_select-highlight-bg: Highlight;
       --_menu-item-fg-highlight: HighlightText;
     }
 

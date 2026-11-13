@@ -1,22 +1,47 @@
 /*
  * Liquid recipe for Switch: a capsule track with a white thumb that turns
- * into a glass lens while pressed (PLAN.md 3.7, Liquid). Why not tokens
- * alone: the thumb takes the off color of text.muted and has no shadow
- * property, and the lens is a translucent fill, a bright rim and a backdrop
- * filter on the thumb part only while the control is held. The off track
- * fill is drawn on the track part, since Switch.tsx clears it to show its
- * tint layer.
+ * into a clear glass lens while it is held or travelling (PLAN.md 3.7,
+ * Liquid). Why not tokens alone: the thumb takes the off color of
+ * text.muted and no shadow, and the lens is a clear fill, a bright rim and
+ * a backdrop filter that only Switch.css's order 1.23 hooks can place on
+ * the thumb and its thumb-lens part. The off track fill is drawn on the
+ * track part, since Switch.tsx clears it to show its tint layer.
  *
- * The stretch (scale.stretch) and the travel on the bouncy spring come from
- * the tokens through Switch.css, so this file sets neither.
- * Fallbacks: where backdrop-filter is unsupported, under reduced
- * transparency, more contrast and forced colors the pressed thumb stays a
- * solid white thumb with no filter.
+ * Hooks set (Switch.css, order 1.23):
+ *   --_switch-thumb-shadow        a soft lift; in light the off thumb adds the control edge
+ *   --_switch-thumb-backdrop      brightness and saturation of what the lens sits on
+ *   --_switch-thumb-highlight     the thumb-lens part: a top start sheen and a bright rim
+ *   --_switch-thumb-solid-pressed 0.2: held, the white thumb turns into a clear lens
+ *   --_switch-thumb-size-pressed  scale.pop, and --_switch-stretch scale.stretch: the lens
+ *                                 swells and stretches toward its travel
+ *   --_switch-lean                distance.shift: on hover the thumb leans further than
+ *                                 the base nudge, a drop about to move
+ *   --_switch-ease, -ease-out     the soft spring: the lens glides and settles, no bounce
+ * Fallbacks: Switch.css itself drops the backdrop and makes the thumb solid
+ * where backdrop-filter is unsupported, under reduced transparency and more
+ * contrast; this file also drops the highlight and the rim there. Reduced
+ * motion is Switch.css's own (--_switch-motion 0, no stretch, no swell).
  */
 @layer ds.recipes {
   [data-style='liquid'] [data-ds='switch'] {
     --_switch-thumb-off: var(--ds-color-primary-text);
     --_switch-on-fill: var(--ds-color-primary-text);
+    --_switch-thumb-shadow: var(--ds-elevation-tooltip);
+    --_switch-thumb-backdrop: brightness(1.12) saturate(1.6);
+    --_switch-thumb-highlight: radial-gradient(90% 70% at 30% 10%, var(--ds-color-glass-highlight), transparent 70%);
+    /* A standing sheen on the thumb at rest, so the glass reads before it is touched (order 1.28). */
+    --_switch-thumb-highlight-opacity: 0.6;
+    --_switch-thumb-highlight-opacity-pressed: 1;
+    --_switch-thumb-solid-pressed: 0.2;
+    --_switch-lean: var(--ds-distance-shift);
+    --_switch-duration: var(--ds-duration-spring-soft);
+    --_switch-ease: var(--ds-ease-spring-soft);
+    --_switch-duration-out: var(--ds-duration-spring-soft);
+    --_switch-ease-out: var(--ds-ease-spring-soft);
+  }
+
+  [data-style='liquid'] [data-ds='switch']:dir(rtl) {
+    --_switch-thumb-highlight: radial-gradient(90% 70% at 70% 10%, var(--ds-color-glass-highlight), transparent 70%);
   }
 
   /* Off: a solid quiet fill inside the control border. With the tint layer the track keeps it, and the layer covers it when on. */
@@ -28,61 +53,73 @@
     background-color: var(--ds-color-bg-surface-4);
   }
 
-  [data-style='liquid'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    box-shadow: var(--ds-elevation-tooltip);
-  }
-
   /* White on the light off track is under 3:1, so the off thumb carries the control edge in light. */
-  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    box-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control), var(--ds-elevation-tooltip);
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked'] {
+    --_switch-thumb-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control), var(--ds-elevation-tooltip);
   }
 
-  /* Pressed: the thumb becomes a lens that brightens the track under it. */
-  [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-    --_switch-thumb-bg: var(--ds-color-glass-lens);
+  /* Held: the lens takes a bright rim around its edge, over the lift. */
+  [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
+    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
+    --_switch-thumb-solid: var(--_switch-thumb-solid-pressed);
   }
 
-  [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
-    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
-
-    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
-    backdrop-filter: brightness(1.12) saturate(1.6);
-  }
-
-  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
-    box-shadow:
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-shadow:
       0 0 0 var(--ds-border-width-default) var(--ds-color-border-control),
       inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
       var(--ds-elevation-tooltip);
   }
 
-  /* ------------------------------------------------------------ fallbacks: a solid white thumb, no filter */
+  /* ------------------------------------------------------------ fallbacks: a solid white thumb, no lens */
 
   @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
-    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-      --_switch-thumb-bg: var(--_switch-thumb-off);
+    [data-style='liquid'] [data-ds='switch'],
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+    [data-style='liquid'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
+      --_switch-thumb-highlight: none;
+      --_switch-thumb-solid: 1;
+      --_switch-thumb-solid-pressed: 1;
     }
   }
 
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-      --_switch-thumb-bg: var(--_switch-thumb-off);
+    [data-style='liquid'] [data-ds='switch'],
+    [data-style='liquid'] [data-ds='switch']:dir(rtl),
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+    [data-style='liquid'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-highlight: none;
+      --_switch-thumb-solid: 1;
+      --_switch-thumb-solid-pressed: 1;
     }
 
-    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+    [data-style='liquid'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
+      --_switch-thumb-shadow: var(--ds-elevation-tooltip);
     }
   }
 
-  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-    --_switch-thumb-bg: var(--_switch-thumb-off);
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:dir(rtl),
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
+    --_switch-thumb-backdrop: none;
+    --_switch-thumb-highlight: none;
+    --_switch-thumb-solid: 1;
+    --_switch-thumb-solid-pressed: 1;
+    --_switch-thumb-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control), var(--ds-elevation-tooltip);
   }
 
-  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+  /* Forced colors: Switch.css draws the thumb in system colors and hides the lens part; the shadow is dropped by the system. */
+  /* The press shape is the platform's on ios and android (packages/css/src/platform),
+     and recipes beat that layer, so the style sets it only on the web platform. */
+  [data-style='liquid'][data-platform='web'] [data-ds='switch'] {
+    --_switch-thumb-size-pressed: var(--ds-scale-pop);
+    --_switch-stretch: var(--ds-scale-stretch);
+    /* A longer capsule than Neutral's 1.75: the lens has room to glide (order 1.28). */
+    --_switch-width: calc(var(--_switch-height) * 2);
   }
 
-  /* Forced colors: the system draws the track border and Switch.css draws the thumb; the filter is gone above. */
 }

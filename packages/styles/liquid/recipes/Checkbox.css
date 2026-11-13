@@ -3,14 +3,27 @@
  * and draws a white mark; unchecked is a solid circle inside the control
  * border; the circle sinks to scale.press while pressed (PLAN.md 3.7,
  * Liquid). Why not tokens alone: Checkbox.css takes the box radius from
- * radius.xs, its neutral tone from the text color and its press from
- * scale.anticipate, and none of those is a Liquid token to change. The
- * mark is Checkbox.css's own draw. No glass: a checkbox sits in content.
+ * radius.xs, its neutral tone from the text color, its press from
+ * scale.anticipate and its land from the bouncy spring, and none of those
+ * is a Liquid token to change. No glass: a checkbox sits in content.
+ *
+ * Motion (Checkbox.css's order 1.23 hooks): the tint pools in from the
+ * centre on the soft spring (--_checkbox-fill-ease), the check draws on the
+ * soft spring (--_checkbox-ease) with a thicker
+ * round stroke, the box comes back from the dip on the soft spring too
+ * (--_checkbox-land-ease) and the dash bends into the check on it
+ * (--_checkbox-morph-ease): a liquid fill, no overshoot. Reduced motion is
+ * Checkbox.css's own (--_checkbox-motion 0); the dip goes here as well.
  */
 @layer ds.recipes {
   [data-style='liquid'] [data-ds='checkbox'] {
     --_checkbox-radius: var(--ds-radius-pill);
     --_checkbox-press-scale: var(--ds-scale-press);
+    --_checkbox-ease: var(--ds-ease-spring-soft);
+    --_checkbox-fill-ease: var(--ds-ease-spring-soft);
+    --_checkbox-land-ease: var(--ds-ease-spring-soft);
+    --_checkbox-morph-ease: var(--ds-ease-spring-soft);
+    --_checkbox-stroke-width: 2.5;
   }
 
   /* The neutral and accent tones both take the tint. Danger and read only keep their own fills. */

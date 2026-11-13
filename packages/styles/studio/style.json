@@ -3,6 +3,7 @@
   "name": "Studio",
   "extends": "base",
   "status": "stable",
+  "proposedSchemes": ["dark", "light"],
   "schemes": ["dark", "light"],
   "defaultScheme": "dark",
   "defaultDensity": "default",
@@ -12,17 +13,17 @@
   "optionalParts": {},
   "fonts": { "sans": "Inter Variable", "arabic": "IBM Plex Sans Arabic" },
   "dials": {
-    "base": "achromatic, black body, six flat steps; light: gray body, white and gray steps",
-    "accent": "ten pastel accents for identity, neutral primary: a white pill in dark, a black pill in light",
+    "base": "achromatic, black body, near black steps; light: white body, white and pale gray steps",
+    "accent": "ten pastel accents for identity, neutral primary: a white cell in dark, a black cell in light",
     "depth": "flat tone steps, no shadow, no blur",
-    "separation": "1px gap between tiles, a hairline on overlays",
-    "radius": "2, 3, 4, 4, 6, square overlays and rows, pill controls",
-    "controls": "bordered transparent pills, a flat white primary",
+    "separation": "1px rules: between tiles, around overlays in the bright text color, between dialog actions",
+    "radius": "2 on controls, fields and marks, 0 on panels, cards, overlays and rows",
+    "controls": "bordered transparent cells, a flat white primary, press inverts",
     "density": "compact",
     "type": "Inter Variable, small sizes, medium weight labels, tabular figures",
     "icons": "pixel",
     "chrome": "rail, sidebars, inspector",
-    "motion": "hard cuts in steps, 70 to 220ms, no travel, no scale",
+    "motion": "hard cuts in steps, 70 to 220ms, no travel, no scale, windows land in four steps",
     "focus": "2px achromatic ring"
   }
 }

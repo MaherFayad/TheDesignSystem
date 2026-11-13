@@ -18,6 +18,9 @@
       inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
     --_tooltip-radius: var(--ds-radius-panel);
     --_tooltip-padding-inline: var(--ds-space-l);
+    /* A soft unfold, shorter than the Popover's: the chip grows out of its trigger along the axis away from it, on the soft spring. */
+    --_tooltip-enter-stretch: calc(var(--_tooltip-enter-scale) * var(--ds-scale-menu-enter));
+    --_tooltip-ease-in: var(--ds-ease-spring-soft);
 
     -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));

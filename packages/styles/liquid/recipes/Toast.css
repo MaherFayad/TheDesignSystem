@@ -14,16 +14,19 @@
  * The tone keeps its colored start edge and icon, so glass is never the
  * only signal.
  *
- * Motion: every toast drops in from above (distance.enter) and grows from
- * scale.enter on the bouncy spring (duration and ease from Toast.css), and
- * the stack sits close (space.2xs between toasts), so a new toast seems to
- * come out from the edge of the one before it. A true overlap, with the
- * later toast tucked under the first and fanned out on hover or focus,
- * needs a hook in Toast.css (see the report).
+ * Motion: a merging stack (Toast.css's order 1.23 stack). Toasts pool
+ * into one glass drop: each one behind peeks a small strip (--_toast-peek
+ * space.xs) and is barely smaller (--_toast-depth 0.03), so the stack reads
+ * as one thick piece of glass rather than a fan of cards. A new toast comes
+ * in from its edge and grows from scale.enter on the soft spring, and the
+ * others slide back into it on the same soft spring (--_toast-stack-ease):
+ * glide and merge, no bounce. Hover or focus opens the stack into a list
+ * with a tight space.2xs gap (--_toaster-gap), so the cards still nearly
+ * touch, like drops that have just come apart.
  */
 @layer ds.recipes {
   [data-style='liquid'] [data-ds='toaster'] {
-    gap: var(--ds-space-2xs);
+    --_toaster-gap: var(--ds-space-2xs);
   }
 
   [data-style='liquid'] [data-ds='toast'] {
@@ -32,8 +35,12 @@
     --_toast-radius: var(--ds-radius-panel);
     --_toast-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
       inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
-    /* Every position drops in from above, the bottom ones too: this layer wins over the travel Toast.css sets per edge. */
-    --_toast-enter-y: calc(var(--ds-distance-enter) * -1);
+    --_toast-peek: var(--ds-space-xs);
+    --_toast-depth: 0.03;
+    --_toast-stack-duration: var(--ds-duration-spring-soft);
+    --_toast-stack-ease: var(--ds-ease-spring-soft);
+    --_toast-duration-in: var(--ds-duration-spring-soft);
+    --_toast-ease-in: var(--ds-ease-spring-soft);
 
     -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
