@@ -130,7 +130,7 @@ passes.
 | N43 | Done. Android sets `--_switch-thumb-size-rest: calc(16 / 28)` (16dp dot, 24dp on, 28dp held) |
 | N46 | Fixed. The Select placeholder reads `--_select-placeholder-fg` (`text-muted`), which keeps 4.5:1 on each field fill |
 | ToggleGroup label dip (angular-sync-3 section 6 item 2) | Fixed. The ink label is kept outside the indicator track, so `followIndicator` no longer dips it |
-| `hit` part | ToggleButton and ToggleGroup manifests list `hit` in `anatomy`. Child shape tests: ToggleButton children are `['state-layer','start','label','hit']`; ToggleGroup items are `['null','icon','hit']` |
+| `hit` part | ToggleButton's manifest lists `hit` in `anatomy`. Child shape tests: ToggleButton children are `['state-layer','start','label','hit']`; ToggleGroup items are `[null,'icon','hit']`. ToggleGroup's manifest does not list it (see Decisions) |
 
 ## Hooks (defaults keep today's look)
 
@@ -188,6 +188,13 @@ The first agent's files are listed in `8aeb19b`.
 - Android's off dot edge uses `outline` with a negative offset, divided by
   the dot scale. Recipes do not set `outline`, so a platform rule can add it
   without beating the recipe layer.
+- `hit` is not in ToggleGroup's anatomy, against the work order. Each
+  ToggleGroup item is its own `data-ds="toggle-button"` root, so the
+  contract scan credits the item's `hit` to ToggleButton. With `hit` listed,
+  "ToggleGroup: anatomy" failed in all four styles ("no root on the page
+  renders [data-part=hit]"). ToggleGroup's anatomy already lists none of the
+  item's children (`icon`, `label`). Without `hit`, ToggleGroup passes 37 of
+  37.
 - I did not touch style recipes, `Button.css` or the lint package. Their
   values are in the tables above.
 
@@ -197,8 +204,9 @@ The first agent's files are listed in `8aeb19b`.
   tests, all pass.
 - `npx tsc --noEmit -p tsconfig.json`: clean.
 - The React contract suite for Switch, Checkbox, CheckboxGroup, RadioGroup,
-  RadioCard, ToggleButton, ToggleGroup, Select, DropdownMenu and ListBox: see
-  the summary returned to the lead.
+  RadioCard, ToggleButton, ToggleGroup, Select, DropdownMenu and ListBox: all
+  10 pass. Each has 37 cases, Select and DropdownMenu 57. ToggleGroup passed
+  only after the anatomy fix above.
 - `npm run check`: see the summary returned to the lead.
 - Lint gates: two gates (`no-tailwind`, `no-native-title`) timed out at 5s
   under machine load. They report no findings.
