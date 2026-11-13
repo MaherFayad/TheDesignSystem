@@ -1,0 +1,1565 @@
+{
+ "note": "Order 1.29 final fixes (B14 tab-slide). perf.cjs, 5 runs per id, 390x844 touch, 4x CPU, scheme light, production builds of the React gallery (vite build, vite preview), one after another on the same machine. before: HEAD sources of Tabs.tsx and Popover.tsx. after: this order (TabsPanel without the Presence switch, keep in view read only on overflow). toggleGroupPrototype: after plus ToggleGroup moved to inFrame (planFollow, planInk), a change outside this order, built to a scratch folder and reverted; it is a change the lead must assign. loadAvg1m is per file.",
+ "before": {
+  "liquid": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5193",
+   "style": "liquid",
+   "loadAvg1m": [
+    1.61,
+    1.33,
+    1.25
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "liquid",
+     "presented": 8,
+     "dropped": 23,
+     "largestLongTaskMs": 317,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 93,
+       "presented": 8,
+       "dropped": 17,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 13,
+        "STATE_PRESENTED_PARTIAL": 4
+       },
+       "longTasksMain": [
+        246
+       ],
+       "longTaskObserver": [
+        246
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 3,
+       "rafMaxMs": 233
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 94,
+       "presented": 9,
+       "dropped": 16,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 16
+       },
+       "longTasksMain": [
+        255
+       ],
+       "longTaskObserver": [
+        254
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 1,
+       "rafMaxMs": 267
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 99,
+       "presented": 8,
+       "dropped": 23,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 20,
+        "STATE_PRESENTED_PARTIAL": 3
+       },
+       "longTasksMain": [
+        317,
+        58
+       ],
+       "longTaskObserver": [
+        317,
+        57
+       ],
+       "rafFrames": 93,
+       "rafOver33ms": 3,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 98,
+       "presented": 8,
+       "dropped": 23,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 67,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 20,
+        "STATE_PRESENTED_PARTIAL": 3
+       },
+       "longTasksMain": [
+        324
+       ],
+       "longTaskObserver": [
+        323
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 2,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 100,
+       "presented": 7,
+       "dropped": 27,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 7,
+        "STATE_DROPPED": 21,
+        "STATE_PRESENTED_PARTIAL": 6
+       },
+       "longTasksMain": [
+        356,
+        65
+       ],
+       "longTaskObserver": [
+        355,
+        64
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 2,
+       "rafMaxMs": 350
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "liquid",
+     "presented": 2,
+     "dropped": 2,
+     "largestLongTaskMs": 63,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 1,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 1
+       },
+       "longTasksMain": [
+        52
+       ],
+       "longTaskObserver": [
+        51
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 33
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 1,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        74
+       ],
+       "longTaskObserver": [
+        73
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 1,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        63
+       ],
+       "longTaskObserver": [
+        62
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        56
+       ],
+       "longTaskObserver": [
+        55
+       ],
+       "rafFrames": 91,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 83,
+       "presented": 2,
+       "dropped": 4,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 4
+       },
+       "longTasksMain": [
+        86
+       ],
+       "longTaskObserver": [
+        85
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 83
+      }
+     ]
+    }
+   ]
+  },
+  "neutral": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5193",
+   "style": "neutral",
+   "loadAvg1m": [
+    1.15,
+    1.17,
+    0.98
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "neutral",
+     "presented": 9,
+     "dropped": 20,
+     "largestLongTaskMs": 333,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 95,
+       "presented": 9,
+       "dropped": 17,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 17
+       },
+       "longTasksMain": [
+        248
+       ],
+       "longTaskObserver": [
+        247
+       ],
+       "rafFrames": 95,
+       "rafOver33ms": 1,
+       "rafMaxMs": 283
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 100,
+       "presented": 10,
+       "dropped": 20,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 20
+       },
+       "longTasksMain": [
+        333
+       ],
+       "longTaskObserver": [
+        332
+       ],
+       "rafFrames": 96,
+       "rafOver33ms": 1,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 100,
+       "presented": 9,
+       "dropped": 23,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 21,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        341,
+        56
+       ],
+       "longTaskObserver": [
+        340,
+        55
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 3,
+       "rafMaxMs": 350
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 99,
+       "presented": 9,
+       "dropped": 23,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 67,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 20,
+        "STATE_PRESENTED_PARTIAL": 3
+       },
+       "longTasksMain": [
+        336,
+        59
+       ],
+       "longTaskObserver": [
+        335,
+        58
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 2,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 94,
+       "presented": 9,
+       "dropped": 16,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 15,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        251
+       ],
+       "longTaskObserver": [
+        251
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 2,
+       "rafMaxMs": 250
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "neutral",
+     "presented": 2,
+     "dropped": 2,
+     "largestLongTaskMs": 0,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 79,
+       "presented": 1,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 2,
+       "dropped": 4,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 4
+       },
+       "longTasksMain": [
+        78
+       ],
+       "longTaskObserver": [
+        78
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 1,
+       "rafMaxMs": 83
+      },
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        52
+       ],
+       "longTaskObserver": [
+        52
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "after": {
+  "liquid": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5192",
+   "style": "liquid",
+   "loadAvg1m": [
+    1.5,
+    1.94,
+    1.66
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "liquid",
+     "presented": 10,
+     "dropped": 18,
+     "largestLongTaskMs": 268,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 96,
+       "presented": 8,
+       "dropped": 18,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 16,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        259
+       ],
+       "longTaskObserver": [
+        259
+       ],
+       "rafFrames": 95,
+       "rafOver33ms": 2,
+       "rafMaxMs": 267
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 94,
+       "presented": 10,
+       "dropped": 17,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 67,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 16,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        230,
+        65
+       ],
+       "longTaskObserver": [
+        229,
+        64
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 2,
+       "rafMaxMs": 267
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 95,
+       "presented": 8,
+       "dropped": 18,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 17,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        269
+       ],
+       "longTaskObserver": [
+        268
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 1,
+       "rafMaxMs": 283
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 98,
+       "presented": 10,
+       "dropped": 22,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 20,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        313,
+        65
+       ],
+       "longTaskObserver": [
+        313,
+        65
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 2,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 97,
+       "presented": 10,
+       "dropped": 20,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 67,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 19,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        268
+       ],
+       "longTaskObserver": [
+        268
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 2,
+       "rafMaxMs": 317
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "liquid",
+     "presented": 2,
+     "dropped": 2,
+     "largestLongTaskMs": 59,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 83,
+       "presented": 1,
+       "dropped": 4,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 4
+       },
+       "longTasksMain": [
+        88
+       ],
+       "longTaskObserver": [
+        88
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 83
+      },
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 1,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 1
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 87,
+       "rafOver33ms": 0,
+       "rafMaxMs": 33
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        59
+       ],
+       "longTaskObserver": [
+        58
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        66
+       ],
+       "longTaskObserver": [
+        65
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        55
+       ],
+       "longTaskObserver": [
+        55
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      }
+     ]
+    }
+   ]
+  },
+  "neutral": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5192",
+   "style": "neutral",
+   "loadAvg1m": [
+    1.25,
+    1.28,
+    1.15
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "neutral",
+     "presented": 9,
+     "dropped": 19,
+     "largestLongTaskMs": 237,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 100,
+       "presented": 10,
+       "dropped": 23,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 67,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 21,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        344
+       ],
+       "longTaskObserver": [
+        343
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 2,
+       "rafMaxMs": 350
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 96,
+       "presented": 9,
+       "dropped": 19,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 9,
+        "STATE_DROPPED": 18,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        82,
+        213
+       ],
+       "longTaskObserver": [
+        81,
+        212
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 300
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 98,
+       "presented": 8,
+       "dropped": 24,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 21,
+        "STATE_PRESENTED_PARTIAL": 3
+       },
+       "longTasksMain": [
+        312,
+        72
+       ],
+       "longTaskObserver": [
+        311,
+        72
+       ],
+       "rafFrames": 83,
+       "rafOver33ms": 3,
+       "rafMaxMs": 333
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 93,
+       "presented": 10,
+       "dropped": 15,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 14,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        228,
+        57
+       ],
+       "longTaskObserver": [
+        227,
+        57
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 2,
+       "rafMaxMs": 233
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 91,
+       "presented": 8,
+       "dropped": 15,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 14,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        237
+       ],
+       "longTaskObserver": [
+        236
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 1,
+       "rafMaxMs": 233
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "neutral",
+     "presented": 2,
+     "dropped": 3,
+     "largestLongTaskMs": 66,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 1,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        51
+       ],
+       "longTaskObserver": [
+        50
+       ],
+       "rafFrames": 90,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 1,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        66
+       ],
+       "longTaskObserver": [
+        65
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 83,
+       "presented": 2,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        84
+       ],
+       "longTaskObserver": [
+        83
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 2,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        69
+       ],
+       "longTaskObserver": [
+        68
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 79,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 75,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "toggleGroupPrototype": {
+  "liquid": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5196",
+   "style": "liquid",
+   "loadAvg1m": [
+    0.29,
+    0.3,
+    0.46
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "liquid",
+     "presented": 8,
+     "dropped": 15,
+     "largestLongTaskMs": 227,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 95,
+       "presented": 8,
+       "dropped": 17,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 16,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        260
+       ],
+       "longTaskObserver": [
+        260
+       ],
+       "rafFrames": 90,
+       "rafOver33ms": 1,
+       "rafMaxMs": 267
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 90,
+       "presented": 10,
+       "dropped": 15,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 65,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 13,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        209,
+        56
+       ],
+       "longTaskObserver": [
+        208,
+        54
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 2,
+       "rafMaxMs": 217
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 97,
+       "presented": 8,
+       "dropped": 19,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 18,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        303
+       ],
+       "longTaskObserver": [
+        303
+       ],
+       "rafFrames": 90,
+       "rafOver33ms": 2,
+       "rafMaxMs": 300
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 90,
+       "presented": 10,
+       "dropped": 14,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 12,
+        "STATE_PRESENTED_PARTIAL": 2
+       },
+       "longTasksMain": [
+        196
+       ],
+       "longTaskObserver": [
+        195
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 1,
+       "rafMaxMs": 200
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 92,
+       "presented": 8,
+       "dropped": 14,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 13,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        227
+       ],
+       "longTaskObserver": [
+        226
+       ],
+       "rafFrames": 95,
+       "rafOver33ms": 1,
+       "rafMaxMs": 217
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "liquid",
+     "presented": 1,
+     "dropped": 2,
+     "largestLongTaskMs": 53,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 1,
+       "dropped": 1,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 1
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 87,
+       "rafOver33ms": 0,
+       "rafMaxMs": 33
+      },
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        53
+       ],
+       "longTaskObserver": [
+        52
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 1,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        60
+       ],
+       "longTaskObserver": [
+        60
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 2,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        54
+       ],
+       "longTaskObserver": [
+        53
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 1,
+       "dropped": 2,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 78,
+        "STATE_PRESENTED_ALL": 1,
+        "STATE_DROPPED": 2
+       },
+       "longTasksMain": [
+        51
+       ],
+       "longTaskObserver": [
+        50
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 50
+      }
+     ]
+    }
+   ]
+  },
+  "neutral": {
+   "viewport": "390x844 touch",
+   "cpuThrottle": 4,
+   "window": "trigger plus 1200ms",
+   "base": "http://127.0.0.1:5196",
+   "style": "neutral",
+   "loadAvg1m": [
+    0.46,
+    0.48,
+    1.05
+   ],
+   "rows": [
+    {
+     "id": "tab-slide",
+     "style": "neutral",
+     "presented": 8,
+     "dropped": 12,
+     "largestLongTaskMs": 188,
+     "runs": [
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 89,
+       "presented": 8,
+       "dropped": 12,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 11,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        181
+       ],
+       "longTaskObserver": [
+        180
+       ],
+       "rafFrames": 89,
+       "rafOver33ms": 1,
+       "rafMaxMs": 183
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 89,
+       "presented": 8,
+       "dropped": 12,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 69,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 11,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        188
+       ],
+       "longTaskObserver": [
+        187
+       ],
+       "rafFrames": 88,
+       "rafOver33ms": 1,
+       "rafMaxMs": 183
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 92,
+       "presented": 8,
+       "dropped": 14,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 70,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 13,
+        "STATE_PRESENTED_PARTIAL": 1
+       },
+       "longTasksMain": [
+        219
+       ],
+       "longTaskObserver": [
+        218
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 2,
+       "rafMaxMs": 217
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 88,
+       "presented": 8,
+       "dropped": 14,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 66,
+        "STATE_PRESENTED_ALL": 8,
+        "STATE_DROPPED": 11,
+        "STATE_PRESENTED_PARTIAL": 3
+       },
+       "longTasksMain": [
+        177
+       ],
+       "longTaskObserver": [
+        176
+       ],
+       "rafFrames": 82,
+       "rafOver33ms": 1,
+       "rafMaxMs": 183
+      },
+      {
+       "animProps": [
+        "color",
+        "background-color",
+        "transform",
+        "clipPath"
+       ],
+       "frames": 89,
+       "presented": 10,
+       "dropped": 11,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 68,
+        "STATE_PRESENTED_ALL": 10,
+        "STATE_DROPPED": 11
+       },
+       "longTasksMain": [
+        193
+       ],
+       "longTaskObserver": [
+        193
+       ],
+       "rafFrames": 87,
+       "rafOver33ms": 1,
+       "rafMaxMs": 200
+      }
+     ]
+    },
+    {
+     "id": "button-press",
+     "style": "neutral",
+     "presented": 2,
+     "dropped": 3,
+     "largestLongTaskMs": 65,
+     "runs": [
+      {
+       "animProps": [],
+       "frames": 80,
+       "presented": 2,
+       "dropped": 1,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 1
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 33
+      },
+      {
+       "animProps": [],
+       "frames": 83,
+       "presented": 2,
+       "dropped": 4,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 4
+       },
+       "longTasksMain": [
+        86
+       ],
+       "longTaskObserver": [
+        85
+       ],
+       "rafFrames": 86,
+       "rafOver33ms": 1,
+       "rafMaxMs": 83
+      },
+      {
+       "animProps": [],
+       "frames": 81,
+       "presented": 2,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        65
+       ],
+       "longTaskObserver": [
+        65
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 82,
+       "presented": 2,
+       "dropped": 3,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 77,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 3
+       },
+       "longTasksMain": [
+        70
+       ],
+       "longTaskObserver": [
+        70
+       ],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 67
+      },
+      {
+       "animProps": [],
+       "frames": 79,
+       "presented": 2,
+       "dropped": 1,
+       "frameStates": {
+        "STATE_NO_UPDATE_DESIRED": 76,
+        "STATE_PRESENTED_ALL": 2,
+        "STATE_DROPPED": 1
+       },
+       "longTasksMain": [],
+       "longTaskObserver": [],
+       "rafFrames": 85,
+       "rafOver33ms": 1,
+       "rafMaxMs": 33
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
