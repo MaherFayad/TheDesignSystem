@@ -1,0 +1,140 @@
+{
+ "note": "Live site, Chromium 1243 headless, Pixel 7 descriptor with touch. Times are ms from the start of sampling; the touch starts about 10 to 30ms after.",
+ "pressHold_button": {
+  "what": "Accent solid Button, Neutral. A touch held for holdMs. :active and the 0.98 press scale only start at touchend.",
+  "runs": [
+   {
+    "holdMs": 60,
+    "activeLog": [
+     [
+      7,
+      "active=false"
+     ],
+     [
+      140,
+      "active=true"
+     ],
+     [
+      242,
+      "active=false"
+     ]
+    ],
+    "restWidthPx": 116.55,
+    "pressedWidthPx": 114.22,
+    "firstDipAtMs": 157
+   },
+   {
+    "holdMs": 90,
+    "activeLog": [
+     [
+      10,
+      "active=false"
+     ],
+     [
+      144,
+      "active=true"
+     ],
+     [
+      250,
+      "active=false"
+     ]
+    ],
+    "restWidthPx": 116.55,
+    "pressedWidthPx": 114.22,
+    "firstDipAtMs": 161
+   },
+   {
+    "holdMs": 150,
+    "activeLog": [
+     [
+      10,
+      "active=false"
+     ],
+     [
+      210,
+      "active=true"
+     ],
+     [
+      314,
+      "active=false"
+     ]
+    ],
+    "restWidthPx": 116.55,
+    "pressedWidthPx": 114.22,
+    "firstDipAtMs": 228
+   },
+   {
+    "holdMs": 300,
+    "activeLog": [
+     [
+      11,
+      "active=false"
+     ],
+     [
+      411,
+      "active=true"
+     ],
+     [
+      512,
+      "active=false"
+     ]
+    ],
+    "restWidthPx": 116.55,
+    "pressedWidthPx": 114.22,
+    "firstDipAtMs": 428
+   },
+   {
+    "holdMs": 600,
+    "activeLog": [
+     [
+      14,
+      "active=false"
+     ],
+     [
+      647,
+      "active=true"
+     ],
+     [
+      790,
+      "active=false"
+     ]
+    ],
+    "restWidthPx": 116.55,
+    "pressedWidthPx": 114.22,
+    "firstDipAtMs": 712
+   }
+  ]
+ },
+ "tooltip_touchLongPress": {
+  "what": "Tooltip on the first IconButton, touch held 900ms then lifted. The new tooltip appears at full opacity at about 556ms with no entrance, and fades out about 100ms after the finger lifts.",
+  "appearMs": 556,
+  "fadeOutStartMs": 1031,
+  "goneMs": 1123
+ },
+ "reference_bestdesignsonx_ui": {
+  "what": "The reference site own UI on desktop: hover on the All and Saved tabs, then a press. Numbers only.",
+  "hoverIndicatorTransformMs": 380,
+  "hoverIndicatorEase": "cubic-bezier(0.16, 1, 0.3, 1)",
+  "hoverBackgroundMs": 220,
+  "dialogEnterMs": 200,
+  "inputFocusShadowMs": 150,
+  "sounds": {
+   "audioBufferStarts": 12,
+   "clipLengthsMs": [
+    209,
+    183,
+    104,
+    104,
+    157,
+    72,
+    384,
+    192,
+    104,
+    287,
+    366,
+    0
+   ]
+  },
+  "pageEntrance": "words and blocks rise with opacity and filter blur over 900ms on load"
+ }
+}

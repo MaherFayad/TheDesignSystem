@@ -1,0 +1,4567 @@
+[
+ {
+  "id": "button-press",
+  "device": "pixel",
+  "trigger": "button Save draft",
+  "events": [
+   [
+    "pointerdown",
+    35
+   ],
+   [
+    "touchstart",
+    37
+   ],
+   [
+    "pointerup",
+    134
+   ],
+   [
+    "touchend",
+    134
+   ],
+   [
+    "mousedown",
+    138
+   ],
+   [
+    "click",
+    139
+   ]
+  ],
+  "animations": [
+   {
+    "target": "button",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "button::after",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 17,
+    "start": 133,
+    "end": 417,
+    "spanMs": 284,
+    "maxDx": 0,
+    "maxDy": 1,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c",
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "button",
+    "frames": 61,
+    "changedFrames": 19,
+    "start": 133,
+    "end": 450,
+    "spanMs": 317,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg",
+     "c",
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "switch-stretch",
+  "device": "pixel",
+  "trigger": "BUTTON ",
+  "events": [
+   [
+    "pointerdown",
+    46
+   ],
+   [
+    "touchstart",
+    47
+   ],
+   [
+    "pointerup",
+    144
+   ],
+   [
+    "touchend",
+    144
+   ],
+   [
+    "mousedown",
+    149
+   ],
+   [
+    "click",
+    150
+   ]
+  ],
+  "animations": [
+   {
+    "target": "span/track",
+    "type": "CSSTransition",
+    "name": "background-color",
+    "props": [
+     "background-color"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "steps(1)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span/track",
+    "type": "CSSTransition",
+    "name": "border-bottom-color",
+    "props": [
+     "border-bottom-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span/track",
+    "type": "CSSTransition",
+    "name": "border-left-color",
+    "props": [
+     "border-left-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span/track",
+    "type": "CSSTransition",
+    "name": "border-right-color",
+    "props": [
+     "border-right-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span/track",
+    "type": "CSSTransition",
+    "name": "border-top-color",
+    "props": [
+     "border-top-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "clip-path",
+    "props": [
+     "clip-path"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "steps(1, start)",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "span/thumb",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 160,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/thumb",
+    "frames": 62,
+    "changedFrames": 20,
+    "start": 143,
+    "end": 476,
+    "spanMs": 333,
+    "maxDx": 18,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1.02
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/thumb-lens",
+    "frames": 62,
+    "changedFrames": 14,
+    "start": 143,
+    "end": 376,
+    "spanMs": 233,
+    "maxDx": 18,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1.02
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w"
+    ]
+   },
+   {
+    "el": "span/track",
+    "frames": 62,
+    "changedFrames": 2,
+    "start": 143,
+    "end": 310,
+    "spanMs": 167,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "check-draw",
+  "device": "pixel",
+  "trigger": "BUTTON ",
+  "events": [
+   [
+    "pointerdown",
+    40
+   ],
+   [
+    "touchstart",
+    41
+   ],
+   [
+    "pointerup",
+    140
+   ],
+   [
+    "touchend",
+    140
+   ],
+   [
+    "mousedown",
+    143
+   ],
+   [
+    "click",
+    144
+   ]
+  ],
+  "animations": [
+   {
+    "target": "span/indicator",
+    "type": "CSSTransition",
+    "name": "border-bottom-color",
+    "props": [
+     "border-bottom-color"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "CSSTransition",
+    "name": "border-left-color",
+    "props": [
+     "border-left-color"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "CSSTransition",
+    "name": "border-right-color",
+    "props": [
+     "border-right-color"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "CSSTransition",
+    "name": "border-top-color",
+    "props": [
+     "border-top-color"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "clip-path",
+    "props": [
+     "clip-path"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 90,
+    "delay": 0,
+    "easing": "steps(1, start)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "path",
+    "type": "CSSTransition",
+    "name": "stroke-dashoffset",
+    "props": [
+     "stroke-dashoffset"
+    ],
+    "duration": 72,
+    "delay": 45,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   },
+   {
+    "target": "path",
+    "type": "CSSTransition",
+    "name": "stroke-dashoffset",
+    "props": [
+     "stroke-dashoffset"
+    ],
+    "duration": 108,
+    "delay": 117,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 156,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/indicator",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 138,
+    "end": 156,
+    "spanMs": 18,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "svg/mark",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 138,
+    "end": 156,
+    "spanMs": 18,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "radio-pop",
+  "device": "pixel",
+  "trigger": "BUTTON ",
+  "events": [
+   [
+    "pointerdown",
+    35
+   ],
+   [
+    "touchstart",
+    36
+   ],
+   [
+    "pointerup",
+    135
+   ],
+   [
+    "touchend",
+    135
+   ],
+   [
+    "mousedown",
+    138
+   ],
+   [
+    "click",
+    141
+   ]
+  ],
+  "animations": [
+   {
+    "target": "button/control[radio]",
+    "type": "CSSTransition",
+    "name": "border-bottom-color",
+    "props": [
+     "border-bottom-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 301,
+    "state": "running"
+   },
+   {
+    "target": "button/control[radio]",
+    "type": "CSSTransition",
+    "name": "border-left-color",
+    "props": [
+     "border-left-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 301,
+    "state": "running"
+   },
+   {
+    "target": "button/control[radio]",
+    "type": "CSSTransition",
+    "name": "border-right-color",
+    "props": [
+     "border-right-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 301,
+    "state": "running"
+   },
+   {
+    "target": "button/control[radio]",
+    "type": "CSSTransition",
+    "name": "border-top-color",
+    "props": [
+     "border-top-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 301,
+    "state": "running"
+   }
+  ],
+  "tracks": []
+ },
+ {
+  "id": "tab-slide",
+  "device": "pixel",
+  "trigger": "button Move every pill",
+  "events": [
+   [
+    "pointerdown",
+    40
+   ],
+   [
+    "touchstart",
+    43
+   ],
+   [
+    "pointerup",
+    138
+   ],
+   [
+    "touchend",
+    139
+   ],
+   [
+    "mousedown",
+    142
+   ],
+   [
+    "click",
+    143
+   ]
+  ],
+  "animations": [
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "background-color",
+    "props": [
+     "background-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "background-color",
+    "props": [
+     "background-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button/item[radio]",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "color"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "color"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "color"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/indicator",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label-ink",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "clipPath"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 173,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "color"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 173,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "div/panel[tabpanel]",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 137,
+    "end": 173,
+    "spanMs": 36,
+    "maxDx": 195,
+    "maxDy": 641.5,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/panel[tabpanel]",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 137,
+    "end": 173,
+    "spanMs": 36,
+    "maxDx": 206,
+    "maxDy": 553.3,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/indicator",
+    "frames": 52,
+    "changedFrames": 10,
+    "start": 178,
+    "end": 338,
+    "spanMs": 160,
+    "maxDx": 90.7,
+    "maxDy": 0,
+    "scaleRange": [
+     0.641,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/indicator",
+    "frames": 52,
+    "changedFrames": 10,
+    "start": 178,
+    "end": 338,
+    "spanMs": 160,
+    "maxDx": 76.7,
+    "maxDy": 0,
+    "scaleRange": [
+     0.869,
+     1.069
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/indicator",
+    "frames": 61,
+    "changedFrames": 11,
+    "start": 137,
+    "end": 338,
+    "spanMs": 201,
+    "maxDx": 46.8,
+    "maxDy": 0,
+    "scaleRange": [
+     0.764,
+     1.007
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "tf",
+     "x",
+     "w"
+    ]
+   },
+   {
+    "el": "button",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 288,
+    "end": 354,
+    "spanMs": 66,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 288,
+    "end": 354,
+    "spanMs": 66,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "span/end",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 288,
+    "end": 354,
+    "spanMs": 66,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 288,
+    "end": 354,
+    "spanMs": 66,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "button/trigger[tab]",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 137,
+    "end": 173,
+    "spanMs": 36,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 137,
+    "end": 173,
+    "spanMs": 36,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   },
+   {
+    "el": "button/trigger[tab]",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 137,
+    "end": 173,
+    "spanMs": 36,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "chip-check-pop",
+  "device": "pixel",
+  "trigger": "chip Video",
+  "events": [
+   [
+    "pointerdown",
+    36
+   ],
+   [
+    "touchstart",
+    38
+   ],
+   [
+    "pointerup",
+    136
+   ],
+   [
+    "touchend",
+    137
+   ],
+   [
+    "mousedown",
+    139
+   ],
+   [
+    "click",
+    140
+   ]
+  ],
+  "animations": [
+   {
+    "target": "path",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "strokeDasharray",
+     "strokeDashoffset"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 152,
+    "state": "running"
+   },
+   {
+    "target": "icon",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+    "firstSeen": 152,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 152,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "icon",
+    "frames": 52,
+    "changedFrames": 12,
+    "start": 152,
+    "end": 352,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.6,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "chip",
+    "frames": 62,
+    "changedFrames": 3,
+    "start": 135,
+    "end": 335,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.746,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w",
+     "bg",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 62,
+    "changedFrames": 11,
+    "start": 135,
+    "end": 318,
+    "spanMs": 183,
+    "maxDx": 20.1,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "tf",
+     "c"
+    ]
+   },
+   {
+    "el": "chip",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "span/icon",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "chip",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 10,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x"
+    ]
+   },
+   {
+    "el": "div",
+    "frames": 62,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 152,
+    "spanMs": 17,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.937,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "w"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "card-lift",
+  "device": "pixel",
+  "trigger": "card Brand reviewMove the",
+  "events": [
+   [
+    "pointerdown",
+    37
+   ],
+   [
+    "touchstart",
+    37
+   ],
+   [
+    "pointerup",
+    137
+   ],
+   [
+    "touchend",
+    137
+   ],
+   [
+    "mousedown",
+    140
+   ],
+   [
+    "click",
+    141
+   ]
+  ],
+  "animations": [
+   {
+    "target": "card",
+    "type": "CSSTransition",
+    "name": "box-shadow",
+    "props": [
+     "box-shadow"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 302,
+    "state": "running"
+   },
+   {
+    "target": "card",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 302,
+    "state": "running"
+   },
+   {
+    "target": "card::after",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 0,
+    "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    "firstSeen": 302,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 302,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "card",
+    "frames": 62,
+    "changedFrames": 4,
+    "start": 286,
+    "end": 353,
+    "spanMs": 67,
+    "maxDx": 0,
+    "maxDy": 0.3,
+    "scaleRange": [
+     1,
+     1.001
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "tf",
+     "bs",
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/header",
+    "frames": 62,
+    "changedFrames": 2,
+    "start": 302,
+    "end": 336,
+    "spanMs": 34,
+    "maxDx": 0,
+    "maxDy": 0.3,
+    "scaleRange": [
+     1,
+     1.001
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "h3/title",
+    "frames": 62,
+    "changedFrames": 2,
+    "start": 302,
+    "end": 336,
+    "spanMs": 34,
+    "maxDx": 0,
+    "maxDy": 0.3,
+    "scaleRange": [
+     1,
+     1.001
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w"
+    ]
+   },
+   {
+    "el": "a/link",
+    "frames": 62,
+    "changedFrames": 2,
+    "start": 302,
+    "end": 336,
+    "spanMs": 34,
+    "maxDx": 0,
+    "maxDy": 0.3,
+    "scaleRange": [
+     1,
+     1.001
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w"
+    ]
+   },
+   {
+    "el": "p/description",
+    "frames": 62,
+    "changedFrames": 2,
+    "start": 302,
+    "end": 336,
+    "spanMs": 34,
+    "maxDx": 0,
+    "maxDy": 0.3,
+    "scaleRange": [
+     1,
+     1.001
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "accordion-reveal",
+  "device": "pixel",
+  "trigger": "button Billing",
+  "events": [
+   [
+    "pointerdown",
+    38
+   ],
+   [
+    "touchstart",
+    41
+   ],
+   [
+    "pointerup",
+    136
+   ],
+   [
+    "touchend",
+    137
+   ],
+   [
+    "mousedown",
+    142
+   ],
+   [
+    "click",
+    146
+   ]
+  ],
+  "animations": [
+   {
+    "target": "icon",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "div",
+    "type": "CSSAnimation",
+    "name": "ds-accordion-reveal",
+    "props": [
+     "clipPath",
+     "transform"
+    ],
+    "duration": 220,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "p",
+    "type": "CSSAnimation",
+    "name": "ds-accordion-child",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 220,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "ul",
+    "type": "CSSAnimation",
+    "name": "ds-accordion-child",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 220,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "p",
+    "type": "CSSAnimation",
+    "name": "ds-accordion-child",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 220,
+    "delay": 72.00000000000001,
+    "easing": "linear",
+    "firstSeen": 160,
+    "state": "running"
+   },
+   {
+    "target": "icon",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 80,
+    "delay": 0,
+    "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    "firstSeen": 302,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "div/item",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "h3/header",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "button/trigger",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "span/end",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 94,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y"
+    ]
+   },
+   {
+    "el": "accordion",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 47,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "h"
+    ]
+   },
+   {
+    "el": "div/item",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 135,
+    "end": 160,
+    "spanMs": 25,
+    "maxDx": 0,
+    "maxDy": 47,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "h"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 61,
+    "changedFrames": 26,
+    "start": 135,
+    "end": 569,
+    "spanMs": 434,
+    "maxDx": 0,
+    "maxDy": 1.9,
+    "scaleRange": [
+     1,
+     1.414
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf",
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "toast-enter",
+  "device": "pixel",
+  "trigger": "button Show a toast",
+  "events": [
+   [
+    "pointerdown",
+    38
+   ],
+   [
+    "touchstart",
+    41
+   ],
+   [
+    "pointerup",
+    152
+   ],
+   [
+    "touchend",
+    153
+   ],
+   [
+    "mousedown",
+    155
+   ],
+   [
+    "click",
+    157
+   ]
+  ],
+  "animations": [
+   {
+    "target": "toast",
+    "type": "CSSAnimation",
+    "name": "ds-toast-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 174,
+    "state": "running"
+   },
+   {
+    "target": "span/icon",
+    "type": "CSSAnimation",
+    "name": "ds-toast-icon-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 174,
+    "state": "running"
+   },
+   {
+    "target": "span/progress",
+    "type": "CSSAnimation",
+    "name": "ds-toast-progress",
+    "props": [
+     "transform"
+    ],
+    "duration": 4000,
+    "delay": -4,
+    "easing": "linear",
+    "firstSeen": 174,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/icon",
+    "frames": 51,
+    "changedFrames": 14,
+    "start": 174,
+    "end": 404,
+    "spanMs": 230,
+    "maxDx": 3.4,
+    "maxDy": 59.8,
+    "scaleRange": [
+     0.49,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/progress",
+    "frames": 51,
+    "changedFrames": 50,
+    "start": 174,
+    "end": 1002,
+    "spanMs": 828,
+    "maxDx": 36.8,
+    "maxDy": 59,
+    "scaleRange": [
+     1,
+     1.238
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "tf"
+    ]
+   },
+   {
+    "el": "toast",
+    "frames": 51,
+    "changedFrames": 12,
+    "start": 174,
+    "end": 370,
+    "spanMs": 196,
+    "maxDx": 0,
+    "maxDy": 59.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf"
+    ]
+   },
+   {
+    "el": "close-button/close",
+    "frames": 51,
+    "changedFrames": 12,
+    "start": 174,
+    "end": 370,
+    "spanMs": 196,
+    "maxDx": 3.3,
+    "maxDy": 59.8,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/icon",
+    "frames": 51,
+    "changedFrames": 12,
+    "start": 174,
+    "end": 370,
+    "spanMs": 196,
+    "maxDx": 3.3,
+    "maxDy": 59.8,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/title",
+    "frames": 51,
+    "changedFrames": 12,
+    "start": 174,
+    "end": 370,
+    "spanMs": 196,
+    "maxDx": 0.1,
+    "maxDy": 59.8,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/description",
+    "frames": 51,
+    "changedFrames": 12,
+    "start": 174,
+    "end": 370,
+    "spanMs": 196,
+    "maxDx": 0.1,
+    "maxDy": 59.4,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "button",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 301,
+    "end": 420,
+    "spanMs": 119,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 2,
+    "start": 301,
+    "end": 420,
+    "spanMs": 119,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dialog-spring",
+  "device": "pixel",
+  "trigger": "button Open dialog",
+  "events": [
+   [
+    "pointerdown",
+    36
+   ],
+   [
+    "touchstart",
+    38
+   ],
+   [
+    "pointerup",
+    135
+   ],
+   [
+    "touchend",
+    135
+   ],
+   [
+    "mousedown",
+    140
+   ],
+   [
+    "click",
+    142
+   ]
+  ],
+  "animations": [
+   {
+    "target": "div/backdrop",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-backdrop-in",
+    "props": [
+     "opacity",
+     "backdropFilter"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "div/panel[dialog]",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "h2/title",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-fade",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "h2/title",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-in",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "p/description",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-fade",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "p/description",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-in",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "div/body",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-fade",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 72.00000000000001,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   },
+   {
+    "target": "div/body",
+    "type": "CSSAnimation",
+    "name": "ds-dialog-part-in",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 72.00000000000001,
+    "easing": "linear",
+    "firstSeen": 171,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "h2/title",
+    "frames": 51,
+    "changedFrames": 13,
+    "start": 175,
+    "end": 408,
+    "spanMs": 233,
+    "maxDx": 0,
+    "maxDy": 9.4,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf"
+    ]
+   },
+   {
+    "el": "p/description",
+    "frames": 51,
+    "changedFrames": 14,
+    "start": 175,
+    "end": 426,
+    "spanMs": 251,
+    "maxDx": 0,
+    "maxDy": 8.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf",
+     "o"
+    ]
+   },
+   {
+    "el": "div/body",
+    "frames": 51,
+    "changedFrames": 16,
+    "start": 175,
+    "end": 454,
+    "spanMs": 279,
+    "maxDx": 0,
+    "maxDy": 7.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf"
+    ]
+   },
+   {
+    "el": "div/panel[dialog]",
+    "frames": 51,
+    "changedFrames": 11,
+    "start": 175,
+    "end": 375,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 4,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf"
+    ]
+   },
+   {
+    "el": "div/backdrop",
+    "frames": 51,
+    "changedFrames": 11,
+    "start": 175,
+    "end": 375,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "o",
+     "bf"
+    ]
+   },
+   {
+    "el": "close-button/close",
+    "frames": 51,
+    "changedFrames": 11,
+    "start": 175,
+    "end": 375,
+    "spanMs": 200,
+    "maxDx": 3.1,
+    "maxDy": 5.4,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/icon",
+    "frames": 51,
+    "changedFrames": 11,
+    "start": 175,
+    "end": 375,
+    "spanMs": 200,
+    "maxDx": 3.1,
+    "maxDy": 5.4,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 51,
+    "changedFrames": 8,
+    "start": 175,
+    "end": 311,
+    "spanMs": 136,
+    "maxDx": 2.1,
+    "maxDy": 2.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 51,
+    "changedFrames": 8,
+    "start": 175,
+    "end": 311,
+    "spanMs": 136,
+    "maxDx": 0.4,
+    "maxDy": 2.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/footer",
+    "frames": 51,
+    "changedFrames": 11,
+    "start": 175,
+    "end": 375,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 2.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "button",
+    "frames": 60,
+    "changedFrames": 2,
+    "start": 290,
+    "end": 393,
+    "spanMs": 103,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 60,
+    "changedFrames": 2,
+    "start": 290,
+    "end": 393,
+    "spanMs": 103,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "copy-swap",
+  "device": "pixel",
+  "trigger": "copy-button Copy linkCopiedCould",
+  "events": [
+   [
+    "pointerdown",
+    36
+   ],
+   [
+    "touchstart",
+    39
+   ],
+   [
+    "pointerup",
+    135
+   ],
+   [
+    "touchend",
+    136
+   ],
+   [
+    "mousedown",
+    141
+   ],
+   [
+    "click",
+    143
+   ]
+  ],
+  "animations": [
+   {
+    "target": "copy-button",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 151,
+    "state": "running"
+   },
+   {
+    "target": "copy-button::after",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 151,
+    "state": "running"
+   },
+   {
+    "target": "span/icon",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 80,
+    "delay": 0,
+    "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    "firstSeen": 151,
+    "state": "running"
+   },
+   {
+    "target": "span/icon",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 151,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 151,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0.4, 0, 1, 1)",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0.4, 0, 1, 1)",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0.4, 0, 1, 1)",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSAnimation",
+    "name": "ds-copy-button-wipe",
+    "props": [
+     "clipPath",
+     "opacity"
+    ],
+    "duration": 180,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "icon",
+    "type": "CSSAnimation",
+    "name": "ds-copy-button-pop",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 168,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSAnimation",
+    "name": "ds-copy-button-roll",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 168,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/icon",
+    "frames": 61,
+    "changedFrames": 9,
+    "start": 151,
+    "end": 301,
+    "spanMs": 150,
+    "maxDx": 0.7,
+    "maxDy": 0.7,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf",
+     "c"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 61,
+    "changedFrames": 6,
+    "start": 151,
+    "end": 252,
+    "spanMs": 101,
+    "maxDx": 0.7,
+    "maxDy": 0.7,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "c"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 51,
+    "changedFrames": 6,
+    "start": 168,
+    "end": 409,
+    "spanMs": 241,
+    "maxDx": 0.7,
+    "maxDy": 0.7,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "c",
+     "tf"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 51,
+    "changedFrames": 5,
+    "start": 168,
+    "end": 252,
+    "spanMs": 84,
+    "maxDx": 0.7,
+    "maxDy": 0.7,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 11,
+    "start": 134,
+    "end": 368,
+    "spanMs": 234,
+    "maxDx": 0.1,
+    "maxDy": 0.7,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c",
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "copy-button",
+    "frames": 61,
+    "changedFrames": 12,
+    "start": 134,
+    "end": 368,
+    "spanMs": 234,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bg",
+     "c",
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/status[status]",
+    "frames": 61,
+    "changedFrames": 4,
+    "start": 134,
+    "end": 368,
+    "spanMs": 234,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     0.987,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "focus-glow",
+  "device": "pixel",
+  "trigger": "INPUT ",
+  "events": [
+   [
+    "pointerdown",
+    33
+   ],
+   [
+    "touchstart",
+    34
+   ],
+   [
+    "pointerup",
+    133
+   ],
+   [
+    "touchend",
+    134
+   ],
+   [
+    "mousedown",
+    136
+   ],
+   [
+    "click",
+    138
+   ]
+  ],
+  "animations": [
+   {
+    "target": "input",
+    "type": "CSSTransition",
+    "name": "border-bottom-color",
+    "props": [
+     "border-bottom-color"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input",
+    "type": "CSSTransition",
+    "name": "border-left-color",
+    "props": [
+     "border-left-color"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input",
+    "type": "CSSTransition",
+    "name": "border-right-color",
+    "props": [
+     "border-right-color"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input",
+    "type": "CSSTransition",
+    "name": "border-top-color",
+    "props": [
+     "border-top-color"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input::before",
+    "type": "CSSTransition",
+    "name": "box-shadow",
+    "props": [
+     "box-shadow"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input::before",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 150,
+    "state": "running"
+   },
+   {
+    "target": "input::before",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 150,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "input",
+    "frames": 61,
+    "changedFrames": 1,
+    "start": 132,
+    "end": 150,
+    "spanMs": 18,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bs"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "menu-origin",
+  "device": "pixel",
+  "trigger": "button Open menu",
+  "events": [
+   [
+    "pointerdown",
+    33
+   ],
+   [
+    "touchstart",
+    67
+   ],
+   [
+    "pointerup",
+    187
+   ],
+   [
+    "touchend",
+    188
+   ],
+   [
+    "click",
+    191
+   ]
+  ],
+  "animations": [
+   {
+    "target": "dropdown-menu[menu]",
+    "type": "CSSAnimation",
+    "name": "ds-menu-in",
+    "props": [
+     "clipPath",
+     "opacity",
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "div/label",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 24,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/start",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/text",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/shortcut",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 48,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/start",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 72.00000000000001,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/text",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 72.00000000000001,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/start",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 96,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/text",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 96,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "div/separator[separator]",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 120,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/start",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 144.00000000000003,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "span/text",
+    "type": "CSSAnimation",
+    "name": "ds-menu-row-in",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 144.00000000000003,
+    "easing": "linear",
+    "firstSeen": 71,
+    "state": "running"
+   },
+   {
+    "target": "button",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 199,
+    "state": "running"
+   },
+   {
+    "target": "button::after",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 199,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 199,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "dropdown-menu[menu]",
+    "frames": 59,
+    "changedFrames": 10,
+    "start": 75,
+    "end": 233,
+    "spanMs": 158,
+    "maxDx": 2,
+    "maxDy": 5.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf",
+     "cp"
+    ]
+   },
+   {
+    "el": "div/item[menuitem]",
+    "frames": 59,
+    "changedFrames": 8,
+    "start": 75,
+    "end": 199,
+    "spanMs": 124,
+    "maxDx": 2,
+    "maxDy": 6.9,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[menuitem]",
+    "frames": 59,
+    "changedFrames": 8,
+    "start": 75,
+    "end": 199,
+    "spanMs": 124,
+    "maxDx": 2,
+    "maxDy": 6.1,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[menuitem]",
+    "frames": 59,
+    "changedFrames": 8,
+    "start": 75,
+    "end": 199,
+    "spanMs": 124,
+    "maxDx": 2,
+    "maxDy": 5.5,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[menuitem]",
+    "frames": 59,
+    "changedFrames": 8,
+    "start": 75,
+    "end": 199,
+    "spanMs": 124,
+    "maxDx": 2,
+    "maxDy": 4.8,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/text",
+    "frames": 59,
+    "changedFrames": 21,
+    "start": 75,
+    "end": 416,
+    "spanMs": 341,
+    "maxDx": 2.3,
+    "maxDy": 3.9,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/shortcut",
+    "frames": 59,
+    "changedFrames": 15,
+    "start": 75,
+    "end": 316,
+    "spanMs": 241,
+    "maxDx": 3.6,
+    "maxDy": 2.5,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "h",
+     "w",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/text",
+    "frames": 59,
+    "changedFrames": 18,
+    "start": 75,
+    "end": 368,
+    "spanMs": 293,
+    "maxDx": 2.3,
+    "maxDy": 3.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "div/separator[separator]",
+    "frames": 59,
+    "changedFrames": 20,
+    "start": 75,
+    "end": 399,
+    "spanMs": 324,
+    "maxDx": 2,
+    "maxDy": 3.8,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "x",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/text",
+    "frames": 59,
+    "changedFrames": 17,
+    "start": 75,
+    "end": 351,
+    "spanMs": 276,
+    "maxDx": 2.3,
+    "maxDy": 3.2,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/text",
+    "frames": 59,
+    "changedFrames": 15,
+    "start": 75,
+    "end": 316,
+    "spanMs": 241,
+    "maxDx": 1.9,
+    "maxDy": 2.5,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   },
+   {
+    "el": "span/start",
+    "frames": 59,
+    "changedFrames": 21,
+    "start": 75,
+    "end": 416,
+    "spanMs": 341,
+    "maxDx": 0.4,
+    "maxDy": 3.9,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "slider-pull",
+  "device": "pixel",
+  "trigger": "SPAN 40%",
+  "events": [
+   [
+    "pointerdown",
+    46
+   ],
+   [
+    "touchstart",
+    52
+   ],
+   [
+    "pointerup",
+    147
+   ],
+   [
+    "touchend",
+    148
+   ],
+   [
+    "click",
+    149
+   ]
+  ],
+  "animations": [
+   {
+    "target": "span/thumb[slider]",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 63,
+    "state": "running"
+   },
+   {
+    "target": "span/thumb[slider]::after",
+    "type": "CSSTransition",
+    "name": "box-shadow",
+    "props": [
+     "box-shadow"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 63,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 63,
+    "state": "running"
+   },
+   {
+    "target": "span",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 ",
+    "firstSeen": 63,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/thumb[slider]",
+    "frames": 62,
+    "changedFrames": 18,
+    "start": 63,
+    "end": 361,
+    "spanMs": 298,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1.142
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h",
+     "tf"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "picker-value-roll",
+  "device": "pixel",
+  "trigger": "select Banana",
+  "events": [
+   [
+    "pointerdown",
+    41
+   ],
+   [
+    "touchstart",
+    41
+   ],
+   [
+    "pointerup",
+    139
+   ],
+   [
+    "touchend",
+    140
+   ],
+   [
+    "mousedown",
+    143
+   ],
+   [
+    "click",
+    144
+   ]
+  ],
+  "animations": [
+   {
+    "target": "select[combobox]::before",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 150,
+    "delay": 0,
+    "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "span/icon",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 1",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "span/highlight",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 80,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "select/content[listbox]",
+    "type": "CSSAnimation",
+    "name": "ds-select-content-in",
+    "props": [
+     "clipPath",
+     "opacity",
+     "transform"
+    ],
+    "duration": 158,
+    "delay": 0,
+    "easing": "linear",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 24,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 48,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 72,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 96,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 120,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   },
+   {
+    "target": "div/item[option]",
+    "type": "Animation",
+    "name": "waapi",
+    "props": [
+     "transform"
+    ],
+    "duration": 200,
+    "delay": 120,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 223,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "select/content[listbox]",
+    "frames": 49,
+    "changedFrames": 10,
+    "start": 230,
+    "end": 389,
+    "spanMs": 159,
+    "maxDx": 2,
+    "maxDy": 6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h",
+     "o",
+     "tf",
+     "cp"
+    ]
+   },
+   {
+    "el": "span/highlight",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2,
+    "maxDy": 5,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     0,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h",
+     "o"
+    ]
+   },
+   {
+    "el": "span/item-label",
+    "frames": 49,
+    "changedFrames": 9,
+    "start": 230,
+    "end": 389,
+    "spanMs": 159,
+    "maxDx": 2.3,
+    "maxDy": 7.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[option]",
+    "frames": 49,
+    "changedFrames": 9,
+    "start": 230,
+    "end": 389,
+    "spanMs": 159,
+    "maxDx": 2,
+    "maxDy": 7.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/item-label",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2.3,
+    "maxDy": 6.9,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[option]",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2,
+    "maxDy": 7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/item-label",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2.3,
+    "maxDy": 6.3,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[option]",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2,
+    "maxDy": 6.3,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/viewport[presentation]",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2,
+    "maxDy": 6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "span/indicator",
+    "frames": 49,
+    "changedFrames": 9,
+    "start": 230,
+    "end": 389,
+    "spanMs": 159,
+    "maxDx": 0.4,
+    "maxDy": 7.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w"
+    ]
+   },
+   {
+    "el": "span/item-label",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2.3,
+    "maxDy": 5.6,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "x",
+     "y",
+     "w",
+     "h"
+    ]
+   },
+   {
+    "el": "div/item[option]",
+    "frames": 49,
+    "changedFrames": 8,
+    "start": 230,
+    "end": 355,
+    "spanMs": 125,
+    "maxDx": 2,
+    "maxDy": 5.7,
+    "scaleRange": [
+     0.98,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "w",
+     "h"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "toggle-pop",
+  "device": "pixel",
+  "trigger": "toggle-button Grid view",
+  "events": [
+   [
+    "pointerdown",
+    32
+   ],
+   [
+    "touchstart",
+    35
+   ],
+   [
+    "pointerup",
+    132
+   ],
+   [
+    "touchend",
+    132
+   ],
+   [
+    "mousedown",
+    135
+   ],
+   [
+    "click",
+    137
+   ]
+  ],
+  "animations": [
+   {
+    "target": "toggle-button",
+    "type": "CSSTransition",
+    "name": "color",
+    "props": [
+     "color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button",
+    "type": "CSSTransition",
+    "name": "background-color",
+    "props": [
+     "background-color"
+    ],
+    "duration": 100,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "toggle-button::after",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "span/state-layer",
+    "type": "CSSTransition",
+    "name": "clip-path",
+    "props": [
+     "clip-path"
+    ],
+    "duration": 200,
+    "delay": 0,
+    "easing": "linear(0 0%, 0.056 5%, 0.176 10%, 0.314 ",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "span/state-layer",
+    "type": "CSSTransition",
+    "name": "opacity",
+    "props": [
+     "opacity"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "span/start",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   },
+   {
+    "target": "span/label",
+    "type": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "duration": 70,
+    "delay": 0,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "firstSeen": 148,
+    "state": "running"
+   }
+  ],
+  "tracks": [
+   {
+    "el": "span/state-layer",
+    "frames": 61,
+    "changedFrames": 12,
+    "start": 148,
+    "end": 348,
+    "spanMs": 200,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     0,
+     0.12
+    ],
+    "props": [
+     "cp",
+     "bg",
+     "c"
+    ]
+   },
+   {
+    "el": "span/start",
+    "frames": 61,
+    "changedFrames": 16,
+    "start": 148,
+    "end": 415,
+    "spanMs": 267,
+    "maxDx": 0,
+    "maxDy": 1,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "tf",
+     "c"
+    ]
+   },
+   {
+    "el": "icon",
+    "frames": 61,
+    "changedFrames": 11,
+    "start": 148,
+    "end": 331,
+    "spanMs": 183,
+    "maxDx": 0,
+    "maxDy": 1,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "c"
+    ]
+   },
+   {
+    "el": "span/label",
+    "frames": 61,
+    "changedFrames": 16,
+    "start": 148,
+    "end": 415,
+    "spanMs": 267,
+    "maxDx": 0,
+    "maxDy": 1,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "y",
+     "tf",
+     "c"
+    ]
+   },
+   {
+    "el": "toggle-button",
+    "frames": 61,
+    "changedFrames": 7,
+    "start": 131,
+    "end": 248,
+    "spanMs": 117,
+    "maxDx": 0,
+    "maxDy": 0,
+    "scaleRange": [
+     1,
+     1
+    ],
+    "opacityRange": [
+     1,
+     1
+    ],
+    "props": [
+     "bs",
+     "bg",
+     "c"
+    ]
+   }
+  ]
+ }
+]
