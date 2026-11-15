@@ -6,7 +6,8 @@ lacks mobile components, and has no interactions to speak of. Four audits
 checked each point. All four agree with the owner.
 
 Reports: `fidelity-gobanana.md`, `fidelity-figma-killer-2.md`, `mobile.md`,
-`interactions.md`, each with evidence under `shots/`.
+`interactions.md`, `liquid-guidelines.md` and `material-guidelines.md`, each
+with evidence under `shots/`.
 
 ## Root causes
 
@@ -58,3 +59,27 @@ swipe, the Liquid tab bar, the gates and the docs pipeline.
    eases) and the owner also wants the feel of the two reference sites?
 4. Is mobile a web target, a React Native target, or both, and in what order?
 5. Does the system ship the source screens as templates (desk, editor)?
+
+## Two platform audits, added on 2026-11-15
+
+- **Liquid against the platform's glass guidance, components and web**
+  (`liquid-guidelines.md`). A good frosted style, a weak copy of the
+  material. About 30 percent of the gap is tokens, 70 percent is component
+  structure. Adaptivity 1, desktop form 1, optics 2, phone bars 2. It
+  already matches what the vendor ships on its own web pages.
+- **Android against Material 3 and its Expressive update**
+  (`material-guidelines.md`). Sizes are often right; the feel is not.
+  Average 1.4 of 5. Back gesture 0, React Native 0. Recommends both a
+  platform variant for behaviour and a Material based style for look, built
+  on the system's own components (the official web components are in
+  maintenance mode).
+
+More decisions for the owner:
+
+6. Does the platform axis gain a `macos` value?
+7. Is there a sixth style built on Material's colour roles, type and shape,
+   and what is its id?
+8. May `@material/material-color-utilities` (Apache 2.0) be added to
+   generate colour schemes from a seed colour?
+9. Which wins when a style and a platform disagree on shape: today the
+   style recipe erases the platform's.
