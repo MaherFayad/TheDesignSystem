@@ -1,0 +1,21 @@
+{
+ "date": "2026-11-15",
+ "command": "npx jest (packages/native)",
+ "ios_preset": {
+  "numTotalTests": 60,
+  "numPassedTests": 60,
+  "numFailedTests": 0,
+  "failures": []
+ },
+ "android_preset": {
+  "numTotalTests": 60,
+  "numPassedTests": 59,
+  "numFailedTests": 1,
+  "failures": [
+   {
+    "test": "ThemeProvider root defaults: studio, its default scheme and density, the device platform, ltr, en",
+    "message": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n@@ -2,9 +2,9 @@\n    \"contrast\": \"default\",\n    \"density\": \"default\",\n    \"dir\": \"ltr\",\n    \"glass\": \"regular\",\n    \"lang\": \"en\",\n-   \"platform\": \"ios\","
+   }
+  ]
+ }
+}
