@@ -1,0 +1,24 @@
+== light: text on glass fill over backdrop (backdrop after saturate 1.8); min over backdrops
+  regular  alpha 0.84: default 11.22 (black); muted 5.88 (black); subtle 4.95 (black); tint 4.67 (black)
+  tinted   alpha 0.88: default 11.27 (black); muted 5.91 (black); subtle 4.97 (black); tint 4.69 (black)
+  strong   alpha 0.92: default 13.60 (black); muted 7.13 (black); subtle 6.00 (black); tint 5.66 (black)
+  dock     alpha 0.84: default 11.22 (black); muted 5.88 (black); subtle 4.95 (black); tint 4.67 (black)
+  clear+40% dim, white text: white 4.85 black 19.87 yellow 6.36 red 11.73 green 7.06 cyan 6.56 blue 14.13 midgrey 11.39
+  clear, no dim, white text: white 2.01 black 19.87 yellow 2.85 red 6.70 green 3.24 cyan 2.95 blue 9.70 midgrey 6.87
+  if regular alpha 0.7: default text worst 7.73 over black; muted worst 4.05
+  if regular alpha 0.6: default text worst 5.73 over black; muted worst 3.00
+  if regular alpha 0.45: default text worst 3.44 over black; muted worst 1.81
+== dark: text on glass fill over backdrop (backdrop after saturate 1.8); min over backdrops
+  regular  alpha 0.90: default 10.46 (white); muted 6.02 (white); subtle 5.13 (white); tint 5.56 (white)
+  tinted   alpha 0.92: default 10.89 (white); muted 6.27 (white); subtle 5.35 (white); tint 5.79 (white)
+  strong   alpha 0.94: default 11.90 (white); muted 6.85 (white); subtle 5.84 (white); tint 6.33 (white)
+  dock     alpha 0.90: default 10.46 (white); muted 6.02 (white); subtle 5.13 (white); tint 5.56 (white)
+  clear+40% dim, white text: white 5.09 black 21.00 yellow 6.75 red 12.34 green 7.47 cyan 6.96 blue 15.30 midgrey 12.56
+  clear, no dim, white text: white 1.99 black 21.00 yellow 2.86 red 6.76 green 3.25 cyan 2.96 blue 10.31 midgrey 7.38
+  if regular alpha 0.7: default text worst 5.20 over white; muted worst 2.99
+  if regular alpha 0.6: default text worst 3.74 over white; muted worst 2.15
+  if regular alpha 0.45: default text worst 2.39 over white; muted worst 1.38
+== adaptive switching (grey backdrops 0 to 255 after blur), worst contrast
+  alpha 0.5: switch at grey 109 (L 0.15); worst default 8.11, worst muted 4.25
+  alpha 0.6: switch at grey 106 (L 0.14); worst default 9.34, worst muted 4.90
+  alpha 0.7: switch at grey 101 (L 0.13); worst default 10.69, worst muted 5.61
