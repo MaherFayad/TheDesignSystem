@@ -127,6 +127,42 @@
     --_toast-edge: var(--ds-color-border-strong);
   }
 
+  /*
+   * android (order M3): the snackbar of Material. The inverse surface with
+   * the surface color as its text (light on the light scheme's dark ink,
+   * dark on the dark scheme's near white), no border, regular weight. The
+   * action is a text button: no fill, no edge, no shadow, in the primary
+   * text color mixed halfway to the surface, which is a light blue on the
+   * dark ink and a deep blue on the near white (7.5:1 light, 4.9:1 dark).
+   */
+  [data-style='neutral'][data-platform='android'] [data-ds='toast'] {
+    --_toast-bg: var(--ds-color-bg-inverse);
+    --_toast-fg: var(--ds-color-bg-surface);
+    --_toast-border-color: transparent;
+    --_toast-edge: transparent;
+  }
+
+  [data-style='neutral'][data-platform='android'] [data-ds='toast'] > :is([data-part='title'], [data-part='description']) {
+    color: var(--_toast-fg);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-style='neutral'][data-platform='android'] [data-ds='toast'] > [data-ds='button'][data-part='action'] {
+    --_button-bg: transparent;
+    --_button-bg-hover: transparent;
+    --_button-bg-active: transparent;
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: color-mix(in srgb, var(--ds-color-primary-on-surface) 50%, var(--ds-color-bg-surface));
+    --_button-fg-hover: color-mix(in srgb, var(--ds-color-primary-on-surface) 50%, var(--ds-color-bg-surface));
+    --_button-fg-active: color-mix(in srgb, var(--ds-color-primary-on-surface) 50%, var(--ds-color-bg-surface));
+    --_button-shadow: 0 0 transparent;
+  }
+
+  [data-style='neutral'][data-platform='android'] [data-ds='toast'] > [data-ds='close-button'][data-part='close'] {
+    --_button-fg: var(--_toast-fg);
+  }
+
   /* The timer line. The ios banner and the android snackbar draw none: ds.chrome hides it there (ruling 16). */
   [data-style='neutral'] [data-ds='toast'] {
     --_toast-progress-thickness: var(--ds-border-width-default);

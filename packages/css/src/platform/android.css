@@ -1376,7 +1376,9 @@
     padding-block-start: 0;
   }
 
+  /* Order M3: no margin above the action or round the close, so the row stays 48 and the action sits level with the text. */
   [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {
     align-self: center;
+    margin-block: 0;
   }
 }

@@ -101,6 +101,7 @@ let nextId = 0;
       (pointerup)="drag.pointerUp($event)"
       (pointercancel)="drag.pointerCancel($event)"
       (lostpointercapture)="drag.lostPointerCapture($event)"
+      (pointerleave)="drag.pointerLeave($event)"
       (keydown)="drag.keyDown($event)"
       (blur)="onTouched()"><span data-part="track"><span aria-hidden="true"></span><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"><span data-part="thumb-lens" aria-hidden="true"></span>@if (thumbIcon()) {<svg data-part="thumb-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength="1" /><path d="M5.5 5.5 10.5 10.5M10.5 5.5 5.5 10.5" /></svg>}</span></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"

@@ -21,6 +21,7 @@ import type { IconName } from '@the-system/icons';
 import { buttonMorph, settled } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
+import { trackPressed } from '../../internal/pressed';
 import { DS_BUTTON_GROUP } from '../button-group/button-group-context';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 
@@ -155,6 +156,8 @@ export abstract class DsButtonBase {
     this.pressOnEnter();
     this.morphOnLoading();
     this.trackPointer();
+    // Press from touch down (order M5, as ButtonBase in React, order M4): data-pressed from a primary pointerdown to the release.
+    inject(DestroyRef).onDestroy(trackPressed(this.host, () => this.inert() || this.host.getAttribute('aria-disabled') === 'true'));
   }
 
   /**

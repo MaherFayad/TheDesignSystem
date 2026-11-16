@@ -10,6 +10,11 @@
 // under the slop the pointer events do nothing and the click toggles as
 // before. A drag decides the state on release, so the click that follows it
 // is consumed (`consumeClick`). Space and Enter never pass through here.
+//
+// From pointerdown to pointerup or pointercancel the root carries
+// `data-pressed` (order M1, Angular in order M5), so the press shows as the
+// finger lands: on touch `:active` can wait for the release. As React's
+// Switch/drag.ts, with markPressed from the shared core.
 import { signal, type Signal } from '@angular/core';
 import {
   SWALLOW_CLICK_MS,
@@ -17,6 +22,7 @@ import {
   clearDragProgress,
   dragOnSide,
   followPointer,
+  markPressed,
   markReleased,
   pastSlop,
   releaseChecked,
@@ -55,6 +61,8 @@ export class SwitchDrag {
     if (this.options.disabled() || e.defaultPrevented || e.button !== 0 || !e.isPrimary) return;
     const control = e.currentTarget as HTMLElement | null;
     if (!control) return;
+    // The press shows from here, not from the release (order M1): the root carries data-pressed while the pointer is down.
+    markPressed(control, true);
     this.run = beginSwitchDrag(control, this.options.checked(), e.pointerId, e.clientX, e.timeStamp);
   }
 
@@ -74,18 +82,30 @@ export class SwitchDrag {
 
   pointerUp(e: PointerEvent): void {
     // On touch `:active` outlasts the tap: from here the travel keeps the state's spring (N1).
-    if (e.currentTarget instanceof Element) markReleased(e.currentTarget, true);
+    if (e.currentTarget instanceof Element) {
+      markReleased(e.currentTarget, true);
+      markPressed(e.currentTarget, false);
+    }
     if (this.run && e.pointerId === this.run.pointerId) this.finish(true, e.timeStamp);
   }
 
   pointerCancel(e: PointerEvent): void {
-    if (e.currentTarget instanceof Element) markReleased(e.currentTarget, true);
+    if (e.currentTarget instanceof Element) {
+      markReleased(e.currentTarget, true);
+      markPressed(e.currentTarget, false);
+    }
     if (this.run && e.pointerId === this.run.pointerId) this.finish(false, e.timeStamp);
   }
 
   lostPointerCapture(e: PointerEvent): void {
     // Capture is lost after the release too; by then the run is over.
+    if (e.currentTarget instanceof Element) markPressed(e.currentTarget, false);
     if (this.run && e.pointerId === this.run.pointerId && this.run.moved) this.finish(false, e.timeStamp);
+  }
+
+  pointerLeave(e: PointerEvent): void {
+    // A mouse that leaves before a drag starts lets go of the press, as `:active` does; a drag keeps it (capture).
+    if (!this.run?.moved && e.currentTarget instanceof Element) markPressed(e.currentTarget, false);
   }
 
   /** Space presses the control too: the press timing applies again (N1). */

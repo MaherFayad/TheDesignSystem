@@ -38,6 +38,7 @@ import {
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
+import { pressHandlers } from '../../internal/pressed';
 import { setPressPoint, staggerGroup } from '@the-system/motion';
 import { useFlipGroup, useRowGlide } from '../ListBox/selectionMotion';
 
@@ -191,10 +192,20 @@ export function ListItem({
     <li
       {...rest}
       // Platform hook: where the press landed in the row, for a ripple from the touch point.
-      onPointerDown={(event) => {
-        setPressPoint(event.currentTarget, 'list', event.clientX, event.clientY);
-        rest.onPointerDown?.(event);
-      }}
+      // Order M4: a linked row carries data-pressed from pointerdown to the release (internal/pressed.ts).
+      {...pressHandlers<HTMLLIElement>(
+        {
+          onPointerDown: (event) => {
+            setPressPoint(event.currentTarget, 'list', event.clientX, event.clientY);
+            rest.onPointerDown?.(event);
+          },
+          onPointerUp: rest.onPointerUp,
+          onPointerCancel: rest.onPointerCancel,
+          onLostPointerCapture: rest.onLostPointerCapture,
+          onPointerLeave: rest.onPointerLeave,
+        },
+        !linked || disabled,
+      )}
       data-part="item"
       data-active={active ? '' : undefined}
       data-disabled={disabled ? '' : undefined}

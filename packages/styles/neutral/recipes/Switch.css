@@ -11,7 +11,7 @@
  *
  * Why not tokens: the off track fill, the thumb colors and the thumb shadow
  * are private properties Switch.css defaults to an outline track and a gray
- * thumb in every style.
+ * thumb in every style. On android the off look is the platform's (order M3).
  */
 @layer ds.recipes {
   [data-style='neutral'] [data-ds='switch'] {
@@ -27,9 +27,21 @@
     --_switch-lean: 0px;
   }
 
-  /* Hover lifts the off track one step, the way a gray control darkens on hover. */
-  [data-style='neutral'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-state='checked']):hover {
+  /* Hover lifts the off track one step, the way a gray control darkens on hover. Not on android, where the state layer answers the hover. */
+  [data-style='neutral']:not([data-platform='android']) [data-ds='switch']:not([data-disabled], [data-readonly], [data-state='checked']):hover {
     --_switch-bg: var(--ds-color-border-control-hover);
+  }
+
+  /*
+   * android (order M3): the off switch is the platform's, as Material draws
+   * it. The track is the faint overlay inside the 2dp outline, the small off
+   * dot is the strong control gray (the platform's edge rule keeps its edge
+   * the same gray), and the thumb has no shadow in any state.
+   */
+  [data-style='neutral'][data-platform='android'] [data-ds='switch'] {
+    --_switch-bg: var(--ds-color-bg-overlay-10);
+    --_switch-thumb-off: var(--ds-color-border-control-hover);
+    --_switch-thumb-shadow: 0 0 transparent;
   }
 
   /* On: the same swap as Switch.css, repeated in this layer so the off fill above does not hold. */
@@ -84,15 +96,6 @@
   [data-style='neutral'][data-contrast='more'][data-platform='ios'] [data-ds='switch'] {
     --_switch-thumb-solid-pressed: 1;
     --_switch-thumb-backdrop: none;
-  }
-
-  /*
-   * android: the off dot's edge is the surface color, so the white dot keeps
-   * 3:1 on the gray track under the 12% state layer of the dark scheme
-   * (order 1.29, B4). On the light scheme the edge matches the white dot.
-   */
-  [data-style='neutral'][data-platform='android'] [data-ds='switch'][data-state='unchecked'] {
-    --_switch-thumb-edge: var(--ds-color-bg-surface);
   }
 
   /* Reduced motion: the thumb does not stretch (this layer wins over the zeroing in Switch.css). */

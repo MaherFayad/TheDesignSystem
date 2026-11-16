@@ -22,6 +22,20 @@
     --_segmented-control-indicator-filter: brightness(1.12) saturate(1.6);
   }
 
+  /*
+   * android (order M3): Material's outlined segmented buttons. A clear track
+   * in the strong control outline, the selected segment filled with the
+   * stronger primary tint, and no lens: no rim, no shadow, no filter, so no
+   * square glass block shows inside the round track.
+   */
+  [data-style='liquid'][data-platform='android'] [data-ds='segmented-control'] {
+    --_segmented-control-bg: transparent;
+    --_segmented-control-border-color: var(--ds-color-border-control-hover);
+    --_segmented-control-thumb-bg: var(--ds-color-primary-tint-hover);
+    --_segmented-control-thumb-shadow: none;
+    --_segmented-control-indicator-filter: none;
+  }
+
   [data-style='liquid'] [data-ds='segmented-control'] > [data-part='item']:not([data-state='on']) {
     --_button-fg: var(--ds-color-text-muted);
   }

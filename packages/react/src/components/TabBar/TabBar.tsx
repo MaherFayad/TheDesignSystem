@@ -23,6 +23,7 @@
 // choice; a fixed bar needs the page to keep the same room at its end.
 import type { PointerEvent } from 'react';
 import { pressOrigin } from './pressOrigin';
+import { pressHandlers } from '../../internal/pressed';
 import { Children, createContext, isValidElement, use, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -106,10 +107,21 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
     ...rest,
     ref,
     // Round 3: the press point, for a platform ripple (./pressOrigin.ts).
-    onPointerDown: (event: PointerEvent<HTMLAnchorElement>) => {
-      pressOrigin(event, 'tab-bar');
-      rest.onPointerDown?.(event);
-    },
+    // Order M4: data-pressed from pointerdown to the release, so the press
+    // shows as the finger lands (internal/pressed.ts).
+    ...pressHandlers<HTMLAnchorElement>(
+      {
+        onPointerDown: (event: PointerEvent<HTMLAnchorElement>) => {
+          pressOrigin(event, 'tab-bar');
+          rest.onPointerDown?.(event);
+        },
+        onPointerUp: rest.onPointerUp,
+        onPointerCancel: rest.onPointerCancel,
+        onLostPointerCapture: rest.onLostPointerCapture,
+        onPointerLeave: rest.onPointerLeave,
+      },
+      rest['aria-disabled'] === true || rest['aria-disabled'] === 'true',
+    ),
     'data-part': 'item',
     'data-active': active ? '' : undefined,
     'aria-current': active ? ('page' as const) : rest['aria-current'],

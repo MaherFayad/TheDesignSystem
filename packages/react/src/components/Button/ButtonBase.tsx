@@ -26,6 +26,7 @@ import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useButtonGroup } from '../ButtonGroup/ButtonGroupContext';
 import { NAVIGATION_KEYS } from '../../internal/keys';
 import { useMotion } from '../../internal/motion';
+import { pressHandlers } from '../../internal/pressed';
 
 /** The shared axes, all of them: Button takes every value. */
 export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -173,6 +174,10 @@ export function ButtonRoot({
   onAuxClick,
   onPointerDown,
   onPointerMove,
+  onPointerUp,
+  onPointerCancel,
+  onLostPointerCapture,
+  onPointerLeave,
   onKeyDown,
   onKeyUp,
   onBlur,
@@ -284,13 +289,25 @@ export function ButtonRoot({
       }
       onAuxClick?.(event);
     },
-    onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
-      if (!inert) {
-        placeGlow(event);
-        placeRipple(event);
-        onPointerDown?.(event);
-      }
-    },
+    // Press from touch down (order M4): data-pressed from pointerdown to the
+    // release, so a platform press shows as the finger lands. Never while
+    // inert (disabled, loading or aria-disabled).
+    ...pressHandlers<HTMLButtonElement>(
+      {
+        onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
+          if (!inert) {
+            placeGlow(event);
+            placeRipple(event);
+            onPointerDown?.(event);
+          }
+        },
+        onPointerUp,
+        onPointerCancel,
+        onLostPointerCapture,
+        onPointerLeave,
+      },
+      inert || rest['aria-disabled'] === true || rest['aria-disabled'] === 'true',
+    ),
     onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
       if (!inert) placeGlow(event);
       onPointerMove?.(event);
