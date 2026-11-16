@@ -454,3 +454,23 @@ phones. Studio and Desk keep their own switch on `ios`, true to their
 sources, with press feedback under the finger and no glass. This refines
 ruling 16 for Neutral: where Neutral sets no shape or behaviour of its own
 on a phone, it takes the platform's.
+
+## Platform looks on the web follow each vendor's web language (owner, 2026-11-16)
+
+The owner judged the phone platform layer of R0.15 as wrong throughout and
+ruled on what the web build should follow:
+
+- On the web, the `android` platform follows Google's Material for the web:
+  Material 3 as Google ships it in web components and its own web products.
+- On the web, the Apple platforms (`ios` and `macos`) follow the vendor's Mac
+  and web language: how it designs its own web pages, web apps and Mac
+  windows.
+- The web build does not imitate native phone screens. The native iOS and
+  Android looks come from the React Native build, where chrome is the
+  system's own views (ruling 8).
+
+The lead's reading, to be confirmed by the first signed screen: the
+references for web platform work are the vendors' own web pages and web
+component catalogues, captured in a browser, and each part is accepted side
+by side with such a capture. The `ios` chrome geometry of R0.15 (phone
+alert grid, phone tab bar, phone sheet) is withdrawn.
