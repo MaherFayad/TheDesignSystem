@@ -445,3 +445,12 @@ every platform and no platform changes it. The platform's touch target is a
 separate platform name, `size.target` (44 on `ios`, 48 on `android`, 24 on
 `web` and `macos`), and the platform CSS reads that one. Order R0.21
 (ds-tokens) makes the change.
+
+## The iOS glass switch: Liquid and Neutral (owner, 2026-11-16)
+
+On `ios` the switch thumb lifts into a glass lens while the finger is down,
+then switches, in Liquid and in Neutral. Neutral follows the platform on
+phones. Studio and Desk keep their own switch on `ios`, true to their
+sources, with press feedback under the finger and no glass. This refines
+ruling 16 for Neutral: where Neutral sets no shape or behaviour of its own
+on a phone, it takes the platform's.

@@ -193,8 +193,8 @@ Actions on resume, before R4 builds on this chrome:
   indicator, 24dp icons). Accept only side by side with a current reference
   capture, signed by the owner.
 - The iOS switch press (glass lens while held) is a signature moment for
-  R3, to be built for Liquid first. Whether other styles show it on `ios`
-  needs the owner: ruling 16 says the style wins on controls.
+  R3, built for Liquid and Neutral (owner ruling in `DECISIONS.md`). Studio
+  and Desk keep their own switch.
 - R0.15's report claimed the chrome "measures the same in all four styles".
   That was true and beside the point: it was the same wrong geometry.
   Acceptance for chrome is a reference capture, not sameness.
