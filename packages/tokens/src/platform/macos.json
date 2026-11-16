@@ -1,0 +1,874 @@
+{
+  "$description": "Platform tokens for macos (desktop). Emitted under [data-platform='macos'] and in the native macos theme objects.",
+  "$extensions": {
+    "ds.systemFont": {
+      "sans": null,
+      "serif": null,
+      "mono": null
+    }
+  },
+  "size": {
+    "control": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "Minimum control size on macOS, 20x20 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility."
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 22,
+          "unit": "px"
+        },
+        "$description": "Small control on macOS. Source: Liquid audit (docs/reports/audit/liquid-guidelines.md), \"What a desktop form needs\": control heights about 22 to 28 by size."
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        },
+        "$description": "Default control size on macOS, 28x28 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "Large control on macOS. Value from memory, unverified: the HIG pages give no number for it."
+      }
+    },
+    "target-min": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "WCAG 2.2 SC 2.5.8 floor for web content. Above the macOS minimum control size of 20 pt (https://developer.apple.com/design/human-interface-guidelines/accessibility)."
+    },
+    "touch": {
+      "ios": {
+        "$type": "dimension",
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        },
+        "$description": "Touch target on iOS, in points. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility, default control size 44x44 pt."
+      },
+      "android": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Touch target on Android, in dp. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Targets and spacing\": at least 48 by 48dp."
+      }
+    }
+  },
+  "shape": {
+    "corner": {
+      "$type": "dimension",
+      "none": {
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "None 0. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "extra-small": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "Extra small 4. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "small": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "Small 8. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "medium": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "Medium 12. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "large": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "Large 16. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "large-increased": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "Large increased 20. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "extra-large": {
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        },
+        "$description": "Extra large 28. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "extra-large-increased": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "Extra large increased 32. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "extra-extra-large": {
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Extra extra large 48. The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      },
+      "full": {
+        "$value": {
+          "value": 999,
+          "unit": "px"
+        },
+        "$description": "Full: a capsule (999px, the same as radius.pill). The vendor publishes no corner scale (Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Shape\": concentric corners, capsules for controls); this platform uses the shared step values from Material audit (docs/reports/audit/material-guidelines.md), \"Shape\"."
+      }
+    }
+  },
+  "opacity": {
+    "state": {
+      "$type": "number",
+      "hover": {
+        "$value": 0.08,
+        "$description": "State layer hover, 0.08. The vendor publishes no state layer opacities; this platform uses the shared values from Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\"."
+      },
+      "focus": {
+        "$value": 0.1,
+        "$description": "State layer focus, 0.1. The vendor publishes no state layer opacities; this platform uses the shared values from Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\"."
+      },
+      "pressed": {
+        "$value": 0.1,
+        "$description": "State layer pressed, 0.1. The vendor publishes no state layer opacities; this platform uses the shared values from Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\"."
+      },
+      "dragged": {
+        "$value": 0.16,
+        "$description": "State layer dragged, 0.16. The vendor publishes no state layer opacities; this platform uses the shared values from Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\"."
+      },
+      "disabled-container": {
+        "$value": 0.12,
+        "$description": "State layer disabled container, 0.12. The vendor publishes no state layer opacities; this platform uses the shared values from Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\"."
+      }
+    }
+  },
+  "elevation": {
+    "level0": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 0: key shadow 0 0 0 0, ambient shadow 0 0 0 0. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 0. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 0
+      }
+    },
+    "level1": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 1: key shadow 0 1 2 0, ambient shadow 0 1 3 1. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 1. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 1
+      }
+    },
+    "level2": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 2,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 2: key shadow 0 1 2 0, ambient shadow 0 2 6 2. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 3. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 3
+      }
+    },
+    "level3": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 3,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 3: key shadow 0 1 3 0, ambient shadow 0 4 8 3. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 6. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 6
+      }
+    },
+    "level4": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 6,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 10,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 4,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 4: key shadow 0 2 3 0, ambient shadow 0 6 10 4. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 8. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 8
+      }
+    },
+    "level5": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 4,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 6,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 5: key shadow 0 4 4 0, ambient shadow 0 8 12 6. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 12. The vendor publishes no elevation levels; this platform uses the shared geometry of https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss.",
+      "$extensions": {
+        "ds.elevation": 12
+      }
+    }
+  },
+  "spring": {
+    "spatial": {
+      "fast": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 1754.6,
+          "$description": "interactiveSpring() defaults: response 0.15, dampingFraction 0.86. Source: https://developer.apple.com/documentation/swiftui/animation/interactivespring(response:dampingfraction:blendduration:). Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 72.05,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "default": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 157.91,
+          "$description": "spring() defaults: response 0.5, dampingFraction 0.825. Source: https://developer.apple.com/documentation/swiftui/animation/spring(response:dampingfraction:blendduration:). Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 20.73,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "slow": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 70.18,
+          "$description": "Derived, no vendor value: the spring() damping fraction 0.825 at 1.5 times its response (0.75). Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 13.82,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      }
+    },
+    "effects": {
+      "fast": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 1754.6,
+          "$description": "Derived, no vendor value: the interactiveSpring() response 0.15 with no bounce (damping fraction 1). Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 83.78,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "default": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 157.91,
+          "$description": "smooth: duration 0.5, no bounce. Source: https://developer.apple.com/documentation/swiftui/spring/smooth(duration:extrabounce:). Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 25.13,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "slow": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 130.51,
+          "$description": "The default animation: response 0.55, dampingFraction 1.0. Source: https://developer.apple.com/documentation/swiftui/animation/default. Converted at mass 1: stiffness (2 pi / response) squared, damping 4 pi times the damping fraction over the response, the conversion the Spring page shows (duration 0.5, bounce 0.3 gives 157.9 and 17.6)."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 22.85,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      }
+    }
+  },
+  "inset": {
+    "safe": {
+      "top": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the top. CSS reads env(safe-area-inset-top); native reads 0 and the safe area provider supplies the live value.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-top"
+        }
+      },
+      "bottom": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the bottom. CSS reads env(safe-area-inset-bottom); native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-bottom"
+        }
+      },
+      "start": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the inline start. The build maps it to env(safe-area-inset-left), or right under :dir(rtl). Native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-start"
+        }
+      },
+      "end": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the inline end. The build maps it to env(safe-area-inset-right), or left under :dir(rtl). Native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-end"
+        }
+      }
+    },
+    "keyboard": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$description": "Height of the on screen keyboard. CSS reads env(keyboard-inset-height), which needs the page to opt in to the virtual keyboard overlay. Native reads 0.",
+      "$extensions": {
+        "ds.env": "keyboard-inset-height"
+      }
+    }
+  },
+  "type": {
+    "display-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 26,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2308
+      },
+      "$description": "Large Title, 26 over 32, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "display-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 22,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.1818
+      },
+      "$description": "Title 1, 22 over 26, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "display-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 17,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2941
+      },
+      "$description": "Title 2, 17 over 22, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "headline-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 22,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.1818
+      },
+      "$description": "Title 1, 22 over 26, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "headline-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 17,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2941
+      },
+      "$description": "Title 2, 17 over 22, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "headline-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 15,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "Title 3, 15 over 20, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "title-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 13,
+          "unit": "px"
+        },
+        "fontWeight": 700,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2308
+      },
+      "$description": "Headline (bold), 13 over 16, weight 700. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "title-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 13,
+          "unit": "px"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2308
+      },
+      "$description": "Body, emphasized weight semibold, 13 over 16, weight 600. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "title-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.25
+      },
+      "$description": "Callout, emphasized weight semibold, 12 over 15, weight 600. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "body-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 13,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2308
+      },
+      "$description": "Body, 13 over 16, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "body-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.25
+      },
+      "$description": "Callout, 12 over 15, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "body-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 11,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2727
+      },
+      "$description": "Subheadline, 11 over 14, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "label-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 13,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2308
+      },
+      "$description": "Body, the size of push button text, 13 over 16, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "label-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 11,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2727
+      },
+      "$description": "Subheadline, 11 over 14, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    },
+    "label-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 10,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3
+      },
+      "$description": "Footnote, 10 over 13, weight 400. Tracking 0: the system font adjusts tracking at every size. Source: https://developer.apple.com/design/human-interface-guidelines/typography, \"macOS built-in text styles\" table, fetched 2026-11-16; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+    }
+  }
+}

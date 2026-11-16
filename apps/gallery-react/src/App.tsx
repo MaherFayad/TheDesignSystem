@@ -1,6 +1,6 @@
 import { Component, Suspense, lazy, useEffect, type ComponentType, type ErrorInfo, type LazyExoticComponent, type ReactNode } from 'react';
-import { Theme, styleIds, themeAttributes, useTheme, type ThemeAxesInput } from '@the-system/react';
-import { GALLERY_STYLE, axisControls, axisQuery, readAxes, readCase } from './axes';
+import { Theme, styleIds, themeAttributes, useDevicePlatform, useTheme, type Platform, type ThemeAxesInput } from '@the-system/react';
+import { GALLERY_STYLE, axisControls, axisQuery, readAxes, readCase, readPlatform, readStoredPlatform, storePlatform, type PlatformSource } from './axes';
 import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
 
@@ -11,13 +11,19 @@ const PlatformScreen = lazy(() => import('./Platforms').then((m) => ({ default: 
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
 /** Stamps the resolved axes on <html> too, so the whole viewport is themed and lang and dir are right. */
-function useDocumentTheme(axes: ThemeAxesInput): void {
+function useDocumentTheme(axes: ThemeAxesInput, device: Platform): void {
   const { style, scheme, density, contrast, platform, glass, dir, lang } = axes;
   useEffect(() => {
-    const attrs = themeAttributes({ style, scheme, density, contrast, platform, glass, dir, lang });
+    const attrs = themeAttributes({ style, scheme, density, contrast, platform, glass, dir, lang }, { platform: device });
     const html = document.documentElement;
     for (const [name, value] of Object.entries(attrs)) html.setAttribute(name, value);
-  }, [style, scheme, density, contrast, platform, glass, dir, lang]);
+  }, [style, scheme, density, contrast, platform, glass, dir, lang, device]);
+}
+
+/** The platform state the bar shows: the device, where the input came from and what was stamped. */
+interface PlatformState {
+  device: Platform;
+  source: PlatformSource;
 }
 
 export function App() {
@@ -28,13 +34,17 @@ export function App() {
   // the registry has no token CSS, so nothing would paint: the gallery uses
   // GALLERY_STYLE instead and says so.
   const unknownStyle = asked.style !== undefined && !styleIds.includes(asked.style) ? asked.style : undefined;
-  const axes = asked.style === undefined || unknownStyle ? { ...asked, style: GALLERY_STYLE } : asked;
+  // Platform: the URL key, then the stored switcher choice, then auto (the
+  // device, resolved by the root Theme on mount).
+  const platform = readPlatform(params, readStoredPlatform());
+  const device = useDevicePlatform();
+  const axes = { ...asked, style: asked.style === undefined || unknownStyle ? GALLERY_STYLE : asked.style, platform: platform.input };
   const chrome = params.get('chrome') !== '0';
   const caseId = readCase(params);
   const path = url.pathname.replace(/\/+$/, '') || '/';
   const slug = path.startsWith('/c/') ? safeDecode(path.slice(3)) : undefined;
   const route = slug !== undefined ? routes.find((r) => r.slug === slug) : undefined;
-  useDocumentTheme(axes);
+  useDocumentTheme(axes, device);
 
   useEffect(() => {
     document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : path.startsWith('/platforms') ? 'Platforms, gallery' : 'Gallery';
@@ -51,7 +61,7 @@ export function App() {
 
   return (
     <Theme {...axes} id="gallery-root" data-gallery="root">
-      {chrome && <Shell params={params} title={route?.name} />}
+      {chrome && <Shell params={params} title={route?.name} platform={{ device, source: platform.source }} />}
       <main data-gallery="stage" data-gallery-case={caseId}>
         {unknownStyle && (
           <p data-gallery="note" role="status">
@@ -70,10 +80,12 @@ export function App() {
 }
 
 /** The bar with navigation and one select per axis. Always English, left to right. */
-function Shell({ params, title }: { params: URLSearchParams; title: string | undefined }) {
+function Shell({ params, title, platform }: { params: URLSearchParams; title: string | undefined; platform: PlatformState }) {
   const resolved = useTheme();
   const query = axisQuery(params);
   const set = (key: string, value: string) => {
+    // Only a choice made here is stored; Auto clears it (contract, step 3).
+    if (key === 'platform') storePlatform(value === '' ? 'auto' : (value as Platform));
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
     else next.delete(key);
@@ -82,6 +94,8 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
     // back button leaves the demo instead of stepping through every select.
     navigate(`${window.location.pathname}${s ? `?${s}` : ''}`, { replace: true });
   };
+  // The platform select shows a stored choice too, not only the URL key.
+  const selected = (key: string): string => (key === 'platform' && platform.source !== 'device' ? resolved.platform : (params.get(key) ?? ''));
   return (
     <Theme as="header" lang="en" data-gallery="shell">
       <nav data-gallery="nav" aria-label="Gallery">
@@ -95,8 +109,8 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
         {axisControls.map((control) => (
           <label key={control.key} data-gallery="axis">
             <span>{control.label}</span>
-            <select value={params.get(control.key) ?? ''} onChange={(e) => set(control.key, e.target.value)}>
-              <option value="">Auto: {String(resolved[control.key])}</option>
+            <select value={selected(control.key)} onChange={(e) => set(control.key, e.target.value)}>
+              <option value="">{control.key === 'platform' ? `Auto: ${platform.device}` : `Auto: ${String(resolved[control.key])}`}</option>
               {control.values.map((v) => (
                 <option key={v} value={v}>
                   {v}
@@ -105,9 +119,19 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
             </select>
           </label>
         ))}
+        <output data-gallery="platform-detected" data-detected={platform.device} data-source={platform.source} aria-live="polite">
+          {platformNote(platform, resolved.platform)}
+        </output>
       </form>
     </Theme>
   );
+}
+
+/** The line in the bar: what the device is, and what the page shows when that differs. */
+function platformNote(state: PlatformState, shown: Platform): string {
+  if (state.source === 'device') return `Detected ${state.device}`;
+  const from = state.source === 'url' ? 'from the address' : 'from your choice';
+  return `Detected ${state.device}, showing ${shown} ${from}`;
 }
 
 function Index({ query }: { query: string }) {

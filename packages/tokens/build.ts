@@ -4,9 +4,17 @@
 //
 // Sources:
 //   packages/tokens/src/base/*.json         tokens shared by every style
+//   packages/tokens/src/platform/<id>.json  platform names for web, ios, android, macos
 //   packages/tokens/src/density/<id>.json   overrides for [data-density='<id>']
-//   packages/tokens/src/contract.json       semantic names every style fills
+//   packages/tokens/src/contract.json       semantic names every style fills, and
+//                                           the platform names every platform fills
 //   packages/styles/<id>/tokens.<scheme>.json   one style, one scheme
+//
+// The platform layer (docs/contracts/tokens.md, ruling 8): the web platform
+// file joins the base tokens, so `:root, [data-style]` carries the web values.
+// Every platform also gets a `[data-platform='<id>']` block, and native gets
+// one theme object per style, scheme and platform. No name has two owners: a
+// style file never sets a platform name.
 //
 // Styles are discovered from the folders, so a new style needs no change here.
 // The output is deterministic: sorted, no timestamps.
@@ -46,12 +54,33 @@ export interface ContractGroup {
   added: string[];
 }
 
+/** Which family the platform font is for a system stack, by kind. null is the platform default. */
+export type SystemFontMap = Partial<Record<'sans' | 'serif' | 'mono', string | null>>;
+
+export interface PlatformLayer {
+  /** `web`, `ios`, `android` or `macos`. */
+  id: string;
+  /** Tokens from `src/platform/<id>.json`: platform names only. */
+  tokens: TokenMap;
+  /** Native only: which family the platform font is, from `$extensions["ds.systemFont"]`. */
+  systemFont: SystemFontMap;
+}
+
+export interface PlatformContract {
+  ids: string[];
+  groups: ContractGroup[];
+}
+
 export interface BuildResult {
   prefix: string;
+  /** Base tokens, including the web platform values. */
   base: TokenMap;
   densities: { id: string; tokens: TokenMap }[];
   modes: Mode[];
   contract: ContractGroup[];
+  platformContract: PlatformContract;
+  /** In contract order: web first. */
+  platforms: PlatformLayer[];
   /** Output files, keyed by path relative to `dist/`. */
   files: Record<string, string>;
 }
@@ -75,6 +104,14 @@ interface ShadowLayer {
   blur: Dimension | string;
   spread: Dimension | string;
   inset?: boolean;
+}
+
+interface Typography {
+  fontFamily: unknown;
+  fontSize: Dimension | string;
+  fontWeight: number | string;
+  letterSpacing: Dimension | string;
+  lineHeight: number | string;
 }
 
 interface Fluid {
@@ -226,6 +263,127 @@ const GENERIC_FONTS = new Set([
   'ui-monospace', 'ui-rounded', 'emoji', 'math', 'fangsong', '-apple-system', 'BlinkMacSystemFont',
 ]);
 
+const MONO_KEYWORDS = new Set(['monospace', 'ui-monospace']);
+const SERIF_KEYWORDS = new Set(['serif', 'ui-serif']);
+
+// ---------------------------------------------------------------- derived tokens
+
+/** The five CSS fields of a typography composite, in DTCG order. */
+const TYPE_FIELDS: [keyof Typography, string, string][] = [
+  ['fontFamily', 'font-family', 'fontFamily'],
+  ['fontSize', 'font-size', 'dimension'],
+  ['fontWeight', 'font-weight', 'fontWeight'],
+  ['letterSpacing', 'letter-spacing', 'dimension'],
+  ['lineHeight', 'line-height', 'number'],
+];
+
+/** Typography composites become one token per field: `type.body-large.font-size`. */
+function expandTypography(map: TokenMap): TokenMap {
+  const out: TokenMap = new Map();
+  for (const [path, t] of map) {
+    if (t.type !== 'typography') {
+      out.set(path, t);
+      continue;
+    }
+    if (aliasTarget(t.value)) throw new Error(`${path}: a typography token must hold its fields, not alias another token`);
+    const v = t.value as Typography;
+    for (const [key, suffix, type] of TYPE_FIELDS) {
+      if (v[key] === undefined) throw new Error(`${path}: typography has no ${key}`);
+      out.set(`${path}.${suffix}`, { path: `${path}.${suffix}`, type, value: v[key], ...(t.description ? { description: t.description } : {}) });
+    }
+  }
+  return out;
+}
+
+/** Platform spring groups (docs/contracts/tokens.md, Platform names). */
+const PLATFORM_SPRINGS = /^spring\.(spatial|effects)\.[a-z0-9-]+$/;
+
+interface SpringNumbers {
+  stiffness: number;
+  damping: number;
+  mass: number;
+}
+
+/** The position of a damped spring from 0 to 1 at time t (seconds). The same model as @the-system/motion. */
+function springAt(s: SpringNumbers, t: number): number {
+  const w0 = Math.sqrt(s.stiffness / s.mass);
+  const zeta = s.damping / (2 * Math.sqrt(s.stiffness * s.mass));
+  if (zeta < 1) {
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);
+    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + ((zeta * w0) / wd) * Math.sin(wd * t));
+  }
+  return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+
+/**
+ * A spring baked for the web: a `linear()` curve of 20 even stops and the time
+ * it takes to settle within 0.005 of its target. The same settings the style
+ * files use for `ease.spring-*` (packages/motion/src/springs.test.ts).
+ */
+export function bakeSpring(s: SpringNumbers): { easing: string; durationMs: number } {
+  const settle = 0.005;
+  const points = 20;
+  const step = 1 / 240;
+  let end = 0;
+  for (let t = 0; t < 4; t += step) if (Math.abs(1 - springAt(s, t)) > settle) end = t + step;
+  const stops: string[] = [];
+  for (let i = 0; i <= points; i++) {
+    const v = i === points ? 1 : springAt(s, (end * i) / points);
+    stops.push(String(Math.round(v * 1000) / 1000));
+  }
+  return { easing: `linear(${stops.join(', ')})`, durationMs: Math.round(end * 1000) };
+}
+
+/** The spring groups of the platform names in a map, keyed by group path. */
+function platformSpringGroups(map: TokenMap, scope: TokenMap): Map<string, SpringNumbers> {
+  const out = new Map<string, SpringNumbers>();
+  for (const path of map.keys()) {
+    const m = /^(.*)\.stiffness$/.exec(path);
+    if (!m || !PLATFORM_SPRINGS.test(m[1]!)) continue;
+    const g = m[1]!;
+    const n = (k: string) => {
+      const t = map.get(`${g}.${k}`);
+      if (!t) throw new Error(`${g}: a spring needs stiffness, damping and mass`);
+      return resolveValue(t.value, scope, `${g}.${k}`) as number;
+    };
+    out.set(g, { stiffness: n('stiffness'), damping: n('damping'), mass: n('mass') });
+  }
+  return out;
+}
+
+/**
+ * What the CSS build writes for a map: typography as five fields, and each
+ * platform spring with a baked `<group>.easing` and `<group>.duration` beside
+ * its numbers (springs are numbers on native and timed curves on the web).
+ */
+function expandForCss(map: TokenMap, scope: TokenMap): TokenMap {
+  const out = expandTypography(map);
+  for (const [g, s] of platformSpringGroups(map, scope)) {
+    const baked = bakeSpring(s);
+    const note = `Baked from ${g} for the web.`;
+    out.set(`${g}.easing`, { path: `${g}.easing`, type: 'string', value: baked.easing, description: note });
+    out.set(`${g}.duration`, { path: `${g}.duration`, type: 'duration', value: { value: baked.durationMs, unit: 'ms' }, description: note });
+  }
+  return out;
+}
+
+/** The env() name of an inset token, or undefined. */
+function envOf(token: Token): string | undefined {
+  const e = token.extensions?.['ds.env'];
+  return typeof e === 'string' ? e : undefined;
+}
+
+/** Logical safe area names map to the physical env() names by direction. */
+function physicalEnv(name: string, rtl: boolean): string {
+  if (name === 'safe-area-inset-start') return rtl ? 'safe-area-inset-right' : 'safe-area-inset-left';
+  if (name === 'safe-area-inset-end') return rtl ? 'safe-area-inset-left' : 'safe-area-inset-right';
+  return name;
+}
+
+function isLogicalEnv(name: string): boolean {
+  return name === 'safe-area-inset-start' || name === 'safe-area-inset-end';
+}
+
 // ---------------------------------------------------------------- CSS values
 
 export function cssVar(prefix: string, path: string): string {
@@ -300,8 +458,17 @@ const DYNAMIC_UNITS: Record<string, string> = { vh: 'dvh', vw: 'dvw' };
 function cssBlock(selector: string, map: TokenMap, prefix: string, scope: TokenMap, extra: string[] = [], indent = '  '): string {
   const lines = [...extra];
   const dynamic: string[] = [];
+  const rtl: string[] = [];
   for (const path of sortedPaths(map)) {
     const t = map.get(path)!;
+    const env = envOf(t);
+    if (env) {
+      // An inset fed by env(): the token value is the fallback.
+      const fallback = cssValue({ ...t, extensions: undefined }, t.value, prefix, scope);
+      lines.push(`${cssVar(prefix, path)}: env(${physicalEnv(env, false)}, ${fallback});`);
+      if (isLogicalEnv(env)) rtl.push(`${cssVar(prefix, path)}: env(${physicalEnv(env, true)}, ${fallback});`);
+      continue;
+    }
     lines.push(`${cssVar(prefix, path)}: ${cssValue(t, t.value, prefix, scope)};`);
     const unit = t.type === 'number' ? unitOf(t) : undefined;
     if (unit && unit in DYNAMIC_UNITS && typeof t.value === 'number') {
@@ -314,6 +481,14 @@ function cssBlock(selector: string, map: TokenMap, prefix: string, scope: TokenM
   if (dynamic.length) {
     const inner = selector.replace(/\n/g, `\n  `);
     out.push(`${indent}@supports (height: 1dvh) {\n${block(inner, dynamic, `${indent}  `)}\n${indent}}`);
+  }
+  // Inline start and end follow the direction: left and right swap under rtl.
+  if (rtl.length) {
+    const rtlSelector = selector
+      .split(',')
+      .map((s) => `${s.trim()}:dir(rtl)`)
+      .join(',\n  ');
+    out.push(block(rtlSelector, rtl, indent));
   }
   return out.join('\n\n');
 }
@@ -336,10 +511,41 @@ function nativePath(token: Token, map: TokenMap): string {
   return windowUnit(token, map) ? `${token.path}-window-ratio` : token.path;
 }
 
-/** The first real family name, or undefined for the platform default. */
-function nativeFamily(value: unknown): string | undefined {
+/** The first real family name of a stack. Figma needs a name it can match. */
+function firstNamedFamily(value: unknown): string | undefined {
   const list = Array.isArray(value) ? (value as string[]) : [value as string];
   return list.find((f) => !GENERIC_FONTS.has(f));
+}
+
+/**
+ * The native family for a stack. A stack that starts with a CSS keyword
+ * (system-ui, ui-monospace, serif) is a system stack: it maps to the platform
+ * font through the platform's system font mapping, and to undefined (the
+ * platform default) when the mapping has no family. It never becomes the
+ * first named family, which is a desktop fallback such as Segoe UI or
+ * SFMono-Regular that a phone does not have. A stack that starts with a named
+ * family is a style font and keeps that name.
+ */
+function nativeFamily(value: unknown, systemFont: SystemFontMap = {}): string | undefined {
+  const list = Array.isArray(value) ? (value as string[]) : [value as string];
+  const first = list[0];
+  if (first === undefined) return undefined;
+  if (!GENERIC_FONTS.has(first)) return first;
+  const kind = MONO_KEYWORDS.has(first) ? 'mono' : SERIF_KEYWORDS.has(first) ? 'serif' : 'sans';
+  return systemFont[kind] ?? undefined;
+}
+
+/**
+ * A CSS only timing function: an `ease.*` string (a baked `linear()` curve or
+ * `steps()`). Native plays springs from the `spring.*` numbers instead.
+ */
+function cssOnly(token: Token, map: TokenMap): boolean {
+  return token.path.startsWith('ease.') && finalToken(token, map).type === 'string';
+}
+
+function elevationOf(token: Token): number | undefined {
+  const e = token.extensions?.['ds.elevation'];
+  return typeof e === 'number' ? e : undefined;
 }
 
 function nativeColor(c: ColorValue): string {
@@ -366,9 +572,12 @@ function nativeShadow(value: unknown): Record<string, unknown> {
   };
 }
 
-function nativeValue(token: Token, map: TokenMap): NativeValue {
+function nativeValue(token: Token, map: TokenMap, systemFont: SystemFontMap = {}): NativeValue {
   const t = finalToken(token, map);
   const value = resolveValue(token.value, map, token.path);
+  if (envOf(t)) return 0;
+  const level = elevationOf(t);
+  if (level !== undefined) return level;
   switch (t.type) {
     case 'color':
       return nativeColor(value as ColorValue);
@@ -389,13 +598,33 @@ function nativeValue(token: Token, map: TokenMap): NativeValue {
     case 'cubicBezier':
       return value as number[];
     case 'fontFamily':
-      return nativeFamily(value);
+      return nativeFamily(value, systemFont);
     case 'shadow':
       return nativeShadow(value);
+    case 'typography': {
+      // A React Native text style. lineHeight is absolute here (size times the multiplier).
+      const v = value as Typography;
+      const size = px(v.fontSize as Dimension);
+      return {
+        fontFamily: nativeFamily(v.fontFamily, systemFont),
+        fontSize: Number(num(size)),
+        fontWeight: Number(v.fontWeight),
+        letterSpacing: Number(num(px(v.letterSpacing as Dimension))),
+        lineHeight: Math.round(size * Number(v.lineHeight) * 100) / 100,
+      };
+    }
     default:
       return String(value);
   }
 }
+
+const NATIVE_TYPOGRAPHY_TYPE = `{
+  readonly fontFamily: string | undefined;
+  readonly fontSize: number;
+  readonly fontWeight: number;
+  readonly letterSpacing: number;
+  readonly lineHeight: number;
+}`;
 
 const NATIVE_SHADOW_TYPE = `{
   readonly shadowColor: string;
@@ -408,7 +637,10 @@ const NATIVE_SHADOW_TYPE = `{
 /** The TypeScript type of a native value, from the token type (not the value). */
 function nativeType(token: Token, map: TokenMap): string {
   const t = finalToken(token, map);
+  if (elevationOf(t) !== undefined || envOf(t)) return 'number';
   switch (t.type) {
+    case 'typography':
+      return NATIVE_TYPOGRAPHY_TYPE;
     case 'color':
       return 'string';
     case 'number':
@@ -489,7 +721,11 @@ function figmaVariable(token: Token, map: TokenMap, prefix: string): FigmaVariab
   } else if (windowUnit(token, map) || t.type === 'fontFamily') {
     const resolved = resolveValue(token.value, map, token.path);
     const family = t.type === 'fontFamily' ? (Array.isArray(resolved) ? (resolved as string[]) : [resolved as string]) : [];
-    v = { type: 'STRING', value: t.type === 'fontFamily' ? (nativeFamily(resolved) ?? family[0] ?? '') : cssValue(t, resolved, prefix, map) };
+    v = { type: 'STRING', value: t.type === 'fontFamily' ? (firstNamedFamily(resolved) ?? family[0] ?? '') : cssValue(t, resolved, prefix, map) };
+  } else if (t.type === 'shadow') {
+    v = { type: 'STRING', value: cssValue(t, resolveValue(token.value, map, token.path), prefix, map) };
+  } else if (envOf(t)) {
+    v = { type: 'FLOAT', value: 0 };
   } else if (typeof native === 'number') {
     v = { type: 'FLOAT', value: native };
   } else if (typeof native === 'string' && t.type !== 'shadow') {
@@ -543,6 +779,81 @@ export function contractNames(groups: ContractGroup[]): string[] {
   return groups.flatMap((g) => [...g.names, ...g.added].map((n) => `${g.group}.${n}`)).sort(compareNames);
 }
 
+export function loadPlatformContract(root: string): PlatformContract {
+  const data = readJson(join(root, 'packages/tokens/src/contract.json')) as { platform?: PlatformContract };
+  if (!data.platform) throw new Error('contract.json: no platform section');
+  return { ids: data.platform.ids, groups: data.platform.groups };
+}
+
+/** True when a value holds a literal colour anywhere (not an alias). */
+function holdsColour(value: unknown): boolean {
+  if (isObject(value) && 'colorSpace' in value) return true;
+  if (Array.isArray(value)) return value.some(holdsColour);
+  if (isObject(value)) return Object.values(value).some(holdsColour);
+  return false;
+}
+
+/**
+ * Checks one platform file against the contract: every platform name is
+ * filled, nothing else is set, no colour (a shadow colour must alias a
+ * `color.*` token), no font family (a typography family must alias
+ * `font.family.*`), no material or blur.
+ */
+function checkPlatform(id: string, tokens: TokenMap, contract: PlatformContract): void {
+  const file = `platform/${id}.json`;
+  const wanted = new Map(contract.groups.flatMap((g) => [...g.names, ...g.added].map((n) => [`${g.group}.${n}`, g.type] as const)));
+  for (const [path, type] of wanted) {
+    const t = tokens.get(path);
+    if (!t) throw new Error(`${file}: platform name ${path} has no value`);
+    if (t.type !== type) throw new Error(`${file}: ${path} is a ${t.type}, the contract wants ${type}`);
+  }
+  for (const [path, t] of tokens) {
+    if (!wanted.has(path)) throw new Error(`${file}: ${path} is not a platform name. A platform file fills only the platform names in contract.json.`);
+    if (t.type === 'color' || t.type === 'fontFamily' || holdsColour(t.value)) throw new Error(`${file}: ${path} sets a colour or a font family, which a platform may never set`);
+    if (/^(color\.material|color\.glass|blur)\./.test(path)) throw new Error(`${file}: ${path} is a surface material, which a platform may never set`);
+    if (t.type === 'shadow') {
+      const layers = Array.isArray(t.value) ? t.value : [t.value];
+      for (const l of layers as ShadowLayer[]) {
+        const target = aliasTarget(l.color);
+        if (!target?.startsWith('color.')) throw new Error(`${file}: ${path} shadow colour must alias a color token`);
+      }
+    }
+    if (t.type === 'typography') {
+      const target = aliasTarget((t.value as Typography).fontFamily);
+      if (!target?.startsWith('font.family.')) throw new Error(`${file}: ${path} fontFamily must alias a font.family token`);
+    }
+  }
+}
+
+export function loadPlatforms(root: string, contract: PlatformContract): PlatformLayer[] {
+  const dir = join(root, 'packages/tokens/src/platform');
+  const files = listJson(dir);
+  for (const f of files) if (!contract.ids.includes(f.replace(/\.json$/, ''))) throw new Error(`platform/${f}: ${f.replace(/\.json$/, '')} is not a platform id in contract.json`);
+  return contract.ids.map((id) => {
+    const path = join(dir, `${id}.json`);
+    if (!existsSync(path)) throw new Error(`platform/${id}.json is missing`);
+    const tree = readJson(path) as Record<string, unknown>;
+    const tokens = flatten(tree, `platform/${id}.json`);
+    checkPlatform(id, tokens, contract);
+    const ext = isObject(tree.$extensions) ? tree.$extensions['ds.systemFont'] : undefined;
+    const systemFont: SystemFontMap = {};
+    if (isObject(ext)) {
+      if (id === 'web') throw new Error('platform/web.json: the web never maps a font family');
+      for (const [k, v] of Object.entries(ext)) {
+        if (k !== 'sans' && k !== 'serif' && k !== 'mono') throw new Error(`platform/${id}.json: ds.systemFont has an unknown kind ${k}`);
+        if (v !== null && typeof v !== 'string') throw new Error(`platform/${id}.json: ds.systemFont.${k} must be a family or null`);
+        systemFont[k] = v as string | null;
+      }
+    }
+    return { id, tokens, systemFont };
+  });
+}
+
+/** A mode with one platform's names over it. The web values are already in the base. */
+export function platformMap(mode: Mode, platform: PlatformLayer): TokenMap {
+  return new Map([...mode.all, ...platform.tokens]);
+}
+
 export function buildTokens(options: BuildOptions = {}): BuildResult {
   const root = options.root ?? join(here, '..', '..');
   const config = readJson(join(root, 'ds.config.json')) as { cssPrefix?: string };
@@ -551,6 +862,15 @@ export function buildTokens(options: BuildOptions = {}): BuildResult {
 
   const base: TokenMap = new Map();
   for (const f of listJson(join(src, 'base'))) flatten(readJson(join(src, 'base', f)), `base/${f}`, base);
+
+  // The web platform values join the base, so a page on `web` looks as it did.
+  const platformContract = loadPlatformContract(root);
+  const platforms = loadPlatforms(root, platformContract);
+  const platformNames = new Set(platforms.flatMap((p) => [...p.tokens.keys()]));
+  for (const p of platformNames) if (base.has(p)) throw new Error(`${p} is set by a base file and by the platform files: a name has one owner`);
+  const web = platforms.find((p) => p.id === 'web');
+  if (!web) throw new Error('contract.json: the platform ids must include web');
+  for (const [p, t] of web.tokens) base.set(p, t);
 
   const densities = listJson(join(src, 'density')).map((f) => {
     const tokens = flatten(readJson(join(src, 'density', f)), `density/${f}`);
@@ -566,6 +886,7 @@ export function buildTokens(options: BuildOptions = {}): BuildResult {
       const m = /^tokens\.([a-z0-9-]+)\.json$/.exec(f);
       if (!m) continue;
       const own = flatten(readJson(join(stylesDir, style, f)), `styles/${style}/${f}`);
+      for (const p of own.keys()) if (platformNames.has(p)) throw new Error(`styles/${style}/${f}: ${p} is a platform name, which a style never sets`);
       const all: TokenMap = new Map([...base, ...own]);
       modes.push({ id: `${style}.${m[1]}`, style, scheme: m[1]!, own, all });
     }
@@ -574,9 +895,21 @@ export function buildTokens(options: BuildOptions = {}): BuildResult {
   // Every alias must resolve in every mode, with no cycles.
   for (const mode of modes) for (const t of mode.all.values()) resolveValue(t.value, mode.all, `${mode.id} ${t.path}`);
   for (const d of densities) for (const t of d.tokens.values()) resolveValue(t.value, new Map([...base, ...d.tokens]), `density ${d.id} ${t.path}`);
+  for (const p of platforms) {
+    for (const mode of modes) {
+      const map = platformMap(mode, p);
+      for (const t of p.tokens.values()) resolveValue(t.value, map, `${p.id} ${mode.id} ${t.path}`);
+    }
+    for (const t of p.tokens.values()) {
+      const d = t.extensions?.['ds.density'];
+      if (d === undefined) continue;
+      if (!isObject(d)) throw new Error(`platform/${p.id}.json: ${t.path} ds.density must be an object`);
+      for (const id of Object.keys(d)) if (!densities.some((x) => x.id === id)) throw new Error(`platform/${p.id}.json: ${t.path} names an unknown density ${id}`);
+    }
+  }
 
   const contract = loadContract(root);
-  const result: BuildResult = { prefix, base, densities, modes, contract, files: {} };
+  const result: BuildResult = { prefix, base, densities, modes, contract, platformContract, platforms, files: {} };
   result.files = render(result);
   return result;
 }
@@ -590,11 +923,30 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
   const blocks: string[] = [];
   // Base tokens may alias style tokens; buildTokens checked those per mode.
   const scope: TokenMap = new Map([...base, ...r.modes.flatMap((m) => [...m.own])]);
-  blocks.push(cssBlock(':root,\n  [data-style]', base, prefix, scope));
-  for (const d of densities) blocks.push(cssBlock(`[data-density='${d.id}']`, d.tokens, prefix, scope));
+  const baseCss = expandForCss(base, scope);
+  blocks.push(cssBlock(':root,\n  [data-style]', baseCss, prefix, scope));
+
+  // The order of the layer (docs/contracts/tokens.md): style and scheme,
+  // platform, density, then contrast. No name has two owners, so the order
+  // between style and platform decides nothing; density comes after platform.
   for (const m of modes) {
     const scheme = m.scheme === 'dark' || m.scheme === 'light' ? [`color-scheme: ${m.scheme};`] : [];
     blocks.push(cssBlock(`[data-style='${m.style}'][data-scheme='${m.scheme}']`, m.own, prefix, m.all, scheme));
+  }
+  const platformCss = r.platforms.map((p) => ({ p, map: expandForCss(p.tokens, scope) }));
+  for (const { p, map } of platformCss) blocks.push(cssBlock(`[data-platform='${p.id}']`, map, prefix, scope));
+  for (const d of densities) blocks.push(cssBlock(`[data-density='${d.id}']`, d.tokens, prefix, scope));
+  // A platform's own density values: on touch platforms density never takes a
+  // control below the platform's size.
+  for (const p of r.platforms) {
+    for (const d of densities) {
+      const map: TokenMap = new Map();
+      for (const [path, t] of p.tokens) {
+        const v = (t.extensions?.['ds.density'] as Record<string, unknown> | undefined)?.[d.id];
+        if (v !== undefined) map.set(path, { path, type: t.type, value: v });
+      }
+      if (map.size) blocks.push(cssBlock(`[data-platform='${p.id}'][data-density='${d.id}']`, map, prefix, scope));
+    }
   }
 
   // Reduced motion: every duration and delay goes to zero, except timing that
@@ -602,14 +954,17 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
   // A style may set its own durations in its mode block, which is more
   // specific than `[data-style]`, so the zeroes are also written for
   // `[data-style][data-scheme]`: the same specificity, later in the file.
+  // Baked platform springs (`spring.*.duration`) are motion too, and are
+  // also written for `[data-platform]`.
   const isMotion = (p: string, map: TokenMap) =>
     (p.startsWith('duration.') || p.startsWith('delay.')) && map.get(p)!.extensions?.['ds.motion'] !== false && base.get(p)?.extensions?.['ds.motion'] !== false;
   const motionSet = new Set(sortedPaths(base).filter((p) => isMotion(p, base)));
   for (const m of modes) for (const p of sortedPaths(m.own)) if (isMotion(p, m.own)) motionSet.add(p);
+  for (const map of [baseCss, ...platformCss.map((x) => x.map)]) for (const p of map.keys()) if (PLATFORM_SPRINGS.test(p.replace(/\.duration$/, '')) && p.endsWith('.duration')) motionSet.add(p);
   const motion = [...motionSet].sort();
   if (motion.length) {
     const lines = motion.map((p) => `      ${cssVar(prefix, p)}: 0ms;`);
-    blocks.push(`  @media (prefers-reduced-motion: reduce) {\n    :root,\n    [data-style],\n    [data-style][data-scheme] {\n${lines.join('\n')}\n    }\n  }`);
+    blocks.push(`  @media (prefers-reduced-motion: reduce) {\n    :root,\n    [data-style],\n    [data-platform],\n    [data-style][data-scheme] {\n${lines.join('\n')}\n    }\n  }`);
   }
 
   // Reduced transparency and more contrast: every material becomes the solid glass.
@@ -646,20 +1001,22 @@ function solidMaterialPaths(modes: Mode[]): string[] {
   return MATERIALS.map((m) => `color.material.${m}`).filter((p) => modes.some((m) => m.all.has(p)));
 }
 
-function nativeTheme(mode: Mode): Record<string, unknown> {
+function nativeTheme(map: TokenMap, systemFont: SystemFontMap = {}): Record<string, unknown> {
   const obj: Record<string, unknown> = {};
-  for (const path of sortedPaths(mode.all)) {
-    const t = mode.all.get(path)!;
-    setPath(obj, nativePath(t, mode.all), nativeValue(t, mode.all));
+  for (const path of sortedPaths(map)) {
+    const t = map.get(path)!;
+    if (cssOnly(t, map)) continue;
+    setPath(obj, nativePath(t, map), nativeValue(t, map, systemFont));
   }
   return obj;
 }
 
-function nativeThemeType(mode: Mode): Record<string, unknown> {
+function nativeThemeType(map: TokenMap): Record<string, unknown> {
   const obj: Record<string, unknown> = {};
-  for (const path of sortedPaths(mode.all)) {
-    const t = mode.all.get(path)!;
-    setPath(obj, nativePath(t, mode.all), nativeType(t, mode.all));
+  for (const path of sortedPaths(map)) {
+    const t = map.get(path)!;
+    if (cssOnly(t, map)) continue;
+    setPath(obj, nativePath(t, map), nativeType(t, map));
   }
   return obj;
 }
@@ -673,8 +1030,18 @@ const NATIVE_TYPES_DOC = `/**
  * - em tokens (radius.control, font.tracking.*) are converted at 16px. For letter
  *   spacing at another size, scale by fontSize / 16.
  * - font.leading.* are multipliers, not line heights: lineHeight = fontSize * leading.
- * - font.family.* is the first real family name of the stack. CSS keywords such as
- *   system-ui or ui-monospace are skipped; undefined means the platform default font.
+ * - font.family.* is the style's font when its stack starts with a named family. A
+ *   system stack (one that starts with system-ui, ui-monospace or another CSS keyword)
+ *   is the platform font: undefined, or the family the platform's system font mapping
+ *   names (android mono is 'monospace'). It is never a desktop fallback family
+ *   named later in the stack.
+ * - type.<role> is a React Native text style: fontFamily as above, fontSize, fontWeight,
+ *   letterSpacing in px, and lineHeight in px (not a multiplier).
+ * - elevation.level0 to level5 are elevation numbers (dp). The other elevation.* names
+ *   are shadow props, below.
+ * - spring.* are numbers (stiffness, damping, mass) for a native spring. The CSS only
+ *   linear() curves (ease.spring-*) are not in native themes.
+ * - inset.* are 0. The safe area provider and the keyboard supply the live values.
  * - Keys ending in -window-ratio come from vh or vw tokens: a ratio from 0 to 1 that
  *   you multiply by the window height (vh) or width (vw), for example from
  *   useWindowDimensions(). dialog.height.max-window-ratio is 0.8 for 80vh.
@@ -692,18 +1059,41 @@ function render(r: BuildResult): Record<string, string> {
   files['css/tokens.css'] = renderCss(r, modes);
   for (const s of styles) files[`css/${s}.css`] = renderCss(r, modes.filter((m) => m.style === s));
 
-  // 2. Native theme objects
-  const themes = modes.map((m) => ({ mode: m, name: identifier(`${m.style} ${m.scheme}`), obj: nativeTheme(m) }));
+  // 2. Native theme objects: one per style, scheme and platform. The web
+  // object keeps its old file name (`<style>.<scheme>.ts`); the others are
+  // `<style>.<scheme>.<platform>.ts`.
+  const platforms = r.platforms;
+  const themes = modes.flatMap((m) =>
+    platforms.map((p) => {
+      const isWeb = p.id === 'web';
+      const map = isWeb ? m.all : platformMap(m, p);
+      return {
+        mode: m,
+        platform: p.id,
+        file: isWeb ? m.id : `${m.id}.${p.id}`,
+        name: identifier(isWeb ? `${m.style} ${m.scheme}` : `${m.style} ${m.scheme} ${p.id}`),
+        map,
+        obj: nativeTheme(map, p.systemFont),
+      };
+    }),
+  );
   const first = themes[0];
+  const themeType = first ? nativeThemeType(first.map) : {};
+  // A platform never changes the shape of a theme, only its values.
+  for (const t of themes) {
+    if (t.platform === 'web') continue;
+    const web = themes.find((w) => w.mode === t.mode && w.platform === 'web')!;
+    if (JSON.stringify(nativeThemeType(t.map)) !== JSON.stringify(nativeThemeType(web.map))) throw new Error(`native ${t.file}: the theme shape differs from ${web.file}`);
+  }
   files['native/types.ts'] = [
     `// ${HEADER}`,
     '',
     NATIVE_TYPES_DOC,
-    `export interface Theme ${first ? tsType(nativeThemeType(first.mode), '') : '{}'}`,
+    `export interface Theme ${first ? tsType(themeType, '') : '{}'}`,
     '',
   ].join('\n');
   for (const t of themes) {
-    files[`native/${t.mode.id}.ts`] = [
+    files[`native/${t.file}.ts`] = [
       `// ${HEADER}`,
       "import type { Theme } from './types';",
       '',
@@ -717,25 +1107,56 @@ function render(r: BuildResult): Record<string, string> {
     for (const p of sortedPaths(d.tokens)) setPath(obj, nativePath(d.tokens.get(p)!, scope), nativeValue(d.tokens.get(p)!, scope));
     return { id: d.id, obj };
   });
-  const themeMap: Record<string, Record<string, string>> = {};
-  for (const t of themes) (themeMap[t.mode.style] ??= {})[t.mode.scheme] = t.name;
+  // themes[style][scheme] is the web theme, as before, and also holds each
+  // platform's theme: themes[style][scheme][platform].
+  const themeMap: Record<string, Record<string, Record<string, string>>> = {};
+  for (const t of themes) ((themeMap[t.mode.style] ??= {})[t.mode.scheme] ??= {})[t.platform] = t.name;
+  const platformDensityObjs: Record<string, Record<string, unknown>> = {};
+  for (const p of platforms) {
+    for (const d of densities) {
+      const obj: Record<string, unknown> = {};
+      const scope = new Map([...base, ...p.tokens]);
+      for (const path of sortedPaths(p.tokens)) {
+        const t = p.tokens.get(path)!;
+        const v = (t.extensions?.['ds.density'] as Record<string, unknown> | undefined)?.[d.id];
+        if (v !== undefined) setPath(obj, path, nativeValue({ path, type: t.type, value: v }, scope));
+      }
+      if (Object.keys(obj).length) (platformDensityObjs[p.id] ??= {})[d.id] = obj;
+    }
+  }
+  const schemeEntry = (byPlatform: Record<string, string>) =>
+    `{ ...${byPlatform['web']}, ${platforms.map((p) => `${tsKey(p.id)}: ${byPlatform[p.id]}`).join(', ')} }`;
   files['native/index.ts'] = [
     `// ${HEADER}`,
-    ...themes.map((t) => `import { ${t.name} } from './${t.mode.id}';`),
+    ...themes.map((t) => `import { ${t.name} } from './${t.file}';`),
     "import type { Theme } from './types';",
     '',
     'export type { Theme };',
     `export type StyleId = ${styles.map((s) => `'${s}'`).join(' | ') || 'never'};`,
     `export type Scheme = ${schemes.map((s) => `'${s}'`).join(' | ') || 'never'};`,
+    `export type Platform = ${platforms.map((p) => `'${p.id}'`).join(' | ') || 'never'};`,
     `export type Density = 'default'${densities.map((d) => ` | '${d.id}'`).join('')};`,
     '',
-    `export const themes: Record<StyleId, Partial<Record<Scheme, Theme>>> = {\n${Object.keys(themeMap)
+    '/** The web theme of a style and scheme, which also holds the theme of each platform by its id. */',
+    'export type PlatformThemes = Theme & { readonly [P in Platform]: Theme };',
+    '',
+    '/**',
+    ' * themes[style][scheme][platform] is the theme for one style, scheme and platform.',
+    ' * themes[style][scheme] alone is the web theme, as before the platform layer.',
+    ' */',
+    `export const themes: Record<StyleId, Partial<Record<Scheme, PlatformThemes>>> = {\n${Object.keys(themeMap)
       .sort(compareNames)
-      .map((s) => `  ${tsKey(s)}: { ${Object.entries(themeMap[s]!).sort(([a], [b]) => compareNames(a, b)).map(([k, v]) => `${tsKey(k)}: ${v}`).join(', ')} },`)
+      .map((s) => `  ${tsKey(s)}: {\n${Object.entries(themeMap[s]!).sort(([a], [b]) => compareNames(a, b)).map(([k, v]) => `    ${tsKey(k)}: ${schemeEntry(v)},`).join('\n')}\n  },`)
       .join('\n')}\n};`,
     '',
     '/** Base token overrides per density. Merge over a theme; `default` has none. */',
     `export const densities = ${tsLiteral(Object.fromEntries(densityObjs.map((d) => [d.id, d.obj])), '')} as const;`,
+    '',
+    '/**',
+    ' * A platform\'s own density values. Merge over densities[density] on that platform:',
+    ' * on ios and android density never takes a control below the platform\'s size.',
+    ' */',
+    `export const platformDensities = ${tsLiteral(platformDensityObjs, '')} as const;`,
     '',
     '/** The px size of 1em and 1rem in these themes. em tokens (radius.control, font.tracking.*) were converted with it. */',
     `export const emBase = ${ROOT_FONT_PX};`,
@@ -752,6 +1173,11 @@ function render(r: BuildResult): Record<string, string> {
   const allNames = new Set<string>(base.keys());
   for (const m of modes) for (const p of m.own.keys()) allNames.add(p);
   const names = [...allNames].sort(compareNames);
+  // CSS names: typography fields and baked springs are their own variables.
+  const typesScope: TokenMap = new Map([...base, ...modes.flatMap((m) => [...m.own])]);
+  const cssNames = new Set<string>(expandForCss(base, typesScope).keys());
+  for (const m of modes) for (const p of m.own.keys()) cssNames.add(p);
+  const cssList = [...cssNames].sort(compareNames);
   files['types/tokens.d.ts'] = [
     `// ${HEADER}`,
     '//',
@@ -762,10 +1188,11 @@ function render(r: BuildResult): Record<string, string> {
     '',
     `export type TokenName =\n${names.map((n) => `  | '${n}'`).join('\n')};`,
     '',
-    `export type CssVariable =\n${names.map((n) => `  | '${cssVar(prefix, n)}'`).join('\n')};`,
+    `export type CssVariable =\n${cssList.map((n) => `  | '${cssVar(prefix, n)}'`).join('\n')};`,
     '',
     `export type StyleId = ${styles.map((s) => `'${s}'`).join(' | ') || 'never'};`,
     `export type Scheme = ${schemes.map((s) => `'${s}'`).join(' | ') || 'never'};`,
+    `export type Platform = ${platforms.map((p) => `'${p.id}'`).join(' | ') || 'never'};`,
     `export type Density = 'default'${densities.map((d) => ` | '${d.id}'`).join('')};`,
     '',
   ].join('\n');
@@ -773,7 +1200,9 @@ function render(r: BuildResult): Record<string, string> {
   // 4. Figma: one flat file per mode.
   for (const m of modes) {
     const variables: Record<string, FigmaVariable> = {};
-    for (const p of sortedPaths(m.all)) variables[p.replace(/\./g, '/')] = figmaVariable(m.all.get(p)!, m.all, prefix);
+    // Figma variables hold one value each: a typography composite becomes its five fields.
+    const figmaMap = expandTypography(m.all);
+    for (const p of sortedPaths(figmaMap)) variables[p.replace(/\./g, '/')] = figmaVariable(figmaMap.get(p)!, figmaMap, prefix);
     files[`figma/${m.id}.json`] = JSON.stringify({ mode: m.id, style: m.style, scheme: m.scheme, variables }, null, 2) + '\n';
   }
 

@@ -22,7 +22,12 @@ export const deskLight: Theme = {
     mark: '#121211',
   },
   breakpoint: {
+    compact: 0,
     desktop: 1100,
+    expanded: 840,
+    'extra-large': 1600,
+    large: 1200,
+    medium: 600,
     phone: 480,
     tablet: 768,
   },
@@ -433,9 +438,6 @@ export const deskLight: Theme = {
     in: [0.42, 0, 1, 1],
     out: [0, 0, 0.58, 1],
     reveal: [0.22, 1, 0.36, 1],
-    'spring-bouncy': 'linear(0, 0.142, 0.452, 0.78, 1.034, 1.177, 1.215, 1.182, 1.115, 1.044, 0.991, 0.961, 0.954, 0.961, 0.976, 0.991, 1.002, 1.009, 1.01, 1.008, 1)',
-    'spring-snappy': 'linear(0, 0.087, 0.285, 0.516, 0.73, 0.898, 1.014, 1.079, 1.105, 1.103, 1.086, 1.062, 1.038, 1.017, 1.003, 0.994, 0.989, 0.989, 0.99, 0.992, 1)',
-    'spring-soft': 'linear(0, 0.055, 0.182, 0.336, 0.49, 0.629, 0.745, 0.836, 0.904, 0.952, 0.984, 1.004, 1.015, 1.019, 1.02, 1.018, 1.016, 1.012, 1.009, 1.007, 1)',
     standard: [0.4, 0, 0.2, 1],
     window: [0.2, 0.8, 0.2, 1],
   },
@@ -490,6 +492,12 @@ export const deskLight: Theme = {
       shadowOpacity: 0.12,
       shadowRadius: 2.5,
     },
+    level0: 0,
+    level1: 1,
+    level2: 3,
+    level3: 6,
+    level4: 8,
+    level5: 12,
     menu: {
       elevation: 13,
       shadowColor: '#1a1d24',
@@ -585,7 +593,7 @@ export const deskLight: Theme = {
       arabic: 'IBM Plex Sans Arabic',
       display: 'Instrument Sans',
       'display-arabic': 'IBM Plex Sans Arabic',
-      mono: 'SFMono-Regular',
+      mono: undefined,
       sans: 'Instrument Sans',
     },
     leading: {
@@ -631,6 +639,15 @@ export const deskLight: Theme = {
       menu: 560,
       regular: 400,
       semibold: 600,
+    },
+  },
+  inset: {
+    keyboard: 0,
+    safe: {
+      bottom: 0,
+      end: 0,
+      start: 0,
+      top: 0,
     },
   },
   inspector: {
@@ -699,6 +716,13 @@ export const deskLight: Theme = {
   opacity: {
     disabled: 0.38,
     grain: 0.08,
+    state: {
+      'disabled-container': 0.12,
+      dragged: 0.16,
+      focus: 0.1,
+      hover: 0.08,
+      pressed: 0.1,
+    },
   },
   palette: {
     art: {
@@ -905,6 +929,20 @@ export const deskLight: Theme = {
     'thumb-hover': '#57554f',
     track: 'rgba(0, 0, 0, 0)',
   },
+  shape: {
+    corner: {
+      'extra-extra-large': 48,
+      'extra-large': 28,
+      'extra-large-increased': 32,
+      'extra-small': 4,
+      full: 999,
+      large: 16,
+      'large-increased': 20,
+      medium: 12,
+      none: 0,
+      small: 8,
+    },
+  },
   shell: {
     rail: {
       width: 42,
@@ -995,6 +1033,23 @@ export const deskLight: Theme = {
       mass: 1,
       stiffness: 960,
     },
+    effects: {
+      default: {
+        damping: 80,
+        mass: 1,
+        stiffness: 1600,
+      },
+      fast: {
+        damping: 123.29,
+        mass: 1,
+        stiffness: 3800,
+      },
+      slow: {
+        damping: 56.57,
+        mass: 1,
+        stiffness: 800,
+      },
+    },
     merge: {
       damping: 24,
       mass: 1,
@@ -1020,6 +1075,23 @@ export const deskLight: Theme = {
       mass: 1,
       stiffness: 459,
     },
+    spatial: {
+      default: {
+        damping: 47.62,
+        mass: 1,
+        stiffness: 700,
+      },
+      fast: {
+        damping: 67.35,
+        mass: 1,
+        stiffness: 1400,
+      },
+      slow: {
+        damping: 31.18,
+        mass: 1,
+        stiffness: 300,
+      },
+    },
   },
   'title-bar': {
     height: 36,
@@ -1033,6 +1105,113 @@ export const deskLight: Theme = {
   tooltip: {
     width: {
       max: 240,
+    },
+  },
+  type: {
+    'body-large': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 16,
+      fontWeight: 400,
+      letterSpacing: 0.5,
+      lineHeight: 24,
+    },
+    'body-medium': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 14,
+      fontWeight: 400,
+      letterSpacing: 0.25,
+      lineHeight: 20,
+    },
+    'body-small': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 12,
+      fontWeight: 400,
+      letterSpacing: 0.4,
+      lineHeight: 16,
+    },
+    'display-large': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 57,
+      fontWeight: 400,
+      letterSpacing: -0.25,
+      lineHeight: 64,
+    },
+    'display-medium': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 45,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 52,
+    },
+    'display-small': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 36,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 44,
+    },
+    'headline-large': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 32,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 40,
+    },
+    'headline-medium': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 28,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 36,
+    },
+    'headline-small': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 24,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 32,
+    },
+    'label-large': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+    },
+    'label-medium': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 12,
+      fontWeight: 500,
+      letterSpacing: 0.5,
+      lineHeight: 16,
+    },
+    'label-small': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 11,
+      fontWeight: 500,
+      letterSpacing: 0.5,
+      lineHeight: 16,
+    },
+    'title-large': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 22,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 28,
+    },
+    'title-medium': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 16,
+      fontWeight: 500,
+      letterSpacing: 0.15,
+      lineHeight: 24,
+    },
+    'title-small': {
+      fontFamily: 'Instrument Sans',
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.1,
+      lineHeight: 20,
     },
   },
   window: {

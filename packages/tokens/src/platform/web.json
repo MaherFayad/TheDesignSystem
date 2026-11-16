@@ -1,0 +1,867 @@
+{
+  "$description": "Platform tokens for web: the values the base files gave before the platform layer, plus the new platform names. Emitted on :root and [data-style], and again under [data-platform='web'].",
+  "size": {
+    "control": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "Studio xs is 22px tall and 26px wide. Raised to 24px for SC 2.5.8."
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        },
+        "$description": "Studio sm is 26px. Raised to 28px so the square icon button (28px in Studio) matches."
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "The web control height the base files gave before the platform layer."
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        },
+        "$description": "The web large control height the base files gave before the platform layer."
+      }
+    },
+    "target-min": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "WCAG 2.2 SC 2.5.8. Nothing interactive is smaller, including handles (via a hit area)."
+    },
+    "touch": {
+      "ios": {
+        "$type": "dimension",
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        },
+        "$description": "Touch target on iOS, in points. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility, default control size 44x44 pt."
+      },
+      "android": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Touch target on Android, in dp. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Targets and spacing\": at least 48 by 48dp."
+      }
+    }
+  },
+  "shape": {
+    "corner": {
+      "$type": "dimension",
+      "none": {
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "None 0. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "extra-small": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "Extra small 4. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "small": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "Small 8. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "medium": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "Medium 12. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "large": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "Large 16. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "large-increased": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "Large increased 20. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "extra-large": {
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        },
+        "$description": "Extra large 28. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "extra-large-increased": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "Extra large increased 32. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "extra-extra-large": {
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Extra extra large 48. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      },
+      "full": {
+        "$value": {
+          "value": 999,
+          "unit": "px"
+        },
+        "$description": "Full: a capsule (999px, the same as radius.pill). Source: Material audit (docs/reports/audit/material-guidelines.md), \"Shape\" corner scale."
+      }
+    }
+  },
+  "opacity": {
+    "state": {
+      "$type": "number",
+      "hover": {
+        "$value": 0.08,
+        "$description": "State layer hover, 0.08. Source: Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\" (current tokens; Material Web still ships 0.12 for focus and pressed)."
+      },
+      "focus": {
+        "$value": 0.1,
+        "$description": "State layer focus, 0.1. Source: Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\" (current tokens; Material Web still ships 0.12 for focus and pressed)."
+      },
+      "pressed": {
+        "$value": 0.1,
+        "$description": "State layer pressed, 0.1. Source: Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\" (current tokens; Material Web still ships 0.12 for focus and pressed)."
+      },
+      "dragged": {
+        "$value": 0.16,
+        "$description": "State layer dragged, 0.16. Source: Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\" (current tokens; Material Web still ships 0.12 for focus and pressed)."
+      },
+      "disabled-container": {
+        "$value": 0.12,
+        "$description": "State layer disabled container, 0.12. Source: Material audit (docs/reports/audit/material-guidelines.md), \"State layers and ripple\" (current tokens; Material Web still ships 0.12 for focus and pressed)."
+      }
+    }
+  },
+  "elevation": {
+    "level0": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 0: key shadow 0 0 0 0, ambient shadow 0 0 0 0. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 0. Level 0 is 0dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 0
+      }
+    },
+    "level1": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 1: key shadow 0 1 2 0, ambient shadow 0 1 3 1. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 1. Level 1 is 1dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 1
+      }
+    },
+    "level2": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 2,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 2: key shadow 0 1 2 0, ambient shadow 0 2 6 2. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 3. Level 2 is 3dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 3
+      }
+    },
+    "level3": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 3,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 3: key shadow 0 1 3 0, ambient shadow 0 4 8 3. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 6. Level 3 is 6dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 6
+      }
+    },
+    "level4": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 6,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 10,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 4,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 4: key shadow 0 2 3 0, ambient shadow 0 6 10 4. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 8. Level 4 is 8dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 8
+      }
+    },
+    "level5": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": "{color.bg.scrim-30}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 4,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.bg.scrim-20}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 6,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Elevation level 5: key shadow 0 4 4 0, ambient shadow 0 8 12 6. Colours are the style's scrim tokens: key scrim-30 (0.3 as in the source), ambient scrim-20 (the source has 0.15; the contract has no 0.15 step). Native reads the elevation number 12. Level 5 is 12dp (Material audit (docs/reports/audit/material-guidelines.md), \"Elevation\"). Geometry: https://raw.githubusercontent.com/material-components/material-web/main/elevation/internal/_elevation.scss (key shadow at 0.3, ambient at 0.15).",
+      "$extensions": {
+        "ds.elevation": 12
+      }
+    }
+  },
+  "spring": {
+    "spatial": {
+      "fast": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 1400,
+          "$description": "Fast spatial spring: stiffness 1400, damping ratio 0.9. Small parts (switch, buttons). Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 67.35,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "default": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 700,
+          "$description": "Default spatial spring: stiffness 700, damping ratio 0.9. Partial screen (bottom sheet, expanded rail). Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 47.62,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "slow": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 300,
+          "$description": "Slow spatial spring: stiffness 300, damping ratio 0.9. Full screen. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 31.18,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      }
+    },
+    "effects": {
+      "fast": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 3800,
+          "$description": "Fast effects spring: stiffness 3800, damping ratio 1, no overshoot. Colour and opacity. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 123.29,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "default": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 1600,
+          "$description": "Default effects spring: stiffness 1600, damping ratio 1. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 80,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "slow": {
+        "stiffness": {
+          "$type": "number",
+          "$value": 800,
+          "$description": "Slow effects spring: stiffness 800, damping ratio 1. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Motion\", standard scheme (stiffness and damping ratio). The web has no vendor springs; it takes the Material standard scheme, which Material also publishes as web curves."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 56.57,
+          "$description": "Damping coefficient (not a ratio): ratio times 2 times the square root of stiffness times mass."
+        },
+        "mass": {
+          "$type": "number",
+          "$value": 1
+        }
+      }
+    }
+  },
+  "inset": {
+    "safe": {
+      "top": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the top. CSS reads env(safe-area-inset-top); native reads 0 and the safe area provider supplies the live value.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-top"
+        }
+      },
+      "bottom": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the bottom. CSS reads env(safe-area-inset-bottom); native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-bottom"
+        }
+      },
+      "start": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the inline start. The build maps it to env(safe-area-inset-left), or right under :dir(rtl). Native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-start"
+        }
+      },
+      "end": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Safe area at the inline end. The build maps it to env(safe-area-inset-right), or left under :dir(rtl). Native reads 0.",
+        "$extensions": {
+          "ds.env": "safe-area-inset-end"
+        }
+      }
+    },
+    "keyboard": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$description": "Height of the on screen keyboard. CSS reads env(keyboard-inset-height), which needs the page to opt in to the virtual keyboard overlay. Native reads 0.",
+      "$extensions": {
+        "ds.env": "keyboard-inset-height"
+      }
+    }
+  },
+  "type": {
+    "display-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 57,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": -0.25,
+          "unit": "px"
+        },
+        "lineHeight": 1.1228
+      },
+      "$description": "Display large, 57 over 64, weight 400, tracking -0.25px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "display-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 45,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.1556
+      },
+      "$description": "Display medium, 45 over 52, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "display-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 36,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2222
+      },
+      "$description": "Display small, 36 over 44, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "headline-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 32,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.25
+      },
+      "$description": "Headline large, 32 over 40, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "headline-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 28,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2857
+      },
+      "$description": "Headline medium, 28 over 36, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "headline-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontSize": {
+          "value": 24,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "Headline small, 24 over 32, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "title-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 22,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2727
+      },
+      "$description": "Title large, 22 over 28, weight 400, tracking 0px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "title-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 16,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0.15,
+          "unit": "px"
+        },
+        "lineHeight": 1.5
+      },
+      "$description": "Title medium, 16 over 24, weight 500, tracking 0.15px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "title-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 14,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0.1,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "Title small, 14 over 20, weight 500, tracking 0.1px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "body-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 16,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0.5,
+          "unit": "px"
+        },
+        "lineHeight": 1.5
+      },
+      "$description": "Body large, 16 over 24, weight 400, tracking 0.5px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "body-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 14,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0.25,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "Body medium, 14 over 20, weight 400, tracking 0.25px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "body-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0.4,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "Body small, 12 over 16, weight 400, tracking 0.4px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "label-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 14,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0.1,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "Label large, 14 over 20, weight 500, tracking 0.1px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "label-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0.5,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "Label medium, 12 over 16, weight 500, tracking 0.5px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    },
+    "label-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": {
+          "value": 11,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0.5,
+          "unit": "px"
+        },
+        "lineHeight": 1.4545
+      },
+      "$description": "Label small, 11 over 16, weight 500, tracking 0.5px. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Type\" table (baseline, public 3p context). The web has no vendor ramp; it takes the Material baseline, the one ramp published for the web."
+    }
+  }
+}

@@ -109,7 +109,8 @@ describe('token build', () => {
   it('gives native plain values a consumer can use', () => {
     const t = result.files['native/studio.dark.ts']!;
     expect(t).toContain("'max-window-ratio': 0.8,");
-    expect(t).toContain("mono: 'SFMono-Regular',");
+    // A system stack is the platform font (native defect 19), never its first named family.
+    expect(t).toContain('mono: undefined,');
     expect(t).not.toMatch(/'(system-ui|ui-monospace|sans-serif)'/);
     expect(result.files['native/types.ts']).toContain('lineHeight = fontSize * leading');
   });
@@ -142,6 +143,10 @@ describe('token build', () => {
   it('matches the theme object snapshots', async () => {
     for (const m of result.modes) {
       await expect(result.files[`native/${m.id}.ts`]).toMatchFileSnapshot(`./__snapshots__/native.${m.id}.ts.snap`);
+      for (const p of result.platforms) {
+        if (p.id === 'web') continue;
+        await expect(result.files[`native/${m.id}.${p.id}.ts`]).toMatchFileSnapshot(`./__snapshots__/native.${m.id}.${p.id}.ts.snap`);
+      }
     }
     await expect(result.files['native/index.ts']).toMatchFileSnapshot('./__snapshots__/native.index.ts.snap');
   });
@@ -194,6 +199,6 @@ describe('style discovery', () => {
     expect(r.modes.map((m) => m.id)).toEqual(['probe.dark', 'probe.light', 'studio.dark', 'studio.light']);
     expect(r.files['css/tokens.css']).toContain("[data-style='probe'][data-scheme='dark'] {");
     expect(r.files['css/probe.css']).toBeDefined();
-    expect(r.files['native/index.ts']).toContain('probe: { dark: probeDark, light: probeLight },');
+    expect(r.files['native/index.ts']).toContain('dark: { ...probeDark, web: probeDark, ios: probeDarkIos, android: probeDarkAndroid, macos: probeDarkMacos },');
   });
 });

@@ -11,6 +11,7 @@ export * from './number';
 export * from './otp';
 export * from './pagination';
 export * from './phone';
+export * from './platform';
 export * from './resize';
 export * from './scrub';
 export * from './shortcut';

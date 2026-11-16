@@ -1,0 +1,12 @@
+iphone-15              expect ios      none=ios bar="Detected ios" hints=iOS touch=1 pass
+iphone-se              expect ios      none=ios bar="Detected ios" hints=iOS touch=1 pass
+pixel-7                expect android  none=android bar="Detected android" hints=Android touch=1 pass
+galaxy-s9              expect android  none=android bar="Detected android" hints=Android touch=1 pass
+ipad-pro-11            expect ios      none=ios bar="Detected ios" hints=iOS touch=1 pass
+ipad-desktop-mode      expect ios      none=ios bar="Detected ios" hints=null touch=5 pass
+ipad-desktop-raw-chromium expect web      none=web bar="Detected web" hints=macOS touch=1 pass
+desktop-chrome         expect web      none=web bar="Detected web" hints=Windows touch=0 pass
+desktop-safari-agent   expect web      none=web bar="Detected web" hints=macOS touch=0 pass
+default-chromium       expect web      none=web bar="Detected web" hints=Linux touch=0 pass
+travel {"stamped":"ios","firstState":"unchecked","afterTap":"checked","thumbX":[134.3125,151.71249389648438,134.3125],"travelPx":17.399993896484375,"backPx":17.399993896484375,"trackWidth":61.59375} desktop {"stamped":"web","travelPx":4}
+exit 0

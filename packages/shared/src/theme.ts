@@ -15,7 +15,13 @@ export type ThemeStyle = StyleId | (string & {});
 export type Scheme = 'dark' | 'light';
 export type Density = 'compact' | 'default' | 'comfortable';
 export type Contrast = 'default' | 'more';
-export type Platform = 'web' | 'ios' | 'android';
+/** The values `data-platform` holds. `macos` is chosen only by override. */
+export type Platform = 'web' | 'ios' | 'android' | 'macos';
+/**
+ * What a theme's `platform` prop takes: a platform, or `auto`, which follows
+ * the device (see `detectPlatform` in platform.ts). `auto` is never stamped.
+ */
+export type PlatformInput = Platform | 'auto';
 /** Only styles with `usesGlass` read it. */
 export type Glass = 'clear' | 'regular' | 'tinted';
 export type Dir = 'ltr' | 'rtl';
@@ -34,8 +40,8 @@ export interface ThemeAxes {
   lang: Lang;
 }
 
-/** What a theme takes: any axis may be left out. */
-export type ThemeAxesInput = Partial<ThemeAxes>;
+/** What a theme takes: any axis may be left out, and `platform` also takes `auto`. */
+export type ThemeAxesInput = Partial<Omit<ThemeAxes, 'platform'>> & { platform?: PlatformInput };
 
 /** The data of one `packages/styles/<id>/style.json`. See section 3.7 of PLAN.md. */
 export interface StyleData {
@@ -78,8 +84,11 @@ export interface ThemeAttributes {
 
 /**
  * Root defaults a platform knows better than the web: React Native passes the
- * device's platform, I18nManager's direction and the system contrast. They
- * apply only at the root (no parent) and only when the input is silent.
+ * device's platform, I18nManager's direction and the system contrast; the web
+ * Theme passes the detected platform after mount. They apply only at the root
+ * (no parent) and only when the input is silent. One exception: a `platform`
+ * input of `auto` takes `root.platform` at any depth, since `auto` means the
+ * device.
  */
 export interface ThemeRootDefaults {
   platform?: Platform;
@@ -129,6 +138,9 @@ export function getStyleData(id: string): StyleData {
  * glass `regular`, lang `en` (each of platform, contrast and dir may come
  * from `root` instead, see ThemeRootDefaults).
  *
+ * - Platform: a value wins; `auto` gives `root.platform` (the device), else
+ *   `web`; no input takes the parent's value, and at the root behaves as
+ *   `auto`. The result is always one of the four values, never `auto`.
  * - A scheme the style does not list falls back to the style's default scheme.
  * - `dir` follows `lang` when `lang` is passed and `dir` is not: `lang="ar"`
  *   alone gives `rtl`. Otherwise `dir` comes from the parent, then from
@@ -146,12 +158,18 @@ export function resolveTheme(input: ThemeAxesInput, parent?: ThemeAxes | null, r
     scheme,
     density: input.density ?? parent?.density ?? styleData.defaultDensity,
     contrast: input.contrast ?? (parent ? parent.contrast : (root.contrast ?? 'default')),
-    platform: input.platform ?? (parent ? parent.platform : (root.platform ?? 'web')),
+    platform: platformOf(input.platform, parent, root),
     glass: input.glass ?? parent?.glass ?? 'regular',
     dir,
     lang,
     styleData,
   };
+}
+
+function platformOf(input: PlatformInput | undefined, parent: ThemeAxes | null | undefined, root: ThemeRootDefaults): Platform {
+  if (input !== undefined && input !== 'auto') return input;
+  if (input === undefined && parent) return parent.platform;
+  return root.platform ?? 'web';
 }
 
 /** The attributes of a theme element for resolved axes. */
@@ -172,8 +190,9 @@ export function attributesOf(axes: ThemeAxes): ThemeAttributes {
 /**
  * Resolves the axes as a root theme would and returns the attributes to
  * spread on any element. Use it to stamp <html> or <body> so the whole
- * viewport is themed.
+ * viewport is themed. On a server `auto` stamps `web`; pass the detected
+ * platform as `root.platform` after mount.
  */
-export function themeAttributes(axes: ThemeAxesInput = {}): ThemeAttributes {
-  return attributesOf(resolveTheme(axes, null));
+export function themeAttributes(axes: ThemeAxesInput = {}, root: ThemeRootDefaults = {}): ThemeAttributes {
+  return attributesOf(resolveTheme(axes, null, root));
 }

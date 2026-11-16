@@ -22,7 +22,12 @@ export const studioLight: Theme = {
     mark: '#0a0a0a',
   },
   breakpoint: {
+    compact: 0,
     desktop: 1100,
+    expanded: 840,
+    'extra-large': 1600,
+    large: 1200,
+    medium: 600,
     phone: 480,
     tablet: 768,
   },
@@ -433,9 +438,6 @@ export const studioLight: Theme = {
     in: [0.42, 0, 1, 1],
     out: [0, 0, 0.58, 1],
     reveal: [0.22, 1, 0.36, 1],
-    'spring-bouncy': 'steps(3, jump-end)',
-    'spring-snappy': 'steps(2, jump-end)',
-    'spring-soft': 'steps(2, jump-end)',
     standard: [0.4, 0, 0.2, 1],
     window: [0.2, 0.8, 0.2, 1],
   },
@@ -490,6 +492,12 @@ export const studioLight: Theme = {
       shadowOpacity: 0,
       shadowRadius: 0,
     },
+    level0: 0,
+    level1: 1,
+    level2: 3,
+    level3: 6,
+    level4: 8,
+    level5: 12,
     menu: {
       elevation: 0,
       shadowColor: '#000000',
@@ -585,7 +593,7 @@ export const studioLight: Theme = {
       arabic: 'IBM Plex Sans Arabic',
       display: 'Inter Variable',
       'display-arabic': 'IBM Plex Sans Arabic',
-      mono: 'SFMono-Regular',
+      mono: undefined,
       sans: 'Inter Variable',
     },
     leading: {
@@ -631,6 +639,15 @@ export const studioLight: Theme = {
       menu: 560,
       regular: 400,
       semibold: 600,
+    },
+  },
+  inset: {
+    keyboard: 0,
+    safe: {
+      bottom: 0,
+      end: 0,
+      start: 0,
+      top: 0,
     },
   },
   inspector: {
@@ -699,6 +716,13 @@ export const studioLight: Theme = {
   opacity: {
     disabled: 0.38,
     grain: 0,
+    state: {
+      'disabled-container': 0.12,
+      dragged: 0.16,
+      focus: 0.1,
+      hover: 0.08,
+      pressed: 0.1,
+    },
   },
   palette: {
     art: {
@@ -905,6 +929,20 @@ export const studioLight: Theme = {
     'thumb-hover': '#4a4a4a',
     track: 'rgba(0, 0, 0, 0)',
   },
+  shape: {
+    corner: {
+      'extra-extra-large': 48,
+      'extra-large': 28,
+      'extra-large-increased': 32,
+      'extra-small': 4,
+      full: 999,
+      large: 16,
+      'large-increased': 20,
+      medium: 12,
+      none: 0,
+      small: 8,
+    },
+  },
   shell: {
     rail: {
       width: 42,
@@ -995,6 +1033,23 @@ export const studioLight: Theme = {
       mass: 1,
       stiffness: 2201,
     },
+    effects: {
+      default: {
+        damping: 80,
+        mass: 1,
+        stiffness: 1600,
+      },
+      fast: {
+        damping: 123.29,
+        mass: 1,
+        stiffness: 3800,
+      },
+      slow: {
+        damping: 56.57,
+        mass: 1,
+        stiffness: 800,
+      },
+    },
     merge: {
       damping: 24,
       mass: 1,
@@ -1020,6 +1075,23 @@ export const studioLight: Theme = {
       mass: 1,
       stiffness: 5521,
     },
+    spatial: {
+      default: {
+        damping: 47.62,
+        mass: 1,
+        stiffness: 700,
+      },
+      fast: {
+        damping: 67.35,
+        mass: 1,
+        stiffness: 1400,
+      },
+      slow: {
+        damping: 31.18,
+        mass: 1,
+        stiffness: 300,
+      },
+    },
   },
   'title-bar': {
     height: 36,
@@ -1033,6 +1105,113 @@ export const studioLight: Theme = {
   tooltip: {
     width: {
       max: 240,
+    },
+  },
+  type: {
+    'body-large': {
+      fontFamily: 'Inter Variable',
+      fontSize: 16,
+      fontWeight: 400,
+      letterSpacing: 0.5,
+      lineHeight: 24,
+    },
+    'body-medium': {
+      fontFamily: 'Inter Variable',
+      fontSize: 14,
+      fontWeight: 400,
+      letterSpacing: 0.25,
+      lineHeight: 20,
+    },
+    'body-small': {
+      fontFamily: 'Inter Variable',
+      fontSize: 12,
+      fontWeight: 400,
+      letterSpacing: 0.4,
+      lineHeight: 16,
+    },
+    'display-large': {
+      fontFamily: 'Inter Variable',
+      fontSize: 57,
+      fontWeight: 400,
+      letterSpacing: -0.25,
+      lineHeight: 64,
+    },
+    'display-medium': {
+      fontFamily: 'Inter Variable',
+      fontSize: 45,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 52,
+    },
+    'display-small': {
+      fontFamily: 'Inter Variable',
+      fontSize: 36,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 44,
+    },
+    'headline-large': {
+      fontFamily: 'Inter Variable',
+      fontSize: 32,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 40,
+    },
+    'headline-medium': {
+      fontFamily: 'Inter Variable',
+      fontSize: 28,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 36,
+    },
+    'headline-small': {
+      fontFamily: 'Inter Variable',
+      fontSize: 24,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 32,
+    },
+    'label-large': {
+      fontFamily: 'Inter Variable',
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+    },
+    'label-medium': {
+      fontFamily: 'Inter Variable',
+      fontSize: 12,
+      fontWeight: 500,
+      letterSpacing: 0.5,
+      lineHeight: 16,
+    },
+    'label-small': {
+      fontFamily: 'Inter Variable',
+      fontSize: 11,
+      fontWeight: 500,
+      letterSpacing: 0.5,
+      lineHeight: 16,
+    },
+    'title-large': {
+      fontFamily: 'Inter Variable',
+      fontSize: 22,
+      fontWeight: 400,
+      letterSpacing: 0,
+      lineHeight: 28,
+    },
+    'title-medium': {
+      fontFamily: 'Inter Variable',
+      fontSize: 16,
+      fontWeight: 500,
+      letterSpacing: 0.15,
+      lineHeight: 24,
+    },
+    'title-small': {
+      fontFamily: 'Inter Variable',
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.1,
+      lineHeight: 20,
     },
   },
   window: {

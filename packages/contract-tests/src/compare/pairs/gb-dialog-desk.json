@@ -1,0 +1,131 @@
+{
+  "id": "gb-dialog-desk",
+  "title": "Desk dialog against the GoBanana Studio dialog",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-gobanana.md",
+    "shot": "fid-gb shot 08, 08-dialog-1440.png",
+    "finding": "A GoBanana dialog is a plain solid panel with surface-2 header and footer bands and a 12px radius; the Desk dialog is glass with window lights, a yellow title bar and a 16px radius."
+  },
+  "source": {
+    "repo": "gb",
+    "screen": "/__design?theme=dark&dir=ltr",
+    "how": "GoBanana's Studio primitives page, dark, left to right, Dialog and toasts section: press Share canvas. The md Studio dialog (components/studio/Dialog.tsx) opens.",
+    "reconstruction": false,
+    "setup": [
+      {
+        "attr": {
+          "selector": "html",
+          "name": "data-gpu",
+          "value": null
+        }
+      },
+      {
+        "click": ".design-panel .st-btn:text-is('Share canvas')"
+      },
+      {
+        "wait": "dialog.st-dialog[open]"
+      }
+    ]
+  },
+  "system": {
+    "url": "/c/dialog?style=desk&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0",
+    "setup": [
+      {
+        "click": "[data-demo-trigger='md']"
+      },
+      {
+        "wait": "[data-ds='dialog'] [data-part='panel']"
+      }
+    ]
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scheme": "dark",
+  "tolerance": {
+    "profile": "default"
+  },
+  "regions": [
+    {
+      "id": "panel",
+      "kind": "part",
+      "source": "dialog.st-dialog[open]",
+      "system": "[data-ds='dialog'] [data-part='panel']",
+      "probes": [
+        "width",
+        "background-color",
+        "border-radius",
+        "border-width",
+        "box-shadow",
+        "backdrop-filter",
+        {
+          "id": "window lights",
+          "property": "count",
+          "source": null,
+          "system": "[data-ds='window-controls']"
+        },
+        {
+          "id": "header fill",
+          "property": "background-color",
+          "source": ".st-dialog-header",
+          "system": "[data-part='titlebar']"
+        },
+        {
+          "id": "header height",
+          "property": "height",
+          "source": ".st-dialog-header",
+          "system": "[data-part='titlebar']"
+        },
+        {
+          "id": "title size",
+          "property": "font-size",
+          "source": ".st-dialog-title",
+          "system": "[data-part='title']"
+        },
+        {
+          "id": "title weight",
+          "property": "font-weight",
+          "source": ".st-dialog-title",
+          "system": "[data-part='title']"
+        },
+        {
+          "id": "title tracking",
+          "property": "letter-spacing",
+          "source": ".st-dialog-title",
+          "system": "[data-part='title']"
+        },
+        {
+          "id": "footer fill",
+          "property": "background-color",
+          "source": ".st-dialog-footer",
+          "system": "[data-part='footer']"
+        }
+      ]
+    },
+    {
+      "id": "scrim",
+      "kind": "region",
+      "crop": false,
+      "source": "dialog.st-dialog[open]",
+      "system": "[data-ds='dialog'] [data-part='backdrop']",
+      "probes": [
+        {
+          "id": "scrim fill",
+          "property": "background-color",
+          "pseudo": {
+            "source": "::backdrop"
+          }
+        },
+        {
+          "id": "scrim blur",
+          "property": "backdrop-filter",
+          "pseudo": {
+            "source": "::backdrop"
+          }
+        }
+      ]
+    }
+  ],
+  "allowed": []
+}

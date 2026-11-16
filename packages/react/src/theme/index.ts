@@ -1,7 +1,24 @@
 export { Theme, type ThemeElement, type ThemeProps } from './Theme';
 export { Bidi, type BidiProps } from './Bidi';
-export { useOptionalPart, useTheme } from './hooks';
-export { DEFAULT_STYLE, attributesOf, getStyleData, resolveTheme, styleIds, themeAttributes } from './resolve';
+export { useDevicePlatform, useOptionalPart, useTheme } from './hooks';
+export {
+  DEFAULT_STYLE,
+  PLATFORM_QUERY_KEY,
+  PLATFORM_STORAGE_KEY,
+  attributesOf,
+  detectPlatform,
+  deviceOf,
+  getStyleData,
+  isPlatform,
+  platformChoice,
+  platformInputOf,
+  platforms,
+  resolvePlatform,
+  resolveTheme,
+  styleIds,
+  themeAttributes,
+} from './resolve';
+export type { DeviceInfo, PlatformSources } from './resolve';
 export type {
   Contrast,
   Density,
@@ -9,6 +26,7 @@ export type {
   Glass,
   Lang,
   Platform,
+  PlatformInput,
   Scheme,
   StyleData,
   ThemeAttributes,

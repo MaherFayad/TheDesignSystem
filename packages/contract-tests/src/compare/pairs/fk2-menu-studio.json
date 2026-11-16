@@ -1,0 +1,49 @@
+{
+  "id": "fk2-menu-studio",
+  "title": "Studio dropdown menu against the Figma-Killer-2 context menu",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-figma-killer-2.md",
+    "shot": "fid-fk2 shot 14, context menu",
+    "finding": "FK2 menus are borderless surface-3 tiles with a 16px radius, 12px row radius, 560 weight rows and a 0 12px 28px shadow; Studio menus are square tiles with a bright 1px rule and no shadow."
+  },
+  "source": {
+    "repo": "fk2",
+    "screen": "/?screen=context-menu",
+    "how": "In FK2 a right click on a layer or a row action opens ContextMenu (src/ui/components/ContextMenu). The harness renders that component with FK2's globals.css, opened at a point, with five rows and a separator.",
+    "reconstruction": true,
+    "setup": [{ "wait": "[role='menu']" }]
+  },
+  "system": {
+    "url": "/c/dropdown-menu?style=studio&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0",
+    "setup": [
+      { "click": "[data-demo-trigger='md']" },
+      { "wait": "[data-ds='dropdown-menu'][role='menu']" }
+    ]
+  },
+  "viewport": { "width": 1440, "height": 900 },
+  "scheme": "dark",
+  "tolerance": { "profile": "default" },
+  "regions": [
+    {
+      "id": "menu",
+      "kind": "part",
+      "source": "[role='menu']",
+      "system": "[data-ds='dropdown-menu'][role='menu']",
+      "probes": [
+        "border-radius",
+        "border-width",
+        "background-color",
+        "box-shadow",
+        "padding",
+        "animation-duration",
+        "animation-timing-function",
+        { "id": "row height", "property": "height", "source": "[role='menuitem']", "system": "[role='menuitem']" },
+        { "id": "row radius", "property": "border-radius", "source": "[role='menuitem']", "system": "[role='menuitem']" },
+        { "id": "row text size", "property": "font-size", "source": "[role='menuitem']", "system": "[role='menuitem']" },
+        { "id": "row weight", "property": "font-weight", "source": "[role='menuitem']", "system": "[role='menuitem']" },
+        { "id": "row text colour", "property": "color", "source": "[role='menuitem']", "system": "[role='menuitem']" }
+      ]
+    }
+  ],
+  "allowed": []
+}

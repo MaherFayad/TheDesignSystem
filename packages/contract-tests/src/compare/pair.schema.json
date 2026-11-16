@@ -1,0 +1,178 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Compare pair",
+  "description": "One side by side comparison of a source screen and a system screen (docs/plan/reset.md section 3). Read by packages/contract-tests/src/compare/run.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "audit", "source", "system", "viewport", "scheme", "tolerance", "regions", "allowed"],
+  "definitions": {
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "click": { "type": "string", "minLength": 1 },
+        "hover": { "type": "string", "minLength": 1 },
+        "focus": { "type": "string", "minLength": 1 },
+        "press": { "type": "string", "minLength": 1 },
+        "wait": { "type": "string", "minLength": 1 },
+        "waitMs": { "type": "integer", "minimum": 0, "maximum": 10000 },
+        "attr": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["selector", "name", "value"],
+          "properties": {
+            "selector": { "type": "string", "minLength": 1 },
+            "name": { "type": "string", "minLength": 1 },
+            "value": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "kind": { "enum": ["control", "part", "region"] },
+    "probe": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "property"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "property": { "type": "string", "minLength": 1 },
+            "source": { "type": ["string", "null"], "minLength": 1 },
+            "system": { "type": ["string", "null"], "minLength": 1 },
+            "pseudo": {
+              "oneOf": [
+                { "type": "string", "pattern": "^::?[a-z-]+$" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": { "type": "string", "pattern": "^::?[a-z-]+$" },
+                    "system": { "type": "string", "pattern": "^::?[a-z-]+$" }
+                  }
+                }
+              ]
+            },
+            "kind": { "$ref": "#/definitions/kind" }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^(gb|fk2)-[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "shot", "finding"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "shot": { "type": "string", "minLength": 1 },
+        "finding": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "screen", "how", "reconstruction"],
+      "properties": {
+        "repo": { "enum": ["gb", "fk2"] },
+        "screen": { "type": "string", "pattern": "^/" },
+        "how": { "type": "string", "minLength": 1 },
+        "reconstruction": { "type": "boolean" },
+        "setup": { "type": "array", "items": { "$ref": "#/definitions/step" } }
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": { "type": "string", "pattern": "^/" },
+        "setup": { "type": "array", "items": { "$ref": "#/definitions/step" } }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 320, "maximum": 2560 },
+        "height": { "type": "integer", "minimum": 320, "maximum": 2560 }
+      }
+    },
+    "scheme": { "enum": ["dark", "light"] },
+    "reducedMotion": { "enum": ["reduce", "no-preference"] },
+    "tolerance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile"],
+      "properties": {
+        "profile": { "enum": ["default"] },
+        "tighten": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "source", "system", "probes"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "kind": { "$ref": "#/definitions/kind" },
+          "source": { "type": "string", "minLength": 1 },
+          "system": { "type": "string", "minLength": 1 },
+          "nth": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "integer", "minimum": 0 },
+              "system": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "probes": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/probe" } },
+          "crop": { "type": "boolean" },
+          "pixels": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "maskText": { "type": "boolean" },
+              "glass": { "type": "boolean" },
+              "mask": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "source": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                  "system": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "allowed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["region", "probe", "reason"],
+        "properties": {
+          "region": { "type": "string", "minLength": 1 },
+          "probe": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

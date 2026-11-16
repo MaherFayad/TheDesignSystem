@@ -1,0 +1,74 @@
+{
+  "id": "gb-button-desk",
+  "title": "Desk buttons against GoBanana Studio buttons",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-gobanana.md",
+    "shot": "fid-gb shot 04, 04-buttons-inputs-desk-1440.png",
+    "finding": "Desk buttons are 36px glass pills with -0.04em tracking; the source button is a flat 28px control with a 1em radius and no tracking."
+  },
+  "source": {
+    "repo": "gb",
+    "screen": "/__design?theme=dark&dir=ltr",
+    "how": "GoBanana's Studio primitives page (app/%5F_design, served at /__design in development), dark, left to right, the Buttons section. The system's default size md stands for the source's default control, st-btn sm at 28px (fidelity-gobanana.md, change 4).",
+    "reconstruction": false,
+    "setup": [
+      {
+        "attr": {
+          "selector": "html",
+          "name": "data-gpu",
+          "value": null
+        }
+      }
+    ]
+  },
+  "system": {
+    "url": "/c/button?style=desk&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scheme": "dark",
+  "tolerance": {
+    "profile": "default"
+  },
+  "regions": [
+    {
+      "id": "secondary",
+      "kind": "control",
+      "source": ".design-panel .st-btn[data-variant='secondary'][data-size='sm']",
+      "system": "[data-ds='button'][data-size='md'][data-tone='neutral'][data-emphasis='soft']",
+      "probes": [
+        "height",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "border-radius",
+        "border-width",
+        "padding-inline-start",
+        "background-color",
+        "color",
+        "box-shadow",
+        "transition-duration"
+      ]
+    },
+    {
+      "id": "primary",
+      "kind": "control",
+      "source": ".design-panel .st-btn[data-variant='primary'][data-size='sm']",
+      "system": "[data-ds='button'][data-size='md'][data-tone='accent'][data-emphasis='solid']",
+      "probes": [
+        "height",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "border-radius",
+        "padding-inline-start",
+        "background-color",
+        "color",
+        "box-shadow"
+      ]
+    }
+  ],
+  "allowed": []
+}

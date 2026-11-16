@@ -3,6 +3,7 @@ import { createElement, use, useMemo, type CSSProperties, type HTMLAttributes, t
 import { Direction } from 'radix-ui';
 import { IconSetContext } from '@the-system/icons/react';
 import { ThemeContext } from './context';
+import { useDevicePlatform } from './hooks';
 import { iconStyleFor } from './icons';
 import { attributesOf, resolveTheme } from './resolve';
 import type { ThemeAxesInput } from './types';
@@ -30,12 +31,17 @@ export interface ThemeProps
  * comes from the nearest parent Theme, and at the root from the defaults in
  * `resolveTheme` (style studio, scheme and density from its style.json).
  *
+ * Platform: `platform="auto"`, and a root Theme with no `platform`, follow
+ * the device (`ios`, `android`, else `web`; never `macos`). The server render
+ * stamps `web` and the detected value is stamped once on mount. An app that
+ * wants no detection passes `platform="web"`.
+ *
  * It also wires the Radix direction provider and the icon set of the active
  * style, and gives `useTheme` and `useOptionalPart` their data. The token CSS
  * and `base.css` key on these attributes, so a Theme paints its own
  * background and text color. Nest a Theme to change any axis for a subtree.
  *
- * No window access: safe to render on the server.
+ * No window access at render on the server: safe to render there.
  */
 export function Theme({
   style,
@@ -52,9 +58,10 @@ export function Theme({
   ...rest
 }: ThemeProps) {
   const parent = use(ThemeContext);
+  const device = useDevicePlatform();
   const value = useMemo(
-    () => resolveTheme({ style, scheme, density, contrast, platform, glass, dir, lang }, parent),
-    [style, scheme, density, contrast, platform, glass, dir, lang, parent],
+    () => resolveTheme({ style, scheme, density, contrast, platform, glass, dir, lang }, parent, { platform: device }),
+    [style, scheme, density, contrast, platform, glass, dir, lang, parent, device],
   );
   return createElement(
     as,

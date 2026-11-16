@@ -311,6 +311,53 @@ describe('SegmentedControl', () => {
     expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
     expect(container.querySelector('[title]')).toBeNull();
   });
+
+  // Order R0.18: in RTL the start is measured from the root's right edge, so
+  // the logical inset-inline-start in SegmentedControl.css lands the thumb on
+  // the item. A left based start would read 17px here and put it off the item.
+  it('in RTL writes the start from the right edge of the root', async () => {
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
+    proto.animate = vi.fn(() => ({ finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
+    proto.getAnimations = () => [];
+    // A fake RTL layout: the root spans x 0 to 200, the items are 60 by 26 px, side by side from x 197 leftwards.
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      const part = this.getAttribute('data-part');
+      if (part === 'item') {
+        const i = Array.from(this.parentElement?.querySelectorAll('[data-part="item"]') ?? []).indexOf(this);
+        return DOMRect.fromRect({ x: 137 - i * 60, y: 3, width: 60, height: 26 });
+      }
+      if (part === 'indicator') {
+        const start = Number.parseFloat(this.style.getPropertyValue('--_segmented-control-indicator-start')) || 0;
+        return DOMRect.fromRect({ x: 200 - start - 60, y: 3, width: 60, height: 26 });
+      }
+      return DOMRect.fromRect({ x: 0, y: 0, width: 200, height: 34 });
+    };
+    try {
+      const user = userEvent.setup();
+      const { container } = render(
+        <Theme dir="rtl" lang="ar">
+          <SegmentedControl aria-label="نطاق التقويم" defaultValue="day" style={{ direction: 'rtl' }}>
+            <SegmentedControlItem value="day">يوم</SegmentedControlItem>
+            <SegmentedControlItem value="week">أسبوع</SegmentedControlItem>
+            <SegmentedControlItem value="month">شهر</SegmentedControlItem>
+          </SegmentedControl>
+        </Theme>,
+      );
+      const el = root(container);
+      expect(getComputedStyle(el).direction).toBe('rtl');
+      const indicator = el.querySelector<HTMLElement>('[data-part="indicator"]');
+      expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('3px');
+      await user.click(screen.getByRole('radio', { name: 'شهر' }));
+      await act(async () => {});
+      expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('123px');
+      expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-inline-size')).toBe('60px');
+    } finally {
+      proto.animate = saved.animate;
+      proto.getAnimations = saved.getAnimations;
+      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+    }
+  });
 });
 
 describe('SegmentedControl fix round', () => {
@@ -336,5 +383,18 @@ describe('SegmentedControl fix round', () => {
     expect(css).not.toMatch(/overflow-wrap: anywhere/);
     expect(css).toMatch(/overflow-wrap: break-word/);
     expect(css).toMatch(/:root\[data-motion='reduce'\] \[data-ds='segmented-control'\] > \[data-part='indicator'\]/);
+  });
+
+  // Order R0.18: Desk's Density recipe sets --_button-padding-inline on every
+  // md toggle-button in a later layer, so a phone rule that only set the
+  // private property lost, and five items spilled 14px past a 320px page in
+  // Arabic. The phone rule sets padding-inline on the text item itself.
+  it('sets the phone padding on the item itself, so a style recipe cannot undo it', () => {
+    const at = css.indexOf('@media (width < 30rem)');
+    expect(at).toBeGreaterThan(0);
+    const phone = css.slice(at, css.indexOf('\n  }\n', at));
+    const own = phone.indexOf("[data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item']:not(:has(> [data-part='icon'])) {");
+    expect(own).toBeGreaterThan(0);
+    expect(phone.slice(own, phone.indexOf('}', own))).toMatch(/\n\s*padding-inline:\s*var\(--ds-space-2xs\);/);
   });
 });

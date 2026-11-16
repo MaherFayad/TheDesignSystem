@@ -183,10 +183,23 @@
     --_button-padding-inline: var(--ds-space-xl);
   }
 
-  /* On a phone the items trade padding for room, so five whole words fit at 320px (review B4). */
+  /*
+   * On a phone the items trade padding for room, so five whole words fit at
+   * 320px (review B4). Order R0.18: the padding is set on the item itself
+   * as well as through --_button-padding-inline. A style recipe that sets
+   * --_button-padding-inline on every toggle-button (Desk's Density.css on
+   * web) sits in a later layer and wins over this base rule, which left Desk
+   * items at space.2xl, five items wider than the track, and a page that
+   * scrolled sideways by 14px in Arabic. No recipe sets padding-inline on an
+   * item, so this holds. Icon only items keep their own rule below.
+   */
   @media (width < 30rem) { /* breakpoint.phone */
     [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
       --_button-padding-inline: var(--ds-space-2xs);
+    }
+
+    [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item']:not(:has(> [data-part='icon'])) {
+      padding-inline: var(--ds-space-2xs);
     }
   }
 

@@ -1,12 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { use } from 'react';
-import { describe, expect, it } from 'vitest';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Direction } from 'radix-ui';
 import { IconSetContext } from '@the-system/icons/react';
 import desk from '@the-system/styles/desk/style.json' with { type: 'json' };
 import studio from '@the-system/styles/studio/style.json' with { type: 'json' };
 import { Bidi } from './Bidi';
-import { useOptionalPart, useTheme } from './hooks';
+import { useDevicePlatform, useOptionalPart, useTheme } from './hooks';
 import { themeAttributes } from './resolve';
 import { Theme } from './Theme';
 
@@ -214,5 +216,120 @@ describe('Bidi', () => {
     expect(root?.querySelector('bdi')).toBeNull();
     expect(root?.textContent).toBe('Export as JSON.');
     expect(root?.className).toBe('x');
+  });
+});
+
+const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1';
+const PIXEL = 'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36';
+
+function asDevice(userAgent: string) {
+  vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue(userAgent);
+}
+
+function DeviceProbe() {
+  return <output data-testid="device">{useDevicePlatform()}</output>;
+}
+
+describe('Theme platform', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('a root Theme with no platform follows the device', () => {
+    asDevice(IPHONE);
+    const { container, unmount } = render(<Theme />);
+    expect(attrs(themes(container)[0]).platform).toBe('ios');
+    unmount();
+    asDevice(PIXEL);
+    const pixel = render(<Theme />);
+    expect(attrs(themes(pixel.container)[0]).platform).toBe('android');
+  });
+
+  it('auto in the test browser (jsdom, a desktop agent) resolves to web', () => {
+    const { container } = render(<Theme platform="auto" />);
+    expect(attrs(themes(container)[0]).platform).toBe('web');
+  });
+
+  it('an explicit value wins over the device, macos included', () => {
+    asDevice(IPHONE);
+    const { container } = render(
+      <>
+        <Theme platform="web" />
+        <Theme platform="android" />
+        <Theme platform="macos" />
+      </>,
+    );
+    expect(themes(container).map((el) => attrs(el).platform)).toEqual(['web', 'android', 'macos']);
+  });
+
+  it('never stamps auto', () => {
+    asDevice(PIXEL);
+    const { container } = render(
+      <Theme platform="auto">
+        <Theme platform="auto" />
+      </Theme>,
+    );
+    expect(themes(container).map((el) => el.getAttribute('data-platform'))).toEqual(['android', 'android']);
+  });
+
+  it('a nested Theme with no platform inherits; a nested auto asks the device again', () => {
+    asDevice(IPHONE);
+    const { container } = render(
+      <Theme platform="web">
+        <Theme />
+        <Theme platform="auto" />
+      </Theme>,
+    );
+    expect(themes(container).map((el) => attrs(el).platform)).toEqual(['web', 'web', 'ios']);
+  });
+
+  it('useTheme reports the resolved platform', () => {
+    asDevice(PIXEL);
+    function Read() {
+      return <output data-testid="p">{useTheme().platform}</output>;
+    }
+    render(
+      <Theme>
+        <Read />
+      </Theme>,
+    );
+    expect(screen.getByTestId('p').textContent).toBe('android');
+  });
+
+  it('renders web on the server and stamps the device once on mount, with no hydration warning', async () => {
+    asDevice(IPHONE);
+    const html = renderToString(
+      <Theme style="liquid">
+        <DeviceProbe />
+      </Theme>,
+    );
+    expect(html).toContain('data-platform="web"');
+    expect(html).toContain('>web</output>');
+    const host = document.createElement('div');
+    host.innerHTML = html;
+    document.body.append(host);
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const recoverable = vi.fn();
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    await act(async () => {
+      root = hydrateRoot(
+        host,
+        <Theme style="liquid">
+          <DeviceProbe />
+        </Theme>,
+        { onRecoverableError: recoverable },
+      );
+    });
+    expect(host.querySelector('[data-ds="theme"]')?.getAttribute('data-platform')).toBe('ios');
+    expect(host.querySelector('output')?.textContent).toBe('ios');
+    expect(errors).not.toHaveBeenCalled();
+    expect(recoverable).not.toHaveBeenCalled();
+    act(() => root?.unmount());
+    host.remove();
+  });
+
+  it('an explicit platform renders the same on the server and the client', () => {
+    asDevice(IPHONE);
+    expect(renderToString(<Theme platform="android" />)).toContain('data-platform="android"');
   });
 });

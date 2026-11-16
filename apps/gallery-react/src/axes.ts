@@ -1,7 +1,11 @@
 // The axis query keys from docs/contracts/anatomy.md:
 // /c/<slug>?style=&scheme=&density=&platform=&dir=&lang=&contrast=&glass=
 // Extra keys: case=<id> shows one case, chrome=0 hides the shell.
-import { styleIds, type ThemeAxesInput } from '@the-system/react';
+//
+// Platform follows the resolution order of docs/contracts/frameworks.md,
+// "Platform axis": the URL key, then the choice stored by the switcher in
+// the bar, then `auto`, which the root Theme resolves from the device.
+import { PLATFORM_QUERY_KEY, PLATFORM_STORAGE_KEY, platformChoice, platformInputOf, platforms, styleIds, type Platform, type PlatformInput, type ThemeAxesInput } from '@the-system/react';
 
 export interface AxisControl {
   key: keyof ThemeAxesInput;
@@ -14,7 +18,7 @@ export const axisControls: readonly AxisControl[] = [
   { key: 'style', label: 'Style', values: styleIds },
   { key: 'scheme', label: 'Scheme', values: ['dark', 'light'] },
   { key: 'density', label: 'Density', values: ['compact', 'default', 'comfortable'] },
-  { key: 'platform', label: 'Platform', values: ['web', 'ios', 'android'] },
+  { key: 'platform', label: 'Platform', values: platforms },
   { key: 'dir', label: 'Direction', values: ['ltr', 'rtl'] },
   { key: 'lang', label: 'Language', values: ['en', 'ar'] },
   { key: 'contrast', label: 'Contrast', values: ['default', 'more'] },
@@ -62,4 +66,40 @@ export function axisQuery(params: URLSearchParams): string {
 export function readCase(params: URLSearchParams): string | undefined {
   const value = params.get('case');
   return value && /^[a-z0-9-]+$/.test(value) ? value : undefined;
+}
+
+/**
+ * The platform choice stored by the switcher, or `undefined`. Storage can be
+ * missing or throw (a private window, blocked site data); then there is none.
+ */
+export function readStoredPlatform(): Platform | undefined {
+  try {
+    return platformChoice(window.localStorage.getItem(PLATFORM_STORAGE_KEY));
+  } catch {
+    return undefined;
+  }
+}
+
+/** Stores a choice made in the switcher. `auto` clears it, as the contract says. */
+export function storePlatform(choice: PlatformInput): void {
+  try {
+    if (choice === 'auto') window.localStorage.removeItem(PLATFORM_STORAGE_KEY);
+    else window.localStorage.setItem(PLATFORM_STORAGE_KEY, choice);
+  } catch {
+    // Nothing stored: the URL key still carries the choice for this visit.
+  }
+}
+
+/** Where the gallery's platform input came from, shown in the bar. */
+export type PlatformSource = 'url' | 'stored' | 'device';
+
+/**
+ * Steps 2 and 3 of the resolution order: the URL key, then the stored
+ * choice, else `auto`. The root Theme runs step 4 (the device) after mount.
+ */
+export function readPlatform(params: URLSearchParams, stored: Platform | undefined): { input: PlatformInput; source: PlatformSource } {
+  const query = params.get(PLATFORM_QUERY_KEY);
+  const input = platformInputOf({ query, stored });
+  const source: PlatformSource = platformChoice(query) ? 'url' : input !== 'auto' ? 'stored' : 'device';
+  return { input, source };
 }

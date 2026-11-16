@@ -8,6 +8,7 @@ export type {
   Glass,
   Lang,
   Platform,
+  PlatformInput,
   Scheme,
   StyleData,
   ThemeAttributes,
