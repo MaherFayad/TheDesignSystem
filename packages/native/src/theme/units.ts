@@ -15,8 +15,8 @@ export function lineHeightOf(fontSize: number, leading: number): number {
   return fontSize * leading;
 }
 
-/** The touch target of a platform: 44 on iOS, 48 on Android, the 24px minimum on the web. */
-export function touchTargetOf(theme: Theme, platform: 'web' | 'ios' | 'android'): number {
+/** The touch target of a platform: 44 on iOS, 48 on Android, the 24px minimum on the web and on macOS. */
+export function touchTargetOf(theme: Theme, platform: 'web' | 'ios' | 'android' | 'macos'): number {
   if (platform === 'ios') return theme.size.touch.ios;
   if (platform === 'android') return theme.size.touch.android;
   return theme.size['target-min'];

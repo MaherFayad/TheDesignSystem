@@ -1061,7 +1061,9 @@ function render(r: BuildResult): Record<string, string> {
 
   // 2. Native theme objects: one per style, scheme and platform. The web
   // object keeps its old file name (`<style>.<scheme>.ts`); the others are
-  // `<style>.<scheme>.<platform>.ts`.
+  // `<platform>/<style>.<scheme>.ts`. A folder, not a `.ios.ts` suffix: React
+  // Native resolves `./studio.dark` to `studio.dark.ios.ts` on iOS when that
+  // file sits beside it.
   const platforms = r.platforms;
   const themes = modes.flatMap((m) =>
     platforms.map((p) => {
@@ -1070,7 +1072,7 @@ function render(r: BuildResult): Record<string, string> {
       return {
         mode: m,
         platform: p.id,
-        file: isWeb ? m.id : `${m.id}.${p.id}`,
+        file: isWeb ? m.id : `${p.id}/${m.id}`,
         name: identifier(isWeb ? `${m.style} ${m.scheme}` : `${m.style} ${m.scheme} ${p.id}`),
         map,
         obj: nativeTheme(map, p.systemFont),
@@ -1095,7 +1097,7 @@ function render(r: BuildResult): Record<string, string> {
   for (const t of themes) {
     files[`native/${t.file}.ts`] = [
       `// ${HEADER}`,
-      "import type { Theme } from './types';",
+      `import type { Theme } from '${t.platform === 'web' ? '.' : '..'}/types';`,
       '',
       `export const ${t.name}: Theme = ${tsLiteral(t.obj, '')};`,
       '',

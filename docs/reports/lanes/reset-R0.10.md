@@ -14,8 +14,10 @@ decision 12 (a root Theme with no `platform` prop is `auto`).
 - `packages/shared/src/platform.test.ts` (new): 17 device fixtures and the
   resolution order case by case.
 - `packages/shared/src/theme.ts`: `Platform` gains `macos`; new
-  `PlatformInput` (`Platform | 'auto'`); `ThemeAxesInput.platform` takes
-  `auto`; `resolveTheme` resolves `auto` to `root.platform` (the device) at
+  `PlatformInput` (`Platform | 'auto'`); new `ThemeInput`, which is
+  `ThemeAxesInput` with `platform` also taking `auto` (`ThemeAxesInput`
+  itself is unchanged, so Angular and native callers keep compiling);
+  `resolveTheme` resolves `auto` to `root.platform` (the device) at
   any depth, no input inherits, the root with no input behaves as `auto`;
   `themeAttributes` takes an optional `root` argument.
 - `packages/react/src/theme/hooks.ts`: `useDevicePlatform()`, a
@@ -131,6 +133,22 @@ its old assertions of `platform: 'web'` pass unchanged.
   key, so the address can be shared; Auto clears both.
 - `?platform=auto` is treated as unknown (falls through), since step 2 only
   takes one of the four values.
+
+## npm run check
+
+Last full run, then the failing steps rerun alone after the last change:
+
+| Step | Result | Owner of the failure |
+| --- | --- | --- |
+| tokens build, gen, manifests | pass | |
+| typecheck | pass on rerun (the full run failed in `packages/tokens/build.ts` line 811) | R0.13, in progress |
+| eslint | R0.10 files pass; the full run failed in `packages/tokens/tests/platform.test.ts` (two `any`) | R0.13 |
+| vitest | 2678 of 2679; the one failure is `packages/lint/src/gates/no-raw-value.test.ts`, "reads the breakpoint tokens", which sees the new breakpoint tokens | R0.13 (new tokens) and the lint gate owner |
+| angular | pass | |
+| docs | pass | |
+| consumer-next | pass | |
+| gallery-angular | pass on rerun (the full run failed on `ThemeAxesInput.platform` taking `auto`; fixed by the `ThemeInput` split) | |
+| native, gallery-native | fail: `Button.styles.ts` line 365, `macos` | R0.10 cause, native owner fix, see below |
 
 ## Open and not done
 

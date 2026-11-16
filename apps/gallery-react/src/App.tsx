@@ -1,5 +1,5 @@
 import { Component, Suspense, lazy, useEffect, type ComponentType, type ErrorInfo, type LazyExoticComponent, type ReactNode } from 'react';
-import { Theme, styleIds, themeAttributes, useDevicePlatform, useTheme, type Platform, type ThemeAxesInput } from '@the-system/react';
+import { Theme, styleIds, themeAttributes, useDevicePlatform, useTheme, type Platform, type ThemeInput } from '@the-system/react';
 import { GALLERY_STYLE, axisControls, axisQuery, readAxes, readCase, readPlatform, readStoredPlatform, storePlatform, type PlatformSource } from './axes';
 import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
@@ -11,7 +11,7 @@ const PlatformScreen = lazy(() => import('./Platforms').then((m) => ({ default: 
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
 /** Stamps the resolved axes on <html> too, so the whole viewport is themed and lang and dir are right. */
-function useDocumentTheme(axes: ThemeAxesInput, device: Platform): void {
+function useDocumentTheme(axes: ThemeInput, device: Platform): void {
   const { style, scheme, density, contrast, platform, glass, dir, lang } = axes;
   useEffect(() => {
     const attrs = themeAttributes({ style, scheme, density, contrast, platform, glass, dir, lang }, { platform: device });

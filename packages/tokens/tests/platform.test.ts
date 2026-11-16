@@ -181,9 +181,11 @@ describe('platform native themes', () => {
     }
   });
 
-  it('writes one theme object per style, scheme and platform', () => {
+  it('writes one theme object per style, scheme and platform, in a folder per platform', () => {
+    // A `.ios.ts` suffix beside the web file would win the import on iOS.
+    for (const rel of Object.keys(result.files)) expect(rel).not.toMatch(/\.(ios|android|macos|native|web)\.ts$/);
     for (const m of result.modes) {
-      for (const p of ['ios', 'android', 'macos']) expect(result.files[`native/${m.id}.${p}.ts`], `${m.id}.${p}`).toBeDefined();
+      for (const p of ['ios', 'android', 'macos']) expect(result.files[`native/${p}/${m.id}.ts`], `${p}/${m.id}`).toBeDefined();
     }
   });
 
@@ -195,24 +197,24 @@ describe('platform native themes', () => {
   });
 
   it('maps system stacks to the platform font', () => {
-    const ios = result.files['native/liquid.light.ios.ts']!;
+    const ios = result.files['native/ios/liquid.light.ts']!;
     expect(ios).toMatch(/family: \{[^}]*mono: undefined,[^}]*sans: undefined,/s);
-    const android = result.files['native/liquid.light.android.ts']!;
+    const android = result.files['native/android/liquid.light.ts']!;
     expect(android).toMatch(/family: \{[^}]*mono: 'monospace',[^}]*sans: undefined,/s);
     // A style font keeps its name: the theme says which family the style wants.
-    expect(result.files['native/studio.dark.ios.ts']).toContain("sans: 'Inter Variable',");
+    expect(result.files['native/ios/studio.dark.ts']).toContain("sans: 'Inter Variable',");
   });
 
   it('gives a role as a React Native text style with an absolute line height', () => {
-    const t = result.files['native/neutral.dark.ios.ts']!;
+    const t = result.files['native/ios/neutral.dark.ts']!;
     expect(t).toContain("'body-large': {\n      fontFamily: 'Inter Variable',\n      fontSize: 17,\n      fontWeight: 400,\n      letterSpacing: 0,\n      lineHeight: 22,\n    },");
     expect(t).toContain("'display-large': {\n      fontFamily: 'Inter Variable',\n      fontSize: 34,\n      fontWeight: 400,\n      letterSpacing: 0,\n      lineHeight: 41,\n    },");
-    const a = result.files['native/neutral.dark.android.ts']!;
+    const a = result.files['native/android/neutral.dark.ts']!;
     expect(a).toContain("'title-large': {\n      fontFamily: 'Inter Variable',\n      fontSize: 22,\n      fontWeight: 400,\n      letterSpacing: 0,\n      lineHeight: 28,\n    },");
   });
 
   it('gives springs and elevation as numbers, insets as 0, and no CSS curves', () => {
-    const t = result.files['native/desk.dark.android.ts']!;
+    const t = result.files['native/android/desk.dark.ts']!;
     expect(t).toMatch(/spatial: \{\n\s+default: \{\n\s+damping: 47\.62,\n\s+mass: 1,\n\s+stiffness: 700,/);
     expect(t).toMatch(/level3: 6,/);
     expect(t).toMatch(/safe: \{\n\s+bottom: 0,\n\s+end: 0,\n\s+start: 0,\n\s+top: 0,/);

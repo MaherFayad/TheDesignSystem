@@ -6,13 +6,13 @@ import { ThemeContext } from './context';
 import { useDevicePlatform } from './hooks';
 import { iconStyleFor } from './icons';
 import { attributesOf, resolveTheme } from './resolve';
-import type { ThemeAxesInput } from './types';
+import type { ThemeInput } from './types';
 
 /** Elements a Theme may render as. Default `div`. */
 export type ThemeElement = 'div' | 'section' | 'main' | 'article' | 'aside' | 'header' | 'footer' | 'nav' | 'span';
 
 export interface ThemeProps
-  extends ThemeAxesInput, Omit<HTMLAttributes<HTMLElement>, 'style' | 'dir' | 'lang' | 'children'> {
+  extends ThemeInput, Omit<HTMLAttributes<HTMLElement>, 'style' | 'dir' | 'lang' | 'children'> {
   /** The element to render. Default `div`. */
   as?: ThemeElement;
   /**

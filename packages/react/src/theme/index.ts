@@ -32,6 +32,7 @@ export type {
   ThemeAttributes,
   ThemeAxes,
   ThemeAxesInput,
+  ThemeInput,
   ThemeStyle,
   ThemeValue,
 } from './types';

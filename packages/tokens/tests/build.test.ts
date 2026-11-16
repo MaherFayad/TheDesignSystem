@@ -145,7 +145,7 @@ describe('token build', () => {
       await expect(result.files[`native/${m.id}.ts`]).toMatchFileSnapshot(`./__snapshots__/native.${m.id}.ts.snap`);
       for (const p of result.platforms) {
         if (p.id === 'web') continue;
-        await expect(result.files[`native/${m.id}.${p.id}.ts`]).toMatchFileSnapshot(`./__snapshots__/native.${m.id}.${p.id}.ts.snap`);
+        await expect(result.files[`native/${p.id}/${m.id}.ts`]).toMatchFileSnapshot(`./__snapshots__/native.${p.id}.${m.id}.ts.snap`);
       }
     }
     await expect(result.files['native/index.ts']).toMatchFileSnapshot('./__snapshots__/native.index.ts.snap');

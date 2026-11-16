@@ -40,8 +40,11 @@ export interface ThemeAxes {
   lang: Lang;
 }
 
-/** What a theme takes: any axis may be left out, and `platform` also takes `auto`. */
-export type ThemeAxesInput = Partial<Omit<ThemeAxes, 'platform'>> & { platform?: PlatformInput };
+/** Any axis may be left out. Every value is a resolved value (no `auto`). */
+export type ThemeAxesInput = Partial<ThemeAxes>;
+
+/** What a theme element takes: `ThemeAxesInput`, with `platform` also taking `auto`. */
+export type ThemeInput = Omit<ThemeAxesInput, 'platform'> & { platform?: PlatformInput };
 
 /** The data of one `packages/styles/<id>/style.json`. See section 3.7 of PLAN.md. */
 export interface StyleData {
@@ -146,7 +149,7 @@ export function getStyleData(id: string): StyleData {
  *   alone gives `rtl`. Otherwise `dir` comes from the parent, then from
  *   `root.dir`, then from `lang`.
  */
-export function resolveTheme(input: ThemeAxesInput, parent?: ThemeAxes | null, root: ThemeRootDefaults = {}): ThemeValue {
+export function resolveTheme(input: ThemeInput, parent?: ThemeAxes | null, root: ThemeRootDefaults = {}): ThemeValue {
   const style = input.style ?? parent?.style ?? DEFAULT_STYLE;
   const styleData = getStyleData(style);
   const wanted = input.scheme ?? parent?.scheme ?? styleData.defaultScheme;
@@ -193,6 +196,6 @@ export function attributesOf(axes: ThemeAxes): ThemeAttributes {
  * viewport is themed. On a server `auto` stamps `web`; pass the detected
  * platform as `root.platform` after mount.
  */
-export function themeAttributes(axes: ThemeAxesInput = {}, root: ThemeRootDefaults = {}): ThemeAttributes {
+export function themeAttributes(axes: ThemeInput = {}, root: ThemeRootDefaults = {}): ThemeAttributes {
   return attributesOf(resolveTheme(axes, null, root));
 }
