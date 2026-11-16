@@ -130,7 +130,38 @@ before the fix (xs 24, sm 28, md 32, lg 44 in Desk and Studio).
 
 ## Other components on phones
 
-SWEEP_RESULTS
+The reflow matrix across every React component, after the fix, one run per
+platform (`--grep sideways`), reports in `docs/reports/reset/R0.20/`:
+
+| Run | Result |
+| --- | --- |
+| `--platform ios` | 848 passed (16.2 min, load average 18 to 26 on 4 cores) |
+| `--platform android` | 851 passed, 5 failed (11.4 min) |
+| `--platform android --component TitleBar,ProgressCircle`, alone | ProgressCircle 8 passed (the full run failure was load); TitleBar 4 failed |
+
+No other component has the OTPField fault (a part held at the touch target
+in width). TitleBar has a separate fault on `android`, en ltr only, in every
+style: case "many" scrolls 2px (Desk, Studio) or 12px (Liquid, Neutral). The
+wide elements are the `hit` parts of its IconButtons, 48px wide, from the
+rule at `packages/css/src/platform/android.css` line 154 to 161, which grows
+the hit part to `size.touch.android`. That rule is the same at `0598c2b9`, so
+something else moved the buttons toward the edge (most likely the platform
+control sizes of R0.13). I did not find the cause: TitleBar and
+`android.css` are outside this order, and `android.css` is R0.15's file
+right now. It needs its own order.
+
+Some routes rendered no demo in one run and did in the other (FloatingActionButton,
+RangeSlider and Stepper in the `ios` run; Field and Section in the `android`
+run), so those components were checked on one phone platform only. Bidi and
+Theme have no demo.
+
+## npm run check
+
+Every step passed except vitest: 1 failed, 2760 passed. The failure is the
+dash gate on `packages/contract-tests/src/record/record.test.ts` line 282
+(an escaped en dash and em dash in a regular expression). That file belongs
+to R0.9, which is still being built. My files pass the gate, and the new
+OTPField test passed inside the run.
 
 ## Decisions made
 

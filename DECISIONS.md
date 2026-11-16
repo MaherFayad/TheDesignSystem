@@ -433,3 +433,15 @@ number.
    on the controls side, where the style wins. The order text that asked for
    a 4 to 5px square in every style gives way to the ruling. Neutral shows
    the platform shape because it sets none of its own.
+
+## `size.target-min` is the 24px floor on every platform (lead, 2026-11-16)
+
+Order R0.13 set `size.target-min` to 44 on `ios` and 48 on `android`, while
+its report said the moved values were unchanged. The name is used 73 times
+in 45 component CSS files as the WCAG 2.2 target size floor (2.5.8, 24 by
+24), and `docs/contracts/anatomy.md` says so. Raising it made OTPField and
+TitleBar overflow at 320px on phones. Ruling: `size.target-min` is 24 on
+every platform and no platform changes it. The platform's touch target is a
+separate platform name, `size.target` (44 on `ios`, 48 on `android`, 24 on
+`web` and `macos`), and the platform CSS reads that one. Order R0.21
+(ds-tokens) makes the change.

@@ -78,6 +78,18 @@ export const CLIPS: ClipDef[] = [
       },
     ],
   },
+  {
+    // Not in the sample pack: it shows a source clip beside ours, from the compare pair fk2-menu-studio.
+    id: 'menu-row-press',
+    name: 'Menu row press',
+    slug: 'dropdown-menu',
+    case: 'variants',
+    does: 'With the menu open, presses and holds the second row for 600ms, then lets go',
+    setup: [{ click: "[data-demo-trigger='md']" }],
+    ready: "[data-ds='dropdown-menu'][role='menu']",
+    strokes: [{ aim: { selector: "[data-ds='dropdown-menu'][role='menu'] [role='menuitem']", nth: 1, inDocument: true }, holdMs: 600, pauseAfterMs: 900 }],
+    source: { pair: 'fk2-menu-studio', strokes: [{ aim: { selector: "[role='menu'] [role='menuitem']", nth: 1, inDocument: true }, holdMs: 600, pauseAfterMs: 900 }] },
+  },
 ];
 
 export function findClip(id: string): ClipDef | undefined {

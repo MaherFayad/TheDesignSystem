@@ -132,6 +132,19 @@ function usage(): string {
   ].join('\n');
 }
 
+/** The pack's note, or, for a run to another folder that changed the pack, what this run recorded. */
+export function packNote(file: PackFile, args: Args): string | undefined {
+  const changed = [
+    args.clips.length > 0 ? `clips ${args.clips.join(', ')}` : '',
+    args.styles.length > 0 ? `styles ${args.styles.join(', ')}` : '',
+    args.platforms.length > 0 ? `platforms ${args.platforms.join(', ')}` : '',
+    args.devices.length > 0 ? `devices ${args.devices.join(', ')}` : '',
+    args.schemes.length > 0 ? `schemes ${args.schemes.join(', ')}` : '',
+  ].filter(Boolean);
+  if (!args.out || changed.length === 0) return file.note;
+  return `A run of pack ${file.order} changed for this folder: ${changed.join('; ')}. It is evidence for the order, not part of its sample pack.`;
+}
+
 function commitOfRepo(): string {
   try {
     const head = execFileSync('git', ['-C', REPO, 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim();
@@ -263,15 +276,17 @@ async function main(): Promise<number> {
     }
     // Keep the pack's own order: clips, then styles, platforms, devices, schemes.
     const order = (c: ClipResult) => [file.clips.indexOf(c.clip), styles.indexOf(c.style), platforms.indexOf(c.platform), devs.indexOf(c.device), schemes.indexOf(c.scheme)].map((n) => String(n < 0 ? 99 : n).padStart(2, '0')).join('');
-    const pack: PackResult = { order: file.order, title: file.title, date: new Date().toISOString(), commit: commitOfRepo(), load, cpus: cpus().length, chromium: chromiumVersion, clips: [...results.values()].sort((a, b) => order(a).localeCompare(order(b))), note: file.note };
+    const pack: PackResult = { order: file.order, title: file.title, date: new Date().toISOString(), commit: commitOfRepo(), load, cpus: cpus().length, chromium: chromiumVersion, clips: [...results.values()].sort((a, b) => order(a).localeCompare(order(b))), note: packNote(file, args) };
     writeFileSync(packJson, `${JSON.stringify(pack, null, 1)}\n`);
     writeFileSync(join(outDir, 'index.html'), indexHtml(pack, args.scale));
     writeFileSync(join(outDir, 'index.md'), indexMarkdown(pack));
     const template = readFileSync(join(SIGNOFF_DIR, 'device-script.template.md'), 'utf8');
     writeFileSync(join(outDir, 'device-script.md'), deviceScript(template, pack, file, args.preview));
-    mkdirSync(SIGNOFF_DIR, { recursive: true });
-    const sheetPath = join(SIGNOFF_DIR, `${file.order}.md`);
-    writeFileSync(sheetPath, signSheet(pack, file, readAnswers(sheetPath), file.ask ?? null));
+    // The sign sheet lives in docs/reports/reset/signoff/; a run with --out keeps its own copy beside the pack.
+    const signDir = args.out ? outDir : SIGNOFF_DIR;
+    mkdirSync(signDir, { recursive: true });
+    const sheetPath = join(signDir, args.out ? `signoff-${file.order}.md` : `${file.order}.md`);
+    writeFileSync(sheetPath, signSheet(pack, file, readAnswers(sheetPath), args.out ? null : (file.ask ?? null)));
     const total = pack.clips.reduce((n, c) => n + c.bytes.video + c.bytes.sheet, 0);
     log(`Wrote ${outDir} (${Math.round(total / 1024)} KB of clips and sheets) and ${sheetPath}`);
     return failed ? 1 : 0;

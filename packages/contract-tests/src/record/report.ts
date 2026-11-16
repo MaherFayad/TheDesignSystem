@@ -56,9 +56,13 @@ h1{font-size:22px;margin:0 0 4px}
 .side h3{font-size:14px;margin:0 0 4px}
 video{display:block;max-inline-size:100%;block-size:auto;background:#000;border-radius:8px}
 .none{font-style:italic}
+.exact .card{overflow-x:auto}
+.exact video{max-inline-size:none}
+label{display:inline-flex;gap:8px;align-items:center;min-block-size:44px;font-size:15px}
 </style></head><body>
 <h1>Recording pack ${esc(pack.order)}: ${esc(pack.title)}</h1>
-<p class="lead">Every clip plays at real speed: each frame is one 60th of a second of the page's own time, shown at 1x with no zoom. The caption above each phone names the style, the platform and what the finger does; a pink point shows where the finger is down, and a dashed ring where it lifted. ${esc(pack.note ?? '')}</p>
+<p class="lead">Every clip plays at real speed: each frame is one 60th of a second of the page's own time, drawn at 1x with no zoom. The caption above each phone names the style, the platform and what the finger does; a pink point shows where the finger is down, and a dashed ring where it lifted. ${esc(pack.note ?? '')}</p>
+<label><input type="checkbox" id="exact"> Show every clip at exact 1x (on a phone narrower than the frame, the clip then scrolls sideways; unticked, it shrinks to fit)</label>
 <p class="lead">Recorded ${esc(pack.date.slice(0, 16).replace('T', ' '))} UTC at commit ${esc(pack.commit)}. Sign sheet: <code>docs/reports/reset/signoff/${esc(pack.order)}.md</code>.</p>
 <div class="grid">
 ${cards}
@@ -70,6 +74,7 @@ for (const v of document.querySelectorAll('video')) {
   v.defaultPlaybackRate = 1;
   v.addEventListener('loadedmetadata', () => { v.style.inlineSize = (v.videoWidth / Number(v.dataset.scale || 1)) + 'px'; });
 }
+document.getElementById('exact').addEventListener('change', (e) => document.body.classList.toggle('exact', e.target.checked));
 </script>
 </body></html>
 `;

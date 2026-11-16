@@ -1,8 +1,8 @@
 # Device script {{order}}: {{title}}
 
 This is a HUMAN GATE (plan section 3, "Device check"). The recording pack
-comes from headless Chromium. It cannot show {{why}}. A short screen
-recording on the owner's own phone settles it.
+comes from headless Chromium, so it cannot settle this: {{why}}. A short
+screen recording on the owner's own phone does.
 
 ## What you need
 

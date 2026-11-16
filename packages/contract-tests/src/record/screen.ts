@@ -175,7 +175,17 @@ export async function recordScreen(browser: Browser, job: ScreenJob): Promise<Sc
     };
     const resolved = new Map<string, Point>();
     try {
-      await idle(Math.round((job.leadMs ?? 400) / FRAME_MS));
+      // The lead in: at least leadMs, and on until the screen has been still for 200ms (2s at most),
+      // so whatever the setup opened has come to rest before the finger lands.
+      const lead = Math.round((job.leadMs ?? 400) / FRAME_MS);
+      const restFrames = Math.round(200 / FRAME_MS);
+      const stillFor = () => {
+        let n = 0;
+        for (let i = frames.length - 1; i > 0 && frames[i]!.hash === frames[i - 1]!.hash; i -= 1) n += 1;
+        return n;
+      };
+      await idle(lead);
+      for (let n = 0; n < Math.round(2000 / FRAME_MS) && stillFor() < restFrames; n += 1) await shoot(null);
       for (const stroke of job.strokes) {
         const key = JSON.stringify(stroke.aim);
         let p: Point | null = resolved.get(key) ?? null;

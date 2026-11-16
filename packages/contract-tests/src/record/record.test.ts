@@ -13,7 +13,7 @@ import { captionLines, fingerStatus, frameHtml, frameState, keyFrames, platformL
 import { FRAME_ARGS, FRAME_MS } from './capture';
 import { clipKey, clipUrl, firstChange, frameName, sheetCells } from './pack';
 import { answerLine, deviceScript, indexHtml, indexMarkdown, readAnswers, signSheet } from './report';
-import { checkPack, loadPack, packIds, parseArgs, RECORD_DIR, SIGNOFF_DIR } from './run';
+import { checkPack, loadPack, packIds, packNote, parseArgs, RECORD_DIR, SIGNOFF_DIR } from './run';
 import { pathDelta, planStroke } from './screen';
 import type { ClipResult, FrameInfo, PackResult } from './types';
 
@@ -114,6 +114,12 @@ describe('the command line', () => {
     expect(() => parseArgs(['--platform', 'phone'])).toThrow(/Unknown platform/);
     expect(() => parseArgs(['--scale', '4'])).toThrow(/scale/);
     expect(() => parseArgs(['--fast'])).toThrow(/Unknown argument/);
+  });
+
+  it('a changed run to another folder says what it recorded instead of the pack note', () => {
+    const file = loadPack('R0.9');
+    expect(packNote(file, parseArgs(['--order', 'R0.9']))).toBe(file.note);
+    expect(packNote(file, parseArgs(['--order', 'R0.9', '--clip', 'menu-row-press', '--style', 'studio', '--out', 'x']))).toBe('A run of pack R0.9 changed for this folder: clips menu-row-press; styles studio. It is evidence for the order, not part of its sample pack.');
   });
 
   it('builds the gallery page; auto leaves the platform to the page', () => {
