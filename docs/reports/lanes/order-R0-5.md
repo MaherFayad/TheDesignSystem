@@ -96,9 +96,9 @@ Proof:
 
 ## Real faults the gates found
 
-- Slider and RangeSlider scroll sideways by 8px at 320px in `desk` and
+- Slider and RangeSlider scrolled sideways by 8px at 320px in `desk` and
   `liquid`, on `web` (and on `macos`, which renders as `web` today), en ltr
-  and ar rtl. Owned by R0.2. Left alone as the order says.
+  and ar rtl, before R0.2. Owned by R0.2, fixed by it while I worked.
 - `packages/react/src/components/ToggleGroup/ToggleGroup.perf.test.tsx:129`:
   a bare `<button>` (`ds/button-primitive`, an existing gate). Owned by
   R0.3, a file in progress. It is the only vitest failure of
@@ -106,7 +106,30 @@ Proof:
 - No conflict marker anywhere in the repo. No CSS file that fails to parse.
   The gallery build keeps all 109 `:dir(rtl)`.
 
-FULL_MATRIX_RESULTS
+Full matrix, every ready component (106 with a demo route), run while R0.2
+landed: 3392 tests, 3387 passed, 2 failed, 3 skipped. Report:
+`docs/reports/reset/R0.5/reflow-all.json`.
+
+- SegmentedControl scrolls sideways by 14px at 320px in `desk`, ar rtl, on
+  `web` (and `macos`, which renders as `web`). Cases `many` and `too-many`;
+  the widest leaf is `span[data-part=indicator]`, 61px. The indicator is
+  placed from the measured start of the selected item:
+  `packages/css/src/components/SegmentedControl.css:126` to `:137`
+  (`inset-inline-start: var(--_segmented-control-indicator-start)`), with the
+  value written by the React component. I did not confirm which side is
+  wrong. No running order owns these files; the lead should assign it.
+  Every other style, platform and direction passes for this component.
+- Slider and RangeSlider pass all 32 runs each once R0.2 landed (commit
+  `ccac1a6d`). A rerun on Slider and RangeSlider alone: 64 passed,
+  `docs/reports/reset/R0.5/reflow-slider-after.json`. With the earlier run
+  that failed 16 of 64 on the tree before R0.2, this is the acceptance
+  check: the fault is found without R0.2 and is gone with it.
+- 3 skips: Autocomplete, desk ios en ltr, desk ios ar rtl, desk android en
+  ltr. The demo did not render within 20 seconds while two `npm run check`
+  runs shared the machine; the other 29 Autocomplete runs pass. Not a
+  fault, but not measured either.
+- Bidi, FieldError, NumberField, Skeleton and Theme render no demo case at
+  `/c/<kebab>`, so their checks are skipped with a note, as before.
 
 ## What I could not prove
 
@@ -114,9 +137,6 @@ FULL_MATRIX_RESULTS
   drops it until R0.10 and R0.14), so the 8 `macos` runs per component
   measure the `web` layout. The test notes it on every such run instead of
   failing. Once R0.10 lands the same runs measure `macos`.
-- "None with R0.2": R0.2 had not changed `Slider.css` or the Slider folders
-  while I worked, so I could not run the matrix on a tree with its fix. The
-  command to run after it lands is in the README and above.
 - The planted check ran in a scratch copy whose `node_modules` link to the
   real tree, so package imports in the copy resolve to the real files. That
   made two more tests fail there (the `:dir()` source list check, which
@@ -144,4 +164,17 @@ FULL_MATRIX_RESULTS
 
 ## Check
 
-NPM_CHECK_RESULT
+`npm run check` on the shared tree (with R0.2 landed and R0.3 in progress):
+every step passes except two.
+
+- vitest: 2607 of 2608 pass. The one failure is `ds/button-primitive` on
+  `packages/react/src/components/ToggleGroup/ToggleGroup.perf.test.tsx:129`,
+  a file of R0.3 in progress. Every R0.5 gate passes.
+- check @the-system/angular: 743 of 744. `tag-field.spec.ts`, "Enter adds
+  the typed text and drops duplicates", failed while three agents loaded the
+  machine. Run alone it passes 13 of 13, and it passed in the planted copy
+  check. A timing flake, not in an R0.5 file.
+
+Typecheck and eslint pass. A later rerun of the lint and contract unit
+tests (`npx vitest run packages/lint packages/contract-tests`) passes 153 of
+153: R0.3 has since removed the bare button.

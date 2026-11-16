@@ -36,3 +36,19 @@ should pick it up.
    `pointerdown` and inherits this cost.
 2. Rerun the before and after timings on a quiet machine. The other lanes
    held the load at 15 to 26 on 4 cores during every run.
+
+## From R0.5 (gates)
+
+1. **SegmentedControl scrolls sideways by 14px at 320px in Desk, Arabic RTL,
+   on web**, in the `many` and `too-many` cases. The widest element is the
+   61px indicator (`packages/css/src/components/SegmentedControl.css:126` to
+   `137`, from a value the React component writes). Found by the new reflow
+   matrix. Order R0.18 (ds-component): fix and prove with the matrix.
+2. Autocomplete on Desk `ios` and `android` was skipped by the matrix
+   (the demo did not render in 20s under load). Rerun on a quiet machine in
+   R0.16.
+3. The CSS parse gate uses Lightning CSS from the tree through Vite
+   (MPL-2.0, test only, never shipped). Declare it in the root
+   `devDependencies` in R0.16.
+4. The `macos` reflow runs measure the web layout until R0.10 and R0.14
+   land.
