@@ -24,7 +24,7 @@
 // while the thread waits for a core.
 //
 //   node tab-slide-trace.cjs <base url> <out.json> <label> [style ...]
-//   FIXTURES=group,control limits the fixtures.
+//   FIXTURES=group,control limits the fixtures. TRACE_DIR=<dir> keeps the raw traces.
 const { chromium, devices } = require('playwright');
 const fs = require('fs');
 
@@ -90,6 +90,11 @@ async function run(browser, style, name) {
   }
   await cdp.send('Tracing.end');
   await done;
+  // TRACE_DIR keeps the raw trace of each run, gzipped, for the DevTools performance panel.
+  if (process.env.TRACE_DIR) {
+    const zlib = require('zlib');
+    fs.writeFileSync(`${process.env.TRACE_DIR}/${label}.${style}.${name}.trace.json.gz`, zlib.gzipSync(JSON.stringify({ traceEvents: events })));
+  }
   const mainTid = (events.find((e) => e.name === 'thread_name' && e.args?.name === 'CrRendererMain') || {}).tid;
   const mainPid = (events.find((e) => e.name === 'thread_name' && e.args?.name === 'CrRendererMain') || {}).pid;
   const tasks = events.filter((e) => e.name === 'RunTask' && e.ph === 'X' && e.tid === mainTid && e.pid === mainPid);
