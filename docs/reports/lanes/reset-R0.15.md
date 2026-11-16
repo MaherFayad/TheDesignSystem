@@ -221,11 +221,20 @@ property and the box of each element. Summary:
 
 ## Checks
 
-- `npm run contract -- --framework react` for Switch, Dialog, AlertDialog,
-  Sheet, Drawer, Toast, TabBar, Navbar, Button, IconButton, ToggleButton,
-  CloseButton, CopyButton, SegmentedControl and ToggleGroup: see the result
-  below.
-- `npm run check`: see the result below.
+- `npm run contract -- --framework react`, web: Switch, AlertDialog, Sheet,
+  Toast, TabBar, Navbar, SegmentedControl, Dialog, Drawer, Button,
+  IconButton, CopyButton and ToggleGroup all pass. Under load one Sheet test
+  hit a protocol error and ToggleGroup ran while the gallery server had
+  died; both pass when run again alone.
+- The same with `--platform ios` and `--platform android` for Switch,
+  AlertDialog, Sheet, Toast, TabBar, Navbar and Button: all pass. Toast on
+  ios (two "target size open" timeouts) and Button, Navbar and Toast on
+  android (`ERR_INSUFFICIENT_RESOURCES`, a crashed tab) failed under load
+  first and pass when run again alone.
+- `npm run check`: every step passes except `check @the-system/angular`, where
+  `src/components/switch/switch.round3.spec.ts` failed 4 drag tests under
+  load. That file is not mine and loads no CSS; run alone,
+  `npm run check -w @the-system/angular` passes 753 of 753.
 
 ## Decisions I made
 

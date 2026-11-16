@@ -101,7 +101,7 @@ export interface PlannedStroke {
 
 export function planStroke(stroke: Stroke): Omit<PlannedStroke, 'downAt' | 'stroke'> {
   const f = (ms: number) => Math.max(0, Math.round(ms / FRAME_MS));
-  const holdFrames = Math.max(1, f(stroke.holdMs ?? 90));
+  const holdFrames = Math.max(1, f(stroke.holdMs ?? 100));
   return { holdFrames, moveFrames: stroke.path ? Math.max(1, f(stroke.moveMs ?? 250)) : 0, restFrames: stroke.path ? f(stroke.restMs ?? 0) : 0, pauseFrames: f(stroke.pauseAfterMs ?? 900) };
 }
 
@@ -143,6 +143,8 @@ export async function recordScreen(browser: Browser, job: ScreenJob): Promise<Sc
     await page.evaluate(settle, job.setup?.length ? 1000 : 3000);
     await sleep(job.setup?.length ? 150 : 400);
 
+    // A blinking caret would make every frame differ and hide when the screen really answers the finger.
+    await page.addStyleTag({ content: '* { caret-color: transparent; }' });
     await framed.pauseClock();
     const cdp = await touchSession(page);
     const frames: FrameInfo[] = [];

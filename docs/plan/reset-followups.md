@@ -124,3 +124,24 @@ should pick it up.
 2. The Angular gallery defines `ds-stage-radio-pop` and other stage
    components twice (`interactions/toggles.ts` and `selection.ts`), which
    prints NG0912 60 times per page load. Pick up in R3.10.
+
+## From R0.15 (shape split)
+
+1. **A Desk sheet on a phone has no visible close control** now that the
+   window lights are hidden there. It still closes by Escape, the scrim and
+   the grabber. Add a close button on phones. R4.8, first item.
+2. Liquid's tab bar item on `android` paints its lens as a round shape of
+   about 79 by 88 where the platform's pill is 64 by 32. The fix is in
+   Liquid's recipe. R4.7.
+3. Other controls in the `ios` and `android` files (FAB, Input, Select,
+   SegmentedControl, Chip, menus) still take a corner from style tokens in
+   `ds.platform`. R4.16.
+4. The `android` navigation bar measures 95 tall with labels; check it
+   against the platform's 80dp. R4.7.
+5. The code example for the button corner in `docs/contracts/anatomy.md`
+   no longer matches: the platform files set no button corner. Lead to
+   update at the R0 gate.
+6. Neutral's switch reduced motion rule never wins on specificity. R3.
+7. On the web, Desk's SegmentedControl and ToggleGroup items are 12px
+   shorter after the Density selector fix (36 to 24). R1 checks them against
+   GoBanana.
