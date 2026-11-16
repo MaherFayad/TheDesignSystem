@@ -200,6 +200,16 @@ export function buildTrack(inp: TrackInput): Track {
     const k = p.w > 0 ? p.w / parentRef : 1;
     return { x: (c.x - p.x) / k, y: (c.y - p.y) / k };
   };
+  const relEdge = (i: number) => {
+    const me = s[i];
+    if (!shown(me)) return null;
+    const ps = inp.parentSeries;
+    if (!ps || !parentRef) return { x: me.x, y: me.y };
+    const p = ps[i];
+    if (!shown(p)) return null;
+    const k = p.w > 0 ? p.w / parentRef : 1;
+    return { x: (me.x - p.x) / k, y: (me.y - p.y) / k };
+  };
   const relRest = existedBefore ? relCentre(before) : null;
   const relEnd = existsAtEnd ? relCentre(n - 1) : null;
 
@@ -302,11 +312,9 @@ export function buildTrack(inp: TrackInput): Track {
     const t = (frames[i]?.t ?? 0) - t0;
     if ((a?.p ?? 0) === 0 && (b?.p ?? 0) === 0) continue;
     if (animatedAt(frames[i]?.t ?? 0) || animatedAt(frames[i - 1]?.t ?? 0)) continue;
+    // A cut with no animation behind it stays a cut even when the frame came late; the gap is noted.
     const gap = (frames[i]?.t ?? 0) - (frames[i - 1]?.t ?? 0);
-    if (gap >= DROPPED_MS) {
-      if (!dropped) dropped = { at: Math.round(t), gapMs: Math.round(gap) };
-      continue;
-    }
+    if (gap >= DROPPED_MS && !dropped) dropped = { at: Math.round(t), gapMs: Math.round(gap) };
     const aVa = a?.va ?? 0;
     const bVa = b?.va ?? 0;
     // Shown means drawn at all (in or out of the viewport): sliding into view is not an appearance.
@@ -319,8 +327,9 @@ export function buildTrack(inp: TrackInput): Track {
       cut = { kind: 'disappear', at: t, size: Math.round(Math.sqrt(rest.va)) };
       break;
     }
-    const ra = relCentre(i - 1);
-    const rb = relCentre(i);
+    // A jump moves the box: its start edge shifts against the painting parent. A box that only grows from its start edge does not jump.
+    const ra = relEdge(i - 1);
+    const rb = relEdge(i);
     if (ra && rb && ownTravel >= NOTICE.jumpPx && dist(ra, rb) >= NOTICE.jumpPx && dist(ra, rb) >= 0.9 * ownTravel) {
       cut = { kind: 'jump', at: t, size: Math.round(dist(ra, rb) * 10) / 10 };
       break;
@@ -511,6 +520,16 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
     if (t.fillDelta >= NOTICE.colour || (t.clipChanged && t.fillDelta > 0)) filled += areaOf(t);
   }
   const fillShare = rootArea > 0 ? Math.min(1, filled / rootArea) : 0;
+  // Content of the headline that fades in or out by itself (a word that swaps), as a share of the control.
+  let faded = 0;
+  if (!headlineIsOverlay) {
+    for (const t of group) {
+      if (t.preMoving || !t.ownStyleChanged || t.opacityMax - t.opacityMin < 0.5) continue;
+      if (rec.meta[t.id]?.parent !== null && group.some((g) => g.id === rec.meta[t.id]?.parent && g.opacityMax - g.opacityMin >= 0.5 && g.ownStyleChanged)) continue;
+      faded += t.areaMax;
+    }
+  }
+  const fadeShare = rootArea > 0 ? Math.min(1, faded / rootArea) : 0;
 
   const hid = named?.id ?? -1;
   const secondaries = live.filter((t) => {
@@ -547,6 +566,7 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
     mainSource: main.source,
     mainEasing: main.easing,
     fillShare: Math.round(fillShare * 100) / 100,
+    fadeShare: Math.round(fadeShare * 100) / 100,
     secondaries,
     cuts,
     tooShortOrSmall,

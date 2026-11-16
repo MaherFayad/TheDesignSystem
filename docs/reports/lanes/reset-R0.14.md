@@ -79,6 +79,19 @@ buttons start at 8px, before the title (on web they sit at the trailing end).
 | Marked proposed | yes |
 | `npm run check` | see "Check" |
 
+## Check
+
+`npm run check` passes every step but two, and neither failure is in a file
+this order touches:
+
+- eslint: `apps/docs/scripts/proof/_m2.mjs:1:20`, `'devices' is defined but
+  never used`. That folder belongs to R0.11.
+- Angular: `dropdown-menu.round3.spec.ts`, one test failed under load. Run
+  alone, it passes 7 of 7.
+
+Tokens build, gen, typecheck, manifests, vitest (2730 of 2730) and the
+native, docs, gallery and consumer checks pass.
+
 ## What needs the owner's eye
 
 - The sheet and dialog card: 12px under the top edge, 16px corners in every

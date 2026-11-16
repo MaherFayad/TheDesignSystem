@@ -183,6 +183,8 @@ export interface Measured {
   mainEasing: string | null;
   /** Share of the component's area whose fill changes visibly. */
   fillShare: number;
+  /** Share of the control's area whose content fades in or out by itself (the headline and its parts). */
+  fadeShare: number;
   secondaries: Track[];
   cuts: Track[];
   /** Changes that carry meaning and finish under 150ms or move under 3px. */

@@ -111,8 +111,9 @@ export function quietChecks(m: Measured, src: QuietSource | undefined): Check[] 
  * wrong when something jumps, appears or vanishes in one frame, or when the
  * look follows the emulated hover after the tap; fine when the headline part
  * moves or resizes 4px or more (for a surface that opens, also 5 percent of
- * its own size, since a short rise on a big panel reads as a fade) or changes
- * fill over a large area, for 150ms or more; invisible otherwise.
+ * its own size, since a short rise on a big panel reads as a fade), or changes
+ * fill or fades its content over 30 percent of the control, for 150ms or
+ * more; invisible otherwise.
  */
 export function auditCall(ix: Interaction, m: Measured): { call: 'fine' | 'invisible' | 'wrong'; why: string } {
   if (m.cuts.length > 0) {
@@ -129,9 +130,10 @@ export function auditCall(ix: Interaction, m: Measured): { call: 'fine' | 'invis
   const moveOk = move >= AUDIT.px && (h.group !== 'overlay' || move >= AUDIT.overlayShare * Math.max(size, 1));
   const sizeOk = h.sizeChange >= AUDIT.px && (h.group !== 'overlay' || h.sizeChange >= AUDIT.overlayShare * Math.max(size, 1));
   const fillOk = h.group !== 'overlay' && m.fillShare >= AUDIT.fillShare;
-  if ((moveOk || sizeOk || fillOk) && ms >= AUDIT.ms) return { call: 'fine', why: `the headline ${moveOk ? `moves ${r1(move)}px` : sizeOk ? `changes size by ${r1(h.sizeChange)}px` : 'changes fill'} over ${ms}ms` };
+  const fadeOk = h.group !== 'overlay' && m.fadeShare >= AUDIT.fillShare;
+  if ((moveOk || sizeOk || fillOk || fadeOk) && ms >= AUDIT.ms) return { call: 'fine', why: `the headline ${moveOk ? `moves ${r1(move)}px` : sizeOk ? `changes size by ${r1(h.sizeChange)}px` : fillOk ? 'changes fill' : `fades content over ${Math.round(m.fadeShare * 100)} percent of the control`} over ${ms}ms` };
   const reasons: string[] = [];
-  if (!(moveOk || sizeOk || fillOk)) reasons.push(`it moves ${r1(move)}px and changes size by ${r1(h.sizeChange)}px`);
+  if (!(moveOk || sizeOk || fillOk || fadeOk)) reasons.push(`it moves ${r1(move)}px and changes size by ${r1(h.sizeChange)}px`);
   if (ms < AUDIT.ms) reasons.push(`its main change takes ${ms}ms`);
   return { call: 'invisible', why: reasons.join(' and ') };
 }

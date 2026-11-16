@@ -28,6 +28,11 @@ const travel = (r: InteractionResult) => {
   return h ? Math.max(h.travel, h.ownTravel) : null;
 };
 const main = (r: InteractionResult) => r.measured?.mainMs ?? null;
+/** The longest animation whose name matches, anywhere in the run. */
+const named = (r: InteractionResult, re: RegExp) => {
+  const a = (r.measured?.tracks ?? []).flatMap((t) => t.animations).filter((x) => re.test(x.name));
+  return a.length > 0 ? Math.max(...a.map((x) => x.duration)) : null;
+};
 /** The duration of the headline's own animation of one property. */
 const animOf = (r: InteractionResult, prop: string) => {
   const a = (r.measured?.headline?.animations ?? []).filter((x) => x.props.includes(prop) && x.iterations >= 0);
@@ -61,7 +66,14 @@ export const AUDIT_TABLE: AuditRow[] = [
       const a = (r.measured?.tracks ?? []).flatMap((t) => t.animations).filter((x) => x.props.includes('clipPath'));
       return a.length > 0 ? Math.max(...a.map((x) => x.duration)) : null;
     } },
-    { what: 'all done ms', audit: 120, read: main, slack: 3 },
+    { what: 'check stroke ms', audit: 72, read: (r) => {
+      const a = (r.measured?.tracks ?? []).flatMap((t) => t.animations).filter((x) => x.props.includes('strokeDashoffset')).sort((x, y) => x.delay - y.delay)[0];
+      return a ? a.duration : null;
+    } },
+    { what: 'check stroke delay ms', audit: 45, read: (r) => {
+      const a = (r.measured?.tracks ?? []).flatMap((t) => t.animations).filter((x) => x.props.includes('strokeDashoffset')).sort((x, y) => x.delay - y.delay)[0];
+      return a ? a.delay : null;
+    } },
   ] },
   { id: 'radio', call: 'invisible', says: 'dot 0.5 to 1, opacity 0 to 1 over 100ms', values: [
     { what: 'dot fade ms', audit: 100, read: (r) => animOf(r, 'opacity') },
@@ -110,11 +122,13 @@ export const AUDIT_TABLE: AuditRow[] = [
   { id: 'input', call: 'invisible', says: 'colour only, no movement', values: [
     { what: 'travel px', audit: 0, read: travel, slack: 0.5 },
   ] },
-  { id: 'copy-button', call: 'fine', says: 'press 0.987 at release; icon wipe 180ms, pop 200ms', values: [
-    { what: 'icon pop ms', audit: 200, read: (r) => {
-      const a = (r.measured?.tracks ?? []).flatMap((t) => t.animations).filter((x) => /pop/.test(x.name));
-      return a.length > 0 ? Math.max(...a.map((x) => x.duration)) : null;
-    } },
+  { id: 'copy-button', call: 'fine', says: 'press 0.987 at release; icon pop 200ms, label roll 158ms', values: [
+    { what: 'icon pop ms', audit: 200, read: (r) => named(r, /pop/) },
+    { what: 'label roll ms', audit: 158, read: (r) => named(r, /roll/) },
+    { what: 'press scale change', audit: 0.013, read: (r) => {
+      const root = (r.measured?.tracks ?? []).find((t) => t.desc.startsWith('button copy-button'));
+      return root ? Math.round((1 - root.scaleMin) * 1000) / 1000 : null;
+    }, slack: 0.001 },
     { what: 'starts at release', audit: true, read: release },
   ] },
   { id: 'slider', call: 'fine', says: 'thumb follows 53px, 16ms latency', values: [

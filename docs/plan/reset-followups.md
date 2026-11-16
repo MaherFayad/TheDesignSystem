@@ -82,3 +82,14 @@ should pick it up.
    `:dir()` gate compares counts and builds only the React gallery. Widen
    both in R0.16.
 6. `tokens.md` line 186 needs per platform density values from R0.13.
+
+## From R0.14 (`macos`)
+
+1. On `macos` the window buttons sit before the title visually but after it
+   in tab order. `Window.tsx` should render them first on `macos`. Pick up
+   in R4 (the desktop form work).
+2. Sheets with detents on `macos` keep a bottom edge detent transform. Pick
+   up in R4.
+3. Not built yet for `macos`: unified toolbar, table, outline view, settings
+   window, alert action layout, toast placement, key and non key window
+   looks. R4 scope.

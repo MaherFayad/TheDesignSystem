@@ -422,3 +422,14 @@ tap, the pill lands 20 of 20). The timing target moves to order R0.17, which
 covers every pressable and also measures the slide's own share (35 to 45ms).
 R0.4, the Angular port, is held to the same pattern and not to the 50ms
 number.
+
+## R0.14 rulings on `macos` (lead, 2026-11-16)
+
+1. **Density does not change control heights on `macos`.** The platform's
+   own sizes hold in every density, as on `ios` and `android` (R0.13
+   decision 7). The macos token file gains density values that keep its
+   control sizes. Order R0.19 (ds-tokens).
+2. **Checkbox shape stays the style's on `macos`.** Ruling 16 puts Checkbox
+   on the controls side, where the style wins. The order text that asked for
+   a 4 to 5px square in every style gives way to the ruling. Neutral shows
+   the platform shape because it sets none of its own.
