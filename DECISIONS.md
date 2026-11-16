@@ -236,3 +236,66 @@ The owner asked for the glass look on controls. That is the Liquid style of
 the plan, scheduled for wave 2. Order 1.26 starts it now, as proposed. The
 hard limits stand: the id is `liquid`, no vendor font file, symbol or mark.
 
+
+## Reset rulings (owner, 2026-11-16)
+
+The owner answered the decision sheet that followed the seven audits in
+`docs/reports/audit/`. These are final. Do not reopen them.
+
+Direction:
+
+1. Studio and Desk return to their sources exactly. The separation and
+   decoration added by orders 1.24 to 1.29 is undone.
+2. Where a source falls below 3:1 on a control boundary (WCAG 2.2, 1.4.11),
+   the 3:1 rule wins everywhere. Keep the hue and raise only the alpha to the
+   lowest value that passes.
+3. Motion: Studio and Desk are quiet like their sources. Neutral and Liquid
+   carry the rich interactions.
+4. The source screens ship as templates: the GoBanana desk and canvas
+   editor, and the Figma-Killer-2 editor shell. They are the acceptance
+   target.
+5. Work is accepted side by side with its source, plus a phone recording the
+   owner signs off. Test counts alone do not accept work.
+
+Mobile:
+
+6. Mobile is both a web target and a React Native target. The web phone
+   comes first.
+7. Phones detect their platform (`ios` or `android` in place of `web`), with
+   an override.
+8. Native build approach: hybrid. System views for chrome (navigation, tab
+   bar, sheets, menus, pickers, alerts); brand controls drawn from tokens
+   with a behaviour profile per platform. The token build gains a platform
+   layer.
+9. Added to the allow list of PLAN section 4, all MIT: `react-native-screens`,
+   `expo-router`, `@expo/ui`, `react-native-keyboard-controller`,
+   `expo-status-bar`.
+10. Inside native chrome Studio and Desk keep the platform's bars and sheets
+    and supply tint, fonts and content. Drawn chrome is an opt in.
+11. Icons in native tab bars and toolbars are our own (Lucide, pixelarticons)
+    rendered to images. No vendor symbol set.
+12. Device verification is set up with an Expo account and cloud builds. The
+    access token is never written to the repo; it is saved as a network
+    secret on the environment.
+
+Platforms and styles:
+
+13. The platform axis gains `macos`.
+14. A Material based style is added with the id `tonal`, after the reset,
+    marked proposed.
+15. `@material/material-color-utilities` (Apache 2.0) is allowed at build
+    time only.
+16. When style and platform disagree on shape: the style wins on controls,
+    the platform wins on sheets, bars and alerts.
+
+Carried items:
+
+17. All pending look approvals are withdrawn. Looks are proposed again after
+    the reset.
+18. Desk dark glass over bright content is rechecked after ruling 1.
+19. Arabic register stands: Gulf modern standard Arabic for docs, white Saudi
+    dialect for demos.
+20. The name and scope stay `@the-system` until gate 1 passes.
+21. GoBanana and Figma-Killer-2 stay read only.
+22. Work resumes. The first output is the reset plan as work orders for the
+    owner's review. Nothing is built before the owner sees it.
