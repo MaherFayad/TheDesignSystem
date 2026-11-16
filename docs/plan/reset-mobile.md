@@ -85,3 +85,30 @@ for the lead.
 - `npm run check` passes.
 - A recording pack (`npm run record`) for Switch, tab bar, alert, sheet.
 - The owner signs on a phone. Until then every look is proposed.
+
+## Fix round 1 (after the lead looked at the sheets)
+
+Three small orders, disjoint files. Agents do not commit.
+
+- **M3, recipes on android (ds-style).** Neutral switch off paint on android
+  (track `bg.overlay-10`, small thumb in `border.control-hover`, no thumb
+  shadow, no thumb edge rule, hover rule off android). Neutral toast on
+  android: inverse surface, light text, no border, text button action; check
+  contrast in both schemes. Liquid segmented control on android: clear track,
+  outline in `border.control-hover`, selected fill `primary.tint-hover`, no
+  thumb shadow, no indicator filter. Files: `packages/styles/neutral/recipes/
+  {Switch,Toast}.css`, `packages/styles/liquid/recipes/SegmentedControl.css`.
+  Proof: reference beside ours for the three parts, web and ios unchanged.
+- **M4, press from touch down in React (ds-component).** Set `data-pressed`
+  from `pointerdown` to `pointerup`, `pointercancel` and lost capture on
+  Button (ButtonBase), Chip, the TabBar item, the linked List row and
+  Pagination pages, the way `Switch/drag.ts` does. Add the state to each
+  manifest. Tests for each. No CSS files.
+- **M5, Angular parity (ds-angular).** The same `data-pressed` on the Angular
+  switch and on the Angular forms of the M4 components, and the sheet close
+  button in the title bar on phones when window controls are on, matching
+  React `Sheet.tsx`.
+
+Known and left alone: the Angular test suite has timing tests that fail on
+some runs with no Angular change (dropdown menu exit copy, switch drag). Not
+part of the mobile fixes.
