@@ -16,7 +16,8 @@ describe('gate ds/no-native-title: hints go through Tooltip', () => {
 
   it('finds no native title in TSX, HTML or Angular templates (strict: only real title inputs pass)', () => {
     expect(format(runRule(createNoNativeTitleRule(titleHosts))), 'use the Tooltip component').toEqual([]);
-  });
+    // A repo wide scan: under a loaded machine it passes the default five seconds.
+  }, 60_000);
 
   it('strict form: [title] passes only on a directive that declares a title input', () => {
     const check = createNoNativeTitle(new Set(['dsDialogContent']));

@@ -9,7 +9,8 @@ describe('gate ds/no-tailwind: no Tailwind inside the system', () => {
 
   it('finds no Tailwind dependency, directive or utility class', () => {
     expect(format(runRule(noTailwindRule)), 'style through data attributes and tokens').toEqual([]);
-  });
+    // A repo wide scan: under a loaded machine it passes the default five seconds.
+  }, 60_000);
 
   it('fails on the package.json fixture', () => {
     expect(lines(noTailwind(fixture('no-tailwind/bad.package.json')))).toEqual([5, 8, 9]);

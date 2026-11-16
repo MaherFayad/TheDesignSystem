@@ -15,8 +15,16 @@
 //   stage: /interactions?focus=tab-slide, the tab-slide stage (two Tabs
 //          lists, a SegmentedControl and a ToggleGroup), taps on the
 //          ToggleGroup items in turn.
+//   control: /c/toggle-group?case=many, a multiple choice ToggleGroup with
+//          the same item markup and no pill, taps on its first three items
+//          in turn. It is the cost of a press without the slide.
+//
+// The machine is shared, so the probe also keeps the main thread CPU time
+// (the trace's tdur) of the costliest task of each tap, which does not grow
+// while the thread waits for a core.
 //
 //   node tab-slide-trace.cjs <base url> <out.json> <label> [style ...]
+//   FIXTURES=group,control limits the fixtures.
 const { chromium, devices } = require('playwright');
 const fs = require('fs');
 
@@ -29,6 +37,7 @@ const WINDOW = 600;
 const fixtures = {
   group: { path: '/c/toggle-group', query: 'case=one', items: '[data-demo-case="one"] [data-ds="toggle-group"] > [data-part="item"]' },
   stage: { path: '/interactions', query: 'focus=tab-slide', items: '[data-interaction-stage] [data-ds="toggle-group"] > [data-part="item"]' },
+  control: { path: '/c/toggle-group', query: 'case=many', items: '[data-demo-case="many"] [data-ds="toggle-group"] > [data-part="item"]', count: 3, noPill: true },
 };
 
 const median = (xs) => {
@@ -45,7 +54,7 @@ async function run(browser, style, name) {
   await page.waitForSelector(fx.items);
   await page.waitForTimeout(1000);
   const items = page.locator(fx.items);
-  const count = await items.count();
+  const count = fx.count ?? (await items.count());
   const boxes = [];
   for (let i = 0; i < count; i++) boxes.push(await items.nth(i).boundingBox());
   const cdp = await ctx.newCDPSession(page);
@@ -54,13 +63,13 @@ async function run(browser, style, name) {
   cdp.on('Tracing.dataCollected', (e) => events.push(...e.value));
   const done = new Promise((r) => cdp.once('Tracing.tracingComplete', r));
   await cdp.send('Tracing.start', {
-    traceConfig: { includedCategories: ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'blink.user_timing'] },
+    traceConfig: { includedCategories: ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'disabled-by-default-devtools.timeline.stack', 'blink.user_timing'] },
     transferMode: 'ReportEvents',
   });
   const marks = [];
   let landed = 0;
   // Start on the item after the one that is on, so every tap changes the value.
-  const start = await items.evaluateAll((els) => Math.max(0, els.findIndex((el) => el.getAttribute('data-state') === 'on')));
+  const start = fx.noPill ? count - 1 : await items.evaluateAll((els) => Math.max(0, els.findIndex((el) => el.getAttribute('data-state') === 'on')));
   for (let t = 0; t < TAPS; t++) {
     const i = (start + 1 + t) % count;
     const b = boxes[i];
@@ -68,7 +77,7 @@ async function run(browser, style, name) {
     await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2);
     await page.waitForTimeout(GAP);
     // The pill lands on the pressed item: it is the one that is on, and the pill span inside it is drawn.
-    const ok = await items.nth(i).evaluate((el) => {
+    const ok = fx.noPill ? true : await items.nth(i).evaluate((el) => {
       const pill = el.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
       if (el.getAttribute('data-state') !== 'on' || !pill) return false;
       const a = el.getBoundingClientRect();
@@ -88,11 +97,24 @@ async function run(browser, style, name) {
     const m = events.find((e) => e.name === `tap-${t}` && e.pid === mainPid);
     return m ? m.ts : null;
   });
-  const perTap = tapTs.map((ts) => {
-    if (ts === null) return null;
-    const inWin = tasks.filter((e) => e.ts >= ts && e.ts < ts + WINDOW * 1000);
-    return Math.round(Math.max(0, ...inWin.map((e) => e.dur)) / 100) / 10;
-  }).filter((x) => x !== null);
+  const ms = (us) => Math.round(us / 100) / 10;
+  const windows = tapTs.filter((ts) => ts !== null).map((ts) => tasks.filter((e) => e.ts >= ts && e.ts < ts + WINDOW * 1000));
+  // Wall time of the longest task under the 4x slowdown.
+  const perTap = windows.map((w) => ms(Math.max(0, ...w.map((e) => e.dur))));
+  // Main thread CPU time (tdur) of the costliest task: it leaves out the
+  // time the thread waits for a core, so it holds when the machine is busy.
+  // The 4x slowdown suspends the thread, so this is close to 1x CPU time.
+  const cpuPerTap = windows.map((w) => ms(Math.max(0, ...w.map((e) => e.tdur ?? 0))));
+  // Style and layout passes that the slide code forces: a style recalc or
+  // layout whose JS stack holds the indicator, the ink or ToggleGroup. Only
+  // the development build keeps the file names in the stack. This count
+  // does not depend on the load of the machine.
+  const passes = events.filter((e) => (e.name === 'UpdateLayoutTree' || e.name === 'Layout') && e.tid === mainTid && e.pid === mainPid);
+  const ours = (e) => (e.args?.beginData?.stackTrace ?? []).some((f) => /(helpers\/indicator|helpers\/nav-ink|ToggleGroup\/ToggleGroup)\.ts/.test(f.url ?? ''));
+  const forcedPerTap = tapTs.filter((ts) => ts !== null).map((ts) => {
+    const inWin = passes.filter((e) => e.ts >= ts && e.ts < ts + WINDOW * 1000 && ours(e));
+    return { style: inWin.filter((e) => e.name === 'UpdateLayoutTree').length, layout: inWin.filter((e) => e.name === 'Layout').length };
+  });
   await ctx.close();
   return {
     style,
@@ -104,6 +126,11 @@ async function run(browser, style, name) {
     over50: perTap.filter((x) => x > 50).length,
     over100: perTap.filter((x) => x > 100).length,
     perTapMs: perTap,
+    cpuMedianMs: median(cpuPerTap),
+    cpuMaxMs: Math.max(...cpuPerTap),
+    cpuPerTapMs: cpuPerTap,
+    forcedStylePasses: forcedPerTap.reduce((n, x) => n + x.style, 0),
+    forcedLayouts: forcedPerTap.reduce((n, x) => n + x.layout, 0),
   };
 }
 
@@ -111,7 +138,7 @@ async function run(browser, style, name) {
   const browser = await chromium.launch();
   const rows = [];
   for (const style of styles) {
-    for (const name of Object.keys(fixtures)) {
+    for (const name of (process.env.FIXTURES ? process.env.FIXTURES.split(',') : Object.keys(fixtures))) {
       const row = await run(browser, style, name);
       rows.push(row);
       console.log(JSON.stringify(row));

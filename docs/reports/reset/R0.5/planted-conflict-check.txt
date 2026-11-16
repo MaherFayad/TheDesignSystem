@@ -1,0 +1,22 @@
+npm run check in a scratch copy of the tree with a conflict planted in packages/css/src/components/Dialog.css (lines 115 to 119). Gate findings and the summary.
+
+"packages/css/src/components/Dialog.css:115:1 ds/no-conflict-marker conflict start (ours): \"<<<<<<< HEAD\". Resolve the merge and remove the marker lines.",
+"packages/css/src/components/Dialog.css:116:29 ds/css-parses does not parse: Unexpected token Semicolon",
+"packages/css/src/components/Dialog.css:117:1 ds/no-conflict-marker conflict divider: \"=======\". Resolve the merge and remove the marker lines.",
+"packages/css/src/components/Dialog.css:119:1 ds/no-conflict-marker conflict end (theirs): \">>>>>>> claude/ds-reset-r1-5\". Resolve the merge and remove the marker lines.",
+
+== summary ==
+pass  tokens build  0.7s
+pass  gen  3.5s
+pass  typecheck  53.4s
+pass  eslint  20.7s
+pass  manifests  1.0s
+FAIL  vitest  260.7s
+pass  check @the-system/angular  170.1s
+pass  check @the-system/native  81.1s
+pass  check @the-system/docs  39.0s
+pass  check @the-system/gallery-angular  77.8s
+pass  check @the-system/gallery-native  10.6s
+pass  check @the-system/consumer-next  36.3s
+pass  check @the-system/consumer-vite  53.6s
+exit 1

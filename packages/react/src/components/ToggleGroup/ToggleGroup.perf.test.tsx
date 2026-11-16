@@ -35,7 +35,6 @@ beforeEach(() => {
   for (const key of ['animate', 'getAnimations', 'getBoundingClientRect']) saved.proto[key] = proto[key];
   proto.animate = function (this: HTMLElement) {
     log.push('write');
-    if (process.env.DBG) console.log('ANIM');
     return { finished: Promise.resolve(), cancel() {}, playState: 'running', effect: null, currentTime: 0 } as unknown as Animation;
   };
   proto.getAnimations = function () {
@@ -45,7 +44,6 @@ beforeEach(() => {
   // Each item is 72 by 32 px, 80 px apart; the root and any other box is 300 by 32.
   proto.getBoundingClientRect = function (this: HTMLElement) {
     log.push('read');
-    if (process.env.DBG) console.log('READ', new Error().stack?.split('\n').slice(2, 5).map((l) => l.trim().split(' (')[0]).join(' | '));
     const item = this.closest('[data-part="item"], [data-part="trigger"]');
     if (!item) return DOMRect.fromRect({ x: 0, y: 0, width: 300, height: 32 });
     return DOMRect.fromRect({ x: indexOf(item) * 80, y: 0, width: 72, height: 32 });
@@ -57,8 +55,8 @@ beforeEach(() => {
   for (const key of ['append', 'appendChild', 'insertBefore', 'replaceChildren'] as const) {
     const own = Element.prototype[key] as (...args: unknown[]) => unknown;
     vi.spyOn(Element.prototype, key).mockImplementation(function (this: Element, ...args: unknown[]) {
-      log.push('write');
-      if (process.env.DBG) console.log('WRITE', key, (this as Element).outerHTML.slice(0, 80), new Error().stack?.split('\n').slice(2, 6).join(' | '));
+      // React's own commit inserts nodes too (the Tabs indicator span); only the writes of the motion code count.
+      if (!/react-dom/.test(new Error().stack ?? '')) log.push('write');
       return own.apply(this, args);
     } as never);
   }
@@ -70,15 +68,9 @@ afterEach(() => {
   style.remove();
 });
 
-/**
- * The log from the last press, from its first read on: everything after
- * `mark`. React's own DOM writes of the commit (a panel swapped in) come
- * before the layout effects, so they come before the first read.
- */
+/** The log from the last press: everything after `mark`. */
 function since(mark: number): Entry[] {
-  const press = log.slice(mark);
-  const first = press.indexOf('read');
-  return first < 0 ? [] : press.slice(first);
+  return log.slice(mark);
 }
 
 /** True when the press reads, then only writes: one style pass. */
@@ -149,12 +141,12 @@ describe('ToggleGroup tab-slide performance fixture', () => {
       );
     }
     render(<Linked />);
+    // Let the frame job of the first paint run, as the browser does between the render and a press.
+    await act(async () => {});
     const mark = log.length;
-    if (process.env.DBG) console.log('MARK');
     await act(async () => {
       screen.getByRole('button', { name: 'Move every pill' }).click();
     });
-    console.log('PRESS', since(mark).join(' '), new Error().stack ? '' : '');
     const press = since(mark);
     expect(readsThenWrites(press)).toBe(true);
     // Three slides started, one per list.

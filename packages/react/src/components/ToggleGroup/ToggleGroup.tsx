@@ -144,7 +144,6 @@ export function ToggleGroup({
     // them, still before the first paint. Same pattern as Tabs and
     // SegmentedControl (order 1.29, review B14).
     inFrame(() => {
-      console.log('JOB', root.isConnected, root.querySelectorAll('[data-state="on"]').length);
       if (!root.isConnected) return;
       const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
       const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
@@ -155,7 +154,6 @@ export function ToggleGroup({
       const lastLabel = inkLabel.current;
       const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
       const plan = planFollow(track, singleValue, { el: pill }, { mode, anchor: root });
-      console.log('PLAN', mode, track.key, singleValue, JSON.stringify(plan.slide)?.slice(0, 80));
       // Round 3: the text under the pill takes the on color where the pill is (helpers/nav-ink.ts in @the-system/motion).
       const ink = planInk({
         switch: '--_toggle-group-ink',
@@ -170,7 +168,6 @@ export function ToggleGroup({
         indicator: pill,
       });
       return () => {
-        console.log('WRITEJOB', singleValue);
         inkLabel.current = label;
         ink(plan.write());
       };
