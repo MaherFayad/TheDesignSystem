@@ -22,6 +22,8 @@ export interface AddOptions {
   registry?: string;
   overwrite?: boolean;
   dryRun?: boolean;
+  /** Angular and native: the repo root the component folders are copied from. Default: this repo. Tests point it at a fixture. */
+  repo?: string;
 }
 
 export interface AddedFile {
@@ -166,7 +168,7 @@ function installed(cwd: string, pkg: string): boolean {
  * internal helpers, other components), so the copy compiles on its own.
  * Imports of the @the-system packages stay: the app installs those.
  */
-function closureOf(entry: string, pkgSrc: string): string[] {
+function closureOf(entry: string, pkgSrc: string, repo: string): string[] {
   const seen = new Set<string>();
   const visit = (file: string) => {
     if (seen.has(file)) return;
@@ -175,8 +177,8 @@ function closureOf(entry: string, pkgSrc: string): string[] {
       if (!fileName.startsWith('.')) continue;
       const base = join(dirname(file), fileName);
       const hit = ['', '.ts', '.tsx', '/index.ts', '/index.tsx'].map((e) => base + e).find((f) => existsSync(f) && statSync(f).isFile());
-      if (!hit) throw new CliError('DS_E_NOT_FOUND', `${relative(REPO, file)} imports ${fileName}, which is missing`);
-      if (!hit.startsWith(pkgSrc) || /\.(spec|test|demo)\.tsx?$/.test(hit)) throw new CliError('DS_E_NOT_FOUND', `${relative(REPO, file)} imports ${fileName} outside the shippable files`);
+      if (!hit) throw new CliError('DS_E_NOT_FOUND', `${relative(repo, file)} imports ${fileName}, which is missing`);
+      if (!hit.startsWith(pkgSrc) || /\.(spec|test|demo)\.tsx?$/.test(hit)) throw new CliError('DS_E_NOT_FOUND', `${relative(repo, file)} imports ${fileName} outside the shippable files`);
       visit(hit);
     }
   };
@@ -187,11 +189,12 @@ function closureOf(entry: string, pkgSrc: string): string[] {
 function addCopy(m: Manifest, o: AddOptions, cwd: string): AddData {
   const framework = o.framework;
   const folder = framework === 'angular' ? kebab(m.name) : m.name;
-  const src = join(REPO, 'packages', framework, 'src/components', folder);
-  if (!existsSync(src)) throw new CliError('DS_E_NOT_FOUND', `${m.name} is ready for ${framework}, but ${relative(REPO, src)} is missing`);
-  const pkgSrc = join(REPO, 'packages', framework, 'src');
+  const repo = resolve(o.repo ?? REPO);
+  const src = join(repo, 'packages', framework, 'src/components', folder);
+  if (!existsSync(src)) throw new CliError('DS_E_NOT_FOUND', `${m.name} is ready for ${framework}, but ${relative(repo, src)} is missing`);
+  const pkgSrc = join(repo, 'packages', framework, 'src');
   const dir = resolve(cwd, o.dir ?? join('src', 'ds', framework));
-  const files = closureOf(join(src, 'index.ts'), pkgSrc)
+  const files = closureOf(join(src, 'index.ts'), pkgSrc, repo)
     .sort()
     .map((abs) => writeFile(join(dir, relative(pkgSrc, abs)), readFileSync(abs, 'utf8'), cwd, o));
   const imports =

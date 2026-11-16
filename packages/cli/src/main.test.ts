@@ -2,8 +2,12 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
+import { add, type AddData } from './commands/add';
 import { run } from './main';
 import { REPO } from './manifests';
+
+/** A small repo with Angular and native packages, read by the snapshots of `ds add`. */
+const FIXTURE = join(import.meta.dirname, '../fixtures/repo');
 
 interface Envelope {
   apiVersion: number;
@@ -86,16 +90,45 @@ describe('ds --json', () => {
     expect((third.json.data.files as { path: string; status: string }[]).filter((f) => f.status === 'conflict')).toEqual([{ path: 'src/components/ds/ds.css', status: 'conflict' }]);
   });
 
-  it('add, angular: copies the component folder without specs and demos', async () => {
-    const r = await ds(['add', 'button', '--framework', 'angular', '--dry-run'], app('angular-app'));
-    expect(r.code).toBe(0);
-    expect(r.json).toMatchSnapshot();
+  // The snapshots of the copy path read the fixture repo, so a merge in
+  // packages/angular or packages/native never changes them. The real packages
+  // are checked for shape and a few known files only.
+  it('add, angular, fixture: copies the folder and what it imports, without specs and demos', async () => {
+    const dir = app('angular-fixture-app');
+    const r = await add({ name: 'button', framework: 'angular', cwd: dir, dryRun: true, repo: FIXTURE });
+    expect(r.exitCode).toBe(0);
+    expect(r.envelope).toMatchSnapshot();
+
+    const written = await add({ name: 'button', framework: 'angular', cwd: dir, repo: FIXTURE });
+    expect((written.envelope.data as AddData).files.every((f) => f.status === 'written')).toBe(true);
+    expect(readFileSync(join(dir, 'src/ds/angular/components/button/button-base.ts'), 'utf8')).toBe(
+      readFileSync(join(FIXTURE, 'packages/angular/src/components/button/button-base.ts'), 'utf8'),
+    );
   });
 
-  it('add, native', async () => {
-    const r = await ds(['add', 'IconButton', '--framework', 'native', '--dry-run'], app('native-app'));
+  it('add, native, fixture', async () => {
+    const r = await add({ name: 'IconButton', framework: 'native', cwd: app('native-fixture-app'), dryRun: true, repo: FIXTURE });
+    expect(r.exitCode).toBe(0);
+    expect(r.envelope).toMatchSnapshot();
+  });
+
+  it.each([
+    ['angular', 'button', ['src/ds/angular/components/button/index.ts', 'src/ds/angular/components/button/button.ts', 'src/ds/angular/theme/theme.ts']],
+    ['native', 'IconButton', ['src/ds/native/components/IconButton/index.ts', 'src/ds/native/components/IconButton/IconButton.tsx']],
+  ] as const)('add, %s, real package: the shape and a few known files', async (fw, name, known) => {
+    const r = await ds(['add', name, '--framework', fw, '--dry-run'], app(`${fw}-app`));
     expect(r.code).toBe(0);
-    expect(r.json).toMatchSnapshot();
+    expect(r.json.type).toBe('add.result');
+    const files = r.json.data.files as { path: string; status: string }[];
+    expect(files.map((f) => f.path)).toEqual(expect.arrayContaining([...known]));
+    expect(files.map((f) => f.path)).toEqual([...files.map((f) => f.path)].sort());
+    for (const f of files) {
+      expect(f.status, f.path).toBe('planned');
+      expect(f.path.startsWith(`src/ds/${fw}/`), f.path).toBe(true);
+      expect(f.path, f.path).not.toMatch(/\.(spec|test|demo)\.tsx?$/);
+    }
+    const { files: _files, ...rest } = r.json.data;
+    expect(rest).toMatchObject({ framework: fw, install: null, shadcn: null });
   });
 
   it('style list', async () => {
