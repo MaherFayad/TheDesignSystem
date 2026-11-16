@@ -801,7 +801,7 @@ function holdsColour(value: unknown): boolean {
  */
 function checkPlatform(id: string, tokens: TokenMap, contract: PlatformContract): void {
   const file = `platform/${id}.json`;
-  const wanted = new Map(contract.groups.flatMap((g) => [...g.names, ...g.added].map((n) => [`${g.group}.${n}`, g.type] as const)));
+  const wanted = new Map<string, string>(contract.groups.flatMap((g) => [...g.names, ...g.added].map((n): [string, string] => [`${g.group}.${n}`, g.type])));
   for (const [path, type] of wanted) {
     const t = tokens.get(path);
     if (!t) throw new Error(`${file}: platform name ${path} has no value`);

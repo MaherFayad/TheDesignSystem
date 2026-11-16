@@ -52,3 +52,14 @@ should pick it up.
    `devDependencies` in R0.16.
 4. The `macos` reflow runs measure the web layout until R0.10 and R0.14
    land.
+
+## From R0.18 (SegmentedControl reflow)
+
+1. Desk's `packages/styles/desk/recipes/Density.css` button rule reaches
+   toggle-button parts inside SegmentedControl and ToggleGroup, because it
+   has no `:not([data-part])`. It also overrides `--_button-height` on
+   SegmentedControl items. Pick up in R1 (the Desk recipe owner).
+2. The `too-many` demo case in an 18rem column on a wide page has items
+   spilling out of the track (31px in Desk, 43px in Neutral, 45px in Liquid).
+   The phone rule follows the viewport, not the container. Use a container
+   query. Pick up in R4.

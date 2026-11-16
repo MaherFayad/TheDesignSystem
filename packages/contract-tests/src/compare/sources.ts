@@ -22,6 +22,9 @@ export interface Server {
 
 type Log = (line: string) => void;
 
+/** A scratch path as notes show it, so reports never carry a machine's folder names. */
+const shown = (path: string): string => `<scratch>${path.slice(scratchRoot().length)}`;
+
 /** The source repos. Environment variables move them for a test machine. */
 export function sourceRoots(): { gb: string; fk2: string } {
   return {
@@ -59,6 +62,16 @@ export function fingerprint(root: string): string {
     }
   };
   return createHash('sha256').update(git(['rev-parse', 'HEAD'])).update(git(['status', '--porcelain'])).digest('hex').slice(0, 16);
+}
+
+/** The short commit of a source repo, for the notes; "unknown" when git cannot say. */
+export function commitOf(root: string): string {
+  try {
+    const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() !== '';
+    return `${execFileSync('git', ['-C', root, 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()}${dirty ? ' with uncommitted changes' : ''}`;
+  } catch {
+    return 'unknown';
+  }
 }
 
 function spawnServer(cmd: string, args: string[], cwd: string, env: NodeJS.ProcessEnv): { child: ChildProcess; tail: () => string } {
@@ -126,7 +139,7 @@ export async function startGb(firstPath: string, log: Log): Promise<Server> {
       await waitFor(`${url}${firstPath}`, child, 240_000);
       return {
         url,
-        notes: [`GoBanana ${fingerprint(sourceRoots().gb)} from a copy at ${dir}, next dev, E2E_AUTH_BYPASS=1 ADMIN_FIXTURES=1 DATABASE_URL empty`],
+        notes: [`GoBanana at commit ${commitOf(sourceRoots().gb)}, from a copy at ${shown(dir)}, next dev, E2E_AUTH_BYPASS=1 ADMIN_FIXTURES=1 DATABASE_URL empty`],
         close: async () => stop(child),
       };
     } catch (err) {
@@ -213,6 +226,8 @@ export async function startFk2(log: Log): Promise<Server> {
             { find: /^@ui\//, replacement: `${join(fk2, 'src', 'ui')}/` },
             { find: /^@core\//, replacement: `${join(fk2, 'src', 'core')}/` },
             { find: /^@fk2\//, replacement: `${join(fk2, 'src')}/` },
+            // globals.css loads Inter by package path in url(); this repo ships the same package.
+            { find: /^@fontsource-variable\/inter\//, replacement: `${join(REPO, 'node_modules', '@fontsource-variable', 'inter')}/` },
           ],
           dedupe: ['react', 'react-dom'],
         },
@@ -223,7 +238,7 @@ export async function startFk2(log: Log): Promise<Server> {
       log(`Started the FK2 harness at ${url}`);
       return {
         url,
-        notes: [`Figma-Killer-2 ${fingerprint(fk2)}: a reconstruction from FK2's own src/ui components and src/styles/globals.css, rendered by Vite from ${dir}; FK2 icons are empty boxes of the same size`],
+        notes: [`Figma-Killer-2 at commit ${commitOf(fk2)}: a reconstruction from FK2's own src/ui components and src/styles/globals.css, rendered by Vite from ${shown(dir)}; FK2 icons are empty boxes of the same size`],
         close: async () => {
           await server.close();
         },

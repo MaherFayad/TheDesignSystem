@@ -1,0 +1,239 @@
+{
+  "pair": "gb-button-desk",
+  "title": "Desk buttons against GoBanana Studio buttons",
+  "date": "2026-11-16T11:17:23.892Z",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-gobanana.md",
+    "shot": "fid-gb shot 04, 04-buttons-inputs-desk-1440.png",
+    "finding": "Desk buttons are 36px glass pills with -0.04em tracking; the source button is a flat 28px control with a 1em radius and no tracking."
+  },
+  "source": {
+    "repo": "gb",
+    "screen": "/__design?theme=dark&dir=ltr",
+    "how": "GoBanana's Studio primitives page (app/%5F_design, served at /__design in development), dark, left to right, the Buttons section. The system's default size md stands for the source's default control, st-btn sm at 28px (fidelity-gobanana.md, change 4).",
+    "reconstruction": false,
+    "url": "http://localhost:44217"
+  },
+  "system": {
+    "url": "/c/button?style=desk&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scheme": "dark",
+  "notes": [
+    "GoBanana at commit 216625c, from a copy at <scratch>/gb/banana-server, next dev, E2E_AUTH_BYPASS=1 ADMIN_FIXTURES=1 DATABASE_URL empty",
+    "System: the React gallery (apps/gallery-react, vite dev) from this checkout",
+    "Source fonts loaded: Inter Variable",
+    "System: data-style desk, data-platform web, data-glass regular",
+    "System fonts loaded: Instrument Sans, IBM Plex Sans Arabic"
+  ],
+  "summary": {
+    "pass": 7,
+    "fail": 13,
+    "allowed": 0
+  },
+  "rows": [
+    {
+      "region": "secondary",
+      "probe": "height",
+      "property": "height",
+      "source": "28px",
+      "system": "35.984px",
+      "difference": "+7.98px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "font-size",
+      "property": "font-size",
+      "source": "11.997px",
+      "system": "13px",
+      "difference": "+1px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "font-weight",
+      "property": "font-weight",
+      "source": "700",
+      "system": "700",
+      "difference": "0",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "secondary",
+      "probe": "letter-spacing",
+      "property": "letter-spacing",
+      "source": "normal",
+      "system": "-0.52px",
+      "difference": "-0.04em",
+      "tolerance": "0.01em",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "border-radius",
+      "property": "border-radius",
+      "source": "11.997px",
+      "system": "17.992px",
+      "difference": "+6px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "border-width",
+      "property": "border-width",
+      "source": "1px",
+      "system": "1px",
+      "difference": "0px",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "secondary",
+      "probe": "padding-inline-start",
+      "property": "padding-inline-start",
+      "source": "7.993px",
+      "system": "16px",
+      "difference": "+8.01px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "background-color",
+      "property": "background-color",
+      "source": "rgba(255, 255, 255, 0.1)",
+      "system": "rgba(255, 255, 255, 0.08)",
+      "difference": "Delta E 1.54",
+      "tolerance": "Delta E 2",
+      "status": "pass"
+    },
+    {
+      "region": "secondary",
+      "probe": "color",
+      "property": "color",
+      "source": "rgb(237, 237, 237)",
+      "system": "rgb(237, 237, 237)",
+      "difference": "Delta E 0",
+      "tolerance": "Delta E 2",
+      "status": "pass"
+    },
+    {
+      "region": "secondary",
+      "probe": "box-shadow",
+      "property": "box-shadow",
+      "source": "none",
+      "system": "rgba(255, 255, 255, 0.18) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.13) 0px 0px 0px 1px inset",
+      "difference": "0 against 2 layers",
+      "tolerance": "1px, Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "secondary",
+      "probe": "transition-duration",
+      "property": "transition-duration",
+      "source": "0.15s, 0.15s, 0.15s, 0.15s, 0.15s",
+      "system": "0.38s",
+      "difference": "+230ms",
+      "tolerance": "10ms or 10 percent",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "height",
+      "property": "height",
+      "source": "28px",
+      "system": "35.984px",
+      "difference": "+7.98px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "font-size",
+      "property": "font-size",
+      "source": "11.997px",
+      "system": "13px",
+      "difference": "+1px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "font-weight",
+      "property": "font-weight",
+      "source": "700",
+      "system": "700",
+      "difference": "0",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "primary",
+      "probe": "letter-spacing",
+      "property": "letter-spacing",
+      "source": "normal",
+      "system": "-0.52px",
+      "difference": "-0.04em",
+      "tolerance": "0.01em",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "border-radius",
+      "property": "border-radius",
+      "source": "11.997px",
+      "system": "17.992px",
+      "difference": "+6px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "padding-inline-start",
+      "property": "padding-inline-start",
+      "source": "7.993px",
+      "system": "16px",
+      "difference": "+8.01px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "primary",
+      "probe": "background-color",
+      "property": "background-color",
+      "source": "rgb(255, 216, 77)",
+      "system": "rgb(255, 216, 77)",
+      "difference": "Delta E 0",
+      "tolerance": "Delta E 2",
+      "status": "pass"
+    },
+    {
+      "region": "primary",
+      "probe": "color",
+      "property": "color",
+      "source": "rgb(17, 24, 39)",
+      "system": "rgb(17, 24, 39)",
+      "difference": "Delta E 0",
+      "tolerance": "Delta E 2",
+      "status": "pass"
+    },
+    {
+      "region": "primary",
+      "probe": "box-shadow",
+      "property": "box-shadow",
+      "source": "none",
+      "system": "rgba(255, 255, 255, 0.18) 0px 1px 0px 0px inset",
+      "difference": "0 against 1 layers",
+      "tolerance": "1px, Delta E 2",
+      "status": "fail"
+    }
+  ]
+}

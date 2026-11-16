@@ -1,0 +1,189 @@
+{
+  "pair": "gb-dialog-desk",
+  "title": "Desk dialog against the GoBanana Studio dialog",
+  "date": "2026-11-16T11:16:41.142Z",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-gobanana.md",
+    "shot": "fid-gb shot 08, 08-dialog-1440.png",
+    "finding": "A GoBanana dialog is a plain solid panel with surface-2 header and footer bands and a 12px radius; the Desk dialog is glass with window lights, a yellow title bar and a 16px radius."
+  },
+  "source": {
+    "repo": "gb",
+    "screen": "/__design?theme=dark&dir=ltr",
+    "how": "GoBanana's Studio primitives page, dark, left to right, Dialog and toasts section: press Share canvas. The md Studio dialog (components/studio/Dialog.tsx) opens.",
+    "reconstruction": false,
+    "url": "http://localhost:33365"
+  },
+  "system": {
+    "url": "/c/dialog?style=desk&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scheme": "dark",
+  "notes": [
+    "GoBanana at commit 216625c, from a copy at <scratch>/gb/banana-server, next dev, E2E_AUTH_BYPASS=1 ADMIN_FIXTURES=1 DATABASE_URL empty",
+    "System: the React gallery (apps/gallery-react, vite dev) from this checkout",
+    "Source fonts loaded: Inter Variable",
+    "System: data-style desk, data-platform web, data-glass regular",
+    "System fonts loaded: Instrument Sans, IBM Plex Sans Arabic"
+  ],
+  "summary": {
+    "pass": 3,
+    "fail": 12,
+    "allowed": 0
+  },
+  "rows": [
+    {
+      "region": "panel",
+      "probe": "width",
+      "property": "width",
+      "source": "440px",
+      "system": "440px",
+      "difference": "0px",
+      "tolerance": "1px",
+      "status": "pass"
+    },
+    {
+      "region": "panel",
+      "probe": "background-color",
+      "property": "background-color",
+      "source": "rgb(27, 27, 27)",
+      "system": "rgba(33, 33, 33, 0.9)",
+      "difference": "Delta E 8.94",
+      "tolerance": "Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "border-radius",
+      "property": "border-radius",
+      "source": "12px",
+      "system": "16px",
+      "difference": "+4px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "border-width",
+      "property": "border-width",
+      "source": "1px",
+      "system": "1px",
+      "difference": "0px",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "panel",
+      "probe": "box-shadow",
+      "property": "box-shadow",
+      "source": "rgba(0, 0, 0, 0.28) 0px 18px 48px 0px",
+      "system": "rgba(255, 255, 255, 0.16) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.55) 0px 0px 0px 1px, rgba(0, 0, 0, 0.6) 0px 8px 24px -6px, rgba(0, 0, 0, 0.85) 0px 30px 80px -20px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "difference": "1 against 5 layers",
+      "tolerance": "1px, Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "backdrop-filter",
+      "property": "backdrop-filter",
+      "source": "none",
+      "system": "blur(24px) saturate(1.3)",
+      "difference": "differs",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "window lights",
+      "property": "count",
+      "source": "absent",
+      "system": "1",
+      "difference": "+1",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "header fill",
+      "property": "background-color",
+      "source": "rgb(40, 40, 40)",
+      "system": "rgba(255, 216, 77, 0.12)",
+      "difference": "Delta E 75.64",
+      "tolerance": "Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "header height",
+      "property": "height",
+      "source": "52.969px",
+      "system": "36px",
+      "difference": "-16.97px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "title size",
+      "property": "font-size",
+      "source": "15.993px",
+      "system": "14px",
+      "difference": "-1.99px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "title weight",
+      "property": "font-weight",
+      "source": "600",
+      "system": "600",
+      "difference": "0",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "panel",
+      "probe": "title tracking",
+      "property": "letter-spacing",
+      "source": "normal",
+      "system": "-0.56px",
+      "difference": "-0.04em",
+      "tolerance": "0.01em",
+      "status": "fail"
+    },
+    {
+      "region": "panel",
+      "probe": "footer fill",
+      "property": "background-color",
+      "source": "rgb(40, 40, 40)",
+      "system": "rgba(0, 0, 0, 0)",
+      "difference": "Delta E 75.87",
+      "tolerance": "Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "scrim",
+      "probe": "scrim fill",
+      "property": "background-color",
+      "source": "color(srgb 0 0 0 / 0.5)",
+      "system": "rgba(0, 0, 0, 0.55)",
+      "difference": "Delta E 5.04",
+      "tolerance": "Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "scrim",
+      "probe": "scrim blur",
+      "property": "backdrop-filter",
+      "source": "none",
+      "system": "blur(24px) saturate(1.3)",
+      "difference": "differs",
+      "tolerance": "equal",
+      "status": "fail"
+    }
+  ]
+}

@@ -240,8 +240,10 @@ describe('platform checks', () => {
     edit(dir);
     return dir;
   }
-  const editJson = (path: string, fn: (j: Record<string, any>) => void) => {
-    const j = JSON.parse(readFileSync(path, 'utf8')) as Record<string, any>;
+  // A loose JSON tree, so a test can reach into a token file by path.
+  type Tree = { [k: string]: Tree } & Record<string, unknown>;
+  const editJson = (path: string, fn: (j: Tree) => void) => {
+    const j = JSON.parse(readFileSync(path, 'utf8')) as Tree;
     fn(j);
     writeFileSync(path, JSON.stringify(j));
   };
@@ -249,7 +251,7 @@ describe('platform checks', () => {
   it('refuses a colour in a platform file', () => {
     const dir = fixture('colour', (d) =>
       editJson(join(d, 'packages/tokens/src/platform/ios.json'), (j) => {
-        j.elevation.level1.$value[0].color = { colorSpace: 'srgb', components: [0, 0, 0], alpha: 0.3, hex: '#000000' };
+        (j.elevation.level1.$value as unknown as { color: unknown }[])[0]!.color = { colorSpace: 'srgb', components: [0, 0, 0], alpha: 0.3, hex: '#000000' };
       }),
     );
     expect(() => buildTokens({ root: dir })).toThrow(/colour/);
@@ -258,7 +260,7 @@ describe('platform checks', () => {
   it('refuses a font family in a platform file', () => {
     const dir = fixture('family', (d) =>
       editJson(join(d, 'packages/tokens/src/platform/android.json'), (j) => {
-        j.type['body-large'].$value.fontFamily = ['Roboto', 'sans-serif'];
+        (j.type['body-large'].$value as unknown as { fontFamily: unknown }).fontFamily = ['Roboto', 'sans-serif'];
       }),
     );
     expect(() => buildTokens({ root: dir })).toThrow(/fontFamily must alias/);
@@ -276,7 +278,7 @@ describe('platform checks', () => {
   it('refuses a style that sets a platform name', () => {
     const dir = fixture('style', (d) =>
       editJson(join(d, 'packages/styles/studio/tokens.dark.json'), (j) => {
-        j.opacity = { state: { hover: { $type: 'number', $value: 0.2 } } };
+        j.opacity = { state: { hover: { $type: 'number', $value: 0.2 } } } as unknown as Tree;
       }),
     );
     expect(() => buildTokens({ root: dir })).toThrow(/platform name, which a style never sets/);

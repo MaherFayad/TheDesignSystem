@@ -1,0 +1,159 @@
+{
+  "pair": "fk2-menu-studio",
+  "title": "Studio dropdown menu against the Figma-Killer-2 context menu",
+  "date": "2026-11-16T11:16:52.891Z",
+  "audit": {
+    "file": "docs/reports/audit/fidelity-figma-killer-2.md",
+    "shot": "fid-fk2 shot 14, context menu",
+    "finding": "FK2 menus are borderless surface-3 tiles with a 16px radius, 12px row radius, 560 weight rows and a 0 12px 28px shadow; Studio menus are square tiles with a bright 1px rule and no shadow."
+  },
+  "source": {
+    "repo": "fk2",
+    "screen": "/?screen=context-menu",
+    "how": "In FK2 a right click on a layer or a row action opens ContextMenu (src/ui/components/ContextMenu). The harness renders that component with FK2's globals.css, opened at a point, with five rows and a separator.",
+    "reconstruction": true,
+    "url": "http://127.0.0.1:42999"
+  },
+  "system": {
+    "url": "/c/dropdown-menu?style=studio&scheme=dark&dir=ltr&lang=en&case=variants&chrome=0"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scheme": "dark",
+  "notes": [
+    "Figma-Killer-2 at commit 51b1994: a reconstruction from FK2's own src/ui components and src/styles/globals.css, rendered by Vite from <scratch>/fk2; FK2 icons are empty boxes of the same size",
+    "System: the React gallery (apps/gallery-react, vite dev) from this checkout",
+    "Source fonts loaded: Inter Variable",
+    "System: data-style studio, data-platform web, data-glass regular",
+    "System fonts loaded: IBM Plex Sans Arabic, Inter Variable"
+  ],
+  "summary": {
+    "pass": 3,
+    "fail": 9,
+    "allowed": 0
+  },
+  "rows": [
+    {
+      "region": "menu",
+      "probe": "border-radius",
+      "property": "border-radius",
+      "source": "16px",
+      "system": "0px",
+      "difference": "-16px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "border-width",
+      "property": "border-width",
+      "source": "0px",
+      "system": "1px",
+      "difference": "+1px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "background-color",
+      "property": "background-color",
+      "source": "rgb(50, 50, 50)",
+      "system": "rgb(17, 17, 17)",
+      "difference": "Delta E 10.13",
+      "tolerance": "Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "box-shadow",
+      "property": "box-shadow",
+      "source": "rgba(0, 0, 0, 0.5) 0px 12px 28px 0px",
+      "system": "none",
+      "difference": "1 against 0 layers",
+      "tolerance": "1px, Delta E 2",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "padding",
+      "property": "padding",
+      "source": "3.997px",
+      "system": "0px",
+      "difference": "-4px",
+      "tolerance": "1px",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "animation-duration",
+      "property": "animation-duration",
+      "source": "0.13s",
+      "system": "0.07s",
+      "difference": "-60ms",
+      "tolerance": "10ms or 10 percent",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "animation-timing-function",
+      "property": "animation-timing-function",
+      "source": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "system": "steps(2)",
+      "difference": "not comparable",
+      "tolerance": "each point 0.02",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "row height",
+      "property": "height",
+      "source": "28px",
+      "system": "28px",
+      "difference": "0px",
+      "tolerance": "1px",
+      "status": "pass"
+    },
+    {
+      "region": "menu",
+      "probe": "row radius",
+      "property": "border-radius",
+      "source": "12px",
+      "system": "0px",
+      "difference": "-12px",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "row text size",
+      "property": "font-size",
+      "source": "11.997px",
+      "system": "11.9956px",
+      "difference": "0px",
+      "tolerance": "equal",
+      "status": "pass"
+    },
+    {
+      "region": "menu",
+      "probe": "row weight",
+      "property": "font-weight",
+      "source": "560",
+      "system": "400",
+      "difference": "-160",
+      "tolerance": "equal",
+      "status": "fail"
+    },
+    {
+      "region": "menu",
+      "probe": "row text colour",
+      "property": "color",
+      "source": "rgb(237, 237, 237)",
+      "system": "rgb(237, 237, 237)",
+      "difference": "Delta E 0",
+      "tolerance": "Delta E 2",
+      "status": "pass"
+    }
+  ]
+}

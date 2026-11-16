@@ -64,6 +64,18 @@ async function runStep(page: Page, step: Step): Promise<void> {
   }
 }
 
+/** Chromium sometimes refuses a capture under load ("Unable to capture screenshot"); try again before giving up. */
+async function retry<T>(what: () => Promise<T>, tries = 3): Promise<T> {
+  for (let i = 1; ; i += 1) {
+    try {
+      return await what();
+    } catch (err) {
+      if (i >= tries) throw err;
+      await new Promise((r) => setTimeout(r, 500 * i));
+    }
+  }
+}
+
 interface SideCapture {
   capture: Buffer;
   probes: Record<string, SideProbe>;
@@ -105,7 +117,7 @@ async function captureSide(browser: Browser, pair: PairFile, side: 'source' | 's
       };
     });
     facts['data-gpu on load'] = gpuOnLoad;
-    const capture = await page.screenshot();
+    const capture = await retry(() => page.screenshot());
     const probes: Record<string, SideProbe> = {};
     const crops: Record<string, Buffer | null> = {};
     const masks: Record<string, Box[]> = {};
@@ -123,7 +135,7 @@ async function captureSide(browser: Browser, pair: PairFile, side: 'source' | 's
         const y = Math.max(0, Math.floor(probe.rect.y));
         const width = Math.min(pair.viewport.width - x, Math.ceil(probe.rect.width));
         const height = Math.min(pair.viewport.height - y, Math.ceil(probe.rect.height));
-        if (width > 0 && height > 0 && (region.crop !== false || region.pixels)) crops[region.id] = await page.screenshot({ clip: { x, y, width, height } });
+        if (width > 0 && height > 0 && (region.crop !== false || region.pixels)) crops[region.id] = await retry(() => page.screenshot({ clip: { x, y, width, height } }));
         if (region.pixels && !region.pixels.glass) {
           masks[region.id] = await page.evaluate(maskRects, {
             root: region[side],
@@ -266,7 +278,7 @@ async function main(): Promise<number> {
     const crops: Crop[] = pair.regions.filter((r) => r.crop !== false).map((r) => ({ region: r.id, source: uri(src.crops[r.id]), system: uri(sys.crops[r.id]), sourceSize: size(src.probes[r.id]), systemSize: size(sys.probes[r.id]), sourceWidth: src.probes[r.id]?.rect.width ?? 0, systemWidth: sys.probes[r.id]?.rect.width ?? 0 }));
     const sheetPage = await browser.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 1 });
     await sheetPage.setContent(sheetHtml(result, crops));
-    await sheetPage.screenshot({ path: join(outDir, 'sheet.png'), fullPage: true });
+    await retry(() => sheetPage.screenshot({ path: join(outDir, 'sheet.png'), fullPage: true }));
     await sheetPage.close();
 
     const s = result.summary;
