@@ -221,3 +221,19 @@ list of parts. R0.22 as a list of fixes is withdrawn. The lead proposed a
 change of method to the owner (one screen, one platform, built to a real
 reference until the owner signs it, before any breadth) and waits for the
 answer. Work is paused.
+
+## Reference set named by the owner (2026-11-16)
+
+Through the Mobbin connector (platforms `ios` and `web` only):
+
+- Phone: the vendor's music and wallet apps, `ios` platform. Tab bar,
+  navigation buttons, large title, grouped lists, switches, alerts, sheets.
+- Desktop and web: the vendor's music app, `web` platform. Sidebar with a
+  floating panel and a tinted current row, glass player capsule over
+  content, search field, context menu with trailing icons, table rows with
+  a full width selected row, capsule buttons.
+- `android`: Material for the web, captured in a browser (no Mobbin set).
+
+Study and measure only; copy no artwork, icons, marks, fonts or text. Image
+links from the connector expire after 30 days, so each order downloads the
+captures it measures against into its evidence folder.
