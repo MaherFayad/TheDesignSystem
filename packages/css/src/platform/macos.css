@@ -173,6 +173,20 @@
     order: -1;
   }
 
+  /*
+   * A style with no lights (no `controls` optional part) ends a window's bar
+   * with its own minimize, zoom and close buttons. On the desktop they lead
+   * too: their group stops being a box and the three come first, in the
+   * markup's order; any app action stays at the trailing end.
+   */
+  [data-platform='macos'] [data-ds='window'] > [data-ds='title-bar'] > [data-part='actions']:has(> [data-part='close']) {
+    display: contents;
+  }
+
+  [data-platform='macos'] [data-ds='window'] > [data-ds='title-bar'] > [data-part='actions'] > :is([data-part='minimize'], [data-part='zoom'], [data-part='close']) {
+    order: -1;
+  }
+
   /* The title sits in the middle of the room the lights and the actions leave. */
   [data-platform='macos'] [data-ds='title-bar'] > [data-part='move'] {
     justify-content: center;

@@ -45,7 +45,8 @@ const profiles = [
 // inserted (before any paint of content), every later change of
 // data-platform, and the layout shift score.
 function watch() {
-  const w = { atBody: null, changes: [], cls: 0 };
+  if (window !== window.top) return;
+  const w = { atBody: null, changes: [], cls: 0, barShift: 0, shifted: [] };
   window.__probe = w;
   new MutationObserver((list, obs) => {
     for (const m of list) {
@@ -57,13 +58,20 @@ function watch() {
   }).observe(document, { childList: true, subtree: true });
   new MutationObserver((list) => {
     for (const m of list) {
-      const now = document.documentElement.getAttribute('data-platform');
+      if (m.target !== document.documentElement) continue;
+      const now = m.target.getAttribute('data-platform');
       if (m.oldValue !== now) w.changes.push({ from: m.oldValue, to: now, body: !!document.body });
     }
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-platform'], attributeOldValue: true });
+  }).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-platform'], attributeOldValue: true });
   try {
     new PerformanceObserver((l) => {
-      for (const e of l.getEntries()) if (!e.hadRecentInput) w.cls += e.value;
+      for (const e of l.getEntries()) {
+        if (e.hadRecentInput) continue;
+        w.cls += e.value;
+        const nodes = e.sources.map((x) => x.node).filter(Boolean);
+        if (nodes.some((n) => n.closest?.('.topbar'))) w.barShift += e.value;
+        w.shifted.push(...nodes.map((n) => n.className || n.nodeName));
+      }
     }).observe({ type: 'layout-shift', buffered: true });
   } catch {}
 }
@@ -105,6 +113,19 @@ async function topbar(page) {
       buttonBox: [Math.round(box.x), Math.round(box.y), Math.round(box.width), Math.round(box.height)],
       barHeight: Math.round(bar.height),
       overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      // Parts of the bar that overlap each other (the brand under the search button, for example).
+      overlaps: (() => {
+        const parts = ['.menu-btn', '.brand-mark', '.brand > span:not(.version)', '.search-btn', ...[...document.querySelectorAll('.tools > *')].map((_, i) => `.tools > :nth-child(${i + 1})`)];
+        const rects = parts.map((sel) => [sel, document.querySelector(sel)?.getBoundingClientRect()]).filter(([, r]) => r && r.width > 1 && r.height > 1);
+        const hits = [];
+        for (let i = 0; i < rects.length; i++)
+          for (let j = i + 1; j < rects.length; j++) {
+            const [a, ra] = rects[i];
+            const [b, rb] = rects[j];
+            if (ra.left < rb.right - 0.5 && rb.left < ra.right - 0.5 && ra.top < rb.bottom - 0.5 && rb.top < ra.bottom - 0.5) hits.push(`${a} / ${b}`);
+          }
+        return hits;
+      })(),
       probe: window.__probe,
     };
   });
@@ -133,8 +154,9 @@ async function topbar(page) {
     ok(late.probe.atBody === expected, `${name}: ${late.probe.atBody} already stamped when <body> was parsed`);
     ok(late.probe.changes.every((c) => !c.body), `${name}: no platform change after the body (${JSON.stringify(late.probe.changes)})`);
     ok(frame.platform === expected, `${name}: preview iframe data-platform ${frame.platform} (${frame.src})`);
-    ok(!row.buttonMoved && late.probe.cls < 0.01, `${name}: platform button did not move, CLS ${late.probe.cls.toFixed(4)}`);
+    ok(!row.buttonMoved && late.probe.barShift === 0, `${name}: top bar did not shift (bar shift ${late.probe.barShift}, page CLS ${late.probe.cls.toFixed(4)} from ${[...new Set(late.probe.shifted)].join(', ') || 'nothing'})`);
     ok(!late.overflowX, `${name}: no horizontal scroll`);
+    ok(late.overlaps.length === 0, `${name}: no overlap in the top bar ${late.overlaps.join(', ')}`);
     ok(errors.length === 0, `${name}: no console error or warning`);
     await ctx.close();
   }

@@ -83,7 +83,7 @@ const chevron = iconMarkup('chevron-down', 16);
       <span class="mv">
         {items.map((i) => (
           <span data-v={i.value} data-current={i.value === value ? '' : undefined} lang={i.lang}>
-            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}>{i.label}{sep}<span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
+            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}><span class="pd-prefix">{i.label}{sep}</span><span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
           </span>
         ))}
       </span>
@@ -111,7 +111,7 @@ const chevron = iconMarkup('chevron-down', 16);
         <div role="menuitemradio" data-part="radio-item" tabindex="-1" aria-checked={i.value === value ? 'true' : 'false'} data-value={i.value} lang={i.lang}>
           <span data-part="indicator" set:html={check} />
           <span data-part="text">
-            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}>{i.label}{sep}<span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
+            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}><span class="pd-prefix">{i.label}{sep}</span><span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
           </span>
           {i.badge && (
             <span data-ds="badge" data-tone="warning" data-emphasis="soft" data-size="sm"><span data-part="label">{i.badge}</span></span>

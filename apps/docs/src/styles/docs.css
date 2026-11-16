@@ -352,6 +352,21 @@ body {
 .menu:not([data-setting='style'], [data-setting='scheme'], [data-setting='platform']) .mv > [data-current] {
   visibility: visible;
 }
+/*
+ * The platform switch (src/lib/platform.ts). Where the bar is short of room
+ * its button shows only the platform the page uses; "Auto:" stays in the
+ * button's name and in the menu.
+ */
+@media (max-width: 1439px) {
+  .tools [data-menu-button] .pd-prefix {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 .menu-label::after {
   content: ':';
   margin-inline-end: var(--ds-space-2xs);
@@ -1365,8 +1380,32 @@ pre.astro-code span {
     gap: var(--ds-space-s);
     padding-inline: var(--ds-space-4xl);
   }
+  /* With the larger controls of a touch platform, the scheme and language switches keep only their icon. */
+  :root:is([data-platform='ios'], [data-platform='android']) .menu[data-compact] [data-menu-button] > [data-part='label'] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  :root:is([data-platform='ios'], [data-platform='android']) .version {
+    display: none;
+  }
+  /* The brand keeps its width; the search button gives up room first. */
   .topbar-start {
+    flex-shrink: 0;
     min-inline-size: 0;
+  }
+  .search-btn {
+    min-inline-size: 0;
+  }
+  .search-btn > .search-btn-text {
+    display: block;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .sidebar {
     position: fixed;
@@ -1406,6 +1445,23 @@ pre.astro-code span {
   .search-btn [data-ds='kbd'],
   .version {
     display: none;
+  }
+  /*
+   * The touch platforms draw larger controls (a 44 or 48 target): the mark
+   * stays, the name stays in the link's name.
+   */
+  :root:is([data-platform='ios'], [data-platform='android']) .brand span:not(.version) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* On a touch platform the search button is a square of the platform's target, as the switches are. */
+  :root:is([data-platform='ios'], [data-platform='android']) .search-btn {
+    inline-size: var(--ds-size-target-min);
+    min-block-size: var(--ds-size-target-min);
   }
   /* The scheme and language switches keep their icon; the value stays in the name. */
   .menu[data-compact] [data-menu-button] > [data-part='label'] {
@@ -1458,8 +1514,15 @@ pre.astro-code span {
   }
 }
 @media (max-width: 479px) {
-  /* Every switch keeps its icon in the bar; the value stays in its name. */
-  .tools .menu [data-menu-button] > [data-part='label'],
+  /*
+   * Every switch keeps its icon in the bar; the value stays in its name. The
+   * platform switch has no icon and shows its value. The style switch moves
+   * to the top of the sidebar (.nav-style).
+   */
+  .tools .menu[data-setting='style'] {
+    display: none;
+  }
+  .tools .menu:not([data-setting='platform']) [data-menu-button] > [data-part='label'],
   .tools .menu [data-menu-button] > [data-part='end'] {
     position: absolute;
     inline-size: 1px;
@@ -1468,10 +1531,22 @@ pre.astro-code span {
     clip-path: inset(50%);
     white-space: nowrap;
   }
-  .tools [data-menu-button] {
+  .tools .menu:not([data-setting='platform']) [data-menu-button] {
     --_button-padding-inline: 0;
     justify-content: center;
     min-inline-size: var(--ds-size-control-md);
+  }
+  .tools .menu[data-setting='platform'] [data-menu-button] {
+    --_button-padding-inline: var(--ds-space-s);
+  }
+  /* The mark stays, the name stays in the link's name. */
+  .brand span:not(.version) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .nav-style {
     display: block;
@@ -1486,6 +1561,11 @@ pre.astro-code span {
   }
 }
 @media (max-width: 359px) {
+  /* Room for the larger controls of a touch platform: tighter gaps, the same gutter. */
+  .topbar,
+  .tools {
+    gap: var(--ds-space-3xs);
+  }
   /* The mark stays; the name stays in the link's name. */
   .brand span:not(.version) {
     position: absolute;
