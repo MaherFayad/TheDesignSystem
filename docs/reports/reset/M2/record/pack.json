@@ -1,16 +1,450 @@
 {
  "order": "M2",
  "title": "Android phone surfaces after order M2",
- "date": "2026-11-16T20:04:12.741Z",
- "commit": "8c8c5e58 with uncommitted changes",
+ "date": "2026-11-16T20:18:29.129Z",
+ "commit": "0d0675f7 with uncommitted changes",
  "load": [
-  5.44,
-  16.95,
-  19.28
+  8.54,
+  14.22,
+  17.52
  ],
  "cpus": 4,
  "chromium": "153.0.8010.12",
  "clips": [
+  {
+   "key": "switch-neutral-android-pixel-light",
+   "clip": "switch",
+   "name": "Switch",
+   "does": "Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/switch-neutral-android-pixel-light.mp4",
+   "sheet": "sheets/switch-neutral-android-pixel-light.png",
+   "source": null,
+   "frames": 176,
+   "durationMs": 2933,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 143
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 72931,
+    "sheet": 90357
+   }
+  },
+  {
+   "key": "switch-neutral-android-pixel-dark",
+   "clip": "switch",
+   "name": "Switch",
+   "does": "Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/switch-neutral-android-pixel-dark.mp4",
+   "sheet": "sheets/switch-neutral-android-pixel-dark.png",
+   "source": null,
+   "frames": 176,
+   "durationMs": 2933,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 143
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 73269,
+    "sheet": 91862
+   }
+  },
+  {
+   "key": "switch-liquid-android-pixel-light",
+   "clip": "switch",
+   "name": "Switch",
+   "does": "Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/switch-liquid-android-pixel-light.mp4",
+   "sheet": "sheets/switch-liquid-android-pixel-light.png",
+   "source": null,
+   "frames": 182,
+   "durationMs": 3033,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 151
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 76132,
+    "sheet": 94485
+   }
+  },
+  {
+   "key": "switch-liquid-android-pixel-dark",
+   "clip": "switch",
+   "name": "Switch",
+   "does": "Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/switch-liquid-android-pixel-dark.mp4",
+   "sheet": "sheets/switch-liquid-android-pixel-dark.png",
+   "source": null,
+   "frames": 182,
+   "durationMs": 3033,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 151
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 76313,
+    "sheet": 91943
+   }
+  },
+  {
+   "key": "button-press-neutral-android-pixel-light",
+   "clip": "button-press",
+   "name": "Button press",
+   "does": "Taps the button (finger down 100ms), then presses and holds it for 600ms",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/button-press-neutral-android-pixel-light.mp4",
+   "sheet": "sheets/button-press-neutral-android-pixel-light.png",
+   "source": null,
+   "frames": 176,
+   "durationMs": 2933,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 141
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": false
+   },
+   "bytes": {
+    "video": 91191,
+    "sheet": 117179
+   }
+  },
+  {
+   "key": "button-press-neutral-android-pixel-dark",
+   "clip": "button-press",
+   "name": "Button press",
+   "does": "Taps the button (finger down 100ms), then presses and holds it for 600ms",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/button-press-neutral-android-pixel-dark.mp4",
+   "sheet": "sheets/button-press-neutral-android-pixel-dark.png",
+   "source": null,
+   "frames": 176,
+   "durationMs": 2933,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 141
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": false
+   },
+   "bytes": {
+    "video": 89916,
+    "sheet": 114070
+   }
+  },
+  {
+   "key": "button-press-liquid-android-pixel-light",
+   "clip": "button-press",
+   "name": "Button press",
+   "does": "Taps the button (finger down 100ms), then presses and holds it for 600ms",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/button-press-liquid-android-pixel-light.mp4",
+   "sheet": "sheets/button-press-liquid-android-pixel-light.png",
+   "source": null,
+   "frames": 185,
+   "durationMs": 3083,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 154
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 97074,
+    "sheet": 132025
+   }
+  },
+  {
+   "key": "button-press-liquid-android-pixel-dark",
+   "clip": "button-press",
+   "name": "Button press",
+   "does": "Taps the button (finger down 100ms), then presses and holds it for 600ms",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/button-press-liquid-android-pixel-dark.mp4",
+   "sheet": "sheets/button-press-liquid-android-pixel-dark.png",
+   "source": null,
+   "frames": 185,
+   "durationMs": 3083,
+   "keyFrames": {
+    "down": 85,
+    "mid": 103,
+    "up": 121,
+    "settled": 154
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 95846,
+    "sheet": 128043
+   }
+  },
+  {
+   "key": "dialog-open-neutral-android-pixel-light",
+   "clip": "dialog-open",
+   "name": "Dialog open",
+   "does": "Taps the button that opens a dialog (finger down 100ms)",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/dialog-open-neutral-android-pixel-light.mp4",
+   "sheet": "sheets/dialog-open-neutral-android-pixel-light.png",
+   "source": null,
+   "frames": 103,
+   "durationMs": 1717,
+   "keyFrames": {
+    "down": 24,
+    "mid": 27,
+    "up": 30,
+    "settled": 43
+   },
+   "firstChange": {
+    "afterDownMs": 133,
+    "whileDown": false
+   },
+   "bytes": {
+    "video": 101039,
+    "sheet": 177364
+   }
+  },
+  {
+   "key": "dialog-open-neutral-android-pixel-dark",
+   "clip": "dialog-open",
+   "name": "Dialog open",
+   "does": "Taps the button that opens a dialog (finger down 100ms)",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/dialog-open-neutral-android-pixel-dark.mp4",
+   "sheet": "sheets/dialog-open-neutral-android-pixel-dark.png",
+   "source": null,
+   "frames": 103,
+   "durationMs": 1717,
+   "keyFrames": {
+    "down": 24,
+    "mid": 27,
+    "up": 30,
+    "settled": 43
+   },
+   "firstChange": {
+    "afterDownMs": 133,
+    "whileDown": false
+   },
+   "bytes": {
+    "video": 95948,
+    "sheet": 162464
+   }
+  },
+  {
+   "key": "dialog-open-liquid-android-pixel-light",
+   "clip": "dialog-open",
+   "name": "Dialog open",
+   "does": "Taps the button that opens a dialog (finger down 100ms)",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/dialog-open-liquid-android-pixel-light.mp4",
+   "sheet": "sheets/dialog-open-liquid-android-pixel-light.png",
+   "source": null,
+   "frames": 103,
+   "durationMs": 1717,
+   "keyFrames": {
+    "down": 24,
+    "mid": 27,
+    "up": 30,
+    "settled": 61
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 110044,
+    "sheet": 180036
+   }
+  },
+  {
+   "key": "dialog-open-liquid-android-pixel-dark",
+   "clip": "dialog-open",
+   "name": "Dialog open",
+   "does": "Taps the button that opens a dialog (finger down 100ms)",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/dialog-open-liquid-android-pixel-dark.mp4",
+   "sheet": "sheets/dialog-open-liquid-android-pixel-dark.png",
+   "source": null,
+   "frames": 103,
+   "durationMs": 1717,
+   "keyFrames": {
+    "down": 24,
+    "mid": 27,
+    "up": 30,
+    "settled": 61
+   },
+   "firstChange": {
+    "afterDownMs": 17,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 104441,
+    "sheet": 165813
+   }
+  },
+  {
+   "key": "sheet-drag-neutral-android-pixel-light",
+   "clip": "sheet-drag",
+   "name": "Sheet drag",
+   "does": "With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/sheet-drag-neutral-android-pixel-light.mp4",
+   "sheet": "sheets/sheet-drag-neutral-android-pixel-light.png",
+   "source": null,
+   "frames": 121,
+   "durationMs": 2017,
+   "keyFrames": {
+    "down": 24,
+    "mid": 36,
+    "up": 48,
+    "settled": 56
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 118947,
+    "sheet": 182266
+   }
+  },
+  {
+   "key": "sheet-drag-neutral-android-pixel-dark",
+   "clip": "sheet-drag",
+   "name": "Sheet drag",
+   "does": "With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go",
+   "style": "neutral",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/sheet-drag-neutral-android-pixel-dark.mp4",
+   "sheet": "sheets/sheet-drag-neutral-android-pixel-dark.png",
+   "source": null,
+   "frames": 121,
+   "durationMs": 2017,
+   "keyFrames": {
+    "down": 24,
+    "mid": 36,
+    "up": 48,
+    "settled": 57
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 111770,
+    "sheet": 166310
+   }
+  },
   {
    "key": "sheet-drag-liquid-android-pixel-light",
    "clip": "sheet-drag",
@@ -38,7 +472,7 @@
     "whileDown": true
    },
    "bytes": {
-    "video": 116207,
+    "video": 126467,
     "sheet": 195716
    }
   },
@@ -69,8 +503,8 @@
     "whileDown": true
    },
    "bytes": {
-    "video": 113933,
-    "sheet": 179154
+    "video": 113968,
+    "sheet": 179164
    }
   }
  ],

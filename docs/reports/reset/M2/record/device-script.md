@@ -29,6 +29,20 @@ screen recording on the owner's own phone does.
 
 ## The clips these steps match
 
+- Switch, Neutral light, Android (set), a Pixel 7 frame: Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms.
+- Switch, Neutral dark, Android (set), a Pixel 7 frame: Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms.
+- Switch, Liquid light, Android (set), a Pixel 7 frame: Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms.
+- Switch, Liquid dark, Android (set), a Pixel 7 frame: Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms.
+- Button press, Neutral light, Android (set), a Pixel 7 frame: Taps the button (finger down 100ms), then presses and holds it for 600ms.
+- Button press, Neutral dark, Android (set), a Pixel 7 frame: Taps the button (finger down 100ms), then presses and holds it for 600ms.
+- Button press, Liquid light, Android (set), a Pixel 7 frame: Taps the button (finger down 100ms), then presses and holds it for 600ms.
+- Button press, Liquid dark, Android (set), a Pixel 7 frame: Taps the button (finger down 100ms), then presses and holds it for 600ms.
+- Dialog open, Neutral light, Android (set), a Pixel 7 frame: Taps the button that opens a dialog (finger down 100ms).
+- Dialog open, Neutral dark, Android (set), a Pixel 7 frame: Taps the button that opens a dialog (finger down 100ms).
+- Dialog open, Liquid light, Android (set), a Pixel 7 frame: Taps the button that opens a dialog (finger down 100ms).
+- Dialog open, Liquid dark, Android (set), a Pixel 7 frame: Taps the button that opens a dialog (finger down 100ms).
+- Sheet drag, Neutral light, Android (set), a Pixel 7 frame: With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
+- Sheet drag, Neutral dark, Android (set), a Pixel 7 frame: With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
 - Sheet drag, Liquid light, Android (set), a Pixel 7 frame: With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
 - Sheet drag, Liquid dark, Android (set), a Pixel 7 frame: With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
 
