@@ -198,3 +198,19 @@ Actions on resume, before R4 builds on this chrome:
 - R0.15's report claimed the chrome "measures the same in all four styles".
   That was true and beside the point: it was the same wrong geometry.
   Acceptance for chrome is a reference capture, not sameness.
+
+Added by the owner the same day, on the Liquid `android` sheet: "even the
+tabs and popups".
+
+5. **The segmented control is wrong.** In Liquid on `android` the selected
+   item is a square block inside a capsule track, in the before and the
+   after. No platform and no style draws it that way. The fault is older
+   than R0.15 and no check caught it, because the checks measure sizes and
+   overflow and nobody looked at the picture.
+6. **Popups are wrong** (alerts, dialogs, sheets), on both platforms.
+
+R0.22 widens: it covers every phone surface on the `/platforms` screens,
+not only bars: segmented control and tabs, switch, alert, dialog, sheet,
+menu, toast, tab bar and navigation bar, list rows. For each: a current
+reference capture per platform, ours beside it, and the owner's sign off.
+The lead looks at every sheet before it goes to the owner.
