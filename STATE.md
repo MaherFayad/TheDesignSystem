@@ -7,9 +7,11 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
-**Paused by the owner (2026-11-16, about 17:00 UTC).** No agent is running.
-Start nothing until the owner says so. `npm run check` passes on the paused
-tree (13 steps, 2761 tests, Angular 753).
+**Resumed by the owner for mobile fixes only (2026-11-16).** The owner
+judged the phone platform layer wrong throughout. Running: orders M1 (iOS)
+and M2 (Android) in `docs/plan/reset-mobile.md`. Nothing else starts: no
+desktop work, no gate review, no R1. `npm run check` passed on the tree
+before these orders (13 steps, 2761 tests, Angular 753).
 
 - R0 done: R0.1 to R0.15, plus the added orders R0.18 (SegmentedControl
   reflow), R0.19 (macos density), R0.20 (OTPField reflow), R0.21 (target
