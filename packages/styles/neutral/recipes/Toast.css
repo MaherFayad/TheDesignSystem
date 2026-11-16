@@ -147,6 +147,12 @@
     font-weight: var(--ds-font-weight-regular);
   }
 
+  /* The count badge in the title: the text color, on a faint wash of it, so it reads on the inverse surface. */
+  [data-style='neutral'][data-platform='android'] [data-ds='toast'] > [data-part='title'] > [data-part='count'] {
+    background-color: color-mix(in srgb, currentColor 16%, transparent);
+    color: inherit;
+  }
+
   [data-style='neutral'][data-platform='android'] [data-ds='toast'] > [data-ds='button'][data-part='action'] {
     --_button-bg: transparent;
     --_button-bg-hover: transparent;

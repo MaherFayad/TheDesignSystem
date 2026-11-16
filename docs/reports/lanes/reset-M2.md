@@ -395,3 +395,72 @@ the lead's scratch folder named in the hand back.
    has one (`:has`), so neither covers it.
 5. The gallery stage padding is dropped on android phone screens only, so
    the bars meet the screen edges as on a phone.
+
+## M3
+
+Fix round 1, order M3: three style recipes on android, so the Android look
+matches Material 3 for the web. Every new rule sits under
+`[data-platform='android']`.
+
+### What changed
+
+- `packages/styles/neutral/recipes/Switch.css`: on android the off switch is
+  the platform's: track `bg.overlay-10` inside the 2dp outline, the small off
+  dot in `border.control-hover`, no thumb shadow in any state. The hover rule
+  that darkened the off track now skips android (the state layer answers the
+  hover there). The android `--_switch-thumb-edge` rule is gone; the
+  platform's edge rule (the dot's own gray) applies.
+- `packages/styles/neutral/recipes/Toast.css`: on android the toast is a
+  snackbar: `bg.inverse` surface, `bg.surface` as its text (light on the
+  light scheme's dark ink, dark on the dark scheme's near white), no border,
+  regular weight, the close in the text color. The action is a text button:
+  no fill, no edge, no shadow, in `primary.on-surface` mixed halfway to
+  `bg.surface`, a light blue on the dark ink and a deep blue on the near
+  white, Material's inverse primary. The count badge in the title takes the
+  text color on a faint wash of it (axe found the old badge at 1.14:1 on the
+  inverse surface).
+- `packages/styles/liquid/recipes/SegmentedControl.css`: on android a clear
+  track, the outline in `border.control-hover`, the selected segment in
+  `primary.tint-hover`, no thumb shadow, no indicator filter. The square
+  glass block inside the round track is gone.
+- `packages/css/src/platform/android.css` (one line, M2's file): the
+  snackbar action kept the base 8px margin above it, so the row grew to 58
+  and the action sat about 10px below the text. The action and close now
+  have `margin-block: 0`; the row is 50 and the action is level with the
+  text (2px off). This reaches every style on android, not only Neutral.
+
+### Verdict by eye (reference beside ours)
+
+- Switch, Neutral: same family. Outlined pale track, small gray dot, the
+  dot grows and darkens under the state layer while held, the on look
+  unchanged.
+- Snackbar, Neutral: same family. Dark ink bar with a light blue text
+  action in light; near white bar with a deep blue action in dark. Our dark
+  action is a grayer blue than Material's.
+- Segmented buttons, Liquid: same family. Now drawn as Neutral's android
+  segments. The dark selected fill is faint beside Material's (the M2
+  choice of `primary.tint-hover`).
+
+### Contrast (computed colors in the browser)
+
+| Pair | Light | Dark |
+| --- | --- | --- |
+| Neutral switch off outline on the page (1.4.11) | 3.44 | 3.80 |
+| Neutral switch off dot on its track (1.4.11) | 4.39 | 4.15 |
+| Neutral snackbar text and close (1.4.3) | 17.87 | 13.50 |
+| Neutral snackbar action (1.4.3) | 7.47 | 4.92 |
+| Liquid segment outline on the page (1.4.11) | 6.40 | 8.47 |
+
+### Checks
+
+- `npm run contract -- --framework react --platform android --component X`:
+  Switch 43 of 43, Toast 63 of 63 (after the badge fix), SegmentedControl
+  43 of 43.
+- Web and ios unchanged: computed style of every element and pseudo element
+  (box, colors, shadow, filter, every private property) on the Switch,
+  Toast and SegmentedControl pages and the settings and toast screens, in
+  Neutral and Liquid, light and dark: 0 of 40 pages differ before and after.
+- `npm run check`: every step passes.
+
+The sheets (reference left, ours right) are outside the repo, in the lead's
+scratch folder under `m3/`.
