@@ -63,3 +63,22 @@ should pick it up.
    spilling out of the track (31px in Desk, 43px in Neutral, 45px in Liquid).
    The phone rule follows the viewport, not the container. Use a container
    query. Pick up in R4.
+
+## From the review of R0 step 1 (`docs/reports/lanes/reset-review-R0-step1.md`)
+
+1. No gate compares the hard coded copies of the layer statement. Add one in
+   R0.16.
+2. In Desk the thin bar thumb stands about 15px past the end of the fill
+   while pulled, with a visible gap. It reads as broken. Decide the pull in
+   R1.10 (cap it, drop it, or inset the track), before the owner signs a
+   recording. The page widening from the same pull moves to R1.10 and R3.5.
+3. `packages/contract-tests/src/contract.spec.ts:594`: a platform mismatch
+   only adds a note and passes, and the applied style is never compared.
+   After R0.14 lands, make both a failure (R0.16).
+4. `docs/reports/lanes/order-R0-5.md:111` cites `reflow-all.json`, which the
+   lead removed for its size (3.9 MB). The SegmentedControl finding now rests
+   on `docs/reports/reset/R0.18/reflow-before.json`.
+5. The reflow matrix covers the dark scheme and default density only. The
+   `:dir()` gate compares counts and builds only the React gallery. Widen
+   both in R0.16.
+6. `tokens.md` line 186 needs per platform density values from R0.13.

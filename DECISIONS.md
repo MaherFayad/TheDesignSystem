@@ -411,3 +411,14 @@ Contract choices made in R0.1 that the plan left open:
     `packages/registry/src/build-registry.ts` (`LAYER_ORDER`),
     `apps/docs/src/styles/system.css` and the token snapshot. A browser keeps
     the order of the first statement it reads.
+
+## R0.3 accepted for the pattern, timing moved to R0.17 (lead, 2026-11-16)
+
+Order R0.3 asked for a median long task under 50ms on a tab tap at 4x CPU.
+The review measured 113ms in Neutral and 130ms in Liquid after the change. A
+press with no indicator already costs 79 to 87ms, so the target cannot be met
+inside ToggleGroup. R0.3 is accepted for what it changed (one read pass per
+tap, the pill lands 20 of 20). The timing target moves to order R0.17, which
+covers every pressable and also measures the slide's own share (35 to 45ms).
+R0.4, the Angular port, is held to the same pattern and not to the 50ms
+number.

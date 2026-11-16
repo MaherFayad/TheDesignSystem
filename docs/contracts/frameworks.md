@@ -137,7 +137,7 @@ layer").
 
 | Value | For |
 | --- | --- |
-| `web` | Desktop and laptop browsers, and every device `auto` does not detect. The default. |
+| `web` | Desktop and laptop browsers, and every device `auto` does not detect. What the server renders. |
 | `ios` | iPhone and iPad, in the browser and in native builds |
 | `android` | Android phones and tablets, in the browser and in native builds |
 | `macos` | Desktop conventions of macOS: body text 13, controls about 22 to 28 tall by size, square checkboxes with a mixed state, window controls at the leading top, sheets that drop from the top of the window |
@@ -178,9 +178,10 @@ the URL key or the stored choice).
   user agent string.
 - On React Native, `auto` follows `Platform.OS` (`ios` or `android`).
 - On the web the resolver reads `navigator` only after mount, never at
-  module scope. The server and the first client render use the value from
-  steps 1 to 3, else `web`, so hydration matches; the detected value is
-  stamped once on mount.
+  module scope. The server and the first client render after it use the
+  prop (step 1) or the URL key (step 2), else `web`, so hydration matches.
+  The stored choice (step 3) and the device (step 4) are read only after
+  mount and stamped once.
 
 Example, the gallery on an iPhone:
 
