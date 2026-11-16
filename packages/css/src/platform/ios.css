@@ -919,6 +919,21 @@
     --_dialog-handle-radius: var(--ds-shape-corner-full);
   }
 
+  /* The sheet's insides: the phone padding of Dialog.css and the title size, the same in every style. */
+  [data-platform='ios'] [data-ds='sheet'] {
+    --_dialog-padding: var(--ds-space-xl);
+    --_dialog-band-padding-block: var(--ds-space-l);
+    --_dialog-band-padding-inline: var(--ds-space-xl);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
+    font-size: var(--ds-type-title-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-font-size: var(--ds-type-title-small-font-size);
+  }
+
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
     inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
     block-size: var(--ds-space-fixed-xs);

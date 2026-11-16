@@ -491,7 +491,10 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
   }
   // Its main change: of the animations that start first in the group, the longest.
   let main: { ms: number | null; source: 'animation' | 'frames' | null; easing: string | null } = { ms: null, source: null, easing: null };
-  const groupAnims = group.flatMap((t) => t.animations).filter((a) => a.iterations >= 0 && a.duration > 0 && a.firstSeen >= t0 - frameMs);
+  // A steps() transition jumps once at its end (a ripple reset, a colour swap): it is not the change a person follows, unless it is all there is.
+  const allAnims = group.flatMap((t) => t.animations).filter((a) => a.iterations >= 0 && a.duration > 0 && a.firstSeen >= t0 - frameMs);
+  const smooth = allAnims.filter((a) => !/^steps\(/.test(easingOf(a)));
+  const groupAnims = smooth.length > 0 ? smooth : allAnims;
   if (groupAnims.length > 0) {
     const first = Math.min(...groupAnims.map((a) => a.firstSeen));
     const best = groupAnims.filter((a) => a.firstSeen <= first + 2 * frameMs).sort((a, b) => b.duration + b.delay - (a.duration + a.delay))[0];

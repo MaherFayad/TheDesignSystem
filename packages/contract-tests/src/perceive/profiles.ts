@@ -143,7 +143,7 @@ export function auditCall(ix: Interaction, m: Measured): { call: 'fine' | 'invis
 export function sentences(ix: Interaction, m: Measured, hold: HoldResult | null): string[] {
   const out: string[] = [];
   const h = m.headline;
-  const name = h ? (h.part ?? h.desc) : 'the headline part';
+  const name = h ? (h.part ?? (h.desc.split(' ')[1] ?? h.desc).replace(/[/[].*$/, '')) : 'the headline part';
   if (m.latency === null) out.push('Nothing visible changes after the finger lands.');
   else out.push(`The first visible change comes ${m.latency}ms after the finger lands${m.startsAtRelease ? ', when the finger lifts' : ', while the finger is still down'}${m.afterClick ? ', after the click' : ''}.`);
   if (h && h.changed) {

@@ -1038,6 +1038,21 @@
     --_dialog-handle-radius: var(--ds-shape-corner-full);
   }
 
+  /* The sheet's insides: the phone padding of Dialog.css and the title size, the same in every style. */
+  [data-platform='android'] [data-ds='sheet'] {
+    --_dialog-padding: var(--ds-space-xl);
+    --_dialog-band-padding-block: var(--ds-space-l);
+    --_dialog-band-padding-inline: var(--ds-space-xl);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
+    font-size: var(--ds-type-title-small-font-size);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-font-size: var(--ds-type-title-small-font-size);
+  }
+
   [data-platform='android'] [data-ds='drawer'] {
     --_dialog-radius: var(--ds-shape-corner-medium);
   }

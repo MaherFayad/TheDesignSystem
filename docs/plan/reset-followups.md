@@ -93,3 +93,10 @@ should pick it up.
 3. Not built yet for `macos`: unified toolbar, table, outline view, settings
    window, alert action layout, toast placement, key and non key window
    looks. R4 scope.
+
+## From R0.11 (docs platform detection)
+
+1. A code tab label in Desk dark reads 3.98 to 4.24:1 when it scrolls under
+   the sticky Desk dark glass top bar of the docs site. It belongs with
+   ruling 18 (the Desk dark glass recheck) in R1.
+2. The docs top bar under safe areas is R4.3.
