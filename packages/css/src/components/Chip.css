@@ -243,7 +243,7 @@
     --_chip-border-color: var(--_chip-border-color-hover);
   }
 
-  button[data-ds='chip']:active:not([data-disabled]) {
+  button[data-ds='chip']:is(:active, [data-pressed]):not([data-disabled]) {
     --_chip-bg: var(--_chip-bg-active);
   }
 

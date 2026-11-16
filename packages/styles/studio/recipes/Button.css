@@ -70,7 +70,7 @@
       --_button-border-color: var(--_button-border-color-hover);
     }
 
-    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:active:not([data-disabled], [data-loading]) {
+    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:is(:active, [data-pressed]):not([data-disabled], [data-loading]) {
       --_button-bg: var(--_button-bg-active);
       --_button-fg: var(--_button-fg-active);
       --_button-border-color: var(--_button-bg-active);

@@ -77,15 +77,15 @@
     transition: clip-path calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit);
   }
 
-  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active):not([data-disabled]) {
+  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active, [data-pressed]):not([data-disabled]) {
     --_close-button-bloom-now: circle(75% at 50% 50%);
   }
 
-  [data-ds='close-button'][data-size][data-shape]:active:not([data-disabled]) {
+  [data-ds='close-button'][data-size][data-shape]:is(:active, [data-pressed]):not([data-disabled]) {
     --_button-turn: var(--_close-button-turn);
   }
 
-  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active):not([data-disabled])::before {
+  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active, [data-pressed]):not([data-disabled])::before {
     transition: clip-path calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
   }
 
@@ -114,7 +114,7 @@
       opacity: 0;
     }
 
-    [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active):not([data-disabled])::before {
+    [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active, [data-pressed]):not([data-disabled])::before {
       opacity: 1;
     }
   }
@@ -130,7 +130,7 @@
     opacity: 0;
   }
 
-  :root[data-motion='reduce'] [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active):not([data-disabled])::before {
+  :root[data-motion='reduce'] [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active, [data-pressed]):not([data-disabled])::before {
     opacity: 1;
   }
 

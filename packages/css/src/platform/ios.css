@@ -132,7 +132,7 @@
     content: '';
   }
 
-  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true']) {
     opacity: 0.55;
     transition-duration: var(--ds-duration-instant);
   }
@@ -422,7 +422,7 @@
   }
 
   /* Highlight on press is a quiet fill, never a ripple. */
-  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled]) {
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled]) {
     --_list-item-bg: var(--_list-item-bg-active);
   }
 

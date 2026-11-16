@@ -726,7 +726,7 @@
     transition: transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true']) {
     --_button-part-scale: var(--_button-part-press);
     --_button-part-y: var(--_button-press-y);
     --_button-press-layer: 1;
@@ -743,12 +743,12 @@
    * duration.instant; on release they spring back (the parts on the snappy
    * spring, the root on the bouncy one) and the shade fades out.
    */
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) > [data-part] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true']) > [data-part] {
     transition-duration: calc(var(--ds-duration-fast) * var(--_button-motion)), calc(var(--_button-duration-in) * var(--_button-motion));
     transition-timing-function: var(--ds-ease-default), var(--_button-press-ease);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after {
     transition-duration: calc(var(--_button-duration-in) * var(--_button-motion));
   }
 
@@ -995,7 +995,7 @@
     }
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading]) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
   }
