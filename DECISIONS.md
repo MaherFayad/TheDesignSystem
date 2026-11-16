@@ -465,12 +465,17 @@ ruled on what the web build should follow:
 - On the web, the Apple platforms (`ios` and `macos`) follow the vendor's Mac
   and web language: how it designs its own web pages, web apps and Mac
   windows.
-- The web build does not imitate native phone screens. The native iOS and
-  Android looks come from the React Native build, where chrome is the
-  system's own views (ruling 8).
+- References for the Apple platforms also include the vendor's own native
+  apps as shown on Mobbin (the owner named its wallet and music apps). The
+  Mobbin connector returns current screens of them. Mobbin has no Android
+  set, so `android` references are Material for the web.
 
-The lead's reading, to be confirmed by the first signed screen: the
-references for web platform work are the vendors' own web pages and web
-component catalogues, captured in a browser, and each part is accepted side
-by side with such a capture. The `ios` chrome geometry of R0.15 (phone
-alert grid, phone tab bar, phone sheet) is withdrawn.
+How references are used: study structure, proportion and behaviour, and
+measure against them side by side. Copy no artwork, icons, marks, fonts or
+text from them (the hard limits of the plan stand: no vendor symbols, no
+vendor font files, the style id stays `liquid`). Each part is accepted side
+by side with a reference capture and the owner's sign off. The `ios` chrome
+geometry of R0.15 (the alert grid, the square full width tab bar, the edge
+to edge sheet) is withdrawn: the current references show a floating capsule
+tab bar, round glass bar buttons, inset grouped lists with large corners,
+compact alerts with stacked capsule actions, and wide capsule switches.
