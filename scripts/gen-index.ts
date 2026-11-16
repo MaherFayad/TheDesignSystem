@@ -81,11 +81,13 @@ for (const pkg of ['shared', 'motion']) {
 }
 
 // CSS barrel: layer order first, then reset, base, one file per component,
-// then one file per platform (ds.platform: after ds.base, before ds.recipes,
-// so a platform reshapes a component and a style still paints it).
+// then one file per platform. The shape split of docs/contracts/anatomy.md:
+// ds.platform (platform rules for controls) sits before ds.recipes, so the
+// style wins on controls; ds.chrome (platform rules for sheets, bars and
+// alerts) sits after ds.recipes, so the platform wins there.
 {
   const src = join(root, 'packages/css/src');
-  const lines = ['@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.overrides;'];
+  const lines = ['@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.chrome, ds.overrides;'];
   for (const f of ['reset.css', 'base.css']) {
     if (existsSync(join(src, f))) lines.push(`@import './${f}';`);
   }

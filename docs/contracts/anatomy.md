@@ -49,7 +49,8 @@ One file per component: `packages/css/src/components/<Name>.css`.
 ```
 
 - Base rules go in `ds.base`. Style pack recipes go in `ds.recipes` and are
-  scoped with `[data-style='<id>']` on an ancestor.
+  scoped with `[data-style='<id>']` on an ancestor. Platform rules go in
+  `ds.platform` or `ds.chrome` (see "Cascade layers and the shape split").
 - Tokens only. Logical properties only. Motion animates `transform`,
   `opacity` and the paint properties of the motion ruling: `clip-path`,
   `stroke-dashoffset`, `stroke-dasharray`, `filter`, `backdrop-filter`,
@@ -61,6 +62,83 @@ One file per component: `packages/css/src/components/<Name>.css`.
 - Translucent surfaces turn solid under `prefers-reduced-transparency` and
   `prefers-contrast: more`, and under `[data-contrast='more']`.
 - No `!important`.
+
+## Cascade layers and the shape split (ruling 16)
+
+Every system CSS file assumes this layer statement, and `npm run gen`
+writes it first in `packages/css/src/index.css`:
+
+```css
+@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.chrome, ds.overrides;
+```
+
+| Layer | Holds | Written by |
+| --- | --- | --- |
+| `ds.reset` | The reset | `packages/css/src/reset.css` |
+| `ds.tokens` | Token variables, base, style, platform, density and contrast | The token build |
+| `ds.base` | One file per component | `packages/css/src/components/` |
+| `ds.platform` | Platform rules for controls | `packages/css/src/platform/<id>.css`, controls part |
+| `ds.recipes` | Style recipes | `packages/styles/<id>/recipes/` |
+| `ds.chrome` | Platform rules for sheets, bars and alerts | `packages/css/src/platform/<id>.css`, chrome part |
+| `ds.overrides` | App and gallery rules | Apps, examples, demos |
+
+Rule: when a style and a platform disagree on shape, the style wins on
+controls and the platform wins on sheets, bars and alerts. `ds.platform`
+sits before `ds.recipes`, so a style recipe beats a platform rule for a
+control. `ds.chrome` sits after `ds.recipes`, so a platform rule for chrome
+beats a style recipe.
+
+Rule: a `ds.chrome` rule sets geometry and placement only: radius, height,
+width, padding, the title size, where actions sit, the edge a surface enters
+from, the grabber, which parts show (no window controls on a phone sheet or
+alert). It never sets a color, a font family, a border color, a shadow color
+or a material, so the style still paints the chrome. Under `web` there are
+no `ds.chrome` rules: the style draws its own chrome.
+
+Chrome side (platform wins, `ds.chrome`):
+
+| Component | What the platform decides |
+| --- | --- |
+| Sheet, Drawer | Edge, radius, grabber, detents, height |
+| Dialog | On `ios` and `android` its phone form (a sheet or a full screen); on `macos` the sheet that drops from the top of the window |
+| AlertDialog | Width, radius, title size, action layout and order |
+| ActionSheet (order R4.9) | All of its geometry |
+| Navbar, NavigationBar (order R4.5) | Height, title size and place, large title, where items sit |
+| TabBar | Height, indicator shape, label under or beside the icon |
+| Toolbar, when it is a bottom toolbar | Height, placement, item spacing |
+| Toast, Toaster | Edge, stack direction, width, radius |
+| Window, TitleBar, WindowControls | On `macos`, the controls at the leading top and the title bar height; on `ios` and `android`, no window controls in sheets and alerts |
+
+Controls side (style wins, `ds.platform` before `ds.recipes`): every other
+component a platform file touches. Today: Alert, Banner, Button,
+ButtonGroup, Checkbox, Chip, CloseButton, CommandPalette, ContextMenu,
+CopyButton, DropdownMenu, Field, FloatingActionButton, IconButton, Input,
+List, ListBox, Pagination, Popover, RadioGroup, RangeSlider,
+SegmentedControl, Select, Sidebar, Slider, Stepper, Switch, Tabs, Textarea,
+ToggleButton, Tooltip. A new component is on the controls side unless this
+table names it.
+
+Example: Desk on an iPhone. Desk's recipe gives the Button its control
+radius and the Sheet its window radius (the dialog family shares
+`--_dialog-radius`); the iOS file gives the Button a capsule and the
+Sheet a 16px top corner with a grabber.
+
+```css
+@layer ds.platform {
+  [data-platform='ios'] [data-ds='button'] { --_button-radius: var(--ds-shape-corner-full); }
+}
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='button'] { --_button-radius: var(--ds-radius-control); }
+  [data-style='desk'] [data-ds='sheet'] { --_dialog-radius: var(--ds-radius-window); }
+}
+@layer ds.chrome {
+  [data-platform='ios'] [data-ds='sheet'] { --_dialog-radius: var(--ds-shape-corner-large); }
+}
+```
+
+Result: the Button keeps Desk's shape, because `ds.recipes` comes after
+`ds.platform`. The Sheet takes the iOS corner, because `ds.chrome` comes
+after `ds.recipes`. Both keep Desk's colors and fonts.
 
 ## One convention for component CSS and props
 
@@ -214,6 +292,10 @@ and resolve what is not passed from the nearest parent:
 `data-style`, `data-scheme`, `data-density`, `data-contrast`, `data-platform`,
 `data-glass`, `dir`, `lang`. It also carries `data-ds="theme"`.
 
+`data-platform` is always a resolved value (`web`, `ios`, `android` or
+`macos`), never `auto`. How `auto` resolves is in `frameworks.md`,
+"Platform axis".
+
 ## Demos and the gallery
 
 - Each component has a demo: `<Name>.demo.tsx` (React, default export),
@@ -227,6 +309,8 @@ and resolve what is not passed from the nearest parent:
   `/c/<component-kebab>?style=&scheme=&density=&platform=&dir=&lang=&contrast=&glass=`
   Extra query keys: `case=<id>` shows one case only, `chrome=0` hides the
   gallery shell for screenshots.
+  `platform=` takes `web`, `ios`, `android`, `macos` or `auto`; with no
+  key the gallery uses the stored choice, then `auto`.
 
 ## React Native
 

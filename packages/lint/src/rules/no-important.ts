@@ -17,7 +17,7 @@ export function noImportant(file: SourceFile): Finding[] {
       file: file.path,
       line: pos.line,
       column: pos.column,
-      message: '!important. Use the cascade layers: ds.reset, ds.tokens, ds.base, ds.recipes, ds.overrides.',
+      message: '!important. Use the cascade layers: ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.chrome, ds.overrides.',
     });
   }
   return out;

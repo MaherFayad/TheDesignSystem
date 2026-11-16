@@ -38,6 +38,36 @@ framework package, the contract is wrong: report it.
 Recipes follow every rule in `anatomy.md`: tokens only, logical properties,
 no `!important`. Write as few as possible. First try a component token.
 
+## Styles and platforms (ruling 16)
+
+Rule: when a style and a platform disagree on shape, the style wins on
+controls and the platform wins on sheets, bars and alerts. The layers do
+this (`anatomy.md`, "Cascade layers and the shape split"), so a recipe needs
+no `[data-platform]` guard to keep its control shapes, and a guard cannot
+keep a chrome shape against the platform.
+
+- A recipe for a control (Button, Switch, Checkbox and the rest of the
+  controls side) is drawn the same on every platform. The platform still
+  sets the control's height, touch target and press feedback, because those
+  come from platform tokens the recipe reads.
+- A recipe for chrome (Sheet, Dialog, AlertDialog, Navbar, TabBar, Toast and
+  the rest of the chrome side) paints it: colors, fonts, borders, shadow
+  colors, material. On `ios`, `android` and `macos` the platform's geometry
+  wins over the recipe's. On `web` the recipe's geometry stands.
+- A style never sets a platform token name (`tokens.md`, "Platform layer").
+
+Example: Liquid's capsule tab bar and round checkbox on an Android phone.
+
+| Part | Side | Result on `android` |
+| --- | --- | --- |
+| Checkbox | Controls | Liquid's round check stays |
+| TabBar | Chrome | The Android bar: 64 tall with a 56 by 32 indicator, in Liquid's colors and material |
+
+Inside native chrome (React Native), Studio and Desk keep the platform's
+bars and sheets and supply tint, fonts and content (ruling 10). A style that
+draws its own native chrome turns on the optional part `chrome.drawn` in
+`style.json`; it is off by default.
+
 ## Optional parts
 
 A component renders an optional part only when the active style turns it on.

@@ -326,3 +326,88 @@ answer to every open question in its section 17. These are final.
     the source products' strings or wordmarks.
 12. Figma capacity for a sixth style is decided when the Figma track starts.
 13. Studio's default density stays `default`.
+
+## Reset plan lead decisions (lead, order R0.1, 2026-11-16)
+
+Lead decisions inside the rulings, recorded by order R0.1 of
+`docs/plan/reset.md`. The contract text is in `docs/contracts/`.
+
+Order changes against the proposal (plan section 1):
+
+1. **Studio and Desk motion moves from R3 into R1** (orders R1.4 and R1.10).
+   Ruling 1 returns both styles to their sources exactly, both fidelity
+   audits score motion as part of fidelity, and R2 accepts templates side by
+   side with the source, so source motion must be in place before R2. R3
+   keeps Neutral, Liquid, the press hook and Angular.
+2. **The Desk danger AlertDialog title contrast moves from R0 into R1.8.**
+   R1.8 deletes the Desk dialog title band where the fault sits, so fixing
+   it in R0 is wasted work. R1.8 ends with axe at 0 findings on that page.
+3. **R2 and R3 run side by side.** R2 builds new parts and templates; R3
+   changes motion blocks and the Neutral and Liquid presets. Each phase keeps
+   one owner per CSS file per round (plan section 2).
+4. **R5 starts its infrastructure right after R0.** The theme defects, the
+   app root, the icon pipeline and device verification touch only native
+   packages, and the Expo account takes time (ruling 12). Drawn brand
+   controls (R5.11 onward) wait for the R1 and R3 gates.
+5. **R6 runs after the closing gate.** Ruling 14 adds `tonal` after the
+   reset, so the closing gate does not wait for it. The contract names the
+   platforms also need (corner scale, state opacities, elevation levels,
+   springs, insets) land earlier, in R0.13.
+6. **Angular ports of the templates and most phone parts move to the new
+   wave 2.** Angular lacks the parts they stand on. R3 and R4 port what
+   Angular can carry now: motion, press, Sheet, Drawer, back handling, safe
+   areas, toast forms.
+
+Perceive profiles (plan section 3, `npm run perceive`):
+
+7. **Rich** (Neutral and Liquid, ruling 3): latency from `pointerdown` to the
+   first visual change at most 32ms (on Android, ripples follow the
+   platform's touch delay: at most 150ms plus 32ms); the headline part moves
+   8px or more, or scales 6 percent or more, or changes fill over 30 percent
+   of its area; the main change lasts 200 to 500ms; at least one secondary
+   element reacts; anything that carries meaning and finishes under 150ms or
+   moves under 3px fails.
+8. **Quiet** (Studio and Desk, ruling 3): durations, travel, scale and easing
+   equal the source's within the motion tolerances of plan section 3, and
+   latency at most 32ms.
+
+Allowed differences from a source (shown as "allowed" in a compare table):
+
+9. **The 2px focus ring** of `PLAN.md` section 12, wherever a source's
+   focus ring differs from it.
+10. **Accessible toast timing**: danger toasts stay until closed (WCAG
+    2.2.1), where Figma-Killer-2 times them out (plan approval 10).
+11. The 3:1 alpha of ruling 2 is listed in each pair file with its reason,
+    like the two above.
+
+Contract choices made in R0.1 that the plan left open:
+
+12. **A root Theme with no `platform` prop is `auto`.** The lead changed the
+    drafted default (`web`) to follow ruling 7 as the owner gave it: phones
+    detect their platform, and an app overrides with an explicit value. The
+    server render uses `web` and the detected value is stamped once on
+    mount. An app that wants no detection passes `platform="web"`.
+13. **The stored platform choice uses the `localStorage` key `ds-platform`**
+    in the galleries and the docs site, and only a choice made in a
+    switcher is stored. One key keeps React, Angular and the docs in step.
+14. **No token name has two owners.** A platform file fills only platform
+    names and a style file never sets one, so the order of the selectors in
+    `ds.tokens` never decides between a style and a platform.
+15. **Density on touch platforms** never takes a control below the
+    platform's touch target. The build writes a platform's own density
+    values as `[data-platform][data-density]`.
+16. **`type.<role>` uses fifteen role names** (display, headline, title,
+    body and label, each large, medium and small). Each platform fills all
+    fifteen, so a component names a role once for every platform.
+17. **Toast and Toaster are on the chrome side**, with sheets, bars and
+    alerts: their edge, stack and shape follow the platform, as the R0.15
+    matrix already checks the toast screen. Menus, popovers and tooltips are
+    on the controls side.
+18. **Drawn native chrome is the optional part `chrome.drawn`** in
+    `style.json`, off by default (ruling 10), so it uses the optional part
+    mechanism that exists instead of a new key.
+19. **The layer statement is written in five places that must stay equal:**
+    `scripts/gen-index.ts`, `packages/tokens/build.ts`,
+    `packages/registry/src/build-registry.ts` (`LAYER_ORDER`),
+    `apps/docs/src/styles/system.css` and the token snapshot. A browser keeps
+    the order of the first statement it reads.

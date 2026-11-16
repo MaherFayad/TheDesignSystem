@@ -624,7 +624,7 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
 
   return [
     `/* ${HEADER} */`,
-    '@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.overrides;',
+    '@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.chrome, ds.overrides;',
     '',
     '@layer ds.tokens {',
     blocks.join('\n\n'),
