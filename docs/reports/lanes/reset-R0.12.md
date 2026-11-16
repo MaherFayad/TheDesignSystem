@@ -113,11 +113,48 @@ switch in desktop Chromium resolves to `web` and travels 4px.
 
 ### Angular contract run
 
-FULL_CONTRACT_RESULT
+`npm run contract -- --framework angular` against the Angular gallery with
+this change: 3987 passed, 24 failed, 76 skipped (1.1h, load average 26 to
+28 on 4 cores; a first attempt died when the disk filled up and is not
+counted). The shared `docs/reports/contract-angular.json` was put back as it
+was, so this run does not change it.
+
+The failing components, each rerun alone with
+`--component DropdownMenu,ErrorState,Field,FilterBar,Input,OTPField,PasswordField`:
+
+| Component | Full run | Alone | Cause |
+| --- | --- | --- | --- |
+| DropdownMenu | 3 axe failures, Desk dark | 87 pass | load |
+| ErrorState | 2 axe failures, Desk | 67 pass | load |
+| Field | target size, Liquid compact | 67 pass | load |
+| FilterBar | axe open, Desk light | 67 pass, 20 skipped | load |
+| Input | axe, Desk dark rtl | 67 pass | load |
+| PasswordField | 320px reflow, 2 cases | 67 pass | load |
+| OTPField | 320px reflow, 14 cases on `ios` and `android` | 53 pass, the same 14 fail | shared CSS, see below |
+
+OTPField: "no sideways scroll at 320px" fails on `platform=ios` and
+`platform=android` in every style, and React fails the same 14 cases
+(`npm run contract -- --framework react --component OTPField`: 53 passed, 14
+failed). The contract test sets the platform through the URL key, which the
+Angular gallery already read before this order, so the failure is in the
+shared CSS or the platform tokens (six cells wider than 320px with the
+phone sizes), not in the Angular port. Owner: the platform token and style
+lanes (R0.13, R0.14) or the OTPField owner; not fixed here.
+
+`npm run contract -- --framework angular --component ToggleGroup`: 67
+passed (R0.4).
 
 ### npm run check
 
-CHECK_RESULT
+Full run after both orders, alone on the machine for the Angular steps:
+every step passed.
+
+| Step | Result |
+| --- | --- |
+| tokens build, gen, typecheck, eslint, manifests | pass |
+| vitest | pass, 209 files, 2733 tests |
+| check @the-system/angular | pass, 111 files, 753 tests (the `tag-field.spec.ts` "Enter adds the typed text" test passed) |
+| check native, docs, gallery-angular, gallery-native, consumer-next, consumer-vite | pass |
 
 ## Decisions made
 
@@ -140,6 +177,8 @@ CHECK_RESULT
 
 ## Open and not done
 
+- OTPField overflows 320px on `ios` and `android`, in React and Angular
+  alike (above). Shared CSS or tokens; not in this order's files.
 - The NG0912 warnings above: two stage components defined twice in the
   gallery's interactions folder. Outside this order's change; not fixed.
 - WebKit is not installed, so the iPhone and iPad profiles run in Chromium

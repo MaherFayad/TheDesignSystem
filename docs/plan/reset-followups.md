@@ -114,3 +114,13 @@ should pick it up.
    the first R1 order that needs press states.
 5. Measure the quiet source numbers on the running sources instead of
    reading them from CSS. R1.4 and R1.10.
+
+## From R0.12 and R0.4 (Angular)
+
+1. **OTPField scrolls sideways at 320px on `ios` and `android`, in every
+   style, in React and Angular** (14 cases). The R0.5 matrix passed it, so
+   it arrived with the platform token layer or the shape split. Order R0.20
+   (ds-component): find the cause and fix it.
+2. The Angular gallery defines `ds-stage-radio-pop` and other stage
+   components twice (`interactions/toggles.ts` and `selection.ts`), which
+   prints NG0912 60 times per page load. Pick up in R3.10.

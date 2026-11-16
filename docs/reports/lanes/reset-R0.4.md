@@ -96,7 +96,8 @@ passed, 0 failed, 0 skipped.
 
 ### npm run check
 
-See the R0.12 report, "npm run check": one run covers both orders.
+One run after both orders: every step passed (vitest 2733 of 2733,
+Angular 753 of 753 with the new perf spec). Details in the R0.12 report.
 
 ## Decisions made
 
