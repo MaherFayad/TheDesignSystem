@@ -214,3 +214,10 @@ not only bars: segmented control and tabs, switch, alert, dialog, sheet,
 menu, toast, tab bar and navigation bar, list rows. For each: a current
 reference capture per platform, ours beside it, and the owner's sign off.
 The lead looks at every sheet before it goes to the owner.
+
+The owner's verdict after that (same day): "all of them are wrong, 100%
+wrong, not even close". This is about the whole phone platform layer, not a
+list of parts. R0.22 as a list of fixes is withdrawn. The lead proposed a
+change of method to the owner (one screen, one platform, built to a real
+reference until the owner signs it, before any breadth) and waits for the
+answer. Work is paused.
