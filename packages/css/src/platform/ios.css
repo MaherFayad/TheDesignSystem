@@ -10,16 +10,19 @@
  * with the style. So this file reads only semantic and platform tokens, and
  * a style's recipes (ds.recipes) still paint over it.
  *
- * Conventions followed, from the public iOS interface guidelines: a 44pt
- * least target, button sizes 28, 32, 44 and 52, a 62 by 31 capsule switch
- * whose thumb widens while held, a segmented control with a lifted sliding
- * segment, inset grouped lists with 44pt rows and a disclosure chevron, a
- * compact centred alert about 270pt wide with equal width actions split by
- * hairlines, sheets that rise from the bottom with a grabber, menus that
- * grow from their source, banners that drop from the top, a bottom tab bar
- * with labels under the icons, dimming as press feedback and spring motion.
- * The body text is 17pt; the closest token is font.size.2xl (16px on a
- * phone), which also keeps a focused field from zooming in iOS browsers.
+ * Conventions followed (order M1, measured beside the vendor's own music,
+ * wallet and fitness apps on Mobbin, 393 wide captures; the measurements
+ * are in docs/reports/lanes/reset-M1.md): a 44pt least target; a wide
+ * capsule switch 63 by 28 whose thumb lifts while held; a 32 tall capsule
+ * segmented control; inset grouped lists with 52pt rows, 17pt text, glyphs
+ * in the tint and a disclosure chevron; a navigation bar with no fill, a
+ * 34pt large title on the content and round glass buttons; a floating
+ * capsule tab bar 62 tall with a lens on the current item, 28pt icons over
+ * short labels; a 320 wide alert with 32pt corners, the text at the leading
+ * edge and capsule actions; sheets with 38pt top corners, a round close
+ * button at the top leading corner and capsule actions; glass menus with
+ * no hairlines between rows; banners that drop from the top; dimming as
+ * press feedback and spring motion. Body text is 17pt (type.body-large).
  *
  * Mechanics. Private --_<component>-* properties are set where a component
  * offers them; where a shape needs more, the documented parts are styled.
@@ -143,79 +146,39 @@
   }
 
   /*
-   * switch: 62 by 31 with a capsule thumb 1.5 times as long as it is tall
-   * (order 1.29; the round thumb's track was 51 by 31, too short for the
-   * capsule to travel or stretch). A solid thumb with a soft shadow at rest. Held, it
-   * widens (the only press change: no growth, no track dip) and turns into
-   * a clear lens: its color thins out so the track shows through, the
-   * backdrop under it brightens and saturates, and a highlight and a rim
-   * light its edge. On release it travels on the bouncy spring, the stretch
-   * springing back as it goes. The colors stay the style's: the lens reads
-   * color.glass.* and the blur reads blur.glass, so a style with no glass
-   * (blur 0) gets a clear thumb with a lit rim.
+   * switch (order M1): the current switch is a wide capsule, 63 by 28, with
+   * a capsule thumb 38 by 24 (measured on the vendor's own wallet app). The
+   * off track is a quiet fill with no outline.
+   *
+   * The press here is the plain one Studio and Desk keep (DECISIONS.md, the
+   * iOS glass switch): from pointerdown (data-pressed, Switch.css) the thumb
+   * stretches toward its travel under the finger, solid, no glass. Liquid
+   * and Neutral turn the held thumb into a raised glass lens in their own
+   * Switch recipes, on this geometry.
    */
   [data-platform='ios'] [data-ds='switch'] {
     --_switch-target: var(--ds-size-touch-ios);
-    --_switch-height: calc(var(--ds-size-touch-ios) * 0.7);
-    --_switch-width: calc(var(--_switch-height) * 2);
+    --_switch-height: var(--ds-size-control-xs);
+    --_switch-width: calc(var(--_switch-height) * 2.25);
     --_switch-inset: var(--ds-border-width-strong);
     --_switch-bg: var(--ds-color-bg-overlay-20);
-    --_switch-stretch: 1.3;
+    --_switch-stretch: 1.15;
     --_switch-track-press: 1;
     --_switch-thumb-size-pressed: 1;
     --_switch-lean: 0px;
-    --_switch-font-size: var(--ds-font-size-2xl);
+    --_switch-font-size: var(--ds-type-body-large-font-size);
     --_switch-gap: var(--ds-space-xl);
     --_switch-thumb-shadow: var(--ds-elevation-card-hover);
-    --_switch-thumb-solid-pressed: 0.2;
-    --_switch-thumb-backdrop: blur(var(--ds-blur-glass)) brightness(1.12) saturate(1.6);
-    --_switch-thumb-highlight: radial-gradient(circle at 50% 0%, var(--ds-color-glass-highlight), transparent 70%);
+    --_switch-thumb-solid-pressed: 1;
+    --_switch-thumb-backdrop: none;
     --_switch-thumb-highlight-opacity: 0;
-    --_switch-thumb-highlight-opacity-pressed: 1;
-    /* The capsule: Switch.css subtracts its length from the travel (17px here). */
-    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
+    --_switch-thumb-highlight-opacity-pressed: 0;
+    /* The capsule: 38 on a 24 thumb. Switch.css subtracts its length from the travel. */
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.58);
   }
 
   [data-platform='ios'] [data-ds='switch'][data-state='checked'] {
     --_switch-bg: var(--_switch-fill);
-  }
-
-  /*
-   * Held: a rim of light around the lens. A clear lens casts no shadow: the
-   * soft shadow darkened the fill round the thumb to under 3:1 against its
-   * edge in dark schemes (order 1.29, B3, B4); it comes back on release.
-   */
-  [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight);
-  }
-
-  /*
-   * The lens needs backdrop-filter. Where it is missing, under reduced
-   * transparency and under more contrast the held thumb stays solid with
-   * no filter and no highlight; it still widens.
-   */
-  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
-    [data-platform='ios'] [data-ds='switch'] {
-      --_switch-thumb-solid-pressed: 1;
-      --_switch-thumb-backdrop: none;
-      --_switch-thumb-highlight-opacity-pressed: 0;
-    }
-  }
-
-  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-    [data-platform='ios'] [data-ds='switch'] {
-      --_switch-thumb-solid-pressed: 1;
-      --_switch-thumb-backdrop: none;
-      --_switch-thumb-highlight-opacity-pressed: 0;
-    }
-  }
-
-  [data-contrast='more'] [data-platform='ios'] [data-ds='switch'],
-  [data-contrast='more'][data-platform='ios'] [data-ds='switch'],
-  [data-platform='ios'] [data-contrast='more'] [data-ds='switch'] {
-    --_switch-thumb-solid-pressed: 1;
-    --_switch-thumb-backdrop: none;
-    --_switch-thumb-highlight-opacity-pressed: 0;
   }
 
   /*
@@ -275,10 +238,16 @@
 
   /* ------------------------------------------------------------ segmented control: a lifted segment that slides */
 
+  /*
+   * Order M1: 32 tall, the thumb 2px inside the track, label 13. No corner
+   * here: the track takes the style's control corner by its shape axis, and
+   * the thumb's corner is concentric with it (SegmentedControl.css), so a
+   * capsule track always holds a capsule thumb (owner feedback 5).
+   */
   [data-platform='ios'] [data-ds='segmented-control'] {
-    --_segmented-control-height: var(--ds-size-control-md);
+    --_segmented-control-height: calc(var(--ds-size-control-xs) + var(--ds-space-fixed-2xs));
     --_segmented-control-inset: var(--ds-border-width-strong);
-    --_segmented-control-radius: var(--ds-radius-field);
+    --_segmented-control-gap: 0px;
     --_segmented-control-bg: var(--ds-color-bg-overlay-10);
     --_segmented-control-border-color: transparent;
     --_segmented-control-thumb-bg: var(--ds-color-bg-surface-3);
@@ -307,7 +276,8 @@
   }
 
   [data-platform='ios'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
-    --_button-font-size: var(--ds-font-size-l);
+    --_button-font-size: var(--ds-type-body-small-font-size);
+    --_button-padding-inline: var(--ds-space-fixed-xl);
 
     font-weight: var(--ds-font-weight-medium);
   }
@@ -320,7 +290,7 @@
 
   [data-platform='ios'] [data-ds='tabs'] {
     --_tabs-height: var(--ds-size-touch-ios);
-    --_tabs-font-size: var(--ds-font-size-xl);
+    --_tabs-font-size: var(--ds-type-body-medium-font-size);
     --_tabs-padding-inline: var(--ds-space-xl);
   }
 
@@ -329,22 +299,29 @@
     --_tabs-indicator-bg: var(--ds-color-primary-on-surface);
   }
 
-  /* soft tabs read as the segmented control: a quiet track and a lifted segment that slides. */
+  /*
+   * soft tabs read as the segmented control: a quiet track 32 tall and a
+   * lifted segment that slides. The list takes the style's control corner
+   * and the thumb sits 2px inside it with the concentric corner, so a
+   * capsule list holds a capsule thumb (owner feedback 5).
+   */
   [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-height: calc(var(--ds-size-control-xs) + var(--ds-space-fixed-2xs) - 2 * var(--ds-border-width-strong));
+    --_tabs-font-size: var(--ds-type-body-small-font-size);
     --_tabs-list-bg: var(--ds-color-bg-overlay-10);
     --_tabs-list-padding: var(--ds-border-width-strong);
-    --_tabs-radius: var(--ds-radius-sm);
+    --_tabs-radius: max(0px, calc(var(--ds-radius-control) - var(--ds-border-width-strong)));
     --_tabs-indicator-bg: var(--ds-color-bg-surface-3);
     --_tabs-bg-hover: transparent;
     --_tabs-weight-active: var(--ds-font-weight-semibold);
   }
 
   [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] {
-    border-radius: var(--ds-radius-field);
+    border-radius: var(--ds-radius-control);
   }
 
   [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
-    box-shadow: var(--ds-elevation-card-hover);
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-default), var(--ds-elevation-card-hover);
   }
 
   /* ------------------------------------------------------------ chip and toggle shapes */
@@ -390,19 +367,40 @@
     --_field-float-inset: calc(var(--ds-space-3xl) + var(--ds-border-width-default));
   }
 
-  /* ------------------------------------------------------------ list: inset grouped rows, 44pt, a chevron on rows that go somewhere */
+  /* ------------------------------------------------------------ list: inset grouped rows, 52pt, a chevron on rows that go somewhere */
 
+  /*
+   * Order M1, measured on the vendor's own music and wallet apps: rows 52
+   * tall, text 17 regular, the subtitle 15, side padding 16, glyphs 24 in
+   * the tint, hairlines from the text to the inline end less the padding.
+   * The group's corner is the style's panel corner (the style wins on
+   * controls); Liquid and Neutral take the platform's in their recipes.
+   */
   [data-platform='ios'] [data-ds='list'] {
-    --_list-height: var(--ds-size-touch-ios);
-    --_list-padding-inline: var(--ds-space-3xl);
-    --_list-padding-block: var(--ds-space-s);
-    --_list-gap: var(--ds-space-xl);
-    --_list-font-size: var(--ds-font-size-2xl);
-    --_list-description-font-size: var(--ds-font-size-l);
+    --_list-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    --_list-padding-inline: calc(2 * var(--ds-space-fixed-m));
+    --_list-padding-block: var(--ds-space-fixed-s);
+    --_list-gap: var(--ds-space-fixed-xl);
+    --_list-font-size: var(--ds-type-body-large-font-size);
+    --_list-description-font-size: var(--ds-type-body-medium-font-size);
   }
 
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'] > [data-part='title'] {
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'] > [data-part='start'] {
+    color: var(--ds-color-primary-on-surface);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'] > [data-part='start'] > [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
+  /* The group is a card on the page: the raised surface, as the platform's white group on its gray page. */
   [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
-    --_list-bg: var(--ds-color-bg-surface-2);
+    --_list-bg: var(--ds-color-bg-surface);
     --_list-radius: var(--ds-radius-panel);
 
     padding: 0;
@@ -414,9 +412,13 @@
     border-radius: 0;
   }
 
-  /* Separators start at the text, not at the edge. */
+  /* Separators start at the text, past the glyph when there is one, and stop at the padding. */
   [data-platform='ios'] [data-ds='list'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
-    inset-inline-end: 0;
+    inset-inline: var(--_list-padding-inline);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item']:has(> [data-part='start']) + [data-part='item']:has(> [data-part='start']) > [data-part='separator'] {
+    inset-inline-start: calc(var(--_list-padding-inline) + var(--ds-size-icon-lg) + var(--_list-gap));
   }
 
   /* Highlight on press is a quiet fill, never a ripple. */
@@ -449,12 +451,77 @@
 
   /* ------------------------------------------------------------ navigation: Sidebar, Pagination, Stepper (Navbar and TabBar geometry is in ds.chrome below) */
 
-  /* Tab bar paint: the current item in the tint, no pill, the label weights. Heights and places are in ds.chrome. */
+  /*
+   * Tab bar paint (order M1): a floating glass capsule, the style's glass
+   * material, edge and lift, and a soft lens behind the current item. Items
+   * at rest are in the text color, the current one in the tint and bolder.
+   * A style's recipe repaints any of it; its shape is in ds.chrome.
+   */
   [data-platform='ios'] [data-ds='tab-bar'] {
+    --_tab-bar-bg: var(--ds-color-material-glass-strong);
+    --_tab-bar-border-color: var(--ds-color-material-glass-border);
     --_tab-bar-pill-bg: transparent;
+    --_tab-bar-fg: var(--ds-color-text-default);
+    --_tab-bar-fg-hover: var(--ds-color-text-default);
     --_tab-bar-fg-active: var(--ds-color-primary-on-surface);
-    --_tab-bar-weight: var(--ds-font-weight-medium);
-    --_tab-bar-weight-active: var(--ds-font-weight-semibold);
+    --_tab-bar-weight: var(--ds-font-weight-semibold);
+    --_tab-bar-weight-active: var(--ds-font-weight-bold);
+
+    border-style: solid;
+    border-color: var(--_tab-bar-border-color);
+    box-shadow: var(--ds-elevation-glass);
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
+    background-color: var(--ds-color-bg-overlay-10);
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-platform='ios'] [data-ds='tab-bar'] {
+      --_tab-bar-bg: var(--ds-color-material-glass-solid);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  /*
+   * Navigation bar paint (order M1): no bar fill and no rule; the title sits
+   * on the content. Its buttons are round glass: the style's glass material,
+   * edge and a soft lift, the text in the text color.
+   */
+  [data-platform='ios'] [data-ds='navbar'] {
+    --_navbar-bg: transparent;
+    --_navbar-border-color: transparent;
+  }
+
+  /* The title is a heading on the content, not a link in the tint: no underline, the bright text color. */
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] :is(a, [data-ds='link']) {
+    --_link-fg: var(--ds-color-text-bright);
+    --_link-fg-hover: var(--ds-color-text-bright);
+    --_link-decoration: transparent;
+    --_link-decoration-hover: transparent;
+
+    color: var(--ds-color-text-bright);
+    text-decoration-line: none;
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'] {
+    --_button-bg: var(--ds-color-material-glass);
+    --_button-bg-hover: var(--ds-color-material-glass);
+    --_button-bg-active: var(--ds-color-material-glass);
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-border-color: var(--ds-color-material-glass-border);
+    --_button-border-color-hover: var(--ds-color-material-glass-border);
+    --_button-shadow: var(--ds-elevation-tooltip);
+
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
   }
 
   [data-platform='ios'] [data-ds='sidebar'] {
@@ -483,14 +550,20 @@
 
   /* ------------------------------------------------------------ menus: DropdownMenu, ContextMenu, the Select list. Compact, 250pt, grows from the source */
 
+  /*
+   * Order M1: the current menu is a rounded glass card about 250 wide with
+   * the style's panel corner, rows 44 tall at 17, glyphs at the leading
+   * edge, no hairlines between rows, and a wider gap between groups.
+   */
   [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content']) {
     --_menu-width-min: calc(var(--ds-menu-width-min) * 1.25);
-    --_menu-radius: var(--ds-radius-card);
-    --_menu-padding: 0;
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-padding: var(--ds-space-fixed-s);
     --_menu-item-height: var(--ds-size-touch-ios);
-    --_menu-item-padding-inline: var(--ds-space-3xl);
-    --_menu-item-radius: 0;
-    --_menu-item-font-size: var(--ds-font-size-2xl);
+    --_menu-item-padding-inline: var(--ds-space-fixed-l);
+    --_menu-item-gap: var(--ds-space-fixed-xl);
+    --_menu-item-radius: max(0px, calc(var(--ds-radius-panel) - var(--ds-space-fixed-s)));
+    --_menu-item-font-size: var(--ds-type-body-large-font-size);
     --_menu-item-font-weight: var(--ds-font-weight-regular);
     --_menu-enter-scale: var(--ds-scale-morph);
     --_menu-shift: 0px;
@@ -500,12 +573,12 @@
     /* No wipe from the trigger side: the whole surface grows out of its trigger point (the Radix origin). */
     --_menu-clip-from: var(--_menu-clip-to);
     /* The touched row is a quiet gray; the selection is the check, never a fill. */
-    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-5);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
   }
 
   [data-platform='ios'] [data-ds='select'][data-part='content'] {
     --_select-item-height: var(--ds-size-touch-ios);
-    --_select-highlight-bg: var(--ds-color-bg-overlay-5);
+    --_select-highlight-bg: var(--ds-color-bg-overlay-10);
   }
 
   /* The selected row: the check in the tint, the label at its usual weight. */
@@ -514,14 +587,21 @@
     color: var(--ds-color-primary-on-surface);
   }
 
-  /* Rows are split by hairlines, the way a menu groups its actions. */
-  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) + :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
-    box-shadow: inset 0 var(--ds-border-width-default) 0 0 var(--_menu-separator-color);
+  /* Leading glyphs at 20, the size the platform's menus draw them; rows without one keep the same start. */
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-inset: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs) + var(--_menu-item-gap));
   }
 
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='start'] > [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+  }
+
+  /* Groups are split by a band, not a hairline. */
   [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='separator'] {
-    block-size: var(--ds-space-fixed-m);
-    margin: 0;
+    block-size: var(--ds-space-fixed-xs);
+    margin-block: var(--ds-space-fixed-2xs);
+    margin-inline: calc(-1 * var(--_menu-padding));
   }
 
   /* ------------------------------------------------------------ popover and tooltip */
@@ -575,36 +655,49 @@
     --_dialog-backdrop-blur: 0px;
   }
 
-  /* The hairlines between the actions: the footer shows the divider color through the gaps ds.chrome leaves. */
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
-    background-color: var(--_dialog-divider-color);
-  }
-
-  /* The actions are text in the tint on the panel. A style recipe for the footer steps aside on ios (Dialog.css recipes). */
+  /*
+   * Order M1: the actions of an alert are capsules on a quiet fill, the
+   * label in the text color; a destructive one in the danger text color,
+   * the default (solid) one bolder. A style recipe for the footer steps
+   * aside on ios (the Dialog recipes guard their footer to web and macos).
+   */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
-    --_button-bg: var(--_dialog-bg);
-    --_button-bg-hover: var(--ds-color-bg-overlay-5);
-    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-bg: var(--ds-color-bg-overlay-10);
+    --_button-bg-hover: var(--ds-color-bg-overlay-10);
+    --_button-bg-active: var(--ds-color-bg-overlay-20);
     --_button-border-color: transparent;
     --_button-border-color-hover: transparent;
-    --_button-fg: var(--ds-color-primary-on-surface);
-    --_button-fg-hover: var(--ds-color-primary-on-surface);
-    --_button-fg-active: var(--ds-color-primary-on-surface);
-    /* Inset, so the next action and the hairline never paint over the ring. */
-    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: 0 0 transparent;
 
-    font-weight: var(--ds-font-weight-regular);
+    font-weight: var(--ds-font-weight-medium);
   }
 
-  /* The default action is the bold one; a destructive one keeps the danger text color. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-emphasis='solid'] {
     font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* The default action of a question that is not destructive: the tint on its capsule, white text. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-emphasis='solid'][data-tone='accent'] {
+    --_button-bg: var(--ds-color-primary-fill);
+    --_button-bg-hover: var(--ds-color-primary-fill);
+    --_button-bg-active: var(--ds-color-primary-fill-pressed);
+    --_button-fg: var(--ds-color-primary-text);
+    --_button-fg-hover: var(--ds-color-primary-text);
+    --_button-fg-active: var(--ds-color-primary-text);
   }
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-tone='danger'] {
     --_button-fg: var(--ds-color-state-danger-text);
     --_button-fg-hover: var(--ds-color-state-danger-text);
     --_button-fg-active: var(--ds-color-state-danger-text);
+  }
+
+  /* The title of an alert is plain text: the danger tone is in the action, not the heading. */
+  [data-platform='ios'] [data-ds='alert-dialog'] {
+    --_dialog-title-fg: var(--ds-color-text-bright);
   }
 
   /* ------------------------------------------------------------ sheet and drawer: paint and motion (the edge, corners and grabber are in ds.chrome) */
@@ -629,6 +722,31 @@
   /* With detents the handle is on the Button base: the grabber does not take the button dim while it is pressed or dragged. */
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle']:active {
     opacity: 1;
+  }
+
+  /* Order M1: the close control of a sheet is a round glass button, in the style's glass material and edge, with a soft lift. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    --_button-bg: var(--ds-color-material-glass);
+    --_button-bg-hover: var(--ds-color-material-glass);
+    --_button-bg-active: var(--ds-color-material-glass);
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-border-color: var(--ds-color-material-glass-border);
+    --_button-border-color-hover: var(--ds-color-material-glass-border);
+    --_button-shadow: var(--ds-elevation-tooltip);
+  }
+
+  /* The sheet's actions: the default one in the tint, the others on a quiet fill, all capsules (the shape is in ds.chrome). */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] > [data-ds='button']:not([data-emphasis='solid']) {
+    --_button-bg: var(--ds-color-bg-overlay-10);
+    --_button-bg-hover: var(--ds-color-bg-overlay-10);
+    --_button-bg-active: var(--ds-color-bg-overlay-20);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
   }
 
   [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'][data-state='open'] {
@@ -744,156 +862,193 @@
  * so the result is equal in all four styles.
  */
 @layer ds.chrome {
-  /* ------------------------------------------------------------ navbar: 44pt with a centred title */
+  /* ------------------------------------------------------------ navbar: a large title on the content, round glass buttons */
 
-  /* The bar is 44pt with a centred semibold title. The large title that collapses needs a part: see the report. */
+  /*
+   * Order M1, measured on the vendor's own music app at 393 wide: no bar,
+   * the title 34 bold at the leading edge (20 in), the buttons 44 tall glass
+   * capsules and circles at the trailing edge (16 in), 8 apart, on the same
+   * row as the title. The collapse of the large title on scroll needs a
+   * scroll part the Navbar does not have (see the order report).
+   */
   [data-platform='ios'] [data-ds='navbar'] {
-    --_navbar-height: calc(var(--ds-size-touch-ios) + var(--ds-space-xs));
     --_navbar-control-height: var(--ds-size-touch-ios);
-    --_navbar-padding-inline: var(--ds-space-3xl);
-    --_navbar-font-size: var(--ds-font-size-2xl);
-  }
+    --_navbar-height: calc(var(--ds-size-touch-ios) + 2 * var(--ds-space-fixed-m));
+    --_navbar-padding-inline: calc(2 * var(--ds-space-fixed-m));
+    --_navbar-gap: var(--ds-space-fixed-xl);
+    --_navbar-font-size: var(--ds-type-body-large-font-size);
 
-  /* The title link is a full height target. */
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'],
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] > a {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--ds-size-touch-ios);
+    padding-block-start: max(var(--ds-space-fixed-m), var(--ds-inset-safe-top));
+    border-block-end-width: 0;
   }
 
   [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
-    font-size: var(--ds-font-size-2xl);
-    font-weight: var(--ds-font-weight-semibold);
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    min-block-size: var(--ds-size-touch-ios);
+    padding-inline-start: var(--ds-space-fixed-2xs);
+    font-size: var(--ds-type-display-large-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-type-display-large-line-height);
   }
 
-  /* On a phone the title sits in the middle of the bar, whatever stands at its ends. */
-  @media (width < 30rem) { /* breakpoint.phone */
-    [data-platform='ios'] [data-ds='navbar']:not([data-sticky]) {
-      position: relative;
-    }
+  /* The title link is a full height target, at the title's size. */
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] > :is(a, [data-ds='link']) {
+    --_link-font-size: var(--ds-type-display-large-font-size);
 
-    [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
-      position: absolute;
-      inset-inline: 0;
-      inline-size: fit-content;
-      max-inline-size: 60%;
-      margin-inline: auto;
-    }
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ds-size-touch-ios);
+    font-size: inherit;
+    font-weight: inherit;
   }
 
-  /* ------------------------------------------------------------ tab bar: full width on the bottom edge, 49pt items, the icon over a 10pt label */
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='end'] {
+    gap: var(--ds-space-fixed-m);
+  }
+
+  /* Bar buttons: 44 tall capsules, an icon alone is a circle; the label at 17. */
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'] {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-padding-inline: calc(2 * var(--ds-space-fixed-m));
+    --_button-font-size: var(--ds-type-body-large-font-size);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* ------------------------------------------------------------ tab bar: a floating capsule, the icon over a short label */
 
   /*
-   * The bar runs the width of the screen with a hairline on its top edge,
-   * square, the safe area under it. A style that draws its bar as a floating
-   * capsule keeps its fill, edge color and material; the bar takes this
-   * shape on ios.
+   * Order M1, measured on the vendor's own music app at 393 wide: a capsule
+   * 62 tall, 20 in from the sides and the bottom edge (it overlaps the home
+   * indicator's safe area by 12), 4 of padding, so the current item's lens is
+   * 54 tall and concentric with the bar. Icons 28, labels 11 under them. The
+   * bar takes the room it has: a layout that wants content to scroll under
+   * it places the bar over the content (the gallery's phone screen does).
    */
   [data-platform='ios'] [data-ds='tab-bar'] {
-    --_tab-bar-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-xs));
-    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+    --_tab-bar-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l));
+    --_tab-bar-icon-size: calc(var(--ds-size-icon-lg) + var(--ds-space-fixed-2xs));
 
-    inline-size: 100%;
-    margin: 0;
-    padding-block: var(--ds-space-3xs) max(var(--ds-space-3xs), var(--ds-inset-safe-bottom));
-    padding-inline: max(var(--ds-space-3xs), var(--ds-inset-safe-start), var(--ds-inset-safe-end));
-    border-width: 0;
-    border-block-start-width: var(--ds-border-width-default);
-    border-radius: var(--ds-shape-corner-none);
+    gap: 0;
+    inline-size: auto;
+    margin-block: 0 max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)));
+    margin-inline: max(calc(2 * var(--ds-space-fixed-l)), var(--ds-inset-safe-start)) max(calc(2 * var(--ds-space-fixed-l)), var(--ds-inset-safe-end));
+    padding: var(--ds-space-fixed-2xs);
+    border-width: var(--ds-border-width-default);
+    border-radius: var(--ds-shape-corner-full);
   }
 
-  /* A style's band drawn just above its bar stays inside the screen. */
+  /* A style's band drawn just above its bar reaches the screen's edges. */
   [data-platform='ios'] [data-ds='tab-bar']::before {
-    inset-inline: 0;
+    inset-inline: calc(-2 * var(--ds-space-fixed-l));
   }
 
   [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] {
-    justify-content: flex-start;
+    justify-content: center;
     gap: var(--ds-space-fixed-4xs);
-    padding-block-start: var(--ds-space-fixed-2xs);
-    font-size: var(--ds-font-size-xs);
+    min-block-size: var(--_tab-bar-item-height);
+    padding-block: var(--ds-space-fixed-2xs);
+    padding-inline: 0;
+    border-radius: var(--ds-shape-corner-full);
+    font-size: var(--ds-type-label-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item']:lang(ar) {
+    font-size: var(--ds-type-label-medium-font-size);
   }
 
   [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
     padding: 0;
   }
 
-  /* ------------------------------------------------------------ dialog and alert dialog: a compact centred alert */
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
+    inline-size: var(--_tab-bar-icon-size);
+    block-size: var(--_tab-bar-icon-size);
+  }
 
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
-    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
-    --_dialog-gutter: var(--ds-space-5xl);
-    --_dialog-radius: var(--ds-shape-corner-large);
-    --_dialog-padding: var(--ds-space-3xl);
+  /* ------------------------------------------------------------ dialog and alert dialog: a compact card with capsule actions */
+
+  /*
+   * Order M1, measured on the vendor's own music app at 393 wide: the alert
+   * is 320 wide (36 from the sides), corner 32, the title 17 semibold and
+   * the message 15 at the leading edge, 30 in; the actions are capsules 48
+   * tall, 16 from the card's edges and 8 apart, side by side for two and
+   * stacked for three or more. No icon.
+   */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']),
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
+    --_dialog-width: calc(var(--ds-dialog-width-sm) - 4 * var(--ds-space-fixed-l));
+    --_dialog-gutter: calc(3 * var(--ds-space-fixed-xl));
+    --_dialog-radius: var(--ds-shape-corner-extra-large-increased);
+    --_dialog-padding: calc(2 * var(--ds-space-fixed-xl) + var(--ds-space-fixed-s));
     /* No travel: the alert grows in place. */
     --_dialog-enter-y: 0px;
   }
 
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
-    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
-  }
-
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
-    text-align: center;
-  }
-
-  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
-    padding-block: var(--_dialog-padding) var(--ds-space-3xs);
-    padding-inline: calc(var(--_dialog-padding) + var(--ds-size-control-sm));
-    border-block-end: 0;
-    font-size: var(--ds-font-size-2xl);
+    gap: 0;
+    padding: 0;
+    text-align: start;
   }
 
   [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
-    align-self: center;
-    margin-inline: 0;
+    display: none;
   }
 
-  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
-    font-size: var(--ds-font-size-2xl);
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='title'] {
+    margin: 0;
+    padding-block: calc(2 * var(--ds-space-fixed-l)) var(--ds-space-fixed-2xs);
+    padding-inline: var(--_dialog-padding);
+    border-block-end: 0;
+    font-size: var(--ds-type-title-large-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-type-title-large-line-height);
   }
 
   /* A style that draws the title in a title bar: the same title size there. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar'] {
-    --_title-bar-font-size: var(--ds-font-size-2xl);
+    --_title-bar-font-size: var(--ds-type-title-large-font-size);
   }
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_dialog-padding);
     font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
   }
 
-  /*
-   * The actions: equal width, side by side for two, stacked for three or
-   * more, split by hairlines (the gaps show the divider color behind them,
-   * painted in ds.platform).
-   */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
-    display: grid;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
-    gap: var(--ds-border-width-default);
-    padding: 0;
-    padding-block-start: var(--ds-border-width-default);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--ds-space-fixed-m);
+    padding-block: calc(2 * var(--ds-space-fixed-l)) calc(2 * var(--ds-space-fixed-m));
+    padding-inline: calc(2 * var(--ds-space-fixed-m));
     border-block-start: 0;
+    background-color: transparent;
   }
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer']:has(> :nth-child(3)) {
-    grid-auto-flow: row;
+    flex-direction: column;
   }
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
-    --_button-height: var(--ds-size-touch-ios);
-    --_button-radius: var(--ds-shape-corner-none);
+    --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-font-size: var(--ds-type-body-large-font-size);
 
-    inline-size: 100%;
+    flex: 1 1 0;
+    inline-size: auto;
     block-size: auto;
-    min-block-size: var(--ds-size-touch-ios);
-    padding-block: var(--ds-space-s);
-    padding-inline: var(--ds-space-xs);
+    min-block-size: var(--_button-height);
+    padding-block: var(--ds-space-fixed-s);
+    padding-inline: var(--ds-space-fixed-xl);
   }
 
-  /* A long action label wraps instead of ending in an ellipsis: the row grows. */
+  /* A long action label wraps instead of ending in an ellipsis: the capsule grows. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] > [data-part='label'] {
     overflow-x: visible;
     white-space: normal;
@@ -908,36 +1063,120 @@
     display: none;
   }
 
-  /* ------------------------------------------------------------ sheet and drawer: rise from the bottom with a grabber */
+  /* ------------------------------------------------------------ sheet and drawer: rise from the bottom, large top corners */
 
+  /*
+   * Order M1, measured on the vendor's own wallet and fitness apps at 393
+   * wide: top corners 38, a round close button 44 at the top leading
+   * corner, 16 in, the title 17 semibold centred on the close button's row,
+   * content 16 in, and the actions as full width capsules 50 tall. The
+   * grabber shows only where the sheet has detents (data-detent), above
+   * that row. The close control is always drawn.
+   */
   [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
-    --_dialog-radius: var(--ds-shape-corner-large);
+    --_dialog-radius: calc(var(--ds-shape-corner-extra-large) + var(--ds-space-fixed-l));
   }
 
-  /* The grabber: 36 by 5 and round, on the Sheet's handle-bar part; the handle keeps a 24px strip for the pointer. */
   [data-platform='ios'] [data-ds='sheet'] {
     --_dialog-handle-radius: var(--ds-shape-corner-full);
+    --_dialog-padding: calc(2 * var(--ds-space-fixed-m));
+    --_dialog-band-padding-block: calc(2 * var(--ds-space-fixed-m));
+    --_dialog-band-padding-inline: calc(2 * var(--ds-space-fixed-m));
   }
 
-  /* The sheet's insides: the phone padding of Dialog.css and the title size, the same in every style. */
-  [data-platform='ios'] [data-ds='sheet'] {
-    --_dialog-padding: var(--ds-space-xl);
-    --_dialog-band-padding-block: var(--ds-space-l);
-    --_dialog-band-padding-inline: var(--ds-space-xl);
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] {
+    position: relative;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-space-fixed-2xs);
+    min-block-size: var(--ds-size-touch-ios);
+    padding-block: calc(2 * var(--ds-space-fixed-m) + (var(--ds-size-touch-ios) - var(--ds-type-title-large-font-size) * var(--ds-type-title-large-line-height)) / 2) var(--ds-space-fixed-m);
+    padding-inline: calc(2 * var(--ds-space-fixed-m) + var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    border-block-end: 0;
+    text-align: center;
   }
 
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
-    font-size: var(--ds-type-title-small-font-size);
+    font-size: var(--ds-type-title-large-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-type-title-large-line-height);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='description'] {
+    font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
   }
 
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='titlebar'] {
-    --_title-bar-font-size: var(--ds-type-title-small-font-size);
+    --_title-bar-font-size: var(--ds-type-title-large-font-size);
+  }
+
+  /* The close button: round, 44, at the top leading corner. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: var(--ds-shape-corner-full);
+
+    position: absolute;
+    inset-block-start: calc(2 * var(--ds-space-fixed-m));
+    inset-inline-start: calc(2 * var(--ds-space-fixed-m));
+    margin: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+  }
+
+  /*
+   * With no detents no grabber shows, but the strip stays as a drag area
+   * over the panel's top edge (a swipe down still dismisses), under the
+   * header and its close button. With detents the grabber shows above the
+   * close row, which moves down with it.
+   */
+  [data-platform='ios'] [data-ds='sheet']:not([data-detent]) > [data-part='panel'] > [data-part='handle'] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  [data-platform='ios'] [data-ds='sheet']:not([data-detent]) > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
+    opacity: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'][data-detent] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    inset-block-start: calc(2 * var(--ds-space-fixed-m) + var(--ds-size-target-min));
   }
 
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
     inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
     block-size: var(--ds-space-fixed-xs);
     padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='body'] {
+    padding-inline: calc(2 * var(--ds-space-fixed-m));
+  }
+
+  /* The actions: full width capsules, 50 tall, stacked in the order they come. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ds-space-fixed-m);
+    padding-block-start: var(--ds-space-fixed-m);
+    border-block-start: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
+    --_button-height: var(--ds-size-control-lg);
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-font-size: var(--ds-type-body-large-font-size);
+
+    inline-size: 100%;
   }
 
   /* The Drawer leaves its side and rises like a sheet. */
@@ -1000,14 +1239,14 @@
     margin-inline: auto;
   }
 
-  /* A banner: rounder than a card, no timer line, the tone on a hairline start edge. */
+  /* A banner: a rounded glass card like the menus, no timer line, the tone on a hairline start edge. */
   [data-platform='ios'] [data-ds='toast'] {
-    --_toast-radius: var(--ds-shape-corner-large-increased);
+    --_toast-radius: var(--ds-shape-corner-extra-large);
     --_toast-progress-thickness: 0px;
 
     border-inline-start-width: var(--ds-border-width-default);
-    padding-block: var(--ds-space-xl);
-    padding-inline: var(--ds-space-3xl) var(--ds-space-xl);
+    padding-block: var(--ds-space-fixed-xl);
+    padding-inline: calc(2 * var(--ds-space-fixed-l)) var(--ds-space-fixed-xl);
     font-size: var(--ds-type-body-medium-font-size);
   }
 }

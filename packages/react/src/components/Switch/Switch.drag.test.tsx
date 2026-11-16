@@ -226,8 +226,10 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
   });
 
   it('N1: the travel is in the transform, which the press times only until the pointer is released', () => {
+    // Order M1: the same rule also reads data-pressed, set from pointerdown, beside :active.
     const pressed = rule(
-      `[data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']`,
+      `[data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'],
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']`,
     );
     expect(pressed).toMatch(/transform calc\(var\(--_switch-duration-in\) \* var\(--_switch-motion\)\) var\(--_switch-ease-in\)/);
     expect(rule(thumb)).toMatch(/transform:\s*translateX\(calc\(\(var\(--_switch-travel\) \+ var\(--_switch-lean-now\)/);
@@ -236,6 +238,17 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
     expect(code).not.toMatch(/^\s*translate:/m);
     expect(code).not.toMatch(/(transition:|,)\s*translate calc/);
     expect(code).not.toMatch(/background-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) step-end;/);
+  });
+
+  it('M1: the press starts on pointerdown: the root carries data-pressed until the pointer is up', () => {
+    const { container } = render(<Switch aria-label="Wifi" />);
+    const root = container.querySelector("[data-ds='switch']") as HTMLElement;
+    const control = root.querySelector("[data-part='control']") as HTMLElement;
+    fireEvent.pointerDown(control, { pointerId: 1, button: 0, isPrimary: true, clientX: 0 });
+    expect(root.hasAttribute('data-pressed')).toBe(true);
+    fireEvent.pointerUp(control, { pointerId: 1, button: 0, isPrimary: true, clientX: 0 });
+    expect(root.hasAttribute('data-pressed')).toBe(false);
+    expect(code).toMatch(/\[data-ds='switch'\]\[data-pressed\]:not\(\[data-disabled\], \[data-readonly\]\) > \[data-part='control'\] \{\s*--_switch-stretch-now/);
   });
 
   it('B4: a drag draws the thumb at its own size and stops it at the ends, so it never leaves the track', () => {

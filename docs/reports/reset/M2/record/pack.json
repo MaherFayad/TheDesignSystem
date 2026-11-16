@@ -1,0 +1,78 @@
+{
+ "order": "M2",
+ "title": "Android phone surfaces after order M2",
+ "date": "2026-11-16T20:04:12.741Z",
+ "commit": "8c8c5e58 with uncommitted changes",
+ "load": [
+  5.44,
+  16.95,
+  19.28
+ ],
+ "cpus": 4,
+ "chromium": "153.0.8010.12",
+ "clips": [
+  {
+   "key": "sheet-drag-liquid-android-pixel-light",
+   "clip": "sheet-drag",
+   "name": "Sheet drag",
+   "does": "With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "light",
+   "video": "clips/sheet-drag-liquid-android-pixel-light.mp4",
+   "sheet": "sheets/sheet-drag-liquid-android-pixel-light.png",
+   "source": null,
+   "frames": 121,
+   "durationMs": 2017,
+   "keyFrames": {
+    "down": 24,
+    "mid": 36,
+    "up": 48,
+    "settled": 56
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 116207,
+    "sheet": 195716
+   }
+  },
+  {
+   "key": "sheet-drag-liquid-android-pixel-dark",
+   "clip": "sheet-drag",
+   "name": "Sheet drag",
+   "does": "With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go",
+   "style": "liquid",
+   "platform": "android",
+   "detected": "android",
+   "device": "pixel",
+   "deviceName": "a Pixel 7 frame",
+   "scheme": "dark",
+   "video": "clips/sheet-drag-liquid-android-pixel-dark.mp4",
+   "sheet": "sheets/sheet-drag-liquid-android-pixel-dark.png",
+   "source": null,
+   "frames": 121,
+   "durationMs": 2017,
+   "keyFrames": {
+    "down": 24,
+    "mid": 36,
+    "up": 48,
+    "settled": 56
+   },
+   "firstChange": {
+    "afterDownMs": 117,
+    "whileDown": true
+   },
+   "bytes": {
+    "video": 113933,
+    "sheet": 179154
+   }
+  }
+ ],
+ "note": "Neutral and Liquid on the android platform, on the Pixel frame, light and dark. The switch is tapped, then held: from pointerdown the 40 state layer shows round the thumb and the 16 dot grows to 28. The button shows the ripple. The dialog grows in place with 28 corners and text actions at the end. The sheet has 28 top corners and a 32 by 4 handle and is dragged down. The navigation bar has no clip yet: the clip list has no tab bar press (a request to the lead in docs/reports/lanes/reset-M2.md)."
+}

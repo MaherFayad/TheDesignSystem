@@ -530,6 +530,8 @@ export function SheetContent({ title, description, closeLabel, children, classNa
   const rootStyle = Object.keys(detentStyle).length > 0 ? ({ ...style, ...detentStyle } as CSSProperties) : style;
   const titlebarOn = useOptionalPart('sheet', 'titlebar');
   const controlsOn = useOptionalPart('sheet', 'controls');
+  // On a phone the window controls are hidden (the platform CSS), so the title bar carries the close control instead (order M1): a sheet always has a visible close.
+  const phone = theme.platform === 'ios' || theme.platform === 'android';
   const split = splitHeader({
     children,
     title,
@@ -559,7 +561,7 @@ export function SheetContent({ title, description, closeLabel, children, classNa
             />
           ) : undefined
         }
-        actions={controlsOn ? undefined : split.closeButton}
+        actions={controlsOn && !phone ? undefined : split.closeButton}
       />
       {split.descriptionNode}
     </>

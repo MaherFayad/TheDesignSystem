@@ -157,3 +157,18 @@ export const RELEASED_ATTR = 'data-released';
 export function markReleased(control: Element, released: boolean): void {
   control.parentElement?.toggleAttribute(RELEASED_ATTR, released);
 }
+
+/** The root flag while a pointer is down on the control (order M1). */
+export const PRESSED_ATTR = 'data-pressed';
+
+/**
+ * Marks the switch root pressed while a pointer is down on its control, from
+ * pointerdown to pointerup or pointercancel. On touch `:active` shows only
+ * after the finger lifts in some browsers, so Switch.css reads this flag
+ * beside `:active`, and the press (the stretch, and the glass lens where a
+ * style draws one) starts as the finger lands. A key press keeps `:active`
+ * alone. `control` is the switch control (the root's child).
+ */
+export function markPressed(control: Element, pressed: boolean): void {
+  control.parentElement?.toggleAttribute(PRESSED_ATTR, pressed);
+}

@@ -107,6 +107,14 @@
     --_button-font-size: var(--ds-font-size-2xl);
   }
 
+  /* An icon button draws its icon at 24 in the 40 container (the component draws 16 at md), as the floating action button does. */
+  [data-platform='android'] :is([data-ds='icon-button'], [data-ds='close-button'])[data-size='md'] [data-ds='icon'],
+  [data-platform='android'] :is([data-ds='icon-button'], [data-ds='close-button']):not([data-size]) [data-ds='icon'],
+  [data-platform='android'] [data-ds='floating-action-button'] [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
   [data-platform='android'] [data-ds='button'][data-emphasis='ghost']:not([data-part]) {
     --_button-padding-inline: var(--ds-space-xl);
   }
@@ -118,13 +126,22 @@
     --_button-fg-active: var(--ds-color-primary-on-surface);
   }
 
-  /* Floating action button: 56dp, a rounded square with a 16dp corner, the style's lift. Every size is the standard FAB: Material's 96dp large FAB is a separate choice, not lg. */
+  /* Floating action button: 56dp, a rounded square with a 16dp corner (shape.corner.large), the style's lift. Every size is the standard FAB: Material's 96dp large FAB is a separate choice, not lg. */
   [data-platform='android'] [data-ds='floating-action-button'][data-size] {
     --_button-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
     --_button-padding-inline: var(--ds-space-3xl);
-    --_button-radius: var(--ds-radius-card);
+    --_button-radius: var(--ds-shape-corner-large);
     --_button-press-scale: 1;
     --_button-part-press: 1;
+  }
+
+  /* A fixed floating action button sits 16 from the edges and, on a screen with a navigation bar, 16 above the bar. */
+  [data-platform='android'] [data-ds='floating-action-button'] {
+    --_floating-action-button-inset: calc(var(--ds-space-fixed-m) * 2);
+  }
+
+  :root:has([data-platform='android'] [data-ds='tab-bar']) [data-platform='android'] [data-ds='floating-action-button'][data-position='fixed'] {
+    inset-block-end: calc(var(--ds-size-touch-android) + var(--ds-size-control-xs) + var(--_floating-action-button-inset) + var(--ds-inset-safe-bottom));
   }
 
   /*
@@ -187,11 +204,12 @@
       clip-path var(--ds-duration-celebrate) step-end;
   }
 
-  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:active::after,
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled])::after,
-  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after {
-    opacity: 0.12;
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after,
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:is(:active, [data-pressed])::after,
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled])::after,
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:is(:active, [data-pressed])::after {
+    /* The pressed state layer, 10% (opacity.state.pressed). */
+    opacity: var(--ds-opacity-state-pressed);
     /* 142% of the reference radius is the full diagonal: the circle covers the box from any corner. */
     clip-path: circle(142% at 50% 50%);
     transition:
@@ -204,7 +222,7 @@
     clip-path: circle(0% at var(--_button-ripple-x) var(--_button-ripple-y));
   }
 
-  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after {
     clip-path: circle(142% at var(--_button-ripple-x) var(--_button-ripple-y));
   }
 
@@ -212,7 +230,7 @@
     clip-path: circle(0% at calc(100% - var(--_button-ripple-x)) var(--_button-ripple-y));
   }
 
-  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after {
     clip-path: circle(142% at calc(100% - var(--_button-ripple-x)) var(--_button-ripple-y));
   }
 
@@ -220,7 +238,7 @@
     clip-path: circle(0% at var(--_chip-press-x) var(--_chip-press-y));
   }
 
-  [data-platform='android'] [data-ds='chip']:active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+  [data-platform='android'] [data-ds='chip']:is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after {
     clip-path: circle(142% at var(--_chip-press-x) var(--_chip-press-y));
   }
 
@@ -228,7 +246,7 @@
     clip-path: circle(0% at calc(100% - var(--_chip-press-x)) var(--_chip-press-y));
   }
 
-  [data-platform='android'] [data-ds='chip']:dir(rtl):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+  [data-platform='android'] [data-ds='chip']:dir(rtl):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after {
     clip-path: circle(142% at calc(100% - var(--_chip-press-x)) var(--_chip-press-y));
   }
 
@@ -236,7 +254,7 @@
     clip-path: circle(0% at var(--_list-press-x) var(--_list-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled])::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled])::after {
     clip-path: circle(142% at var(--_list-press-x) var(--_list-press-y));
   }
 
@@ -244,7 +262,7 @@
     clip-path: circle(0% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl):active:not([data-disabled])::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl):is(:active, [data-pressed]):not([data-disabled])::after {
     clip-path: circle(142% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
   }
 
@@ -252,7 +270,7 @@
     clip-path: circle(0% at var(--_pagination-press-x) var(--_pagination-press-y));
   }
 
-  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after {
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:is(:active, [data-pressed])::after {
     clip-path: circle(142% at var(--_pagination-press-x) var(--_pagination-press-y));
   }
 
@@ -260,25 +278,41 @@
     clip-path: circle(0% at calc(100% - var(--_pagination-press-x)) var(--_pagination-press-y));
   }
 
-  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:dir(rtl):active::after {
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:dir(rtl):is(:active, [data-pressed])::after {
     clip-path: circle(142% at calc(100% - var(--_pagination-press-x)) var(--_pagination-press-y));
   }
 
-  /* The ripple of a tab sits in the pill, not across the whole item. */
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after {
-    inset-block: var(--ds-space-xl) auto;
-    inset-inline: 0;
-    block-size: calc(var(--ds-size-control-md) + var(--ds-space-fixed-2xs) * 2 - var(--ds-space-fixed-m));
-    margin-inline: auto;
-    inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
-    border-radius: var(--ds-radius-pill);
+  /*
+   * The state layers of a navigation bar item sit on the 64 by 32 pill, not
+   * across the whole item: ::before is the hover and focus layer (8% and
+   * 10%), ::after the ripple (10% pressed). Both are placed on the pill in
+   * ds.chrome below.
+   */
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::before {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-standard);
+  }
+
+  @media (hover: hover) {
+    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:hover::before {
+      opacity: var(--ds-opacity-state-hover);
+    }
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:focus-visible::before {
+    opacity: var(--ds-opacity-state-focus);
   }
 
   /* ------------------------------------------------------------ switch: the thumb is a dot at rest, grows while pressed, larger when on */
 
   [data-platform='android'] [data-ds='switch'] {
     --_switch-target: var(--ds-size-touch-android);
-    --_switch-height: var(--ds-size-control-md);
+    /* The 52 by 32 track (size.control.xs is 32 on android at every density). */
+    --_switch-height: var(--ds-size-control-xs);
     --_switch-width: calc(var(--_switch-height) * 1.625);
     --_switch-inset: var(--ds-border-width-strong);
     --_switch-bg: var(--ds-color-bg-overlay-10);
@@ -336,7 +370,7 @@
    * The 40dp state layer round the thumb: a circle in the text color on the
    * track's ::before, centred on the thumb and moved by the same travel on
    * the same curve. It paints before the thumb and the fill, so it shows
-   * round the dot. Hover 8%, held 12%.
+   * round the dot. Hover 8%, focus 10%, held 10% (opacity.state.*).
    */
   [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track']::before {
     content: '';
@@ -357,12 +391,18 @@
 
   @media (hover: hover) {
     [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:hover > [data-part='track']::before {
-      opacity: 0.08;
+      opacity: var(--ds-opacity-state-hover);
     }
   }
 
-  [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']::before {
-    opacity: 0.12;
+  [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:focus-visible > [data-part='track']::before {
+    opacity: var(--ds-opacity-state-focus);
+  }
+
+  /* Pressed from pointerdown: the root carries data-pressed while the finger is down (Switch.css), so the layer shows as the finger lands. */
+  [data-platform='android'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']::before,
+  [data-platform='android'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] > [data-part='track']::before {
+    opacity: var(--ds-opacity-state-pressed);
   }
 
   [data-platform='android'] [data-ds='switch'][data-dragging] > [data-part='control'] > [data-part='track']::before {
@@ -402,13 +442,13 @@
   }
 
   /*
-   * The state layer: 8% on hover, shown whole at once; 12% while held. A
+   * The state layer: 8% on hover, shown whole at once; 10% while held (opacity.state.*). A
    * touch has no hover, so the press grows the checkbox circle from the
    * centre: the ripple. The radio's hover veil becomes the same 40dp layer.
    */
   @media (hover: hover) {
     [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:hover::after {
-      opacity: 0.08;
+      opacity: var(--ds-opacity-state-hover);
       clip-path: circle(50% at 50% 50%);
       transition:
         opacity var(--ds-duration-celebrate) var(--ds-ease-out),
@@ -416,12 +456,12 @@
     }
 
     [data-platform='android'] [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):hover) > [data-part='control']::after {
-      opacity: 0.08;
+      opacity: var(--ds-opacity-state-hover);
     }
   }
 
   [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:active::after {
-    opacity: 0.12;
+    opacity: var(--ds-opacity-state-pressed);
     clip-path: circle(50% at 50% 50%);
     transition:
       opacity var(--ds-duration-instant) step-start,
@@ -453,7 +493,7 @@
 
   /* The radio's layer keeps the press area of the veil, so it is not clipped: held, it shows whole at once. */
   [data-platform='android'] [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):active) > [data-part='control']::after {
-    opacity: 0.12;
+    opacity: var(--ds-opacity-state-pressed);
     transition: opacity var(--ds-duration-instant) step-start;
   }
 
@@ -504,7 +544,8 @@
     --_segmented-control-radius: var(--ds-radius-pill);
     --_segmented-control-bg: transparent;
     --_segmented-control-border-color: var(--ds-color-border-control-hover);
-    --_segmented-control-thumb-bg: var(--ds-color-primary-tint);
+    /* The selected segment's fill: the nearest role to secondary container is the stronger primary tint. */
+    --_segmented-control-thumb-bg: var(--ds-color-primary-tint-hover);
     --_segmented-control-thumb-shadow: none;
     --_segmented-control-item-radius: 0px;
 
@@ -512,8 +553,17 @@
   }
 
   /* The track clips the ends, so the focus ring sits inside each segment and is never cut off (WCAG 2.4.7). */
+  /* Each segment: 12 at the sides, the label in label large at one weight whether selected or not (the fill and the outline tell it). */
   [data-platform='android'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
-    --_button-font-size: var(--ds-font-size-xl);
+    --_button-font-size: var(--ds-type-label-large-font-size);
+    --_button-padding-inline: var(--ds-space-fixed-xl);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* Segmented control's phone rule sets the padding on the item itself; a text segment keeps the 12 here, and its label still wraps at 320. */
+  [data-platform='android'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item']:not(:has(> [data-part='icon'])) {
+    padding-inline: var(--ds-space-fixed-xl);
     --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
   }
 
@@ -544,6 +594,12 @@
   [data-platform='android'] [data-ds='tabs']:not([data-orientation='vertical']) > [data-part='list'] > [data-part='trigger'] {
     flex: 1 0 auto;
     justify-content: center;
+  }
+
+  /* Primary tabs: the indicator spans the tab's content, not the whole tab, with its top corners round (3dp, as thick as the bar). */
+  [data-platform='android'] [data-ds='tabs'][data-emphasis='ghost']:not([data-orientation='vertical']) > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+    inset-inline: var(--_tabs-padding-inline);
+    border-radius: var(--_tabs-indicator-thickness) var(--_tabs-indicator-thickness) 0 0;
   }
 
   /* ------------------------------------------------------------ chip: 32dp, 8dp corners, an outline at rest */
@@ -660,6 +716,20 @@
     border-radius: 0;
   }
 
+  /* The headline in body large, the supporting text in body medium, a 24dp leading icon (the component draws the 16 icon). */
+  [data-platform='android'] [data-ds='list'] > [data-part='item'] > [data-part='title'] {
+    line-height: var(--ds-type-body-large-line-height);
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'] > [data-part='description'] {
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'] > [data-part='start'] > [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
   [data-platform='android'] [data-ds='list'][data-variant='inset'] {
     --_list-radius: var(--ds-radius-card);
 
@@ -682,9 +752,21 @@
     font-weight: var(--ds-font-weight-regular);
   }
 
-  /* Navigation bar paint: a tonal pill behind the current icon, no rule on top, the label weights. Its sizes are in ds.chrome. */
+  /* The title reads as a title in the on surface color, not as a link: no underline, no link color. It stays a link and keeps its focus ring. */
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] [data-ds='link'] {
+    --_link-fg: var(--ds-color-text-bright);
+    --_link-fg-hover: var(--ds-color-text-bright);
+    --_link-decoration: transparent;
+    --_link-decoration-hover: transparent;
+  }
+
+  /*
+   * Navigation bar paint: a tonal pill behind the current icon (the nearest
+   * role to Material's secondary container is the stronger primary tint),
+   * no rule on top, the label weights. Its sizes are in ds.chrome.
+   */
   [data-platform='android'] [data-ds='tab-bar'] {
-    --_tab-bar-pill-bg: var(--ds-color-primary-tint);
+    --_tab-bar-pill-bg: var(--ds-color-primary-tint-hover);
     --_tab-bar-fg-active: var(--ds-color-text-bright);
     --_tab-bar-border-color: transparent;
     --_tab-bar-weight: var(--ds-font-weight-medium);
@@ -725,14 +807,17 @@
   [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content']) {
     --_menu-width-min: calc(var(--ds-menu-width-min) * 0.56);
     --_menu-width-max: calc(var(--ds-menu-width-min) * 1.4);
-    --_menu-radius: var(--ds-radius-xs);
-    --_menu-padding: var(--ds-space-s) 0;
+    --_menu-radius: var(--ds-shape-corner-extra-small);
+    --_menu-shadow: var(--ds-elevation-level2);
+    --_menu-padding: var(--ds-space-fixed-m) 0;
     --_menu-item-height: var(--ds-size-touch-android);
-    --_menu-item-padding-inline: var(--ds-space-xl);
+    --_menu-item-padding-inline: var(--ds-space-fixed-xl);
     --_menu-item-radius: 0;
-    --_menu-item-gap: var(--ds-space-xl);
-    --_menu-item-font-size: var(--ds-font-size-xl);
+    --_menu-item-gap: var(--ds-space-fixed-xl);
+    --_menu-item-font-size: var(--ds-type-label-large-font-size);
     --_menu-item-font-weight: var(--ds-font-weight-regular);
+    /* The separator sits 8 above and 8 below, and the inset follows the 24 icon. */
+    --_menu-inset: calc(var(--ds-size-icon-lg) + var(--_menu-item-gap));
     /* A short scale and fade from the anchor: no drop, no item cascade. */
     --_menu-enter-scale: var(--ds-scale-menu-enter);
     --_menu-shift: 0px;
@@ -743,6 +828,12 @@
 
   [data-platform='android'] [data-ds='select'][data-part='content'] {
     --_select-item-height: var(--ds-size-touch-android);
+  }
+
+  /* A 24dp leading icon (the component draws the 16 icon). */
+  [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='start'] > [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
   }
 
   /*
@@ -804,6 +895,11 @@
 
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='title'] {
     font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* The supporting text in the muted text, the nearest role to on surface variant. */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='description'] {
+    color: var(--ds-color-text-muted);
   }
 
   /* The actions are text buttons in the primary color. A style recipe for the footer steps aside on android (Dialog.css recipes). */
@@ -914,11 +1010,16 @@
 @layer ds.chrome {
   /* ------------------------------------------------------------ top app bar: 64dp, a start aligned 22sp title */
 
+  /*
+   * The small top app bar: 64 tall, 4 at each side so the 48 targets of its
+   * actions sit 4 from the edge, the title 16 from the edge in title large
+   * (22 on 28). Lengths are fixed: the bar does not follow density.
+   */
   [data-platform='android'] [data-ds='navbar'] {
     --_navbar-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
     --_navbar-control-height: var(--ds-size-touch-android);
-    --_navbar-padding-inline: var(--ds-space-xs);
-    --_navbar-font-size: var(--ds-type-body-medium-font-size);
+    --_navbar-padding-inline: var(--ds-space-fixed-2xs);
+    --_navbar-font-size: var(--ds-type-label-large-font-size);
   }
 
   /* The title link is a full height target. */
@@ -930,26 +1031,34 @@
   }
 
   [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] {
-    font-size: var(--ds-font-size-4xl);
+    margin-inline-start: var(--ds-space-fixed-xl);
+    font-size: var(--ds-type-title-large-font-size);
+    line-height: var(--ds-type-title-large-line-height);
+  }
+
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] [data-ds='link'] {
+    --_link-font-size: var(--ds-type-title-large-font-size);
   }
 
   /* ------------------------------------------------------------ navigation bar: full width on the bottom edge, 80dp, a 64 by 32 pill behind the current icon, a 12sp label */
 
   /*
-   * The bar runs the width of the screen, square, the safe area under it. A
-   * style that draws its bar as a floating capsule keeps its fill and
-   * material; the bar takes this shape on android.
+   * The bar runs the width of the screen, square, with no rule on top and
+   * the safe area under it. Each item is 80 tall: 12 above the pill, the 64
+   * by 32 pill round the 24 icon, 4 between, the 16 line of the 12 label,
+   * 16 under it. A style that draws its bar as a floating capsule keeps its
+   * fill and material; the bar takes this shape on android.
    */
   [data-platform='android'] [data-ds='tab-bar'] {
-    --_tab-bar-item-height: calc(var(--ds-size-touch-android) + var(--ds-size-control-md));
+    --_tab-bar-item-height: calc(var(--ds-size-touch-android) + var(--ds-size-control-xs));
     --_tab-bar-icon-size: var(--ds-size-icon-lg);
 
+    gap: 0;
     inline-size: 100%;
     margin: 0;
-    padding-block: var(--ds-space-3xs) max(var(--ds-space-3xs), var(--ds-inset-safe-bottom));
-    padding-inline: max(var(--ds-space-3xs), var(--ds-inset-safe-start), var(--ds-inset-safe-end));
+    padding-block: 0 var(--ds-inset-safe-bottom);
+    padding-inline: max(var(--ds-space-fixed-m), var(--ds-inset-safe-start), var(--ds-inset-safe-end));
     border-width: 0;
-    border-block-start-width: var(--ds-border-width-default);
     border-radius: var(--ds-shape-corner-none);
   }
 
@@ -959,9 +1068,14 @@
   }
 
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] {
+    justify-content: flex-start;
     gap: var(--ds-space-fixed-2xs);
-    padding-block: var(--ds-space-xl) var(--ds-space-3xl);
+    padding-block: var(--ds-space-fixed-xl) calc(var(--ds-space-fixed-m) * 2);
+    padding-inline: 0;
+    border-radius: var(--ds-shape-corner-none);
     font-size: var(--ds-type-label-medium-font-size);
+    line-height: var(--ds-type-label-medium-line-height);
+    letter-spacing: var(--ds-type-label-medium-letter-spacing);
   }
 
   /* The pill: 64 by 32 around the 24dp icon, round ended. */
@@ -971,57 +1085,165 @@
     border-radius: var(--ds-shape-corner-full);
   }
 
+  /* The icon fills its 24 box (the component draws the md icon, 16, in it). */
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
+    inline-size: var(--_tab-bar-icon-size);
+    block-size: var(--_tab-bar-icon-size);
+  }
+
+  /* The large badge: 16 tall, its start 4 past the icon's centre, its top 2 below the pill's top. */
+  [data-platform='android'] [data-ds='tab-bar'] [data-part='item-icon'] > [data-part='item-badge'] {
+    inset-block-start: var(--ds-space-fixed-4xs);
+    inset-inline-start: calc(50% + var(--ds-space-fixed-2xs));
+  }
+
+  /* The state layers sit on the pill, round ended (their paint is in ds.platform). */
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::before,
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after {
+    inset-block: var(--ds-space-fixed-xl) auto;
+    inset-inline: 0;
+    block-size: var(--ds-size-control-xs);
+    inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
+    margin-inline: auto;
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  /*
+   * Order M2, a reset of a style's paint on chrome: Liquid draws a glass lens
+   * behind the whole current item and turns the icon pill off. No platform
+   * draws that on a navigation bar, so on android the item has no lens and
+   * the pill is back (the tonal fill of ds.platform). Liquid keeps its glass
+   * bar, its tint and its weights.
+   */
+  [data-platform='android'] [data-ds='tab-bar'] {
+    --_tab-bar-pill-bg: var(--ds-color-primary-tint-hover);
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:focus-visible {
+    box-shadow: var(--_tab-bar-ring);
+  }
+
   /* ------------------------------------------------------------ dialog and alert dialog: 28dp corners, a start aligned title, text actions at the end */
 
+  /*
+   * A basic dialog: 28 corners, 24 inside, a 24 headline (headline small),
+   * 16 to the supporting text, 24 to the actions, which are text buttons at
+   * the end, 8 apart. At least 24 from the screen edges. The lengths are
+   * fixed: the dialog does not follow density.
+   */
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
-    --_dialog-gutter: var(--ds-space-6xl);
+    --_dialog-gutter: var(--ds-size-icon-lg);
     --_dialog-radius: var(--ds-shape-corner-extra-large);
-    --_dialog-padding: var(--ds-space-6xl);
+    --_dialog-padding: var(--ds-size-icon-lg);
     /* No travel: the dialog grows in place. */
     --_dialog-enter-y: 0px;
   }
 
   [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
-    padding-block: var(--_dialog-padding) var(--ds-space-xl);
+    padding-block: var(--_dialog-padding) calc(var(--ds-space-fixed-m) * 2);
     padding-inline-start: var(--_dialog-padding);
     border-block-end: 0;
-    font-size: var(--ds-font-size-5xl);
+    font-size: var(--ds-type-headline-small-font-size);
+    line-height: var(--ds-type-headline-small-line-height);
   }
 
   [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
-    inset-block-start: var(--ds-space-3xl);
-    inset-inline-end: var(--ds-space-3xl);
+    inset-block-start: var(--ds-space-fixed-xl);
+    inset-inline-end: var(--ds-space-fixed-xl);
   }
 
   [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
-    font-size: var(--ds-font-size-5xl);
+    font-size: var(--ds-type-headline-small-font-size);
+    line-height: var(--ds-type-headline-small-line-height);
+  }
+
+  /*
+   * A dialog with an icon: the 24 icon centred at the top, 16 above the
+   * headline, and the headline centred under it. The icon has no disc (order
+   * M2, a reset of the disc fill that Dialog.css and a style give it: the
+   * platform shows the glyph alone, in the tone's color).
+   */
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
+    align-self: center;
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+    margin-block-start: var(--_dialog-padding);
+    margin-inline: 0;
+    background-color: transparent;
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] > [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] + [data-part='title'] {
+    padding-block: calc(var(--ds-space-fixed-m) * 2) 0;
+    padding-inline: var(--_dialog-padding);
+    text-align: center;
+  }
+
+  /* One column, top to bottom, whatever layout a style gives its alert (Studio sets the icon beside the title). */
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] + [data-part='description'] {
+    padding-block-start: calc(var(--ds-space-fixed-m) * 2);
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title']:has(+ [data-part='description']) {
+    padding-block-end: 0;
+  }
+
+  /* The footer's own 24 is the space above the actions. */
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='description']:has(+ [data-part='footer']) {
+    padding-block-end: 0;
   }
 
   /* A style that draws the title in a title bar: the same title size there. */
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar'] {
-    --_title-bar-font-size: var(--ds-font-size-5xl);
+    --_title-bar-font-size: var(--ds-type-headline-small-font-size);
   }
 
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
     font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
   }
 
-  /* The actions sit at the inline end of a footer with no band, no rule and no cells. */
+  /*
+   * The actions sit at the inline end of a footer with no band, no rule and
+   * no cells: 24 above them, 24 at the sides and under them, 8 between. The
+   * band and the rule do not show (order M2, a reset of a style's footer
+   * fill and divider on the platform's dialogs and sheets).
+   */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) {
+    --_dialog-footer-bg: transparent;
+    --_dialog-header-bg: transparent;
+    --_dialog-divider-color: transparent;
+  }
+
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) > [data-part='panel'] > [data-part='footer'] {
-    gap: var(--ds-space-s);
-    padding-block: var(--ds-space-xl) var(--_dialog-padding);
+    justify-content: flex-end;
+    gap: var(--ds-space-fixed-m);
+    padding-block: var(--_dialog-padding);
     padding-inline: var(--_dialog-padding);
     border-block-start: 0;
   }
 
+  /* Text actions: 40 tall, 12 at the sides, a capsule state layer whatever corner the style gives its buttons. */
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'],
   [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
-    --_button-padding-inline: var(--ds-space-xl);
-  }
-
-  /* A text action's state layer is a capsule, whatever corner the style gives its buttons. */
-  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] {
+    --_button-height: var(--ds-size-control-md);
+    --_button-padding-inline: var(--ds-space-fixed-xl);
     --_button-radius: var(--ds-shape-corner-full);
+    --_button-font-size: var(--ds-type-label-large-font-size);
   }
 
   /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */
@@ -1033,24 +1255,48 @@
 
   /* ------------------------------------------------------------ bottom sheet and side sheet */
 
+  /*
+   * A modal bottom sheet: full width up to 640, 28 top corners, the 32 by 4
+   * drag handle in a 48 target at the top, 16 inside at the sides, the title
+   * in title large. The close control stays (a sheet always has a visible
+   * way to close). Fixed lengths: the sheet does not follow density.
+   */
   [data-platform='android'] [data-ds='sheet'] {
     --_dialog-radius: var(--ds-shape-corner-extra-large);
     --_dialog-handle-radius: var(--ds-shape-corner-full);
+    --_dialog-padding: calc(var(--ds-space-fixed-m) * 2);
+    --_dialog-band-padding-block: var(--ds-space-fixed-m);
+    --_dialog-band-padding-inline: calc(var(--ds-space-fixed-m) * 2);
   }
 
-  /* The sheet's insides: the phone padding of Dialog.css and the title size, the same in every style. */
-  [data-platform='android'] [data-ds='sheet'] {
-    --_dialog-padding: var(--ds-space-xl);
-    --_dialog-band-padding-block: var(--ds-space-l);
-    --_dialog-band-padding-inline: var(--ds-space-xl);
-  }
-
-  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
-    font-size: var(--ds-type-title-small-font-size);
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'],
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='title'] {
+    font-size: var(--ds-type-title-large-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-type-title-large-line-height);
   }
 
   [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='titlebar'] {
-    --_title-bar-font-size: var(--ds-type-title-small-font-size);
+    --_title-bar-font-size: var(--ds-type-title-large-font-size);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] {
+    padding-block: var(--ds-space-fixed-m) var(--_dialog-padding);
+  }
+
+  /* The close control: a 40 icon button with a 24 icon, its 48 target from the hit part. */
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] [data-ds='close-button'][data-part='close'] {
+    --_button-height: var(--ds-size-control-md);
+
+    flex: none;
+    inline-size: var(--ds-size-control-md);
+    min-inline-size: var(--ds-size-control-md);
+    block-size: var(--ds-size-control-md);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] [data-ds='close-button'][data-part='close'] [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
   }
 
   [data-platform='android'] [data-ds='drawer'] {
@@ -1077,6 +1323,11 @@
     margin-inline: 0;
   }
 
+  /* A snackbar shows above the navigation bar, never over it: 80 for the bar, then the toast inset. */
+  :root:has([data-platform='android'] [data-ds='tab-bar']) [data-platform='android'] [data-ds='toaster'] {
+    --_toaster-inset-block-end: calc(var(--ds-size-touch-android) + var(--ds-size-control-xs) + var(--ds-toast-inset) + var(--ds-inset-safe-bottom));
+  }
+
   /*
    * Snackbars do not overlap: a stacked toaster lays its toasts out as the
    * expanded list at all times, each at its offset with the gap, unclipped.
@@ -1088,24 +1339,41 @@
     --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * var(--_toast-offset)));
   }
 
-  /* One row: the icon, the text, the action and the close at the end. 4dp corners, no edge and no timer line. */
+  /*
+   * One row, 48 tall: the text 16 from the start, the action 8 from the end,
+   * the close (a 24 icon in its 48 target) at the end. 4dp corners, no edge,
+   * no timer line, and no leading icon: a snackbar shows none.
+   */
   [data-platform='android'] [data-ds='toast'] {
     --_toast-radius: var(--ds-shape-corner-extra-small);
     /* No timer line: a snackbar's time is not drawn. */
     --_toast-progress-thickness: 0px;
 
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     grid-template-areas:
-      'icon title action close'
-      'icon description action close';
+      'title action close'
+      'description action close';
     grid-template-rows: auto auto;
     align-items: center;
-    column-gap: var(--ds-space-xl);
+    column-gap: var(--ds-space-fixed-2xs);
     min-block-size: var(--ds-size-touch-android);
-    padding-block: var(--ds-space-xl);
-    padding-inline: var(--ds-space-3xl) var(--ds-space-s);
+    padding-block: var(--ds-space-fixed-2xs);
+    padding-inline: calc(var(--ds-space-fixed-m) * 2) var(--ds-space-fixed-2xs);
     border-inline-start-width: 0;
     font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+
+  [data-platform='android'] [data-ds='toast'] > [data-part='icon'] {
+    display: none;
+  }
+
+  [data-platform='android'] [data-ds='toast'] > :is([data-part='title'], [data-part='description']) {
+    padding-block: calc(var(--ds-space-fixed-xl) - var(--ds-space-fixed-2xs));
+  }
+
+  [data-platform='android'] [data-ds='toast'] > [data-part='title'] + [data-part='description'] {
+    padding-block-start: 0;
   }
 
   [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {

@@ -19,6 +19,15 @@
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
   }
 
+  /* ios (order M1): no bar. The title sits on the content and the bar's buttons carry the glass (packages/css/src/platform/ios.css). */
+  [data-style='liquid'][data-platform='ios'] [data-ds='navbar'] {
+    --_navbar-bg: transparent;
+    --_navbar-border-color: transparent;
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   [data-style='liquid'] [data-ds='navbar'] [data-part='content-list'] [data-part='link'] {
     --_navbar-link-radius: calc(var(--ds-radius-panel) - var(--_navbar-panel-padding));
   }

@@ -64,12 +64,14 @@
 
   /* Held: the lens takes a bright rim around its edge, over the lift. */
   [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'],
   [data-style='liquid'] [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) {
     --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
     --_switch-thumb-solid: var(--_switch-thumb-solid-pressed);
   }
 
-  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
     --_switch-thumb-shadow:
       0 0 0 var(--ds-border-width-strong) var(--ds-color-border-control),
       inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
@@ -135,4 +137,48 @@
     --_switch-stretch: var(--ds-scale-stretch);
   }
 
+  /*
+   * ios (order M1, DECISIONS.md, the iOS glass switch): the platform's wide
+   * capsule, 63 by 28 with a 38 by 24 thumb, and from pointerdown the thumb
+   * lifts into a raised glass lens larger than the track: it grows by 1.4
+   * (a number, as the platform's own stretch is: no scale token reaches past
+   * the track), stretches a little toward its travel and turns clear, with
+   * the bright rim and a deeper lift. On release it travels on the soft
+   * spring and settles back to the solid thumb. Reduced motion keeps the
+   * clear lens and drops the growth, the stretch and the travel
+   * (Switch.css zeroes --_switch-motion and the growth).
+   */
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'] {
+    --_switch-width: calc(var(--_switch-height) * 2.25);
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.58);
+    --_switch-thumb-size-pressed: 1.4;
+    --_switch-stretch: 1.1;
+    --_switch-thumb-solid-pressed: 0.12;
+    --_switch-thumb-highlight-opacity-pressed: 1;
+  }
+
+  /* Held, the lens drops the off thumb's control edge (a 2px ring at rest in light): the rim and the lift draw it. [data-state] lifts these over the light rule above. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
+    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-glass-highlight), var(--ds-elevation-card-hover);
+  }
+
+  /* Where the lens cannot be drawn, the held thumb stays solid: it still lifts and stretches. */
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'][data-platform='ios'] [data-ds='switch'] {
+      --_switch-thumb-solid-pressed: 1;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'][data-platform='ios'] [data-ds='switch'] {
+      --_switch-thumb-solid-pressed: 1;
+      --_switch-thumb-highlight-opacity-pressed: 0;
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-platform='ios'] [data-ds='switch'] {
+    --_switch-thumb-solid-pressed: 1;
+    --_switch-thumb-highlight-opacity-pressed: 0;
+  }
 }

@@ -127,7 +127,10 @@
  * prop, the thumb-icon part (an aria-hidden svg: a check drawn while on and
  * a cross while off). Root state `data-dragging`
  * marks a drag; `data-released` (order 1.29) marks the time from a pointer
- * release to the next press (a pointerdown or a key), set by the framework.
+ * release to the next press (a pointerdown or a key), set by the framework;
+ * `data-pressed` (order M1) marks the time a pointer is down on the control,
+ * from pointerdown, so every press rule here reads it beside `:active`: on
+ * touch `:active` can show only after the finger lifts.
  *
  * The thumb moves with transform only. The focus ring shows at once: its
  * layer has no transition (WCAG 2.4.7).
@@ -466,7 +469,8 @@
   }
 
   /* Pressed: the thumb grows and stretches toward its travel, and turns clear where a style asks. */
-  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
     --_switch-stretch-now: var(--_switch-stretch);
     --_switch-thumb-size-now: var(--_switch-thumb-size-pressed);
     --_switch-thumb-solid-now: var(--_switch-thumb-solid-pressed);
@@ -479,7 +483,8 @@
    * the state's timing: on touch `:active` stays on after a tap, and the press
    * timing no longer carries the travel (N1). The color keeps the state's timing.
    */
-  [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+  [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'],
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
@@ -487,12 +492,14 @@
       box-shadow calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
   }
 
-  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active [data-part='thumb-lens'] {
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active [data-part='thumb-lens'],
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] [data-part='thumb-lens'] {
     opacity: var(--_switch-thumb-highlight-opacity-pressed);
   }
 
   /* Pressed: the track dips a little and springs back on release. */
-  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] {
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] > [data-part='track'] {
     --_switch-track-scale: var(--_switch-track-press);
 
     transition:
@@ -500,7 +507,8 @@
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
   }
 
-  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']:has(> span:not([data-part])) {
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track']:has(> span:not([data-part])),
+  [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
@@ -590,7 +598,8 @@
    * (order 1.29, B4).
    */
   [data-ds='switch'][data-dragging] > [data-part='control'],
-  [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) > [data-part='control']:is(:active, :hover) {
+  [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) > [data-part='control']:is(:active, :hover),
+  [data-ds='switch'][data-dragging][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
     --_switch-stretch-now: 1;
     --_switch-lean-now: 0px;
     --_switch-thumb-size-now: min(var(--_switch-thumb-size-pressed), 1);
@@ -704,7 +713,9 @@
     [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
     [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'],
     [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
-    [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'],
+    [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] > [data-part='track'],
+    [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
       transition: none;
     }
   }
@@ -724,7 +735,9 @@
   :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
   :root[data-motion='reduce'] [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'],
   :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
-  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'],
+  :root[data-motion='reduce'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] > [data-part='track'],
+  :root[data-motion='reduce'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
     transition: none;
   }
 

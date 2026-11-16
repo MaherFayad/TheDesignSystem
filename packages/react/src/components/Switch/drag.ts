@@ -23,6 +23,10 @@
 // after a tap, and Switch.css then times the travel on the state's spring, not
 // on the press.
 //
+// From pointerdown to pointerup or pointercancel the root carries
+// `data-pressed` (order M1), so the press shows as the finger lands: on touch
+// `:active` can wait for the release.
+//
 // The run itself (the slop, the rubber band, the snap) is the switch drag
 // core of @the-system/motion (helpers/switch-drag.ts), one copy for both
 // frameworks; this hook keeps the pointer wiring and the `dragging` flag.
@@ -33,6 +37,7 @@ import {
   clearDragProgress,
   dragOnSide,
   followPointer,
+  markPressed,
   markReleased,
   pastSlop,
   releaseChecked,
@@ -45,6 +50,7 @@ type Handlers = {
   onPointerUp?: PointerEventHandler<HTMLButtonElement>;
   onPointerCancel?: PointerEventHandler<HTMLButtonElement>;
   onLostPointerCapture?: PointerEventHandler<HTMLButtonElement>;
+  onPointerLeave?: PointerEventHandler<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
@@ -97,6 +103,8 @@ export function useSwitchDrag({
       markReleased(e.currentTarget, false);
       swallowUntil.current = 0;
       if (disabled || e.defaultPrevented || e.button !== 0 || !e.isPrimary) return;
+      // The press shows from here, not from the release (order M1): the root carries data-pressed while the pointer is down.
+      markPressed(e.currentTarget, true);
       run.current = beginSwitchDrag(e.currentTarget, checked, e.pointerId, e.clientX, e.timeStamp);
     },
     onPointerMove: (e: PointerEvent<HTMLButtonElement>) => {
@@ -117,17 +125,25 @@ export function useSwitchDrag({
       own.onPointerUp?.(e);
       // On touch `:active` outlasts the tap: from here the travel keeps the state's spring (N1).
       markReleased(e.currentTarget, true);
+      markPressed(e.currentTarget, false);
       if (run.current && e.pointerId === run.current.pointerId) finish(true, e.timeStamp);
     },
     onPointerCancel: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerCancel?.(e);
       markReleased(e.currentTarget, true);
+      markPressed(e.currentTarget, false);
       if (run.current && e.pointerId === run.current.pointerId) finish(false, e.timeStamp);
     },
     onLostPointerCapture: (e: PointerEvent<HTMLButtonElement>) => {
       own.onLostPointerCapture?.(e);
       // Capture is lost after the release too; by then the run is over.
+      markPressed(e.currentTarget, false);
       if (run.current && e.pointerId === run.current.pointerId && run.current.moved) finish(false, e.timeStamp);
+    },
+    onPointerLeave: (e: PointerEvent<HTMLButtonElement>) => {
+      own.onPointerLeave?.(e);
+      // A mouse that leaves before a drag starts lets go of the press, as `:active` does; a drag keeps it (capture).
+      if (!run.current?.moved) markPressed(e.currentTarget, false);
     },
     onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
       own.onKeyDown?.(e);

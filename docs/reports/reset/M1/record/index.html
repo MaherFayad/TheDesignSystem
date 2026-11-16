@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recording pack M1</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f7f9;--fg:#15171a;--muted:#5a606b;--card:#fff;--line:#d9dce1}
+@media (prefers-color-scheme: dark){:root{--bg:#111315;--fg:#eceef1;--muted:#a3a9b3;--card:#1b1e22;--line:#30343a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,sans-serif;padding:16px}
+h1{font-size:22px;margin:0 0 4px}
+.lead{color:var(--muted);max-inline-size:70ch}
+.grid{display:flex;flex-wrap:wrap;gap:16px;margin-block-start:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;max-inline-size:100%}
+.card h2{font-size:16px;margin:0}
+.card p{margin:4px 0;color:var(--muted);font-size:14px;max-inline-size:60ch}
+.pair{display:flex;flex-wrap:wrap;gap:12px;margin-block-start:8px}
+.side h3{font-size:14px;margin:0 0 4px}
+video{display:block;max-inline-size:100%;block-size:auto;background:#000;border-radius:8px}
+.none{font-style:italic}
+.exact .card{overflow-x:auto}
+.exact video{max-inline-size:none}
+label{display:inline-flex;gap:8px;align-items:center;min-block-size:44px;font-size:15px}
+</style></head><body>
+<h1>Recording pack M1: iOS phone surfaces after order M1</h1>
+<p class="lead">Every clip plays at real speed: each frame is one 60th of a second of the page's own time, drawn at 1x with no zoom. The caption above each phone names the style, the platform and what the finger does; a pink point shows where the finger is down, and a dashed ring where it lifted. Liquid and Neutral on the ios platform, on the iPhone frame, light and dark. The switch is tapped, then held: from pointerdown the thumb lifts into a raised clear lens larger than the track, and it switches on release. The dialog takes the alert form: a 320 wide card with 32 corners and capsule actions. The sheet has 38 top corners and a round close button at the top leading corner, and is dragged down by its top strip. The tab bar and the alert itself have no clip yet: the clip list has no tab bar press and no AlertDialog open (a request to the lead in docs/reports/lanes/reset-M1.md).</p>
+<label><input type="checkbox" id="exact"> Show every clip at exact 1x (on a phone narrower than the frame, the clip then scrolls sideways; unticked, it shrinks to fit)</label>
+<p class="lead">Recorded 2026-11-16 20:10 UTC at commit 8c8c5e58 with uncommitted changes. Sign sheet: <code>docs/reports/reset/signoff/M1.md</code>.</p>
+<div class="grid">
+<section class="card" id="switch-liquid-ios-iphone-light"><h2>Switch, Liquid light, iOS (set), an iPhone 15 Pro frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-liquid-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 17ms after the finger lands, while it is still down. 2.93s, 176 frames, 73 KB. <a href="sheets/switch-liquid-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="switch-liquid-ios-iphone-dark"><h2>Switch, Liquid dark, iOS (set), an iPhone 15 Pro frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-liquid-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 17ms after the finger lands, while it is still down. 2.93s, 176 frames, 74 KB. <a href="sheets/switch-liquid-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="switch-neutral-ios-iphone-light"><h2>Switch, Neutral light, iOS (set), an iPhone 15 Pro frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-neutral-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 17ms after the finger lands, while it is still down. 2.93s, 176 frames, 74 KB. <a href="sheets/switch-neutral-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="switch-neutral-ios-iphone-dark"><h2>Switch, Neutral dark, iOS (set), an iPhone 15 Pro frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-neutral-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 17ms after the finger lands, while it is still down. 2.93s, 176 frames, 75 KB. <a href="sheets/switch-neutral-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-liquid-ios-iphone-light"><h2>Dialog open, Liquid light, iOS (set), an iPhone 15 Pro frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-liquid-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 17ms after the finger lands, while it is still down. 1.72s, 103 frames, 112 KB. <a href="sheets/dialog-open-liquid-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-liquid-ios-iphone-dark"><h2>Dialog open, Liquid dark, iOS (set), an iPhone 15 Pro frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-liquid-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 33ms after the finger lands, while it is still down. 1.72s, 103 frames, 112 KB. <a href="sheets/dialog-open-liquid-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-neutral-ios-iphone-light"><h2>Dialog open, Neutral light, iOS (set), an iPhone 15 Pro frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-neutral-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 133ms after the finger lands, after it lifted. 1.72s, 103 frames, 109 KB. <a href="sheets/dialog-open-neutral-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-neutral-ios-iphone-dark"><h2>Dialog open, Neutral dark, iOS (set), an iPhone 15 Pro frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-neutral-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 133ms after the finger lands, after it lifted. 1.72s, 103 frames, 94 KB. <a href="sheets/dialog-open-neutral-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-liquid-ios-iphone-light"><h2>Sheet drag, Liquid light, iOS (set), an iPhone 15 Pro frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-liquid-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, while it is still down. 2.02s, 121 frames, 88 KB. <a href="sheets/sheet-drag-liquid-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-liquid-ios-iphone-dark"><h2>Sheet drag, Liquid dark, iOS (set), an iPhone 15 Pro frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-liquid-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, while it is still down. 2.02s, 121 frames, 101 KB. <a href="sheets/sheet-drag-liquid-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-neutral-ios-iphone-light"><h2>Sheet drag, Neutral light, iOS (set), an iPhone 15 Pro frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-neutral-ios-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, while it is still down. 2.02s, 121 frames, 92 KB. <a href="sheets/sheet-drag-neutral-ios-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-neutral-ios-iphone-dark"><h2>Sheet drag, Neutral dark, iOS (set), an iPhone 15 Pro frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-neutral-ios-iphone-dark.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, while it is still down. 2.02s, 121 frames, 95 KB. <a href="sheets/sheet-drag-neutral-ios-iphone-dark.png">Contact sheet</a></p></div></div></section>
+</div>
+<script>
+// Real speed, and 1x: a clip drawn at 2 pixels per CSS px is shown at half its pixel width.
+for (const v of document.querySelectorAll('video')) {
+  v.playbackRate = 1;
+  v.defaultPlaybackRate = 1;
+  v.addEventListener('loadedmetadata', () => { v.style.inlineSize = (v.videoWidth / Number(v.dataset.scale || 1)) + 'px'; });
+}
+document.getElementById('exact').addEventListener('change', (e) => document.body.classList.toggle('exact', e.target.checked));
+</script>
+</body></html>

@@ -1,0 +1,36 @@
+{
+  "order": "M1",
+  "title": "iOS phone surfaces after order M1",
+  "clips": [
+    "switch",
+    "dialog-open",
+    "sheet-drag"
+  ],
+  "styles": [
+    "liquid",
+    "neutral"
+  ],
+  "platforms": [
+    "ios"
+  ],
+  "devices": [
+    "iphone"
+  ],
+  "schemes": [
+    "light",
+    "dark"
+  ],
+  "note": "Liquid and Neutral on the ios platform, on the iPhone frame, light and dark. The switch is tapped, then held: from pointerdown the thumb lifts into a raised clear lens larger than the track, and it switches on release. The dialog takes the alert form: a 320 wide card with 32 corners and capsule actions. The sheet has 38 top corners and a round close button at the top leading corner, and is dragged down by its top strip. The tab bar and the alert itself have no clip yet: the clip list has no tab bar press and no AlertDialog open (a request to the lead in docs/reports/lanes/reset-M1.md).",
+  "device": {
+    "needed": true,
+    "why": "the clips come from Chromium's touch emulation with an iPhone viewport, not WebKit; the switch marks its press from pointerdown, but glass and blur draw on a software GPU and a real finger on iOS Safari may differ",
+    "steps": [
+      "Turn on the phone's screen recording.",
+      "Open the Platforms page, iOS, Settings screen. Tap the Show previews switch, then press and hold it for about a second.",
+      "Scroll the Settings screen so the rows pass under the tab bar, then tap Search and Home.",
+      "Open the Alert screen and look at the alert. Open the Sheet screen and tap the round close button.",
+      "Stop the recording and send it back with the phone's model and system version."
+    ]
+  },
+  "ask": "Do the switch, the tab bar, the alert and the sheet read as the current iOS on your iPhone, in Liquid and in Neutral? Answer \"approve\", or name the part and what is still wrong."
+}

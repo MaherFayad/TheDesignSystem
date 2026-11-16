@@ -48,6 +48,11 @@
     --_dialog-handle-radius: var(--ds-radius-pill);
   }
 
+  /* ios (order M1): the page behind an alert or a sheet dims and stays sharp, as the platform draws it; the panels keep their glass. */
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-backdrop-blur: 0px;
+  }
+
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
 
   @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {

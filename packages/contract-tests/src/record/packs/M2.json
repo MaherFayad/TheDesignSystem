@@ -1,0 +1,37 @@
+{
+  "order": "M2",
+  "title": "Android phone surfaces after order M2",
+  "clips": [
+    "switch",
+    "button-press",
+    "dialog-open",
+    "sheet-drag"
+  ],
+  "styles": [
+    "neutral",
+    "liquid"
+  ],
+  "platforms": [
+    "android"
+  ],
+  "devices": [
+    "pixel"
+  ],
+  "schemes": [
+    "light",
+    "dark"
+  ],
+  "note": "Neutral and Liquid on the android platform, on the Pixel frame, light and dark. The switch is tapped, then held: from pointerdown the 40 state layer shows round the thumb and the 16 dot grows to 28. The button shows the ripple. The dialog grows in place with 28 corners and text actions at the end. The sheet has 28 top corners and a 32 by 4 handle and is dragged down. The navigation bar has no clip yet: the clip list has no tab bar press (a request to the lead in docs/reports/lanes/reset-M2.md).",
+  "device": {
+    "needed": true,
+    "why": "the clips come from Chromium's touch emulation, where a press shown through :active arrives only when the finger lifts; the switch marks the press from pointerdown, the button family and the navigation bar do not yet",
+    "steps": [
+      "Turn on the phone's screen recording and show touches (Developer options, Show taps).",
+      "Open the Platforms page, Android, Settings screen. Tap the Show previews switch, then press and hold it for about a second.",
+      "Press and hold each item of the navigation bar for about a second, then tap Search.",
+      "Open the Alert screen and look at the dialog. Open the Sheet screen, drag the sheet's handle down about a third of the screen and let go.",
+      "Stop the recording and send it back with the phone's model and system version."
+    ]
+  },
+  "ask": "Do the switch, the navigation bar, the dialog and the bottom sheet read as Material 3 on your Android phone, in Neutral and in Liquid? Answer \"approve\", or name the part and what is still wrong."
+}

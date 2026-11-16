@@ -71,3 +71,38 @@
     inset-block-end: 0;
   }
 }
+
+/*
+ * Order M1, ios only: the phone screen fills the frame (no stage padding),
+ * and the tab bar floats over the content at the bottom, so the content
+ * scrolls under it as on the platform. The body keeps room under its last
+ * row for the bar: the bar's 54 item, its 4 padding twice and border, and
+ * the 20 gap under it.
+ */
+@layer ds.overrides {
+  [data-platform='ios'] [data-gallery='stage']:has(> [data-gallery='phone']) {
+    padding: 0;
+  }
+
+  [data-platform='ios'] [data-gallery='phone-tabs'] {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--ds-z-topbar);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-body'] {
+    padding-block-end: calc(var(--ds-size-touch-ios) + 4 * var(--ds-space-fixed-l) + 4 * var(--ds-space-fixed-2xs));
+  }
+}
+
+/*
+ * Order M2, android only: the phone screen fills the frame (no stage
+ * padding), so the top app bar and the navigation bar run the full width of
+ * the screen as on the platform.
+ */
+@layer ds.overrides {
+  [data-platform='android'] [data-gallery='stage']:has(> [data-gallery='phone']) {
+    padding: 0;
+  }
+}
