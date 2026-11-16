@@ -234,6 +234,7 @@ Through the Mobbin connector (platforms `ios` and `web` only):
   a full width selected row, capsule buttons.
 - `android`: Material for the web, captured in a browser (no Mobbin set).
 
-Study and measure only; copy no artwork, icons, marks, fonts or text. Image
-links from the connector expire after 30 days, so each order downloads the
-captures it measures against into its evidence folder.
+Study and measure only; copy no artwork, icons, marks, fonts or text.
+Reference captures are third party screenshots: they are never committed to
+this repo. An order keeps them in scratch outside the repo while it
+measures, and its report cites the Mobbin link of each screen.
