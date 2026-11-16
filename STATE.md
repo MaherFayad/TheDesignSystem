@@ -7,10 +7,20 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
-**Pause requested by the owner (2026-11-16):** finish the running orders
-(R0.9 and R0.21), check and commit them, then pause. Start nothing new.
-Not started in R0: R0.16 (gate review), R0.17 (press cost profile), and a
-review of steps 2 to 4. Follow ups are in `docs/plan/reset-followups.md`.
+**Paused by the owner (2026-11-16, about 17:00 UTC).** No agent is running.
+Start nothing until the owner says so. `npm run check` passes on the paused
+tree (13 steps, 2761 tests, Angular 753).
+
+- R0 done: R0.1 to R0.15, plus the added orders R0.18 (SegmentedControl
+  reflow), R0.19 (macos density), R0.20 (OTPField reflow), R0.21 (target
+  size floor).
+- R0 not started: R0.16 (gate review, with a quiet rerun of the perceive
+  baseline and the reflow sweep), R0.17 (press cost profile), a fresh
+  review of steps 2 to 4. No docs deploy since the reset began.
+- Waiting on the owner: the recording pack format
+  (`docs/reports/reset/signoff/R0.9.md`, row `pack-format`), the phones for
+  device checks, the proposed `macos` look and the phone chrome of R0.15.
+- Follow ups: `docs/plan/reset-followups.md`.
 
 The owner lifted the pause and answered 22 decisions: see "Reset rulings" in
 `DECISIONS.md`. The seven audits are in `docs/reports/audit/`.

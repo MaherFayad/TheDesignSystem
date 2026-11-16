@@ -1460,8 +1460,8 @@ pre.astro-code span {
   }
   /* On a touch platform the search button is a square of the platform's target, as the switches are. */
   :root:is([data-platform='ios'], [data-platform='android']) .search-btn {
-    inline-size: var(--ds-size-target-min);
-    min-block-size: var(--ds-size-target-min);
+    inline-size: var(--ds-size-target);
+    min-block-size: var(--ds-size-target);
   }
   /* The scheme and language switches keep their icon; the value stays in the name. */
   .menu[data-compact] [data-menu-button] > [data-part='label'] {

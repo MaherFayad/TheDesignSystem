@@ -1,0 +1,108 @@
+{
+ "note": "npm run contract -- --framework react --grep sideways, React gallery, Chromium. Runs named by --tag.",
+ "runs": {
+  "r021-otpfield-after": {
+   "components": 1,
+   "passed": 32,
+   "failed": 0,
+   "failures": []
+  },
+  "r021-sideways-android-rerun": {
+   "components": 2,
+   "passed": 15,
+   "failed": 1,
+   "failures": [
+    {
+     "test": "ProgressCircle: no sideways scroll at 320px and no title attribute, desk android ar rtl",
+     "why": [
+      "page scrolls sideways by 2px at 320px",
+      "case variants alone scrolls sideways by 2px: span is 131px wide, white-space normal; circle in [data-ds=progress-circle] is 105px wide, white-space normal"
+     ]
+    }
+   ]
+  },
+  "r021-sideways-android": {
+   "components": 108,
+   "passed": 863,
+   "failed": 1,
+   "failures": [
+    {
+     "test": "ProgressCircle: no sideways scroll at 320px and no title attribute, desk android ar rtl",
+     "why": [
+      "page scrolls sideways by 2px at 320px",
+      "case variants alone scrolls sideways by 2px: span is 131px wide, white-space normal; circle in [data-ds=progress-circle] is 105px wide, white-space normal"
+     ]
+    }
+   ]
+  },
+  "r021-sideways-ios-rerun": {
+   "components": 2,
+   "passed": 16,
+   "failed": 0,
+   "failures": []
+  },
+  "r021-sideways-ios": {
+   "components": 107,
+   "passed": 856,
+   "failed": 0,
+   "failures": []
+  },
+  "r021-titlebar-android-after": {
+   "components": 1,
+   "passed": 8,
+   "failed": 0,
+   "failures": []
+  },
+  "r021-titlebar-before": {
+   "components": 1,
+   "passed": 4,
+   "failed": 4,
+   "failures": [
+    {
+     "test": "TitleBar: no sideways scroll at 320px and no title attribute, desk android en ltr",
+     "why": [
+      "page scrolls sideways by 2px at 320px",
+      "case many alone scrolls sideways by 2px: span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap; span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap"
+     ]
+    },
+    {
+     "test": "TitleBar: no sideways scroll at 320px and no title attribute, liquid android en ltr",
+     "why": [
+      "page scrolls sideways by 12px at 320px",
+      "case many alone scrolls sideways by 12px: span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap; span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap"
+     ]
+    },
+    {
+     "test": "TitleBar: no sideways scroll at 320px and no title attribute, neutral android en ltr",
+     "why": [
+      "page scrolls sideways by 12px at 320px",
+      "case many alone scrolls sideways by 12px: span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap; span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap"
+     ]
+    },
+    {
+     "test": "TitleBar: no sideways scroll at 320px and no title attribute, studio android en ltr",
+     "why": [
+      "page scrolls sideways by 2px at 320px",
+      "case many alone scrolls sideways by 2px: span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap; span[data-part=hit] in [data-ds=icon-button] is 48px wide, white-space nowrap"
+     ]
+    }
+   ]
+  }
+ },
+ "progressCircleCheck": {
+  "page": "/c/progress-circle?style=desk&scheme=dark&platform=android&dir=rtl&lang=ar at 320px, 4 loads each, page overflow in px",
+  "targetMin48": [
+   2,
+   0,
+   2,
+   0
+  ],
+  "targetMin24": [
+   0,
+   0,
+   2,
+   0
+  ],
+  "reading": "The 2px overflow comes and goes with the moment the page is read, at either value: not caused by this order."
+ }
+}

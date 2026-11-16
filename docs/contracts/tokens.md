@@ -115,7 +115,7 @@ What a platform may set:
 | Kind | Names |
 | --- | --- |
 | Type ramp | `type.<role>` composites (see "Platform names") |
-| Control heights | `size.control.*`, `size.touch.*`, `size.target-min` |
+| Control heights | `size.control.*`, `size.touch.*`, `size.target` (the platform touch target: 24 on `web` and `macos`, 44 on `ios`, 48 on `android`), `size.target-min` (the WCAG 2.5.8 floor: 24 on every platform, never changed by one) |
 | Corner scale | `shape.corner.*` |
 | State opacities | `opacity.state.*` |
 | Elevation levels | `elevation.level0` to `elevation.level5`, geometry only |

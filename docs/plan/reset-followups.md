@@ -145,3 +145,21 @@ should pick it up.
 7. On the web, Desk's SegmentedControl and ToggleGroup items are 12px
    shorter after the Density selector fix (36 to 24). R1 checks them against
    GoBanana.
+
+## From R0.20 and R0.21 (target sizes)
+
+1. 27 components were 44 or 48 on phones only while the floor was raised,
+   and are back to their earlier sizes (none under 24): inline links, Rating
+   items, resize and split handles, Menubar triggers, ListBox options, Chip
+   on `android` and others. The list is in
+   `docs/reports/reset/R0.21/phone-targets-lost.json`. R4 decides which get
+   a platform rule on `size.target`.
+2. The Sheet and Drawer handle strips on `ios` are 24 tall
+   (`ios.css:940`, `:974`). Consider `size.target` in R4.8.
+3. ProgressCircle overflows by 2px at 320px in Desk, `android`, Arabic RTL,
+   on some animation frames. Needs its own small order.
+4. Stale comments about `target-min` in `OTPField.css` (lines 77, 187 to
+   189) and `OTPField.reflow.test.ts` (lines 1 to 3); wording is in
+   `docs/reports/lanes/reset-R0.21.md`.
+5. FloatingActionButton, RangeSlider, Stepper, Field and Section rendered no
+   demo on one phone platform in the sweep. Rerun at the R0 gate.
