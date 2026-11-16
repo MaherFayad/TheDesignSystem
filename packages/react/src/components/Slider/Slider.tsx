@@ -2,9 +2,10 @@
 // Motion. slider-pull (pattern press, Slider.css): the thumb lifts a little
 // while it is grabbed and settles on release, a CSS transition on the
 // thumb's transform. slider-nudge: when a key pushes a thumb past the
-// minimum or the maximum, the thumb and the fill pull half way to
-// --_slider-pull-max past that end and spring back (order 1.23; round 2
-// played one shake swing). A held key nudges once, not on every repeat.
+// minimum or the maximum, the thumb pulls half way to --_slider-pull-max
+// past that end and springs back (order 1.23; round 2 played one shake
+// swing). A held key nudges once, not on every repeat. The fill stays inside
+// the track box (order R0.2, reflow at 320px), so it ends at the track end.
 //
 // Order 1.23 (proposed):
 // - slider-fill: the fill is drawn by the track's ::before with a clip-path
@@ -15,10 +16,10 @@
 //   Radix's own transform) play from the old place to the new one on the
 //   snappy spring.
 // - slider-rubber-band: a drag past the minimum or the maximum pulls the
-//   outer thumb, and the fill with it, past the end of the track with a
-//   resistance that grows with the distance (--_slider-pull-start and
-//   --_slider-pull-end, 0 to 1, times --_slider-pull-max). On release both
-//   spring back on the bouncy spring.
+//   outer thumb past the end of the track with a resistance that grows with
+//   the distance (--_slider-pull-start and --_slider-pull-end, 0 to 1, times
+//   --_slider-pull-max). The fill stops at the track end (order R0.2). On
+//   release the thumb springs back on the bouncy spring.
 // The arithmetic and the Web Animations calls are the slider helpers of
 // @the-system/motion (helpers/slider-fill.ts), one copy for both
 // frameworks; this file keeps the state, the timers and the pointer wiring.
@@ -107,7 +108,7 @@ interface BaseInternals {
 
 /**
  * slider-nudge (order 1.23): a key that pushes a thumb past its end pulls
- * it, and the fill with it, half of --_slider-pull-max past the end on the
+ * it (not the fill, order R0.2) half of --_slider-pull-max past the end on the
  * snappy spring, then lets go on the bouncy spring: the rubber band of a
  * drag, played by a key. The value never changes. A rapid second key
  * restarts it; unmounting clears it.

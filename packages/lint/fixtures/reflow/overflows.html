@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-style="desk" data-platform="android">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reflow fixture that scrolls sideways</title>
+    <style>
+      body { margin: 0; }
+      [data-ds='slider'] { display: flex; }
+      [data-ds='slider'] [data-part='track'] { display: block; flex: none; inline-size: 400px; block-size: 24px; }
+    </style>
+  </head>
+  <body>
+    <section data-demo-case="fits">
+      <p>This case fits.</p>
+    </section>
+    <section data-demo-case="range">
+      <div data-ds="slider"><span data-part="track"></span></div>
+      <button type="button" title="Native hint">Set range</button>
+    </section>
+  </body>
+</html>

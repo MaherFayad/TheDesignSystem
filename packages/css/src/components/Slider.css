@@ -58,8 +58,8 @@
  *                                  end, 0 to 1 (slider-rubber-band); set by Slider.tsx
  *   --_slider-pull-max             the furthest a pull reaches; 0px turns it off
  *   --_slider-pull-now             on a thumb: the pull it follows
- *   --_slider-clip-start, --_slider-clip-end   the fill's clip from each end,
- *                                  read by --_slider-clip-left and -right
+ *   --_slider-clip-start, --_slider-clip-end   the fill's clip from each end of
+ *                                  the track box, read by --_slider-clip-left and -right
  *   --_slider-halo                 the state layer around the thumb (hover, held)
  *   --_slider-halo-spread          how far it reaches; 0px turns it off
  *   --_slider-halo-now             the working spread the hover and held rules set
@@ -76,9 +76,9 @@
  *   thumb wrapper, with transform) on the snappy spring when a key or a
  *   press moves the value, and lets both follow a drag at once.
  * - slider-rubber-band: past an end, the outer thumb travels up to
- *   --_slider-pull-max beyond the track and the fill stretches with it; the
- *   ::before reaches --_slider-pull-max past each end of the track for that.
- *   On release the thumb's transform springs back on the bouncy spring.
+ *   --_slider-pull-max beyond the track. The fill stays inside the track box
+ *   (order R0.2, reflow at 320px) and ends at the track end while the thumb
+ *   pulls. On release the thumb's transform springs back on the bouncy spring.
  * - slider-pull gains a state layer: on hover and while held, a soft halo
  *   spreads around the circle (box-shadow on ::after, the edge layer).
  */
@@ -111,8 +111,8 @@
     --_slider-pull-start: 0;
     --_slider-pull-end: 0;
     --_slider-pull-max: calc(var(--ds-distance-enter) * 3);
-    --_slider-clip-start: calc(var(--_slider-from) * 100% + var(--_slider-pull-max) * (1 - 2 * var(--_slider-from) - var(--_slider-pull-start)));
-    --_slider-clip-end: calc((1 - var(--_slider-to)) * 100% + var(--_slider-pull-max) * (2 * var(--_slider-to) - 1 - var(--_slider-pull-end)));
+    --_slider-clip-start: calc(var(--_slider-from) * 100%);
+    --_slider-clip-end: calc((1 - var(--_slider-to)) * 100%);
     --_slider-clip-left: var(--_slider-clip-start);
     --_slider-clip-right: var(--_slider-clip-end);
     --_slider-halo: var(--ds-color-primary-tint-hover);
@@ -198,15 +198,16 @@
   }
 
   /*
-   * slider-fill: the fill, clipped from each end. It reaches --_slider-pull-max
-   * past both ends of the track, so a pull can stretch it; at rest the clip
-   * keeps it inside the track.
+   * slider-fill: the fill, clipped from each end. Its box is the track box
+   * (order R0.2): a box past the track made the page scroll sideways at
+   * 320px, even with the clip keeping the paint inside. So the fill stops at
+   * the end of the track, and a pull moves the thumb only.
    */
   :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track']::before {
     content: '';
     position: absolute;
     inset-block: 0;
-    inset-inline: calc(var(--_slider-pull-max) * -1);
+    inset-inline: 0;
     border-radius: var(--ds-radius-pill);
     background-color: var(--_slider-fill);
     clip-path: inset(0 var(--_slider-clip-right) 0 var(--_slider-clip-left) round var(--ds-radius-pill));

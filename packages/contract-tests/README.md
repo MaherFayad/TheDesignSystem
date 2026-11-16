@@ -16,15 +16,16 @@ npm run contract -- --framework angular               # skips with a note until 
 npm run contract -- --framework react --style liquid --styles liquid   # the whole suite in one style
 npm run contract -- --framework react --platform ios --component Button,Switch --tag ios-controls
 npm run contract -- --framework react --platform android --grep "target size" --target-min 48 --tag android-min48
+npm run contract -- --framework react --component Slider,RangeSlider --grep "sideways" --tag reflow   # the reflow matrix only
 ```
 
 Options that narrow or move a run (each sets an environment variable the spec reads):
 
 | Option | Variable | Effect |
 | --- | --- | --- |
-| `--style <id>` | `DS_STYLE` | the style of the checks that run once (variants, states, keys, reflow) |
-| `--styles <a,b>` | `DS_STYLES` | narrows the per style loops (anatomy, target size, axe) |
-| `--platform <web, ios or android>` | `DS_PLATFORM` | added to every URL |
+| `--style <id>` | `DS_STYLE` | the style of the checks that run once (variants, states, keys) |
+| `--styles <a,b>` | `DS_STYLES` | narrows the per style loops (anatomy, target size, reflow, axe) |
+| `--platform <web, ios, android or macos>` | `DS_PLATFORM` | added to every URL; narrows the reflow matrix to that platform |
 | `--target-min <px>` | `DS_TARGET_MIN` | the minimum target size, default 24 (WCAG 2.5.8); 44 and 48 are the platform guides, not WCAG |
 | `--grep <regex>` | (playwright `--grep`) | runs only the tests whose title matches |
 | `--tag <name>` | | the report name, `docs/reports/contract-<framework>-<name>.json` |
@@ -58,7 +59,9 @@ Environment the spec reads: `DS_GALLERY_URL`, `DS_FRAMEWORK` (default
 `scripts/shots.ts` and `scripts/a11y.ts` share it.
 
 Unit tests for the helpers: `src/lib.test.ts` and `src/page.test.ts` run in
-Vitest with `npm run check`. The Playwright suite is not part of check.
+Vitest with `npm run check`. `src/reflow.test.ts` runs the reflow scan in
+Chromium on two fixtures in `packages/lint/fixtures/reflow/`, one that fits
+320px and one that does not. The Playwright suite is not part of check.
 
 ## Which components
 
@@ -81,7 +84,7 @@ Every test title starts with the component name.
 | `a11y.keys` | **keyboard map**, one generic check per key (below) | default style, dark, en ltr |
 | (always) | disabled roots are out of the tab order or carry `aria-disabled="true"` | keyboard map |
 | (always) | **target size**: every interactive element in a demo case, and in every root a trigger opens, is at least 24 by 24 CSS px | every style and every density (compact, default, comfortable), dark, en ltr; overlays also with each trigger in the variants case open, density default |
-| (always) | **reflow**: no sideways scroll at 320px wide; no native `title` attribute | en ltr and ar rtl |
+| (always) | **reflow**: no sideways scroll at 320px wide; no native `title` attribute. A note says when the page applied another platform than the one asked for | every style (its dark scheme) by every platform (`web`, `ios`, `android`, `macos`), in en ltr and ar rtl |
 | `contract.skipAxeRules` | **axe** with `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`, minus these rules | every style and scheme in `packages/styles/*/style.json`, in en ltr and ar rtl |
 
 ### Part ownership

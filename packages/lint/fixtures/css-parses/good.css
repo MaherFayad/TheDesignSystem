@@ -1,0 +1,13 @@
+/* A passing sample for ds/css-parses: layers, nesting, strings and escapes. */
+@layer ds.base {
+  [data-ds='dialog'] {
+    content: "a { b";
+    grid-template-areas: 'head' 'body';
+    &:dir(rtl) .x\:y {
+      inset-inline-start: calc(var(--ds-space-2) * (1 + 1));
+    }
+    @media (min-width: 40rem) {
+      padding: var(--ds-space-4);
+    }
+  }
+}

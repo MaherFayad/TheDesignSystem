@@ -109,6 +109,14 @@ describe('RangeSlider', () => {
     expect(css).toMatch(/:has\(> \[data-part='thumb'\]:focus\) \{\s*z-index:/);
   });
 
+  it('reflow at 320px (order R0.2): the shared fill stays in the track box and a range sets no clip of its own', () => {
+    const shared = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const at = shared.indexOf("> [data-part='control'] > [data-part='track']::before {");
+    expect(shared.slice(at, shared.indexOf('}', at))).toMatch(/inset-inline: 0;/);
+    const own = readFileSync(join(process.cwd(), 'packages/css/src/components/RangeSlider.css'), 'utf8');
+    expect(own).not.toMatch(/::before|--_slider-clip|inset-inline/);
+  });
+
   it('keeps the demo thumb centers 24px apart on a 320px screen', () => {
     // 320px less the 16px page gutters and one 24px target is the travel of a thumb center.
     const travel = 320 - 2 * 16 - 24;

@@ -20,6 +20,7 @@ export * from './rules/no-tailwind';
 export * from './rules/token-vocabulary';
 export * from './rules/no-public-token-declared';
 export * from './rules/forced-colors-fallback';
+export * from './rules/no-conflict-marker';
 
 import { animateTransformOpacityOnlyRule } from './rules/animate-transform-opacity-only';
 import { buttonPrimitiveRule } from './rules/button-primitive';
@@ -33,6 +34,7 @@ import { noRawValueRule } from './rules/no-raw-value';
 import { noTailwindRule } from './rules/no-tailwind';
 import { noPublicTokenDeclaredRule } from './rules/no-public-token-declared';
 import { forcedColorsFallbackRule } from './rules/forced-colors-fallback';
+import { noConflictMarkerRule } from './rules/no-conflict-marker';
 import type { Rule } from './types';
 
 /**
@@ -52,6 +54,7 @@ export const rules: readonly Rule[] = [
   noImportantRule,
   noPublicTokenDeclaredRule,
   forcedColorsFallbackRule,
+  noConflictMarkerRule,
 ];
 
 // Gates that read the token build instead of files.

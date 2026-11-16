@@ -381,7 +381,7 @@ export interface Axes {
   scheme?: string;
   /** compact, default or comfortable. Left out of the URL when not set. */
   density?: string;
-  /** web, ios or android. Left out of the URL when not set (the gallery reads web). */
+  /** web, ios, android or macos. Left out of the URL when not set (the gallery reads web). */
   platform?: string;
   dir: 'ltr' | 'rtl';
   lang: 'en' | 'ar';
@@ -417,6 +417,30 @@ export function isControl(m: Manifest): boolean {
   if (sizes.some((s) => s === 'xl' || s === '2xl')) return false;
   if (/never focusable|not focusable/i.test(m.a11y?.focus ?? '')) return false;
   return !opensAndCloses(m);
+}
+
+/**
+ * The platforms of the platform axis, from the table in
+ * `docs/contracts/frameworks.md` (`data-platform`). `auto` is an input only
+ * and resolves to one of these, so it is not a separate run.
+ */
+export const PLATFORMS = ['web', 'ios', 'android', 'macos'] as const;
+
+/**
+ * The reflow matrix (order R0.5): every style by every platform, in en ltr
+ * and ar rtl, each in the style's dark scheme when it has one. The width is
+ * 320px in every case. Density stays the style's default.
+ */
+export function reflowMatrix(styles: StyleInfo[], platforms: readonly string[] = PLATFORMS): Axes[] {
+  const out: Axes[] = [];
+  for (const s of styles) {
+    const scheme = s.schemes.includes('dark') ? 'dark' : s.defaultScheme;
+    for (const platform of platforms) {
+      out.push({ style: s.id, scheme, platform, dir: 'ltr', lang: 'en' });
+      out.push({ style: s.id, scheme, platform, dir: 'rtl', lang: 'ar' });
+    }
+  }
+  return out;
 }
 
 /** The axe matrix: every style and scheme, in en ltr and ar rtl. */

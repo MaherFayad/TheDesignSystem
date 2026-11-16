@@ -31,7 +31,7 @@ import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup
 import { ButtonRoot, renderSlotContent, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
 import { useTheme } from '../../theme';
 import { GroupDisabledContext, moveFromInertItem, useGroupDisabled } from './inertItems';
-import { followIndicator, fromLocal, playInk } from '@the-system/motion';
+import { inFrame, planFollow, planInk } from '@the-system/motion';
 import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
@@ -119,8 +119,9 @@ export function ToggleGroup({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const track = useIndicatorTrack();
   // The label under the pill, for the ink. Kept outside the track (order 1.29,
-  // angular-sync-3 section 6 item 2): followIndicator makes the track's label
-  // dip and pop, and ToggleGroup's labels take the ink instead.
+  // angular-sync-3 section 6 item 2): planFollow makes the track's label
+  // dip and pop, and ToggleGroup's labels take the ink instead. planFollow
+  // is given no label, so the track keeps none.
   const inkLabel = useRef<Element | null>(null);
   const motion = useMotion();
   const { ref, ...radixRest } = rest as typeof rest & { ref?: Ref<HTMLDivElement> };
@@ -136,27 +137,43 @@ export function ToggleGroup({
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!single || !root) return;
-    const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
-    const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
-    if (!item || !pill) {
-      track.key = null;
-      return;
-    }
-    const lastLabel = inkLabel.current;
-    const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
-    const slide = followIndicator(track, singleValue, { el: pill }, { mode: motion.mode('tab-slide'), anchor: root });
-    inkLabel.current = label;
-    // Round 3: the text under the pill takes the on color where the pill is (helpers/nav-ink.ts in @the-system/motion).
-    playInk({
-      switch: '--_toggle-group-ink',
-      slide,
-      to: track.rect ? fromLocal(track.rect, root) : pill.getBoundingClientRect(),
-      anchor: root,
-      parts: Array.from(root.querySelectorAll(INKED)),
-      reaching: Array.from(item.querySelectorAll(INKED_OWN)),
-      restFrom: lastLabel,
-      inkFrom: label,
-      axis: orientation === 'vertical' ? 'y' : 'x',
+    const mode = motion.mode('tab-slide');
+    const axis = orientation === 'vertical' ? 'y' : 'x';
+    // Order R0.3: the reads of this group share one style pass with every
+    // other list of the commit (inFrame), and the writes come after all of
+    // them, still before the first paint. Same pattern as Tabs and
+    // SegmentedControl (order 1.29, review B14).
+    inFrame(() => {
+      console.log('JOB', root.isConnected, root.querySelectorAll('[data-state="on"]').length);
+      if (!root.isConnected) return;
+      const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
+      const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
+      if (!item || !pill) {
+        track.key = null;
+        return;
+      }
+      const lastLabel = inkLabel.current;
+      const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+      const plan = planFollow(track, singleValue, { el: pill }, { mode, anchor: root });
+      console.log('PLAN', mode, track.key, singleValue, JSON.stringify(plan.slide)?.slice(0, 80));
+      // Round 3: the text under the pill takes the on color where the pill is (helpers/nav-ink.ts in @the-system/motion).
+      const ink = planInk({
+        switch: '--_toggle-group-ink',
+        slide: plan.slide,
+        to: plan.to,
+        anchor: root,
+        parts: Array.from(root.querySelectorAll(INKED)),
+        reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+        restFrom: lastLabel,
+        inkFrom: label,
+        axis,
+        indicator: pill,
+      });
+      return () => {
+        console.log('WRITEJOB', singleValue);
+        inkLabel.current = label;
+        ink(plan.write());
+      };
     });
   }, [single, singleValue, track, motion, orientation]);
 

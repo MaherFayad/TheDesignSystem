@@ -32,6 +32,8 @@ import {
   triggerSelector,
   openedKebab,
   hasOpenChecks,
+  PLATFORMS,
+  reflowMatrix,
   variantFindings,
   type Axes,
   type AxeViolation,
@@ -58,6 +60,7 @@ import {
   targetStops,
   probeFocused,
   probePoint,
+  appliedAxes,
   reflowAndTitles,
   scanAnatomy,
   scanDisabled,
@@ -73,8 +76,9 @@ const framework = process.env.DS_FRAMEWORK ?? 'react';
 const only = (process.env.DS_COMPONENT ?? '').split(',').map((s) => s.trim()).filter(Boolean);
 const manifests = loadManifests(repo);
 // DS_STYLES (comma list) narrows the per style loops; DS_STYLE sets the style
-// of the checks that run once (variants, states, keys, reflow); DS_PLATFORM
-// (web, ios, android) is added to every URL. run.ts sets them from --styles,
+// of the checks that run once (variants, states, keys); DS_PLATFORM
+// (web, ios, android, macos) is added to every URL and narrows the reflow
+// matrix to that platform. run.ts sets them from --styles,
 // --style and --platform.
 const onlyStyles = (process.env.DS_STYLES ?? '').split(',').map((s) => s.trim()).filter(Boolean);
 const allStyles = discoverStyles(repo);
@@ -579,10 +583,15 @@ for (const m of components) {
     }
   }
 
-  for (const axes of [baseAxes, { ...baseAxes, dir: 'rtl', lang: 'ar' } satisfies Axes]) {
-    test(`${name}: no sideways scroll at 320px and no title attribute, ${axes.lang} ${axes.dir}`, async ({ page }) => {
+  // Reflow (WCAG 1.4.10) at 320px wide: every style by every platform, in en
+  // ltr and ar rtl (order R0.5). Wave 1 ran it in the default style only.
+  // DS_PLATFORM narrows it to one platform, DS_STYLES to some styles.
+  for (const axes of reflowMatrix(styles, platform ? [platform] : PLATFORMS)) {
+    test(`${name}: no sideways scroll at 320px and no title attribute, ${axes.style} ${axes.platform} ${axes.lang} ${axes.dir}`, async ({ page }) => {
       await page.setViewportSize({ width: 320, height: 800 });
       await open(page, kebab, axes);
+      const applied = await page.evaluate(appliedAxes);
+      if (applied.platform !== axes.platform) note(`asked for platform ${axes.platform}, the page applied ${applied.platform ?? 'none'}`);
       const r = await page.evaluate(reflowAndTitles);
       const failures = [
         ...(r.overflow > 1 ? [`page scrolls sideways by ${r.overflow}px at 320px`, ...r.wide] : []),

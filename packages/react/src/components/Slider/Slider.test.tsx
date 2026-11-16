@@ -152,7 +152,7 @@ describe('Slider', () => {
   });
 
   describe('slider-pull and slider-nudge', () => {
-    it('slider-nudge: a key past the maximum pulls the thumb and the fill toward the end, then lets go, and the value stays', () => {
+    it('slider-nudge: a key past the maximum pulls the thumb toward the end, then lets go, and the value stays', () => {
       vi.useFakeTimers();
       try {
         const { container } = render(
@@ -212,7 +212,7 @@ describe('Slider', () => {
       expect(reduced).toMatch(/--_slider-lift: 1;/);
     });
 
-    it('slider-rubber-band: a drag past the end pulls the thumb and the fill with resistance, and lets go on release', () => {
+    it('slider-rubber-band: a drag past the end pulls the thumb with resistance, and lets go on release', () => {
       const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
       const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
       try {
@@ -266,6 +266,18 @@ describe('Slider', () => {
       const range = css.indexOf("> [data-part='track'] > [data-part='range'] {");
       expect(css.slice(range, css.indexOf('}', range))).not.toMatch(/background/);
       expect(css).not.toMatch(/transition[^;]*\b(width|inset|left|right)\b/);
+    });
+
+    it('reflow at 320px (order R0.2): the fill box is the track box, and a pull never widens it', () => {
+      const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+      const at = css.indexOf("> [data-part='control'] > [data-part='track']::before {");
+      const fill = css.slice(at, css.indexOf('}', at));
+      expect(fill).toMatch(/inset-inline: 0;/);
+      expect(fill).not.toMatch(/pull-max/);
+      // The clip from each end reads only the value, never the pull, so it stays within 0 to 100 percent.
+      const clip = css.match(/--_slider-clip-(start|end): [^;]*;/g) ?? [];
+      expect(clip).toHaveLength(2);
+      for (const rule of clip) expect(rule).not.toMatch(/pull/);
     });
 
     it('marks the root while a pointer holds the thumb', () => {

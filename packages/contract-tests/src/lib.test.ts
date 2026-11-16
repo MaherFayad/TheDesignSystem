@@ -1,10 +1,13 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
   anatomyFindings,
   axeMatrix,
+  PLATFORMS,
+  reflowMatrix,
   booleanStates,
   defaultStyle,
   demoPath,
@@ -323,5 +326,39 @@ describe('contract.opens', () => {
     expect(hasOpenChecks(split)).toBe(true);
     expect(hasOpenChecks(own)).toBe(true);
     expect(hasOpenChecks(still)).toBe(false);
+  });
+});
+
+describe('reflowMatrix: reflow in every style and every platform (order R0.5)', () => {
+  const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+
+  it('lists the platforms of the contract table in frameworks.md', () => {
+    const row = readFileSync(join(repo, 'docs/contracts/frameworks.md'), 'utf8')
+      .split('\n')
+      .find((l) => l.startsWith('| Platform | `data-platform` |'));
+    expect(row, 'the Platform row of the axes table').toBeDefined();
+    const cell = (row ?? '').split('|')[3] ?? '';
+    const values = [...cell.replace(/\(.*\)/, '').matchAll(/`([a-z]+)`/g)].map((m) => m[1]);
+    expect([...PLATFORMS]).toEqual(values);
+  });
+
+  it('runs 4 styles by 4 platforms, in en ltr and ar rtl, on this repo', () => {
+    const styles = discoverStyles(repo);
+    expect(styles.map((s) => s.id)).toEqual(['desk', 'liquid', 'neutral', 'studio']);
+    const matrix = reflowMatrix(styles);
+    expect(matrix).toHaveLength(4 * 4 * 2);
+    const pairs = new Set(matrix.map((a) => `${a.style} ${a.platform}`));
+    expect(pairs.size).toBe(16);
+    for (const s of styles) for (const p of PLATFORMS) expect(pairs.has(`${s.id} ${p}`), `${s.id} ${p}`).toBe(true);
+    expect(matrix.filter((a) => a.dir === 'rtl').every((a) => a.lang === 'ar')).toBe(true);
+    expect(demoPath('slider', matrix[2] ?? { dir: 'ltr', lang: 'en' })).toBe('/c/slider?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0');
+  });
+
+  it('narrows to one platform and keeps a light only style in its own scheme', () => {
+    const matrix = reflowMatrix([{ id: 'paper', schemes: ['light'], defaultScheme: 'light', optionalParts: {} }], ['ios']);
+    expect(matrix).toEqual([
+      { style: 'paper', scheme: 'light', platform: 'ios', dir: 'ltr', lang: 'en' },
+      { style: 'paper', scheme: 'light', platform: 'ios', dir: 'rtl', lang: 'ar' },
+    ]);
   });
 });

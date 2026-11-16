@@ -73,3 +73,18 @@ export function format(findings: Finding[]): string[] {
 export function lines(findings: Finding[]): number[] {
   return findings.map((f) => f.line);
 }
+
+// Conflict markers, built from repeat() so no file of the gates holds a marker line.
+const OURS = '<'.repeat(7);
+const SPLIT = '='.repeat(7);
+const THEIRS = '>'.repeat(7);
+
+/** Dialog.css with a conflict planted after its first declaration, as a merge leaves it. */
+export function plantedDialog(): { path: string; content: string; at: number } {
+  const path = 'packages/css/src/components/Dialog.css';
+  const text = readText(path) ?? '';
+  const src = text.split('\n');
+  const at = src.findIndex((l) => /^\s+[a-z-]+:\s/.test(l)) + 1;
+  src.splice(at, 0, `${OURS} HEAD`, '  padding: var(--ds-space-4);', SPLIT, '  padding: var(--ds-space-2);', `${THEIRS} claude/ds-reset-r1-5`);
+  return { path, content: src.join('\n'), at: at + 1 };
+}

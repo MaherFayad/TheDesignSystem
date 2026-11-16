@@ -375,6 +375,12 @@ export function reflowAndTitles(): { overflow: number; wide: string[]; titles: s
   return { overflow, wide, titles };
 }
 
+/** The style and platform the page applied, read from `<html>` (the gallery stamps the resolved axes there), else the first themed element. */
+export function appliedAxes(): { style: string | null; platform: string | null } {
+  const read = (name: string) => document.documentElement.getAttribute(name) ?? document.querySelector(`[${name}]`)?.getAttribute(name) ?? null;
+  return { style: read('data-style'), platform: read('data-platform') };
+}
+
 /** The component that owns each axe target, for the report. */
 export function axeOwners(targets: string[]): Record<string, string> {
   const out: Record<string, string> = {};
