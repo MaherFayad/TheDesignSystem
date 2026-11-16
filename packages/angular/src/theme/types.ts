@@ -7,11 +7,13 @@ export type {
   Glass,
   Lang,
   Platform,
+  PlatformInput,
   Scheme,
   StyleData,
   ThemeAttributes,
   ThemeAxes,
   ThemeAxesInput,
+  ThemeInput,
   ThemeStyle,
   ThemeValue,
 } from '@the-system/shared';

@@ -1,20 +1,38 @@
 // Theme resolution comes from packages/shared (theme.ts), the same rules as
 // the React Theme. This file adds only what is web and Angular specific: the
 // document stamp and the icon style of a style pack.
-import { themeAttributes, type StyleData, type ThemeAttributes, type ThemeAxesInput } from '@the-system/shared';
+import { themeAttributes, type StyleData, type ThemeAttributes, type ThemeInput, type ThemeRootDefaults } from '@the-system/shared';
 import type { IconStyle } from '@the-system/icons';
 import deskIcons from '@the-system/styles/desk/icons';
 import studioIcons from '@the-system/styles/studio/icons';
 
-export { DEFAULT_STYLE, attributesOf, getStyleData, resolveTheme, styleIds, themeAttributes } from '@the-system/shared';
+export {
+  DEFAULT_STYLE,
+  PLATFORM_QUERY_KEY,
+  PLATFORM_STORAGE_KEY,
+  attributesOf,
+  detectPlatform,
+  deviceOf,
+  getStyleData,
+  isPlatform,
+  platformChoice,
+  platformInputOf,
+  platforms,
+  resolvePlatform,
+  resolveTheme,
+  styleIds,
+  themeAttributes,
+} from '@the-system/shared';
+export type { DeviceInfo, PlatformSources, ThemeRootDefaults } from '@the-system/shared';
 
 /**
  * Stamps the attributes of a root theme on an element, by default the
  * document element, so the whole viewport is themed and lang and dir are
- * right. Returns the attributes it set.
+ * right. Returns the attributes it set. A platform of `auto` (or none) takes
+ * `root.platform`, the device: pass `inject(DsDevicePlatform).value()`.
  */
-export function applyDocumentTheme(axes: ThemeAxesInput = {}, element?: Element): ThemeAttributes {
-  const attrs = themeAttributes(axes);
+export function applyDocumentTheme(axes: ThemeInput = {}, element?: Element, root: ThemeRootDefaults = {}): ThemeAttributes {
+  const attrs = themeAttributes(axes, root);
   const target = element ?? globalThis.document?.documentElement;
   if (target) for (const [name, value] of Object.entries(attrs)) target.setAttribute(name, value);
   return attrs;

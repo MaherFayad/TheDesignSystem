@@ -5,6 +5,12 @@
 //   <div dsTheme="desk" scheme="light">...</div>
 //   <main dsTheme [style]="axes.style" lang="ar">...</main>
 //
+// Platform follows "Platform axis" in docs/contracts/frameworks.md: a value
+// wins; `auto` asks the device through the shared resolver
+// (packages/shared/src/platform.ts); no input takes the parent's value, and
+// the outermost dsTheme with none is `auto`. Under server rendering the
+// device is `web`; in the browser it is read once, by DsDevicePlatform.
+//
 // The `style` input. React names the style axis `style` and moves inline
 // styles to a `css` prop; dsTheme keeps both names. In Angular a binding,
 // `[style]="'desk'"`, reaches the `style` input. A static `style="desk"` does
@@ -16,6 +22,8 @@
 import {
   Directive,
   Injectable,
+  PLATFORM_ID,
+  signal,
   computed,
   effect,
   inject,
@@ -25,13 +33,34 @@ import {
   type Signal,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { detectPlatform, deviceOf } from '@the-system/shared';
 import { DS_ICON_STYLE } from '@the-system/icons/angular';
 import type { IconStyle } from '@the-system/icons';
 import { consumeHostAttributes } from '../internal/host';
 import { iconStyleFor, resolveTheme } from './resolve';
-import type { Contrast, Density, Dir, Glass, Lang, Platform, Scheme, ThemeStyle, ThemeValue } from './types';
+import type { Contrast, Density, Dir, Glass, Lang, Platform, PlatformInput, Scheme, ThemeStyle, ThemeValue } from './types';
 
 const rootDefaults = resolveTheme({}, null);
+
+/**
+ * The platform `auto` resolves to on this device: `ios`, `android` or `web`,
+ * never `macos`. Under server rendering it is `web`. In the browser it reads
+ * `navigator` once, when the first dsTheme asks for it, never at module
+ * scope. A hydrated page keeps the server's markup and the first client
+ * change detection stamps the detected value once; Angular hydration
+ * compares nodes, not attribute values, so this raises no mismatch.
+ */
+@Injectable({ providedIn: 'root' })
+export class DsDevicePlatform {
+  private readonly _value = signal<Platform>('web');
+  readonly value: Signal<Platform> = this._value.asReadonly();
+
+  constructor() {
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) return;
+    this._value.set(detectPlatform(deviceOf(inject(DOCUMENT).defaultView?.navigator)));
+  }
+}
 
 /**
  * The resolved axes of the nearest dsTheme, as a signal. Outside any dsTheme
@@ -121,7 +150,11 @@ export class DsTheme implements OnInit {
   readonly scheme = input<Scheme | undefined>(undefined);
   readonly density = input<Density | undefined>(undefined);
   readonly contrast = input<Contrast | undefined>(undefined);
-  readonly platform = input<Platform | undefined>(undefined);
+  /**
+   * `web`, `ios`, `android`, `macos`, or `auto`, which follows the device.
+   * No input takes the parent's value; the outermost dsTheme with none is `auto`.
+   */
+  readonly platform = input<PlatformInput | undefined>(undefined);
   readonly glass = input<Glass | undefined>(undefined);
   readonly dir = input<Dir | undefined>(undefined);
   readonly lang = input<Lang | undefined>(undefined);
@@ -129,6 +162,7 @@ export class DsTheme implements OnInit {
   readonly css = input<Record<string, string | number> | string | null | undefined>(undefined);
 
   private readonly parent = inject(DsThemeService, { skipSelf: true });
+  private readonly device = inject(DsDevicePlatform).value;
   /** dir and lang are stamped back by host bindings; style never reaches the DOM as an attribute. */
   private readonly _consumed = consumeHostAttributes(['dsTheme', 'scheme', 'density', 'contrast', 'platform', 'glass', 'css']);
   private readonly directionality = inject(Directionality, { self: true });
@@ -147,6 +181,7 @@ export class DsTheme implements OnInit {
         lang: this.lang(),
       },
       this.parent.isRoot ? null : this.parent.value(),
+      { platform: this.device() },
     ),
   );
 
