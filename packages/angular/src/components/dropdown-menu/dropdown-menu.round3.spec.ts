@@ -143,8 +143,11 @@ describe('dropdown menu, order 1.23', () => {
 
   it('exit copy (review B6): the real menu leaves at once, an inert aria-hidden copy plays the exit, a press reopens at once', async () => {
     const { byId, press, settle, real, copies } = await setup();
-    const drawn = Element.prototype.getBoundingClientRect;
-    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+    // Spy where the method is found first: another spec in the same worker can leave an
+    // own property on HTMLElement.prototype, which would hide a spy on Element.prototype.
+    const holder = Object.hasOwn(HTMLElement.prototype, 'getBoundingClientRect') ? HTMLElement.prototype : Element.prototype;
+    const drawn = holder.getBoundingClientRect;
+    vi.spyOn(holder, 'getBoundingClientRect').mockImplementation(function (this: Element) {
       return this.getAttribute('role') === 'menu' ? DOMRect.fromRect({ x: 0, y: 0, width: 220, height: 120 }) : drawn.call(this);
     });
     byId('trigger').focus();

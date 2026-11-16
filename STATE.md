@@ -7,11 +7,29 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
-**Resumed by the owner for mobile fixes only (2026-11-16).** The owner
-judged the phone platform layer wrong throughout. Running: orders M1 (iOS)
-and M2 (Android) in `docs/plan/reset-mobile.md`. Nothing else starts: no
-desktop work, no gate review, no R1. `npm run check` passed on the tree
-before these orders (13 steps, 2761 tests, Angular 753).
+**Stopped by the owner's order after the mobile fixes (2026-11-16).** The
+owner judged the phone platform layer wrong throughout and asked for the iOS
+and Android fixes only, then a stop. Done: orders M1 (iOS) and M2 (Android)
+and fix round 1 (M3 android recipe paint, M4 press from touch down in React,
+M5 the same in Angular) in `docs/plan/reset-mobile.md`. Nothing else starts:
+no desktop work, no gate review, no R1. `npm run check` passes on this tree
+(13 steps, 2779 tests, Angular 771).
+
+- Every phone look is proposed until the owner signs it
+  (`docs/reports/reset/signoff/M1.md`, `M2.md`). Reports:
+  `docs/reports/lanes/reset-M1.md`, `reset-M2.md`, `reset-M4.md`,
+  `reset-M5.md`.
+- Open on phones, for the owner: the iOS off switch in Liquid keeps a dark
+  outline because of the 3:1 ruling; the Android navigation bar is the 80
+  tall form, and Google now prefers the 64 tall form.
+- Known gaps on phones: the iOS large title does not collapse on scroll; the
+  iOS sheet runs edge to edge; glass has no refraction; no tab bar or alert
+  clip in the recording list; Angular has no Chip, TabBar, List, Pagination
+  or Sheet yet, so those have no press from touch down there; Desk press
+  label rule still reads `:active` alone.
+- Fixed in passing: two Angular specs flaked because a stub on
+  `Element.prototype` was hidden by an own property left on
+  `HTMLElement.prototype` by another spec.
 
 - R0 done: R0.1 to R0.15, plus the added orders R0.18 (SegmentedControl
   reflow), R0.19 (macos density), R0.20 (OTPField reflow), R0.21 (target

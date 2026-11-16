@@ -101,10 +101,14 @@ describe('switch-drag on the control', () => {
       },
     });
     stub(Element.prototype, 'clientWidth', { get: () => 44 });
-    stub(Element.prototype, 'getBoundingClientRect', {
-      value: () => ({ x: 0, y: 0, left: 0, top: 0, width: 44, height: 24, right: 44, bottom: 24, toJSON: () => ({}) }),
-      writable: true,
-    });
+    // Stubbed on both prototypes: another spec in the same worker can leave an own
+    // property on HTMLElement.prototype, which would hide a stub on Element.prototype.
+    for (const proto of [Element.prototype, HTMLElement.prototype]) {
+      stub(proto, 'getBoundingClientRect', {
+        value: () => ({ x: 0, y: 0, left: 0, top: 0, width: 44, height: 24, right: 44, bottom: 24, toJSON: () => ({}) }),
+        writable: true,
+      });
+    }
     stub(Element.prototype, 'setPointerCapture', { value: () => {}, writable: true });
   });
   afterEach(() => {
