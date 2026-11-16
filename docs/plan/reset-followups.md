@@ -163,3 +163,38 @@ should pick it up.
    `docs/reports/lanes/reset-R0.21.md`.
 5. FloatingActionButton, RangeSlider, Stepper, Field and Section rendered no
    demo on one phone platform in the sweep. Rerun at the R0 gate.
+
+## Owner feedback on the R0 screenshots (2026-11-16, work paused)
+
+The owner looked at the R0.15 before and after sheets (Liquid on `android`,
+Desk alert and sheet on `ios`) and said:
+
+1. **The iOS switch is wrong.** On the current iOS the thumb turns into a
+   raised glass lens while pressed, then switches. Ours does nothing while
+   held.
+2. **The iOS chrome follows an old iOS.** The 270 wide alert with a grid of
+   square actions, the full width square tab bar and the edge to edge sheet
+   are the look of earlier versions. The current one has a floating glass
+   tab bar, capsule actions in alerts, and inset sheets with large corners.
+   R0.15 took its `ios` geometry from the old convention. This is a fault in
+   R0.15, not a matter of taste.
+3. **The bottom navigation is not right on either platform.** After R0.15
+   Liquid on `android` shows a square bar with a round lens on the current
+   item, which matches no platform.
+4. **Tab bar icons are too small.**
+
+Actions on resume, before R4 builds on this chrome:
+
+- New order R0.22 (ds-qa research, then ds-style): fetch the vendor's
+  current guidance and its own web pages again, write the `ios` chrome
+  geometry for the current version (tab bar, alert, sheet, toolbar, toast,
+  icon and label sizes) into the platform tokens and `ios.css`, and redo
+  the `android` navigation bar against Material 3 (80dp bar, 64 by 32
+  indicator, 24dp icons). Accept only side by side with a current reference
+  capture, signed by the owner.
+- The iOS switch press (glass lens while held) is a signature moment for
+  R3, to be built for Liquid first. Whether other styles show it on `ios`
+  needs the owner: ruling 16 says the style wins on controls.
+- R0.15's report claimed the chrome "measures the same in all four styles".
+  That was true and beside the point: it was the same wrong geometry.
+  Acceptance for chrome is a reference capture, not sameness.
