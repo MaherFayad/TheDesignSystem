@@ -123,7 +123,7 @@ export function auditCall(ix: Interaction, m: Measured): { call: 'fine' | 'invis
   }
   if (m.afterClick && m.headline?.group !== 'overlay') return { call: 'wrong', why: `the first change comes ${m.latency}ms after the finger lands, after the click, through emulated hover` };
   const h = m.headline;
-  if (!h || !h.changed) return { call: 'invisible', why: 'the headline part does not change' };
+  if (!h || (!h.changed && m.fadeShare < AUDIT.fillShare && m.fillShare < AUDIT.fillShare)) return { call: 'invisible', why: 'the headline part does not change' };
   const ms = ix.gesture === 'drag' ? (h.totalMs ?? 0) : (m.mainMs ?? 0);
   const move = Math.max(h.travel, h.ownTravel);
   const size = h.group === 'overlay' ? Math.sqrt(Math.max(1, m.rootArea)) : 0;
@@ -131,7 +131,8 @@ export function auditCall(ix: Interaction, m: Measured): { call: 'fine' | 'invis
   const sizeOk = h.sizeChange >= AUDIT.px && (h.group !== 'overlay' || h.sizeChange >= AUDIT.overlayShare * Math.max(size, 1));
   const fillOk = h.group !== 'overlay' && m.fillShare >= AUDIT.fillShare;
   const fadeOk = h.group !== 'overlay' && m.fadeShare >= AUDIT.fillShare;
-  if ((moveOk || sizeOk || fillOk || fadeOk) && ms >= AUDIT.ms) return { call: 'fine', why: `the headline ${moveOk ? `moves ${r1(move)}px` : sizeOk ? `changes size by ${r1(h.sizeChange)}px` : fillOk ? 'changes fill' : `fades content over ${Math.round(m.fadeShare * 100)} percent of the control`} over ${ms}ms` };
+  if ((moveOk || sizeOk || fillOk) && ms >= AUDIT.ms) return { call: 'fine', why: `the headline ${moveOk ? `moves ${r1(move)}px` : sizeOk ? `changes size by ${r1(h.sizeChange)}px` : 'changes fill'} over ${ms}ms` };
+  if (fadeOk && m.fadeMs >= AUDIT.ms) return { call: 'fine', why: `its content fades over ${Math.round(m.fadeShare * 100)} percent of the control over ${m.fadeMs}ms` };
   const reasons: string[] = [];
   if (!(moveOk || sizeOk || fillOk || fadeOk)) reasons.push(`it moves ${r1(move)}px and changes size by ${r1(h.sizeChange)}px`);
   if (ms < AUDIT.ms) reasons.push(`its main change takes ${ms}ms`);

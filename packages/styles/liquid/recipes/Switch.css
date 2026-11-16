@@ -117,15 +117,22 @@
   }
 
   /* Forced colors: Switch.css draws the thumb in system colors and hides the lens part; the shadow is dropped by the system. */
-  /* The press shape is the platform's on ios and android (packages/css/src/platform),
-     and recipes beat that layer, so the style sets it only on the web platform. */
-  [data-style='liquid'][data-platform='web'] [data-ds='switch'] {
+
+  /*
+   * The shape is the style's on every platform (ruling 16: the style wins on
+   * controls). A longer capsule than Neutral's 1.75, so the lens has room to
+   * glide (order 1.28), and a capsule lens 1.5 times as long as it is tall
+   * (order 1.29). The height stays the platform's.
+   */
+  [data-style='liquid'] [data-ds='switch'] {
+    --_switch-width: calc(var(--_switch-height) * 2);
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
+  }
+
+  /* The press is the platform's on ios and android (packages/css/src/platform), so the style sets its own only where the platform sets none. */
+  [data-style='liquid']:is([data-platform='web'], [data-platform='macos']) [data-ds='switch'] {
     --_switch-thumb-size-pressed: var(--ds-scale-pop);
     --_switch-stretch: var(--ds-scale-stretch);
-    /* A longer capsule than Neutral's 1.75: the lens has room to glide (order 1.28). */
-    --_switch-width: calc(var(--_switch-height) * 2);
-    /* A capsule lens, 1.5 times as long as it is tall (order 1.29); ios sets the same, android keeps its dot. */
-    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
   }
 
 }

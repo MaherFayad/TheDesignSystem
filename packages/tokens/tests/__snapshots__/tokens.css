@@ -3576,6 +3576,20 @@
     --ds-size-control-xs: 32px;
   }
 
+  [data-platform='macos'][data-density='comfortable'] {
+    --ds-size-control-lg: 32px;
+    --ds-size-control-md: 28px;
+    --ds-size-control-sm: 22px;
+    --ds-size-control-xs: 20px;
+  }
+
+  [data-platform='macos'][data-density='compact'] {
+    --ds-size-control-lg: 32px;
+    --ds-size-control-md: 28px;
+    --ds-size-control-sm: 22px;
+    --ds-size-control-xs: 20px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :root,
     [data-style],

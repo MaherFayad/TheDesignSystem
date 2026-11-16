@@ -94,9 +94,8 @@
     margin-block: 0;
   }
 
-  /* The ios banner and the android snackbar draw no timer line (packages/css/src/platform),
-     and recipes beat that layer, so the style draws its line on the web platform only. */
-  [data-style='studio'][data-platform='web'] [data-ds='toast'] {
+  /* The timer line. The ios banner and the android snackbar draw none: ds.chrome hides it there (ruling 16). */
+  [data-style='studio'] [data-ds='toast'] {
     --_toast-progress-thickness: var(--ds-border-width-default);
   }
 }

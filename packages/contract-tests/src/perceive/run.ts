@@ -265,20 +265,32 @@ async function main(): Promise<number> {
       for (const platform of platforms) {
         for (const device of devicesFor(platform, args.devices)) {
           const profile = args.profile ?? profileFor(style);
-          const context = await browser.newContext({ ...devices[DEVICES[device]], colorScheme: args.scheme, reducedMotion: 'no-preference' });
+          const newContext = async () => {
+            if (!browser?.isConnected()) browser = await chromium.launch();
+            return browser.newContext({ ...devices[DEVICES[device]], colorScheme: args.scheme, reducedMotion: 'no-preference' });
+          };
+          let context = await newContext();
           const load = loadavg();
           const results: InteractionResult[] = [];
           const recordings: Record<string, Recording> = {};
           log(`\n${style}, platform ${platform}, ${device}, ${profile} profile (load ${load.map((l) => l.toFixed(2)).join(' ')})`);
           for (const ix of ixs) {
-            const { result, recording } = await measureOne(context, server.url, ix, { style, platform, device, profile, scheme: args.scheme, holdMs: args.holdMs, pressHold: args.pressHold, frames: args.frames });
+            const opts = { style, platform, device, profile, scheme: args.scheme, holdMs: args.holdMs, pressHold: args.pressHold, frames: args.frames };
+            let { result, recording } = await measureOne(context, server.url, ix, opts);
+            // Under load Chromium can drop a page or the whole browser, or a page can take too long: try twice more on a fresh context.
+            for (let attempt = 2; result.error && attempt <= 3; attempt += 1) {
+              log(`  retry ${ix.id} (${result.error})`);
+              await context.close().catch(() => undefined);
+              context = await newContext();
+              ({ result, recording } = await measureOne(context, server.url, ix, opts));
+            }
             results.push(result);
             if (recording) recordings[ix.id] = recording;
             const m = result.measured;
             log(`  ${result.pass ? 'pass' : 'FAIL'}  ${ix.id.padEnd(18)} ${result.error ? `error: ${result.error}` : `latency ${m?.latency ?? 'none'}ms${m?.startsAtRelease ? ' at release' : ''}, main ${m?.mainMs ?? 'none'}ms, moves ${m?.headline ? Math.max(m.headline.travel, m.headline.ownTravel) : 0}px, call ${result.call}`}`);
             if (!result.pass) failed = true;
           }
-          await context.close();
+          await context.close().catch(() => undefined);
           const label = args.calibrate ? 'calibration' : (args.tag ?? `${style}-${platform}-${device}`);
           const outDir = resolve(args.out ? (styles.length * platforms.length > 1 || (args.devices?.length ?? 1) > 1 ? join(args.out, `${style}-${platform}-${device}`) : args.out) : join(REPO, 'docs/reports/reset/perceive', label));
           mkdirSync(outDir, { recursive: true });

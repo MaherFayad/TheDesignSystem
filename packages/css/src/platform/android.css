@@ -7,8 +7,8 @@
  * controls, press feedback, where overlays come from and how they leave,
  * the place of toasts, navigation placement and the type scale. It never
  * changes brand: colors, font family, surface material and character stay
- * with the style. So this file reads only semantic tokens, and a style's
- * recipes (ds.recipes, the layer after this one) still paint over it.
+ * with the style. So this file reads only semantic and platform tokens, and
+ * a style's recipes (ds.recipes) still paint over it.
  *
  * Conventions followed, from the public Material guidance (values checked
  * against Google's published component tokens): a 48dp least target;
@@ -52,6 +52,19 @@
  * are tokens only, so the component's reduced zeroing and the reduced
  * tokens still hold. Under reduced motion the ripple shows whole at once.
  * Under forced colors the ripple and the state layers are hidden.
+ *
+ * Two parts, as the shape split asks (docs/contracts/anatomy.md, ruling 16,
+ * order R0.15):
+ *
+ * - ds.platform, for controls, and for the paint and motion of chrome (the
+ *   text actions, the pill color, durations and curves). It sits before
+ *   ds.recipes, so a style recipe that sets the same private property keeps
+ *   its shape on a control (the style wins on controls).
+ * - ds.chrome, at the end of this file, for the geometry of the top app
+ *   bar, the navigation bar, dialogs, sheets and the snackbar. It sits after
+ *   ds.recipes and sets geometry and placement only, from platform tokens,
+ *   so the result is the same in every style (the platform wins on sheets,
+ *   bars and alerts).
  *
  * Known limit: a Theme with another data-platform nested inside an android
  * one still matches these descendant selectors.
@@ -653,50 +666,24 @@
     display: none;
   }
 
-  /* ------------------------------------------------------------ navigation: Navbar, TabBar, Sidebar, Pagination, Stepper */
+  /* ------------------------------------------------------------ navigation: Sidebar, Pagination, Stepper (Navbar and TabBar geometry is in ds.chrome below) */
 
-  /* The top app bar: 64dp, a start aligned 22sp title. */
+  /* The top app bar has no rule under it. */
   [data-platform='android'] [data-ds='navbar'] {
-    --_navbar-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
-    --_navbar-control-height: var(--ds-size-touch-android);
-    --_navbar-padding-inline: var(--ds-space-xs);
     --_navbar-border-color: transparent;
-    --_navbar-font-size: var(--ds-font-size-xl);
-  }
-
-  /* The title link is a full height target. */
-  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'],
-  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] > a {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--ds-size-touch-android);
   }
 
   [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] {
-    font-size: var(--ds-font-size-4xl);
     font-weight: var(--ds-font-weight-regular);
   }
 
-  /* The navigation bar: 80dp, a 64 by 32 pill behind the current icon, a 12sp label. */
+  /* Navigation bar paint: a tonal pill behind the current icon, no rule on top, the label weights. Its sizes are in ds.chrome. */
   [data-platform='android'] [data-ds='tab-bar'] {
-    --_tab-bar-item-height: calc(var(--ds-size-touch-android) + var(--ds-size-control-md));
-    --_tab-bar-icon-size: var(--ds-size-icon-lg);
     --_tab-bar-pill-bg: var(--ds-color-primary-tint);
     --_tab-bar-fg-active: var(--ds-color-text-bright);
     --_tab-bar-border-color: transparent;
     --_tab-bar-weight: var(--ds-font-weight-medium);
     --_tab-bar-weight-active: var(--ds-font-weight-bold);
-  }
-
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] {
-    gap: var(--ds-space-fixed-2xs);
-    padding-block: var(--ds-space-xl) var(--ds-space-3xl);
-    font-size: var(--ds-font-size-s);
-  }
-
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
-    padding-block: var(--ds-space-fixed-2xs);
-    padding-inline: calc((var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2 - var(--_tab-bar-icon-size)) / 2);
   }
 
   /* A navigation drawer: 56dp items, a full pill behind the current one, no edge mark. */
@@ -799,57 +786,27 @@
     --_tooltip-ease-in: var(--ds-ease-emphasized);
   }
 
-  /* ------------------------------------------------------------ dialog and alert dialog: 28dp corners, a start aligned title, text actions at the end */
+  /* ------------------------------------------------------------ dialog and alert dialog: paint and motion (the geometry is in ds.chrome) */
 
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
-    --_dialog-gutter: var(--ds-space-6xl);
-    --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
-    --_dialog-padding: var(--ds-space-6xl);
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: transparent;
-    --_dialog-enter-y: 0px;
     --_dialog-enter-scale: var(--ds-scale-window-enter);
     --_dialog-duration-in: var(--ds-duration-window-open);
     --_dialog-ease-in: var(--ds-ease-emphasized);
   }
 
-  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
-    padding-block: var(--_dialog-padding) var(--ds-space-xl);
-    padding-inline-start: var(--_dialog-padding);
-    border-block-end: 0;
-    font-size: var(--ds-font-size-5xl);
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='title'] {
     font-weight: var(--ds-font-weight-regular);
   }
 
-  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
-    inset-block-start: var(--ds-space-3xl);
-    inset-inline-end: var(--ds-space-3xl);
-  }
-
-  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
-    font-size: var(--ds-font-size-5xl);
-    font-weight: var(--ds-font-weight-regular);
-  }
-
-  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
-    font-size: var(--ds-font-size-xl);
-  }
-
-  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) > [data-part='panel'] > [data-part='footer'] {
-    gap: var(--ds-space-s);
-    padding-block: var(--ds-space-xl) var(--_dialog-padding);
-    padding-inline: var(--_dialog-padding);
-    border-block-start: 0;
-  }
-
-  /* The actions are text buttons in the primary color. */
+  /* The actions are text buttons in the primary color. A style recipe for the footer steps aside on android (Dialog.css recipes). */
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'],
   [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
     --_button-bg: transparent;
     --_button-border-color: transparent;
     --_button-fg: var(--ds-color-primary-on-surface);
-    --_button-padding-inline: var(--ds-space-xl);
   }
 
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-tone='danger'] {
@@ -860,7 +817,7 @@
     --_button-bg: var(--ds-color-bg-overlay-5);
   }
 
-  /* ------------------------------------------------------------ bottom sheet and side sheet */
+  /* ------------------------------------------------------------ bottom sheet and side sheet: motion (the edge, corners and handle are in ds.chrome) */
 
   [data-platform='android'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-duration-in: var(--ds-duration-window-open);
@@ -869,49 +826,13 @@
 
   /* Order 1.29: the bottom sheet rises and grows from scale.window-enter (0.92), as the android dialog does; Dialog.css honours the scale on the Sheet. */
   [data-platform='android'] [data-ds='sheet'] {
-    --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
-    --_dialog-handle-radius: var(--ds-radius-pill);
     --_dialog-enter-scale: var(--ds-scale-window-enter);
   }
 
-  [data-platform='android'] [data-ds='drawer'] {
-    --_dialog-radius: var(--ds-radius-card);
-  }
-
-  /* The drag handle: a 32 by 4 bar (the handle-bar part, round ended), 22dp from the top, inside a 48dp target. */
-  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
-    inline-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m) * 2);
-    block-size: var(--ds-space-fixed-2xs);
-    padding-block: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
-  }
-
-  /* ------------------------------------------------------------ toast: a snackbar at the bottom, start aligned, one row with the action at the end. The surface stays the style's: Material's inverse surface is a surface choice, so a style opts in through its recipe. */
-
-  :root:not(:has([data-ds='sheet'] > [data-part='panel'][data-state='open'])) [data-platform='android'] [data-ds='toaster'] {
-    --_toaster-dir: -1;
-    --_toaster-align: end;
-    --_toaster-gap: var(--ds-space-s);
-
-    flex-direction: column;
-    inset-block: auto var(--_toaster-inset-block-end);
-    inset-inline: var(--_toaster-inset-inline) auto;
-    margin-inline: 0;
-  }
-
-  /*
-   * Snackbars do not overlap: a stacked toaster lays its toasts out as the
-   * expanded list at all times, each at its offset with the gap, unclipped.
-   * The newest sits at the bottom and older ones step up; from the fourth
-   * back they are hidden as before.
-   */
-  [data-platform='android'] [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
-    --_toast-strip: calc(var(--_toast-shadow-room) * -1);
-    --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * var(--_toast-offset)));
-  }
+  /* ------------------------------------------------------------ toast: the snackbar's paint and motion (its place, stack and shape are in ds.chrome). The surface stays the style's: Material's inverse surface is a surface choice, so a style opts in through its recipe. */
 
   [data-platform='android'] [data-ds='toast'] {
     --_toast-edge: var(--_toast-border-color);
-    --_toast-radius: var(--ds-radius-xs);
     --_toast-shadow: var(--ds-elevation-menu);
     --_toast-blur: 0px;
     --_toast-enter-scale: 1;
@@ -919,25 +840,6 @@
     --_toast-ease-in: var(--ds-ease-emphasized);
     --_toast-stack-ease: var(--ds-ease-emphasized);
     --_toast-swipe-ease-out: var(--ds-ease-standard);
-    /* No timer line: a snackbar's time is not drawn. */
-    --_toast-progress-thickness: 0px;
-
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    grid-template-areas:
-      'icon title action close'
-      'icon description action close';
-    grid-template-rows: auto auto;
-    align-items: center;
-    column-gap: var(--ds-space-xl);
-    min-block-size: var(--ds-size-touch-android);
-    padding-block: var(--ds-space-xl);
-    padding-inline: var(--ds-space-3xl) var(--ds-space-s);
-    border-inline-start-width: 0;
-    font-size: var(--ds-font-size-xl);
-  }
-
-  [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {
-    align-self: center;
   }
 
   [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
@@ -990,5 +892,198 @@
     [data-platform='android'] :is([data-ds='input'], [data-ds='textarea'], [data-ds='select']:not([data-part])) {
       border-width: var(--ds-border-width-default);
     }
+  }
+}
+
+/*
+ * The chrome part (ruling 16): the top app bar, the navigation bar,
+ * dialogs, sheets and the snackbar. ds.chrome comes after ds.recipes, so
+ * the geometry below holds in every style: a style still paints the chrome
+ * (colors, fonts, borders, shadow colors, material, motion), but its
+ * corners, heights, widths, paddings, title sizes, action layout, entry
+ * edge and the parts that show are the platform's. These rules set geometry
+ * and placement only. Every length reads a platform token (shape.corner.*,
+ * size.*, type.*) or a token that is the same in every style (space.*,
+ * font.size.4xl and 5xl), so the result is equal in all four styles.
+ */
+@layer ds.chrome {
+  /* ------------------------------------------------------------ top app bar: 64dp, a start aligned 22sp title */
+
+  [data-platform='android'] [data-ds='navbar'] {
+    --_navbar-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
+    --_navbar-control-height: var(--ds-size-touch-android);
+    --_navbar-padding-inline: var(--ds-space-xs);
+    --_navbar-font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  /* The title link is a full height target. */
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'],
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] > a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ds-size-touch-android);
+  }
+
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] {
+    font-size: var(--ds-font-size-4xl);
+  }
+
+  /* ------------------------------------------------------------ navigation bar: full width on the bottom edge, 80dp, a 64 by 32 pill behind the current icon, a 12sp label */
+
+  /*
+   * The bar runs the width of the screen, square, the safe area under it. A
+   * style that draws its bar as a floating capsule keeps its fill and
+   * material; the bar takes this shape on android.
+   */
+  [data-platform='android'] [data-ds='tab-bar'] {
+    --_tab-bar-item-height: calc(var(--ds-size-touch-android) + var(--ds-size-control-md));
+    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+
+    inline-size: 100%;
+    margin: 0;
+    padding-block: var(--ds-space-3xs) max(var(--ds-space-3xs), var(--ds-inset-safe-bottom));
+    padding-inline: max(var(--ds-space-3xs), var(--ds-inset-safe-start), var(--ds-inset-safe-end));
+    border-width: 0;
+    border-block-start-width: var(--ds-border-width-default);
+    border-radius: var(--ds-shape-corner-none);
+  }
+
+  /* A style's band drawn just above its bar stays inside the screen. */
+  [data-platform='android'] [data-ds='tab-bar']::before {
+    inset-inline: 0;
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] {
+    gap: var(--ds-space-fixed-2xs);
+    padding-block: var(--ds-space-xl) var(--ds-space-3xl);
+    font-size: var(--ds-type-label-medium-font-size);
+  }
+
+  /* The pill: 64 by 32 around the 24dp icon, round ended. */
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+    padding-block: var(--ds-space-fixed-2xs);
+    padding-inline: calc((var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2 - var(--_tab-bar-icon-size)) / 2);
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  /* ------------------------------------------------------------ dialog and alert dialog: 28dp corners, a start aligned title, text actions at the end */
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-gutter: var(--ds-space-6xl);
+    --_dialog-radius: var(--ds-shape-corner-extra-large);
+    --_dialog-padding: var(--ds-space-6xl);
+    /* No travel: the dialog grows in place. */
+    --_dialog-enter-y: 0px;
+  }
+
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block: var(--_dialog-padding) var(--ds-space-xl);
+    padding-inline-start: var(--_dialog-padding);
+    border-block-end: 0;
+    font-size: var(--ds-font-size-5xl);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
+    inset-block-start: var(--ds-space-3xl);
+    inset-inline-end: var(--ds-space-3xl);
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    font-size: var(--ds-font-size-5xl);
+  }
+
+  /* A style that draws the title in a title bar: the same title size there. */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-font-size: var(--ds-font-size-5xl);
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
+    font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  /* The actions sit at the inline end of a footer with no band, no rule and no cells. */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) > [data-part='panel'] > [data-part='footer'] {
+    gap: var(--ds-space-s);
+    padding-block: var(--ds-space-xl) var(--_dialog-padding);
+    padding-inline: var(--_dialog-padding);
+    border-block-start: 0;
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'],
+  [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
+    --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */
+
+  /* A style that draws a window title bar on its alerts and sheets keeps the bar, without the lights. */
+  [data-platform='android'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------ bottom sheet and side sheet */
+
+  [data-platform='android'] [data-ds='sheet'] {
+    --_dialog-radius: var(--ds-shape-corner-extra-large);
+    --_dialog-handle-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='android'] [data-ds='drawer'] {
+    --_dialog-radius: var(--ds-shape-corner-medium);
+  }
+
+  /* The drag handle: a 32 by 4 bar (the handle-bar part, round ended), 22dp from the top, inside a 48dp target. */
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    inline-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m) * 2);
+    block-size: var(--ds-space-fixed-2xs);
+    padding-block: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
+  }
+
+  /* ------------------------------------------------------------ toast: a snackbar at the bottom, start aligned, one row with the action at the end */
+
+  :root:not(:has([data-ds='sheet'] > [data-part='panel'][data-state='open'])) [data-platform='android'] [data-ds='toaster'] {
+    --_toaster-dir: -1;
+    --_toaster-align: end;
+    --_toaster-gap: var(--ds-space-s);
+
+    flex-direction: column;
+    inset-block: auto var(--_toaster-inset-block-end);
+    inset-inline: var(--_toaster-inset-inline) auto;
+    margin-inline: 0;
+  }
+
+  /*
+   * Snackbars do not overlap: a stacked toaster lays its toasts out as the
+   * expanded list at all times, each at its offset with the gap, unclipped.
+   * The newest sits at the bottom and older ones step up; from the fourth
+   * back they are hidden as before.
+   */
+  [data-platform='android'] [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
+    --_toast-strip: calc(var(--_toast-shadow-room) * -1);
+    --_toast-stack-transform: translateY(calc(var(--_toaster-dir) * var(--_toast-offset)));
+  }
+
+  /* One row: the icon, the text, the action and the close at the end. 4dp corners, no edge and no timer line. */
+  [data-platform='android'] [data-ds='toast'] {
+    --_toast-radius: var(--ds-shape-corner-extra-small);
+    /* No timer line: a snackbar's time is not drawn. */
+    --_toast-progress-thickness: 0px;
+
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'icon title action close'
+      'icon description action close';
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: var(--ds-space-xl);
+    min-block-size: var(--ds-size-touch-android);
+    padding-block: var(--ds-space-xl);
+    padding-inline: var(--ds-space-3xl) var(--ds-space-s);
+    border-inline-start-width: 0;
+    font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {
+    align-self: center;
   }
 }

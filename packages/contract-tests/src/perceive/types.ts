@@ -166,6 +166,8 @@ export interface Measured {
   pointerdown: number | null;
   pointerup: number | null;
   click: number | null;
+  /** How long the finger was down as the page saw it (pointerup less pointerdown); under load it can differ from the gesture asked. */
+  fingerMs: number | null;
   /** Time from pointerdown to the first visual change anywhere in the component or what it opened. */
   latency: number | null;
   /** True when the first change came at or after the finger lifted. */
@@ -185,6 +187,8 @@ export interface Measured {
   fillShare: number;
   /** Share of the control's area whose content fades in or out by itself (the headline and its parts). */
   fadeShare: number;
+  /** How long the longest of those fades takes, in ms. */
+  fadeMs: number;
   secondaries: Track[];
   cuts: Track[];
   /** Changes that carry meaning and finish under 150ms or move under 3px. */

@@ -12,16 +12,26 @@ framework.
 
 | Value | Where it applies |
 | --- | --- |
-| `web` | Browsers, React and Angular. The default on the web. |
-| `ios` | React Native on iOS, or a web screen that should read as iOS |
-| `android` | React Native on Android, or a web screen that should read as Android |
+| `web` | Desktop and laptop browsers, and every device `auto` does not detect. What a server renders. |
+| `ios` | iPhone and iPad, in the browser and in React Native |
+| `android` | Android phones and tablets, in the browser and in React Native |
+| `macos` | Desktop conventions of macOS. Chosen only by an explicit value. |
+| `auto` | An input only. It resolves to `ios` on an iPhone or iPad, `android` on an Android device and `web` everywhere else. |
 
-Set it on the root Theme: `<Theme platform="ios">`. The Theme writes
-`data-platform` on its element, and a component reads it only where the
-platforms really differ. On the web today that is Rail, which takes the tab
-bar shape of each platform. On React Native the provider reads the device
-platform when the prop is not set, and the theme objects carry the platform
-sizes.
+The outermost Theme with no `platform` prop is `auto`. The server render says
+`web` and the detected value is stamped once on mount. An app that wants no
+detection passes `platform="web"`. The Theme writes `data-platform` on its
+element, and a component reads it only where the platforms really differ. On
+React Native `auto` follows the device, and the theme objects carry the
+platform sizes.
+
+### On this site
+
+The platform switch in the top bar starts on Auto, which shows the platform
+detected for your device, for example "Auto: iOS" on an iPhone. Pick a
+platform to see every page and every preview with it; the choice is kept on
+every page until you pick Auto again. An address with `?platform=android`
+shows that platform for that page only, over the choice.
 
 ## By framework
 

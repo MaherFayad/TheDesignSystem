@@ -1,0 +1,842 @@
+{
+ "info": {
+  "date": "2026-11-16T12:43:11.594Z",
+  "style": "studio",
+  "platform": "auto",
+  "device": "Pixel 7",
+  "profile": "quiet",
+  "scheme": "light",
+  "load": [
+   27.29,
+   25.91,
+   23.03
+  ],
+  "cpus": 4,
+  "chromium": "153.0.8010.12",
+  "url": "http://localhost:5791",
+  "notes": [
+   "Detected platform on the page: android.",
+   "Median frame interval: 16.7ms (16.7ms is 60 frames a second).",
+   "The machine was loaded (load average 27.29 on 4 cores): latencies and frame times may read longer than on an idle machine."
+  ]
+ },
+ "results": [
+  {
+   "id": "button",
+   "name": "Button",
+   "does": "taps an accent solid button",
+   "style": "studio",
+   "platform": "auto",
+   "detectedPlatform": "android",
+   "device": "pixel",
+   "profile": "quiet",
+   "gesture": "tap",
+   "holdMs": 90,
+   "measured": {
+    "pointerdown": 4071.4000000003725,
+    "pointerup": 4169.4000000003725,
+    "click": 4178.200000001118,
+    "fingerMs": 98,
+    "latency": 114,
+    "startsAtRelease": true,
+    "afterClick": false,
+    "droppedFrames": 0,
+    "frameMs": 16.7,
+    "frames": 84,
+    "headline": {
+     "id": 1,
+     "desc": "button button",
+     "part": null,
+     "group": "root",
+     "parent": null,
+     "merged": [],
+     "existedBefore": true,
+     "existsAtEnd": true,
+     "preMoving": false,
+     "changed": true,
+     "start": 114,
+     "end": 263,
+     "inMs": 17,
+     "totalMs": 166,
+     "travel": 0,
+     "edgeTravel": 0,
+     "ownTravel": 0,
+     "sizeChange": 0,
+     "scaleMin": 1,
+     "scaleMax": 1,
+     "opacityMin": 1,
+     "opacityMax": 1,
+     "colourDelta": 96.7,
+     "fillDelta": 96.7,
+     "ownStyleChanged": true,
+     "clipChanged": false,
+     "filterChanged": false,
+     "shadowChanged": false,
+     "areaMax": 6575,
+     "cut": {
+      "kind": "colour",
+      "at": 113.69999999962783,
+      "size": 97
+     },
+     "dropped": null,
+     "animations": [
+      {
+       "type": "CSSTransition",
+       "name": "clip-path",
+       "props": [
+        "clipPath"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "steps(1)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "clip-path",
+       "props": [
+        "clipPath"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "opacity",
+       "props": [
+        "opacity"
+       ],
+       "duration": 70,
+       "delay": 0,
+       "easing": "steps(1, start)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "clip-path",
+       "props": [
+        "clipPath"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "steps(1)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "opacity",
+       "props": [
+        "opacity"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "keyEasing": "linear"
+      }
+     ]
+    },
+    "mainMs": 120,
+    "mainSource": "animation",
+    "mainEasing": "steps(1)",
+    "fillShare": 1,
+    "fadeShare": 0,
+    "fadeMs": 0,
+    "secondaries": [],
+    "cuts": [],
+    "tooShortOrSmall": [
+     {
+      "desc": "button button",
+      "why": "finishes in 120ms"
+     },
+     {
+      "desc": "span/label",
+      "why": "finishes in 70ms"
+     }
+    ],
+    "tracks": [
+     {
+      "id": 1,
+      "desc": "button button",
+      "part": null,
+      "group": "root",
+      "parent": null,
+      "merged": [],
+      "existedBefore": true,
+      "existsAtEnd": true,
+      "preMoving": false,
+      "changed": true,
+      "start": 114,
+      "end": 263,
+      "inMs": 17,
+      "totalMs": 166,
+      "travel": 0,
+      "edgeTravel": 0,
+      "ownTravel": 0,
+      "sizeChange": 0,
+      "scaleMin": 1,
+      "scaleMax": 1,
+      "opacityMin": 1,
+      "opacityMax": 1,
+      "colourDelta": 96.7,
+      "fillDelta": 96.7,
+      "ownStyleChanged": true,
+      "clipChanged": false,
+      "filterChanged": false,
+      "shadowChanged": false,
+      "areaMax": 6575,
+      "cut": {
+       "kind": "colour",
+       "at": 113.69999999962783,
+       "size": 97
+      },
+      "dropped": null,
+      "animations": [
+       {
+        "type": "CSSTransition",
+        "name": "clip-path",
+        "props": [
+         "clipPath"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "steps(1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "clip-path",
+        "props": [
+         "clipPath"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "opacity",
+        "props": [
+         "opacity"
+        ],
+        "duration": 70,
+        "delay": 0,
+        "easing": "steps(1, start)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "clip-path",
+        "props": [
+         "clipPath"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "steps(1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "opacity",
+        "props": [
+         "opacity"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       }
+      ]
+     },
+     {
+      "id": 2,
+      "desc": "span/label",
+      "part": "label",
+      "group": "root",
+      "parent": 1,
+      "merged": [],
+      "existedBefore": true,
+      "existsAtEnd": true,
+      "preMoving": false,
+      "changed": true,
+      "start": 114,
+      "end": 347,
+      "inMs": 17,
+      "totalMs": 250,
+      "travel": 1,
+      "edgeTravel": 1,
+      "ownTravel": 1,
+      "sizeChange": 0,
+      "scaleMin": 1,
+      "scaleMax": 1,
+      "opacityMin": 1,
+      "opacityMax": 1,
+      "colourDelta": 96.7,
+      "fillDelta": 0,
+      "ownStyleChanged": true,
+      "clipChanged": false,
+      "filterChanged": false,
+      "shadowChanged": false,
+      "areaMax": 1464,
+      "cut": {
+       "kind": "colour",
+       "at": 113.69999999962783,
+       "size": 97
+      },
+      "dropped": null,
+      "animations": [
+       {
+        "type": "CSSTransition",
+        "name": "transform",
+        "props": [
+         "transform"
+        ],
+        "duration": 70,
+        "delay": 0,
+        "easing": "steps(2)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "transform",
+        "props": [
+         "transform"
+        ],
+        "duration": 70,
+        "delay": 0,
+        "easing": "steps(2)",
+        "keyEasing": "linear"
+       }
+      ]
+     }
+    ],
+    "rootArea": 6575
+   },
+   "hold": {
+    "holdMs": 618,
+    "onAfter": null,
+    "shownMs": 0,
+    "share": 0
+   },
+   "checks": [
+    {
+     "id": "latency",
+     "label": "First visible change after the finger lands",
+     "pass": false,
+     "measured": "114ms, at release",
+     "limit": "at most 32ms"
+    },
+    {
+     "id": "travel",
+     "label": "Headline travel equals the source",
+     "pass": true,
+     "measured": "0px",
+     "limit": "0px within 1px"
+    },
+    {
+     "id": "scale",
+     "label": "Headline scale equals the source",
+     "pass": true,
+     "measured": "1",
+     "limit": "1 within 0.01"
+    },
+    {
+     "id": "duration",
+     "label": "Main change takes as long as the source",
+     "pass": false,
+     "measured": "120ms",
+     "limit": "150ms within 15ms"
+    },
+    {
+     "id": "easing",
+     "label": "Easing is the source curve",
+     "pass": false,
+     "measured": "steps(1)",
+     "limit": "ease, each control point within 0.02"
+    },
+    {
+     "id": "held",
+     "label": "Press shows while the finger is held 618ms",
+     "pass": false,
+     "measured": "nothing while held",
+     "limit": "from 32ms or sooner, for the whole hold"
+    }
+   ],
+   "pass": false,
+   "call": "invisible",
+   "callWhy": "its main change takes 120ms",
+   "sentences": [
+    "The first visible change comes 114ms after the finger lands, when the finger lifts.",
+    "The button button changes colour (Delta E 97) over 120ms (steps(1)).",
+    "The fill changes over 100 percent of the control.",
+    "Nothing else reacts.",
+    "Held for 618ms, the press shows nothing while the finger is down."
+   ]
+  },
+  {
+   "id": "switch",
+   "name": "Switch",
+   "does": "taps a switch that is off",
+   "style": "studio",
+   "platform": "auto",
+   "detectedPlatform": "android",
+   "device": "pixel",
+   "profile": "quiet",
+   "gesture": "tap",
+   "holdMs": 90,
+   "measured": {
+    "pointerdown": 3998.2000000011176,
+    "pointerup": 4080.5,
+    "click": 4087.9000000003725,
+    "fingerMs": 82,
+    "latency": 99,
+    "startsAtRelease": true,
+    "afterClick": false,
+    "droppedFrames": 0,
+    "frameMs": 16.7,
+    "frames": 84,
+    "headline": {
+     "id": 5,
+     "desc": "span/thumb",
+     "part": "thumb",
+     "group": "root",
+     "parent": 3,
+     "merged": [],
+     "existedBefore": true,
+     "existsAtEnd": true,
+     "preMoving": false,
+     "changed": true,
+     "start": 99,
+     "end": 369,
+     "inMs": 203,
+     "totalMs": 287,
+     "travel": 25,
+     "edgeTravel": 20.5,
+     "ownTravel": 25,
+     "sizeChange": 15.4,
+     "scaleMin": 0.667,
+     "scaleMax": 1.167,
+     "opacityMin": 1,
+     "opacityMax": 1,
+     "colourDelta": 55.9,
+     "fillDelta": 55.9,
+     "ownStyleChanged": true,
+     "clipChanged": false,
+     "filterChanged": false,
+     "shadowChanged": true,
+     "areaMax": 1296,
+     "cut": {
+      "kind": "colour",
+      "at": 98.79999999888241,
+      "size": 56
+     },
+     "dropped": null,
+     "animations": [
+      {
+       "type": "CSSTransition",
+       "name": "box-shadow",
+       "props": [
+        "boxShadow"
+       ],
+       "duration": 100,
+       "delay": 0,
+       "easing": "cubic-bezier(0, 0, 0.58, 1)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "color",
+       "props": [
+        "color"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "steps(1, start)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "transform",
+       "props": [
+        "transform"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+       "keyEasing": "linear"
+      },
+      {
+       "type": "CSSTransition",
+       "name": "transform",
+       "props": [
+        "transform"
+       ],
+       "duration": 120,
+       "delay": 0,
+       "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+       "keyEasing": "linear"
+      }
+     ]
+    },
+    "mainMs": 120,
+    "mainSource": "animation",
+    "mainEasing": "steps(1, start)",
+    "fillShare": 0.96,
+    "fadeShare": 0,
+    "fadeMs": 0,
+    "secondaries": [
+     {
+      "desc": "span/track",
+      "ownTravel": 0,
+      "colourDelta": 86.7,
+      "start": 114,
+      "totalMs": 134
+     },
+     {
+      "desc": "span",
+      "ownTravel": 0,
+      "colourDelta": 0,
+      "start": 99,
+      "totalMs": 17
+     }
+    ],
+    "cuts": [],
+    "tooShortOrSmall": [
+     {
+      "desc": "span/track",
+      "why": "finishes in 120ms"
+     },
+     {
+      "desc": "span",
+      "why": "finishes in 120ms"
+     },
+     {
+      "desc": "span/thumb",
+      "why": "finishes in 120ms"
+     }
+    ],
+    "tracks": [
+     {
+      "id": 3,
+      "desc": "span/track",
+      "part": "track",
+      "group": "root",
+      "parent": 2,
+      "merged": [],
+      "existedBefore": true,
+      "existsAtEnd": true,
+      "preMoving": false,
+      "changed": true,
+      "start": 114,
+      "end": 232,
+      "inMs": 134,
+      "totalMs": 134,
+      "travel": 0,
+      "edgeTravel": 0,
+      "ownTravel": 0,
+      "sizeChange": 0,
+      "scaleMin": 1,
+      "scaleMax": 1,
+      "opacityMin": 1,
+      "opacityMax": 1,
+      "colourDelta": 86.7,
+      "fillDelta": 86.7,
+      "ownStyleChanged": true,
+      "clipChanged": false,
+      "filterChanged": false,
+      "shadowChanged": false,
+      "areaMax": 2600,
+      "cut": {
+       "kind": "colour",
+       "at": 231.7999999988824,
+       "size": 87
+      },
+      "dropped": null,
+      "animations": [
+       {
+        "type": "CSSTransition",
+        "name": "border-bottom-color",
+        "props": [
+         "borderBottomColor"
+        ],
+        "duration": 100,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "border-left-color",
+        "props": [
+         "borderLeftColor"
+        ],
+        "duration": 100,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "border-right-color",
+        "props": [
+         "borderRightColor"
+        ],
+        "duration": 100,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "border-top-color",
+        "props": [
+         "borderTopColor"
+        ],
+        "duration": 100,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "background-color",
+        "props": [
+         "backgroundColor"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "steps(1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "opacity",
+        "props": [
+         "opacity"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "transform",
+        "props": [
+         "transform"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "opacity",
+        "props": [
+         "opacity"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       }
+      ]
+     },
+     {
+      "id": 4,
+      "desc": "span",
+      "part": null,
+      "group": "root",
+      "parent": 3,
+      "merged": [],
+      "existedBefore": false,
+      "existsAtEnd": true,
+      "preMoving": false,
+      "changed": true,
+      "start": 99,
+      "end": 99,
+      "inMs": 17,
+      "totalMs": 17,
+      "travel": 0,
+      "edgeTravel": 0,
+      "ownTravel": 0,
+      "sizeChange": 0,
+      "scaleMin": 1,
+      "scaleMax": 1,
+      "opacityMin": 1,
+      "opacityMax": 1,
+      "colourDelta": 0,
+      "fillDelta": 0,
+      "ownStyleChanged": true,
+      "clipChanged": false,
+      "filterChanged": false,
+      "shadowChanged": false,
+      "areaMax": 2394,
+      "cut": null,
+      "dropped": null,
+      "animations": [
+       {
+        "type": "CSSTransition",
+        "name": "opacity",
+        "props": [
+         "opacity"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "steps(1, start)",
+        "keyEasing": "linear"
+       }
+      ]
+     },
+     {
+      "id": 5,
+      "desc": "span/thumb",
+      "part": "thumb",
+      "group": "root",
+      "parent": 3,
+      "merged": [],
+      "existedBefore": true,
+      "existsAtEnd": true,
+      "preMoving": false,
+      "changed": true,
+      "start": 99,
+      "end": 369,
+      "inMs": 203,
+      "totalMs": 287,
+      "travel": 25,
+      "edgeTravel": 20.5,
+      "ownTravel": 25,
+      "sizeChange": 15.4,
+      "scaleMin": 0.667,
+      "scaleMax": 1.167,
+      "opacityMin": 1,
+      "opacityMax": 1,
+      "colourDelta": 55.9,
+      "fillDelta": 55.9,
+      "ownStyleChanged": true,
+      "clipChanged": false,
+      "filterChanged": false,
+      "shadowChanged": true,
+      "areaMax": 1296,
+      "cut": {
+       "kind": "colour",
+       "at": 98.79999999888241,
+       "size": 56
+      },
+      "dropped": null,
+      "animations": [
+       {
+        "type": "CSSTransition",
+        "name": "box-shadow",
+        "props": [
+         "boxShadow"
+        ],
+        "duration": 100,
+        "delay": 0,
+        "easing": "cubic-bezier(0, 0, 0.58, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "color",
+        "props": [
+         "color"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "steps(1, start)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "transform",
+        "props": [
+         "transform"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "keyEasing": "linear"
+       },
+       {
+        "type": "CSSTransition",
+        "name": "transform",
+        "props": [
+         "transform"
+        ],
+        "duration": 120,
+        "delay": 0,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "keyEasing": "linear"
+       }
+      ]
+     }
+    ],
+    "rootArea": 3698
+   },
+   "hold": {
+    "holdMs": 599,
+    "onAfter": null,
+    "shownMs": 0,
+    "share": 0
+   },
+   "checks": [
+    {
+     "id": "latency",
+     "label": "First visible change after the finger lands",
+     "pass": false,
+     "measured": "99ms, at release",
+     "limit": "at most 32ms"
+    },
+    {
+     "id": "travel",
+     "label": "Headline travel equals the source",
+     "pass": false,
+     "measured": "25px",
+     "limit": "15px within 1px"
+    },
+    {
+     "id": "scale",
+     "label": "Headline scale equals the source",
+     "pass": false,
+     "measured": "0.667",
+     "limit": "1 within 0.01"
+    },
+    {
+     "id": "duration",
+     "label": "Main change takes as long as the source",
+     "pass": false,
+     "measured": "120ms",
+     "limit": "150ms within 15ms"
+    },
+    {
+     "id": "easing",
+     "label": "Easing is the source curve",
+     "pass": false,
+     "measured": "steps(1, start)",
+     "limit": "ease, each control point within 0.02"
+    },
+    {
+     "id": "held",
+     "label": "Press shows while the finger is held 599ms",
+     "pass": false,
+     "measured": "nothing while held",
+     "limit": "from 32ms or sooner, for the whole hold"
+    }
+   ],
+   "pass": false,
+   "call": "invisible",
+   "callWhy": "its main change takes 120ms",
+   "sentences": [
+    "The first visible change comes 99ms after the finger lands, when the finger lifts.",
+    "The thumb moves 25px, shrinks to 0.667, changes colour (Delta E 56) over 120ms (steps(1, start)).",
+    "The fill changes over 96 percent of the control.",
+    "Also reacting: track (colour), span (fade).",
+    "Held for 599ms, the press shows nothing while the finger is down."
+   ]
+  }
+ ]
+}

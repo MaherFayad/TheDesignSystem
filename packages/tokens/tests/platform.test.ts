@@ -142,8 +142,8 @@ describe('platform CSS', () => {
     expect(css).toContain(':root:dir(rtl),\n  [data-style]:dir(rtl) {');
   });
 
-  it('keeps touch platforms at their own control sizes under every density', () => {
-    for (const id of ['ios', 'android']) {
+  it('keeps ios, android and macos at their own control sizes under every density', () => {
+    for (const id of ['ios', 'android', 'macos']) {
       const own = block(`[data-platform='${id}']`);
       for (const d of ['compact', 'comfortable']) {
         const b = block(`[data-platform='${id}'][data-density='${d}']`);
@@ -225,6 +225,20 @@ describe('platform native themes', () => {
 
   it('exports the platform density values', () => {
     expect(index).toMatch(/export const platformDensities = \{\n\s+android: \{\n\s+comfortable: \{\n\s+size: \{\n\s+control: \{\n\s+lg: 56,\n\s+md: 40,/);
+  });
+
+  // Order R0.19: density keeps the macos control heights (DECISIONS.md, R0.14
+  // rulings on macos, item 1), on the web and in the native objects.
+  it('keeps macos control heights under every density, in CSS and native', () => {
+    const own = block("[data-platform='macos']");
+    expect(own.get('--ds-size-control-md')).toBe('28px');
+    for (const d of ['compact', 'comfortable']) {
+      const b = block(`[data-platform='macos'][data-density='${d}']`);
+      expect([...b.keys()].sort(), d).toEqual(['--ds-size-control-lg', '--ds-size-control-md', '--ds-size-control-sm', '--ds-size-control-xs']);
+      expect(b.get('--ds-size-control-md'), d).toBe('28px');
+      expect(css.indexOf(`\n  [data-platform='macos'][data-density='${d}'] {`), d).toBeGreaterThan(css.indexOf(`\n  [data-density='${d}'] {`));
+    }
+    expect(index).toMatch(/\n\s+macos: \{\n\s+comfortable: \{\n\s+size: \{\n\s+control: \{\n\s+lg: 32,\n\s+md: 28,\n\s+sm: 22,\n\s+xs: 20,\n\s+\},\n\s+\},\n\s+\},\n\s+compact: \{\n\s+size: \{\n\s+control: \{\n\s+lg: 32,\n\s+md: 28,\n\s+sm: 22,\n\s+xs: 20,/);
   });
 });
 

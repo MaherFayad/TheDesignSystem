@@ -522,11 +522,13 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
   const fillShare = rootArea > 0 ? Math.min(1, filled / rootArea) : 0;
   // Content of the headline that fades in or out by itself (a word that swaps), as a share of the control.
   let faded = 0;
+  let fadeMs = 0;
   if (!headlineIsOverlay) {
     for (const t of group) {
       if (t.preMoving || !t.ownStyleChanged || t.opacityMax - t.opacityMin < 0.5) continue;
       if (rec.meta[t.id]?.parent !== null && group.some((g) => g.id === rec.meta[t.id]?.parent && g.opacityMax - g.opacityMin >= 0.5 && g.ownStyleChanged)) continue;
       faded += t.areaMax;
+      fadeMs = Math.max(fadeMs, changeMs(t, t0, frameMs).ms ?? 0);
     }
   }
   const fadeShare = rootArea > 0 ? Math.min(1, faded / rootArea) : 0;
@@ -555,6 +557,7 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
     pointerdown: eventTime(rec, 'pointerdown'),
     pointerup,
     click,
+    fingerMs: pointerup !== null ? Math.round(pointerup - t0) : null,
     latency: firstAbs === null ? null : Math.round(firstAbs - t0),
     startsAtRelease: firstAbs !== null && pointerup !== null && firstAbs >= pointerup,
     afterClick: firstAbs !== null && click !== null && firstAbs >= click + 50 && rec.stateChanged !== true,
@@ -567,6 +570,7 @@ export function analyze(rec: Recording, opts: { gesture?: string } = {}): Measur
     mainEasing: main.easing,
     fillShare: Math.round(fillShare * 100) / 100,
     fadeShare: Math.round(fadeShare * 100) / 100,
+    fadeMs,
     secondaries,
     cuts,
     tooShortOrSmall,

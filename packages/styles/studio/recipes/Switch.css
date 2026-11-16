@@ -39,9 +39,8 @@
     }
   }
 
-  /* The press shape is the platform's on ios and android (packages/css/src/platform),
-     and recipes beat that layer, so the style sets it only on the web platform. */
-  [data-style='studio'][data-platform='web'] [data-ds='switch'] {
+  /* The press is the platform's on ios and android (packages/css/src/platform), so the style sets its own only where the platform sets none. */
+  [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='switch'] {
     --_switch-thumb-size-pressed: 1;
     --_switch-stretch: 1;
   }

@@ -7,8 +7,8 @@
  * controls, press feedback, where overlays come from and how they leave,
  * the place of toasts, navigation placement and the type scale. It never
  * changes brand: colors, font family, surface material and character stay
- * with the style. So this file reads only semantic tokens, and a style's
- * recipes (ds.recipes, the layer after this one) still paint over it.
+ * with the style. So this file reads only semantic and platform tokens, and
+ * a style's recipes (ds.recipes) still paint over it.
  *
  * Conventions followed, from the public iOS interface guidelines: a 44pt
  * least target, button sizes 28, 32, 44 and 52, a 62 by 31 capsule switch
@@ -42,6 +42,19 @@
  * the backdrop blur, menus that grow out of their trigger with a check for
  * the selection, and the segment filter. Durations are set only through
  * duration tokens, so a component's reduced form is never undone here.
+ *
+ * Two parts, as the shape split asks (docs/contracts/anatomy.md, ruling 16,
+ * order R0.15):
+ *
+ * - ds.platform, for controls, and for the paint and motion of chrome (the
+ *   tint of the alert actions, the grabber color, durations and curves). It
+ *   sits before ds.recipes, so a style recipe that sets the same private
+ *   property keeps its shape on a control (the style wins on controls).
+ * - ds.chrome, at the end of this file, for the geometry of the navbar, the
+ *   tab bar, dialogs and alerts, sheets and drawers, and toasts. It sits
+ *   after ds.recipes and sets geometry and placement only, from platform
+ *   tokens, so the result is the same in every style (the platform wins on
+ *   sheets, bars and alerts).
  *
  * Known limit: a Theme with another data-platform nested inside an ios one
  * still matches these descendant selectors.
@@ -442,63 +455,14 @@
     transform: translateY(-50%) rotate(-45deg);
   }
 
-  /* ------------------------------------------------------------ navigation: Navbar, TabBar, Sidebar, Pagination, Stepper */
+  /* ------------------------------------------------------------ navigation: Sidebar, Pagination, Stepper (Navbar and TabBar geometry is in ds.chrome below) */
 
-  /* The bar is 44pt with a centred semibold title. The large title that collapses needs a part: see the report. */
-  [data-platform='ios'] [data-ds='navbar'] {
-    --_navbar-height: calc(var(--ds-size-touch-ios) + var(--ds-space-xs));
-    --_navbar-control-height: var(--ds-size-touch-ios);
-    --_navbar-padding-inline: var(--ds-space-3xl);
-    --_navbar-font-size: var(--ds-font-size-2xl);
-  }
-
-  /* The title link is a full height target. */
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'],
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] > a {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--ds-size-touch-ios);
-  }
-
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
-    font-size: var(--ds-font-size-2xl);
-    font-weight: var(--ds-font-weight-semibold);
-  }
-
-  /* On a phone the title sits in the middle of the bar, whatever stands at its ends. */
-  @media (width < 30rem) { /* breakpoint.phone */
-    [data-platform='ios'] [data-ds='navbar']:not([data-sticky]) {
-      position: relative;
-    }
-
-    [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
-      position: absolute;
-      inset-inline: 0;
-      inline-size: fit-content;
-      max-inline-size: 60%;
-      margin-inline: auto;
-    }
-  }
-
-  /* Tab bar: 49pt items, the icon over a 10pt label, the current item in the tint, no pill. */
+  /* Tab bar paint: the current item in the tint, no pill, the label weights. Heights and places are in ds.chrome. */
   [data-platform='ios'] [data-ds='tab-bar'] {
-    --_tab-bar-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-xs));
-    --_tab-bar-icon-size: var(--ds-size-icon-lg);
     --_tab-bar-pill-bg: transparent;
     --_tab-bar-fg-active: var(--ds-color-primary-on-surface);
     --_tab-bar-weight: var(--ds-font-weight-medium);
     --_tab-bar-weight-active: var(--ds-font-weight-semibold);
-  }
-
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] {
-    justify-content: flex-start;
-    gap: var(--ds-space-fixed-4xs);
-    padding-block-start: var(--ds-space-fixed-2xs);
-    font-size: var(--ds-font-size-xs);
-  }
-
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
-    padding: 0;
   }
 
   [data-platform='ios'] [data-ds='sidebar'] {
@@ -596,17 +560,12 @@
     font-size: var(--ds-font-size-l);
   }
 
-  /* ------------------------------------------------------------ dialog and alert dialog: a compact centred alert */
+  /* ------------------------------------------------------------ dialog and alert dialog: paint and motion (the geometry is in ds.chrome) */
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
-    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
-    --_dialog-gutter: var(--ds-space-5xl);
-    --_dialog-radius: var(--ds-radius-card);
-    --_dialog-padding: var(--ds-space-3xl);
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     /* The alert scales down into place on the bouncy spring, from a little larger (the component's own enter, no travel). */
-    --_dialog-enter-y: 0px;
     --_dialog-enter-scale: 1.15;
     --_dialog-duration-in: var(--ds-duration-spring-bouncy);
     --_dialog-ease-in: var(--ds-ease-spring-bouncy);
@@ -624,56 +583,13 @@
     --_dialog-backdrop-blur: 0px;
   }
 
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
-    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
-  }
-
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
-    text-align: center;
-  }
-
-  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
-    padding-block: var(--_dialog-padding) var(--ds-space-3xs);
-    padding-inline: calc(var(--_dialog-padding) + var(--ds-size-control-sm));
-    border-block-end: 0;
-    font-size: var(--ds-font-size-2xl);
-  }
-
-  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
-    align-self: center;
-    margin-inline: 0;
-  }
-
-  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
-    font-size: var(--ds-font-size-2xl);
-  }
-
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
-    font-size: var(--ds-font-size-l);
-  }
-
-  /*
-   * The actions: equal width, side by side for two, stacked for three or
-   * more, split by hairlines (the gaps show the divider color behind them).
-   */
+  /* The hairlines between the actions: the footer shows the divider color through the gaps ds.chrome leaves. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
-    display: grid;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
-    gap: var(--ds-border-width-default);
-    padding: 0;
-    padding-block-start: var(--ds-border-width-default);
-    border-block-start: 0;
     background-color: var(--_dialog-divider-color);
   }
 
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer']:has(> :nth-child(3)) {
-    grid-auto-flow: row;
-  }
-
+  /* The actions are text in the tint on the panel. A style recipe for the footer steps aside on ios (Dialog.css recipes). */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
-    --_button-height: var(--ds-size-touch-ios);
-    --_button-radius: 0;
     --_button-bg: var(--_dialog-bg);
     --_button-bg-hover: var(--ds-color-bg-overlay-5);
     --_button-bg-active: var(--ds-color-bg-overlay-10);
@@ -685,20 +601,7 @@
     /* Inset, so the next action and the hairline never paint over the ring. */
     --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
 
-    inline-size: 100%;
-    block-size: auto;
-    min-block-size: var(--ds-size-touch-ios);
-    padding-block: var(--ds-space-s);
-    padding-inline: var(--ds-space-xs);
     font-weight: var(--ds-font-weight-regular);
-  }
-
-  /* A long action label wraps instead of ending in an ellipsis: the row grows. */
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] > [data-part='label'] {
-    overflow-x: visible;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    text-overflow: clip;
   }
 
   /* The default action is the bold one; a destructive one keeps the danger text color. */
@@ -712,7 +615,7 @@
     --_button-fg-active: var(--ds-color-state-danger-text);
   }
 
-  /* ------------------------------------------------------------ sheet and drawer: rise from the bottom with a grabber */
+  /* ------------------------------------------------------------ sheet and drawer: paint and motion (the edge, corners and grabber are in ds.chrome) */
 
   /*
    * Rises on the bouncy spring: it passes its rest place a little and
@@ -723,46 +626,17 @@
    * path) an app picks: the gallery passes half and all of the room on ios.
    */
   [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
-    --_dialog-radius: var(--ds-radius-card);
     --_dialog-duration-in: var(--ds-duration-window-open);
     --_dialog-ease-in: var(--ds-ease-spring-bouncy);
   }
 
-  /* The grabber: 36 by 5 and round, on the Sheet's handle-bar part; the handle keeps a 24px strip for the pointer. */
   [data-platform='ios'] [data-ds='sheet'] {
     --_dialog-handle-color: var(--ds-color-border-strong);
-    --_dialog-handle-radius: var(--ds-radius-pill);
-  }
-
-  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
-    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
-    block-size: var(--ds-space-fixed-xs);
-    padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
   }
 
   /* With detents the handle is on the Button base: the grabber does not take the button dim while it is pressed or dragged. */
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle']:active {
     opacity: 1;
-  }
-
-  /* The Drawer leaves its side and rises like a sheet. */
-  [data-platform='ios'] [data-ds='drawer'] {
-    align-items: flex-end;
-    justify-content: center;
-    padding-block-start: calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px));
-  }
-
-  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'],
-  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'],
-  [data-platform='ios'] [data-ds='drawer'][data-size] > [data-part='panel'] {
-    inline-size: min(var(--ds-dialog-width-xl), 100%);
-    block-size: auto;
-    max-block-size: 100%;
-    padding-block-start: var(--ds-space-xl);
-    padding-block-end: env(safe-area-inset-bottom, 0px);
-    border-radius: 0;
-    border-start-start-radius: var(--_dialog-radius);
-    border-start-end-radius: var(--_dialog-radius);
   }
 
   [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'][data-state='open'] {
@@ -773,54 +647,14 @@
     animation: ds-ios-sink var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
   }
 
-  /* The Drawer has no handle part: its grabber is drawn on the panel, 36 by 5 and round, at the top centre. */
-  /*
-   * Order 1.29: the grabber is the Drawer's handle part, so it takes the
-   * swipe down to dismiss (Drawer.tsx). The strip spans the top of the
-   * panel at the target height; the bar draws where the old grabber was,
-   * 36 by 5 and round, at the top centre.
-   */
+  /* Order 1.29: the Drawer's grabber is its handle part, so it takes the swipe down to dismiss (Drawer.tsx). Its color here, its shape in ds.chrome. */
   [data-platform='ios'] [data-ds='drawer'] {
     --_dialog-drawer-handle-color: var(--ds-color-border-strong);
   }
 
-  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'],
-  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'] > [data-part='handle'] {
-    inset-block: 0 auto;
-    inset-inline: 0;
-    align-items: flex-start;
-    inline-size: auto;
-    block-size: var(--ds-size-target-min);
-    padding-block-start: var(--ds-space-fixed-xs);
-    box-sizing: border-box;
-  }
-
-  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
-    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
-    block-size: var(--ds-space-fixed-xs);
-    border-radius: var(--ds-radius-pill);
-  }
-
-  /* ------------------------------------------------------------ toast: a banner that drops from the top, under the safe area */
-
-  /*
-   * Every position maps to the top centre. The stack grows down from the
-   * top edge (--_toaster-dir, --_toaster-align), so the toasts behind the
-   * front one peek out under it, not off the screen, and each one enters
-   * from above its own height (the component's enter reads the direction).
-   */
-  [data-platform='ios'] [data-ds='toaster'] {
-    --_toaster-dir: 1;
-    --_toaster-align: start;
-
-    flex-direction: column-reverse;
-    inset-block: var(--_toaster-inset-block-start) auto;
-    inset-inline: 0;
-    margin-inline: auto;
-  }
+  /* ------------------------------------------------------------ toast: paint and motion of the banner (the edge, stack and shape are in ds.chrome) */
 
   [data-platform='ios'] [data-ds='toast'] {
-    --_toast-radius: calc(var(--ds-radius-card) + var(--ds-radius-sm));
     --_toast-edge: var(--_toast-border-color);
     --_toast-shadow: var(--ds-elevation-menu);
     --_toast-enter-scale: 1;
@@ -830,12 +664,6 @@
     --_toast-peek: var(--ds-space-m);
     --_toast-stack-duration: var(--ds-duration-spring-bouncy);
     --_toast-stack-ease: var(--ds-ease-spring-bouncy);
-    --_toast-progress-thickness: 0px;
-
-    border-inline-start-width: var(--ds-border-width-default);
-    padding-block: var(--ds-space-xl);
-    padding-inline: var(--ds-space-3xl) var(--ds-space-xl);
-    font-size: var(--ds-font-size-l);
   }
 
   [data-platform='ios'] [data-ds='toast'] > [data-part='title'] {
@@ -909,5 +737,270 @@
     [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
       background-color: CanvasText;
     }
+  }
+}
+
+/*
+ * The chrome part (ruling 16): sheets, bars, alerts and toasts. ds.chrome
+ * comes after ds.recipes, so the geometry below holds in every style: a
+ * style still paints the chrome (colors, fonts, borders, shadow colors,
+ * material, motion), but its corners, heights, widths, paddings, title
+ * sizes, action layout, entry edge and the parts that show are the
+ * platform's. These rules set geometry and placement only. Every length
+ * reads a platform token (shape.corner.*, size.*, type.*) or a token that
+ * is the same in every style (space.*, font.size.2xl and xs, dialog.width.*),
+ * so the result is equal in all four styles.
+ */
+@layer ds.chrome {
+  /* ------------------------------------------------------------ navbar: 44pt with a centred title */
+
+  /* The bar is 44pt with a centred semibold title. The large title that collapses needs a part: see the report. */
+  [data-platform='ios'] [data-ds='navbar'] {
+    --_navbar-height: calc(var(--ds-size-touch-ios) + var(--ds-space-xs));
+    --_navbar-control-height: var(--ds-size-touch-ios);
+    --_navbar-padding-inline: var(--ds-space-3xl);
+    --_navbar-font-size: var(--ds-font-size-2xl);
+  }
+
+  /* The title link is a full height target. */
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'],
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] > a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
+    font-size: var(--ds-font-size-2xl);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* On a phone the title sits in the middle of the bar, whatever stands at its ends. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-platform='ios'] [data-ds='navbar']:not([data-sticky]) {
+      position: relative;
+    }
+
+    [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
+      position: absolute;
+      inset-inline: 0;
+      inline-size: fit-content;
+      max-inline-size: 60%;
+      margin-inline: auto;
+    }
+  }
+
+  /* ------------------------------------------------------------ tab bar: full width on the bottom edge, 49pt items, the icon over a 10pt label */
+
+  /*
+   * The bar runs the width of the screen with a hairline on its top edge,
+   * square, the safe area under it. A style that draws its bar as a floating
+   * capsule keeps its fill, edge color and material; the bar takes this
+   * shape on ios.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'] {
+    --_tab-bar-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-xs));
+    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+
+    inline-size: 100%;
+    margin: 0;
+    padding-block: var(--ds-space-3xs) max(var(--ds-space-3xs), var(--ds-inset-safe-bottom));
+    padding-inline: max(var(--ds-space-3xs), var(--ds-inset-safe-start), var(--ds-inset-safe-end));
+    border-width: 0;
+    border-block-start-width: var(--ds-border-width-default);
+    border-radius: var(--ds-shape-corner-none);
+  }
+
+  /* A style's band drawn just above its bar stays inside the screen. */
+  [data-platform='ios'] [data-ds='tab-bar']::before {
+    inset-inline: 0;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] {
+    justify-content: flex-start;
+    gap: var(--ds-space-fixed-4xs);
+    padding-block-start: var(--ds-space-fixed-2xs);
+    font-size: var(--ds-font-size-xs);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+    padding: 0;
+  }
+
+  /* ------------------------------------------------------------ dialog and alert dialog: a compact centred alert */
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
+    --_dialog-gutter: var(--ds-space-5xl);
+    --_dialog-radius: var(--ds-shape-corner-large);
+    --_dialog-padding: var(--ds-space-3xl);
+    /* No travel: the alert grows in place. */
+    --_dialog-enter-y: 0px;
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
+    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
+    text-align: center;
+  }
+
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block: var(--_dialog-padding) var(--ds-space-3xs);
+    padding-inline: calc(var(--_dialog-padding) + var(--ds-size-control-sm));
+    border-block-end: 0;
+    font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
+    align-self: center;
+    margin-inline: 0;
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    font-size: var(--ds-font-size-2xl);
+  }
+
+  /* A style that draws the title in a title bar: the same title size there. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
+    font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  /*
+   * The actions: equal width, side by side for two, stacked for three or
+   * more, split by hairlines (the gaps show the divider color behind them,
+   * painted in ds.platform).
+   */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--ds-border-width-default);
+    padding: 0;
+    padding-block-start: var(--ds-border-width-default);
+    border-block-start: 0;
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer']:has(> :nth-child(3)) {
+    grid-auto-flow: row;
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: var(--ds-shape-corner-none);
+
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: var(--ds-size-touch-ios);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--ds-space-xs);
+  }
+
+  /* A long action label wraps instead of ending in an ellipsis: the row grows. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] > [data-part='label'] {
+    overflow-x: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+
+  /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */
+
+  /* A style that draws a window title bar on its alerts and sheets keeps the bar, without the lights. */
+  [data-platform='ios'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------ sheet and drawer: rise from the bottom with a grabber */
+
+  [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
+    --_dialog-radius: var(--ds-shape-corner-large);
+  }
+
+  /* The grabber: 36 by 5 and round, on the Sheet's handle-bar part; the handle keeps a 24px strip for the pointer. */
+  [data-platform='ios'] [data-ds='sheet'] {
+    --_dialog-handle-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+    block-size: var(--ds-space-fixed-xs);
+    padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
+  }
+
+  /* The Drawer leaves its side and rises like a sheet. */
+  [data-platform='ios'] [data-ds='drawer'] {
+    align-items: flex-end;
+    justify-content: center;
+    padding-block-start: calc(var(--ds-space-5xl) + var(--ds-inset-safe-top));
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'],
+  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'],
+  [data-platform='ios'] [data-ds='drawer'][data-size] > [data-part='panel'] {
+    inline-size: min(var(--ds-dialog-width-xl), 100%);
+    block-size: auto;
+    max-block-size: 100%;
+    padding-block-start: var(--ds-space-xl);
+    padding-block-end: var(--ds-inset-safe-bottom);
+    border-radius: 0;
+    border-start-start-radius: var(--_dialog-radius);
+    border-start-end-radius: var(--_dialog-radius);
+  }
+
+  /*
+   * The Drawer's grabber is its handle part (order 1.29): the strip spans the
+   * top of the panel at the target height; the bar draws at the top centre,
+   * 36 by 5 and round.
+   */
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'],
+  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'] > [data-part='handle'] {
+    inset-block: 0 auto;
+    inset-inline: 0;
+    align-items: flex-start;
+    inline-size: auto;
+    block-size: var(--ds-size-target-min);
+    padding-block-start: var(--ds-space-fixed-xs);
+    box-sizing: border-box;
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
+    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+    block-size: var(--ds-space-fixed-xs);
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  /* ------------------------------------------------------------ toast: a banner that drops from the top, under the safe area */
+
+  /*
+   * Every position maps to the top centre. The stack grows down from the
+   * top edge (--_toaster-dir, --_toaster-align), so the toasts behind the
+   * front one peek out under it, not off the screen, and each one enters
+   * from above its own height (the component's enter reads the direction).
+   */
+  [data-platform='ios'] [data-ds='toaster'] {
+    --_toaster-dir: 1;
+    --_toaster-align: start;
+
+    flex-direction: column-reverse;
+    inset-block: var(--_toaster-inset-block-start) auto;
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  /* A banner: rounder than a card, no timer line, the tone on a hairline start edge. */
+  [data-platform='ios'] [data-ds='toast'] {
+    --_toast-radius: var(--ds-shape-corner-large-increased);
+    --_toast-progress-thickness: 0px;
+
+    border-inline-start-width: var(--ds-border-width-default);
+    padding-block: var(--ds-space-xl);
+    padding-inline: var(--ds-space-3xl) var(--ds-space-xl);
+    font-size: var(--ds-type-body-medium-font-size);
   }
 }

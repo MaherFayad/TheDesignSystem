@@ -1,7 +1,7 @@
 // Proof for order R0.11: platform detection in the docs site.
 // Needs the site served (npm run build:site, then npm run serve:site -w @the-system/docs).
 // Run from the repo root: BASE=http://localhost:4400 node apps/docs/scripts/proof/platform.mjs [--shots] [--axe]
-// Writes docs/reports/reset/R0.11/probe.json, and with --shots the top bar PNGs.
+// Writes docs/reports/reset/R0.11/probe.json (probe-axe.json with --axe), and with --shots the top bar PNGs.
 import { chromium, devices } from 'playwright';
 import { AxeBuilder } from '@axe-core/playwright';
 import fs from 'node:fs';
@@ -79,16 +79,18 @@ function watch() {
 async function context(browser, descriptor, extra = {}) {
   const { init, ...rest } = descriptor;
   const ctx = await browser.newContext({ ...rest, ...extra });
+  ctx.setDefaultTimeout(90000);
+  ctx.setDefaultNavigationTimeout(90000);
   if (init) await ctx.addInitScript(init);
   await ctx.addInitScript(watch);
   return ctx;
 }
 
 async function frameState(page) {
-  const handle = await page.waitForSelector('iframe[data-src][src]', { timeout: 15000 });
+  const handle = await page.waitForSelector('iframe[data-src][src]', { state: 'attached', timeout: 60000 });
   const src = await handle.getAttribute('src');
   const frame = await handle.contentFrame();
-  await frame.waitForSelector('[data-ds="theme"][data-platform]', { timeout: 15000 });
+  await frame.waitForSelector('[data-ds="theme"][data-platform]', { state: 'attached', timeout: 60000 });
   const platform = await frame.evaluate(() => document.querySelector('[data-ds="theme"]').getAttribute('data-platform'));
   const html = await frame.evaluate(() => document.documentElement.getAttribute('data-platform'));
   return { src: src.replace(/^.*\?/, '?'), platform, html };
@@ -291,7 +293,7 @@ async function topbar(page) {
 
   await browser.close();
   report.failures = failures;
-  fs.writeFileSync(`${out}/probe.json`, JSON.stringify(report, null, 1) + '\n');
+  fs.writeFileSync(`${out}/${axe ? 'probe-axe' : 'probe'}.json`, JSON.stringify(report, null, 1) + '\n');
   console.log(failures === 0 ? 'all pass' : `${failures} failed`);
   process.exitCode = failures === 0 ? 0 : 1;
 })();

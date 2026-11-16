@@ -28,18 +28,18 @@ export function runMarkdown(info: RunInfo, results: InteractionResult[]): string
   out.push(`Load average at the start: ${info.load.map((l) => l.toFixed(2)).join(', ')} on ${info.cpus} cores.`);
   for (const n of info.notes) out.push(`${n}`);
   out.push('');
-  out.push('| Interaction | Latency | Headline | Moves | Scale | Main change | Fill share | Reacting | Cuts | Held 600ms | Verdict |');
-  out.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
+  out.push('| Interaction | Finger down | Latency | Headline | Moves | Scale | Main change | Fill share | Reacting | Cuts | Held 600ms | Verdict |');
+  out.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
   for (const r of results) {
     if (!r.measured) {
-      out.push(`| ${r.name} | | | | | | | | | | error: ${cell(r.error ?? 'no measurement')} |`);
+      out.push(`| ${r.name} | | | | | | | | | | | error: ${cell(r.error ?? 'no measurement')} |`);
       continue;
     }
     const m = r.measured;
     const h = m.headline;
     const fails = r.checks.filter((c) => !c.pass).map((c) => c.id);
     out.push(
-      `| ${r.name} | ${m.latency === null ? 'none' : `${m.latency}ms${m.startsAtRelease ? ' (at release)' : ''}`} | ${cell(h?.part ?? h?.desc ?? 'not found')} | ${h ? `${Math.max(h.travel, h.ownTravel)}px` : ''} | ${h ? `${h.scaleMin} to ${h.scaleMax}` : ''} | ${m.mainMs === null ? 'none' : `${m.mainMs}ms`} | ${Math.round(m.fillShare * 100)}% | ${m.secondaries.length} | ${m.cuts.length} | ${r.hold ? (r.hold.onAfter === null ? 'not shown' : `${r.hold.shownMs}ms`) : ''} | ${r.pass ? 'pass' : `fail: ${fails.join(', ')}`}${r.call ? `; audit call ${r.call}` : ''} |`,
+      `| ${r.name} | ${m.fingerMs === null ? '' : `${m.fingerMs}ms`} | ${m.latency === null ? 'none' : `${m.latency}ms${m.startsAtRelease ? ' (at release)' : ''}`} | ${cell(h?.part ?? h?.desc ?? 'not found')} | ${h ? `${Math.max(h.travel, h.ownTravel)}px` : ''} | ${h ? `${h.scaleMin} to ${h.scaleMax}` : ''} | ${m.mainMs === null ? 'none' : `${m.mainMs}ms`} | ${Math.round(m.fillShare * 100)}% | ${m.secondaries.length} | ${m.cuts.length} | ${r.hold ? (r.hold.onAfter === null ? 'not shown' : `${r.hold.shownMs}ms`) : ''} | ${r.pass ? 'pass' : `fail: ${fails.join(', ')}`}${r.call ? `; audit call ${r.call}` : ''} |`,
     );
   }
   out.push('');

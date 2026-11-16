@@ -37,10 +37,8 @@
     --_switch-bg: var(--_switch-fill);
   }
 
-  /* Reduced motion: the thumb does not stretch (this layer wins over the zeroing in Switch.css). */
-  /* The press shape is the platform's on ios and android (packages/css/src/platform),
-     and recipes beat that layer, so the style sets it only on the web platform. */
-  [data-style='neutral'][data-platform='web'] [data-ds='switch'] {
+  /* The press is the platform's on ios and android (packages/css/src/platform), so the style sets its own only where the platform sets none. */
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) [data-ds='switch'] {
     --_switch-stretch: var(--ds-scale-pop);
     --_switch-thumb-size-pressed: 1;
   }

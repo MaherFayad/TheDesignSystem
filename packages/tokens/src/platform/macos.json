@@ -15,7 +15,19 @@
           "value": 20,
           "unit": "px"
         },
-        "$description": "Minimum control size on macOS, 20x20 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility."
+        "$description": "Minimum control size on macOS, 20x20 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility. Density never changes it on macOS (docs/contracts/tokens.md, order of the layer; DECISIONS.md, R0.14 rulings on macos, item 1).",
+        "$extensions": {
+          "ds.density": {
+            "compact": {
+              "value": 20,
+              "unit": "px"
+            },
+            "comfortable": {
+              "value": 20,
+              "unit": "px"
+            }
+          }
+        }
       },
       "sm": {
         "$type": "dimension",
@@ -23,7 +35,19 @@
           "value": 22,
           "unit": "px"
         },
-        "$description": "Small control on macOS. Source: Liquid audit (docs/reports/audit/liquid-guidelines.md), \"What a desktop form needs\": control heights about 22 to 28 by size."
+        "$description": "Small control on macOS. Source: Liquid audit (docs/reports/audit/liquid-guidelines.md), \"What a desktop form needs\": control heights about 22 to 28 by size. Density never changes it on macOS (docs/contracts/tokens.md, order of the layer; DECISIONS.md, R0.14 rulings on macos, item 1).",
+        "$extensions": {
+          "ds.density": {
+            "compact": {
+              "value": 22,
+              "unit": "px"
+            },
+            "comfortable": {
+              "value": 22,
+              "unit": "px"
+            }
+          }
+        }
       },
       "md": {
         "$type": "dimension",
@@ -31,7 +55,19 @@
           "value": 28,
           "unit": "px"
         },
-        "$description": "Default control size on macOS, 28x28 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\"."
+        "$description": "Default control size on macOS, 28x28 pt. Source: https://developer.apple.com/design/human-interface-guidelines/accessibility; Liquid audit (docs/reports/audit/liquid-guidelines.md), \"Sizes and type\". Density never changes it on macOS (docs/contracts/tokens.md, order of the layer; DECISIONS.md, R0.14 rulings on macos, item 1).",
+        "$extensions": {
+          "ds.density": {
+            "compact": {
+              "value": 28,
+              "unit": "px"
+            },
+            "comfortable": {
+              "value": 28,
+              "unit": "px"
+            }
+          }
+        }
       },
       "lg": {
         "$type": "dimension",
@@ -39,7 +75,19 @@
           "value": 32,
           "unit": "px"
         },
-        "$description": "Large control on macOS. Value from memory, unverified: the HIG pages give no number for it."
+        "$description": "Large control on macOS. Value from memory, unverified: the HIG pages give no number for it. Density never changes it on macOS (docs/contracts/tokens.md, order of the layer; DECISIONS.md, R0.14 rulings on macos, item 1).",
+        "$extensions": {
+          "ds.density": {
+            "compact": {
+              "value": 32,
+              "unit": "px"
+            },
+            "comfortable": {
+              "value": 32,
+              "unit": "px"
+            }
+          }
+        }
       }
     },
     "target-min": {
