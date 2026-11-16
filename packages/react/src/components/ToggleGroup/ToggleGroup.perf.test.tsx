@@ -14,6 +14,7 @@ import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Button } from '../Button';
 import { Tabs, TabsList, TabsPanel, TabsTrigger } from '../Tabs';
 import { ToggleGroup, ToggleGroupItem } from './index';
 
@@ -118,9 +119,7 @@ describe('ToggleGroup tab-slide performance fixture', () => {
       const [value, setValue] = useState('list');
       return (
         <>
-          <button type="button" onClick={() => setValue((v) => (v === 'list' ? 'grid' : 'list'))}>
-            Move every pill
-          </button>
+          <Button onClick={() => setValue((v) => (v === 'list' ? 'grid' : 'list'))}>Move every pill</Button>
           <ToggleGroup type="single" aria-label="First" value={value} onValueChange={(v) => v && setValue(v)}>
             <ToggleGroupItem value="list">List</ToggleGroupItem>
             <ToggleGroupItem value="grid">Grid</ToggleGroupItem>
