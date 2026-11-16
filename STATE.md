@@ -7,6 +7,11 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
+**Pause requested by the owner (2026-11-16):** finish the running orders
+(R0.9 and R0.21), check and commit them, then pause. Start nothing new.
+Not started in R0: R0.16 (gate review), R0.17 (press cost profile), and a
+review of steps 2 to 4. Follow ups are in `docs/plan/reset-followups.md`.
+
 The owner lifted the pause and answered 22 decisions: see "Reset rulings" in
 `DECISIONS.md`. The seven audits are in `docs/reports/audit/`.
 

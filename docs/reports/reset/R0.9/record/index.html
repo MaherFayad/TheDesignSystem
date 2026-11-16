@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recording pack R0.9</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f7f9;--fg:#15171a;--muted:#5a606b;--card:#fff;--line:#d9dce1}
+@media (prefers-color-scheme: dark){:root{--bg:#111315;--fg:#eceef1;--muted:#a3a9b3;--card:#1b1e22;--line:#30343a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,sans-serif;padding:16px}
+h1{font-size:22px;margin:0 0 4px}
+.lead{color:var(--muted);max-inline-size:70ch}
+.grid{display:flex;flex-wrap:wrap;gap:16px;margin-block-start:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;max-inline-size:100%}
+.card h2{font-size:16px;margin:0}
+.card p{margin:4px 0;color:var(--muted);font-size:14px;max-inline-size:60ch}
+.pair{display:flex;flex-wrap:wrap;gap:12px;margin-block-start:8px}
+.side h3{font-size:14px;margin:0 0 4px}
+video{display:block;max-inline-size:100%;block-size:auto;background:#000;border-radius:8px}
+.none{font-style:italic}
+.exact .card{overflow-x:auto}
+.exact video{max-inline-size:none}
+label{display:inline-flex;gap:8px;align-items:center;min-block-size:44px;font-size:15px}
+</style></head><body>
+<h1>Recording pack R0.9: Sample pack for the owner to approve the format</h1>
+<p class="lead">Every clip plays at real speed: each frame is one 60th of a second of the page's own time, drawn at 1x with no zoom. The caption above each phone names the style, the platform and what the finger does; a pink point shows where the finger is down, and a dashed ring where it lifted. Neutral, light, platform auto (the page detects iOS on the iPhone frame and Android on the Pixel frame). Neutral has no source screen, so no source clip sits beside these; the index shows one wherever a clip names a compare pair. Dark is one flag away (--scheme light,dark) and was left out of the sample to keep it small.</p>
+<label><input type="checkbox" id="exact"> Show every clip at exact 1x (on a phone narrower than the frame, the clip then scrolls sideways; unticked, it shrinks to fit)</label>
+<p class="lead">Recorded 2026-11-16 15:04 UTC at commit e5c592cc. Sign sheet: <code>docs/reports/reset/signoff/R0.9.md</code>.</p>
+<div class="grid">
+<section class="card" id="button-press-neutral-auto-iphone-light"><h2>Button press, Neutral light, iOS (detected), an iPhone 15 Pro frame</h2><p>Taps the button (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/button-press-neutral-auto-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, after it lifted. 2.93s, 176 frames, 85 KB. <a href="sheets/button-press-neutral-auto-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="button-press-neutral-auto-pixel-light"><h2>Button press, Neutral light, Android (detected), a Pixel 7 frame</h2><p>Taps the button (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/button-press-neutral-auto-pixel-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, after it lifted. 2.93s, 176 frames, 87 KB. <a href="sheets/button-press-neutral-auto-pixel-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="switch-neutral-auto-iphone-light"><h2>Switch, Neutral light, iOS (detected), an iPhone 15 Pro frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-neutral-auto-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, after it lifted. 2.93s, 176 frames, 73 KB. <a href="sheets/switch-neutral-auto-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="switch-neutral-auto-pixel-light"><h2>Switch, Neutral light, Android (detected), a Pixel 7 frame</h2><p>Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms</p>
+<div class="pair"><div class="side"><video src="clips/switch-neutral-auto-pixel-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, after it lifted. 2.93s, 176 frames, 73 KB. <a href="sheets/switch-neutral-auto-pixel-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-neutral-auto-iphone-light"><h2>Dialog open, Neutral light, iOS (detected), an iPhone 15 Pro frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-neutral-auto-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 133ms after the finger lands, after it lifted. 1.72s, 103 frames, 104 KB. <a href="sheets/dialog-open-neutral-auto-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="dialog-open-neutral-auto-pixel-light"><h2>Dialog open, Neutral light, Android (detected), a Pixel 7 frame</h2><p>Taps the button that opens a dialog (finger down 100ms)</p>
+<div class="pair"><div class="side"><video src="clips/dialog-open-neutral-auto-pixel-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 133ms after the finger lands, after it lifted. 1.72s, 103 frames, 99 KB. <a href="sheets/dialog-open-neutral-auto-pixel-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-neutral-auto-iphone-light"><h2>Sheet drag, Neutral light, iOS (detected), an iPhone 15 Pro frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-neutral-auto-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 0ms after the finger lands, while it is still down. 2.02s, 121 frames, 83 KB. <a href="sheets/sheet-drag-neutral-auto-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="sheet-drag-neutral-auto-pixel-light"><h2>Sheet drag, Neutral light, Android (detected), a Pixel 7 frame</h2><p>With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go</p>
+<div class="pair"><div class="side"><video src="clips/sheet-drag-neutral-auto-pixel-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 0ms after the finger lands, while it is still down. 2.02s, 121 frames, 111 KB. <a href="sheets/sheet-drag-neutral-auto-pixel-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="toast-swipe-neutral-auto-iphone-light"><h2>Toast swipe, Neutral light, iOS (detected), an iPhone 15 Pro frame</h2><p>With a toast showing, swipes it 180px over 250ms toward the edge the platform sets and lets go</p>
+<div class="pair"><div class="side"><video src="clips/toast-swipe-neutral-auto-iphone-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 33ms after the finger lands, while it is still down. 1.77s, 106 frames, 63 KB. <a href="sheets/toast-swipe-neutral-auto-iphone-light.png">Contact sheet</a></p></div></div></section>
+<section class="card" id="toast-swipe-neutral-auto-pixel-light"><h2>Toast swipe, Neutral light, Android (detected), a Pixel 7 frame</h2><p>With a toast showing, swipes it 180px over 250ms toward the edge the platform sets and lets go</p>
+<div class="pair"><div class="side"><video src="clips/toast-swipe-neutral-auto-pixel-light.mp4" muted loop playsinline autoplay controls preload="metadata" data-scale="2"></video><p class="meta">The screen first changes 117ms after the finger lands, while it is still down. 1.77s, 106 frames, 68 KB. <a href="sheets/toast-swipe-neutral-auto-pixel-light.png">Contact sheet</a></p></div></div></section>
+</div>
+<script>
+// Real speed, and 1x: a clip drawn at 2 pixels per CSS px is shown at half its pixel width.
+for (const v of document.querySelectorAll('video')) {
+  v.playbackRate = 1;
+  v.defaultPlaybackRate = 1;
+  v.addEventListener('loadedmetadata', () => { v.style.inlineSize = (v.videoWidth / Number(v.dataset.scale || 1)) + 'px'; });
+}
+document.getElementById('exact').addEventListener('change', (e) => document.body.classList.toggle('exact', e.target.checked));
+</script>
+</body></html>
