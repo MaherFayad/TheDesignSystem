@@ -109,20 +109,20 @@ damping at 1.5 times its response) and `spring.effects.fast` (the
 
 ## Check
 
-`npm run check` passes every step that reads my files: tokens build, gen,
-typecheck, eslint, manifests and the token tests. It is not fully green
-because of two files other orders own:
+Last run: every step passes (tokens build, gen, typecheck, eslint,
+manifests, and the angular, native, docs, gallery and consumer checks) but
+vitest, with one failing test in a file this order does not own:
 
-1. `packages/lint/src/gates/no-raw-value.test.ts:35` expects the breakpoint
-   list to be exactly `phone`, `tablet`, `desktop`. This order adds the five
-   shared breakpoints the contract names, so the expected object needs
-   `compact: 0, medium: 600, expanded: 840, large: 1200, 'extra-large': 1600`.
-   The gate itself works with them.
-2. `packages/native` typecheck: `src/components/Button/Button.styles.ts:365`
-   passes a `Platform` that now includes `macos` (R0.10's change to
-   `packages/shared/src/theme.ts`) to `touchTargetOf` in
-   `src/theme/units.ts:19`, which takes only web, ios and android. Native
-   jest, run alone, passes 60 of 60 with the new token output.
+- `packages/lint/src/gates/no-raw-value.test.ts:35` expects the breakpoint
+  list to be exactly `phone`, `tablet`, `desktop`. This order adds the five
+  shared breakpoints the contract names, so the expected object needs
+  `compact: 0, medium: 600, expanded: 840, large: 1200, 'extra-large': 1600`.
+  The gate itself works with them.
+
+An earlier run also failed the `packages/native` typecheck, because R0.10
+added `macos` to `Platform` while `touchTargetOf` took only three
+platforms. That passed on the last run. Native jest passes 60 of 60 with
+the new token output.
 
 ## Existing output that changed
 
@@ -186,7 +186,7 @@ because of two files other orders own:
 
 ## Left open
 
-- The two failures in "Check", for the lead.
+- The lint test in "Check", for the lead.
 - iOS mono on native is `undefined` (the system sans): React Native on iOS has
   no generic monospace name, and naming a vendor family was out of bounds.
   R5.2 or the font loader decision should settle it.

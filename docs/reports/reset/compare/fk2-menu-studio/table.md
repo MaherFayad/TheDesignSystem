@@ -1,6 +1,6 @@
 # Compare fk2-menu-studio: Studio dropdown menu against the Figma-Killer-2 context menu
 
-Run 2026-11-16T11:16:52.891Z. Viewport 1440 by 900, dark scheme.
+Run 2026-11-16T11:27:43.264Z. Viewport 1440 by 900, dark scheme.
 Audit: docs/reports/audit/fidelity-figma-killer-2.md, fid-fk2 shot 14, context menu. FK2 menus are borderless surface-3 tiles with a 16px radius, 12px row radius, 560 weight rows and a 0 12px 28px shadow; Studio menus are square tiles with a bright 1px rule and no shadow.
 
 - Source (fk2, a reconstruction from source parts): `/?screen=context-menu`. In FK2 a right click on a layer or a row action opens ContextMenu (src/ui/components/ContextMenu). The harness renders that component with FK2's globals.css, opened at a point, with five rows and a separator.

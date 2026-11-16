@@ -53,12 +53,17 @@ move the source repos.
 - **The system** is the React gallery (`apps/gallery-react`, vite dev), or the
   address given with `--system-url`.
 
-GoBanana marks its page `data-gpu="software"` in headless Chromium and turns
-every live blur off. The GoBanana pairs remove that mark in their setup, so
-computed CSS shows the designed blur. The software GPU still draws without
-real blur on both sides, so a glass region is compared by its CSS, and a
-pixel probe on it (`"pixels": { "glass": true }`) is never run; it shows as
-allowed with that reason.
+GoBanana's site pages (the `(site)` layout: desk, Finder, pricing) run
+`GpuProbe`, which marks the page `data-gpu="software"` in headless Chromium and
+turns every live blur off. The Studio primitives page `/__design` has no such
+probe, so the sample pairs need nothing. A pair on a site page removes the
+mark with the setup step
+`{ "attr": { "selector": "html", "name": "data-gpu", "value": null } }`, so
+computed CSS shows the designed blur; the run notes say when the mark was
+there on load. The software GPU still draws blur differently from a real
+one, so a glass region is compared by its CSS, and a pixel probe on it
+(`"pixels": { "glass": true }`) is never run; it shows as allowed with that
+reason.
 
 ## A pair file
 

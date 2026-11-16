@@ -1,6 +1,6 @@
 # Compare gb-button-desk: Desk buttons against GoBanana Studio buttons
 
-Run 2026-11-16T11:17:23.892Z. Viewport 1440 by 900, dark scheme.
+Run 2026-11-16T11:27:27.613Z. Viewport 1440 by 900, dark scheme.
 Audit: docs/reports/audit/fidelity-gobanana.md, fid-gb shot 04, 04-buttons-inputs-desk-1440.png. Desk buttons are 36px glass pills with -0.04em tracking; the source button is a flat 28px control with a 1em radius and no tracking.
 
 - Source (gb): `/__design?theme=dark&dir=ltr`. GoBanana's Studio primitives page (app/%5F_design, served at /__design in development), dark, left to right, the Buttons section. The system's default size md stands for the source's default control, st-btn sm at 28px (fidelity-gobanana.md, change 4).

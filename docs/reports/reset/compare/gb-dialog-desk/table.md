@@ -1,6 +1,6 @@
 # Compare gb-dialog-desk: Desk dialog against the GoBanana Studio dialog
 
-Run 2026-11-16T11:16:41.142Z. Viewport 1440 by 900, dark scheme.
+Run 2026-11-16T11:27:36.771Z. Viewport 1440 by 900, dark scheme.
 Audit: docs/reports/audit/fidelity-gobanana.md, fid-gb shot 08, 08-dialog-1440.png. A GoBanana dialog is a plain solid panel with surface-2 header and footer bands and a 12px radius; the Desk dialog is glass with window lights, a yellow title bar and a 16px radius.
 
 - Source (gb): `/__design?theme=dark&dir=ltr`. GoBanana's Studio primitives page, dark, left to right, Dialog and toasts section: press Share canvas. The md Studio dialog (components/studio/Dialog.tsx) opens.

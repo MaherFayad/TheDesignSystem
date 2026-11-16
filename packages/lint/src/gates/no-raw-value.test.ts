@@ -32,7 +32,16 @@ describe('gate ds/no-raw-value: tokens for spacing, size, radius, font size, sha
   });
 
   it('reads the breakpoint tokens', () => {
-    expect(BREAKPOINTS).toEqual({ phone: 480, tablet: 768, desktop: 1100 });
+    expect(BREAKPOINTS).toEqual({
+      phone: 480,
+      tablet: 768,
+      desktop: 1100,
+      compact: 0,
+      medium: 600,
+      expanded: 840,
+      large: 1200,
+      'extra-large': 1600,
+    });
   });
 
   it('allows a condition length only as a breakpoint value with its comment on the same line', () => {
