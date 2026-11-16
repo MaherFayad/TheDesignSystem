@@ -10,8 +10,8 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 The owner lifted the pause and answered 22 decisions: see "Reset rulings" in
 `DECISIONS.md`. The seven audits are in `docs/reports/audit/`.
 
-- Now: ds-architect writes the reset plan to `docs/plan/reset.md`. Nothing
-  is built until the owner has seen it.
+- Now: the owner approved `docs/plan/reset.md` (97 orders). Phase R0 is
+  running, starting with order R0.1.
 - Gate 1 is not passed (`docs/reports/wave-1.md`). Order 1.31 is folded into
   the reset plan.
 - All look approvals are withdrawn and return as proposals after the reset.

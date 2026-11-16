@@ -299,3 +299,30 @@ Carried items:
 21. GoBanana and Figma-Killer-2 stay read only.
 22. Work resumes. The first output is the reset plan as work orders for the
     owner's review. Nothing is built before the owner sees it.
+
+## Reset plan approved (owner, 2026-11-16)
+
+The owner read the summary of `docs/plan/reset.md` and accepted the proposed
+answer to every open question in its section 17. These are final.
+
+1. Desk's `sans` stays Instrument Sans. The canvas editor template sets a
+   font scope to Inter through a token alias decided in order R2.1.
+2. `auto` detects `ios` and `android` only. `macos` is chosen by override.
+3. Ruling 2 also covers muted text on Desk glass: raise the glass alpha only,
+   to the lowest value that brings muted text to 4.5:1.
+4. Studio keeps `pixelarticons`. The icon set is an allowed difference from
+   Figma-Killer-2, whose own set declares no licence.
+5. Native uses the platform font in every style until the owner approves a
+   font loader and font files.
+6. Open: the owner has not yet named the phones for device checks.
+7. Sound: build the hook, off by default, shown in one demo.
+8. Angular ports of the templates and the phone family move to the new
+   wave 2.
+9. One Playwright WebKit download is allowed as a dev tool, for the
+   acceptance harness only.
+10. The system keeps its toast timing (danger toasts stay until closed, WCAG
+    2.2.1). This is an allowed difference from Figma-Killer-2.
+11. Templates use the system's sample content and synthetic images, never
+    the source products' strings or wordmarks.
+12. Figma capacity for a sixth style is decided when the Figma track starts.
+13. Studio's default density stays `default`.
