@@ -48,7 +48,7 @@ Order R0.13 of `docs/plan/reset.md`, built to `docs/contracts/tokens.md`,
     named family keeps it; Figma keeps the first named family;
   - defect 20: `ease.*` strings (CSS `linear()` and `steps()` curves) are left
     out of native themes; native springs come from `spring.*`.
-- Tests: `tests/platform.test.ts` (new, 33 tests), `tests/build.test.ts`
+- Tests: `tests/platform.test.ts` (new, 29 tests), `tests/build.test.ts`
   updated, 24 new native snapshots plus the updated CSS and native snapshots.
 - Evidence: `docs/reports/reset/R0.13/platform-values.md`, every platform
   value with the audit line or vendor page it comes from.
