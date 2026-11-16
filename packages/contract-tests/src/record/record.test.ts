@@ -35,6 +35,7 @@ function frames(n: number, strokes: [number, number][], changesAt: number[], dra
       upFor: !down && lastUp !== undefined ? (i - lastUp) * FRAME_MS : null,
       edge: strokes.some(([d]) => d === i) ? 'down' : strokes.some(([, u]) => u === i) ? 'up' : null,
       hash: `h${hash}`,
+      changed: changesAt.includes(i) ? 400 : 0,
     });
   }
   return out;
@@ -184,6 +185,10 @@ describe('frames, key frames and the touch point', () => {
   it('says when the screen first answered and whether the finger was still down', () => {
     expect(firstChange(frames(80, [[24, 30]], [31]))).toEqual({ afterDownMs: 117, whileDown: false });
     expect(firstChange(frames(80, [[24, 30]], [26]))).toEqual({ afterDownMs: 33, whileDown: true });
+    // A hairline that moves by a pixel is not an answer.
+    const hairline = frames(80, [[24, 30]], [24, 31]);
+    hairline[24]!.changed = 7;
+    expect(firstChange(hairline)).toEqual({ afterDownMs: 117, whileDown: false });
     expect(answerLine(clip({ firstChange: { afterDownMs: 100, whileDown: false } }))).toBe('The screen first changes 100ms after the finger lands, after it lifted.');
   });
 
@@ -275,12 +280,9 @@ describe('the index, the sign sheet and the device script', () => {
   });
 });
 
-describe('writing rules and sources', () => {
+describe('sources', () => {
+  // The repo wide gate ds/no-dash (packages/lint) covers dashes in these files.
   const files = [...readdirSync(RECORD_DIR).filter((f) => f.endsWith('.ts')).map((f) => join(RECORD_DIR, f)), join(SIGNOFF_DIR, 'device-script.template.md'), join(SIGNOFF_DIR, 'TEMPLATE.md')];
-
-  it('no em dash or en dash in the record files and templates', () => {
-    for (const f of files) expect(/[\u2013\u2014]/.test(readFileSync(f, 'utf8')), f).toBe(false);
-  });
 
   it('no path into the third party vendor folder of Figma-Killer-2', () => {
     const vendor = ['alm', 'design', 'system'].join('-');

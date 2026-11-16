@@ -93,10 +93,18 @@
     "target-min": {
       "$type": "dimension",
       "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "WCAG 2.2 SC 2.5.8 Target Size (Minimum): nothing interactive is smaller than 24 by 24 CSS px, including handles (via a hit area). The same on every platform; no platform changes it (DECISIONS.md, size.target-min is the 24px floor on every platform). The platform touch target is size.target."
+    },
+    "target": {
+      "$type": "dimension",
+      "$value": {
         "value": 44,
         "unit": "px"
       },
-      "$description": "A button needs a hit region of at least 44x44 pt. Source: https://developer.apple.com/design/human-interface-guidelines/buttons."
+      "$description": "Touch target on iOS: a button needs a hit region of at least 44x44 pt. Source: https://developer.apple.com/design/human-interface-guidelines/buttons, and https://developer.apple.com/design/human-interface-guidelines/accessibility, default control size 44x44 pt. The same value as size.touch.ios."
     },
     "touch": {
       "ios": {

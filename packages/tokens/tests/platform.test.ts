@@ -142,6 +142,37 @@ describe('platform CSS', () => {
     expect(css).toContain(':root:dir(rtl),\n  [data-style]:dir(rtl) {');
   });
 
+  // Order R0.21 (DECISIONS.md, size.target-min is the 24px floor on every
+  // platform): the floor never moves; the touch target is size.target.
+  it('keeps size.target-min at 24px on every platform and gives the touch target as size.target', () => {
+    const want = { web: '24px', ios: '44px', android: '48px', macos: '24px' } as const;
+    const base = block(':root,\n  [data-style]');
+    expect(base.get('--ds-size-target-min')).toBe('24px');
+    expect(base.get('--ds-size-target')).toBe('24px');
+    for (const [id, target] of Object.entries(want)) {
+      const b = block(`[data-platform='${id}']`);
+      expect(b.get('--ds-size-target-min'), id).toBe('24px');
+      expect(b.get('--ds-size-target'), id).toBe(target);
+      expect(b.get('--ds-size-touch-ios'), id).toBe('44px');
+      expect(b.get('--ds-size-touch-android'), id).toBe('48px');
+      const p = result.platforms.find((x) => x.id === id)!;
+      expect(p.tokens.get('size.target-min')?.value, id).toEqual({ value: 24, unit: 'px' });
+      expect(p.tokens.get('size.target')?.description, id).toMatch(/Source|https:/);
+    }
+    for (const [rel, content] of Object.entries(result.files)) {
+      if (!/^native\/(ios|android|macos)\/\w+\.\w+\.ts$/.test(rel)) continue;
+      const id = rel.split('/')[1] as keyof typeof want;
+      expect(content, rel).toContain("'target-min': 24,");
+      expect(content, rel).toContain(`target: ${parseInt(want[id], 10)},`);
+    }
+    for (const d of ['compact', 'comfortable']) {
+      for (const id of ['ios', 'android']) {
+        const b = block(`[data-platform='${id}'][data-density='${d}']`);
+        expect(b.get('--ds-size-target-min') ?? '24px', `${id} ${d}`).toBe('24px');
+      }
+    }
+  });
+
   it('keeps ios, android and macos at their own control sizes under every density', () => {
     for (const id of ['ios', 'android', 'macos']) {
       const own = block(`[data-platform='${id}']`);

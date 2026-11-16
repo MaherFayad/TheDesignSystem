@@ -93,10 +93,18 @@
     "target-min": {
       "$type": "dimension",
       "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "WCAG 2.2 SC 2.5.8 Target Size (Minimum): nothing interactive is smaller than 24 by 24 CSS px, including handles (via a hit area). The same on every platform; no platform changes it (DECISIONS.md, size.target-min is the 24px floor on every platform). The platform touch target is size.target."
+    },
+    "target": {
+      "$type": "dimension",
+      "$value": {
         "value": 48,
         "unit": "px"
       },
-      "$description": "Targets at least 48 by 48dp. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Targets and spacing\"."
+      "$description": "Touch target on Android: targets at least 48 by 48dp. Source: Material audit (docs/reports/audit/material-guidelines.md), \"Targets and spacing\". The same value as size.touch.android."
     },
     "touch": {
       "ios": {

@@ -1,6 +1,6 @@
 # Recording pack R0.9: Sample pack for the owner to approve the format
 
-Recorded 2026-11-16 15:04 UTC at commit e5c592cc, Chromium 153.0.8010.12, load average 7.2 12.5 15.5 on 4 cores (the load does not change the clips: they are drawn on the page's own clock).
+Recorded 2026-11-16 15:13 UTC at commit b722b65c with uncommitted changes, Chromium 153.0.8010.12, load average 5.8 5.8 11.0 on 4 cores (the load does not change the clips: they are drawn on the page's own clock).
 
 Open `index.html` to watch the clips in a grid at real speed. Each clip below has its contact sheet: finger down, mid press or mid drag, finger lifted, settled.
 
@@ -30,7 +30,7 @@ Taps the button (finger down 100ms), then presses and holds it for 600ms.
 
 Taps a switch that is off (finger down 100ms), then presses and holds it for 600ms.
 
-- Clip: [clips/switch-neutral-auto-iphone-light.mp4](clips/switch-neutral-auto-iphone-light.mp4) (2.93s, 176 frames at 60 a second, 73 KB)
+- Clip: [clips/switch-neutral-auto-iphone-light.mp4](clips/switch-neutral-auto-iphone-light.mp4) (2.93s, 176 frames at 60 a second, 72 KB)
 - The screen first changes 117ms after the finger lands, after it lifted.
 - Source: none. No compare pair covers this style and interaction.
 
@@ -50,7 +50,7 @@ Taps a switch that is off (finger down 100ms), then presses and holds it for 600
 
 Taps the button that opens a dialog (finger down 100ms).
 
-- Clip: [clips/dialog-open-neutral-auto-iphone-light.mp4](clips/dialog-open-neutral-auto-iphone-light.mp4) (1.72s, 103 frames at 60 a second, 104 KB)
+- Clip: [clips/dialog-open-neutral-auto-iphone-light.mp4](clips/dialog-open-neutral-auto-iphone-light.mp4) (1.72s, 103 frames at 60 a second, 105 KB)
 - The screen first changes 133ms after the finger lands, after it lifted.
 - Source: none. No compare pair covers this style and interaction.
 
@@ -60,7 +60,7 @@ Taps the button that opens a dialog (finger down 100ms).
 
 Taps the button that opens a dialog (finger down 100ms).
 
-- Clip: [clips/dialog-open-neutral-auto-pixel-light.mp4](clips/dialog-open-neutral-auto-pixel-light.mp4) (1.72s, 103 frames at 60 a second, 99 KB)
+- Clip: [clips/dialog-open-neutral-auto-pixel-light.mp4](clips/dialog-open-neutral-auto-pixel-light.mp4) (1.72s, 103 frames at 60 a second, 100 KB)
 - The screen first changes 133ms after the finger lands, after it lifted.
 - Source: none. No compare pair covers this style and interaction.
 
@@ -71,7 +71,7 @@ Taps the button that opens a dialog (finger down 100ms).
 With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
 
 - Clip: [clips/sheet-drag-neutral-auto-iphone-light.mp4](clips/sheet-drag-neutral-auto-iphone-light.mp4) (2.02s, 121 frames at 60 a second, 83 KB)
-- The screen first changes 0ms after the finger lands, while it is still down.
+- The screen first changes 117ms after the finger lands, while it is still down.
 - Source: none. No compare pair covers this style and interaction.
 
 ![Contact sheet: Sheet drag, Neutral light, iOS (detected), an iPhone 15 Pro frame](sheets/sheet-drag-neutral-auto-iphone-light.png)
@@ -81,7 +81,7 @@ With the sheet open, puts a finger on its handle, drags it down 260px over 300ms
 With the sheet open, puts a finger on its handle, drags it down 260px over 300ms and lets go.
 
 - Clip: [clips/sheet-drag-neutral-auto-pixel-light.mp4](clips/sheet-drag-neutral-auto-pixel-light.mp4) (2.02s, 121 frames at 60 a second, 111 KB)
-- The screen first changes 0ms after the finger lands, while it is still down.
+- The screen first changes 117ms after the finger lands, while it is still down.
 - Source: none. No compare pair covers this style and interaction.
 
 ![Contact sheet: Sheet drag, Neutral light, Android (detected), a Pixel 7 frame](sheets/sheet-drag-neutral-auto-pixel-light.png)

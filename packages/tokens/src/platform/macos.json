@@ -96,7 +96,15 @@
         "value": 24,
         "unit": "px"
       },
-      "$description": "WCAG 2.2 SC 2.5.8 floor for web content. Above the macOS minimum control size of 20 pt (https://developer.apple.com/design/human-interface-guidelines/accessibility)."
+      "$description": "WCAG 2.2 SC 2.5.8 Target Size (Minimum): nothing interactive is smaller than 24 by 24 CSS px, including handles (via a hit area). The same on every platform; no platform changes it (DECISIONS.md, size.target-min is the 24px floor on every platform). The platform touch target is size.target."
+    },
+    "target": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "Target on macOS, a pointer platform: the WCAG 2.2 SC 2.5.8 floor, 24 by 24 CSS px (https://www.w3.org/TR/WCAG22/#target-size-minimum). Above the macOS minimum control size of 20 pt (https://developer.apple.com/design/human-interface-guidelines/accessibility); the macOS default control size is 28 pt, size.control.md."
     },
     "touch": {
       "ios": {

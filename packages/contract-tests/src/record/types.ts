@@ -107,6 +107,8 @@ export interface FrameInfo {
   edge: 'down' | 'up' | null;
   /** A hash of the screen pixels, to find when the screen settles. */
   hash: string;
+  /** How much of the screen differs from the frame before, in CSS px squared. */
+  changed: number;
 }
 
 /** The moments a contact sheet shows, as frame numbers. */

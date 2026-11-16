@@ -136,12 +136,19 @@ export async function finishClip(browser: Browser, job: ComposeJob, opts: { crf:
   return { keyFrames: k, bytes: { video: statSync(job.video).size, sheet: existsSync(job.sheet) ? statSync(job.sheet).size : 0 } };
 }
 
-/** When the screen first changed after the first finger down, and whether the finger was still down then. */
+/** The least change that counts as the screen answering the finger, in CSS px squared (a 5 by 5 px patch). */
+export const VISIBLE_CHANGE = 25;
+
+/**
+ * When the screen first changed after the first finger down, and whether the
+ * finger was still down then. A change under VISIBLE_CHANGE (a hairline that
+ * moves by a pixel) does not count.
+ */
 export function firstChange(frames: ScreenRecording['frames']): ClipResult['firstChange'] {
   const down = frames.findIndex((f) => f.edge === 'down');
   if (down < 1) return null;
   for (let i = down; i < frames.length; i += 1) {
-    if (frames[i]!.hash !== frames[down - 1]!.hash) return { afterDownMs: Math.round((i - down) * FRAME_MS), whileDown: frames[i]!.finger === 'down' };
+    if (frames[i]!.changed >= VISIBLE_CHANGE) return { afterDownMs: Math.round((i - down) * FRAME_MS), whileDown: frames[i]!.finger === 'down' };
   }
   return null;
 }

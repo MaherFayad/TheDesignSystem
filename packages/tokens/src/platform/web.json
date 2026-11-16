@@ -41,7 +41,15 @@
         "value": 24,
         "unit": "px"
       },
-      "$description": "WCAG 2.2 SC 2.5.8. Nothing interactive is smaller, including handles (via a hit area)."
+      "$description": "WCAG 2.2 SC 2.5.8 Target Size (Minimum): nothing interactive is smaller than 24 by 24 CSS px, including handles (via a hit area). The same on every platform; no platform changes it (DECISIONS.md, size.target-min is the 24px floor on every platform). The platform touch target is size.target."
+    },
+    "target": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "Touch target on the web. The web has no vendor touch target, so it is the WCAG 2.2 SC 2.5.8 floor, 24 by 24 CSS px (https://www.w3.org/TR/WCAG22/#target-size-minimum), the same as size.target-min."
     },
     "touch": {
       "ios": {

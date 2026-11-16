@@ -4,6 +4,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { devices, type Browser, type Page } from '@playwright/test';
+import { PNG } from 'pngjs';
 import { holdPointer, touchDown, touchMove, touchSession, touchUp, type Point } from '../perceive/gesture';
 import { settle } from '../compare/probe';
 import type { Step } from '../compare/types';
@@ -150,6 +151,7 @@ export async function recordScreen(browser: Browser, job: ScreenJob): Promise<Sc
     const frames: FrameInfo[] = [];
     let finger: Point | null = null;
     let downAt: number | null = null;
+    let before: Buffer | null = null;
     let upAt: number | null = null;
     const shoot = async (edge: FrameInfo['edge'], input?: () => Promise<unknown>) => {
       // A frame with nothing new to draw can come back without pixels: the screen is the one before.
@@ -158,6 +160,14 @@ export async function recordScreen(browser: Browser, job: ScreenJob): Promise<Sc
       if (!png && index > 0) png = readFileSync(join(job.dir, `${String(index - 1).padStart(4, '0')}.png`));
       for (let tries = 0; !png && tries < 10; tries += 1) png = await framed.frame(true);
       if (!png) throw new Error('the first frame came back without pixels');
+      const pixels = PNG.sync.read(png).data;
+      let changed = 0;
+      if (before && before.length === pixels.length) {
+        for (let i = 0; i < pixels.length; i += 4) {
+          if (pixels[i] !== before[i] || pixels[i + 1] !== before[i + 1] || pixels[i + 2] !== before[i + 2]) changed += 1;
+        }
+      }
+      before = pixels;
       writeFileSync(join(job.dir, `${String(index).padStart(4, '0')}.png`), png);
       frames.push({
         index,
@@ -167,7 +177,8 @@ export async function recordScreen(browser: Browser, job: ScreenJob): Promise<Sc
         downFor: finger && downAt !== null ? (index - downAt) * FRAME_MS : null,
         upFor: !finger && upAt !== null ? (index - upAt) * FRAME_MS : null,
         edge,
-        hash: png ? hashOf(png) : '',
+        hash: hashOf(png),
+        changed: Math.round((changed / (job.scale * job.scale)) * 10) / 10,
       });
     };
     const idle = async (n: number) => {
