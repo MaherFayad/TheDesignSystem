@@ -1,0 +1,39 @@
+{
+  "order": "R0.9",
+  "title": "Sample pack for the owner to approve the format",
+  "clips": [
+    "button-press",
+    "switch",
+    "dialog-open",
+    "sheet-drag",
+    "toast-swipe"
+  ],
+  "styles": [
+    "neutral"
+  ],
+  "platforms": [
+    "auto"
+  ],
+  "devices": [
+    "iphone",
+    "pixel"
+  ],
+  "schemes": [
+    "light"
+  ],
+  "note": "Neutral, light, platform auto (the page detects iOS on the iPhone frame and Android on the Pixel frame). Neutral has no source screen, so no source clip sits beside these; the index shows one wherever a clip names a compare pair. Dark is one flag away (--scheme light,dark) and was left out of the sample to keep it small.",
+  "device": {
+    "needed": true,
+    "why": "the clips come from Chromium's touch emulation, where the press look arrives only when the finger lifts; a real finger on iOS Safari and Android Chrome may differ",
+    "steps": [
+      "Turn on the phone's screen recording and show touches if the phone can (Android: Developer options, Show taps).",
+      "Open the Button page and tap the accent button once, then press and hold it for about a second.",
+      "Open the Switch page and tap the first switch that is off, then press and hold it for about a second.",
+      "Open the Dialog page and tap Open sm dialog.",
+      "Open the Sheet page, tap Open sm sheet, then drag the sheet's handle down about a third of the screen and let go.",
+      "Open the Toast page, tap Show neutral toast, then swipe the toast toward the edge it came from (up on iOS, sideways on Android).",
+      "Stop the recording and send it back with the phone's model and system version."
+    ]
+  },
+  "ask": "Do these clips show what you need to sign an interaction: real speed at 1x, one phone per clip, the caption with style, platform and gesture above the phone, the pink touch point while the finger is down and the dashed ring where it lifted, the timeline under the phone, and a contact sheet of four moments? Answer \"approve the format\", or name what to change (for example: both phones side by side in one clip, a bigger caption, dark as well as light in every pack)."
+}

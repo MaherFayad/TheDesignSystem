@@ -1,0 +1,1597 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/home/user/TheDesignSystem/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "/home/user/TheDesignSystem/packages/contract-tests/playwright.config.ts",
+      "--grep",
+      "sideways"
+    ],
+    "configFile": "/home/user/TheDesignSystem/packages/contract-tests/playwright.config.ts",
+    "rootDir": "/home/user/TheDesignSystem/packages/contract-tests/src",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/user/TheDesignSystem/packages/contract-tests/src",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.ts$/"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/contract-react-r020-before.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 4,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "contract.spec.ts",
+      "file": "contract.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk web en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7802,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:57:56.934Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-d7f1cfc89c5c35bf3812",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk web ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7679,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:57:56.683Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-316dd75ac72a08dcdf70",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk ios en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 8150,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:57:56.809Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-add66-e-attribute-desk-ios-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-cee1fa092be9fb5815ee",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 7597,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:57:56.329Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e2343d5c6b0bf42b7537",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk android en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 5300,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 290px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 8px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 290px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 8px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 103px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 290px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 10px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 8px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; span in [data-ds=otp-field] is 10px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:04.604Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-c81d0-tribute-desk-android-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-63d83d651194a8e4f6c6",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk android ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 7288,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 112px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 112px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=desk&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 112px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:05.289Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-e8ed5-tribute-desk-android-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-185447942b019856cd46",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk macos en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6740,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:05.513Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-38f8a25b98de464562b6",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, desk macos ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 4291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:08.541Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-98612aee681c0344049e",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid web en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 5855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:13.663Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-8a8ece4cc3758de7f31c",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid web ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4141,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:12.473Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-4393d1542659df739c15",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid ios en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5954,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:16.652Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-6584b-attribute-liquid-ios-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-6039cfa1afd8b293cca0",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid ios ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 5096,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:13.737Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-5f285-attribute-liquid-ios-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-b82cabc295b68e824498",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid android en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5853,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 12px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 12px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 114px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 284px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 12px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:16.646Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-529b8-ibute-liquid-android-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-57c4cc07f33fd01a7278",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid android ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 4303,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=liquid&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 121px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:22.121Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-66ce1-ibute-liquid-android-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e722d1c2d625aca476f3",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid macos en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 3920,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:19.980Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-bdcfaed6352281ae8462",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, liquid macos ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5293,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:26.772Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-b7be0c83e25daa7a2024",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral web en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:26.899Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-ad6251aa9ccc3b6f6794",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral web ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 3784,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:23.960Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-dadb56ebfccd3b79ba36",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral ios en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 6692,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 7\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 104px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 104px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 4px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 96px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 4px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:29.616Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-1f953-ttribute-neutral-ios-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-a24ad07689c9bdf7f936",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral ios ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 5791,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=ios&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 4px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 4px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:27.848Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-25914-ttribute-neutral-ios-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-90bebb6a58b043a838f0",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral android en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5074,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 136px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 136px: span is 108px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 28px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 128px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 28px: span in [data-ds=bidi] is 277px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 14px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 14px: span[data-part=message] in [data-ds=field-error] is 267px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 14px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:32.379Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-26f1d-bute-neutral-android-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-80bdc114f53f640a053d",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral android ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 5273,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=neutral&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 28px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 28px: span is 113px wide, white-space normal; span is 108px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:37.203Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-8d4ae-bute-neutral-android-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-d858d171127813c779ff",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral macos en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3607,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:34.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-8b8c0d60e70969fb8a58",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, neutral macos ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 3992,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:40.343Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-a65a684c5fb1da84cd3b",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio web en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5479,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:42.207Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-1386784337a8019df862",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio web ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4227,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:38.754Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-2b14eb9e8248bd8e5935",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio ios en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4929,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 5\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 92px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 92px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 84px: span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 44px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:43.243Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-cedfd-attribute-studio-ios-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-54a5a58aec2ac76ad9d3",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 4422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:47.190Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-209f1129a7fd4760b416",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio android en ltr",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 5215,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 283px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 7px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 283px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 7px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 13\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 124px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 124px: span is 90px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case empty alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case one alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case many alone scrolls sideways by 18px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case too-many alone scrolls sideways by 116px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-text alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case long-arabic alone scrolls sideways by 18px: span in [data-ds=bidi] is 283px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case loading alone scrolls sideways by 7px: span in [data-ds=otp-field] is 9px wide, white-space normal; span in [data-ds=otp-field] is 9px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case error alone scrolls sideways by 7px: span[data-part=message] in [data-ds=field-error] is 272px wide, white-space normal; path in [data-ds=icon] is 13px wide, white-space normal\",\u001b[39m\n\u001b[31m+   \"case disabled alone scrolls sideways by 7px: span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal; span[data-part=cell] in [data-ds=otp-field] is 48px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:45.709Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-d4edc-ibute-studio-android-en-ltr/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-a24a1b03dcb5a7ca97e5",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio android ar rtl",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 3838,
+                  "error": {
+                    "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 97px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 97px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 59,
+                      "line": 600
+                    },
+                    "snippet": "  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 59,
+                        "line": 600
+                      },
+                      "message": "Error: OTPField reflow on http://localhost:42119/c/otp-field?style=studio&scheme=dark&platform=android&dir=rtl&lang=ar&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"page scrolls sideways by 18px at 320px\",\u001b[39m\n\u001b[31m+   \"case variants alone scrolls sideways by 18px: span is 97px wide, white-space normal; span is 84px wide, white-space normal\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  598 |         ...r.titles.map((t) => `native title attribute: ${t}`),\n  599 |       ];\n> 600 |       expect(failures, `${name} reflow on ${page.url()}`).toEqual([]);\n      |                                                           ^\n  601 |     });\n  602 |   }\n  603 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:600:59"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:52.157Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/22269/test-results/contract-OTPField-no-sidew-8ff3f-ibute-studio-android-ar-rtl/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 59,
+                    "line": 600
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e91190e7c9a55dd545b0",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio macos en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4271,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:48.816Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-6f012719091f00b0ce40",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        },
+        {
+          "title": "OTPField: no sideways scroll at 320px and no title attribute, studio macos ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 3886,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T13:58:53.552Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-78046f58307b8befbff0",
+          "file": "contract.spec.ts",
+          "line": 590,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-16T13:57:52.690Z",
+    "duration": 65207.851,
+    "expected": 18,
+    "skipped": 0,
+    "unexpected": 14,
+    "flaky": 0
+  }
+}

@@ -7,7 +7,8 @@
  *
  * Private properties on the root (docs/contracts/anatomy.md, one convention).
  * Recipes override these; states only swap them:
- *   --_otp-field-height (a cell is as wide as it is tall), --_otp-field-gap,
+ *   --_otp-field-height (a cell is as wide as it is tall), --_otp-field-cell-min
+ *   (the least width of a cell in a narrow row), --_otp-field-gap,
  *   --_otp-field-font-size, --_otp-field-radius, --_otp-field-bg,
  *   --_otp-field-fg, --_otp-field-border-color (at rest, -hover, -focus,
  *   -invalid), --_otp-field-ring (the focus ring of the active cell),
@@ -71,11 +72,23 @@
     --_otp-field-shift: var(--ds-distance-shift);
     --_otp-field-duration: var(--ds-duration-spring-snappy);
     --_otp-field-ease: var(--ds-ease-spring-snappy);
+    /*
+     * The least width of a cell: a portrait cell, three fifths of the size's
+     * height, or size.target-min where that is smaller (24px on the web).
+     */
+    --_otp-field-cell-min: min(var(--ds-size-target-min), calc(var(--_otp-field-height) * 0.6));
 
     position: relative;
     box-sizing: border-box;
     display: inline-flex;
-    flex-wrap: nowrap;
+    /*
+     * Wrap, so the row's least width is one cell, not all of them: a parent
+     * that sizes to its content (a flex item with its automatic minimum)
+     * can then narrow the row at 320px (order R0.20). The cells start from
+     * their floor and grow back to the square (the cell rule below), so the
+     * row breaks onto a second line only when even the floors do not fit.
+     */
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--_otp-field-gap);
     /*
@@ -88,7 +101,7 @@
     /*
      * As a flex or grid item the automatic minimum would be the cells' full
      * width, so max-inline-size never won and lg rows overflowed at 320px.
-     * Zero lets the cells shrink to their 24px floor (WCAG 1.4.10).
+     * Zero lets the cells shrink to their floor (the cell rule below, WCAG 1.4.10).
      */
     min-inline-size: 0;
     color: var(--_otp-field-fg);
@@ -167,12 +180,26 @@
     position: relative;
     box-sizing: border-box;
     display: inline-grid;
-    /* In a narrow container the cells shrink, never below the 24px target. */
-    flex: 0 1 auto;
+    /*
+     * In a narrow container the cells narrow in width only (order R0.20).
+     * A cell is not a target: the control part covers the row and takes the
+     * tap, so the target is the row, as wide as the cells and as tall as one.
+     * The height never drops below size.target-min, which is 24px on the web
+     * and the touch target on ios (44) and android (48). The width floor is
+     * --_otp-field-cell-min. With the touch target as the width floor, six or
+     * eight cells and their gaps do not fit 320px on a phone.
+     *
+     * The flex basis is the floor and the cell grows back to the square:
+     * inline-size gives the row its natural width (a fit-content root reads
+     * it), max-inline-size stops the growth there. In a narrow row every
+     * cell gives up the same width.
+     */
+    flex: 1 1 var(--_otp-field-cell-min);
     place-items: center;
     inline-size: var(--_otp-field-height);
+    max-inline-size: var(--_otp-field-height);
     block-size: var(--_otp-field-height);
-    min-inline-size: var(--ds-size-target-min);
+    min-inline-size: var(--_otp-field-cell-min);
     min-block-size: var(--ds-size-target-min);
     border: var(--ds-border-width-default) solid var(--_otp-field-border-color);
     transition: border-color var(--_otp-field-border-duration) var(--_otp-field-border-ease);
