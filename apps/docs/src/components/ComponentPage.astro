@@ -11,6 +11,7 @@ import { familyLabel, frameworkIds, slugOf, type FrameworkId, type Manifest, typ
 import { caseText, pageText, ui, type Lang } from '../lib/i18n.ts';
 import Menu from './Menu.astro';
 import { iconMarkup } from '../lib/chrome.ts';
+import { platformItems, platformValues } from '../lib/platform.ts';
 import { inlineHtml } from '../lib/text.ts';
 import { componentPath, href, manifests, styles } from '../lib/site.ts';
 import { criteriaFor, criterionUrl } from '../lib/wcag.ts';
@@ -82,7 +83,7 @@ if (m.mistakes?.length) toc.push({ depth: 2, slug: 'mistakes', text: t.mistakes 
 const axes = [
   { key: 'style', values: styles.map((s) => s.id), value: 'neutral' },
   { key: 'scheme', values: ['light', 'dark'], value: 'light' },
-  { key: 'platform', values: ['web', 'ios', 'android'], value: 'web' },
+  { key: 'platform', values: platformValues, value: 'auto' },
   { key: 'density', values: ['compact', 'default', 'comfortable'], value: 'default' },
   { key: 'dir', values: ['ltr', 'rtl'], value: ar ? 'rtl' : 'ltr' },
   { key: 'lang', values: ['en', 'ar'], value: lang },
@@ -125,9 +126,9 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
                 <span class="axis-name" aria-hidden="true">{a.key === 'style' ? ui[lang].previewStyle : t.axes[a.key]}</span>
                 <Menu
                   id={`axis-${a.key}`}
-                  setting={`axis-${a.key}`}
+                  setting={a.key === 'platform' ? 'platform' : `axis-${a.key}`}
                   label={a.key === 'style' ? ui[lang].previewStyle : t.axes[a.key]}
-                  items={a.values.map((v) => ({ value: v, label: axisLabel(v), lang: a.key === 'style' && ar ? 'en' : undefined }))}
+                  items={a.key === 'platform' ? platformItems(lang) : a.values.map((v) => ({ value: v, label: axisLabel(v), lang: a.key === 'style' && ar ? 'en' : undefined }))}
                   value={a.value}
                   align="start"
                 />

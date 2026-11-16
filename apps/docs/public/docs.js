@@ -2,6 +2,8 @@
 // its markup is absent.
 //
 // - Scheme switch (light and dark), saved in localStorage.
+// - Platform switch: auto (the device) or a platform, saved under the shared
+//   key ds-platform and passed to every preview frame as the resolved value.
 // - Preview settings: the style in the top bar and the switches above the
 //   hero preview drive every gallery iframe on the page.
 // - Preview frames: lazy, sized to their content when the gallery is served
@@ -53,8 +55,17 @@
   const site = {
     style: root.dataset.style || 'neutral',
     schemeChoice: root.dataset.schemeChoice || 'system',
-    platform: root.dataset.platformChoice || 'web',
+    // What the platform switchers show checked: the URL key, the stored
+    // choice or auto. The resolved value is root.dataset.platform.
+    platform: root.dataset.platformChoice || 'auto',
   };
+  // The shared resolver (packages/shared/src/platform.ts), left by the head
+  // script. Without it the page stays on the platform the HTML was built with.
+  const P = window.dsPlatform;
+  const detected = root.dataset.platformDetected || 'web';
+  let platformFromUrl = root.dataset.platformSource === 'url';
+  // The key of the preview platform before the top bar had one: no longer read.
+  store.remove('ds-docs-platform');
   const preview = { style: null, scheme: null, density: 'default', dir: pageLang === 'ar' ? 'rtl' : 'ltr', lang: pageLang };
   const frames = [];
   const galleryBase = root.dataset.gallery || '';
@@ -65,7 +76,7 @@
   const previewSettings = () => ({
     style: preview.style || site.style,
     scheme: preview.scheme || siteScheme(),
-    platform: site.platform,
+    platform: root.dataset.platform || 'web',
     density: preview.density,
     dir: preview.dir,
     lang: preview.lang,
@@ -104,6 +115,11 @@
     root.dataset.scheme = siteScheme();
     root.dataset.schemeChoice = site.schemeChoice;
     root.dataset.platformChoice = site.platform;
+    if (P) {
+      const choice = P.platformChoice(site.platform);
+      root.dataset.platform = P.resolvePlatform({ query: platformFromUrl ? choice : null, stored: platformFromUrl ? null : choice, device: detected });
+      root.dataset.platformSource = !choice ? 'device' : platformFromUrl ? 'url' : 'stored';
+    }
     const p = previewSettings();
     for (const frame of frames) {
       const next = frameUrl(frame);
@@ -115,6 +131,7 @@
     showValue('style', site.style);
     showValue('scheme', site.schemeChoice);
     showValue('lang', pageLang);
+    showValue('platform', site.platform);
     for (const [k, v] of Object.entries(p)) showValue(`axis-${k}`, v);
     // Gallery links open the same view the previews show.
     document.querySelectorAll('a[href]').forEach((a) => {
@@ -123,6 +140,9 @@
       const q = a.hasAttribute('data-open-gallery') ? new URLSearchParams() : url.searchParams;
       const keys = a.hasAttribute('data-open-gallery') ? Object.keys(p) : ['style', 'scheme', 'platform'];
       for (const k of keys) q.set(k, p[k]);
+      // On auto the link names no platform, so the gallery detects the device
+      // of whoever opens it.
+      if (site.platform === 'auto') q.delete('platform');
       url.search = q.toString();
       a.href = url.toString();
     });
@@ -138,9 +158,19 @@
       preview.scheme = null;
       if (value === 'system') store.remove('ds-docs-scheme');
       else store.set('ds-docs-scheme', value);
-    } else if (setting === 'axis-platform') {
+    } else if (setting === 'platform') {
+      // A choice in a switcher is stored and kept on every page; auto clears
+      // it. The address loses its platform key, which would win over it.
       site.platform = value;
-      store.set('ds-docs-platform', value);
+      const storageKey = P ? P.PLATFORM_STORAGE_KEY : 'ds-platform';
+      if (value === 'auto') store.remove(storageKey);
+      else store.set(storageKey, value);
+      if (platformFromUrl) {
+        platformFromUrl = false;
+        const url = new URL(location.href);
+        url.searchParams.delete(P ? P.PLATFORM_QUERY_KEY : 'platform');
+        history.replaceState(history.state, '', url);
+      }
     } else if (setting === 'axis-style') {
       preview.style = value === site.style ? null : value;
     } else if (setting === 'axis-scheme') {
@@ -213,6 +243,7 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
     window.addEventListener('storage', (e) => {
       if (e.key === 'ds-docs-style' && e.newValue) site.style = e.newValue;
       else if (e.key === 'ds-docs-scheme') site.schemeChoice = e.newValue || 'system';
+      else if (P && e.key === P.PLATFORM_STORAGE_KEY && !platformFromUrl) site.platform = P.platformChoice(e.newValue) || 'auto';
       else return;
       applySettings();
     });
@@ -225,6 +256,17 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
   // move, Enter and Space pick, Escape closes, Tab closes and moves on; a
   // click outside closes. Focus goes back to the button.
   let openMenu = null;
+  // The text of a menu item, without the label variants CSS hides (the auto
+  // platform item has one per detected platform, src/components/Menu.astro).
+  const itemText = (item) => {
+    const text = item.querySelector('[data-part="text"]');
+    if (!text) return '';
+    const copy = text.cloneNode(true);
+    copy.querySelectorAll('[data-pd]').forEach((v) => {
+      if (v.dataset.pd !== (root.dataset.platformDetected || 'none')) v.remove();
+    });
+    return copy.textContent.replace(/\s+/g, ' ').trim();
+  };
   function setupMenus() {
     document.querySelectorAll('[data-menu-root]').forEach((box) => {
       const btn = box.querySelector('[data-menu-button]');
@@ -270,7 +312,7 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
         }
         close(true);
         setSetting(box.dataset.setting, item.dataset.value);
-        announce(`${menu.getAttribute('aria-label')}: ${item.querySelector('[data-part="text"]')?.textContent ?? ''}`);
+        announce(`${menu.getAttribute('aria-label')}: ${itemText(item)}`);
       };
 
       btn.addEventListener('click', () => (menu.hidden ? open() : close(true)));
@@ -297,7 +339,7 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
           const now = Date.now();
           typed = now - typedAt > 600 ? e.key.toLowerCase() : typed + e.key.toLowerCase();
           typedAt = now;
-          const text = (item) => (item.querySelector('[data-part="text"]')?.textContent || '').trim().toLowerCase();
+          const text = (item) => itemText(item).toLowerCase();
           const order = [...list.slice(i + (typed.length === 1 ? 1 : 0)), ...list.slice(0, i + (typed.length === 1 ? 1 : 0))];
           const hit = order.find((item) => text(item).startsWith(typed));
           if (hit) focusItem(hit);

@@ -6,6 +6,7 @@ import '../styles/system.css';
 import '../styles/docs.css';
 import Menu from './Menu.astro';
 import { chromeCss, iconMarkup, styleIds } from '../lib/chrome.ts';
+import { platformCss, platformHeadScript, platformItems } from '../lib/platform.ts';
 import { ui, type Lang } from '../lib/i18n.ts';
 import { galleryHref } from '../../scripts/gallery.ts';
 import { config, href, navGroups, neighbours, sourceUrl, styles } from '../lib/site.ts';
@@ -45,6 +46,7 @@ const galleryHome = galleryHref('/');
 const galleryBase = galleryHome.replace(/\/$/, '');
 const styleItems = styles.map((s) => ({ value: s.id, label: s.name, lang: lang === 'ar' ? 'en' : undefined, badge: s.status === 'proposed' ? t.proposed : undefined }));
 const schemeItems = (['system', 'light', 'dark'] as const).map((v) => ({ value: v, label: t.schemeValues[v] }));
+const platformMenuItems = platformItems(lang);
 const langPath = path === '/404/' ? '/' : path;
 const langItems = [
   { value: 'en', label: 'English', lang: 'en', href: href('en', langPath), hreflang: 'en' },
@@ -55,7 +57,10 @@ const langItems = [
 const switchCss = [
   ...styles.map((s) => `:root[data-style='${s.id}'] [data-setting='style'] .mv>[data-v='${s.id}']`),
   ...['system', 'light', 'dark'].map((v) => `:root[data-scheme-choice='${v}'] [data-setting='scheme'] .mv>[data-v='${v}']`),
-].join(',') + '{visibility:visible}';
+].join(',') + '{visibility:visible}\n' + platformCss;
+// The platform (docs/contracts/frameworks.md, "Platform axis"): the built
+// page says web; the head script stamps the URL key, else the stored choice,
+// else the device, before the first paint (src/lib/platform.ts).
 const headScript = `(() => {
   const r = document.documentElement;
   const ids = ${JSON.stringify(styleIds)};
@@ -77,16 +82,15 @@ const headScript = `(() => {
   let choice = get('ds-docs-scheme');
   if (choice !== 'dark' && choice !== 'light') choice = 'system';
   const scheme = choice === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : choice;
-  const platform = get('ds-docs-platform');
   r.dataset.style = style;
   r.dataset.scheme = scheme;
   r.dataset.schemeChoice = choice;
-  r.dataset.platformChoice = platform === 'ios' || platform === 'android' ? platform : 'web';
+  ${platformHeadScript}
 })();`;
 ---
 
 <!doctype html>
-<html lang={lang} dir={dir} data-ds="theme" data-style="neutral" data-scheme="light" data-scheme-choice="system" data-platform-choice="web" data-density="default" data-contrast="default" data-platform="web" data-glass="regular" data-gallery={galleryBase}>
+<html lang={lang} dir={dir} data-ds="theme" data-style="neutral" data-scheme="light" data-scheme-choice="system" data-platform-choice="auto" data-density="default" data-contrast="default" data-platform="web" data-glass="regular" data-gallery={galleryBase}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -139,6 +143,7 @@ const headScript = `(() => {
       <div class="tools">
         <Menu id="site-style" setting="style" label={t.siteStyle} items={styleItems} value="neutral" icon="grid" />
         <Menu id="site-scheme" setting="scheme" label={t.scheme} items={schemeItems} value="system" icon="sun" iconDark="moon" compact />
+        <Menu id="site-platform" setting="platform" label={t.platform} items={platformMenuItems} value="auto" />
         <Menu id="site-lang" setting="lang" label={t.language} items={langItems} value={lang} icon="language" compact />
         {sourceUrl && <a class="icon-btn" href={sourceUrl}>Source</a>}
       </div>

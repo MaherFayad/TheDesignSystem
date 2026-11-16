@@ -33,9 +33,13 @@
 // the text under the pill takes the on color where the pill is, with the
 // aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. As in
 // React (order 1.29, angular-sync-3 section 6 item 2), the label under the
-// pill is kept outside the track: followIndicator gets the pill alone, so it
+// pill is kept outside the track: planFollow gets the pill alone, so it
 // never dips and pops a label. A multiple group has no pill. It plays from
-// afterRenderEffect, after the items show the new state.
+// afterRenderEffect, after the items show the new state. Order R0.4 (the
+// twin of R0.3): the effect queues one frame job (inFrame) that reads with
+// planFollow and planInk and returns the writes, so the reads of every list
+// in a render share one style pass and the writes come after all of them,
+// still before the first paint.
 //
 // Names that differ from React: `onValueChange` is the `valueChange` output
 // of `[(value)]`. `start`, `end` and `icon` take an icon name or a
@@ -63,7 +67,7 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { createTrack, followIndicator, fromLocal, playInk } from '@the-system/motion';
+import { createTrack, inFrame, planFollow, planInk } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis, ButtonSlotContent } from '../button/button-base';
@@ -212,27 +216,40 @@ export class DsToggleGroup implements ControlValueAccessor {
   private follow(single: boolean, key: string): void {
     const root = this.host;
     if (!single) return;
-    const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
-    const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
-    if (!item || !pill) {
-      this.track.key = null;
-      return;
-    }
-    const lastLabel = this.lastLabel;
-    const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
-    const slide = followIndicator(this.track, key, { el: pill }, { mode: this.motion.mode('tab-slide'), anchor: root });
-    this.lastLabel = label;
-    // Round 3: the text under the pill takes the on color where the pill is.
-    playInk({
-      switch: '--_toggle-group-ink',
-      slide,
-      to: this.track.rect ? fromLocal(this.track.rect, root) : pill.getBoundingClientRect(),
-      anchor: root,
-      parts: Array.from(root.querySelectorAll(INKED)),
-      reaching: Array.from(item.querySelectorAll(INKED_OWN)),
-      restFrom: lastLabel,
-      inkFrom: label,
-      axis: untracked(this.orientation) === 'vertical' ? 'y' : 'x',
+    const mode = this.motion.mode('tab-slide');
+    const axis = untracked(this.orientation) === 'vertical' ? 'y' : 'x';
+    // Order R0.4, as R0.3 in React: the reads of this group share one style
+    // pass with every other list of the render (inFrame), and the writes come
+    // after all of them, still before the first paint. Same pattern as
+    // SegmentedControl (order 1.29, review B14).
+    inFrame(() => {
+      if (!root.isConnected) return;
+      const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
+      const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
+      if (!item || !pill) {
+        this.track.key = null;
+        return;
+      }
+      const lastLabel = this.lastLabel;
+      const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+      const plan = planFollow(this.track, key, { el: pill }, { mode, anchor: root });
+      // Round 3: the text under the pill takes the on color where the pill is.
+      const ink = planInk({
+        switch: '--_toggle-group-ink',
+        slide: plan.slide,
+        to: plan.to,
+        anchor: root,
+        parts: Array.from(root.querySelectorAll(INKED)),
+        reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+        restFrom: lastLabel,
+        inkFrom: label,
+        axis,
+        indicator: pill,
+      });
+      return () => {
+        this.lastLabel = label;
+        ink(plan.write());
+      };
     });
   }
 

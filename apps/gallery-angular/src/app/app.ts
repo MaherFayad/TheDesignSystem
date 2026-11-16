@@ -15,8 +15,20 @@ import {
   type Type,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { DsTheme, DsThemeService, applyDocumentTheme, styleIds } from '@the-system/angular';
-import { GALLERY_STYLE, axisControls, axisQuery, nameOf, readAxes, readCase } from './axes';
+import { DsDevicePlatform, DsTheme, DsThemeService, applyDocumentTheme, styleIds, type Platform } from '@the-system/angular';
+import {
+  GALLERY_STYLE,
+  axisControls,
+  axisQuery,
+  nameOf,
+  platformNote,
+  readAxes,
+  readCase,
+  readPlatform,
+  readStoredPlatform,
+  storePlatform,
+  type PlatformSource,
+} from './axes';
 import { FocusStage, InteractionsList } from './interactions/page';
 import { routes } from './routes.gen';
 
@@ -26,6 +38,12 @@ function navigate(to: string, replace = false): void {
   if (replace) window.history.replaceState(null, '', to);
   else window.history.pushState(null, '', to);
   window.dispatchEvent(new Event(EVENT));
+}
+
+/** The platform state the bar shows: the device and where the input came from. */
+export interface PlatformState {
+  device: Platform;
+  source: PlatformSource;
 }
 
 /** The shell's select values read the resolved theme of the shell's parent, like React's useTheme. */
@@ -46,23 +64,33 @@ function navigate(to: string, replace = false): void {
         <label data-gallery="axis">
           <span>{{ control.label }}</span>
           <select (change)="set(control.key, $any($event.target).value)">
-            <option value="" [selected]="!params().get(control.key)">Auto: {{ resolved()[control.key] }}</option>
+            <option value="" [selected]="!selected(control.key)">Auto: {{ control.key === 'platform' ? detection().device : resolved()[control.key] }}</option>
             @for (v of control.values; track v) {
-              <option [value]="v" [selected]="params().get(control.key) === v">{{ v }}</option>
+              <option [value]="v" [selected]="selected(control.key) === v">{{ v }}</option>
             }
           </select>
         </label>
       }
+      <output data-gallery="platform-detected" [attr.data-detected]="detection().device" [attr.data-source]="detection().source" aria-live="polite">{{ note() }}</output>
     </form>
   `,
 })
 export class Shell {
   readonly params = input.required<URLSearchParams>();
   readonly current = input<string | undefined>(undefined);
+  /** Named apart from `platform`, which the header's own dsTheme takes. */
+  readonly detection = input.required<PlatformState>();
   protected readonly controls = axisControls;
   protected readonly query = computed(() => axisQuery(this.params()));
   // The theme around the shell element (the gallery root), as React reads it.
   protected readonly resolved = inject(DsThemeService, { skipSelf: true }).value;
+  protected readonly note = computed(() => platformNote(this.detection().device, this.detection().source, this.resolved().platform));
+
+  /** The platform select shows a stored choice too, not only the URL key. */
+  protected selected(key: string): string {
+    if (key === 'platform' && this.detection().source !== 'device') return this.resolved().platform;
+    return this.params().get(key) ?? '';
+  }
 
   protected go(event: MouseEvent, to: string): void {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -71,6 +99,8 @@ export class Shell {
   }
 
   protected set(key: string, value: string): void {
+    // Only a choice made here is stored; Auto clears it (contract, step 3).
+    if (key === 'platform') storePlatform(value === '' ? 'auto' : (value as Platform));
     const next = new URLSearchParams(this.params());
     if (value) next.set(key, value);
     else next.delete(key);
@@ -88,7 +118,7 @@ export class Shell {
       [style]="axes().style" [scheme]="axes().scheme" [density]="axes().density" [contrast]="axes().contrast"
       [platform]="axes().platform" [glass]="axes().glass" [dir]="axes().dir" [lang]="axes().lang">
       @if (chrome()) {
-        <header dsTheme [lang]="'en'" data-gallery="shell" [params]="params()" [current]="route()?.name"></header>
+        <header dsTheme [lang]="'en'" data-gallery="shell" [params]="params()" [current]="route()?.name" [detection]="platformState()"></header>
       }
       <main #stage data-gallery="stage" [attr.data-gallery-case]="caseId() ?? null">
         @if (unknownStyle(); as u) {
@@ -159,14 +189,22 @@ export class App {
   private readonly url = computed(() => new URL(this.href()));
   protected readonly params = computed(() => this.url().searchParams);
   private readonly asked = computed(() => readAxes(this.params()));
+  // Platform: the URL key, then the stored switcher choice, then auto (the
+  // device, resolved by the root dsTheme). Storage is read again on every
+  // address change; the switcher stores before it navigates.
+  private readonly platform = computed(() => readPlatform(this.params(), readStoredPlatform()));
+  private readonly device = inject(DsDevicePlatform).value;
+  protected readonly platformState = computed<PlatformState>(() => ({ device: this.device(), source: this.platform().source }));
   protected readonly unknownStyle = computed(() => {
     const s = this.asked().style;
     return s !== undefined && !styleIds.includes(s) ? s : undefined;
   });
   // No style asked, or one not in the registry: the gallery shows GALLERY_STYLE.
-  protected readonly axes = computed(() =>
-    this.asked().style === undefined || this.unknownStyle() ? { ...this.asked(), style: GALLERY_STYLE } : this.asked(),
-  );
+  protected readonly axes = computed(() => ({
+    ...this.asked(),
+    style: this.asked().style === undefined || this.unknownStyle() ? GALLERY_STYLE : this.asked().style,
+    platform: this.platform().input,
+  }));
   protected readonly chrome = computed(() => this.params().get('chrome') !== '0');
   protected readonly caseId = computed(() => readCase(this.params()));
   /** `/interactions?focus=<id>`: one stage only, for recordings. */
@@ -219,7 +257,7 @@ export class App {
     });
 
     // Stamps the resolved axes on <html> too, so the whole viewport is themed.
-    effect(() => applyDocumentTheme(this.axes()));
+    effect(() => applyDocumentTheme(this.axes(), undefined, { platform: this.device() }));
 
     effect(() => {
       const r = this.route();

@@ -24,6 +24,12 @@ export interface MenuItem {
   /** A link: the item navigates instead of setting a value. */
   href?: string;
   hreflang?: string;
+  /**
+   * Variants of the label, one per value of a fact the head script stamps on
+   * <html> (the detected platform for the auto item). CSS shows the one that
+   * applies, so the item reads "Auto: iOS"; "none" is the text with no script.
+   */
+  details?: { value: string; label: string; lang?: string }[];
 }
 
 interface Props {
@@ -48,6 +54,7 @@ interface Props {
 
 const { id, setting, label, items, value, icon, iconDark, align = 'end', compact = false, showLabel = false } = Astro.props;
 const check = iconMarkup('check', 16);
+const sep = ': ';
 const chevron = iconMarkup('chevron-down', 16);
 ---
 
@@ -75,7 +82,9 @@ const chevron = iconMarkup('chevron-down', 16);
       <span class:list={[{ 'visually-hidden': !showLabel, 'menu-label': showLabel }]}>{label}{showLabel ? '' : ' '}</span>
       <span class="mv">
         {items.map((i) => (
-          <span data-v={i.value} data-current={i.value === value ? '' : undefined} lang={i.lang}>{i.label}</span>
+          <span data-v={i.value} data-current={i.value === value ? '' : undefined} lang={i.lang}>
+            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}>{i.label}{sep}<span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
+          </span>
         ))}
       </span>
     </span>
@@ -101,7 +110,9 @@ const chevron = iconMarkup('chevron-down', 16);
       ) : (
         <div role="menuitemradio" data-part="radio-item" tabindex="-1" aria-checked={i.value === value ? 'true' : 'false'} data-value={i.value} lang={i.lang}>
           <span data-part="indicator" set:html={check} />
-          <span data-part="text">{i.label}</span>
+          <span data-part="text">
+            {i.details ? <Fragment><span data-pd="none">{i.label}</span>{i.details.map((d) => <span data-pd={d.value}>{i.label}{sep}<span lang={d.lang}>{d.label}</span></span>)}</Fragment> : i.label}
+          </span>
           {i.badge && (
             <span data-ds="badge" data-tone="warning" data-emphasis="soft" data-size="sm"><span data-part="label">{i.badge}</span></span>
           )}

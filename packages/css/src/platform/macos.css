@@ -1,0 +1,253 @@
+/*
+ * Platform macos (order R0.14, proposed). Read when the Theme element, or
+ * any ancestor, carries data-platform="macos". Every rule sits under
+ * [data-platform='macos'], so the other platforms are untouched. `auto`
+ * never resolves to macos: an app or the gallery picks it by override.
+ *
+ * The desktop form of docs/reports/audit/liquid-guidelines.md ("What a
+ * desktop form needs", change 9) and docs/contracts/frameworks.md
+ * ("Platform axis"): body text 13, controls 22 to 28 tall by size, square
+ * checkboxes that keep the mixed dash, window controls at the leading top
+ * of a 28 tall title bar, and sheets that drop from the top of the window
+ * as a card instead of rising from the bottom or growing in the middle.
+ *
+ * Most of the form comes from the macos token file (R0.13): the control
+ * heights (size.control.xs 20, sm 22, md 28, lg 32) already reach every
+ * control that reads size.control.*, and the type ramp is type.<role>.
+ * This file maps components onto those roles and adds the shapes the
+ * tokens cannot carry. It reads platform tokens and semantic tokens only:
+ * no raw value, no color, no font family, no material.
+ *
+ * Two parts, as the shape split asks (docs/contracts/anatomy.md, ruling 16):
+ *
+ * - ds.platform, for controls and the text size of the Theme. It sits
+ *   before ds.recipes, so a style recipe that sets the same private
+ *   property keeps its shape (the style wins on controls).
+ * - ds.chrome, for the title bar, dialogs, alerts and sheets. It sits after
+ *   ds.recipes and sets geometry and placement only: height, radius,
+ *   width, padding, the title size, the edge a surface enters from and
+ *   which parts show. The style still paints the chrome.
+ *
+ * Mechanics as in ios.css: private --_<component>-* properties where a
+ * component offers them, documented parts where it does not. Size rules
+ * skip a button that is a part of another component or sits in an
+ * attached ButtonGroup, so it keeps the size its parent gives it. Logical
+ * properties only. Nothing here animates; motion stays the style's, so
+ * reduced motion needs no rule of its own.
+ *
+ * Known limit: a Theme with another data-platform nested inside a macos one
+ * still matches these descendant selectors.
+ */
+@layer ds.platform {
+  /* ------------------------------------------------------------ text: body 13 on the Theme element */
+
+  /* The same two places base.css sets the system text size, so rem keeps following the user's setting. */
+  [data-platform='macos'][data-ds='theme']:not(html),
+  html[data-platform='macos'][data-ds='theme'] > body {
+    font-size: var(--ds-type-body-large-font-size);
+  }
+
+  /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton */
+
+  /* Heights come from size.control.*: mini 20, small 22, regular 28, large 32. Regular and large text is 13, small and mini 11. */
+  [data-platform='macos'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+    --_button-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *):is([data-size='xs'], [data-size='sm']) {
+    --_button-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  /* ------------------------------------------------------------ fields: Label, Field, Input, Textarea, Select trigger */
+
+  [data-platform='macos'] [data-ds='label'] {
+    --_label-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='label'][data-size='sm'] {
+    --_label-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  /* Help text under a field is the small secondary line of the desktop. */
+  [data-platform='macos'] [data-ds='field'] > [data-part='description'] {
+    font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='input'] {
+    --_input-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='input']:is([data-size='xs'], [data-size='sm']) {
+    --_input-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='textarea'] {
+    --_textarea-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  /* The pop up button: the trigger is a regular control. */
+  [data-platform='macos'] [data-ds='select']:not([data-part]) {
+    --_select-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='select'][data-size='sm']:not([data-part]) {
+    --_select-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  /* ------------------------------------------------------------ checkbox and radio */
+
+  /*
+   * A square box with a small corner, never a circle, and the mixed state
+   * keeps the component's dash. The 24px target stays (size.target-min);
+   * only the drawn box is desktop sized.
+   */
+  [data-platform='macos'] [data-ds='checkbox'] {
+    --_checkbox-radius: var(--ds-shape-corner-extra-small);
+    --_checkbox-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='checkbox'][data-size='sm'] {
+    --_checkbox-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='radio-group'] {
+    --_radio-group-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  /* ------------------------------------------------------------ switch: a small capsule, 22 tall at the regular size */
+
+  [data-platform='macos'] [data-ds='switch'] {
+    --_switch-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='switch']:not([data-size='sm'], [data-size='lg']) {
+    --_switch-height: var(--ds-size-control-sm);
+  }
+
+  [data-platform='macos'] [data-ds='switch'][data-size='sm'] {
+    --_switch-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  /* ------------------------------------------------------------ menus: DropdownMenu, ContextMenu, the Select list. Rows 22 tall, text 13 */
+
+  [data-platform='macos'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):not([data-size='sm']) {
+    --_menu-item-height: var(--ds-size-control-sm);
+    --_menu-item-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='macos'] [data-ds='select'][data-part='content']:not([data-size='sm']) {
+    --_select-item-height: var(--ds-size-control-sm);
+    --_select-item-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  /* ------------------------------------------------------------ tooltip: the small help tag */
+
+  [data-platform='macos'] [data-ds='tooltip'] {
+    font-size: var(--ds-type-body-small-font-size);
+  }
+
+  /* ------------------------------------------------------------ dialog text: body 13 in every member of the family */
+
+  [data-platform='macos'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] {
+    font-size: var(--ds-type-body-large-font-size);
+  }
+}
+
+@layer ds.chrome {
+  /* ------------------------------------------------------------ title bar: 28 tall, the lights first, the title in the middle */
+
+  /*
+   * The bar of a window, and of a dialog in a style that draws one. 28 tall
+   * (size.control.md, the regular control height), the title 13 bold
+   * (type.title-large), and the first light 8 from the edge (the bar's
+   * padding; TitleBar.css pulls the lights' 24px targets back onto it).
+   */
+  [data-platform='macos'] [data-ds='title-bar'] {
+    --_title-bar-height: var(--ds-size-control-md);
+    --_title-bar-padding-inline: var(--ds-space-fixed-m);
+    --_title-bar-font-size: var(--ds-type-title-large-font-size);
+  }
+
+  /* The window controls lead the bar whatever order the markup gives. */
+  [data-platform='macos'] [data-ds='title-bar'] > [data-part='controls'] {
+    order: -1;
+  }
+
+  /* The title sits in the middle of the room the lights and the actions leave. */
+  [data-platform='macos'] [data-ds='title-bar'] > [data-part='move'] {
+    justify-content: center;
+  }
+
+  [data-platform='macos'] [data-ds='title-bar'] > [data-part='title'],
+  [data-platform='macos'] [data-ds='title-bar'] > [data-part='move'] > [data-part='title'] {
+    text-align: center;
+  }
+
+  /* ------------------------------------------------------------ dialog, alert and sheet: a card that drops from the top of the window */
+
+  /*
+   * The page is the window. Every modal member of the family is a card held
+   * at the top edge, a fixed gutter below it, with all four corners round
+   * (shape.corner.large). It enters from above that edge and leaves the
+   * same way; its durations and curves stay the style's.
+   */
+  [data-platform='macos'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) {
+    --_dialog-gutter: var(--ds-space-fixed-xl);
+    --_dialog-radius: var(--ds-shape-corner-large);
+    --_dialog-enter-scale: 1;
+
+    align-items: flex-start;
+  }
+
+  [data-platform='macos'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-enter-y: calc(-100% - var(--_dialog-gutter));
+  }
+
+  [data-platform='macos'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
+    transform-origin: 50% 0;
+  }
+
+  /*
+   * The Sheet leaves the bottom edge: its gap is at the top now, and keeps
+   * the clearance for toasts on the top edge that Dialog.css gives it.
+   */
+  [data-platform='macos'] [data-ds='sheet'] {
+    --_dialog-slide: calc(-100% - var(--_dialog-gutter));
+
+    padding-block: max(calc(var(--_dialog-gutter) + var(--ds-inset-safe-top)), calc(var(--_sheet-toast-end) + var(--ds-space-s))) var(--_dialog-gutter);
+  }
+
+  /* As wide as a dialog of its size, and closed on all four sides. */
+  [data-platform='macos'] [data-ds='sheet'] > [data-part='panel'] {
+    inline-size: min(var(--_dialog-width), 100%);
+    padding-block-end: 0;
+    border-block-end-width: var(--ds-border-width-default);
+    border-end-start-radius: var(--_dialog-radius);
+    border-end-end-radius: var(--_dialog-radius);
+    transform-origin: 50% 0;
+  }
+
+  /* No grabber on the desktop: the sheet is not dragged. The close control and Escape stay. */
+  [data-platform='macos'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:not(button) {
+    display: none;
+  }
+
+  [data-platform='macos'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:not(button) + [data-part='header'] {
+    padding-block-start: var(--_dialog-band-padding-block);
+  }
+
+  /* Titles are 13 bold, the desktop's heading in a sheet or an alert. */
+  [data-platform='macos'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='title'],
+  [data-platform='macos'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
+    font-size: var(--ds-type-title-large-font-size);
+  }
+
+  /* The close control stays centred on the first line of the smaller title. */
+  [data-platform='macos'] [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
+    inset-block-start: calc(var(--_dialog-band-padding-block) + (var(--ds-type-title-large-font-size) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+  }
+
+  [data-platform='macos'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    margin-block-start: calc((var(--ds-type-title-large-font-size) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+  }
+}
