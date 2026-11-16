@@ -1,6 +1,6 @@
 # Perceive calibration against the motion audit
 
-Neutral, platform web, Pixel 7 profile, touch, run 2026-11-16T12:52:11.191Z. Load average at the start: 25.86, 25.98, 24.08 on 4 cores.
+Neutral, platform web, Pixel 7 profile, touch, run 2026-11-16T13:20:29.983Z. Load average at the start: 20.14, 22.82, 24.78 on 4 cores.
 
 Result: fail. 9 of 20 invisible (audit 9), 4 wrong (audit 4), 7 fine (audit 7). 41 of 43 numbers within 10 percent.
 
@@ -45,7 +45,7 @@ Result: fail. 9 of 20 invisible (audit 9), 4 wrong (audit 4), 7 fine (audit 7). 
 | copy-button | press scale change | 0.013 | 0 | no |
 | copy-button | starts at release | true | true | yes |
 | slider | thumb travel px | 53 | 49.8 | yes |
-| slider | latency ms | 16 | 27 | yes |
+| slider | latency ms | 16 | 26 | yes |
 | chip | label travel px | 20 | 20.1 | yes |
 | chip | label ms | 158 | 158 | yes |
 | card | after the click | true | true | yes |
@@ -68,7 +68,7 @@ Result: fail. 9 of 20 invisible (audit 9), 4 wrong (audit 4), 7 fine (audit 7). 
 | tooltip | wrong | wrong | div tooltip[tooltip] appears in one frame, with no entrance |
 | accordion | wrong | wrong | div vanishes in one frame |
 | input | invisible | invisible | it moves 0px and changes size by 0px |
-| copy-button | fine | fine | the headline changes fill over 182ms |
-| slider | fine | fine | the headline moves 49.8px over 1001ms |
+| copy-button | fine | fine | its content fades over 46 percent of the control over 182ms |
+| slider | fine | fine | the headline moves 49.8px over 1184ms |
 | chip | fine | fine | the headline moves 20.1px over 158ms |
-| card | wrong | wrong | the first change comes 452ms after the finger lands, after the click, through emulated hover |
+| card | wrong | wrong | the first change comes 296ms after the finger lands, after the click, through emulated hover |

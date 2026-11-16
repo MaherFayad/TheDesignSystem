@@ -100,3 +100,17 @@ should pick it up.
    the sticky Desk dark glass top bar of the docs site. It belongs with
    ruling 18 (the Desk dark glass recheck) in R1.
 2. The docs top bar under safe areas is R4.3.
+
+## From R0.8 (perception gate)
+
+1. Rerun the baseline on a quiet machine before R3 starts (R0.16).
+2. In Chromium's touch emulation `:active` arrives only at release, so "the
+   press starts when the finger lifts" may be partly an artefact of
+   emulation. The owner's device check and a WebKit run must settle it
+   before R3 fixes its press timing design.
+3. CopyButton's press shows no drawn shrink although its transition starts.
+   R3 owner to look.
+4. Add a hold step to the compare harness (`holdPointer` is ready). R0.16 or
+   the first R1 order that needs press states.
+5. Measure the quiet source numbers on the running sources instead of
+   reading them from CSS. R1.4 and R1.10.

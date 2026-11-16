@@ -1,23 +1,23 @@
 {
  "info": {
-  "date": "2026-11-16T12:56:24.686Z",
+  "date": "2026-11-16T13:24:39.136Z",
   "style": "studio",
   "platform": "auto",
   "device": "Pixel 7",
   "profile": "quiet",
   "scheme": "light",
   "load": [
-   25.74,
-   27.48,
-   25.83
+   27.01,
+   22.96,
+   23.9
   ],
   "cpus": 4,
   "chromium": "153.0.8010.12",
-  "url": "http://localhost:5791",
+  "url": "http://localhost:36391",
   "notes": [
    "Detected platform on the page: android.",
    "Median frame interval: 16.7ms (16.7ms is 60 frames a second).",
-   "The machine was loaded (load average 25.74 on 4 cores): latencies and frame times may read longer than on an idle machine."
+   "The machine was loaded (load average 27.01 on 4 cores): latencies and frame times may read longer than on an idle machine."
   ]
  },
  "results": [
@@ -33,16 +33,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4168.0999999996275,
-    "pointerup": 4264.799999998882,
-    "click": 4274.5,
-    "fingerMs": 97,
-    "latency": 113,
+    "pointerdown": 7828.89999999851,
+    "pointerup": 7951.199999999255,
+    "click": 7978,
+    "fingerMs": 122,
+    "latency": 150,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 0,
+    "droppedFrames": 5,
     "frameMs": 16.7,
-    "frames": 88,
+    "frames": 67,
     "headline": {
      "id": 1,
      "desc": "button button",
@@ -54,10 +54,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 113,
+     "start": 150,
      "end": 279,
      "inMs": 17,
-     "totalMs": 183,
+     "totalMs": 145,
      "travel": 0,
      "edgeTravel": 0,
      "ownTravel": 0,
@@ -75,7 +75,7 @@
      "areaMax": 6575,
      "cut": {
       "kind": "colour",
-      "at": 112.80000000037217,
+      "at": 150.4000000014903,
       "size": 97
      },
      "dropped": null,
@@ -139,7 +139,7 @@
     },
     "mainMs": 120,
     "mainSource": "animation",
-    "mainEasing": "steps(1)",
+    "mainEasing": "cubic-bezier(0.4, 0, 0.2, 1)",
     "fillShare": 1,
     "fadeShare": 0,
     "fadeMs": 0,
@@ -167,10 +167,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 113,
+      "start": 150,
       "end": 279,
       "inMs": 17,
-      "totalMs": 183,
+      "totalMs": 145,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -188,7 +188,7 @@
       "areaMax": 6575,
       "cut": {
        "kind": "colour",
-       "at": 112.80000000037217,
+       "at": 150.4000000014903,
        "size": 97
       },
       "dropped": null,
@@ -261,10 +261,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 113,
-      "end": 365,
+      "start": 150,
+      "end": 417,
       "inMs": 17,
-      "totalMs": 269,
+      "totalMs": 283,
       "travel": 1,
       "edgeTravel": 1,
       "ownTravel": 1,
@@ -282,7 +282,7 @@
       "areaMax": 1464,
       "cut": {
        "kind": "colour",
-       "at": 112.80000000037217,
+       "at": 150.4000000014903,
        "size": 97
       },
       "dropped": null,
@@ -315,7 +315,7 @@
     "rootArea": 6575
    },
    "hold": {
-    "holdMs": 622,
+    "holdMs": 627,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -325,7 +325,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "113ms, at release",
+     "measured": "150ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -353,12 +353,12 @@
      "id": "easing",
      "label": "Easing is the source curve",
      "pass": false,
-     "measured": "steps(1)",
+     "measured": "cubic-bezier(0.4, 0, 0.2, 1)",
      "limit": "ease, each control point within 0.02"
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 622ms",
+     "label": "Press shows while the finger is held 627ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -368,11 +368,12 @@
    "call": "invisible",
    "callWhy": "its main change takes 120ms",
    "sentences": [
-    "The first visible change comes 113ms after the finger lands, when the finger lifts.",
-    "The button button changes colour (Delta E 97) over 120ms (steps(1)).",
+    "The first visible change comes 150ms after the finger lands, when the finger lifts.",
+    "The button changes colour (Delta E 97) over 120ms (cubic-bezier(0.4, 0, 0.2, 1)).",
     "The fill changes over 100 percent of the control.",
     "Nothing else reacts.",
-    "Held for 622ms, the press shows nothing while the finger is down."
+    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 627ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -387,16 +388,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4527.700000001118,
-    "pointerup": 4626.9000000003725,
-    "click": 4634.10000000149,
-    "fingerMs": 99,
-    "latency": 143,
+    "pointerdown": 5894.300000000745,
+    "pointerup": 6015.800000000745,
+    "click": 6028.200000001118,
+    "fingerMs": 122,
+    "latency": 144,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 3,
+    "droppedFrames": 2,
     "frameMs": 16.7,
-    "frames": 74,
+    "frames": 82,
     "headline": {
      "id": 5,
      "desc": "span/thumb",
@@ -408,10 +409,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 143,
-     "end": 470,
-     "inMs": 240,
-     "totalMs": 344,
+     "start": 144,
+     "end": 453,
+     "inMs": 242,
+     "totalMs": 325,
      "travel": 25,
      "edgeTravel": 20.5,
      "ownTravel": 25,
@@ -429,7 +430,7 @@
      "areaMax": 1296,
      "cut": {
       "kind": "colour",
-      "at": 143.19999999888205,
+      "at": 144.2999999992553,
       "size": 56
      },
      "dropped": null,
@@ -482,7 +483,7 @@
     },
     "mainMs": 120,
     "mainSource": "animation",
-    "mainEasing": "steps(1, start)",
+    "mainEasing": "cubic-bezier(0.16, 1, 0.3, 1)",
     "fillShare": 0.96,
     "fadeShare": 0,
     "fadeMs": 0,
@@ -491,14 +492,14 @@
       "desc": "span/track",
       "ownTravel": 0,
       "colourDelta": 86.7,
-      "start": 171,
-      "totalMs": 131
+      "start": 156,
+      "totalMs": 164
      },
      {
       "desc": "span",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 143,
+      "start": 144,
       "totalMs": 17
      }
     ],
@@ -529,10 +530,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 171,
-      "end": 285,
-      "inMs": 131,
-      "totalMs": 131,
+      "start": 156,
+      "end": 304,
+      "inMs": 164,
+      "totalMs": 164,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -550,7 +551,7 @@
       "areaMax": 2600,
       "cut": {
        "kind": "colour",
-       "at": 284.7999999988824,
+       "at": 303.69999999925494,
        "size": 87
       },
       "dropped": null,
@@ -656,8 +657,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 143,
-      "end": 143,
+      "start": 144,
+      "end": 144,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -702,10 +703,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 143,
-      "end": 470,
-      "inMs": 240,
-      "totalMs": 344,
+      "start": 144,
+      "end": 453,
+      "inMs": 242,
+      "totalMs": 325,
       "travel": 25,
       "edgeTravel": 20.5,
       "ownTravel": 25,
@@ -723,7 +724,7 @@
       "areaMax": 1296,
       "cut": {
        "kind": "colour",
-       "at": 143.19999999888205,
+       "at": 144.2999999992553,
        "size": 56
       },
       "dropped": null,
@@ -778,7 +779,7 @@
     "rootArea": 3698
    },
    "hold": {
-    "holdMs": 632,
+    "holdMs": 621,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -788,7 +789,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "143ms, at release",
+     "measured": "144ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -816,12 +817,12 @@
      "id": "easing",
      "label": "Easing is the source curve",
      "pass": false,
-     "measured": "steps(1, start)",
+     "measured": "cubic-bezier(0.16, 1, 0.3, 1)",
      "limit": "ease, each control point within 0.02"
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 632ms",
+     "label": "Press shows while the finger is held 621ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -831,12 +832,12 @@
    "call": "invisible",
    "callWhy": "its main change takes 120ms",
    "sentences": [
-    "The first visible change comes 143ms after the finger lands, when the finger lifts.",
-    "The thumb moves 25px, shrinks to 0.667, changes colour (Delta E 56) over 120ms (steps(1, start)).",
+    "The first visible change comes 144ms after the finger lands, when the finger lifts.",
+    "The thumb moves 25px, shrinks to 0.667, changes colour (Delta E 56) over 120ms (cubic-bezier(0.16, 1, 0.3, 1)).",
     "The fill changes over 96 percent of the control.",
     "Also reacting: track (colour), span (fade).",
-    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 632ms, the press shows nothing while the finger is down."
+    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 621ms, the press shows nothing while the finger is down."
    ]
   }
  ]
