@@ -26,9 +26,11 @@
  *   keeps radius.sheet at its top corners.
  */
 /*
- * Order 1.28: the footer rules hold on the web platform only. On ios and
- * android the platform lays out the actions (split text actions, text actions
- * at the end), and recipes beat that layer, so they step aside there.
+ * Order 1.28: the footer rules hold on the web and macos platforms. On ios
+ * and android the platform draws the actions as text (split text actions,
+ * text actions at the end), so the footer paint steps aside there. The
+ * geometry of a phone alert is the platform's whatever this file says
+ * (ds.chrome, ruling 16); this guard only keeps the button fills off it.
  */
 @layer ds.recipes {
   [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
@@ -73,18 +75,18 @@
 
   /* ------------------------------------------------------------ footer band */
 
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
     padding-block: var(--ds-space-xl);
   }
 
   @media (width < 30rem) { /* breakpoint.phone */
-    [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+    [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
       padding-block: var(--ds-space-m);
     }
   }
 
   /* Every footer button starts as the secondary: white, the strong border, the tiny shadow. */
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']) {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-bg-surface);
     --_button-fg: var(--ds-color-text-default);
     --_button-border-color: var(--ds-color-border-strong);
@@ -98,7 +100,7 @@
   }
 
   /* The main action: an accent button, or the AlertDialog action, is the filled blue. */
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:is([data-tone='accent'], [data-part='action']):not([data-emphasis='link']) {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:is([data-tone='accent'], [data-part='action']):not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -111,7 +113,7 @@
   }
 
   /* A destructive main action is the filled red. */
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='link']) {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='link']) {
     --_button-bg: var(--ds-color-state-danger-solid);
     --_button-fg: var(--ds-color-state-danger-on-solid);
     --_button-border-color: var(--ds-color-state-danger-solid);
@@ -124,13 +126,13 @@
   }
 
   /* The hover and press swaps of Button.css, repeated in this layer so the footer values above still change on hover. */
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-hover);
     --_button-fg: var(--_button-fg-hover);
     --_button-border-color: var(--_button-border-color-hover);
   }
 
-  [data-style='neutral'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):active:not([data-disabled], [data-loading]) {
+  [data-style='neutral']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):active:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
   }

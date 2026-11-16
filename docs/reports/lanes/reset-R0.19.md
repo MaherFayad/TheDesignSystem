@@ -105,7 +105,17 @@ and `android` alone. I may not edit that file. Replacement for the "Sets" cell:
 
 ## Check
 
-See the order report for the result of `npm run check`.
+`npm run check` passes every step but two, and neither failure is in a file
+this order touches:
+
+- eslint: `apps/docs/scripts/proof/_m2.mjs:1:20`, `'devices' is defined but
+  never used`. The same error R0.14 reported.
+- Angular: `recheck-angular-2.spec.ts`, "Form B5", timed out at 5000ms under
+  load (another agent's check ran at the same time). Run alone with
+  `ng test --include`, it passes 19 of 19.
+
+Tokens build, gen, typecheck, manifests, vitest (2731 of 2731, 209 files) and
+the native, docs, gallery and consumer checks pass.
 
 ## Left open
 

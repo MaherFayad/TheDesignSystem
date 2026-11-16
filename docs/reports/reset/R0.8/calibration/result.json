@@ -1,15 +1,15 @@
 {
  "info": {
-  "date": "2026-11-16T12:38:47.991Z",
+  "date": "2026-11-16T12:52:11.191Z",
   "style": "neutral",
   "platform": "web",
   "device": "Pixel 7",
   "profile": "rich",
   "scheme": "light",
   "load": [
-   23.77,
-   21.84,
-   20.75
+   25.86,
+   25.98,
+   24.08
   ],
   "cpus": 4,
   "chromium": "153.0.8010.12",
@@ -17,7 +17,7 @@
   "notes": [
    "Detected platform on the page: web.",
    "Median frame interval: 16.7ms (16.7ms is 60 frames a second).",
-   "The machine was loaded (load average 23.77 on 4 cores): latencies and frame times may read longer than on an idle machine."
+   "The machine was loaded (load average 25.86 on 4 cores): latencies and frame times may read longer than on an idle machine."
   ]
  },
  "results": [
@@ -33,16 +33,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 5070.5,
-    "pointerup": 5168.700000001118,
-    "click": 5178.800000000745,
-    "fingerMs": 98,
-    "latency": 115,
+    "pointerdown": 7103.4000000003725,
+    "pointerup": 7200.699999999255,
+    "click": 7210.9000000003725,
+    "fingerMs": 97,
+    "latency": 113,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 0,
+    "droppedFrames": 1,
     "frameMs": 16.7,
-    "frames": 86,
+    "frames": 83,
     "headline": {
      "id": 1,
      "desc": "button button",
@@ -54,8 +54,8 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 115,
-     "end": 414,
+     "start": 113,
+     "end": 413,
      "inMs": 17,
      "totalMs": 316,
      "travel": 0,
@@ -75,7 +75,7 @@
      "areaMax": 4196,
      "cut": {
       "kind": "colour",
-      "at": 114.60000000000036,
+      "at": 113.49999999962711,
       "size": 12
      },
      "dropped": null,
@@ -156,8 +156,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 115,
-      "end": 414,
+      "start": 113,
+      "end": 413,
       "inMs": 17,
       "totalMs": 316,
       "travel": 0,
@@ -177,7 +177,7 @@
       "areaMax": 4196,
       "cut": {
        "kind": "colour",
-       "at": 114.60000000000036,
+       "at": 113.49999999962711,
        "size": 12
       },
       "dropped": null,
@@ -241,7 +241,7 @@
       "changed": true,
       "start": 130,
       "end": 380,
-      "inMs": 73,
+      "inMs": 67,
       "totalMs": 267,
       "travel": 1,
       "edgeTravel": 1.4,
@@ -289,7 +289,7 @@
     "rootArea": 4196
    },
    "hold": {
-    "holdMs": 573,
+    "holdMs": 614,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -299,7 +299,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "115ms, at release",
+     "measured": "113ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -332,7 +332,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 573ms",
+     "label": "Press shows while the finger is held 614ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -342,11 +342,12 @@
    "call": "invisible",
    "callWhy": "its main change takes 70ms",
    "sentences": [
-    "The first visible change comes 115ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 113ms after the finger lands, when the finger lifts.",
     "The button button shrinks to 0.98, changes colour (Delta E 12) over 70ms (cubic-bezier(0, 0, 0.58, 1)).",
     "The fill changes over 100 percent of the control.",
     "Nothing else reacts.",
-    "Held for 573ms, the press shows nothing while the finger is down."
+    "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 614ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -361,16 +362,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3667.5999999996275,
-    "pointerup": 3781.9000000003725,
-    "click": 3793.199999999255,
-    "fingerMs": 114,
-    "latency": 131,
+    "pointerdown": 5066.5,
+    "pointerup": 5181.5999999996275,
+    "click": 5195,
+    "fingerMs": 115,
+    "latency": 134,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 1,
-    "frameMs": 16.7,
-    "frames": 86,
+    "droppedFrames": 2,
+    "frameMs": 16.6,
+    "frames": 87,
     "headline": {
      "id": 1,
      "desc": "button icon-button",
@@ -382,10 +383,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 131,
-     "end": 447,
-     "inMs": 269,
-     "totalMs": 333,
+     "start": 134,
+     "end": 450,
+     "inMs": 285,
+     "totalMs": 332,
      "travel": 0,
      "edgeTravel": 0.5,
      "ownTravel": 0,
@@ -403,7 +404,7 @@
      "areaMax": 1296,
      "cut": {
       "kind": "colour",
-      "at": 130.50000000037244,
+      "at": 134.30000000000018,
       "size": 23
      },
      "dropped": null,
@@ -469,7 +470,7 @@
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 50ms"
+      "why": "finishes in 51ms"
      }
     ],
     "tracks": [
@@ -484,10 +485,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 131,
-      "end": 447,
-      "inMs": 269,
-      "totalMs": 333,
+      "start": 134,
+      "end": 450,
+      "inMs": 285,
+      "totalMs": 332,
       "travel": 0,
       "edgeTravel": 0.5,
       "ownTravel": 0,
@@ -505,7 +506,7 @@
       "areaMax": 1296,
       "cut": {
        "kind": "colour",
-       "at": 130.50000000037244,
+       "at": 134.30000000000018,
        "size": 23
       },
       "dropped": null,
@@ -567,10 +568,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 146,
-      "end": 263,
-      "inMs": 50,
-      "totalMs": 133,
+      "start": 147,
+      "end": 389,
+      "inMs": 51,
+      "totalMs": 259,
       "travel": 1,
       "edgeTravel": 1.2,
       "ownTravel": 1,
@@ -594,7 +595,7 @@
     "rootArea": 1296
    },
    "hold": {
-    "holdMs": 545,
+    "holdMs": 697,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -604,7 +605,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "131ms, at release",
+     "measured": "134ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -632,12 +633,12 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "button icon-button finishes in 70ms; svg icon finishes in 50ms",
+     "measured": "button icon-button finishes in 70ms; svg icon finishes in 51ms",
      "limit": "no change under 150ms or under 3px"
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 545ms",
+     "label": "Press shows while the finger is held 697ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -647,12 +648,12 @@
    "call": "invisible",
    "callWhy": "its main change takes 70ms",
    "sentences": [
-    "The first visible change comes 131ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 134ms after the finger lands, when the finger lifts.",
     "The button icon-button shrinks to 0.98, changes colour (Delta E 23) over 70ms (cubic-bezier(0, 0, 0.58, 1)).",
     "The fill changes over 100 percent of the control.",
     "Nothing else reacts.",
-    "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 545ms, the press shows nothing while the finger is down."
+    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 697ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -667,16 +668,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 2742.5999999996275,
-    "pointerup": 2837.199999999255,
-    "click": 2846.0999999996275,
-    "fingerMs": 95,
-    "latency": 110,
+    "pointerdown": 4749.200000001118,
+    "pointerup": 4863.4000000003725,
+    "click": 4940.0999999996275,
+    "fingerMs": 114,
+    "latency": 254,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 2,
+    "droppedFrames": 4,
     "frameMs": 16.7,
-    "frames": 79,
+    "frames": 72,
     "headline": {
      "id": 5,
      "desc": "span/thumb",
@@ -688,10 +689,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 110,
-     "end": 448,
-     "inMs": 271,
-     "totalMs": 355,
+     "start": 254,
+     "end": 644,
+     "inMs": 296,
+     "totalMs": 406,
      "travel": 12,
      "edgeTravel": 12,
      "ownTravel": 12,
@@ -745,15 +746,15 @@
       "desc": "span/track",
       "ownTravel": 0,
       "colourDelta": 20.7,
-      "start": 110,
-      "totalMs": 155
+      "start": 254,
+      "totalMs": 175
      },
      {
       "desc": "span",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 110,
-      "totalMs": 172
+      "start": 254,
+      "totalMs": 209
      }
     ],
     "cuts": [],
@@ -770,10 +771,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 110,
-      "end": 248,
-      "inMs": 155,
-      "totalMs": 155,
+      "start": 254,
+      "end": 412,
+      "inMs": 175,
+      "totalMs": 175,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -789,7 +790,11 @@
       "filterChanged": false,
       "shadowChanged": false,
       "areaMax": 448,
-      "cut": null,
+      "cut": {
+       "kind": "colour",
+       "at": 412.49999999888223,
+       "size": 21
+      },
       "dropped": null,
       "animations": [
        {
@@ -860,10 +865,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 110,
-      "end": 265,
+      "start": 254,
+      "end": 447,
       "inMs": 17,
-      "totalMs": 172,
+      "totalMs": 209,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -917,10 +922,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 110,
-      "end": 448,
-      "inMs": 271,
-      "totalMs": 355,
+      "start": 254,
+      "end": 644,
+      "inMs": 296,
+      "totalMs": 406,
       "travel": 12,
       "edgeTravel": 12,
       "ownTravel": 12,
@@ -967,7 +972,7 @@
     "rootArea": 817
    },
    "hold": {
-    "holdMs": 645,
+    "holdMs": 633,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -977,7 +982,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "110ms, at release",
+     "measured": "254ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -1010,7 +1015,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 645ms",
+     "label": "Press shows while the finger is held 633ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -1020,12 +1025,12 @@
    "call": "fine",
    "callWhy": "the headline moves 12px over 158ms",
    "sentences": [
-    "The first visible change comes 110ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 254ms after the finger lands, when the finger lifts.",
     "The thumb moves 12px, grows to 1.02 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "The fill changes over 55 percent of the control.",
     "Also reacting: track (colour), span (fade).",
-    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 645ms, the press shows nothing while the finger is down."
+    "The page dropped frames 4 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 633ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -1040,14 +1045,14 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 5995.199999999255,
-    "pointerup": 6076.4000000003725,
-    "click": 6096.699999999255,
-    "fingerMs": 81,
-    "latency": 118,
+    "pointerdown": 5903.9000000003725,
+    "pointerup": 6042.5,
+    "click": 6091.799999998882,
+    "fingerMs": 139,
+    "latency": 234,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 0,
+    "droppedFrames": 2,
     "frameMs": 16.7,
     "frames": 84,
     "headline": {
@@ -1061,10 +1066,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 118,
-     "end": 255,
-     "inMs": 97,
-     "totalMs": 154,
+     "start": 234,
+     "end": 350,
+     "inMs": 106,
+     "totalMs": 133,
      "travel": 0,
      "edgeTravel": 0,
      "ownTravel": 0,
@@ -1159,10 +1164,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 118,
-      "end": 255,
-      "inMs": 97,
-      "totalMs": 154,
+      "start": 234,
+      "end": 350,
+      "inMs": 106,
+      "totalMs": 133,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -1238,10 +1243,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 118,
-      "end": 255,
+      "start": 234,
+      "end": 350,
       "inMs": 17,
-      "totalMs": 154,
+      "totalMs": 133,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -1295,8 +1300,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 118,
-      "end": 118,
+      "start": 234,
+      "end": 234,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -1345,7 +1350,7 @@
     "rootArea": 672
    },
    "hold": {
-    "holdMs": 613,
+    "holdMs": 614,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -1355,7 +1360,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "118ms, at release",
+     "measured": "234ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -1388,7 +1393,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 613ms",
+     "label": "Press shows while the finger is held 614ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -1398,10 +1403,11 @@
    "call": "invisible",
    "callWhy": "it moves 0px and changes size by 0px",
    "sentences": [
-    "The first visible change comes 118ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 234ms after the finger lands, when the finger lifts.",
     "The indicator changes colour (Delta E 35) over 225ms (cubic-bezier(0, 0, 0.58, 1)).",
     "Nothing else reacts.",
-    "Held for 613ms, the press shows nothing while the finger is down."
+    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 614ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -1416,16 +1422,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4156.60000000149,
-    "pointerup": 4236.10000000149,
-    "click": 4265.60000000149,
-    "fingerMs": 80,
-    "latency": 121,
+    "pointerdown": 5132.0999999996275,
+    "pointerup": 5255.300000000745,
+    "click": 5397.300000000745,
+    "fingerMs": 123,
+    "latency": 275,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 3,
-    "frameMs": 16.7,
-    "frames": 73,
+    "droppedFrames": 2,
+    "frameMs": 16.6,
+    "frames": 80,
     "headline": {
      "id": 10,
      "desc": "span/indicator",
@@ -1437,10 +1443,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 146,
-     "end": 349,
-     "inMs": 149,
-     "totalMs": 219,
+     "start": 299,
+     "end": 557,
+     "inMs": 274,
+     "totalMs": 274,
      "travel": 0,
      "edgeTravel": 2,
      "ownTravel": 0,
@@ -1494,22 +1500,22 @@
       "desc": "button/control[radio]",
       "ownTravel": 0,
       "colourDelta": 34.7,
-      "start": 121,
-      "totalMs": 124
+      "start": 275,
+      "totalMs": 133
      },
      {
       "desc": "span/indicator",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 121,
-      "totalMs": 124
+      "start": 275,
+      "totalMs": 133
      },
      {
       "desc": "button/control[radio]",
       "ownTravel": 0,
       "colourDelta": 34.7,
-      "start": 146,
-      "totalMs": 339
+      "start": 299,
+      "totalMs": 382
      }
     ],
     "cuts": [],
@@ -1535,10 +1541,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 121,
-      "end": 229,
-      "inMs": 124,
-      "totalMs": 124,
+      "start": 275,
+      "end": 391,
+      "inMs": 133,
+      "totalMs": 133,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -1625,10 +1631,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 121,
-      "end": 229,
+      "start": 275,
+      "end": 391,
       "inMs": null,
-      "totalMs": 124,
+      "totalMs": 133,
       "travel": 0,
       "edgeTravel": 2,
       "ownTravel": 0,
@@ -1682,10 +1688,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 146,
-      "end": 469,
-      "inMs": 89,
-      "totalMs": 339,
+      "start": 299,
+      "end": 664,
+      "inMs": 81,
+      "totalMs": 382,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -1860,10 +1866,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 146,
-      "end": 349,
-      "inMs": 149,
-      "totalMs": 219,
+      "start": 299,
+      "end": 557,
+      "inMs": 274,
+      "totalMs": 274,
       "travel": 0,
       "edgeTravel": 2,
       "ownTravel": 0,
@@ -1910,7 +1916,7 @@
     "rootArea": 29105
    },
    "hold": {
-    "holdMs": 598,
+    "holdMs": 606,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -1920,7 +1926,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "121ms, at release",
+     "measured": "275ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -1953,7 +1959,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 598ms",
+     "label": "Press shows while the finger is held 606ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -1963,11 +1969,11 @@
    "call": "invisible",
    "callWhy": "it moves 0px and changes size by 2.8px",
    "sentences": [
-    "The first visible change comes 121ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 275ms after the finger lands, when the finger lifts.",
     "The indicator shrinks to 0.501, fades from 0.26 to 1 over 200ms (cubic-bezier(0, 0, 0.58, 1)).",
     "Also reacting: control (colour), indicator (fade), control (colour).",
-    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 598ms, the press shows nothing while the finger is down."
+    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 606ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -1982,16 +1988,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4652,
-    "pointerup": 4727.9000000003725,
-    "click": 4782.300000000745,
-    "fingerMs": 76,
-    "latency": 135,
+    "pointerdown": 4464.800000000745,
+    "pointerup": 4591.9000000003725,
+    "click": 4619,
+    "fingerMs": 127,
+    "latency": 156,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 3,
+    "droppedFrames": 5,
     "frameMs": 16.7,
-    "frames": 79,
+    "frames": 64,
     "headline": {
      "id": 4,
      "desc": "span/indicator",
@@ -2005,16 +2011,16 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 135,
-     "end": 325,
-     "inMs": 124,
-     "totalMs": 206,
+     "start": 156,
+     "end": 375,
+     "inMs": 235,
+     "totalMs": 235,
      "travel": 60.4,
      "edgeTravel": 56.5,
      "ownTravel": 60.4,
-     "sizeChange": 12.3,
+     "sizeChange": 7.9,
      "scaleMin": 0.871,
-     "scaleMax": 1.071,
+     "scaleMax": 1,
      "opacityMin": 1,
      "opacityMax": 1,
      "colourDelta": 0,
@@ -2023,7 +2029,7 @@
      "clipChanged": false,
      "filterChanged": false,
      "shadowChanged": false,
-     "areaMax": 131,
+     "areaMax": 123,
      "cut": null,
      "dropped": null,
      "animations": [
@@ -2051,7 +2057,7 @@
       "desc": "span/label",
       "ownTravel": 0,
       "colourDelta": 19.8,
-      "start": 325,
+      "start": 375,
       "totalMs": 17
      }
     ],
@@ -2060,7 +2066,7 @@
       "desc": "p",
       "cut": {
        "kind": "disappear",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 77
       }
      },
@@ -2068,7 +2074,7 @@
       "desc": "p",
       "cut": {
        "kind": "appear",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 86
       }
      }
@@ -2105,16 +2111,16 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 325,
-      "inMs": 124,
-      "totalMs": 206,
+      "start": 156,
+      "end": 375,
+      "inMs": 235,
+      "totalMs": 235,
       "travel": 60.4,
       "edgeTravel": 56.5,
       "ownTravel": 60.4,
-      "sizeChange": 12.3,
+      "sizeChange": 7.9,
       "scaleMin": 0.871,
-      "scaleMax": 1.071,
+      "scaleMax": 1,
       "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
@@ -2123,7 +2129,7 @@
       "clipChanged": false,
       "filterChanged": false,
       "shadowChanged": false,
-      "areaMax": 131,
+      "areaMax": 123,
       "cut": null,
       "dropped": null,
       "animations": [
@@ -2151,8 +2157,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 135,
+      "start": 156,
+      "end": 156,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2172,13 +2178,10 @@
       "areaMax": 449,
       "cut": {
        "kind": "colour",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 20
       },
-      "dropped": {
-       "at": 135,
-       "gapMs": 61
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -2192,8 +2195,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 135,
+      "start": 156,
+      "end": 156,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2213,13 +2216,10 @@
       "areaMax": 1964,
       "cut": {
        "kind": "colour",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 20
       },
-      "dropped": {
-       "at": 135,
-       "gapMs": 61
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -2233,8 +2233,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 325,
-      "end": 325,
+      "start": 375,
+      "end": 375,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2254,7 +2254,7 @@
       "areaMax": 545,
       "cut": {
        "kind": "colour",
-       "at": 324.8000000000002,
+       "at": 374.89999999925476,
        "size": 20
       },
       "dropped": null,
@@ -2283,8 +2283,8 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 135,
+      "start": 156,
+      "end": 156,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2304,13 +2304,10 @@
       "areaMax": 5866,
       "cut": {
        "kind": "disappear",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 77
       },
-      "dropped": {
-       "at": 135,
-       "gapMs": 61
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -2324,10 +2321,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 325,
+      "start": 156,
+      "end": 375,
       "inMs": 17,
-      "totalMs": 206,
+      "totalMs": 235,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2370,10 +2367,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 325,
+      "start": 156,
+      "end": 375,
       "inMs": 17,
-      "totalMs": 206,
+      "totalMs": 235,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2416,8 +2413,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 135,
-      "end": 135,
+      "start": 156,
+      "end": 156,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2437,20 +2434,17 @@
       "areaMax": 7373,
       "cut": {
        "kind": "appear",
-       "at": 135.30000000000018,
+       "at": 156.49999999925512,
        "size": 86
       },
-      "dropped": {
-       "at": 135,
-       "gapMs": 61
-      },
+      "dropped": null,
       "animations": []
      }
     ],
     "rootArea": 23542
    },
    "hold": {
-    "holdMs": 620,
+    "holdMs": 613,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -2460,7 +2454,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "135ms, at release",
+     "measured": "156ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -2493,7 +2487,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 620ms",
+     "label": "Press shows while the finger is held 613ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -2503,13 +2497,13 @@
    "call": "wrong",
    "callWhy": "p vanishes in one frame",
    "sentences": [
-    "The first visible change comes 135ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 156ms after the finger lands, when the finger lifts.",
     "The indicator moves 60.4px, shrinks to 0.871 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "Also reacting: label (colour).",
     "The p vanishes in one frame.",
     "The p appears in one frame.",
-    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 620ms, the press shows nothing while the finger is down."
+    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 613ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -2524,16 +2518,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4233.60000000149,
-    "pointerup": 4481.200000001118,
-    "click": 4544.4000000003725,
-    "fingerMs": 248,
-    "latency": 319,
+    "pointerdown": 4484.800000000745,
+    "pointerup": 4629.800000000745,
+    "click": 4793.4000000003725,
+    "fingerMs": 145,
+    "latency": 312,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 5,
-    "frameMs": 16.6,
-    "frames": 74,
+    "droppedFrames": 2,
+    "frameMs": 16.7,
+    "frames": 88,
     "headline": {
      "id": 2,
      "desc": "span/indicator",
@@ -2545,10 +2539,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 319,
-     "end": 531,
-     "inMs": 208,
-     "totalMs": 229,
+     "start": 312,
+     "end": 496,
+     "inMs": 133,
+     "totalMs": 201,
      "travel": 49.4,
      "edgeTravel": 47,
      "ownTravel": 49.4,
@@ -2591,21 +2585,21 @@
       "desc": "button toggle-button/item[radio]",
       "ownTravel": 0,
       "colourDelta": 19.8,
-      "start": 490,
-      "totalMs": 37
+      "start": 380,
+      "totalMs": 65
      },
      {
       "desc": "button toggle-button/item[radio]",
       "ownTravel": 0,
       "colourDelta": 19.8,
-      "start": 490,
-      "totalMs": 37
+      "start": 380,
+      "totalMs": 65
      },
      {
       "desc": "span/label",
       "ownTravel": 0,
       "colourDelta": 19.8,
-      "start": 319,
+      "start": 312,
       "totalMs": 17
      }
     ],
@@ -2617,7 +2611,7 @@
      },
      {
       "desc": "span/label",
-      "why": "finishes in 37ms"
+      "why": "finishes in 48ms"
      },
      {
       "desc": "button toggle-button/item[radio]",
@@ -2636,10 +2630,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 319,
-      "end": 531,
-      "inMs": 208,
-      "totalMs": 229,
+      "start": 312,
+      "end": 496,
+      "inMs": 133,
+      "totalMs": 201,
       "travel": 49.4,
       "edgeTravel": 47,
       "ownTravel": 49.4,
@@ -2682,10 +2676,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 490,
-      "end": 510,
-      "inMs": 37,
-      "totalMs": 37,
+      "start": 380,
+      "end": 428,
+      "inMs": 48,
+      "totalMs": 65,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2728,10 +2722,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 490,
-      "end": 510,
-      "inMs": 37,
-      "totalMs": 37,
+      "start": 380,
+      "end": 428,
+      "inMs": 48,
+      "totalMs": 65,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2762,10 +2756,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 490,
-      "end": 510,
-      "inMs": 37,
-      "totalMs": 37,
+      "start": 380,
+      "end": 428,
+      "inMs": 48,
+      "totalMs": 65,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2808,8 +2802,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 319,
-      "end": 319,
+      "start": 312,
+      "end": 312,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -2829,7 +2823,7 @@
       "areaMax": 621,
       "cut": {
        "kind": "colour",
-       "at": 319.0999999985097,
+       "at": 311.69999999925494,
        "size": 20
       },
       "dropped": null,
@@ -2858,10 +2852,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 319,
-      "end": 531,
+      "start": 312,
+      "end": 496,
       "inMs": 17,
-      "totalMs": 229,
+      "totalMs": 201,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2904,10 +2898,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 319,
-      "end": 531,
+      "start": 312,
+      "end": 496,
       "inMs": 17,
-      "totalMs": 229,
+      "totalMs": 201,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -2943,7 +2937,7 @@
     "rootArea": 3833
    },
    "hold": {
-    "holdMs": 583,
+    "holdMs": 614,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -2953,7 +2947,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "319ms, at release",
+     "measured": "312ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -2981,12 +2975,12 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "button toggle-button/item[radio] finishes in 100ms; span/label finishes in 37ms; button toggle-button/item[radio] finishes in 100ms",
+     "measured": "button toggle-button/item[radio] finishes in 100ms; span/label finishes in 48ms; button toggle-button/item[radio] finishes in 100ms",
      "limit": "no change under 150ms or under 3px"
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 583ms",
+     "label": "Press shows while the finger is held 614ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -2996,11 +2990,11 @@
    "call": "fine",
    "callWhy": "the headline moves 49.4px over 158ms",
    "sentences": [
-    "The first visible change comes 319ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 312ms after the finger lands, when the finger lifts.",
     "The indicator moves 49.4px, shrinks to 0.906 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "Also reacting: item (colour), item (colour), label (colour).",
-    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 583ms, the press shows nothing while the finger is down."
+    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 614ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -3015,16 +3009,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 5298,
-    "pointerup": 5412.0999999996275,
-    "click": 5419,
-    "fingerMs": 114,
-    "latency": 301,
+    "pointerdown": 4055.2999999988824,
+    "pointerup": 4272.299999998882,
+    "click": 4280.199999999255,
+    "fingerMs": 217,
+    "latency": 831,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 1,
-    "frameMs": 16.7,
-    "frames": 88,
+    "droppedFrames": 4,
+    "frameMs": 16.6,
+    "frames": 90,
     "headline": {
      "id": 5,
      "desc": "div select/content[listbox]",
@@ -3036,17 +3030,17 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 316,
-     "end": 468,
-     "inMs": 86,
-     "totalMs": 169,
+     "start": 862,
+     "end": 1008,
+     "inMs": 89,
+     "totalMs": 162,
      "travel": 5.9,
      "edgeTravel": 4,
      "ownTravel": 5.9,
      "sizeChange": 4.5,
      "scaleMin": 0.98,
      "scaleMax": 1,
-     "opacityMin": 0.59,
+     "opacityMin": 0.58,
      "opacityMax": 1,
      "colourDelta": 0,
      "fillDelta": 0,
@@ -3084,178 +3078,178 @@
       "desc": "button select[combobox]",
       "ownTravel": 0,
       "colourDelta": 20.7,
-      "start": 301,
-      "totalMs": 197
+      "start": 831,
+      "totalMs": 194
      },
      {
       "desc": "div/item[option]",
       "ownTravel": 4.9,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "svg icon",
       "ownTravel": 4.5,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-label",
       "ownTravel": 5.1,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-description",
       "ownTravel": 5.3,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "div/item[option]",
       "ownTravel": 5.5,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "svg icon",
       "ownTravel": 5.1,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-label",
       "ownTravel": 5.6,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-description",
       "ownTravel": 5.9,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "div/item[option]",
       "ownTravel": 6.2,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "svg icon",
       "ownTravel": 5.8,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-label",
       "ownTravel": 6.2,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 89
      },
      {
       "desc": "span/item-description",
       "ownTravel": 6.5,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 94
      },
      {
       "desc": "div/item[option]",
       "ownTravel": 6.8,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 94
      },
      {
       "desc": "svg icon",
       "ownTravel": 6.5,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 94
      },
      {
       "desc": "span/item-label",
       "ownTravel": 6.8,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 94
      },
      {
       "desc": "span/item-description",
       "ownTravel": 7.1,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 100
+      "start": 862,
+      "totalMs": 94
      },
      {
       "desc": "span/highlight",
       "ownTravel": 4.9,
       "colourDelta": 0,
-      "start": 316,
-      "totalMs": 86
+      "start": 862,
+      "totalMs": 89
      }
     ],
     "cuts": [],
     "tooShortOrSmall": [
      {
       "desc": "svg icon",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-label",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-description",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-label",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-description",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-label",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-description",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-label",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/item-description",
-      "why": "finishes in 86ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "span/highlight",
@@ -3274,10 +3268,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 301,
-      "end": 481,
+      "start": 831,
+      "end": 1008,
       "inMs": 17,
-      "totalMs": 197,
+      "totalMs": 194,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -3295,7 +3289,7 @@
       "areaMax": 7168,
       "cut": {
        "kind": "colour",
-       "at": 300.5,
+       "at": 830.800000001118,
        "size": 21
       },
       "dropped": null,
@@ -3324,14 +3318,14 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 468,
-      "inMs": 33,
-      "totalMs": 169,
+      "start": 862,
+      "end": 980,
+      "inMs": 17,
+      "totalMs": 134,
       "travel": 0,
       "edgeTravel": 7.5,
       "ownTravel": 0,
-      "sizeChange": 14.9,
+      "sizeChange": 15,
       "scaleMin": 1,
       "scaleMax": 1,
       "opacityMin": 1,
@@ -3358,17 +3352,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 468,
-      "inMs": 86,
-      "totalMs": 169,
+      "start": 862,
+      "end": 1008,
+      "inMs": 89,
+      "totalMs": 162,
       "travel": 5.9,
       "edgeTravel": 4,
       "ownTravel": 5.9,
       "sizeChange": 4.5,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3406,17 +3400,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 4.9,
       "edgeTravel": 4.1,
       "ownTravel": 4.9,
       "sizeChange": 4.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3452,17 +3446,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 4.5,
       "edgeTravel": 4.3,
       "ownTravel": 4.5,
       "sizeChange": 0.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3486,17 +3480,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.1,
       "edgeTravel": 4.3,
       "ownTravel": 5.1,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3520,17 +3514,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.3,
       "edgeTravel": 4.6,
       "ownTravel": 5.3,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3554,17 +3548,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.5,
       "edgeTravel": 4.7,
       "ownTravel": 5.5,
       "sizeChange": 4.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3600,17 +3594,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.1,
       "edgeTravel": 5,
       "ownTravel": 5.1,
       "sizeChange": 0.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3634,17 +3628,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.6,
       "edgeTravel": 5,
       "ownTravel": 5.6,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3668,17 +3662,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.9,
       "edgeTravel": 5.2,
       "ownTravel": 5.9,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3702,17 +3696,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 6.2,
       "edgeTravel": 5.4,
       "ownTravel": 6.2,
       "sizeChange": 4.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3748,17 +3742,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 5.8,
       "edgeTravel": 5.6,
       "ownTravel": 5.8,
       "sizeChange": 0.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3782,17 +3776,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 6.2,
       "edgeTravel": 5.6,
       "ownTravel": 6.2,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3816,17 +3810,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 940,
+      "inMs": 89,
+      "totalMs": 94,
       "travel": 6.5,
       "edgeTravel": 5.9,
       "ownTravel": 6.5,
       "sizeChange": 3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.59,
+      "opacityMin": 0.58,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -3850,10 +3844,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 940,
+      "inMs": 89,
+      "totalMs": 94,
       "travel": 6.8,
       "edgeTravel": 6.1,
       "ownTravel": 6.8,
@@ -3896,10 +3890,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 940,
+      "inMs": 89,
+      "totalMs": 94,
       "travel": 6.5,
       "edgeTravel": 6.3,
       "ownTravel": 6.5,
@@ -3930,10 +3924,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 940,
+      "inMs": 89,
+      "totalMs": 94,
       "travel": 6.8,
       "edgeTravel": 6.2,
       "ownTravel": 6.8,
@@ -3964,10 +3958,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 399,
-      "inMs": 86,
-      "totalMs": 100,
+      "start": 862,
+      "end": 940,
+      "inMs": 89,
+      "totalMs": 94,
       "travel": 7.1,
       "edgeTravel": 6.5,
       "ownTravel": 7.1,
@@ -3998,10 +3992,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 316,
-      "end": 385,
-      "inMs": 86,
-      "totalMs": 86,
+      "start": 862,
+      "end": 935,
+      "inMs": 89,
+      "totalMs": 89,
       "travel": 4.9,
       "edgeTravel": 4.1,
       "ownTravel": 4.9,
@@ -4042,7 +4036,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "301ms, at release",
+     "measured": "831ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -4070,7 +4064,7 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "svg icon finishes in 86ms; span/item-label finishes in 86ms; span/item-description finishes in 86ms; svg icon finishes in 86ms",
+     "measured": "svg icon finishes in 89ms; span/item-label finishes in 89ms; span/item-description finishes in 89ms; svg icon finishes in 89ms",
      "limit": "no change under 150ms or under 3px"
     }
    ],
@@ -4078,10 +4072,10 @@
    "call": "invisible",
    "callWhy": "it moves 5.9px and changes size by 4.5px",
    "sentences": [
-    "The first visible change comes 301ms after the finger lands, when the finger lifts.",
-    "The content moves 5.9px, shrinks to 0.98, fades from 0.59 to 1 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
+    "The first visible change comes 831ms after the finger lands, when the finger lifts.",
+    "The content moves 5.9px, shrinks to 0.98, fades from 0.58 to 1 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "Also reacting: button select[combobox] (colour), item (4.9px), svg icon (4.5px), item-label (5.1px).",
-    "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 4 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -4096,16 +4090,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3351.0999999996275,
-    "pointerup": 4146.0999999996275,
-    "click": 4164.5999999996275,
-    "fingerMs": 795,
-    "latency": 798,
-    "startsAtRelease": true,
+    "pointerdown": 4312.699999999255,
+    "pointerup": 4643.300000000745,
+    "click": 4654.699999999255,
+    "fingerMs": 331,
+    "latency": 276,
+    "startsAtRelease": false,
     "afterClick": false,
-    "droppedFrames": 4,
-    "frameMs": 16.7,
-    "frames": 69,
+    "droppedFrames": 5,
+    "frameMs": 16.6,
+    "frames": 68,
     "headline": {
      "id": 5,
      "desc": "div dropdown-menu[menu]",
@@ -4117,10 +4111,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 798,
-     "end": 1184,
-     "inMs": 100,
-     "totalMs": 402,
+     "start": 276,
+     "end": 620,
+     "inMs": 75,
+     "totalMs": 361,
      "travel": 8.5,
      "edgeTravel": 4,
      "ownTravel": 8.5,
@@ -4137,10 +4131,7 @@
      "shadowChanged": false,
      "areaMax": 88075,
      "cut": null,
-     "dropped": {
-      "at": 1102,
-      "gapMs": 110
-     },
+     "dropped": null,
      "animations": [
       {
        "type": "CSSAnimation",
@@ -4168,197 +4159,197 @@
       "desc": "div/label",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "svg icon",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/shortcut",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "svg icon",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/shortcut",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "svg icon",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "svg icon",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "svg icon",
       "ownTravel": 4.7,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "div/separator[separator]",
       "ownTravel": 4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "div/label",
       "ownTravel": 4.1,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "svg icon",
       "ownTravel": 4.1,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 4.5,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "span/shortcut",
       "ownTravel": 5.4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "span/text",
       "ownTravel": 5.3,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "div/separator[separator]",
       "ownTravel": 5.5,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "div/label",
       "ownTravel": 5.8,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "span/text",
       "ownTravel": 6.4,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "svg icon",
       "ownTravel": 6.6,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 7,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "span/text",
       "ownTravel": 7.6,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "div/separator[separator]",
       "ownTravel": 7.9,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "svg icon",
       "ownTravel": 8.1,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 361
      },
      {
       "desc": "span/text",
       "ownTravel": 8.3,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      },
      {
       "desc": "span/shortcut",
       "ownTravel": 8.9,
       "colourDelta": 0,
-      "start": 798,
-      "totalMs": 402
+      "start": 276,
+      "totalMs": 384
      }
     ],
     "cuts": [],
@@ -4388,10 +4379,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 815,
-      "end": 1102,
+      "start": 348,
+      "end": 579,
       "inMs": 17,
-      "totalMs": 303,
+      "totalMs": 247,
       "travel": 0,
       "edgeTravel": 1,
       "ownTravel": 0,
@@ -4438,7 +4429,7 @@
         "props": [
          "transform"
         ],
-        "duration": 131.67286545455144,
+        "duration": 131.81493548313654,
         "delay": 0,
         "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
         "keyEasing": "linear"
@@ -4449,7 +4440,7 @@
         "props": [
          "opacity"
         ],
-        "duration": 131.67286545455144,
+        "duration": 131.81493548313654,
         "delay": 0,
         "easing": "cubic-bezier(0, 0, 0.58, 1)",
         "keyEasing": "linear"
@@ -4467,10 +4458,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 815,
-      "end": 1102,
+      "start": 348,
+      "end": 579,
       "inMs": 17,
-      "totalMs": 303,
+      "totalMs": 247,
       "travel": 0.7,
       "edgeTravel": 1.1,
       "ownTravel": 0.7,
@@ -4506,7 +4497,7 @@
         "props": [
          "transform"
         ],
-        "duration": 104.02156370909564,
+        "duration": 104.13379903167785,
         "delay": 0,
         "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
         "keyEasing": "linear"
@@ -4524,10 +4515,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 815,
-      "end": 992,
+      "start": 348,
+      "end": 434,
       "inMs": 17,
-      "totalMs": 194,
+      "totalMs": 102,
       "travel": 0.9,
       "edgeTravel": 0.9,
       "ownTravel": 0.7,
@@ -4558,10 +4549,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 100,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 75,
+      "totalMs": 361,
       "travel": 8.5,
       "edgeTravel": 4,
       "ownTravel": 8.5,
@@ -4578,10 +4569,7 @@
       "shadowChanged": false,
       "areaMax": 88075,
       "cut": null,
-      "dropped": {
-       "at": 1102,
-       "gapMs": 110
-      },
+      "dropped": null,
       "animations": [
        {
         "type": "CSSAnimation",
@@ -4609,10 +4597,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 2.1,
       "edgeTravel": 1.7,
       "ownTravel": 4,
@@ -4630,8 +4618,8 @@
       "areaMax": 4351,
       "cut": null,
       "dropped": {
-       "at": 1102,
-       "gapMs": 110
+       "at": 563,
+       "gapMs": 129
       },
       "animations": [
        {
@@ -4659,10 +4647,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 2.5,
       "edgeTravel": 2.5,
       "ownTravel": 4,
@@ -4693,10 +4681,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 2.5,
       "edgeTravel": 2.5,
       "ownTravel": 4,
@@ -4713,7 +4701,10 @@
       "shadowChanged": false,
       "areaMax": 2326,
       "cut": null,
-      "dropped": null,
+      "dropped": {
+       "at": 563,
+       "gapMs": 129
+      },
       "animations": [
        {
         "type": "CSSAnimation",
@@ -4740,10 +4731,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.9,
       "edgeTravel": 3.7,
       "ownTravel": 4,
@@ -4760,7 +4751,10 @@
       "shadowChanged": false,
       "areaMax": 168,
       "cut": null,
-      "dropped": null,
+      "dropped": {
+       "at": 563,
+       "gapMs": 129
+      },
       "animations": [
        {
         "type": "CSSAnimation",
@@ -4787,10 +4781,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.2,
       "edgeTravel": 3.2,
       "ownTravel": 4,
@@ -4821,10 +4815,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.2,
       "edgeTravel": 3.2,
       "ownTravel": 4,
@@ -4868,10 +4862,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 3.9,
       "edgeTravel": 3.6,
       "ownTravel": 4,
@@ -4915,10 +4909,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.6,
       "edgeTravel": 3.6,
       "ownTravel": 4,
@@ -4949,10 +4943,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.6,
       "edgeTravel": 3.6,
       "ownTravel": 4,
@@ -4996,10 +4990,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 361,
+      "totalMs": 361,
       "travel": 3.8,
       "edgeTravel": 3.8,
       "ownTravel": 4,
@@ -5030,10 +5024,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 3.8,
       "edgeTravel": 3.8,
       "ownTravel": 4,
@@ -5077,10 +5071,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 4.7,
       "edgeTravel": 4.5,
       "ownTravel": 4.7,
@@ -5111,12 +5105,12 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 402,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 361,
+      "totalMs": 384,
       "travel": 3.9,
-      "edgeTravel": 3.8,
+      "edgeTravel": 3.9,
       "ownTravel": 4,
       "sizeChange": 3.8,
       "scaleMin": 0.98,
@@ -5158,12 +5152,12 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 4.1,
-      "edgeTravel": 3.8,
+      "edgeTravel": 4,
       "ownTravel": 4.1,
       "sizeChange": 4,
       "scaleMin": 0.98,
@@ -5205,10 +5199,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 4.1,
       "edgeTravel": 4.1,
       "ownTravel": 4.1,
@@ -5263,10 +5257,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 4.5,
       "edgeTravel": 4,
       "ownTravel": 4.5,
@@ -5310,10 +5304,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 5.4,
       "edgeTravel": 5.1,
       "ownTravel": 5.4,
@@ -5357,10 +5351,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 5.3,
       "edgeTravel": 4.6,
       "ownTravel": 5.3,
@@ -5404,10 +5398,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 5.5,
       "edgeTravel": 5.1,
       "ownTravel": 5.5,
@@ -5451,10 +5445,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 5.8,
       "edgeTravel": 5.2,
       "ownTravel": 5.8,
@@ -5498,10 +5492,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 6.4,
       "edgeTravel": 5.8,
       "ownTravel": 6.4,
@@ -5545,10 +5539,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 6.6,
       "edgeTravel": 6.5,
       "ownTravel": 6.6,
@@ -5579,10 +5573,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 7,
       "edgeTravel": 6.5,
       "ownTravel": 7,
@@ -5626,10 +5620,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 7.6,
       "edgeTravel": 7.1,
       "ownTravel": 7.6,
@@ -5673,10 +5667,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 643,
+      "inMs": 320,
+      "totalMs": 384,
       "travel": 7.9,
       "edgeTravel": 7.7,
       "ownTravel": 7.9,
@@ -5720,10 +5714,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
-      "inMs": 355,
-      "totalMs": 402,
+      "start": 276,
+      "end": 620,
+      "inMs": 320,
+      "totalMs": 361,
       "travel": 8.1,
       "edgeTravel": 7.9,
       "ownTravel": 8.1,
@@ -5754,10 +5748,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
+      "start": 276,
+      "end": 643,
       "inMs": 320,
-      "totalMs": 402,
+      "totalMs": 384,
       "travel": 8.3,
       "edgeTravel": 7.9,
       "ownTravel": 8.3,
@@ -5801,10 +5795,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 798,
-      "end": 1184,
+      "start": 276,
+      "end": 643,
       "inMs": 320,
-      "totalMs": 402,
+      "totalMs": 384,
       "travel": 8.9,
       "edgeTravel": 8.7,
       "ownTravel": 8.9,
@@ -5846,7 +5840,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "798ms, at release",
+     "measured": "276ms",
      "limit": "at most 32ms"
     },
     {
@@ -5882,10 +5876,10 @@
    "call": "invisible",
    "callWhy": "it moves 8.5px and changes size by 8.4px",
    "sentences": [
-    "The first visible change comes 798ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 276ms after the finger lands, while the finger is still down.",
     "The div dropdown-menu[menu] moves 8.5px, shrinks to 0.98, fades from 0.58 to 1 over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "Also reacting: label (4px), svg icon (4px), text (4px), shortcut (4px).",
-    "The page dropped frames 4 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -5900,16 +5894,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4479.699999999255,
-    "pointerup": 4594.699999999255,
-    "click": 4629,
-    "fingerMs": 115,
-    "latency": 612,
+    "pointerdown": 4409.300000000745,
+    "pointerup": 4516.5999999996275,
+    "click": 4523.5,
+    "fingerMs": 107,
+    "latency": 537,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 10,
-    "frameMs": 16.8,
-    "frames": 66,
+    "droppedFrames": 3,
+    "frameMs": 16.7,
+    "frames": 74,
     "headline": {
      "id": 5,
      "desc": "div/panel[dialog]",
@@ -5921,17 +5915,17 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 612,
-     "end": 759,
-     "inMs": 131,
-     "totalMs": 164,
+     "start": 537,
+     "end": 596,
+     "inMs": 17,
+     "totalMs": 76,
      "travel": 4,
      "edgeTravel": 7.1,
      "ownTravel": 4,
      "sizeChange": 7.2,
      "scaleMin": 0.98,
      "scaleMax": 1,
-     "opacityMin": 0.57,
+     "opacityMin": 1,
      "opacityMax": 1,
      "colourDelta": 0,
      "fillDelta": 0,
@@ -5968,92 +5962,57 @@
       "desc": "div/backdrop",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 612,
-      "totalMs": 164
+      "start": 537,
+      "totalMs": 76
      },
      {
       "desc": "h2/title",
       "ownTravel": 9.7,
       "colourDelta": 0,
-      "start": 638,
-      "totalMs": 138
-     },
-     {
-      "desc": "button close-button/close",
-      "ownTravel": 6.4,
-      "colourDelta": 0,
-      "start": 612,
-      "totalMs": 164
-     },
-     {
-      "desc": "svg icon",
-      "ownTravel": 6.4,
-      "colourDelta": 0,
-      "start": 612,
-      "totalMs": 164
+      "start": 537,
+      "totalMs": 93
      },
      {
       "desc": "p/description",
       "ownTravel": 8.8,
       "colourDelta": 0,
-      "start": 638,
-      "totalMs": 190
-     },
-     {
-      "desc": "p",
-      "ownTravel": 7.7,
-      "colourDelta": 0,
-      "start": 638,
-      "totalMs": 138
-     },
-     {
-      "desc": "button button",
-      "ownTravel": 3.2,
-      "colourDelta": 0,
-      "start": 612,
-      "totalMs": 43
-     },
-     {
-      "desc": "span/label",
-      "ownTravel": 3.2,
-      "colourDelta": 0,
-      "start": 612,
-      "totalMs": 43
+      "start": 537,
+      "totalMs": 108
      }
     ],
     "cuts": [],
     "tooShortOrSmall": [
      {
       "desc": "button close-button/close",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "p",
-      "why": "finishes in 138ms"
+      "why": "finishes in 30ms"
      },
      {
       "desc": "div/footer",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "button button",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "span/label",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "button button",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      },
      {
       "desc": "span/label",
-      "why": "finishes in 131ms"
+      "why": "finishes in 17ms"
      }
     ],
     "tracks": [
@@ -6068,10 +6027,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 638,
-      "end": 812,
+      "start": 385,
+      "end": 613,
       "inMs": 17,
-      "totalMs": 190,
+      "totalMs": 245,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -6088,10 +6047,7 @@
       "shadowChanged": false,
       "areaMax": 4837,
       "cut": null,
-      "dropped": {
-       "at": 812,
-       "gapMs": 53
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -6105,10 +6061,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 638,
-      "end": 812,
+      "start": 385,
+      "end": 613,
       "inMs": 17,
-      "totalMs": 190,
+      "totalMs": 245,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -6125,10 +6081,7 @@
       "shadowChanged": false,
       "areaMax": 1751,
       "cut": null,
-      "dropped": {
-       "at": 812,
-       "gapMs": 53
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -6142,17 +6095,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 759,
-      "inMs": 43,
-      "totalMs": 164,
+      "start": 537,
+      "end": 596,
+      "inMs": 17,
+      "totalMs": 76,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6189,17 +6142,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 759,
-      "inMs": 131,
-      "totalMs": 164,
+      "start": 537,
+      "end": 596,
+      "inMs": 17,
+      "totalMs": 76,
       "travel": 4,
       "edgeTravel": 7.1,
       "ownTravel": 4,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6236,10 +6189,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 638,
-      "end": 759,
-      "inMs": 105,
-      "totalMs": 138,
+      "start": 537,
+      "end": 613,
+      "inMs": 17,
+      "totalMs": 93,
       "travel": 9.7,
       "edgeTravel": 10.6,
       "ownTravel": 9.7,
@@ -6293,17 +6246,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 759,
-      "inMs": 131,
-      "totalMs": 164,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 6.4,
       "edgeTravel": 6.6,
       "ownTravel": 6.4,
       "sizeChange": 0.6,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6327,17 +6280,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 759,
-      "inMs": 131,
-      "totalMs": 164,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 6.4,
       "edgeTravel": 6.5,
       "ownTravel": 6.4,
       "sizeChange": 0.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6361,17 +6314,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 638,
-      "end": 812,
-      "inMs": 138,
-      "totalMs": 190,
+      "start": 537,
+      "end": 628,
+      "inMs": 17,
+      "totalMs": 108,
       "travel": 8.8,
       "edgeTravel": 9.9,
       "ownTravel": 8.8,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.83,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6418,17 +6371,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 638,
-      "end": 759,
-      "inMs": 138,
-      "totalMs": 138,
+      "start": 537,
+      "end": 550,
+      "inMs": 30,
+      "totalMs": 30,
       "travel": 7.7,
       "edgeTravel": 8.8,
       "ownTravel": 7.7,
       "sizeChange": 6.6,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.51,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6452,17 +6405,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 759,
-      "inMs": 131,
-      "totalMs": 164,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 2.5,
       "edgeTravel": 4.7,
       "ownTravel": 2.5,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6486,17 +6439,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 638,
-      "inMs": 131,
-      "totalMs": 43,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 2.5,
       "edgeTravel": 3.1,
       "ownTravel": 2.5,
       "sizeChange": 2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6520,17 +6473,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 638,
-      "inMs": 131,
-      "totalMs": 43,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 2.5,
       "edgeTravel": 2.8,
       "ownTravel": 2.5,
       "sizeChange": 1.4,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6554,17 +6507,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 638,
-      "inMs": 131,
-      "totalMs": 43,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 3.2,
       "edgeTravel": 2.9,
       "ownTravel": 3.2,
       "sizeChange": 2.4,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6588,17 +6541,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 612,
-      "end": 638,
-      "inMs": 131,
-      "totalMs": 43,
+      "start": 537,
+      "end": 537,
+      "inMs": 17,
+      "totalMs": 17,
       "travel": 3.2,
       "edgeTravel": 2.9,
       "ownTravel": 3.2,
       "sizeChange": 1.8,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6620,7 +6573,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "612ms, at release",
+     "measured": "537ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -6641,14 +6594,14 @@
      "id": "secondary",
      "label": "A second element reacts",
      "pass": true,
-     "measured": "div/backdrop, h2/title, button close-button/close",
+     "measured": "div/backdrop, h2/title, p/description",
      "limit": "at least one"
     },
     {
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "button close-button/close finishes in 131ms; svg icon finishes in 131ms; p finishes in 138ms; div/footer finishes in 131ms",
+     "measured": "button close-button/close finishes in 17ms; svg icon finishes in 17ms; p finishes in 30ms; div/footer finishes in 17ms",
      "limit": "no change under 150ms or under 3px"
     }
    ],
@@ -6656,10 +6609,10 @@
    "call": "invisible",
    "callWhy": "it moves 4px and changes size by 7.2px",
    "sentences": [
-    "The first visible change comes 612ms after the finger lands, when the finger lifts.",
-    "The panel moves 4px, shrinks to 0.98, fades from 0.57 to 1 over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
-    "Also reacting: backdrop (fade), title (9.7px), close (6.4px), svg icon (6.4px).",
-    "The page dropped frames 10 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The first visible change comes 537ms after the finger lands, when the finger lifts.",
+    "The panel moves 4px, shrinks to 0.98 over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
+    "Also reacting: backdrop (fade), title (9.7px), description (8.8px).",
+    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -6674,16 +6627,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3471.7000000011176,
-    "pointerup": 3509.300000000745,
-    "click": 3516.300000000745,
-    "fingerMs": 38,
-    "latency": 414,
+    "pointerdown": 3511.4000000003725,
+    "pointerup": 3610.9000000003725,
+    "click": 3638.4000000003725,
+    "fingerMs": 100,
+    "latency": 326,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 5,
+    "droppedFrames": 3,
     "frameMs": 16.7,
-    "frames": 57,
+    "frames": 84,
     "headline": {
      "id": 5,
      "desc": "div/panel[alertdialog]",
@@ -6695,17 +6648,17 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 414,
-     "end": 750,
-     "inMs": 193,
-     "totalMs": 352,
+     "start": 326,
+     "end": 486,
+     "inMs": 129,
+     "totalMs": 176,
      "travel": 4,
      "edgeTravel": 7.1,
      "ownTravel": 4,
      "sizeChange": 7.2,
      "scaleMin": 0.98,
      "scaleMax": 1,
-     "opacityMin": 0.57,
+     "opacityMin": 0.9,
      "opacityMax": 1,
      "colourDelta": 0,
      "fillDelta": 0,
@@ -6742,61 +6695,77 @@
       "desc": "div/backdrop",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 414,
-      "totalMs": 352
+      "start": 326,
+      "totalMs": 176
      },
      {
       "desc": "span/icon",
       "ownTravel": 6.1,
       "colourDelta": 0,
-      "start": 447,
-      "totalMs": 320
+      "start": 326,
+      "totalMs": 217
      },
      {
       "desc": "svg icon",
       "ownTravel": 6.1,
       "colourDelta": 0,
-      "start": 447,
-      "totalMs": 160
+      "start": 326,
+      "totalMs": 176
      },
      {
       "desc": "h2/title",
       "ownTravel": 8.5,
       "colourDelta": 0,
-      "start": 447,
-      "totalMs": 320
+      "start": 326,
+      "totalMs": 217
      },
      {
       "desc": "p/description",
       "ownTravel": 7.6,
       "colourDelta": 0,
-      "start": 447,
-      "totalMs": 320
+      "start": 354,
+      "totalMs": 323
      },
      {
       "desc": "button button/action",
       "ownTravel": 3.2,
       "colourDelta": 0,
-      "start": 414,
-      "totalMs": 193
+      "start": 326,
+      "totalMs": 65
      },
      {
       "desc": "span/label",
       "ownTravel": 3.2,
       "colourDelta": 0,
-      "start": 414,
-      "totalMs": 193
+      "start": 326,
+      "totalMs": 65
      }
     ],
     "cuts": [],
     "tooShortOrSmall": [
      {
+      "desc": "svg icon",
+      "why": "finishes in 129ms"
+     },
+     {
+      "desc": "div/footer",
+      "why": "finishes in 129ms"
+     },
+     {
       "desc": "button button/cancel",
-      "why": "moves only 2.4px"
+      "why": "finishes in 129ms"
      },
      {
       "desc": "span/label",
-      "why": "moves only 2.4px"
+      "why": "finishes in 129ms"
+     },
+     {
+      "desc": "button button/action",
+      "why": "finishes in 129ms"
+     },
+     {
+      "desc": "span/label",
+      "why": "finishes in 129ms"
      }
     ],
     "tracks": [
@@ -6811,10 +6780,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 809,
+      "start": 326,
+      "end": 527,
       "inMs": 17,
-      "totalMs": 411,
+      "totalMs": 217,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -6831,10 +6800,7 @@
       "shadowChanged": false,
       "areaMax": 6193,
       "cut": null,
-      "dropped": {
-       "at": 809,
-       "gapMs": 59
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -6848,10 +6814,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 809,
+      "start": 326,
+      "end": 527,
       "inMs": 17,
-      "totalMs": 411,
+      "totalMs": 217,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -6868,10 +6834,7 @@
       "shadowChanged": false,
       "areaMax": 2384,
       "cut": null,
-      "dropped": {
-       "at": 809,
-       "gapMs": 59
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -6885,17 +6848,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 750,
-      "inMs": 49,
-      "totalMs": 352,
+      "start": 326,
+      "end": 486,
+      "inMs": 44,
+      "totalMs": 176,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6932,17 +6895,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 750,
-      "inMs": 193,
-      "totalMs": 352,
+      "start": 326,
+      "end": 486,
+      "inMs": 129,
+      "totalMs": 176,
       "travel": 4,
       "edgeTravel": 7.1,
       "ownTravel": 4,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -6979,17 +6942,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 447,
-      "end": 750,
-      "inMs": 160,
-      "totalMs": 320,
+      "start": 326,
+      "end": 527,
+      "inMs": 129,
+      "totalMs": 217,
       "travel": 6.1,
       "edgeTravel": 23.2,
       "ownTravel": 6.1,
       "sizeChange": 24.5,
       "scaleMin": 0.49,
       "scaleMax": 1,
-      "opacityMin": 0.81,
+      "opacityMin": 0.29,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7026,17 +6989,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 447,
-      "end": 590,
-      "inMs": 160,
-      "totalMs": 160,
+      "start": 326,
+      "end": 486,
+      "inMs": 129,
+      "totalMs": 176,
       "travel": 6.1,
       "edgeTravel": 14.6,
       "ownTravel": 6.1,
       "sizeChange": 12.2,
       "scaleMin": 0.49,
       "scaleMax": 1,
-      "opacityMin": 0.81,
+      "opacityMin": 0.29,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7060,17 +7023,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 447,
-      "end": 750,
-      "inMs": 160,
-      "totalMs": 320,
+      "start": 326,
+      "end": 527,
+      "inMs": 129,
+      "totalMs": 217,
       "travel": 8.5,
       "edgeTravel": 9.5,
       "ownTravel": 8.5,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.47,
+      "opacityMin": 0.17,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7117,10 +7080,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 447,
-      "end": 750,
-      "inMs": 160,
-      "totalMs": 320,
+      "start": 354,
+      "end": 660,
+      "inMs": 101,
+      "totalMs": 323,
       "travel": 7.6,
       "edgeTravel": 9,
       "ownTravel": 7.6,
@@ -7174,17 +7137,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 590,
-      "inMs": 193,
-      "totalMs": 193,
+      "start": 326,
+      "end": 438,
+      "inMs": 129,
+      "totalMs": 129,
       "travel": 2.4,
       "edgeTravel": 4.7,
       "ownTravel": 2.4,
       "sizeChange": 7.2,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7208,17 +7171,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 590,
-      "inMs": 193,
-      "totalMs": 193,
+      "start": 326,
+      "end": 375,
+      "inMs": 129,
+      "totalMs": 65,
       "travel": 2.4,
       "edgeTravel": 3.1,
       "ownTravel": 2.4,
       "sizeChange": 2.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7242,17 +7205,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 590,
-      "inMs": 193,
-      "totalMs": 193,
+      "start": 326,
+      "end": 375,
+      "inMs": 129,
+      "totalMs": 65,
       "travel": 2.4,
       "edgeTravel": 2.8,
       "ownTravel": 2.4,
       "sizeChange": 1.7,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7276,17 +7239,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 590,
-      "inMs": 193,
-      "totalMs": 193,
+      "start": 326,
+      "end": 375,
+      "inMs": 129,
+      "totalMs": 65,
       "travel": 3.2,
       "edgeTravel": 3,
       "ownTravel": 3.2,
       "sizeChange": 2.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7310,17 +7273,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 414,
-      "end": 590,
-      "inMs": 193,
-      "totalMs": 193,
+      "start": 326,
+      "end": 375,
+      "inMs": 129,
+      "totalMs": 65,
       "travel": 3.2,
       "edgeTravel": 2.9,
       "ownTravel": 3.2,
       "sizeChange": 1.7,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.57,
+      "opacityMin": 0.9,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7342,7 +7305,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "414ms, at release",
+     "measured": "326ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -7370,7 +7333,7 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "button button/cancel moves only 2.4px; span/label moves only 2.4px",
+     "measured": "svg icon finishes in 129ms; div/footer finishes in 129ms; button button/cancel finishes in 129ms; span/label finishes in 129ms",
      "limit": "no change under 150ms or under 3px"
     }
    ],
@@ -7378,10 +7341,10 @@
    "call": "invisible",
    "callWhy": "it moves 4px and changes size by 7.2px",
    "sentences": [
-    "The first visible change comes 414ms after the finger lands, when the finger lifts.",
-    "The panel moves 4px, shrinks to 0.98, fades from 0.57 to 1 over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
+    "The first visible change comes 326ms after the finger lands, when the finger lifts.",
+    "The panel moves 4px, shrinks to 0.98 over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
     "Also reacting: backdrop (fade), icon (6.1px), svg icon (6.1px), title (8.5px).",
-    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -7396,16 +7359,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3618,
-    "pointerup": 3831.2999999988824,
-    "click": 3846.0999999996275,
-    "fingerMs": 213,
-    "latency": 847,
+    "pointerdown": 5132.200000001118,
+    "pointerup": 5248.0999999996275,
+    "click": 5257.5999999996275,
+    "fingerMs": 116,
+    "latency": 369,
     "startsAtRelease": true,
     "afterClick": false,
     "droppedFrames": 3,
     "frameMs": 16.7,
-    "frames": 86,
+    "frames": 77,
     "headline": {
      "id": 5,
      "desc": "div/panel[dialog]",
@@ -7417,10 +7380,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 847,
-     "end": 1038,
-     "inMs": 116,
-     "totalMs": 208,
+     "start": 369,
+     "end": 581,
+     "inMs": 89,
+     "totalMs": 229,
      "travel": 236.8,
      "edgeTravel": 236.8,
      "ownTravel": 236.8,
@@ -7464,149 +7427,149 @@
       "desc": "div/backdrop",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 847,
-      "totalMs": 208
+      "start": 369,
+      "totalMs": 229
      },
      {
       "desc": "span/handle-bar",
       "ownTravel": 236.8,
       "colourDelta": 0,
-      "start": 847,
-      "totalMs": 208
+      "start": 369,
+      "totalMs": 229
      },
      {
       "desc": "div/header",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 860,
-      "totalMs": 232
+      "start": 403,
+      "totalMs": 195
      },
      {
       "desc": "h2/title",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 860,
+      "start": 403,
       "totalMs": 195
      },
      {
       "desc": "p/description",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 860,
+      "start": 403,
       "totalMs": 195
      },
      {
       "desc": "button close-button/close",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 860,
+      "start": 403,
       "totalMs": 195
      },
      {
       "desc": "svg icon",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 860,
+      "start": 403,
       "totalMs": 195
      },
      {
       "desc": "label label/label",
       "ownTravel": 240.8,
       "colourDelta": 23.9,
-      "start": 901,
-      "totalMs": 154
+      "start": 403,
+      "totalMs": 195
      },
      {
       "desc": "div input",
       "ownTravel": 236.8,
       "colourDelta": 20.7,
-      "start": 901,
-      "totalMs": 154
+      "start": 403,
+      "totalMs": 195
      },
      {
       "desc": "input/control",
       "ownTravel": 236.8,
       "colourDelta": 0,
-      "start": 901,
-      "totalMs": 154
+      "start": 403,
+      "totalMs": 195
      },
      {
       "desc": "div/footer",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 934,
-      "totalMs": 217
+      "start": 424,
+      "totalMs": 249
      },
      {
       "desc": "button button",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 934,
-      "totalMs": 121
+      "start": 424,
+      "totalMs": 174
      },
      {
       "desc": "span/label",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 934,
-      "totalMs": 121
+      "start": 424,
+      "totalMs": 174
      },
      {
       "desc": "button button",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 934,
-      "totalMs": 121
+      "start": 424,
+      "totalMs": 174
      },
      {
       "desc": "span/label",
       "ownTravel": 240.8,
       "colourDelta": 0,
-      "start": 934,
-      "totalMs": 121
+      "start": 424,
+      "totalMs": 174
      }
     ],
     "cuts": [],
     "tooShortOrSmall": [
      {
       "desc": "span/handle-bar",
-      "why": "finishes in 116ms"
+      "why": "finishes in 89ms"
      },
      {
       "desc": "h2/title",
-      "why": "finishes in 104ms"
+      "why": "finishes in 55ms"
      },
      {
       "desc": "p/description",
-      "why": "finishes in 104ms"
+      "why": "finishes in 55ms"
      },
      {
       "desc": "button close-button/close",
-      "why": "finishes in 104ms"
+      "why": "finishes in 55ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 104ms"
+      "why": "finishes in 55ms"
      },
      {
       "desc": "input/control",
-      "why": "finishes in 62ms"
+      "why": "finishes in 55ms"
      },
      {
       "desc": "button button",
-      "why": "finishes in 89ms"
+      "why": "finishes in 149ms"
      },
      {
       "desc": "span/label",
-      "why": "finishes in 89ms"
+      "why": "finishes in 149ms"
      },
      {
       "desc": "button button",
-      "why": "finishes in 89ms"
+      "why": "finishes in 149ms"
      },
      {
       "desc": "span/label",
-      "why": "finishes in 89ms"
+      "why": "finishes in 149ms"
      }
     ],
     "tracks": [
@@ -7621,10 +7584,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 847,
-      "end": 1064,
+      "start": 369,
+      "end": 620,
       "inMs": 17,
-      "totalMs": 234,
+      "totalMs": 267,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -7655,10 +7618,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 847,
-      "end": 1064,
+      "start": 369,
+      "end": 620,
       "inMs": 17,
-      "totalMs": 234,
+      "totalMs": 267,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -7689,10 +7652,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 847,
-      "end": 1038,
-      "inMs": 71,
-      "totalMs": 208,
+      "start": 369,
+      "end": 581,
+      "inMs": 50,
+      "totalMs": 229,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -7736,10 +7699,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 847,
-      "end": 1038,
-      "inMs": 116,
-      "totalMs": 208,
+      "start": 369,
+      "end": 581,
+      "inMs": 89,
+      "totalMs": 229,
       "travel": 236.8,
       "edgeTravel": 236.8,
       "ownTravel": 236.8,
@@ -7783,10 +7746,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 847,
-      "end": 1038,
-      "inMs": 116,
-      "totalMs": 208,
+      "start": 369,
+      "end": 581,
+      "inMs": 89,
+      "totalMs": 229,
       "travel": 236.8,
       "edgeTravel": 236.8,
       "ownTravel": 236.8,
@@ -7817,17 +7780,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 860,
-      "end": 1075,
-      "inMs": 104,
-      "totalMs": 232,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
+      "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.19,
+      "opacityMin": 0.72,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7874,9 +7837,9 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 860,
-      "end": 1038,
-      "inMs": 104,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
       "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
@@ -7884,7 +7847,7 @@
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.19,
+      "opacityMin": 0.72,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7908,9 +7871,9 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 860,
-      "end": 1038,
-      "inMs": 104,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
       "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
@@ -7918,7 +7881,7 @@
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.19,
+      "opacityMin": 0.72,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7942,9 +7905,9 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 860,
-      "end": 1038,
-      "inMs": 104,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
       "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
@@ -7952,7 +7915,7 @@
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.19,
+      "opacityMin": 0.72,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -7976,9 +7939,9 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 860,
-      "end": 1038,
-      "inMs": 104,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
       "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
@@ -7986,7 +7949,7 @@
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.19,
+      "opacityMin": 0.72,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8010,10 +7973,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 901,
-      "end": 1038,
-      "inMs": 62,
-      "totalMs": 154,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
+      "totalMs": 195,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8067,10 +8030,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 901,
-      "end": 1038,
-      "inMs": 62,
-      "totalMs": 154,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
+      "totalMs": 195,
       "travel": 236.8,
       "edgeTravel": 236.8,
       "ownTravel": 236.8,
@@ -8179,10 +8142,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 901,
-      "end": 1038,
-      "inMs": 62,
-      "totalMs": 154,
+      "start": 403,
+      "end": 581,
+      "inMs": 55,
+      "totalMs": 195,
       "travel": 236.8,
       "edgeTravel": 236.8,
       "ownTravel": 236.8,
@@ -8213,10 +8176,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 934,
-      "end": 1134,
-      "inMs": 89,
-      "totalMs": 217,
+      "start": 424,
+      "end": 656,
+      "inMs": 149,
+      "totalMs": 249,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8270,10 +8233,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 934,
-      "end": 1038,
-      "inMs": 89,
-      "totalMs": 121,
+      "start": 424,
+      "end": 581,
+      "inMs": 149,
+      "totalMs": 174,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8304,10 +8267,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 934,
-      "end": 1038,
-      "inMs": 89,
-      "totalMs": 121,
+      "start": 424,
+      "end": 581,
+      "inMs": 149,
+      "totalMs": 174,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8338,10 +8301,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 934,
-      "end": 1038,
-      "inMs": 89,
-      "totalMs": 121,
+      "start": 424,
+      "end": 581,
+      "inMs": 149,
+      "totalMs": 174,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8372,10 +8335,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 934,
-      "end": 1038,
-      "inMs": 89,
-      "totalMs": 121,
+      "start": 424,
+      "end": 581,
+      "inMs": 149,
+      "totalMs": 174,
       "travel": 240.8,
       "edgeTravel": 240.8,
       "ownTravel": 240.8,
@@ -8404,7 +8367,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "847ms, at release",
+     "measured": "369ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -8432,7 +8395,7 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "span/handle-bar finishes in 116ms; h2/title finishes in 104ms; p/description finishes in 104ms; button close-button/close finishes in 104ms",
+     "measured": "span/handle-bar finishes in 89ms; h2/title finishes in 55ms; p/description finishes in 55ms; button close-button/close finishes in 55ms",
      "limit": "no change under 150ms or under 3px"
     }
    ],
@@ -8440,7 +8403,7 @@
    "call": "fine",
    "callWhy": "the headline moves 236.8px over 200ms",
    "sentences": [
-    "The first visible change comes 847ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 369ms after the finger lands, when the finger lifts.",
     "The panel moves 236.8px over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
     "Also reacting: backdrop (fade), handle-bar (236.8px), header (240.8px), title (240.8px).",
     "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
@@ -8458,14 +8421,14 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3285.300000000745,
-    "pointerup": 3383.7000000011176,
-    "click": 3468.60000000149,
-    "fingerMs": 98,
-    "latency": 533,
+    "pointerdown": 5602.700000001118,
+    "pointerup": 5719.0999999996275,
+    "click": 5736.700000001118,
+    "fingerMs": 116,
+    "latency": 217,
     "startsAtRelease": true,
     "afterClick": true,
-    "droppedFrames": 5,
+    "droppedFrames": 3,
     "frameMs": 16.7,
     "frames": 77,
     "headline": {
@@ -8479,17 +8442,17 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 533,
-     "end": 596,
-     "inMs": 63,
-     "totalMs": 79,
+     "start": 217,
+     "end": 413,
+     "inMs": 117,
+     "totalMs": 213,
      "travel": 39.7,
      "edgeTravel": 40.2,
      "ownTravel": 39.7,
      "sizeChange": 7.6,
      "scaleMin": 0.98,
      "scaleMax": 1,
-     "opacityMin": 0.92,
+     "opacityMin": 0.61,
      "opacityMax": 1,
      "colourDelta": 0,
      "fillDelta": 0,
@@ -8526,139 +8489,65 @@
       "desc": "span/icon",
       "ownTravel": 39.8,
       "colourDelta": 0,
-      "start": 533,
-      "totalMs": 113
+      "start": 229,
+      "totalMs": 217
      },
      {
       "desc": "svg icon",
       "ownTravel": 39.8,
       "colourDelta": 0,
-      "start": 533,
-      "totalMs": 79
+      "start": 229,
+      "totalMs": 183
      },
      {
       "desc": "div/title",
       "ownTravel": 39.7,
       "colourDelta": 0,
-      "start": 533,
-      "totalMs": 79
+      "start": 217,
+      "totalMs": 195
      },
      {
       "desc": "button close-button/close",
       "ownTravel": 39.8,
       "colourDelta": 0,
-      "start": 533,
-      "totalMs": 79
+      "start": 217,
+      "totalMs": 195
      },
      {
       "desc": "svg icon",
       "ownTravel": 39.8,
       "colourDelta": 0,
-      "start": 533,
-      "totalMs": 79
+      "start": 217,
+      "totalMs": 195
      },
      {
       "desc": "span/progress",
-      "ownTravel": 68.4,
+      "ownTravel": 63,
       "colourDelta": 0,
-      "start": 579,
-      "totalMs": 1099
+      "start": 246,
+      "totalMs": 1086
      }
     ],
     "cuts": [],
     "tooShortOrSmall": [
      {
       "desc": "svg icon",
-      "why": "finishes in 63ms"
+      "why": "finishes in 116ms"
      },
      {
       "desc": "div/title",
-      "why": "finishes in 63ms"
+      "why": "finishes in 117ms"
      },
      {
       "desc": "button close-button/close",
-      "why": "finishes in 63ms"
+      "why": "finishes in 117ms"
      },
      {
       "desc": "svg icon",
-      "why": "finishes in 63ms"
+      "why": "finishes in 117ms"
      }
     ],
     "tracks": [
-     {
-      "id": 1,
-      "desc": "button button",
-      "part": null,
-      "group": "root",
-      "parent": null,
-      "merged": [],
-      "existedBefore": true,
-      "existsAtEnd": true,
-      "preMoving": false,
-      "changed": true,
-      "start": 533,
-      "end": 579,
-      "inMs": 17,
-      "totalMs": 63,
-      "travel": 0,
-      "edgeTravel": 0,
-      "ownTravel": 0,
-      "sizeChange": 0,
-      "scaleMin": 1,
-      "scaleMax": 1,
-      "opacityMin": 1,
-      "opacityMax": 1,
-      "colourDelta": 4.6,
-      "fillDelta": 3.3,
-      "ownStyleChanged": true,
-      "clipChanged": false,
-      "filterChanged": false,
-      "shadowChanged": false,
-      "areaMax": 5580,
-      "cut": null,
-      "dropped": {
-       "at": 533,
-       "gapMs": 140
-      },
-      "animations": []
-     },
-     {
-      "id": 2,
-      "desc": "span/label",
-      "part": "label",
-      "group": "root",
-      "parent": 1,
-      "merged": [],
-      "existedBefore": true,
-      "existsAtEnd": true,
-      "preMoving": false,
-      "changed": true,
-      "start": 533,
-      "end": 579,
-      "inMs": 17,
-      "totalMs": 63,
-      "travel": 0,
-      "edgeTravel": 0,
-      "ownTravel": 0,
-      "sizeChange": 0,
-      "scaleMin": 1,
-      "scaleMax": 1,
-      "opacityMin": 1,
-      "opacityMax": 1,
-      "colourDelta": 4.6,
-      "fillDelta": 0,
-      "ownStyleChanged": true,
-      "clipChanged": false,
-      "filterChanged": false,
-      "shadowChanged": false,
-      "areaMax": 2098,
-      "cut": null,
-      "dropped": {
-       "at": 533,
-       "gapMs": 140
-      },
-      "animations": []
-     },
      {
       "id": 3,
       "desc": "li toast",
@@ -8670,17 +8559,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 596,
-      "inMs": 63,
-      "totalMs": 79,
+      "start": 217,
+      "end": 413,
+      "inMs": 117,
+      "totalMs": 213,
       "travel": 39.7,
       "edgeTravel": 40.2,
       "ownTravel": 39.7,
       "sizeChange": 7.6,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.92,
+      "opacityMin": 0.61,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8717,10 +8606,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 630,
-      "inMs": 63,
-      "totalMs": 113,
+      "start": 229,
+      "end": 429,
+      "inMs": 116,
+      "totalMs": 217,
       "travel": 39.8,
       "edgeTravel": 44.4,
       "ownTravel": 39.8,
@@ -8764,10 +8653,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 596,
-      "inMs": 63,
-      "totalMs": 79,
+      "start": 229,
+      "end": 395,
+      "inMs": 116,
+      "totalMs": 183,
       "travel": 39.8,
       "edgeTravel": 44.4,
       "ownTravel": 39.8,
@@ -8798,17 +8687,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 596,
-      "inMs": 63,
-      "totalMs": 79,
+      "start": 217,
+      "end": 395,
+      "inMs": 117,
+      "totalMs": 195,
       "travel": 39.7,
       "edgeTravel": 40,
       "ownTravel": 39.7,
       "sizeChange": 5.8,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.92,
+      "opacityMin": 0.61,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8832,17 +8721,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 596,
-      "inMs": 63,
-      "totalMs": 79,
+      "start": 217,
+      "end": 395,
+      "inMs": 117,
+      "totalMs": 195,
       "travel": 39.8,
       "edgeTravel": 40.1,
       "ownTravel": 39.8,
       "sizeChange": 0.6,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.92,
+      "opacityMin": 0.61,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8866,17 +8755,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 533,
-      "end": 596,
-      "inMs": 63,
-      "totalMs": 79,
+      "start": 217,
+      "end": 395,
+      "inMs": 117,
+      "totalMs": 195,
       "travel": 39.8,
       "edgeTravel": 39.9,
       "ownTravel": 39.8,
       "sizeChange": 0.3,
       "scaleMin": 0.98,
       "scaleMax": 1,
-      "opacityMin": 0.92,
+      "opacityMin": 0.61,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8900,17 +8789,17 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 579,
-      "end": 1661,
-      "inMs": 987,
-      "totalMs": 1099,
-      "travel": 68.4,
+      "start": 246,
+      "end": 1315,
+      "inMs": 984,
+      "totalMs": 1086,
+      "travel": 63,
       "edgeTravel": 39.5,
-      "ownTravel": 68.4,
-      "sizeChange": 105,
+      "ownTravel": 63,
+      "sizeChange": 91.5,
       "scaleMin": 1,
-      "scaleMax": 1.462,
-      "opacityMin": 1,
+      "scaleMax": 1.365,
+      "opacityMin": 0.99,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -8918,7 +8807,7 @@
       "clipChanged": false,
       "filterChanged": false,
       "shadowChanged": false,
-      "areaMax": 327,
+      "areaMax": 340,
       "cut": null,
       "dropped": null,
       "animations": [
@@ -8929,7 +8818,7 @@
          "transform"
         ],
         "duration": 4000,
-        "delay": -156,
+        "delay": -41,
         "easing": "linear",
         "keyEasing": "linear"
        }
@@ -8944,7 +8833,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "533ms, at release",
+     "measured": "217ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -8972,7 +8861,7 @@
      "id": "meaning",
      "label": "Nothing that carries meaning is too fast or too small",
      "pass": false,
-     "measured": "svg icon finishes in 63ms; div/title finishes in 63ms; button close-button/close finishes in 63ms; svg icon finishes in 63ms",
+     "measured": "svg icon finishes in 116ms; div/title finishes in 117ms; button close-button/close finishes in 117ms; svg icon finishes in 117ms",
      "limit": "no change under 150ms or under 3px"
     }
    ],
@@ -8980,10 +8869,10 @@
    "call": "fine",
    "callWhy": "the headline moves 39.7px over 200ms",
    "sentences": [
-    "The first visible change comes 533ms after the finger lands, when the finger lifts, after the click.",
-    "The li toast moves 39.7px, shrinks to 0.98 over 200ms (linear(0 0%, 0.054 5%, 0.172 10%, 0.3...).",
+    "The first visible change comes 217ms after the finger lands, when the finger lifts, after the click.",
+    "The li toast moves 39.7px, shrinks to 0.98, fades from 0.61 to 1 over 200ms (linear(0 0%, 0.054 5%, 0.172 10%, 0.3...).",
     "Also reacting: icon (39.8px), svg icon (39.8px), title (39.7px), close (39.8px).",
-    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -8998,16 +8887,16 @@
    "gesture": "long-press",
    "holdMs": 900,
    "measured": {
-    "pointerdown": 4096.5999999996275,
-    "pointerup": 4990.5,
-    "click": 5000.5999999996275,
-    "fingerMs": 894,
-    "latency": 564,
+    "pointerdown": 4646.60000000149,
+    "pointerup": 5573.800000000745,
+    "click": 5586.700000001118,
+    "fingerMs": 927,
+    "latency": 541,
     "startsAtRelease": false,
     "afterClick": false,
-    "droppedFrames": 4,
+    "droppedFrames": 5,
     "frameMs": 16.7,
-    "frames": 98,
+    "frames": 109,
     "headline": {
      "id": 4,
      "desc": "div tooltip[tooltip]",
@@ -9019,17 +8908,17 @@
      "existsAtEnd": false,
      "preMoving": false,
      "changed": true,
-     "start": 564,
-     "end": 1140,
+     "start": 541,
+     "end": 1155,
      "inMs": 17,
-     "totalMs": 593,
+     "totalMs": 630,
      "travel": 0,
      "edgeTravel": 0,
      "ownTravel": 0,
      "sizeChange": 0,
      "scaleMin": 1,
      "scaleMax": 1,
-     "opacityMin": 0,
+     "opacityMin": 0.25,
      "opacityMax": 1,
      "colourDelta": 0,
      "fillDelta": 0,
@@ -9040,13 +8929,10 @@
      "areaMax": 4681,
      "cut": {
       "kind": "appear",
-      "at": 563.7000000003727,
+      "at": 541.3999999985099,
       "size": 68
      },
-     "dropped": {
-      "at": 564,
-      "gapMs": 67
-     },
+     "dropped": null,
      "animations": [
       {
        "type": "CSSAnimation",
@@ -9073,8 +8959,8 @@
       "desc": "button icon-button",
       "ownTravel": 0,
       "colourDelta": 15.6,
-      "start": 926,
-      "totalMs": 215
+      "start": 982,
+      "totalMs": 422
      }
     ],
     "cuts": [
@@ -9082,7 +8968,7 @@
       "desc": "div tooltip[tooltip]",
       "cut": {
        "kind": "appear",
-       "at": 563.7000000003727,
+       "at": 541.3999999985099,
        "size": 68
       }
      },
@@ -9090,7 +8976,7 @@
       "desc": "bdi",
       "cut": {
        "kind": "appear",
-       "at": 563.7000000003727,
+       "at": 541.3999999985099,
        "size": 26
       }
      }
@@ -9117,15 +9003,15 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 926,
-      "end": 1124,
+      "start": 982,
+      "end": 1388,
       "inMs": 17,
-      "totalMs": 215,
+      "totalMs": 422,
       "travel": 0,
-      "edgeTravel": 0.2,
+      "edgeTravel": 0.5,
       "ownTravel": 0,
-      "sizeChange": 0.3,
-      "scaleMin": 0.993,
+      "sizeChange": 0.7,
+      "scaleMin": 0.98,
       "scaleMax": 1,
       "opacityMin": 1,
       "opacityMax": 1,
@@ -9138,7 +9024,7 @@
       "areaMax": 1296,
       "cut": {
        "kind": "colour",
-       "at": 925.5000000003729,
+       "at": 982.2999999985095,
        "size": 16
       },
       "dropped": null,
@@ -9171,7 +9057,7 @@
         "props": [
          "transform"
         ],
-        "duration": 72.39121586785375,
+        "duration": 200,
         "delay": 0,
         "easing": "linear(0 0%, 0.054 5%, 0.172 10%, 0.307 15%, 0.439 20%, 0.556 25%, 0.654 30%, 0.734 35%, 0.798 40%, 0.848 45%, 0.886 50%, 0.915 55%, 0.937 60%, 0.954 65%, 0.966 70%, 0.975 75%, 0.982 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
         "keyEasing": "linear"
@@ -9182,7 +9068,7 @@
         "props": [
          "opacity"
         ],
-        "duration": 72.39121586785375,
+        "duration": 200,
         "delay": 0,
         "easing": "cubic-bezier(0, 0, 0.58, 1)",
         "keyEasing": "linear"
@@ -9200,15 +9086,15 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 926,
-      "end": 1091,
+      "start": 982,
+      "end": 1287,
       "inMs": 17,
-      "totalMs": 182,
-      "travel": 0.4,
-      "edgeTravel": 0.4,
-      "ownTravel": 0.4,
-      "sizeChange": 0.1,
-      "scaleMin": 0.993,
+      "totalMs": 321,
+      "travel": 1,
+      "edgeTravel": 1.2,
+      "ownTravel": 1,
+      "sizeChange": 0.3,
+      "scaleMin": 0.98,
       "scaleMax": 1,
       "opacityMin": 1,
       "opacityMax": 1,
@@ -9221,7 +9107,7 @@
       "areaMax": 256,
       "cut": {
        "kind": "colour",
-       "at": 925.5000000003729,
+       "at": 982.2999999985095,
        "size": 16
       },
       "dropped": null,
@@ -9238,17 +9124,17 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 564,
-      "end": 1140,
+      "start": 541,
+      "end": 1155,
       "inMs": 17,
-      "totalMs": 593,
+      "totalMs": 630,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0,
+      "opacityMin": 0.25,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -9259,13 +9145,10 @@
       "areaMax": 4681,
       "cut": {
        "kind": "appear",
-       "at": 563.7000000003727,
+       "at": 541.3999999985099,
        "size": 68
       },
-      "dropped": {
-       "at": 564,
-       "gapMs": 67
-      },
+      "dropped": null,
       "animations": [
        {
         "type": "CSSAnimation",
@@ -9292,17 +9175,17 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 564,
-      "end": 1124,
+      "start": 541,
+      "end": 1155,
       "inMs": 17,
-      "totalMs": 577,
+      "totalMs": 630,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.26,
+      "opacityMin": 0.25,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -9313,13 +9196,10 @@
       "areaMax": 702,
       "cut": {
        "kind": "appear",
-       "at": 563.7000000003727,
+       "at": 541.3999999985099,
        "size": 26
       },
-      "dropped": {
-       "at": 564,
-       "gapMs": 67
-      },
+      "dropped": null,
       "animations": []
      },
      {
@@ -9333,17 +9213,17 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 564,
-      "end": 1124,
+      "start": 541,
+      "end": 1155,
       "inMs": 17,
-      "totalMs": 577,
+      "totalMs": 630,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
       "sizeChange": 0,
       "scaleMin": 1,
       "scaleMax": 1,
-      "opacityMin": 0.26,
+      "opacityMin": 0.25,
       "opacityMax": 1,
       "colourDelta": 0,
       "fillDelta": 0,
@@ -9353,10 +9233,7 @@
       "shadowChanged": false,
       "areaMax": 72,
       "cut": null,
-      "dropped": {
-       "at": 564,
-       "gapMs": 67
-      },
+      "dropped": null,
       "animations": []
      }
     ],
@@ -9368,7 +9245,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "564ms",
+     "measured": "541ms",
      "limit": "at most 32ms"
     },
     {
@@ -9404,12 +9281,12 @@
    "call": "wrong",
    "callWhy": "div tooltip[tooltip] appears in one frame, with no entrance",
    "sentences": [
-    "The first visible change comes 564ms after the finger lands, while the finger is still down.",
-    "The div tooltip[tooltip] fades from 0 to 1 over 100ms (cubic-bezier(0.4, 0, 1, 1)).",
+    "The first visible change comes 541ms after the finger lands, while the finger is still down.",
+    "The div tooltip[tooltip] fades from 0.25 to 1 over 100ms (cubic-bezier(0.4, 0, 1, 1)).",
     "Also reacting: button icon-button (colour).",
     "The div tooltip[tooltip] appears in one frame.",
     "The bdi appears in one frame.",
-    "The page dropped frames 4 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -9424,16 +9301,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4061.300000000745,
-    "pointerup": 4114.300000000745,
-    "click": 4126,
-    "fingerMs": 53,
-    "latency": 93,
+    "pointerdown": 6670.700000001118,
+    "pointerup": 6769,
+    "click": 6778.9000000003725,
+    "fingerMs": 98,
+    "latency": 159,
     "startsAtRelease": true,
     "afterClick": false,
     "droppedFrames": 1,
     "frameMs": 16.6,
-    "frames": 80,
+    "frames": 90,
     "headline": {
      "id": 24,
      "desc": "div",
@@ -9445,9 +9322,9 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 93,
-     "end": 332,
-     "inMs": 108,
+     "start": 159,
+     "end": 398,
+     "inMs": 105,
      "totalMs": 255,
      "travel": 4,
      "edgeTravel": 4,
@@ -9492,15 +9369,15 @@
       "desc": "svg icon",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 116,
-      "totalMs": 224
+      "start": 200,
+      "totalMs": 148
      },
      {
       "desc": "svg icon",
-      "ownTravel": 0.4,
-      "colourDelta": 5.1,
-      "start": 93,
-      "totalMs": 307
+      "ownTravel": 2,
+      "colourDelta": 15.6,
+      "start": 159,
+      "totalMs": 438
      }
     ],
     "cuts": [
@@ -9508,7 +9385,7 @@
       "desc": "div",
       "cut": {
        "kind": "disappear",
-       "at": 93.39999999925476,
+       "at": 158.99999999888223,
        "size": 120
       }
      },
@@ -9516,7 +9393,7 @@
       "desc": "button button/trigger",
       "cut": {
        "kind": "jump",
-       "at": 93.39999999925476,
+       "at": 158.99999999888223,
        "size": 49
       }
      }
@@ -9543,16 +9420,16 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 116,
-      "end": 323,
-      "inMs": 17,
-      "totalMs": 224,
+      "start": 200,
+      "end": 331,
+      "inMs": 33,
+      "totalMs": 148,
       "travel": 0,
-      "edgeTravel": 4.4,
+      "edgeTravel": 4.3,
       "ownTravel": 0,
-      "sizeChange": 6.2,
+      "sizeChange": 6.1,
       "scaleMin": 1,
-      "scaleMax": 1.388,
+      "scaleMax": 1.383,
       "opacityMin": 1,
       "opacityMax": 1,
       "colourDelta": 0,
@@ -9561,7 +9438,7 @@
       "clipChanged": false,
       "filterChanged": false,
       "shadowChanged": false,
-      "areaMax": 493,
+      "areaMax": 490,
       "cut": null,
       "dropped": null,
       "animations": [
@@ -9589,8 +9466,8 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 93,
-      "end": 93,
+      "start": 159,
+      "end": 159,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -9610,10 +9487,13 @@
       "areaMax": 14345,
       "cut": {
        "kind": "disappear",
-       "at": 93.39999999925476,
+       "at": 158.99999999888223,
        "size": 120
       },
-      "dropped": null,
+      "dropped": {
+       "at": 159,
+       "gapMs": 63
+      },
       "animations": []
      },
      {
@@ -9627,8 +9507,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 93,
-      "end": 93,
+      "start": 159,
+      "end": 159,
       "inMs": 17,
       "totalMs": 17,
       "travel": 49,
@@ -9648,10 +9528,13 @@
       "areaMax": 13677,
       "cut": {
        "kind": "jump",
-       "at": 93.39999999925476,
+       "at": 158.99999999888223,
        "size": 49
       },
-      "dropped": null,
+      "dropped": {
+       "at": 159,
+       "gapMs": 63
+      },
       "animations": []
      },
      {
@@ -9665,8 +9548,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 93,
-      "end": 93,
+      "start": 159,
+      "end": 159,
       "inMs": 17,
       "totalMs": 17,
       "travel": 49,
@@ -9685,7 +9568,10 @@
       "shadowChanged": false,
       "areaMax": 5329,
       "cut": null,
-      "dropped": null,
+      "dropped": {
+       "at": 159,
+       "gapMs": 63
+      },
       "animations": []
      },
      {
@@ -9699,19 +9585,19 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 93,
-      "end": 383,
-      "inMs": 247,
-      "totalMs": 307,
-      "travel": 49.4,
+      "start": 159,
+      "end": 580,
+      "inMs": 339,
+      "totalMs": 438,
+      "travel": 51,
       "edgeTravel": 52.6,
-      "ownTravel": 0.4,
+      "ownTravel": 2,
       "sizeChange": 6.6,
       "scaleMin": 1,
       "scaleMax": 1.414,
       "opacityMin": 1,
       "opacityMax": 1,
-      "colourDelta": 5.1,
+      "colourDelta": 15.6,
       "fillDelta": 0,
       "ownStyleChanged": true,
       "clipChanged": false,
@@ -9760,7 +9646,7 @@
         "props": [
          "color"
         ],
-        "duration": 24.983959123760272,
+        "duration": 80,
         "delay": 0,
         "easing": "cubic-bezier(0.25, 0.1, 0.25, 1)",
         "keyEasing": "linear"
@@ -9771,7 +9657,7 @@
         "props": [
          "transform"
         ],
-        "duration": 29.517779998525157,
+        "duration": 158,
         "delay": 0,
         "easing": "linear(0 0%, 0.055 5%, 0.173 10%, 0.31 15%, 0.442 20%, 0.559 25%, 0.657 30%, 0.737 35%, 0.801 40%, 0.85 45%, 0.888 50%, 0.917 55%, 0.939 60%, 0.955 65%, 0.967 70%, 0.976 75%, 0.983 80%, 0.987 85%, 0.991 90%, 0.993 95%, 1 100%)",
         "keyEasing": "linear"
@@ -9789,9 +9675,9 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 93,
-      "end": 332,
-      "inMs": 108,
+      "start": 159,
+      "end": 398,
+      "inMs": 105,
       "totalMs": 255,
       "travel": 4,
       "edgeTravel": 4,
@@ -9829,7 +9715,7 @@
     "rootArea": 60805
    },
    "hold": {
-    "holdMs": 581,
+    "holdMs": 621,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -9839,7 +9725,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "93ms, at release",
+     "measured": "159ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -9872,7 +9758,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 581ms",
+     "label": "Press shows while the finger is held 621ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -9882,13 +9768,13 @@
    "call": "wrong",
    "callWhy": "div vanishes in one frame",
    "sentences": [
-    "The first visible change comes 93ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 159ms after the finger lands, when the finger lifts.",
     "The div moves 4px over 220ms (cubic-bezier(0.22, 1, 0.36, 1)).",
-    "Also reacting: svg icon (fade), svg icon (fade).",
+    "Also reacting: svg icon (fade), svg icon (colour).",
     "The div vanishes in one frame.",
     "The trigger jumps 49px in one frame.",
     "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 581ms, the press shows nothing while the finger is down."
+    "Held for 621ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -9903,16 +9789,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 5853,
-    "pointerup": 5943.5999999996275,
-    "click": 5950.0999999996275,
-    "fingerMs": 91,
-    "latency": 108,
+    "pointerdown": 4094.300000000745,
+    "pointerup": 4193.60000000149,
+    "click": 4202.4000000003725,
+    "fingerMs": 99,
+    "latency": 115,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 2,
+    "droppedFrames": 1,
     "frameMs": 16.7,
-    "frames": 84,
+    "frames": 82,
     "headline": {
      "id": 1,
      "desc": "div input",
@@ -9924,10 +9810,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 108,
-     "end": 275,
-     "inMs": 133,
-     "totalMs": 184,
+     "start": 115,
+     "end": 265,
+     "inMs": 132,
+     "totalMs": 166,
      "travel": 0,
      "edgeTravel": 0,
      "ownTravel": 0,
@@ -10046,10 +9932,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 108,
-      "end": 275,
-      "inMs": 133,
-      "totalMs": 184,
+      "start": 115,
+      "end": 265,
+      "inMs": 132,
+      "totalMs": 166,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -10156,7 +10042,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "108ms, at release",
+     "measured": "115ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -10192,10 +10078,10 @@
    "call": "invisible",
    "callWhy": "it moves 0px and changes size by 0px",
    "sentences": [
-    "The first visible change comes 108ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 115ms after the finger lands, when the finger lifts.",
     "The div input changes colour (Delta E 21) over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
     "Nothing else reacts.",
-    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -10210,16 +10096,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3653.800000000745,
-    "pointerup": 3734.4000000003725,
-    "click": 3788.699999999255,
-    "fingerMs": 81,
-    "latency": 142,
+    "pointerdown": 5055.9000000003725,
+    "pointerup": 5280.5999999996275,
+    "click": 5303,
+    "fingerMs": 225,
+    "latency": 248,
     "startsAtRelease": true,
     "afterClick": false,
-    "droppedFrames": 2,
+    "droppedFrames": 3,
     "frameMs": 16.7,
-    "frames": 85,
+    "frames": 86,
     "headline": {
      "id": 9,
      "desc": "span/label",
@@ -10277,15 +10163,15 @@
       "desc": "button copy-button",
       "ownTravel": 0,
       "colourDelta": 23,
-      "start": 142,
-      "totalMs": 255
+      "start": 248,
+      "totalMs": 266
      },
      {
       "desc": "svg icon",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 171,
-      "totalMs": 258
+      "start": 278,
+      "totalMs": 262
      }
     ],
     "cuts": [],
@@ -10315,10 +10201,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 142,
-      "end": 380,
+      "start": 248,
+      "end": 497,
       "inMs": 17,
-      "totalMs": 255,
+      "totalMs": 266,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -10336,7 +10222,7 @@
       "areaMax": 5632,
       "cut": {
        "kind": "colour",
-       "at": 141.69999999925494,
+       "at": 248.4999999996271,
        "size": 23
       },
       "dropped": null,
@@ -10376,10 +10262,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 196,
-      "end": 283,
+      "start": 307,
+      "end": 395,
       "inMs": null,
-      "totalMs": 103,
+      "totalMs": 104,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -10410,10 +10296,10 @@
       "existsAtEnd": false,
       "preMoving": false,
       "changed": true,
-      "start": 171,
-      "end": 262,
+      "start": 278,
+      "end": 377,
       "inMs": null,
-      "totalMs": 108,
+      "totalMs": 116,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -10467,8 +10353,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 212,
-      "end": 362,
+      "start": 323,
+      "end": 473,
       "inMs": 50,
       "totalMs": 167,
       "travel": 0,
@@ -10514,10 +10400,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 171,
-      "end": 412,
+      "start": 278,
+      "end": 523,
       "inMs": 17,
-      "totalMs": 258,
+      "totalMs": 262,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -10560,8 +10446,8 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 171,
-      "end": 171,
+      "start": 278,
+      "end": 278,
       "inMs": 17,
       "totalMs": 17,
       "travel": 0,
@@ -10587,7 +10473,7 @@
     "rootArea": 5632
    },
    "hold": {
-    "holdMs": 601,
+    "holdMs": 621,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -10597,7 +10483,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "142ms, at release",
+     "measured": "248ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -10630,7 +10516,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 601ms",
+     "label": "Press shows while the finger is held 621ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -10640,12 +10526,12 @@
    "call": "fine",
    "callWhy": "the headline changes fill over 182ms",
    "sentences": [
-    "The first visible change comes 142ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 248ms after the finger lands, when the finger lifts.",
     "The label does not change.",
     "The fill changes over 100 percent of the control.",
     "Also reacting: button copy-button (colour), svg icon (fade).",
-    "The page dropped frames 2 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 601ms, the press shows nothing while the finger is down."
+    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
+    "Held for 621ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -10660,16 +10546,16 @@
    "gesture": "drag",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 4062.0999999996275,
-    "pointerup": 5080.300000000745,
+    "pointerdown": 4423.10000000149,
+    "pointerup": 5231.10000000149,
     "click": null,
-    "fingerMs": 1018,
-    "latency": 268,
+    "fingerMs": 808,
+    "latency": 27,
     "startsAtRelease": false,
     "afterClick": false,
-    "droppedFrames": 5,
+    "droppedFrames": 3,
     "frameMs": 16.7,
-    "frames": 118,
+    "frames": 112,
     "headline": {
      "id": 9,
      "desc": "span/thumb[slider]",
@@ -10681,12 +10567,12 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 268,
-     "end": 1234,
-     "inMs": 896,
-     "totalMs": 983,
+     "start": 27,
+     "end": 1011,
+     "inMs": 919,
+     "totalMs": 1001,
      "travel": 49.8,
-     "edgeTravel": 51.7,
+     "edgeTravel": 51.6,
      "ownTravel": 49.8,
      "sizeChange": 3.6,
      "scaleMin": 1,
@@ -10701,7 +10587,10 @@
      "shadowChanged": false,
      "areaMax": 762,
      "cut": null,
-     "dropped": null,
+     "dropped": {
+      "at": 649,
+      "gapMs": 52
+     },
      "animations": [
       {
        "type": "CSSTransition",
@@ -10770,12 +10659,12 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 268,
-      "end": 1234,
-      "inMs": 896,
-      "totalMs": 983,
+      "start": 27,
+      "end": 1011,
+      "inMs": 919,
+      "totalMs": 1001,
       "travel": 49.8,
-      "edgeTravel": 51.7,
+      "edgeTravel": 51.6,
       "ownTravel": 49.8,
       "sizeChange": 3.6,
       "scaleMin": 1,
@@ -10790,7 +10679,10 @@
       "shadowChanged": false,
       "areaMax": 762,
       "cut": null,
-      "dropped": null,
+      "dropped": {
+       "at": 649,
+       "gapMs": 52
+      },
       "animations": [
        {
         "type": "CSSTransition",
@@ -10846,8 +10738,8 @@
     {
      "id": "latency",
      "label": "First visible change after the finger lands",
-     "pass": false,
-     "measured": "268ms",
+     "pass": true,
+     "measured": "27ms",
      "limit": "at most 32ms"
     },
     {
@@ -10874,12 +10766,12 @@
    ],
    "pass": false,
    "call": "fine",
-   "callWhy": "the headline moves 49.8px over 983ms",
+   "callWhy": "the headline moves 49.8px over 1001ms",
    "sentences": [
-    "The first visible change comes 268ms after the finger lands, while the finger is still down.",
+    "The first visible change comes 27ms after the finger lands, while the finger is still down.",
     "The thumb moves 49.8px, grows to 1.15 over 200ms (linear(0 0%, 0.054 5%, 0.172 10%, 0.3...).",
     "Nothing else reacts.",
-    "The page dropped frames 5 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
+    "The page dropped frames 3 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine."
    ]
   },
   {
@@ -10894,16 +10786,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3133.4000000003725,
-    "pointerup": 3249.199999999255,
-    "click": 3253.5,
-    "fingerMs": 116,
-    "latency": 137,
+    "pointerdown": 4437.799999998882,
+    "pointerup": 4585.89999999851,
+    "click": 4589.89999999851,
+    "fingerMs": 148,
+    "latency": 165,
     "startsAtRelease": true,
     "afterClick": false,
     "droppedFrames": 1,
     "frameMs": 16.7,
-    "frames": 87,
+    "frames": 85,
     "headline": {
      "id": 2,
      "desc": "span/label",
@@ -10915,10 +10807,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 137,
-     "end": 298,
-     "inMs": 95,
-     "totalMs": 178,
+     "start": 165,
+     "end": 332,
+     "inMs": 100,
+     "totalMs": 183,
      "travel": 20.1,
      "edgeTravel": 20,
      "ownTravel": 20.1,
@@ -10936,7 +10828,7 @@
      "areaMax": 682,
      "cut": {
       "kind": "colour",
-      "at": 136.59999999962747,
+      "at": 165.00000000111777,
       "size": 78
      },
      "dropped": null,
@@ -10965,8 +10857,8 @@
       "desc": "svg icon",
       "ownTravel": 0,
       "colourDelta": 0,
-      "start": 137,
-      "totalMs": 228
+      "start": 165,
+      "totalMs": 234
      }
     ],
     "cuts": [],
@@ -10988,10 +10880,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 137,
-      "end": 315,
+      "start": 165,
+      "end": 374,
       "inMs": 17,
-      "totalMs": 195,
+      "totalMs": 226,
       "travel": 10,
       "edgeTravel": 0,
       "ownTravel": 10,
@@ -11009,7 +10901,7 @@
       "areaMax": 3090,
       "cut": {
        "kind": "colour",
-       "at": 136.59999999962747,
+       "at": 165.00000000111777,
        "size": 78
       },
       "dropped": null,
@@ -11026,10 +10918,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 137,
-      "end": 298,
-      "inMs": 95,
-      "totalMs": 178,
+      "start": 165,
+      "end": 332,
+      "inMs": 100,
+      "totalMs": 183,
       "travel": 20.1,
       "edgeTravel": 20,
       "ownTravel": 20.1,
@@ -11047,7 +10939,7 @@
       "areaMax": 682,
       "cut": {
        "kind": "colour",
-       "at": 136.59999999962747,
+       "at": 165.00000000111777,
        "size": 78
       },
       "dropped": null,
@@ -11076,10 +10968,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 137,
-      "end": 348,
-      "inMs": 162,
-      "totalMs": 228,
+      "start": 165,
+      "end": 382,
+      "inMs": 166,
+      "totalMs": 234,
       "travel": 0,
       "edgeTravel": 4.5,
       "ownTravel": 0,
@@ -11127,7 +11019,7 @@
     "rootArea": 3090
    },
    "hold": {
-    "holdMs": 612,
+    "holdMs": 620,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -11137,7 +11029,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "137ms, at release",
+     "measured": "165ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -11170,7 +11062,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 612ms",
+     "label": "Press shows while the finger is held 620ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -11180,12 +11072,12 @@
    "call": "fine",
    "callWhy": "the headline moves 20.1px over 158ms",
    "sentences": [
-    "The first visible change comes 137ms after the finger lands, when the finger lifts.",
+    "The first visible change comes 165ms after the finger lands, when the finger lifts.",
     "The label moves 20.1px, changes colour (Delta E 78) over 158ms (linear(0 0%, 0.055 5%, 0.173 10%, 0.3...).",
     "The fill changes over 100 percent of the control.",
     "Also reacting: svg icon (fade).",
     "The page dropped frames 1 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 612ms, the press shows nothing while the finger is down."
+    "Held for 620ms, the press shows nothing while the finger is down."
    ]
   },
   {
@@ -11200,16 +11092,16 @@
    "gesture": "tap",
    "holdMs": 90,
    "measured": {
-    "pointerdown": 3467.300000000745,
-    "pointerup": 3550.0999999996275,
-    "click": 3563.7000000011176,
-    "fingerMs": 83,
-    "latency": 256,
+    "pointerdown": 3494,
+    "pointerup": 3612.5999999996275,
+    "click": 3631.300000000745,
+    "fingerMs": 119,
+    "latency": 452,
     "startsAtRelease": true,
     "afterClick": true,
     "droppedFrames": 4,
-    "frameMs": 16.6,
-    "frames": 80,
+    "frameMs": 16.7,
+    "frames": 86,
     "headline": {
      "id": 1,
      "desc": "div card",
@@ -11221,10 +11113,10 @@
      "existsAtEnd": true,
      "preMoving": false,
      "changed": true,
-     "start": 256,
-     "end": 277,
+     "start": 452,
+     "end": 468,
      "inMs": null,
-     "totalMs": 37,
+     "totalMs": 33,
      "travel": 0,
      "edgeTravel": 0,
      "ownTravel": 0,
@@ -11299,10 +11191,10 @@
       "existsAtEnd": true,
       "preMoving": false,
       "changed": true,
-      "start": 256,
-      "end": 277,
+      "start": 452,
+      "end": 468,
       "inMs": null,
-      "totalMs": 37,
+      "totalMs": 33,
       "travel": 0,
       "edgeTravel": 0,
       "ownTravel": 0,
@@ -11360,7 +11252,7 @@
     "rootArea": 120473
    },
    "hold": {
-    "holdMs": 580,
+    "holdMs": 609,
     "onAfter": null,
     "shownMs": 0,
     "share": 0
@@ -11370,7 +11262,7 @@
      "id": "latency",
      "label": "First visible change after the finger lands",
      "pass": false,
-     "measured": "256ms, at release",
+     "measured": "452ms, at release",
      "limit": "at most 32ms"
     },
     {
@@ -11403,7 +11295,7 @@
     },
     {
      "id": "held",
-     "label": "Press shows while the finger is held 580ms",
+     "label": "Press shows while the finger is held 609ms",
      "pass": false,
      "measured": "nothing while held",
      "limit": "from 32ms or sooner, for the whole hold"
@@ -11411,13 +11303,13 @@
    ],
    "pass": false,
    "call": "wrong",
-   "callWhy": "the first change comes 256ms after the finger lands, after the click, through emulated hover",
+   "callWhy": "the first change comes 452ms after the finger lands, after the click, through emulated hover",
    "sentences": [
-    "The first visible change comes 256ms after the finger lands, when the finger lifts, after the click.",
+    "The first visible change comes 452ms after the finger lands, when the finger lifts, after the click.",
     "The div card changes a little over 200ms (linear(0 0%, 0.056 5%, 0.176 10%, 0.3...).",
     "Nothing else reacts.",
     "The page dropped frames 4 times (gaps of 50ms or more) after the finger landed, so times may read longer than on an idle machine.",
-    "Held for 580ms, the press shows nothing while the finger is down."
+    "Held for 609ms, the press shows nothing while the finger is down."
    ]
   }
  ]

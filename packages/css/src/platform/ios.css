@@ -62,12 +62,11 @@
 @layer ds.platform {
   /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
 
-  /* Sizes: mini 28, small 32, regular 44, large 52. */
+  /* Sizes: mini 28, small 32, regular 44, large 52. The corners are the style's (ruling 16, order R0.15): no radius here. */
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
     --_button-height: var(--ds-size-touch-ios);
     --_button-padding-inline: var(--ds-space-3xl);
     --_button-font-size: var(--ds-font-size-2xl);
-    --_button-radius: var(--ds-radius-panel);
     --_button-press-scale: 1;
     --_button-part-press: 1;
 
@@ -95,25 +94,18 @@
     --_button-height: var(--ds-size-control-sm);
     --_button-padding-inline: var(--ds-space-m);
     --_button-font-size: var(--ds-font-size-l);
-    --_button-radius: var(--ds-radius-sm);
   }
 
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='sm'] {
     --_button-height: var(--ds-size-control-md);
     --_button-padding-inline: var(--ds-space-xl);
     --_button-font-size: var(--ds-font-size-xl);
-    --_button-radius: var(--ds-radius-field);
   }
 
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='lg'] {
     --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
     --_button-padding-inline: var(--ds-space-5xl);
     --_button-font-size: var(--ds-font-size-2xl);
-    --_button-radius: var(--ds-radius-card);
-  }
-
-  [data-platform='ios'] [data-ds='icon-button']:not([data-part], [data-ds='button-group'][data-attached] > *) {
-    --_button-radius: var(--ds-radius-pill);
   }
 
   /*

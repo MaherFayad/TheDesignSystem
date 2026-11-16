@@ -25,7 +25,7 @@ import { BASELINE_SAMPLE, INTERACTIONS, findInteraction, profileFor } from './ca
 import { drag, holdPointer, touchSession, type Point } from './gesture';
 import { auditCall, quietChecks, richChecks, sentences } from './profiles';
 import { calibrationMarkdown, runMarkdown, type RunInfo } from './report';
-import { pageNow, startSampler, stopSampler, type SamplerConfig } from './sampler';
+import { pageNow, sinceFingerDown, startSampler, stopSampler, type SamplerConfig } from './sampler';
 import { quietSource } from './sources';
 import type { Device, HoldResult, Interaction, InteractionResult, Measured, PlatformArg, Profile, Recording, Track } from './types';
 import { settle } from '../compare/probe';
@@ -143,7 +143,7 @@ async function record(page: Page, ix: Interaction, point: Point, cfg: SamplerCon
     await page.evaluate(startSampler, cfg);
     await sleep(120);
     if (gesture.kind === 'drag') await drag(cdp, point, ix.dragStep ?? 3.6);
-    else await holdPointer(cdp, point, gesture.holdMs);
+    else await holdPointer(cdp, point, gesture.holdMs, undefined, () => page.evaluate(sinceFingerDown));
     const after = gesture.kind === 'long-press' ? 900 : gesture.kind === 'hold' ? 400 : 1200;
     await sleep(after);
     await page.evaluate(pageNow);

@@ -183,7 +183,7 @@ Inside `@layer ds.tokens`, on the Theme element, later rows win:
 | Base | `:root, [data-style]` | Base values, and the `web` values of the platform names |
 | Style and scheme | `[data-style='<id>'][data-scheme='<s>']` | Style names |
 | Platform | `[data-platform='<id>']` | Platform names |
-| Density | `[data-density='<d>']` | Density values. On `ios` and `android` density never takes a control below the platform's touch target; the build writes the platform's own density values where it has them, as `[data-platform='<id>'][data-density='<d>']`. |
+| Density | `[data-density='<d>']` | Density values. On `ios` and `android` density never takes a control below the platform's touch target, and on `macos` density never changes the platform's control sizes; the build writes the platform's own density values where it has them, as `[data-platform='<id>'][data-density='<d>']`. |
 | Contrast | `[data-contrast='more']` and the media queries | Solid materials, stronger borders |
 
 ```css

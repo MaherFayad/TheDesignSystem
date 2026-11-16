@@ -12,8 +12,8 @@
  *
  * Conventions followed, from the public Material guidance (values checked
  * against Google's published component tokens): a 48dp least target;
- * buttons 40dp tall as full capsules with 14sp labels and 24dp sides, the
- * hit area widened to 48; a switch 52 by 32 whose thumb is a 16dp dot
+ * buttons 40dp tall with 14sp labels and 24dp sides (the corners are the
+ * style's), the hit area widened to 48; a switch 52 by 32 whose thumb is a 16dp dot
  * while off, 24 while on and 28 while pressed, with a 2dp outline off; an
  * 18dp checkbox with a 2dp edge and a 40dp state layer; a state layer and a
  * ripple as press feedback; outlined segmented buttons 40dp tall; list rows
@@ -72,13 +72,18 @@
 @layer ds.platform {
   /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
 
-  /* Common buttons: 40dp capsules, 24dp sides, a 14sp medium label. Filled, tonal, outlined and text are the solid, soft, outline and ghost emphases. */
+  /*
+   * Common buttons: 40dp tall, 24dp sides, a 14sp medium label. Filled,
+   * tonal, outlined and text are the solid, soft, outline and ghost
+   * emphases. The corners are the style's (ruling 16, order R0.15): no
+   * radius here, so a capsule shows only in a style whose buttons are
+   * capsules.
+   */
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
     --_button-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
     --_button-padding-inline: var(--ds-space-6xl);
     --_button-gap: var(--ds-space-s);
     --_button-font-size: var(--ds-font-size-xl);
-    --_button-radius: var(--ds-radius-pill);
     --_button-press-scale: 1;
     --_button-part-press: 1;
 
@@ -1012,6 +1017,11 @@
   [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'],
   [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
     --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  /* A text action's state layer is a capsule, whatever corner the style gives its buttons. */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] {
+    --_button-radius: var(--ds-shape-corner-full);
   }
 
   /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */

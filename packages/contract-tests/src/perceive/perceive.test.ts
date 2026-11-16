@@ -9,8 +9,10 @@ import { analyze, analyzeHold, buildSeries, colourDistance, snapDiffers } from '
 import { AUDIT_TABLE, compareWithAudit, within } from './calibration';
 import { INTERACTIONS, findInteraction, profileFor } from './catalog';
 import { auditCall, bezierOf, quietChecks, richChecks, sameEasing } from './profiles';
+import { holdPointer } from './gesture';
 import { devicesFor, pageUrl, parseArgs } from './run';
 import { QUIET_SOURCES, quietSource } from './sources';
+import type { CDPSession } from '@playwright/test';
 import type { AnimationRecord, ElementMeta, Frame, Interaction, InteractionResult, Recording, Snap } from './types';
 
 const FRAME = 16.7;
@@ -241,6 +243,26 @@ describe('command line', () => {
   it('has a unique id and a headline for every interaction', () => {
     expect(new Set(INTERACTIONS.map((i) => i.id)).size).toBe(INTERACTIONS.length);
     for (const i of INTERACTIONS) expect(i.headline).not.toBe('');
+  });
+});
+
+describe('holdPointer', () => {
+  function fakeCdp() {
+    const calls: { type: string; at: number }[] = [];
+    const cdp = { send: async (_m: string, p: { type: string }) => void calls.push({ type: p.type, at: Date.now() }) } as unknown as CDPSession;
+    return { cdp, calls };
+  }
+  it('puts the finger down, holds and lifts', async () => {
+    const { cdp, calls } = fakeCdp();
+    await holdPointer(cdp, { x: 1, y: 2 }, 60);
+    expect(calls.map((c) => c.type)).toEqual(['touchStart', 'touchEnd']);
+    expect((calls[1]?.at ?? 0) - (calls[0]?.at ?? 0)).toBeGreaterThanOrEqual(55);
+  });
+  it('times the hold from when the page saw the finger, and reads the page while held', async () => {
+    const { cdp, calls } = fakeCdp();
+    const seen = await holdPointer(cdp, { x: 1, y: 2 }, 100, async () => 'held', async () => 80);
+    expect(seen).toBe('held');
+    expect((calls[1]?.at ?? 0) - (calls[0]?.at ?? 0)).toBeLessThan(80);
   });
 });
 

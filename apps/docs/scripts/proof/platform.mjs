@@ -136,6 +136,8 @@ async function topbar(page) {
 (async () => {
   const browser = await chromium.launch();
 
+  // --axe runs only the axe pass, which is long, and writes probe-axe.json.
+  if (!axe) {
   // 1. Every profile, no query, nothing stored: the docs page and its preview.
   for (const [name, descriptor, expected] of profiles) {
     const ctx = await context(browser, descriptor);
@@ -230,6 +232,8 @@ async function topbar(page) {
     await ctx.close();
   }
 
+  }
+
   // 4. Screenshots of the top bar.
   if (shots) {
     for (const [name, descriptor, file] of [['iPhone 15', devices['iPhone 15'], 'iphone'], ['Pixel 7', devices['Pixel 7'], 'pixel']]) {
@@ -267,9 +271,10 @@ async function topbar(page) {
               localStorage.setItem('ds-docs-style', s);
             } catch {}
           }, [style]);
-          const page = await ctx.newPage();
           for (const path of ['/', '/components/switch/', '/platforms/', '/ar/components/switch/']) {
-            await page.goto(base + path, { waitUntil: 'load' });
+            const page = await ctx.newPage();
+            // A loaded machine can refuse a navigation once: try again.
+            await page.goto(base + path, { waitUntil: 'load' }).catch(() => page.goto(base + path, { waitUntil: 'load' }));
             await page.waitForTimeout(500);
             const runs = [['page', null]];
             if (path === '/components/switch/') runs.push(['platform menu open', '#site-platform-button']);
@@ -284,6 +289,7 @@ async function topbar(page) {
               ok(r.violations.length === 0, `axe ${style} ${scheme} ${name} ${path} ${what} (${platform}): ${r.violations.map((v) => v.id).join(', ') || 'clean'}`);
               if (open) await page.keyboard.press('Escape');
             }
+            await page.close();
           }
           await ctx.close();
         }

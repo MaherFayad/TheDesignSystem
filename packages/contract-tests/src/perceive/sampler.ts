@@ -216,3 +216,15 @@ export function stopSampler(scheme: 'light' | 'dark'): Recording {
 export function pageNow(): number {
   return performance.now();
 }
+
+/** Waits until the sampler has logged pointerdown (or touchstart) and returns how many ms ago that was. */
+export async function sinceFingerDown(): Promise<number> {
+  const w = window as unknown as { __perceive?: { events: [string, number][] } };
+  const until = performance.now() + 3000;
+  for (;;) {
+    const e = w.__perceive?.events.find(([t]) => t === 'pointerdown' || t === 'touchstart');
+    if (e) return performance.now() - e[1];
+    if (performance.now() > until) throw new Error('no pointerdown seen');
+    await new Promise((r) => setTimeout(r, 2));
+  }
+}

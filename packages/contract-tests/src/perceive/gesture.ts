@@ -34,11 +34,19 @@ export async function touchUp(cdp: CDPSession): Promise<void> {
 /**
  * Puts a finger down at a point, keeps it there for `ms`, runs `whileHeld`
  * (if given) before lifting, then lifts. Returns what `whileHeld` returned.
+ * `landed`, when given, waits until the page has seen the finger and returns
+ * how many ms ago that was, so the hold is timed from the page's
+ * `pointerdown` and not from the moment the event was sent (under load the
+ * page can see it late, which would shorten the hold).
  */
-export async function holdPointer<T = void>(cdp: CDPSession, p: Point, ms: number, whileHeld?: () => Promise<T>): Promise<T | undefined> {
+export async function holdPointer<T = void>(cdp: CDPSession, p: Point, ms: number, whileHeld?: () => Promise<T>, landed?: () => Promise<number>): Promise<T | undefined> {
   const started = Date.now();
   await touchDown(cdp, p);
-  const left = ms - (Date.now() - started);
+  let left = ms - (Date.now() - started);
+  if (landed) {
+    const ago = await landed().catch(() => null);
+    if (ago !== null) left = ms - ago;
+  }
   if (left > 0) await sleep(left);
   const out = whileHeld ? await whileHeld() : undefined;
   await touchUp(cdp);

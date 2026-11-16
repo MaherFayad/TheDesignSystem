@@ -11,7 +11,8 @@
  * 34px on ios and android, under the touch heights those files set.
  */
 @layer ds.recipes {
-  [data-style='desk'][data-platform='web'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-size='xs'], [data-size='sm'], [data-size='lg']) {
+  /* A toggle button that is a part (a SegmentedControl or ToggleGroup item) keeps the size its parent gives it. */
+  [data-style='desk'][data-platform='web'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-size='xs'], [data-size='sm'], [data-size='lg'], [data-ds='toggle-button'][data-part]) {
     --_button-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
     --_button-padding-inline: var(--ds-space-2xl);
   }

@@ -121,7 +121,7 @@
    * (soft by default), and a danger action is the red pill. The others are
    * the glass pills of the Button recipe.
    */
-  [data-style='desk'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='accent']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
+  [data-style='desk']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='accent']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -134,7 +134,7 @@
     --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
   }
 
-  [data-style='desk'][data-platform='web'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
+  [data-style='desk']:is([data-platform='web'], [data-platform='macos']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
     --_button-bg: var(--ds-color-state-danger-solid);
     --_button-fg: var(--ds-color-state-danger-on-solid);
     --_button-border-color: transparent;
