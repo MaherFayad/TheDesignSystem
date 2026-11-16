@@ -16,6 +16,9 @@ The owner lifted the pause and answered 22 decisions: see "Reset rulings" in
   the reset plan.
 - All look approvals are withdrawn and return as proposals after the reset.
 - Live site: https://the-system-docs.vercel.app (public).
+- Owner permission (2026-11-16): the lead may delete finished agents' scratch
+  copies under this session's temp folder when disk space runs short. Nothing
+  else outside the repo.
 
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
