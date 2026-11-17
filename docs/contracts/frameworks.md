@@ -230,3 +230,16 @@ Rule: clipboard and eyedropper are feature tested, never assumed.
 Rule: dates in React run on React Aria; date math lives in
 `packages/shared/src/date.ts` on `@internationalized/date`. Digits stay Latin
 through `-u-nu-latn`.
+
+## Input modality (proposed, order C3)
+
+Rule: the document root carries `data-modality="keyboard"` or
+`data-modality="pointer"`, kept by `acquireModality(document)` from
+`@the-system/shared`. React's root Theme calls it; Angular's root `dsTheme`
+calls it after render. There is no attribute on the server or before the
+first input.
+
+Rule: component and platform CSS may only hide a focus ring under
+`[data-modality='pointer']`. It never keys a ring on `keyboard`, so with no
+attribute the ring shows (WCAG 2.2 2.4.7).
+

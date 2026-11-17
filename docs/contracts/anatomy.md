@@ -246,6 +246,11 @@ follows it.
     | SwipeActions | `data-side` on its `actions` parts |
     | SectionIndex | `data-collapsed`, `data-active`, `data-dragging` |
     | List | a sectioned List nests a List root inside its `section` part; the nested list belongs to its own root |
+    | List row | `data-action`, `data-no-chevron`, `data-title-lines` (`2`, `3`, `all`); List `data-variant` gains `flush`; new parts `control` and `footer` |
+    | Pagination | `data-variant` is `dots` (absent for the numbered form); `data-compact` under dots |
+    | WheelPicker | `data-centered` on rows, `data-dragging` on a column |
+    | ColorSwatchPicker, ColorField | `data-layout` (`grid`, `row`); `data-channel` |
+    | DateField, TimeField | `data-type` on segment parts, `data-placeholder` |
     | ActionSheet | `data-placement` |
     | Calendar | `data-today`, `data-unavailable`, `data-outside-month` |
     | Toast | `data-position`, `data-swipe` |
