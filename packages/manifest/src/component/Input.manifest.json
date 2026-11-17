@@ -218,7 +218,7 @@
       "status": "ready",
       "behavior": "div[dsInput] around a native input, ControlValueAccessor",
       "example": "input.demo.ts",
-      "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName."
+      "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName. Order M9.1: variant plain, clearable with the clear part (a dsCloseButton between the control and the end slot, shown while the box holds focus and a value; a press keeps focus on the input, then clears with an input event; Escape clears except inside a dialog), clearLabel, and data-empty on the root, as React."
     },
     "native": {
       "status": "planned"

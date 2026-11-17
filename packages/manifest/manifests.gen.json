@@ -8251,7 +8251,7 @@
         "status": "ready",
         "behavior": "hand built on the CDK (Portal, Directionality) with Radix DropdownMenu's keys and focus rules; positioning in behavior/popper.ts",
         "example": "dropdown-menu.demo.ts",
-        "note": "Root on an ng-container (dsDropdownMenu), dsDropdownMenuTrigger on the system button, the content and each submenu are ng-templates rendered through a CDK ComponentPortal whose host is the themed layer (data-menu-layer), as in React. onOpenChange, onCheckedChange and onValueChange are the openChange, checkedChange and valueChange outputs of [(open)], [(checked)] and [(value)]; onSelect is the select output and preventDefault keeps the menu open. The DOM keeps Radix's attribute and variable names (data-radix-popper-content-wrapper, --radix-dropdown-menu-content-*), which DropdownMenu.css reads. Not done: Radix's focus guard spans in body and the pointer grace area toward a submenu."
+        "note": "Root on an ng-container (dsDropdownMenu), dsDropdownMenuTrigger on the system button, the content and each submenu are ng-templates rendered through a CDK ComponentPortal whose host is the themed layer (data-menu-layer), as in React. onOpenChange, onCheckedChange and onValueChange are the openChange, checkedChange and valueChange outputs of [(open)], [(checked)] and [(value)]; onSelect is the select output and preventDefault keeps the menu open. The DOM keeps Radix's attribute and variable names (data-radix-popper-content-wrapper, --radix-dropdown-menu-content-*), which DropdownMenu.css reads. Not done: Radix's focus guard spans in body and the pointer grace area toward a submenu. Order M9.4: div[dsDropdownMenuQuickActions] (role group, label required) and div[dsDropdownMenuQuickAction] (role menuitem, icon required, tone) render the quick action row with React's DOM; ArrowLeft and ArrowRight move inside the row (mirrored in rtl, wrapping, skipping disabled) and are prevented, so a submenu does not close."
       },
       "native": {
         "status": "planned",
@@ -9000,7 +9000,7 @@
         "status": "ready",
         "behavior": "div[dsField], provides DsFieldContext through DI",
         "example": "field.demo.ts",
-        "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]."
+        "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]. Order M9.1: inside an inset Fieldset the field is one row through Field.css alone; a row with no drawn label takes label[dsFieldLabel] with data-visually-hidden."
       },
       "native": {
         "status": "planned"
@@ -9346,7 +9346,7 @@
         "status": "ready",
         "behavior": "fieldset[dsFieldset] host bindings; the error is p[dsFieldError] given its own DsFieldContext through viewProviders",
         "example": "fieldset.demo.ts",
-        "note": "legend, description and error take a string or a TemplateRef. Fieldset.css is used as is."
+        "note": "legend, description and error take a string or a TemplateRef. Fieldset.css is used as is. Order M9.1: variant inset is stamped as data-variant; each projected dsField is a direct child of the body part, so the row rules of Field.css apply as is."
       },
       "native": {
         "status": "planned"
@@ -11780,7 +11780,7 @@
         "status": "ready",
         "behavior": "div[dsInput] around a native input, ControlValueAccessor",
         "example": "input.demo.ts",
-        "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName."
+        "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName. Order M9.1: variant plain, clearable with the clear part (a dsCloseButton between the control and the end slot, shown while the box holds focus and a value; a press keeps focus on the input, then clears with an input event; Escape clears except inside a dialog), clearLabel, and data-empty on the root, as React."
       },
       "native": {
         "status": "planned"
@@ -15414,7 +15414,7 @@
         "status": "ready",
         "behavior": "div[dsNumberField] with a native input and two dsIconButton steppers, hand built on packages/shared number.ts with React Aria's rules, CDK LiveAnnouncer, ControlValueAccessor",
         "example": "number-field.demo.ts",
-        "note": "Same DOM, keys and words as React (React Aria's English and Arabic stepper names and role description). value is a model: [(value)]; defaultValue is value and onChange is valueChange, fired with each committed change. start and end take an icon name, a short text or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root. The hidden input named name sits after the root, as in React. Stepper words exist in English and Arabic only. The mouse wheel never changes the value."
+        "note": "Same DOM, keys and words as React (React Aria's English and Arabic stepper names and role description). value is a model: [(value)]; defaultValue is value and onChange is valueChange, fired with each committed change. start and end take an icon name, a short text or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root. The hidden input named name sits after the root, as in React. Stepper words exist in English and Arabic only. The mouse wheel never changes the value. Order M9.3: variant (field, stepper) is an input, stamped as data-variant only when set; the stepper renders value, decrease, increase, with two soft pill dsIconButtons a step under the field height, as React. The Arabic stepper names stay as they are."
       },
       "native": {
         "status": "planned"
@@ -20725,7 +20725,7 @@
         "status": "ready",
         "behavior": "button[dsSelect], hand built with the Radix Select DOM and keys: a CDK ComponentPortal list placed with the Radix Popper steps (internal/popper.ts), focus moved into the list, typeahead from the shared listbox.ts, the page hidden and scroll locked while open (behavior/dialog-behavior.ts), ControlValueAccessor",
         "example": "select.demo.ts",
-        "note": "The host is the trigger, the root. Inputs take the React prop names; onValueChange and onOpenChange are the valueChange and openChange outputs of [(value)] and [(open)]. aria-label, aria-labelledby and aria-describedby are inputs, as the list reads them too. empty takes text or a TemplateRef. The loading words and, inside a form, the Radix bubble select are siblings after the trigger, added by the component. The Radix Spinner DOM is inline until the Angular Spinner exists. Typeahead folds Arabic like the rest of the list family, with the Radix pause of 1000ms. Angular Aria Select would replace the hand built keys once @angular/aria is installed. Select.css is used as is."
+        "note": "The host is the trigger, the root. Inputs take the React prop names; onValueChange and onOpenChange are the valueChange and openChange outputs of [(value)] and [(open)]. aria-label, aria-labelledby and aria-describedby are inputs, as the list reads them too. empty takes text or a TemplateRef. The loading words and, inside a form, the Radix bubble select are siblings after the trigger, added by the component. The Radix Spinner DOM is inline until the Angular Spinner exists. Typeahead folds Arabic like the rest of the list family, with the Radix pause of 1000ms. Angular Aria Select would replace the hand built keys once @angular/aria is installed. Select.css is used as is. Order M9.3: emphasis (outline, ghost) is an input, stamped as data-emphasis only when set, as React."
       },
       "native": {
         "status": "planned",
@@ -27138,7 +27138,7 @@
         "status": "ready",
         "behavior": "hand built on the shared toast store and the Radix Toast DOM; CDK ComponentPortal for the themed layer",
         "example": "toast.demo.ts",
-        "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is. Order 1.23 as React: the stack (data-stacked and the place values from internal/toast-stack.ts, a copy of React's stack.ts), data-expanded on hover or focus inside, data-paused from the same boolean that pauses the store, the progress part of a timed toast, the swipe of internal/toast-swipe.ts (a copy of React's swipe.ts), and position auto. Order M9.8 parts (start, meta) and the closable option are not yet rendered by the Angular toaster: Angular parity is order M9.14. The store already resolves closable for it."
+        "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. Toast.css is used as is. Order 1.23 as React: the stack (data-stacked and the place values from internal/toast-stack.ts, a copy of React's stack.ts), data-expanded on hover or focus inside, data-paused from the same boolean that pauses the store, the progress part of a timed toast, the swipe of internal/toast-swipe.ts (a copy of React's swipe.ts), and position auto. Order M9.8 as React: the start part (an icon name, a person drawn as a decorative avatar on React's Avatar DOM until the Angular Avatar exists, a TemplateRef or a short text) and the meta part (a text, or a Date as a relative time in <time datetime> through toastMeta(), refreshed every 30 s); each toaster item asks toastClosable(item, platform), so on ios a timed toast has no close button and danger, action and never ending toasts keep it; meta is read after the description; Escape closes a focused toast."
       },
       "native": {
         "status": "planned",

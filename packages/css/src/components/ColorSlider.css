@@ -1,0 +1,189 @@
+/*
+ * ColorSlider: change one channel of a colour (order M9.18, proposed).
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md. The layout follows Slider: the label at the
+ * start of the first row, the value at the end, the track under them.
+ *
+ * The gradient and the thumb colour are data, not tokens: ColorSlider.tsx
+ * sets them inline as --_color-slider-fill (React Aria's gradient of the
+ * channel, which already runs right to left in Arabic) and
+ * --_color-slider-thumb-bg (the colour now). This file holds no colour value.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_color-slider-thickness     the track, by data-size; the thumb is as tall
+ *   --_color-slider-thumb         the thumb, never under size.target-min
+ *   --_color-slider-length        the length of a vertical slider
+ *   --_color-slider-gap           the room between the label row and the track
+ *   --_color-slider-font-size     the label and the value
+ *   --_color-slider-label-fg, --_color-slider-value-fg
+ *   --_color-slider-fill          the gradient, set inline
+ *   --_color-slider-thumb-bg      the colour now, set inline
+ *   --_color-slider-thumb-border  the ring of the thumb, the surface colour
+ *   --_color-slider-border-color  the edge around the thumb and the track,
+ *                                 color.border.control, 3:1 or more (1.4.11)
+ *   --_color-slider-ring          the focus ring around the thumb
+ *   --_color-slider-lift          the thumb scale while dragged (pattern press); 1 turns it off
+ *   --_color-slider-lift-now      the working scale the dragging state sets
+ *   --_color-slider-duration, --_color-slider-ease   the lift and its settle
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-slider-tile, --_color-slider-tile-alt, --_color-slider-tile-size
+ *     the checkerboard under a see through gradient (opacity), as on ColorSwatch
+ *
+ * The track starts and ends half a thumb in from the root's edges, so the
+ * thumb centre meets the ends of the gradient and the thumb stays inside the
+ * root at 320px (1.4.10). React Aria places the thumb along the track
+ * (inline left, its own transform); nothing here animates its place.
+ *
+ * Motion (pattern press, proposed): while a pointer drags the thumb, it
+ * grows to --_color-slider-lift (scale.stretch, as Slider) on the individual scale property, and settles
+ * on release. Under reduced motion every duration token is 0ms.
+ */
+@layer ds.base {
+  [data-ds='color-slider'] {
+    --_color-slider-thickness: var(--ds-size-control-xs);
+    --_color-slider-thumb: max(var(--_color-slider-thickness), var(--ds-size-target-min));
+    --_color-slider-length: calc(var(--ds-size-control-lg) * 4);
+    --_color-slider-gap: var(--ds-space-2xs);
+    --_color-slider-font-size: var(--ds-font-size-s);
+    --_color-slider-label-fg: var(--ds-color-text-default);
+    --_color-slider-value-fg: var(--ds-color-text-muted);
+    --_color-slider-fill: transparent;
+    --_color-slider-thumb-bg: transparent;
+    --_color-slider-thumb-border: var(--ds-color-bg-surface);
+    --_color-slider-border-color: var(--ds-color-border-control);
+    --_color-slider-ring: var(--ds-focus-shadow-ring);
+    --_color-slider-lift: var(--ds-scale-stretch);
+    --_color-slider-lift-now: 1;
+    --_color-slider-duration: var(--ds-duration-base);
+    --_color-slider-ease: var(--ds-ease-default);
+    --_color-slider-tile: var(--ds-color-bg-surface);
+    --_color-slider-tile-alt: var(--ds-color-border-strong);
+    --_color-slider-tile-size: calc(var(--ds-size-icon-sm) / 2);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ds-space-m);
+    row-gap: var(--_color-slider-gap);
+    align-items: baseline;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_color-slider-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='color-slider'][data-size='sm'] {
+    --_color-slider-thickness: var(--ds-size-icon-md);
+  }
+
+  [data-ds='color-slider'][data-size='lg'] {
+    --_color-slider-thickness: var(--ds-size-control-sm);
+    --_color-slider-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='color-slider'] > [data-part='label'] {
+    grid-column: 1;
+    color: var(--_color-slider-label-fg);
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='color-slider'] > [data-part='value'] {
+    grid-column: 2;
+    color: var(--_color-slider-value-fg);
+    font-variant-numeric: tabular-nums;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+  }
+
+  [data-ds='color-slider'] > [data-part='track'] {
+    grid-column: 1 / -1;
+    box-sizing: border-box;
+    block-size: var(--_color-slider-thickness);
+    min-inline-size: calc(var(--_color-slider-thumb) * 3);
+    margin-inline: calc(var(--_color-slider-thumb) / 2);
+    border-radius: var(--ds-radius-pill);
+    background:
+      var(--_color-slider-fill),
+      repeating-conic-gradient(var(--_color-slider-tile) 0 25%, var(--_color-slider-tile-alt) 0 50%) 0 0 /
+        calc(var(--_color-slider-tile-size) * 2) calc(var(--_color-slider-tile-size) * 2);
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_color-slider-border-color);
+    forced-color-adjust: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  [data-ds='color-slider'] [data-part='thumb'] {
+    --_color-slider-lift-now: 1;
+    box-sizing: border-box;
+    inset-block-start: 50%;
+    inline-size: var(--_color-slider-thumb);
+    block-size: var(--_color-slider-thumb);
+    border: var(--ds-border-width-strong) solid var(--_color-slider-thumb-border);
+    border-radius: var(--ds-radius-pill);
+    background:
+      linear-gradient(var(--_color-slider-thumb-bg), var(--_color-slider-thumb-bg)),
+      repeating-conic-gradient(var(--_color-slider-tile) 0 25%, var(--_color-slider-tile-alt) 0 50%) 0 0 /
+        calc(var(--_color-slider-tile-size) * 2) calc(var(--_color-slider-tile-size) * 2);
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_color-slider-border-color);
+    scale: var(--_color-slider-lift-now);
+    transition:
+      scale var(--_color-slider-duration) var(--_color-slider-ease),
+      box-shadow var(--_color-slider-duration) var(--_color-slider-ease);
+    forced-color-adjust: none;
+    cursor: grab;
+  }
+
+  [data-ds='color-slider'] [data-part='thumb'][data-dragging] {
+    --_color-slider-lift-now: var(--_color-slider-lift);
+    cursor: grabbing;
+  }
+
+  /* Focus shows at once (WCAG 2.4.7): the ring is not part of the transition timing a person waits on. */
+  [data-ds='color-slider'] [data-part='thumb'][data-focus-visible] {
+    box-shadow:
+      0 0 0 var(--ds-border-width-default) var(--_color-slider-border-color),
+      var(--_color-slider-ring);
+    outline: var(--ds-border-width-strong) solid transparent;
+    transition: scale var(--_color-slider-duration) var(--_color-slider-ease);
+  }
+
+  [data-ds='color-slider'][data-orientation='vertical'] {
+    grid-template-columns: auto;
+    justify-items: center;
+  }
+
+  [data-ds='color-slider'][data-orientation='vertical'] > [data-part='track'] {
+    inline-size: var(--_color-slider-thickness);
+    min-inline-size: 0;
+    block-size: var(--_color-slider-length);
+    margin-inline: 0;
+    margin-block: calc(var(--_color-slider-thumb) / 2);
+  }
+
+  [data-ds='color-slider'][data-orientation='vertical'] [data-part='thumb'] {
+    inset-block-start: auto;
+    inset-inline-start: 50%;
+  }
+
+  [data-ds='color-slider'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='color-slider'][data-disabled] :is([data-part='track'], [data-part='thumb']) {
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='color-slider'] {
+      --_color-slider-border-color: CanvasText;
+    }
+
+    [data-ds='color-slider'] [data-part='thumb'][data-focus-visible] {
+      outline-color: Highlight;
+      outline-offset: var(--ds-border-width-strong);
+    }
+  }
+}

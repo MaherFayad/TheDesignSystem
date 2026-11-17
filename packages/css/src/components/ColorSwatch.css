@@ -1,0 +1,89 @@
+/*
+ * ColorSwatch: a preview of one colour (order M9.18, proposed). Follows "One
+ * convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * The colour is data, not a token: ColorSwatch.tsx sets it inline as
+ * --_color-swatch-fill from the value the consumer passes. This file never
+ * holds a colour value of its own.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_color-swatch-size       the square, from size.control by data-size
+ *   --_color-swatch-radius     the corner, by data-shape
+ *   --_color-swatch-fill       the colour, set inline by the component
+ *   --_color-swatch-edge       the inner edge: color.border.control, 3:1 or
+ *                              more on every surface in every style (1.4.11),
+ *                              so a swatch near the surface colour still shows
+ *                              where it ends
+ *   --_color-swatch-ring       a box shadow list a parent sets (the selection
+ *                              ring and the focus ring of ColorSwatchPicker);
+ *                              none at rest
+ *   --_color-swatch-duration, --_color-swatch-ease   the ring change
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-swatch-tile, --_color-swatch-tile-alt   the two squares of the
+ *                              checkerboard under a see through colour
+ *   --_color-swatch-tile-size  one square of the checkerboard
+ *
+ * The checkerboard is always drawn under the colour; an opaque colour hides
+ * it. Under forced colors the swatch keeps its colour (forced-color-adjust:
+ * none, as React Aria asks) and the edge becomes CanvasText.
+ *
+ * Motion: the ring changes on duration.base. Under reduced motion every
+ * duration token is 0ms, so it changes at once.
+ */
+@layer ds.base {
+  [data-ds='color-swatch'] {
+    --_color-swatch-size: var(--ds-size-control-md);
+    --_color-swatch-radius: var(--ds-radius-xs);
+    --_color-swatch-fill: transparent;
+    --_color-swatch-edge: var(--ds-color-border-control);
+    --_color-swatch-ring: 0 0 0 0 transparent;
+    --_color-swatch-tile: var(--ds-color-bg-surface);
+    --_color-swatch-tile-alt: var(--ds-color-border-strong);
+    --_color-swatch-tile-size: calc(var(--ds-size-icon-sm) / 2);
+    --_color-swatch-duration: var(--ds-duration-base);
+    --_color-swatch-ease: var(--ds-ease-default);
+
+    box-sizing: border-box;
+    display: inline-block;
+    flex: none;
+    inline-size: var(--_color-swatch-size);
+    block-size: var(--_color-swatch-size);
+    border-radius: var(--_color-swatch-radius);
+    background:
+      linear-gradient(var(--_color-swatch-fill), var(--_color-swatch-fill)),
+      repeating-conic-gradient(var(--_color-swatch-tile) 0 25%, var(--_color-swatch-tile-alt) 0 50%) 0 0 /
+        calc(var(--_color-swatch-tile-size) * 2) calc(var(--_color-swatch-tile-size) * 2);
+    box-shadow:
+      inset 0 0 0 var(--ds-border-width-default) var(--_color-swatch-edge),
+      var(--_color-swatch-ring);
+    transition: box-shadow var(--_color-swatch-duration) var(--_color-swatch-ease);
+    forced-color-adjust: none;
+  }
+
+  [data-ds='color-swatch'][data-size='xs'] {
+    --_color-swatch-size: var(--ds-size-control-xs);
+  }
+
+  [data-ds='color-swatch'][data-size='sm'] {
+    --_color-swatch-size: var(--ds-size-control-sm);
+  }
+
+  [data-ds='color-swatch'][data-size='lg'] {
+    --_color-swatch-size: var(--ds-size-control-lg);
+  }
+
+  [data-ds='color-swatch'][data-shape='pill'] {
+    --_color-swatch-radius: var(--ds-radius-pill);
+  }
+
+  [data-ds='color-swatch'][data-shape='square'] {
+    --_color-swatch-radius: 0;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='color-swatch'] {
+      --_color-swatch-edge: CanvasText;
+    }
+  }
+}

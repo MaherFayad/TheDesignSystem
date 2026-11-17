@@ -1,0 +1,217 @@
+/*
+ * ColorSwatchPicker: pick one colour from a set of swatches (order M9.18,
+ * proposed). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md. Each swatch is a ColorSwatch root styled by
+ * ColorSwatch.css; as its parent, this file sizes it and sets its private
+ * --_color-swatch-* properties for the selection and focus rings, as
+ * NumberField sets its buttons' corners.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_color-swatch-picker-columns   the columns of the grid, set inline from the prop
+ *   --_color-swatch-picker-gap       the room between row items and the add button
+ *   --_color-swatch-picker-radius    the outer corner of the grid mosaic
+ *   --_color-swatch-picker-border-color   the edge around the mosaic, 3:1 or more on the surface (1.4.11)
+ *   --_color-swatch-picker-ring-color     the selection ring (1.4.1: a ring and a check, not colour)
+ *   --_color-swatch-picker-ring-width     its width; the gap inside it is the same width
+ *   --_color-swatch-picker-size           in row: the disc drawn, by data-size
+ *   --_color-swatch-picker-item-size      in row: the target of a disc, size.control.lg
+ *   --_color-swatch-picker-max            in grid: the largest cell
+ *   --_color-swatch-picker-duration, --_color-swatch-picker-ease   the check as it comes in
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-swatch-picker-gap-color   the surface between a ring and its swatch
+ *   --_color-swatch-picker-check-bg, --_color-swatch-picker-check-fg   the
+ *     small disc the check sits on, so the check reads on any colour
+ *   --_color-swatch-picker-check-size  that disc
+ *
+ * grid (data-layout='grid'): a mosaic of square cells with no gap, as many
+ * columns as the prop says, each cell at least size.target-min (24px, WCAG
+ * 2.5.8) and at most --_color-swatch-picker-max. Twelve columns of 24 fit a
+ * 320px screen with its 16px gutters (1.4.10). The mosaic has rounded outer
+ * corners and one edge at 3:1 around it; inside it, cells meet edge to edge
+ * (the swatches' own edges are off). The rings are drawn inside the cell
+ * (inset), so a neighbour never covers them. The list is dir ltr: the grid is
+ * a colour map and keeps its hue order in right to left.
+ *
+ * row (data-layout='row'): round discs in reading order, each centred in a
+ * target of size.control.lg (44 on web, 50 on ios, 56 on android), then the
+ * add button. The ring goes around the disc with a gap; focus draws the focus
+ * ring around the whole target.
+ *
+ * Motion (pattern pop, proposed): the check comes in from scale.enter and
+ * opacity 0 over duration.base; the rings change on duration.base. Under
+ * reduced motion every duration token is 0ms, so both show at once.
+ */
+@layer ds.base {
+  [data-ds='color-swatch-picker'] {
+    --_color-swatch-picker-columns: 12;
+    --_color-swatch-picker-gap: var(--ds-space-2xs);
+    --_color-swatch-picker-radius: var(--ds-radius-field);
+    --_color-swatch-picker-border-color: var(--ds-color-border-control);
+    --_color-swatch-picker-ring-color: var(--ds-color-text-bright);
+    --_color-swatch-picker-ring-width: var(--ds-border-width-strong);
+    --_color-swatch-picker-gap-color: var(--ds-color-bg-surface);
+    --_color-swatch-picker-size: var(--ds-size-control-sm);
+    --_color-swatch-picker-item-size: var(--ds-size-control-lg);
+    --_color-swatch-picker-max: var(--ds-size-control-md);
+    --_color-swatch-picker-check-bg: var(--ds-color-bg-surface);
+    --_color-swatch-picker-check-fg: var(--ds-color-text-bright);
+    --_color-swatch-picker-check-size: var(--ds-size-icon-md);
+    --_color-swatch-picker-duration: var(--ds-duration-base);
+    --_color-swatch-picker-ease: var(--ds-ease-default);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_color-swatch-picker-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  [data-ds='color-swatch-picker'] > [data-part='list'] {
+    min-inline-size: 0;
+    outline: none;
+  }
+
+  [data-ds='color-swatch-picker'] [data-part='item'] {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='color-swatch-picker'] [data-part='item'] > [data-part='swatch'] {
+    transition: box-shadow var(--_color-swatch-picker-duration) var(--_color-swatch-picker-ease);
+  }
+
+  /* The check on the picked swatch: a small disc of the surface, so it reads on any colour. */
+  [data-ds='color-swatch-picker'] [data-part='check'] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition:
+      opacity var(--_color-swatch-picker-duration) var(--_color-swatch-picker-ease),
+      transform var(--_color-swatch-picker-duration) var(--_color-swatch-picker-ease);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(var(--ds-scale-enter));
+    }
+  }
+
+  [data-ds='color-swatch-picker'] [data-part='check'] > svg {
+    box-sizing: border-box;
+    inline-size: var(--_color-swatch-picker-check-size);
+    block-size: var(--_color-swatch-picker-check-size);
+    padding: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_color-swatch-picker-check-bg);
+    color: var(--_color-swatch-picker-check-fg);
+  }
+
+  [data-ds='color-swatch-picker'] [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* Grid: the mosaic. */
+  [data-ds='color-swatch-picker'][data-layout='grid'] {
+    --_color-swatch-picker-check-size: var(--ds-size-icon-sm);
+    display: grid;
+    inline-size: 100%;
+    max-inline-size: calc(var(--_color-swatch-picker-columns) * var(--_color-swatch-picker-max));
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='grid'] > [data-part='list'] {
+    display: grid;
+    grid-template-columns: repeat(var(--_color-swatch-picker-columns), minmax(var(--ds-size-target-min), 1fr));
+    overflow: clip;
+    border-radius: var(--_color-swatch-picker-radius);
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_color-swatch-picker-border-color);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='grid'] [data-part='item'] {
+    aspect-ratio: 1;
+    min-block-size: var(--ds-size-target-min);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='grid'] [data-part='item'] > [data-part='swatch'] {
+    --_color-swatch-size: 100%;
+    --_color-swatch-radius: 0;
+    --_color-swatch-edge: transparent;
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='grid'] [data-part='item'][data-selected] > [data-part='swatch'] {
+    --_color-swatch-ring:
+      inset 0 0 0 var(--_color-swatch-picker-ring-width) var(--_color-swatch-picker-ring-color),
+      inset 0 0 0 calc(var(--_color-swatch-picker-ring-width) * 2) var(--_color-swatch-picker-gap-color);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='grid'] [data-part='item']:focus-visible > [data-part='swatch'] {
+    --_color-swatch-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring),
+      inset 0 0 0 calc(var(--ds-border-width-strong) * 2) var(--ds-color-focus-halo);
+  }
+
+  /* Row: discs in targets, then the add button. */
+  [data-ds='color-swatch-picker'][data-layout='row'] > [data-part='list'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_color-swatch-picker-gap);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'][data-size='sm'] {
+    --_color-swatch-picker-size: var(--ds-size-control-xs);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'][data-size='lg'] {
+    --_color-swatch-picker-size: var(--ds-size-control-md);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] {
+    inline-size: var(--_color-swatch-picker-item-size);
+    block-size: var(--_color-swatch-picker-item-size);
+    border-radius: var(--ds-radius-pill);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] > [data-part='swatch'] {
+    --_color-swatch-size: var(--_color-swatch-picker-size);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'][data-selected] > [data-part='swatch'] {
+    --_color-swatch-ring:
+      0 0 0 var(--_color-swatch-picker-ring-width) var(--_color-swatch-picker-gap-color),
+      0 0 0 calc(var(--_color-swatch-picker-ring-width) * 2) var(--_color-swatch-picker-ring-color);
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item']:focus-visible {
+    box-shadow: var(--ds-focus-shadow-ring);
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  [data-ds='color-swatch-picker'][data-layout='row'] > [data-part='add'] {
+    flex: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='color-swatch-picker'] {
+      --_color-swatch-picker-border-color: CanvasText;
+      --_color-swatch-picker-ring-color: Highlight;
+      --_color-swatch-picker-check-bg: Canvas;
+      --_color-swatch-picker-check-fg: CanvasText;
+    }
+
+    [data-ds='color-swatch-picker'] [data-part='item']:focus-visible {
+      outline: var(--ds-border-width-strong) solid Highlight;
+      outline-offset: calc(var(--ds-border-width-strong) * -1);
+    }
+  }
+}

@@ -185,7 +185,7 @@
       "status": "ready",
       "behavior": "div[dsField], provides DsFieldContext through DI",
       "example": "field.demo.ts",
-      "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]."
+      "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]. Order M9.1: inside an inset Fieldset the field is one row through Field.css alone; a row with no drawn label takes label[dsFieldLabel] with data-visually-hidden."
     },
     "native": {
       "status": "planned"
