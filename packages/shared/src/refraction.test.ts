@@ -140,7 +140,7 @@ describe('refraction filter', () => {
     const tags = f.node.children?.map((c) => c.tag);
     expect(tags).toEqual(['feImage', 'feDisplacementMap', 'feColorMatrix', 'feComposite']);
     const image = f.node.children![0]!;
-    expect(image.attrs.href.startsWith('data:image/bmp;base64,Qk')).toBe(true);
+    expect(image.attrs.href!.startsWith('data:image/bmp;base64,Qk')).toBe(true);
     expect(image.attrs.preserveAspectRatio).toBe('none');
     const bend = f.node.children![1]!;
     expect(bend.attrs).toMatchObject({ in: 'SourceGraphic', in2: 'map', xChannelSelector: 'R', yChannelSelector: 'G' });

@@ -92,4 +92,11 @@
       --_popover-border-color: CanvasText;
     }
   }
+
+  /* ios (order F1): the kit's popover corner (about 34) and its large soft shadow, which packages/css/src/platform/ios.css sets for the styles that take the platform's look. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='popover'],
+  [data-style='liquid'][data-platform='ios'] [data-ds='popover']:dir(rtl) {
+    --_popover-radius: revert-layer;
+    --_popover-shadow: revert-layer;
+  }
 }

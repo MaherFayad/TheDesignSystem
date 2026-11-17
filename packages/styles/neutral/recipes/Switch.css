@@ -27,8 +27,8 @@
     --_switch-lean: 0px;
   }
 
-  /* Hover lifts the off track one step, the way a gray control darkens on hover. Not on android, where the state layer answers the hover. */
-  [data-style='neutral']:not([data-platform='android']) [data-ds='switch']:not([data-disabled], [data-readonly], [data-state='checked']):hover {
+  /* Hover lifts the off track one step, the way a gray control darkens on hover. Not on android, where the state layer answers the hover, nor on ios, where the off track is the platform's gray. */
+  [data-style='neutral']:not([data-platform='android'], [data-platform='ios']) [data-ds='switch']:not([data-disabled], [data-readonly], [data-state='checked']):hover {
     --_switch-bg: var(--ds-color-border-control-hover);
   }
 
@@ -77,14 +77,13 @@
   /* Order M6: the held lens takes the rim of the platform's clear material (a thin bright upper edge, a fainter lower one, a soft inner shade, the lift), drawn in white, not the thumb color, so it is the same lens as Liquid's. */
   [data-style='neutral'][data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
-    /* The ring that keeps the lens at 3:1 on the track is a hairline here, as the kit draws the lens edge; white on the fill it still measures over 3:1. */
-    --_switch-thumb-ring-width: var(--ds-border-width-default);
+    /* Order F1: no ring and no hard line. A soft light along the top, a soft shade inside the lower edge and one soft lift; the lens is told from the track by its brightness and its lift. */
+    --_switch-thumb-ring-width: 0px;
+    --_switch-thumb-edge-width: 0px;
     --_switch-thumb-shadow:
-      inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 75%, transparent),
-      inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
-      inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
-      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent),
-      var(--ds-elevation-card-hover);
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
+      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent),
+      0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
   }
 
   @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
@@ -120,6 +119,48 @@
   /* Forced colors: Switch.css paints the thumb and the track in system colors and drops the shadow. */
 
   /*
+   * ios (order F1, owner ruling): the platform's switch. The on fill is the
+   * platform green, the off track a plain gray fill, and there is no track
+   * edge and no thumb ring in any state: the shapes separate by fill and a
+   * soft low shadow. The 3:1 outline ruling is waived for this one control
+   * on ios. The green is the closest token there is (the window zoom light,
+   * mixed toward the success fill in dark); a platform green token is asked
+   * of the lead. An invalid or read only switch keeps its edge.
+   */
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
+    --_switch-fill: var(--ds-color-window-light-zoom);
+    --_switch-fill-border: transparent;
+    --_switch-border-color: transparent;
+    --_switch-border-color-hover: transparent;
+    --_switch-thumb-ring-width: 0px;
+    --_switch-thumb-edge-width: 0px;
+    --_switch-thumb-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
+    --_switch-fill: color-mix(in srgb, var(--ds-color-window-light-zoom) 75%, var(--ds-color-state-success-fill));
+    --_switch-thumb-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 30%, transparent);
+  }
+
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]),
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]):hover {
+    --_switch-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 9%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]),
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]):hover {
+    --_switch-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, var(--ds-color-glass-backdrop-dark));
+  }
+
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 9%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, var(--ds-color-glass-backdrop-dark));
+  }
+
+  /*
    * ios (order M6): Neutral takes the platform's clear glass on its chrome,
    * as it takes the glass switch (DECISIONS.md, the iOS glass switch). The
    * material is in packages/css/src/platform/ios.css; this one property on
@@ -127,5 +168,16 @@
    */
   [data-style='neutral'][data-platform='ios'] {
     --_ios-glass: regular;
+  }
+
+  /*
+   * ios (order F1, owner ruling: Neutral follows the kit for colour on ios):
+   * in dark the page is the kit's black, not the style's navy. The grouped
+   * card, the elevated surfaces and the hairline take the kit's grays in
+   * packages/css/src/platform/ios.css and the Neutral recipes. This sits here
+   * beside the glass switch, the root rule Neutral has on ios.
+   */
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'][data-ds='theme'] {
+    background-color: var(--ds-color-glass-backdrop-dark);
   }
 }

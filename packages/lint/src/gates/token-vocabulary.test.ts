@@ -21,6 +21,13 @@ describe('gate ds/token-vocabulary: every var(--ds-*) exists in the token build'
     const known = builtNames();
     expect(known.size, `${BUILT} declares no --ds-* names`).toBeGreaterThan(0);
     const privateNames = declaredPrivateProperties(filesFor({ appliesTo: isComponentBaseCss }).map((p) => readText(p) ?? ''));
+    // The platform layer owns the private names that start with its platform id
+    // (--_ios-*, --_android-*, --_macos-*, --_web-*). A platform file may set one
+    // in a style query or have a script set it on a part, so a name used in a
+    // platform file counts as declared there.
+    for (const path of filesFor({ appliesTo: (f) => f.includes('packages/css/src/platform/') })) {
+      for (const m of (readText(path) ?? '').matchAll(/--_(?:ios|android|macos|web)-[\w-]+/g)) privateNames.add(m[0]);
+    }
     expect(format(runRule(createTokenVocabularyRule(known, undefined, privateNames))), 'use a built token, add the name to packages/tokens/src/contract.json, or declare the private property in the component CSS').toEqual([]);
   });
 

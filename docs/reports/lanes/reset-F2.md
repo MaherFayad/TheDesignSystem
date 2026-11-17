@@ -254,7 +254,20 @@ tracked and no filter is built.
 
 - `npx vitest run packages/shared/src/refraction packages/react/src/theme`:
   47 passed.
-- `npm run check`: see the order report.
+- `npm run check` (other agents running, machine loaded): tokens build, gen,
+  eslint, manifests, native, docs, galleries and consumers pass. Typecheck
+  failed on one line of my test (fixed, `tsc` now passes). Vitest: one
+  failure is mine, `ds/token-vocabulary`: `--_ios-refraction` is read with
+  `var()` in `ios-refraction.css`, and the gate wants every private property
+  declared in a file under `packages/css/src/components`, which this order
+  does not list. Fix for the lead: declare it on the part roots (for example
+  `--_ios-refraction: ;` in TabBar.css, Button.css, DropdownMenu.css,
+  Toast.css and SegmentedControl.css), or let platform files declare their
+  own. The other vitest failures are not from this order: four 5s timeouts
+  under load (PhoneField, RadioCard, Sidebar, ToggleGroup perf, doctor) pass
+  when rerun alone, and `cli` search ranks ContextMenu over Kbd (manifests,
+  untouched here). Angular: one tag-field spec (`design is already added`),
+  untouched here.
 
 ## What cannot be known without a real iPhone
 
