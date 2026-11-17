@@ -89,6 +89,31 @@
   }
 
   /*
+   * Tier 1 shows the content behind sharper than the M6 blur did, and the
+   * glare lifts it, so three labels fell under 4.5:1 over the demo's
+   * lightest or darkest content (measured from pixels): the dark tab bar
+   * (Liquid 4.14, Neutral 3.87) and the light menu (Liquid 4.37). The tint
+   * goes up there, not the blur, and only for the strength the styles ship.
+   * Tier 1 runs in Chromium only, which knows every feature in this
+   * condition, so the condition keeps the fallbacks of ios.css whole.
+   */
+  @media (prefers-reduced-transparency: no-preference) and (prefers-contrast: no-preference) and (forced-colors: none) {
+    @container style(--_ios-glass: regular) {
+      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] {
+        background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 74%, transparent);
+      }
+
+      :root[data-refraction='true'] [data-platform='ios']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+        background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 80%, transparent);
+      }
+
+      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+        background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
+      }
+    }
+  }
+
+  /*
    * Fallbacks: the parts take back what ios.css gives them there (no backdrop
    * filter). The weight of these selectors equals the tiers above.
    */
