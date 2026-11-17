@@ -37,6 +37,12 @@ export interface UiElement {
   intrinsic: boolean;
   /** The system name: a component (`Button`) or a part component (`DialogFooter`). Set by the reader. */
   system?: string;
+  /**
+   * True for an app component the file declares or imports from a relative
+   * path (`<SongMenuItems />`). The doctor cannot see what it renders, so a
+   * slot treats it like an expression child.
+   */
+  local?: boolean;
   attrs: UiAttr[];
   children: UiChild[];
   /** True when JSX spreads props (`{...rest}`): unknown props may be set. */
@@ -67,6 +73,8 @@ export interface SystemImports {
   native: boolean;
   /** `radix-ui` and `@radix-ui/*` imports, with their offsets. */
   radix: { module: string; index: number }[];
+  /** App components: capitalized names imported from a relative path that is not a system module, or declared at the top of the file. */
+  locals: Set<string>;
 }
 
 /**
@@ -88,13 +96,26 @@ export function matchesModule(mod: string, patterns: readonly string[]): boolean
 }
 
 export function readImports(source: ts.SourceFile, packages: readonly string[], nativePackages: readonly string[]): SystemImports {
-  const out: SystemImports = { named: new Map(), namespaces: new Set(), native: false, radix: [] };
+  const out: SystemImports = { named: new Map(), namespaces: new Set(), native: false, radix: [], locals: new Set() };
+  const component = /^[A-Z]/;
   for (const st of source.statements) {
+    if (ts.isFunctionDeclaration(st) || ts.isClassDeclaration(st)) {
+      if (st.name && component.test(st.name.text)) out.locals.add(st.name.text);
+    } else if (ts.isVariableStatement(st)) {
+      for (const d of st.declarationList.declarations) if (ts.isIdentifier(d.name) && component.test(d.name.text)) out.locals.add(d.name.text);
+    }
     if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
     const mod = st.moduleSpecifier.text;
     if (mod === 'react-native' || matchesModule(mod, nativePackages)) out.native = true;
     if (mod === 'radix-ui' || mod.startsWith('@radix-ui/')) out.radix.push({ module: mod, index: st.getStart(source) });
-    if (!matchesModule(mod, packages) && !matchesModule(mod, nativePackages)) continue;
+    if (!matchesModule(mod, packages) && !matchesModule(mod, nativePackages)) {
+      const clause = st.importClause;
+      if (!mod.startsWith('.') || !clause || clause.isTypeOnly) continue;
+      if (clause.name && component.test(clause.name.text)) out.locals.add(clause.name.text);
+      const b = clause.namedBindings;
+      if (b && ts.isNamedImports(b)) for (const e of b.elements) if (!e.isTypeOnly && component.test(e.name.text)) out.locals.add(e.name.text);
+      continue;
+    }
     const clause = st.importClause;
     if (!clause || clause.isTypeOnly) continue;
     const b = clause.namedBindings;
@@ -135,6 +156,7 @@ export function readJsx(source: ts.SourceFile, imports: SystemImports, framework
     if (parent) el.parent = parent;
     const sys = intrinsic ? undefined : systemName(tag, imports);
     if (sys) el.system = sys;
+    else if (!intrinsic && imports.locals.has(tag)) el.local = true;
     for (const a of opening.attributes.properties) {
       if (ts.isJsxSpreadAttribute(a)) {
         el.spread = true;
@@ -298,6 +320,18 @@ export function readAngular(ng: AngularCompiler, text: string, offset: number, k
       if (sys && known(sys)) {
         el.system = sys;
         break;
+      }
+    }
+    // An ng-container that hosts a system directive the manifests do not list
+    // (`dsDropdownMenuSub`, a wrapper of a trigger and a content) is that
+    // component, as the same tag imported in JSX is: it is not transparent.
+    if (!el.system && tag === 'ng-container') {
+      for (const a of el.attrs) {
+        const sys = angularSystemName(a.name);
+        if (sys) {
+          el.system = sys;
+          break;
+        }
       }
     }
     el.children = nodesToChildren(n.children ?? [], el);

@@ -58,8 +58,36 @@ export function insteadUseHint(m: Manifest | undefined, n = 3): string {
 }
 
 /**
+ * The part component that renders a part of `m`, when it is not `m` itself:
+ * `DropdownMenuContent` renders the `root` of DropdownMenu, `DropdownMenuLabel`
+ * its `label`.
+ */
+export function partOwner(index: ManifestIndex, m: Manifest, part: string): string | undefined {
+  for (const [name, p] of index.parts) if (p.owner === m && p.part === part) return name;
+  return undefined;
+}
+
+/**
+ * The part component that renders an overlay's surface, when the component
+ * is a wrapper of a trigger and a content: the part that renders its `root`
+ * (DropdownMenuContent, PopoverContent) or its `panel` (DialogContent,
+ * SheetContent, ActionSheetContent). In place, such a wrapper renders only
+ * its trigger; the content goes to a portal.
+ */
+export function contentPart(index: ManifestIndex, name: string): string | undefined {
+  const m = index.components.get(name);
+  if (!m) return undefined;
+  return partOwner(index, m, 'root') ?? partOwner(index, m, 'panel');
+}
+
+/**
  * The slot that holds an element's children: a part component's own slot;
- * for a component, its `root` slot, else its `label` slot.
+ * for a component, its `root` slot, else its `label` slot. A slot that a
+ * part component renders is that part's, not the component's: the children
+ * of `DropdownMenu` are its trigger and its content (the parts that fill the
+ * menu's root slot), so `DropdownMenu` itself has no children slot and only
+ * `DropdownMenuContent` is held to the root slot. The manifest says this
+ * through `parts` (`"DropdownMenuContent": "root"`); no component is named here.
  */
 export function childrenSlot(index: ManifestIndex, name: string): { owner: Manifest; slotName: string; slot: Slot } | undefined {
   const part = index.parts.get(name);
@@ -71,7 +99,22 @@ export function childrenSlot(index: ManifestIndex, name: string): { owner: Manif
   if (!m?.slots) return undefined;
   for (const key of ['root', 'label']) {
     const slot = m.slots[key];
-    if (slot) return { owner: m, slotName: key, slot };
+    if (!slot) continue;
+    if (partOwner(index, m, key)) {
+      // The root slot is rendered by a part: the component is a wrapper and its children are its parts.
+      if (key === 'root') return undefined;
+      continue;
+    }
+    return { owner: m, slotName: key, slot };
   }
   return undefined;
+}
+
+/**
+ * True when a component prop of the slot's own name fills the slot: StatusDot
+ * takes its text from `label`, so `<StatusDot label="Online" />` is not empty.
+ * Read from the manifest: the slot `label` and the prop `label`.
+ */
+export function slotProp(owner: Manifest, slotName: string): boolean {
+  return Boolean(owner.props?.[slotName]);
 }

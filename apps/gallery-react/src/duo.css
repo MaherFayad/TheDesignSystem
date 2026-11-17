@@ -233,4 +233,14 @@
   [data-platform='ios'] [data-gallery='duo-shell'] [data-gallery='phone-tabs'] {
     inset-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
   }
+
+  /*
+   * Order L2: the iOS layer leaves room after the content for a bar over it
+   * (ios-shell.css), so the phone body drops the extra room under its last
+   * row that the /platforms screen keeps for its bar, and ends on its own
+   * padding as on its other sides (about 194 of empty room before, 110 now).
+   */
+  [data-platform='ios'] [data-gallery='duo-shell'] [data-gallery='phone-body'] {
+    padding-block-end: var(--ds-space-3xl);
+  }
 }

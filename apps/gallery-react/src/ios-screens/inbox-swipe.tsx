@@ -260,9 +260,6 @@ export function Screen({ lang }: ScreenProps) {
     return sorted(kept, sort);
   }, [ids, filter, unread, favourites, sort]);
 
-  // StatusDot's name is its `label` prop; ds doctor reads the label slot as children (reported to the lead).
-  const unreadDot = { tone: 'accent', label: w.unreadDot, hideLabel: true } as const;
-
   const startActions = (a: Article): SwipeAction[] => [
     { label: unread.has(a.id) ? w.read : w.markUnread, icon: 'mail', tone: 'accent', onSelect: () => markRead(a) },
     { label: favourites.has(a.id) ? w.unfavourite : w.favourite, icon: 'star', tone: 'warning', onSelect: () => favour(a) },
@@ -273,47 +270,37 @@ export function Screen({ lang }: ScreenProps) {
     { label: w.del, icon: 'trash', tone: 'danger', onSelect: () => remove(a) },
   ];
 
-  // The trigger and the menu are passed as expressions: ds doctor reads the DropdownMenu root slot (the
-  // items) as the children of DropdownMenu itself and flags its two real children (reported to the lead).
-  const filterTrigger = (
-    <DropdownMenuTrigger>
-      <IconButton icon="filter" label={w.filter} />
-    </DropdownMenuTrigger>
-  );
-
-  const filterContent = (
-    <DropdownMenuContent align="end">
-      <DropdownMenuQuickActions label={w.sort}>
-        <DropdownMenuQuickAction icon="arrow-down" onSelect={() => setSort('newest')} aria-current={sort === 'newest' ? 'true' : undefined}>
-          {w.newest}
-        </DropdownMenuQuickAction>
-        <DropdownMenuQuickAction icon="arrow-up" onSelect={() => setSort('oldest')} aria-current={sort === 'oldest' ? 'true' : undefined}>
-          {w.oldest}
-        </DropdownMenuQuickAction>
-        <DropdownMenuQuickAction icon="clock" onSelect={() => setSort('shortest')} aria-current={sort === 'shortest' ? 'true' : undefined}>
-          {w.shortest}
-        </DropdownMenuQuickAction>
-      </DropdownMenuQuickActions>
-      <DropdownMenuSeparator />
-      <DropdownMenuLabel>{w.show}</DropdownMenuLabel>
-      <DropdownMenuRadioGroup value={filter} onValueChange={(v) => setFilter(v as Filter)}>
-        <DropdownMenuRadioItem value="all" start="list">
-          {w.all}
-        </DropdownMenuRadioItem>
-        <DropdownMenuRadioItem value="unread" start="mail">
-          {w.unread}
-        </DropdownMenuRadioItem>
-        <DropdownMenuRadioItem value="favourites" start="star">
-          {w.favourites}
-        </DropdownMenuRadioItem>
-      </DropdownMenuRadioGroup>
-    </DropdownMenuContent>
-  );
-
   const filterMenu = (
     <DropdownMenu>
-      {filterTrigger}
-      {filterContent}
+      <DropdownMenuTrigger>
+        <IconButton icon="filter" label={w.filter} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuQuickActions label={w.sort}>
+          <DropdownMenuQuickAction icon="arrow-down" onSelect={() => setSort('newest')} aria-current={sort === 'newest' ? 'true' : undefined}>
+            {w.newest}
+          </DropdownMenuQuickAction>
+          <DropdownMenuQuickAction icon="arrow-up" onSelect={() => setSort('oldest')} aria-current={sort === 'oldest' ? 'true' : undefined}>
+            {w.oldest}
+          </DropdownMenuQuickAction>
+          <DropdownMenuQuickAction icon="clock" onSelect={() => setSort('shortest')} aria-current={sort === 'shortest' ? 'true' : undefined}>
+            {w.shortest}
+          </DropdownMenuQuickAction>
+        </DropdownMenuQuickActions>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>{w.show}</DropdownMenuLabel>
+        <DropdownMenuRadioGroup value={filter} onValueChange={(v) => setFilter(v as Filter)}>
+          <DropdownMenuRadioItem value="all" start="list">
+            {w.all}
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="unread" start="mail">
+            {w.unread}
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="favourites" start="star">
+            {w.favourites}
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 
@@ -369,7 +356,7 @@ export function Screen({ lang }: ScreenProps) {
               }
               title={title}
               description={w.byline(a, lang)}
-              end={unread.has(a.id) ? <StatusDot {...unreadDot} /> : undefined}
+              end={unread.has(a.id) ? <StatusDot tone="accent" label={w.unreadDot} hideLabel /> : undefined}
               swipe={<SwipeActions start={startActions(a)} end={endActions(a)} menuLabel={w.menu(title)} />}
               footer={
                 <>

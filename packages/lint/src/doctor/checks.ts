@@ -28,7 +28,7 @@ import {
   type UiChild,
   type UiElement,
 } from './elements';
-import { childrenSlot, insteadUseHint, knows, propValues, type ManifestIndex } from './manifests';
+import { childrenSlot, contentPart, insteadUseHint, knows, propValues, slotProp, type ManifestIndex } from './manifests';
 
 export type Severity = 'error' | 'warning';
 
@@ -155,15 +155,25 @@ function hasDsAttr(el: UiElement | undefined): boolean {
 }
 
 /**
- * Children with transparent wrappers opened up: Angular `ng-container`, and
- * a system wrapper that has no manifest of its own and renders its one child
+ * Children with transparent wrappers opened up: Angular `ng-container` that
+ * hosts no system directive, and a system wrapper that has no manifest of
+ * its own and renders its one child
  * (`DialogClose`, `DialogTrigger`, always asChild).
  */
 function flatChildren(el: UiElement, index?: ManifestIndex): UiChild[] {
   return el.children.flatMap((c) => {
     if (c.kind !== 'element') return [c];
     const child = c.element;
-    if (TRANSPARENT.has(child.tag)) return flatChildren(child, index);
+    // `<ng-container [ngTemplateOutlet]="...">` renders a template the doctor cannot see: an expression.
+    if (TRANSPARENT.has(child.tag) && attr(child, 'ngTemplateOutlet')) return [{ kind: 'expr', index: child.index }];
+    // A system host (`<ng-container dsDropdownMenu>`) is the component, not a group.
+    if (TRANSPARENT.has(child.tag) && !child.system) return flatChildren(child, index);
+    // An overlay wrapper (`<Dialog>` with a trigger and a content) renders only its trigger in place.
+    const content = index && child.system ? contentPart(index, child.system) : undefined;
+    if (content) {
+      const inPlace = child.children.filter((k) => !(k.kind === 'element' && k.element.system === content));
+      return flatChildren({ ...child, children: inPlace }, index);
+    }
     if (index && child.system && !knows(index, child.system)) {
       const inner = child.children.filter((k) => k.kind === 'element');
       if (inner.length === 1 && child.children.length === 1) return flatChildren(child, index);
@@ -258,10 +268,14 @@ export function markupFindings(file: DoctorFile, roots: UiElement[], ctx: Doctor
     const cs = rendered ? undefined : childrenSlot(index, el.system);
     if (cs) {
       const kids = flatChildren(el, index);
-      const elems = kids.filter((c): c is { kind: 'element'; element: UiElement } => c.kind === 'element');
+      const all = kids.filter((c): c is { kind: 'element'; element: UiElement } => c.kind === 'element');
+      // An app component (`<SongMenuItems />`) renders what the doctor cannot see: it counts like an expression.
+      const elems = all.filter((c) => !c.element.local);
       const texts = kids.filter((c) => c.kind === 'text');
-      const exprs = kids.filter((c) => c.kind === 'expr');
+      const exprs = [...kids.filter((c) => c.kind === 'expr'), ...all.filter((c) => c.element.local)];
       const { slot, owner, slotName } = cs;
+      // The slot is filled by the component prop of its name (StatusDot `label`).
+      const byProp = owner.name === el.system && slotProp(owner, slotName) && attr(el, slotName) !== undefined;
       const hint = insteadUseHint(owner, 2);
       const where = `${owner.name} ${slotName}`;
       // Where a slot takes text, text and phrasing elements together are one label.
@@ -273,7 +287,7 @@ export function markupFindings(file: DoctorFile, roots: UiElement[], ctx: Doctor
       if (slot.max !== undefined && items > slot.max) {
         add(el.index, 'ds/slot-limits', `${el.system} holds ${items} items; the ${where} slot takes at most ${slot.max}.${hint}`);
       }
-      if (slot.min && items + exprs.length === 0 && !attr(el, 'children') && !el.spread) {
+      if (slot.min && items + exprs.length === 0 && !attr(el, 'children') && !el.spread && !byProp) {
         add(el.index, 'ds/slot-limits', `${el.system} is empty; the ${where} slot needs at least ${slot.min}.`);
       }
       const accepts = slot.accepts ?? 'any';

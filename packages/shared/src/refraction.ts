@@ -31,8 +31,9 @@ export const REFRACTION_ID_PREFIX = 'ds-refraction';
 
 /**
  * The glass parts that bend, inside an ios Theme. The same list as
- * `packages/css/src/platform/ios-refraction.css`: the tab bar and the lens of
- * its current tab, the navigation bar and sheet buttons, the menu, the toast
+ * `packages/css/src/platform/ios-refraction.css`: the tab bar, the lens of
+ * its current tab and its search disc, the navigation bar and sheet buttons,
+ * the menu and the selection menu, the action sheet's panel, the toast
  * banner and the segmented thumb. The held switch thumb is not on it: it
  * grows and stretches while held, and the bend drew a ragged edge on the
  * track's end there (Chromium 153), so it keeps the CSS only band.
@@ -40,10 +41,12 @@ export const REFRACTION_ID_PREFIX = 'ds-refraction';
 export const REFRACTION_PARTS: readonly string[] = [
   "[data-ds='tab-bar']",
   "[data-ds='tab-bar'] > [data-part='item']",
+  "[data-ds='tab-bar'] > [data-part='search']",
   "[data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])",
   "[data-ds='navbar'] > [data-part='menu-button']",
   "[data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']",
-  ":is([data-ds='dropdown-menu'], [data-ds='context-menu'])",
+  ":is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])",
+  "[data-ds='action-sheet'] [data-part='panel']",
   "[data-ds='toast']",
   "[data-ds='segmented-control'] > [data-part='indicator']",
 ];
@@ -96,6 +99,15 @@ const BAND_MAX = 30;
 // the half short side, so the middle of a cap is never pinched to a point.
 const CAP_BOOST = 0.5;
 const CAP_LIMIT = 0.85;
+// A bar (order L2): a capsule at least BAR_RATIO times as long as it is
+// tall, such as the tab bar, a text button, the selection menu or the toast.
+// Its flat sides take a narrow band, so a line of text resting under the
+// middle of the bar stays readable (the share of the short side squeezed it
+// into a smear in Chromium), and its end caps a wide one, which is where the
+// reference shows the bend. The cap band stops at the cap's radius.
+const BAR_RATIO = 3;
+const BAR_BAND = 12;
+const BAR_CAP = 30;
 // The profile of the bevel: the move is (1 - depth / band) ^ PROFILE. The
 // sampled point never goes backwards (no fold) while PROFILE * DEPTH <= 1:
 // the slope at the rim is 1 - PROFILE * DEPTH. 1.6 keeps the start of the
@@ -128,14 +140,24 @@ export function refractionResolution(shape: RefractionShape): number {
   return shape.width * shape.height > LARGE_AREA ? RESOLUTION_LARGE : RESOLUTION;
 }
 
-/** The default band width for a shape, CSS px. */
+/** True for a bar: a capsule at least three times as long as it is tall (or as wide, for a column). */
+export function refractionIsBar(shape: RefractionShape): boolean {
+  const short = Math.min(shape.width, shape.height);
+  return short > 0 && Math.max(shape.width, shape.height) >= BAR_RATIO * short && refractionRadius(shape) >= short / 2;
+}
+
+/** The default band width for a shape, CSS px: on a bar the band of its flat sides. */
 export function refractionBand(shape: RefractionShape): number {
-  return clamp(Math.min(shape.width, shape.height) * BAND_SHARE, BAND_MIN, BAND_MAX);
+  const short = Math.min(shape.width, shape.height);
+  if (refractionIsBar(shape)) return clamp(Math.min(BAR_BAND, short * BAND_SHARE), BAND_MIN, BAND_MAX);
+  return clamp(short * BAND_SHARE, BAND_MIN, BAND_MAX);
 }
 
 /** The widest the band gets on a shape (at the end of a cap), CSS px: the map's moves are a share of this. */
 export function refractionReach(shape: RefractionShape, band: number): number {
-  return Math.min(band * (1 + CAP_BOOST), Math.max(band, (CAP_LIMIT * Math.min(shape.width, shape.height)) / 2));
+  const short = Math.min(shape.width, shape.height);
+  if (refractionIsBar(shape)) return Math.max(band, Math.min(BAR_CAP, short / 2));
+  return Math.min(band * (1 + CAP_BOOST), Math.max(band, (CAP_LIMIT * short) / 2));
 }
 
 /** What the map holds at one point: the inward move (each in -1 to 1, a share of the largest move) and the glare (0 to 1). */
@@ -149,7 +171,7 @@ export interface RefractionSample {
  * The map at one point (x, y) of a shape, in CSS px from its top left corner.
  * Outside the shape, and inside it past the band, there is no move and no glare.
  * `band` is the band along the flat sides; at the ends of the long side it is
- * wider (`CAP_BOOST`).
+ * wider (`CAP_BOOST`, or on a bar up to its cap band).
  */
 export function refractionAt(shape: RefractionShape, band: number, x: number, y: number): RefractionSample {
   const r = refractionRadius(shape);
@@ -183,7 +205,8 @@ export function refractionAt(shape: RefractionShape, band: number, x: number, y:
   // How much the edge here faces along the long side: 1 on the end of a cap, 0 on a flat side.
   const along = shape.width >= shape.height ? Math.abs(nx) : Math.abs(ny);
   const reach = refractionReach(shape, band);
-  const local = Math.min(band * (1 + CAP_BOOST * along), reach);
+  // A bar goes from its flat band to its cap band; any other shape widens by CAP_BOOST, up to its reach.
+  const local = refractionIsBar(shape) ? band + (reach - band) * along : Math.min(band * (1 + CAP_BOOST * along), reach);
   if (depth < 0 || depth >= local || local <= 0) return { dx: 0, dy: 0, glare: 0 };
   const edge = 1 - depth / local;
   // The bevel: the move grows with a power of the nearness to the edge, so

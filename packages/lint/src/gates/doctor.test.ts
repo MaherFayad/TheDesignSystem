@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DOCTOR_RULES, main, runDoctor, type DoctorReport } from '../doctor';
 import { matchesModule } from '../doctor/elements';
+import { childrenSlot, contentPart, indexManifests, slotProp } from '../doctor/manifests';
 import { ROOT } from './harness';
 
 const FIXTURES = join(ROOT, 'packages/lint/fixtures/doctor');
@@ -64,6 +65,46 @@ for (const fw of ['react', 'angular', 'native'] as const) {
     });
   });
 }
+
+describe('ds doctor: slot-limits on wrappers and named props (order T1)', () => {
+  const lines = (r: DoctorReport) => r.data.findings.map((f) => `${f.file}:${f.line} ${f.ruleId} ${f.message.split('.')[0]}`);
+
+  it('reads the trigger and the content as the children of a menu, a popover, a dialog, a sheet and an action sheet', async () => {
+    const r = await report('wrappers/right');
+    expect(r.data.summary.files).toBe(2);
+    expect(r.data.summary.skipped).toEqual([]);
+    expect(lines(r)).toEqual([]);
+  });
+
+  it('still fails a real breach of the content slot and a StatusDot with no name', async () => {
+    const r = await report('wrappers/wrong');
+    expect(lines(r)).toEqual([
+      'Menus.tsx:15 ds/slot-limits <Button> in the DropdownMenu root slot, which takes DropdownMenuQuickActions, DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuGroup, DropdownMenuSeparator, DropdownMenuSub',
+      'Menus.tsx:16 ds/slot-limits <div> in the DropdownMenu root slot, which takes DropdownMenuQuickActions, DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuGroup, DropdownMenuSeparator, DropdownMenuSub',
+      'Menus.tsx:23 ds/slot-limits DropdownMenuContent holds 13 items; the DropdownMenu root slot takes at most 12',
+      'Menus.tsx:43 ds/slot-limits DropdownMenuContent is empty; the DropdownMenu root slot needs at least 1',
+      'Menus.tsx:45 ds/slot-limits StatusDot is empty; the StatusDot label slot needs at least 1',
+      'menus.html:6 ds/slot-limits <button> in the DropdownMenu root slot, which takes DropdownMenuQuickActions, DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuGroup, DropdownMenuSeparator, DropdownMenuSub',
+      'menus.html:9 ds/slot-limits StatusDot is empty; the StatusDot label slot needs at least 1',
+    ]);
+  });
+
+  it('finds the wrapper from the manifest parts, with no component named in the rule', () => {
+    const owner = { name: 'Menu', kind: 'component', parts: { MenuContent: 'root', MenuLabel: 'label' }, slots: { root: { accepts: ['MenuItem'], max: 2 }, label: { accepts: 'text' as const, max: 1 } } };
+    const dot = { name: 'Dot', kind: 'component', props: { label: { type: 'node' } }, slots: { label: { accepts: 'text' as const, min: 1 } } };
+    const modal = { name: 'Modal', kind: 'component', parts: { ModalContent: 'panel', ModalFooter: 'footer' }, slots: { footer: { accepts: ['Button'], max: 2 } } };
+    const index = indexManifests([owner, dot, modal]);
+    expect(contentPart(index, 'Menu')).toBe('MenuContent');
+    expect(contentPart(index, 'Modal')).toBe('ModalContent');
+    expect(contentPart(index, 'Dot')).toBeUndefined();
+    expect(childrenSlot(index, 'Menu')).toBeUndefined();
+    expect(childrenSlot(index, 'MenuContent')?.slotName).toBe('root');
+    expect(childrenSlot(index, 'MenuLabel')?.slotName).toBe('label');
+    expect(childrenSlot(index, 'Dot')?.slotName).toBe('label');
+    expect(slotProp(dot, 'label')).toBe(true);
+    expect(slotProp(owner, 'root')).toBe(false);
+  });
+});
 
 describe('ds doctor: the examples', () => {
   for (const example of ['consumer-next', 'consumer-vite']) {

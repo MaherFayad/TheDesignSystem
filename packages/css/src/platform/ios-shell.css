@@ -235,7 +235,15 @@
       margin-inline: auto;
     }
 
-    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar'] > [data-part='item'] {
+    /* With a search disc the capsule and the disc are centred as one: the bar moves back by half the disc and its gap (never in the column). */
+    @container not style(--_ios-rail: side) {
+      [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])):not([data-placement='side']) {
+        inset-inline-start: calc(-1 * (var(--_ios-search-size) + var(--_ios-search-gap)) / 2);
+        margin-inline: auto;
+      }
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) {
       flex: none;
       min-inline-size: calc(var(--ds-size-touch-ios) + 2 * var(--ds-space-fixed-l));
       padding-inline: var(--ds-space-fixed-m);
@@ -266,7 +274,7 @@
     padding: var(--ds-space-fixed-2xs);
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='item'] {
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > :is([data-part='item'], [data-part='search']) {
     flex: none;
     inline-size: var(--_ios-rail-item);
     min-inline-size: var(--_ios-rail-item);
@@ -275,7 +283,7 @@
     padding: 0;
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='item'] > [data-part='item-label'] {
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > :is([data-part='item'], [data-part='search']) > [data-part='item-label'] {
     position: absolute;
     inline-size: var(--ds-border-width-default);
     block-size: var(--ds-border-width-default);
@@ -290,6 +298,24 @@
     content: none;
   }
 
+  /*
+   * The search disc in the column (order L2, kit): 48 round, 12 under the
+   * capsule and centred on it, as the column's other round buttons. The bar
+   * keeps that room under it.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:has(> [data-part='search']:not([data-expanded])) {
+    position: relative;
+    margin-block-end: calc(var(--_ios-rail-item) + var(--ds-space-fixed-xl));
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='search']:not([data-expanded]) {
+    inset-block: calc(100% + var(--ds-border-width-default) + var(--ds-space-fixed-xl)) auto;
+    inset-inline: 0;
+    inline-size: var(--_ios-rail-item);
+    block-size: var(--_ios-rail-item);
+    margin-inline: auto;
+  }
+
   /* The same capsule on a bar a docked shell puts in its column (side, or auto in the query). */
   @container style(--_ios-rail: side) {
     [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) {
@@ -301,7 +327,7 @@
       padding: var(--ds-space-fixed-2xs);
     }
 
-    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='item'] {
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > :is([data-part='item'], [data-part='search']) {
       flex: none;
       inline-size: var(--_ios-rail-item);
       min-inline-size: var(--_ios-rail-item);
@@ -310,7 +336,7 @@
       padding: 0;
     }
 
-    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='item'] > [data-part='item-label'] {
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > :is([data-part='item'], [data-part='search']) > [data-part='item-label'] {
       position: absolute;
       inline-size: var(--ds-border-width-default);
       block-size: var(--ds-border-width-default);
@@ -347,6 +373,48 @@
 
     [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']):dir(rtl) {
       inset-inline: calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2 - var(--ds-space-fixed-2xs) - var(--ds-border-width-default)) auto;
+    }
+
+    /* The search disc under the capsule, as on a bar placed side by hand. */
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search']:not([data-expanded]) {
+      inset-block: calc(100% + var(--ds-border-width-default) + var(--ds-space-fixed-xl)) auto;
+      inset-inline: 0;
+      inline-size: var(--_ios-rail-item);
+      block-size: var(--_ios-rail-item);
+      margin-inline: auto;
+    }
+
+    /*
+     * Docked with a search disc (order L2): the disc sits at the column's
+     * foot, centred in the column, and the capsule's foot is raised by the
+     * disc and its 12 gap, so the disc never falls below the foot. The disc
+     * is fixed on the shell, not on the capsule: the capsule still scrolls
+     * on a short shell (the outer screen in landscape is 382 tall), and a
+     * scroller would clip a disc placed on it. A bar with a disc has no
+     * backdrop filter of its own (ios-refraction.css; here for a style
+     * without the glass), so the shell is the disc's containing block.
+     */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])):not([data-placement='bottom']) {
+      position: fixed;
+      inset-block: auto calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-xl));
+      max-block-size: calc(100% - var(--_ios-rail-head) - var(--_ios-rail-foot) - 3 * var(--_ios-rail-item) - 2 * var(--_ios-rail-gap) - var(--ds-space-fixed-xl));
+      margin: 0;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search']:not([data-expanded]) {
+      position: fixed;
+      inset-block: auto var(--_ios-rail-foot);
+      margin: 0;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search']:not([data-expanded]):dir(ltr) {
+      inset-inline: auto calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search']:not([data-expanded]):dir(rtl) {
+      inset-inline: calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2) auto;
     }
   }
 

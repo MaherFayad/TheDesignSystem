@@ -1,0 +1,20 @@
+<!-- The Angular form of the same composition: the menu host holds its trigger and its content, a sub menu host holds its own, and a projected template is read like an expression. -->
+<ng-container dsDropdownMenu>
+  <button dsButton dsDropdownMenuTrigger>Open the menu</button>
+  <ng-template dsDropdownMenuContent align="end">
+    <div dsDropdownMenuItem>Rename file</div>
+    <ng-container dsDropdownMenuSub>
+      <div dsDropdownMenuSubTrigger>Share file</div>
+      <ng-template dsDropdownMenuSubContent>
+        <div dsDropdownMenuItem>Copy link</div>
+      </ng-template>
+    </ng-container>
+  </ng-template>
+</ng-container>
+<ng-container dsDropdownMenu>
+  <button dsIconButton dsDropdownMenuTrigger icon="more" label="More actions"></button>
+  <ng-template dsDropdownMenuContent>
+    <ng-container [ngTemplateOutlet]="items" />
+  </ng-template>
+</ng-container>
+<span dsStatusDot tone="success" label="Online"></span>

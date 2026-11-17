@@ -561,10 +561,61 @@
     background-color: var(--ds-color-bg-overlay-10);
   }
 
+  /*
+   * The search item at rest (order L2, from the M9.9 request): its own round
+   * disc of the bar's glass beside the capsule (its shape is in ds.chrome).
+   * Current, it takes the lens as a layer over that glass, as the current
+   * tab's lens sits on the bar. Expanded into its field it is part of the
+   * capsule again and draws nothing of its own.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+    background-color: var(--_tab-bar-bg);
+    box-shadow: var(--ds-elevation-glass);
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded]) {
+    background-image: linear-gradient(var(--ds-color-bg-overlay-10), var(--ds-color-bg-overlay-10));
+  }
+
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
     [data-platform='ios'] [data-ds='tab-bar'] {
       --_tab-bar-bg: var(--ds-color-material-glass-solid);
 
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  /*
+   * Page dots (order L2, from the M9.9 request): the dots sit on a small
+   * glass platter, as the kit draws them. The current dot stays wider than
+   * the others (Pagination.css), so the current page is never told apart by
+   * brightness alone (WCAG 2.2 1.4.1). Its height is in ds.chrome.
+   */
+  [data-platform='ios'] [data-ds='pagination'][data-variant='dots'] {
+    --_pagination-track-bg: var(--ds-color-material-glass);
+    --_pagination-track-padding-inline: var(--ds-space-fixed-2xs);
+  }
+
+  [data-platform='ios'] [data-ds='pagination'][data-variant='dots'] > [data-part='track'] {
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-platform='ios'] [data-ds='pagination'][data-variant='dots'] {
+      --_pagination-track-bg: var(--ds-color-material-glass-solid);
+    }
+
+    [data-platform='ios'] [data-ds='pagination'][data-variant='dots'] > [data-part='track'] {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
@@ -937,6 +988,7 @@
      * border band without it read as a ring.
      */
     [data-platform='ios'] [data-ds='tab-bar'],
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
@@ -946,6 +998,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
@@ -979,6 +1032,7 @@
      * glass buttons lend it to the rim.
      */
     [data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'] [data-ds='toast']::after,
@@ -1008,6 +1062,7 @@
 
     /* Right to left: the light comes from the upper start, which is now the right. */
     [data-platform='ios'] [data-ds='tab-bar']:dir(rtl)::after,
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='toast']:dir(rtl)::after,
@@ -1026,6 +1081,7 @@
 
     /* Dark: a faint light edge, never a dark ring. */
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']::after,
@@ -1043,6 +1099,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']:dir(rtl)::after,
@@ -1070,6 +1127,24 @@
       box-shadow: inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent);
     }
 
+    /*
+     * The search disc, current: the 10 percent overlay of the M1 paint stays
+     * over its glass (gray in light, lighter in dark), so the current disc
+     * is told apart by more than the glyph's tint (WCAG 2.2 1.4.1); the soft
+     * light along the top of the lens, and the disc's drop shadow.
+     */
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible) {
+      box-shadow:
+        inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 45%, transparent),
+        0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible) {
+      box-shadow:
+        inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent),
+        0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
+    }
+
     /* The segmented thumb: a bright glass on the track, the rim above and one soft, low lift. */
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 92%, transparent);
@@ -1086,7 +1161,8 @@
 
   /* The three strengths. Liquid and Neutral ship regular, the one closest to the references. */
   @container style(--_ios-glass: clear) {
-    [data-platform='ios'] [data-ds='tab-bar'] {
+    [data-platform='ios'] [data-ds='tab-bar'],
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
@@ -1111,7 +1187,8 @@
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
@@ -1131,7 +1208,8 @@
   }
 
   @container style(--_ios-glass: regular) {
-    [data-platform='ios'] [data-ds='tab-bar'] {
+    [data-platform='ios'] [data-ds='tab-bar'],
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
@@ -1173,7 +1251,8 @@
         0 0 var(--ds-space-fixed-m) var(--ds-color-material-glass-solid);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
@@ -1185,6 +1264,19 @@
       --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
     }
 
+    /*
+     * Order L2: a text button on the bar holds a line of light text, which
+     * fell to 2.96:1 (Neutral) and 3.15:1 (Liquid) over the lightest content
+     * at some scroll positions (measured from pixels, 31 positions). Its dark
+     * tint goes up so the label keeps 4.5:1 (WCAG 2.2 1.4.3); the blur stays.
+     * Round icon buttons keep the clearer glass: their glyphs keep 3:1.
+     */
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='end'] [data-ds='button']:not([data-emphasis='solid']) {
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
+    }
+
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
@@ -1193,7 +1285,8 @@
   }
 
   @container style(--_ios-glass: frosted) {
-    [data-platform='ios'] [data-ds='tab-bar'] {
+    [data-platform='ios'] [data-ds='tab-bar'],
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
@@ -1218,7 +1311,8 @@
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
@@ -1246,7 +1340,9 @@
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       [data-platform='ios'] [data-ds='tab-bar'],
-      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
         background-color: var(--ds-color-material-glass-solid);
         border-color: var(--_tab-bar-border-color);
         box-shadow: var(--ds-elevation-glass);
@@ -1303,6 +1399,12 @@
         box-shadow: none;
       }
 
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible) {
+        background-image: linear-gradient(var(--ds-color-bg-overlay-10), var(--ds-color-bg-overlay-10));
+        box-shadow: var(--ds-elevation-glass);
+      }
+
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
         background-color: var(--_segmented-control-thumb-bg);
@@ -1318,6 +1420,7 @@
 
       /* The solid paint keeps its border: no rim. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
@@ -1334,7 +1437,11 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'],
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'],
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
-    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
       background-color: var(--ds-color-material-glass-solid);
       border-color: var(--_tab-bar-border-color);
       box-shadow: var(--ds-elevation-glass);
@@ -1405,6 +1512,12 @@
       box-shadow: none;
     }
 
+    [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible),
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-active]:not([data-expanded], :focus-visible) {
+      background-image: linear-gradient(var(--ds-color-bg-overlay-10), var(--ds-color-bg-overlay-10));
+      box-shadow: var(--ds-elevation-glass);
+    }
+
     [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
     [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'],
@@ -1422,6 +1535,7 @@
 
     /* No rim with more contrast. */
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='toast']::after,
@@ -1430,6 +1544,7 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
     [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::after,
@@ -1447,6 +1562,8 @@
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       [data-platform='ios'] [data-ds='toast'],
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
@@ -1471,6 +1588,7 @@
 
       /* No rim where the glass cannot be drawn. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
@@ -2176,7 +2294,7 @@
     inset-inline: calc(-2 * var(--ds-space-fixed-l));
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] {
+  [data-platform='ios'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) {
     justify-content: center;
     gap: var(--ds-space-fixed-4xs);
     min-block-size: var(--_tab-bar-item-height);
@@ -2186,17 +2304,84 @@
     font-size: var(--ds-type-label-small-font-size);
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item']:lang(ar) {
+  [data-platform='ios'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']):lang(ar) {
     font-size: var(--ds-type-label-medium-font-size);
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+  [data-platform='ios'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-icon'] {
     padding: 0;
   }
 
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
+  [data-platform='ios'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-icon'] > [data-ds='icon'] {
     inline-size: var(--_tab-bar-icon-size);
     block-size: var(--_tab-bar-icon-size);
+  }
+
+  /*
+   * The search item (order L2, from the M9.9 request, after the vendor kit
+   * and its music app): at rest a round disc as tall as the bar, one gap
+   * (8) past the capsule's inline end; the bar leaves that room at its end.
+   * The label is hidden from view and stays in the link, so it is still the
+   * item's name. The disc is drawn out of the bar's box (position absolute
+   * on the bar), so the items keep the whole capsule. In the column it sits
+   * under the capsule (ios-shell.css). Expanded into its field it is back
+   * in the capsule: the tabs keep their icons only, as squares as tall as
+   * an item, and the field takes the rest.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'] {
+    --_ios-search-size: calc(var(--_tab-bar-item-height) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default));
+    --_ios-search-gap: var(--ds-space-fixed-m);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])):not([data-placement='side']) {
+    position: relative;
+    margin-inline-end: calc(max(calc(2 * var(--ds-space-fixed-l)), var(--ds-inset-safe-end)) + var(--_ios-search-size) + var(--_ios-search-gap));
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    position: absolute;
+    inset-block: calc(-1 * var(--ds-border-width-default));
+    inset-inline-start: calc(100% + var(--ds-border-width-default) + var(--_ios-search-gap));
+    flex: none;
+    box-sizing: border-box;
+    inline-size: var(--_ios-search-size);
+    min-inline-size: 0;
+    block-size: var(--_ios-search-size);
+    min-block-size: 0;
+    padding: 0;
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) > [data-part='item-label'],
+  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search'][data-expanded]) > [data-part='item'] > [data-part='item-label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /*
+   * Squares as tall as an item; where the field needs the room they narrow,
+   * down to the icon's own box (never under the 24 target), and the field
+   * keeps half the capsule (TabBar.css). Four tabs and the field at 393 give
+   * tabs of 39, under the platform's 44 (reported in order L2).
+   */
+  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search'][data-expanded]) > [data-part='item'] {
+    flex: 0 1 var(--_tab-bar-item-height);
+    min-inline-size: max(var(--_tab-bar-icon-size), var(--ds-size-target-min));
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search'][data-expanded] {
+    flex: 1 1 0;
+    padding-inline: var(--ds-space-fixed-2xs);
+  }
+
+  /* Dots: the platter is as tall as the least target, the dots keep their 24 slots. */
+  [data-platform='ios'] [data-ds='pagination'][data-variant='dots'] > [data-part='track'] {
+    min-block-size: var(--ds-size-target-min);
   }
 
   /* ------------------------------------------------------------ dialog and alert dialog: a compact card with capsule actions */
@@ -2640,11 +2825,11 @@
     --_button-fg-active: var(--ds-color-state-danger-text);
   }
 
-  /* Dark: the danger red on the gray capsule over the dark glass measured 4.30 (Liquid); a fifth of the bright text color lifts it over 4.5. */
+  /* Dark: the danger red on the gray capsule over the dark glass measured 4.30 (Liquid, order P1), and 4.23 over the demo page with the dilated ink read of order L2; a third of the bright text color lifts it over 4.5. */
   [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel'])[data-tone='danger'] {
-    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
-    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
-    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
+    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
+    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
+    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
   }
 
   [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > [data-part='cancel'] {

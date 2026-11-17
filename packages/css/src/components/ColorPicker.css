@@ -1,0 +1,101 @@
+/*
+ * ColorPicker: the colour panel and its trigger (order M9.20, proposed).
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md. Every control in it is another root with its
+ * own file (Tabs, ColorSwatchPicker, ColorArea, ColorSlider, ColorField,
+ * ColorSwatch, IconButton); this file only lays them out, as a parent sets
+ * the place of its children. The controls inside a view belong to the Tabs
+ * root (anatomy rule), so they are reached by their data-ds under the views
+ * part.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_color-picker-gap         the room between the views, the opacity row and the footer
+ *   --_color-picker-padding     the room above a view's controls, under the tabs
+ *   --_color-picker-width       the panel's largest inline size; it fills less when its container is narrower
+ *   --_color-picker-border-color the line over the footer
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-picker-preview     the preview swatch, larger than a saved disc
+ *
+ * The tabs share the row equally, as a segmented control does (the kit's
+ * three views). The footer is the preview at the inline start, the saved
+ * colours filling the middle and wrapping, and the eyedropper at the end.
+ * Everything follows reading order; the grid and the area keep their own
+ * rules for right to left.
+ *
+ * 1.4.10: the panel has no fixed width. It fills its container up to
+ * --_color-picker-width, so it fits a 320px screen with its gutters, in a
+ * sheet as in a popover.
+ *
+ * Motion: none of its own.
+ */
+@layer ds.base {
+  [data-ds='color-picker'] {
+    --_color-picker-gap: var(--ds-space-m);
+    --_color-picker-padding: var(--ds-space-s);
+    --_color-picker-width: calc(var(--ds-size-control-lg) * 9);
+    --_color-picker-border-color: var(--ds-color-border-default);
+    --_color-picker-preview: calc(var(--ds-size-control-lg) * 1.5);
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='color-picker'][data-variant='compact'] {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  [data-ds='color-picker'][data-variant='inline'] {
+    display: grid;
+    gap: var(--_color-picker-gap);
+    inline-size: 100%;
+    max-inline-size: var(--_color-picker-width);
+  }
+
+  [data-ds='color-picker'] > [data-part='views'] {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  [data-ds='color-picker'] > [data-part='views'] > [data-part='list'] > [data-part='trigger'] {
+    flex: 1 1 0;
+  }
+
+  [data-ds='color-picker'] > [data-part='views'] > [data-part='panel']:not([hidden]) {
+    display: grid;
+    gap: var(--_color-picker-gap);
+    padding-block-start: var(--_color-picker-padding);
+  }
+
+  [data-ds='color-picker'] > [data-part='footer'] {
+    display: flex;
+    align-items: center;
+    gap: var(--_color-picker-gap);
+    min-inline-size: 0;
+    padding-block-start: var(--_color-picker-gap);
+    border-block-start: var(--ds-border-width-default) solid var(--_color-picker-border-color);
+  }
+
+  [data-ds='color-picker'] > [data-part='footer'] > [data-part='preview'] {
+    --_color-swatch-size: var(--_color-picker-preview);
+    --_color-swatch-radius: var(--ds-radius-control);
+  }
+
+  [data-ds='color-picker'] > [data-part='footer'] > [data-part='saved'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  [data-ds='color-picker'] > [data-part='footer'] > [data-part='eyedropper'] {
+    flex: none;
+    align-self: flex-start;
+  }
+
+  /* The swatch inside the trigger is drawn at the trigger's icon size. */
+  [data-ds='color-picker'] > [data-part='trigger'] [data-ds='color-swatch'] {
+    --_color-swatch-size: var(--ds-size-icon-lg);
+  }
+}

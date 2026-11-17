@@ -1,0 +1,134 @@
+/*
+ * ColorArea: change two channels of a colour on a square of colour (order
+ * M9.20, proposed). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md. The thumb follows ColorSlider's thumb: a ring
+ * of the surface colour, an edge at 3:1 outside it, the colour inside.
+ *
+ * The gradient and the thumb colour are data, not tokens: ColorArea.tsx
+ * sets them inline as --_color-area-fill (React Aria's layered gradient,
+ * which already runs from the right in Arabic), --_color-area-blend (screen
+ * for the rgb space, normal otherwise) and --_color-area-thumb-bg (the
+ * colour now). This file holds no colour value.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_color-area-height       the block size; the area fills its inline size
+ *   --_color-area-radius       the corner
+ *   --_color-area-border-color the edge around the area and the thumb,
+ *                              color.border.control, 3:1 or more (1.4.11)
+ *   --_color-area-thumb        the thumb, never under size.target-min (2.5.8)
+ *   --_color-area-ring         the focus ring around the thumb
+ *   --_color-area-lift         how much the thumb's ring grows while dragged (pattern press); 0px turns it off
+ *   --_color-area-lift-now     the working growth the dragging state sets
+ *   --_color-area-duration, --_color-area-ease   the lift and its settle
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-area-fill, --_color-area-blend   the gradient and its blend, set inline
+ *   --_color-area-thumb-bg     the colour now, set inline
+ *   --_color-area-thumb-border the ring of the thumb, the surface colour
+ *
+ * React Aria places the thumb (inline left and top as fractions, its own
+ * translate) and keeps touch-action none on the area and the thumb, so a
+ * finger drag never scrolls the page. Nothing here animates its place. The
+ * thumb centre reaches the edges of the area; the area keeps half a thumb of
+ * room around it from its parent's padding, never its own, so a press at
+ * the very edge still lands on the ends of each channel.
+ *
+ * Focus (frameworks.md, "Input modality"): the ring shows while a hidden
+ * input inside the thumb has focus, and is hidden only under
+ * data-modality pointer, where a press focuses the input on its own.
+ *
+ * Motion (pattern press, proposed): while a pointer drags, the thumb's
+ * surface ring grows by --_color-area-lift and settles on release, as on
+ * ColorSlider (a box shadow; React Aria owns the transform). Under reduced
+ * motion every duration token is 0ms, so it changes at once.
+ */
+@layer ds.base {
+  [data-ds='color-area'] {
+    --_color-area-height: calc(var(--ds-size-control-lg) * 5);
+    --_color-area-radius: var(--ds-radius-control);
+    --_color-area-border-color: var(--ds-color-border-control);
+    --_color-area-thumb: max(var(--ds-size-control-sm), var(--ds-size-target-min));
+    --_color-area-thumb-border: var(--ds-color-bg-surface);
+    --_color-area-thumb-bg: transparent;
+    --_color-area-fill: none;
+    --_color-area-blend: normal;
+    --_color-area-ring: var(--ds-focus-shadow-ring);
+    --_color-area-lift: var(--ds-border-width-strong);
+    --_color-area-lift-now: 0px;
+    --_color-area-duration: var(--ds-duration-base);
+    --_color-area-ease: var(--ds-ease-default);
+
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    inline-size: 100%;
+    min-inline-size: calc(var(--_color-area-thumb) * 3);
+    block-size: var(--_color-area-height);
+    border-radius: var(--_color-area-radius);
+    background: var(--_color-area-fill);
+    background-blend-mode: var(--_color-area-blend);
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_color-area-border-color);
+    forced-color-adjust: none;
+    touch-action: none;
+    cursor: crosshair;
+    user-select: none;
+  }
+
+  [data-ds='color-area'] > [data-part='thumb'] {
+    --_color-area-lift-now: 0px;
+    box-sizing: border-box;
+    inline-size: var(--_color-area-thumb);
+    block-size: var(--_color-area-thumb);
+    border: var(--ds-border-width-strong) solid var(--_color-area-thumb-border);
+    border-radius: var(--ds-radius-pill);
+    background: var(--_color-area-thumb-bg);
+    box-shadow:
+      0 0 0 var(--_color-area-lift-now) var(--_color-area-thumb-border),
+      0 0 0 calc(var(--_color-area-lift-now) + var(--ds-border-width-default)) var(--_color-area-border-color);
+    transition: box-shadow var(--_color-area-duration) var(--_color-area-ease);
+    forced-color-adjust: none;
+    cursor: grab;
+  }
+
+  [data-ds='color-area'] > [data-part='thumb'][data-dragging] {
+    --_color-area-lift-now: var(--_color-area-lift);
+    cursor: grabbing;
+  }
+
+  /* Focus shows at once (WCAG 2.4.7): the ring is not part of the transition timing a person waits on. */
+  [data-ds='color-area'] > [data-part='thumb']:focus-within {
+    box-shadow:
+      0 0 0 var(--_color-area-lift-now) var(--_color-area-thumb-border),
+      0 0 0 calc(var(--_color-area-lift-now) + var(--ds-border-width-default)) var(--_color-area-border-color),
+      var(--_color-area-ring);
+    outline: var(--ds-border-width-strong) solid transparent;
+    transition: none;
+  }
+
+  :root[data-modality='pointer'] [data-ds='color-area'] > [data-part='thumb']:focus-within {
+    box-shadow:
+      0 0 0 var(--_color-area-lift-now) var(--_color-area-thumb-border),
+      0 0 0 calc(var(--_color-area-lift-now) + var(--ds-border-width-default)) var(--_color-area-border-color);
+  }
+
+  /* Disabled, as ColorSlider: the area and the thumb dim and take no pointer. */
+  [data-ds='color-area'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='color-area'][data-disabled] > [data-part='thumb'] {
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='color-area'] {
+      --_color-area-border-color: CanvasText;
+    }
+
+    [data-ds='color-area'] > [data-part='thumb']:focus-within {
+      outline-color: Highlight;
+      outline-offset: var(--ds-border-width-strong);
+    }
+  }
+}
