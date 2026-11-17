@@ -30,7 +30,6 @@ import {
   List,
   ListItem,
   Navbar,
-  Pagination,
   SegmentedControl,
   SegmentedControlItem,
   Select,
@@ -46,7 +45,6 @@ import {
   Switch,
   TabBar,
   TabBarItem,
-  TabBarSearch,
   Toaster,
   toast,
 } from '@the-system/react';
@@ -128,9 +126,9 @@ function Tabs() {
     <div data-gallery="phone-tabs">
       <TabBar aria-label="Main">
         <TabBarItem href="#home" icon="home" label="Home" />
+        <TabBarItem href="#search" icon="search" label="Search" />
         <TabBarItem href="#inbox" icon="inbox" label="Inbox" badge={3} />
         <TabBarItem href="#settings" icon="settings" label="Settings" active />
-        <TabBarSearch href="#search" label="Search" />
       </TabBar>
     </div>
   );
@@ -169,9 +167,6 @@ function PhoneArtTop() {
             </figcaption>
           </figure>
         ))}
-      </div>
-      <div data-gallery="phone-art-dots">
-        <Pagination variant="dots" pageCount={4} defaultPage={1} label="Pages of recent boards" />
       </div>
     </section>
   );

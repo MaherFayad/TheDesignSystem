@@ -187,7 +187,6 @@
 
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
   [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
   [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after {
     content: '';
@@ -207,7 +206,6 @@
 
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:is(:active, [data-pressed])::after,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):is(:active, [data-pressed])::after,
   [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled])::after,
   [data-platform='android'] [data-ds='pagination'] > [data-part='page']:is(:active, [data-pressed])::after {
     /* The pressed state layer, 10% (opacity.state.pressed). */
@@ -290,8 +288,7 @@
    * 10%), ::after the ripple (10% pressed). Both are placed on the pill in
    * ds.chrome below.
    */
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::before,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::before {
     content: '';
     position: absolute;
     background-color: currentColor;
@@ -301,14 +298,12 @@
   }
 
   @media (hover: hover) {
-    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:hover::before,
-    [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):hover::before {
+    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:hover::before {
       opacity: var(--ds-opacity-state-hover);
     }
   }
 
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:focus-visible::before,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):focus-visible::before {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:focus-visible::before {
     opacity: var(--ds-opacity-state-focus);
   }
 
@@ -1148,8 +1143,6 @@
   :root[data-motion='reduce'] [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:active::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
@@ -1172,7 +1165,6 @@
     /* The ripple and the state layer are decoration: the system draws its own focus and press. */
     [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
     [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
-    [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
     [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
     [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
     [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after,
@@ -1284,7 +1276,7 @@
     inset-inline: 0;
   }
 
-  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] {
     justify-content: flex-start;
     gap: var(--ds-space-fixed-2xs);
     padding-block: var(--ds-space-fixed-xl) calc(var(--ds-space-fixed-m) * 2);
@@ -1296,14 +1288,14 @@
   }
 
   /* The pill: 64 by 32 around the 24dp icon, round ended. */
-  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-icon'] {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
     padding-block: var(--ds-space-fixed-2xs);
     padding-inline: calc((var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2 - var(--_tab-bar-icon-size)) / 2);
     border-radius: var(--ds-shape-corner-full);
   }
 
   /* The icon fills its 24 box (the component draws the md icon, 16, in it). */
-  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-icon'] > [data-ds='icon'] {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
     inline-size: var(--_tab-bar-icon-size);
     block-size: var(--_tab-bar-icon-size);
   }
@@ -1316,9 +1308,7 @@
 
   /* The state layers sit on the pill, round ended (their paint is in ds.platform). */
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::before,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
-  [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after {
     inset-block: var(--ds-space-fixed-xl) auto;
     inset-inline: 0;
     block-size: var(--ds-size-control-xs);
@@ -1338,12 +1328,12 @@
     --_tab-bar-pill-bg: var(--ds-color-primary-tint-hover);
   }
 
-  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
     background-color: transparent;
     box-shadow: none;
   }
 
-  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']):focus-visible {
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:focus-visible {
     box-shadow: var(--_tab-bar-ring);
   }
 

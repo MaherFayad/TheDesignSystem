@@ -19,17 +19,8 @@
     --_input-radius: var(--ds-radius-xs);
   }
 
-  /*
-   * The Input inside a SearchField is its text only, on every platform (ios
-   * since order F1, web and android since order L2: the surface above drew a
-   * white box inside the field there). The field draws the fill: off ios the
-   * same white surface as the style's other fields; ios draws its own.
-   */
-  [data-style='liquid'] [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
+  /* ios (order F1): the Input inside a SearchField is its text only; the field draws the fill, so the surface above does not draw a box inside the capsule. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
     --_input-bg: transparent;
-  }
-
-  [data-style='liquid']:not([data-platform='ios']) [data-ds='search-field']:not([data-part], [data-readonly]) {
-    --_search-field-bg: var(--ds-color-bg-surface);
   }
 }

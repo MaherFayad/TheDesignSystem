@@ -230,6 +230,15 @@
     border-block-end: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
   }
 
+  /*
+   * Items of a zero basis and a zero floor would fit on the accessory's line
+   * at no width when a platform sets the gap to 0 (android). A floor of one
+   * hairline sends them to a row of their own in every platform.
+   */
+  [data-ds='tab-bar']:has(> [data-part='accessory']):not([data-compact]) > :is([data-part='item'], [data-part='search']) {
+    min-inline-size: var(--ds-border-width-default);
+  }
+
   /* Its content (a Toolbar) takes the row. */
   [data-ds='tab-bar'] > [data-part='accessory'] > * {
     flex: 1 1 auto;

@@ -43,25 +43,9 @@
 
     /* Small chrome: a low blur, so the middle stays clear. */
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'],
-    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
-    }
-
-    /*
-     * A bar that holds a search disc (order L2). A backdrop filter on the bar
-     * makes it the backdrop root of its children in Chromium, so the disc,
-     * drawn outside the bar's box, would see nothing behind it (measured: a
-     * flat fill). The bar gives up its own filter and isolates instead, so
-     * its band (below, ds.chrome) stays under its content; in tier 1 its
-     * ::before carries the bar's glass. In tier 2 the middle of such a bar is
-     * the content under the tint, without the low blur.
-     */
-    :root [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])) {
-      isolation: isolate;
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
     }
 
     /* The navigation and sheet buttons (order G2): a lower saturation than the bar, so a button over one strong colour reads as clear glass and not as a pill of that colour. */
@@ -101,8 +85,7 @@
      * together still never fold; the glare is applied twice too, measured
      * against the labels in docs/reports/lanes/reset-P1.md.
      */
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'],
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'] {
       -webkit-backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
       backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
     }
@@ -144,30 +127,7 @@
    */
   @media (prefers-reduced-transparency: no-preference) and (prefers-contrast: no-preference) and (forced-colors: none) {
     @container style(--_ios-glass: regular) {
-      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'],
-      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
-        background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
-      }
-
-      /*
-       * Order L2: a scan of 31 scroll positions found a light menu row at
-       * 4.30 (Liquid, tier 1) with the shade behind its text: the bend and
-       * its glare lift the darkest content under the row. The light menu's
-       * tint goes from 64 to 72 percent in tier 1 (the selection menu keeps
-       * 6:1 and more without it).
-       */
-      :root[data-refraction='true'] [data-platform='ios']:not([data-scheme='dark'], [data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
-        background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
-      }
-
-      /*
-       * Order L2: in tier 2 a bar that holds a search disc has no low blur
-       * (see above), and its dark labels fell to 3.64 (Liquid) and 3.85
-       * (Neutral) over the lightest content; the bar and its disc take the
-       * tier 1 tint.
-       */
-      :root:not([data-refraction='true']) [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])),
-      :root:not([data-refraction='true']) [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] {
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
       }
 
@@ -186,7 +146,6 @@
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
@@ -205,8 +164,6 @@
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
@@ -230,7 +187,6 @@
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
@@ -258,7 +214,6 @@
 @layer ds.chrome {
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar']::before,
-    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
     :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::before,
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='toast']::before {
@@ -344,24 +299,6 @@
       mask-composite: add;
     }
 
-    /* Tier 1, a bar that holds a search disc (order L2): its glass, the same bend as on the bar, in its ::before over the border box. */
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded]))::before {
-      content: '';
-      display: block;
-      position: absolute;
-      inset: calc(-1 * var(--ds-border-width-default));
-      z-index: calc(0 - var(--ds-z-raised));
-      border-radius: inherit;
-      background: none;
-      box-shadow: none;
-      opacity: 1;
-      pointer-events: none;
-      animation: none;
-      transition: none;
-      -webkit-backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
-      backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
-    }
-
     /* Tier 1: no sheen over the bend. */
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
@@ -398,8 +335,6 @@
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded]))::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
@@ -418,10 +353,6 @@
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded]))::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded]))::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
@@ -449,8 +380,6 @@
   @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded]))::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
