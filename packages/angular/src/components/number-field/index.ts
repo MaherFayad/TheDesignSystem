@@ -1,1 +1,1 @@
-export { DsNumberField, type NumberFieldAdornment, type NumberFieldShape, type NumberFieldSize } from './number-field';
+export { DsNumberField, type NumberFieldAdornment, type NumberFieldShape, type NumberFieldSize, type NumberFieldVariant } from './number-field';

@@ -53,6 +53,16 @@
 // its edge, gives a little against the other way, and closes past a distance
 // or on a fast flick; let go short, it springs back. Layout never animates
 // and the store never waits.
+//
+// The close button and the banner parts (order M9.8), as React. Each toast
+// asks the store's toastClosable(item, platform): on ios a timed toast has
+// no close button by default, as a notification banner; a toast that stays
+// until closed (danger, an action, no timeout) always keeps it, and
+// toast({ closable }) decides elsewhere (the store refuses closable false
+// on a toast that stays). A toast without one still closes by its timer,
+// by Escape when it has focus (F8, then Tab: each toast is a tab stop) and
+// by the swipe. start and meta come from the item; meta is read after the
+// description in the announcement, in the toast's language.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -74,7 +84,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
-import { toastStore, toastUrgency, type ToastAction, type ToastItem, type ToastSnapshot, type ToastStore } from '@the-system/shared';
+import { toastClosable, toastMeta, toastStore, toastUrgency, type ToastAction, type ToastItem, type ToastSnapshot, type ToastStore } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import {
   START_BUFFER,
@@ -93,7 +103,17 @@ import {
 import { animationsDone } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
-import { TOAST_PARTS_IMPORTS, TOAST_PARTS_TEMPLATE, toastDirFor, toastIcons, toastLabelsFor, type ToastPartsData } from './toast';
+import {
+  TOAST_PARTS_IMPORTS,
+  TOAST_PARTS_TEMPLATE,
+  toastDirFor,
+  toastIcons,
+  toastLabelsFor,
+  toastMetaClock,
+  toastMetaOf,
+  toastStartKind,
+  type ToastPartsData,
+} from './toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
 export type ToasterPosition = ToasterPlacement;
@@ -116,9 +136,10 @@ export function resolveToasterPosition(position: ToasterPositionProp, platform: 
   return toasterPlacement(position, platform);
 }
 
-/** The text a screen reader hears for a toast, after the label. */
-export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' | 'action'>): string {
-  const parts = [item.title, item.description, item.action ? (item.action.altText ?? item.action.label) : undefined];
+/** The text a screen reader hears for a toast, after the label: title, description, meta, then the action's alternative. */
+export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' | 'action' | 'meta'>, lang?: string, now?: number): string {
+  const meta = item.meta !== undefined ? toastMeta(item.meta, lang, now).text : undefined;
+  const parts = [item.title, item.description, meta, item.action ? (item.action.altText ?? item.action.label) : undefined];
   return parts
     .map((p) => p?.trim())
     .filter((p): p is string => !!p)
@@ -258,6 +279,8 @@ export class DsToasterItem {
   protected readonly layer = inject(DsToasterLayer);
   protected readonly icons = toastIcons;
   protected readonly toastDirFor = toastDirFor;
+  protected readonly startKindOf = toastStartKind;
+  protected readonly metaOf = toastMetaOf;
   readonly element = consumeHostAttributes(['dsToasterItem']);
   private readonly injector = inject(Injector);
   private gesture: Gesture | null = null;
@@ -286,9 +309,13 @@ export class DsToasterItem {
       count: item.count,
       action: item.action,
       closeLabel: item.lang !== undefined ? toastLabelsFor(item.lang).close : this.layer.closeLabel(),
-      closable: true,
+      closable: toastClosable(item, this.layer.platform()),
+      start: item.start,
+      meta: item.meta,
+      lang: item.lang ?? this.layer.lang(),
     };
   });
+  protected readonly now = toastMetaClock(this.parts);
 
   constructor() {
     // A closed toast plays its exit, then leaves the store at once (or after
@@ -474,6 +501,9 @@ export class DsToasterLayer {
   protected readonly hasToasts = computed(() => this.items().length > 0);
   protected readonly attrs = computed(() => attributesOf(this.theme.value()));
   private readonly words = computed(() => toastLabelsFor(this.theme.value().lang));
+  /** The platform and language of the theme the toaster is declared in: the close rule and a meta time read them. */
+  readonly platform = computed(() => this.theme.value().platform);
+  readonly lang = computed(() => this.theme.value().lang);
   readonly closeLabel = computed(() => this.toaster.closeLabel() ?? this.words().close);
   private readonly announceLabel = computed(() => this.toaster.toastLabel() ?? this.words().toast);
   protected readonly position = computed(() => resolveToasterPosition(this.toaster.position(), this.theme.value().platform));
@@ -544,7 +574,8 @@ export class DsToasterLayer {
     effect(() => {
       const snapshot = this.snapshot();
       const label = this.announceLabel();
-      untracked(() => this.announce(snapshot, label));
+      const lang = this.lang();
+      untracked(() => this.announce(snapshot, label, lang));
     });
 
     // The stack: each toast's place, written before the next paint (toast-stack.ts in @the-system/motion).
@@ -589,7 +620,7 @@ export class DsToasterLayer {
     this.members.delete(item);
   }
 
-  private announce(snapshot: ToastSnapshot, label: string): void {
+  private announce(snapshot: ToastSnapshot, label: string, lang: string): void {
     const live = new Set(snapshot.visible.map((t) => t.id));
     for (const id of [...this.seen.keys()]) if (!live.has(id)) this.seen.delete(id);
     const fresh = snapshot.visible.filter((t) => t.state === 'open' && this.seen.get(t.id) !== t.version);
@@ -599,7 +630,7 @@ export class DsToasterLayer {
       this.pending.push({
         key: `${t.id}:${t.version}`,
         label: t.lang !== undefined ? toastLabelsFor(t.lang).toast : label,
-        text: toastAnnouncement(t),
+        text: toastAnnouncement(t, t.lang ?? lang),
         lang: t.lang,
         urgent: toastUrgency(t.tone) === 'assertive',
       });

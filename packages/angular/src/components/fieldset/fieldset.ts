@@ -11,6 +11,12 @@
 // error part in place of `error`, as React's useFormFieldError(name), and
 // the host renders data-name.
 //
+// With variant inset the body is a card of rows (order M9.1, as React):
+// each dsField child is one row, label at the leading edge and the control
+// filling the rest (Field.css reads the field as a direct child of the
+// body, which the projected host is). The description draws under the card
+// as its footer; in the DOM it stays before the body, so it is read first.
+//
 // DOM order: legend, description, error, body. The error is the system
 // FieldError, given a Field context of its own through viewProviders, so it
 // takes the group's error id and the error part name and never reaches the
@@ -25,6 +31,8 @@ import { DsFormContext } from '../form/form-context';
 import { DsErrorContext, hasContent } from './error-context';
 
 export type FieldsetSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+/** inset: a grouped card of rows, the legend above it as the section header and the description under it as the footer. */
+export type FieldsetVariant = 'inset';
 /** A node prop in Angular: text, or a template. */
 export type FieldsetText = string | TemplateRef<unknown>;
 
@@ -40,6 +48,7 @@ let nextId = 0;
     'data-ds': 'fieldset',
     '[attr.data-name]': 'name() ?? null',
     '[attr.data-size]': 'size()',
+    '[attr.data-variant]': 'variant() ?? null',
     '[attr.disabled]': 'disabled() ? "" : null',
     '[attr.aria-describedby]': 'describedBy()',
     '[attr.data-disabled]': 'disabled() ? "" : null',
@@ -74,6 +83,13 @@ export class DsFieldset {
   readonly name = input<string | undefined>(undefined);
   /** Legend size and the space between the fields. Default md. */
   readonly size = input<FieldsetSize>('md');
+  /**
+   * inset: the fields are rows of one card, split by hairlines, with the
+   * legend above the card and the description under it. Give each row an
+   * Input with variant plain. Stamped as data-variant. Default unset: the
+   * fields stack.
+   */
+  readonly variant = input<FieldsetVariant | undefined>(undefined);
   /** Native disabled: disables every control inside, buttons included. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Marks the group invalid. Unset: invalid while an error shows. `false` hides the error. */
@@ -120,6 +136,6 @@ export class DsFieldset {
   constructor() {
     // An error that shows after the first render slides in (order 1.22).
     settleAfterFirstRender(this.errorContext);
-    consumeHostAttributes(['dsFieldset', 'legend', 'description', 'error', 'name', 'size', 'disabled', 'invalid', 'aria-describedby']);
+    consumeHostAttributes(['dsFieldset', 'legend', 'description', 'error', 'name', 'size', 'variant', 'disabled', 'invalid', 'aria-describedby']);
   }
 }

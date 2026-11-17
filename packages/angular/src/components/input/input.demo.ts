@@ -114,6 +114,9 @@ const longValue =
         <div dsField label="رقم الجوال" orientation="horizontal">
           <div dsInput type="tel" placeholder="05x xxx xxxx"></div>
         </div>
+        <div dsField label="اسم الفريق" description="اضغط على الحقل ويطلع لك زر مسح النص.">
+          <div dsInput clearable value="فريق التصميم في الرياض"></div>
+        </div>
       </div>
     </section>
 
@@ -162,6 +165,21 @@ const longValue =
         </div>
         <div dsField label="اسم اللوحة" lang="ar" dir="rtl">
           <div dsInput variant="filled" value="إطلاق الربيع"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order M9.1: plain has no box (a row of an inset Fieldset draws the edge); clearable shows Clear text while the field has focus and a value. -->
+    <section data-demo="case" data-demo-case="plain" heading="Plain and clearable">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+        <div dsField label="Board name" description="Focus the field to see the clear button.">
+          <div dsInput clearable value="Spring launch"></div>
+        </div>
+        <div dsField label="Team name">
+          <div dsInput variant="plain" clearable value="Design"></div>
+        </div>
+        <div dsField label="Search term">
+          <div dsInput variant="plain" clearable placeholder="For example, hero"></div>
         </div>
       </div>
     </section>

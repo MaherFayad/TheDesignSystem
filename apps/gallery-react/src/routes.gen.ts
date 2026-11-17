@@ -22,6 +22,7 @@ export const routes: DemoRoute[] = [
   { name: 'Breadcrumbs', slug: 'breadcrumbs', load: () => import('../../../packages/react/src/components/Breadcrumbs/Breadcrumbs.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'ButtonGroup', slug: 'button-group', load: () => import('../../../packages/react/src/components/ButtonGroup/ButtonGroup.demo') },
+  { name: 'Calendar', slug: 'calendar', load: () => import('../../../packages/react/src/components/Calendar/Calendar.demo') },
   { name: 'Callout', slug: 'callout', load: () => import('../../../packages/react/src/components/Callout/Callout.demo') },
   { name: 'Card', slug: 'card', load: () => import('../../../packages/react/src/components/Card/Card.demo') },
   { name: 'Checkbox', slug: 'checkbox', load: () => import('../../../packages/react/src/components/Checkbox/Checkbox.demo') },
@@ -120,6 +121,7 @@ export const routes: DemoRoute[] = [
   { name: 'Toolbar', slug: 'toolbar', load: () => import('../../../packages/react/src/components/Toolbar/Toolbar.demo') },
   { name: 'Tooltip', slug: 'tooltip', load: () => import('../../../packages/react/src/components/Tooltip/Tooltip.demo') },
   { name: 'Tour', slug: 'tour', load: () => import('../../../packages/react/src/components/Tour/Tour.demo') },
+  { name: 'WheelPicker', slug: 'wheel-picker', load: () => import('../../../packages/react/src/components/WheelPicker/WheelPicker.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },
   { name: 'WindowControls', slug: 'window-controls', load: () => import('../../../packages/react/src/components/WindowControls/WindowControls.demo') },
 ];

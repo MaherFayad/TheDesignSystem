@@ -17,6 +17,8 @@ const copy = {
     error: 'Choose a status for the task.',
     noStatus: 'No statuses yet. Add one from Settings.',
     loading: 'Loading statuses',
+    filters: 'Task filters',
+    show: 'Show',
   },
   ar: {
     sort: 'الترتيب حسب',
@@ -26,6 +28,8 @@ const copy = {
     error: 'اختر حالة للمهمة.',
     noStatus: 'ما فيه حالات. أضف حالة من الإعدادات.',
     loading: 'جار تحميل الحالات',
+    filters: 'فلاتر المهام',
+    show: 'العرض',
   },
 } as const;
 
@@ -62,6 +66,29 @@ function statusOptions(lang: 'en' | 'ar'): SelectItem[] {
         <div data-demo="row" label="shape pill">
           <ng-container [ngTemplateOutlet]="sortTpl" [ngTemplateOutletContext]="{ shape: 'pill', value: 'name' }" />
         </div>
+        <div data-demo="row" label="emphasis outline, ghost">
+          <div dsField [label]="copy.en.sort" style="inline-size: 14rem;">
+            <button dsSelect emphasis="outline" [items]="sortEn" defaultValue="name"></button>
+          </div>
+          <div dsField [label]="copy.en.sort" style="inline-size: 14rem;">
+            <button dsSelect emphasis="ghost" [items]="sortEn" defaultValue="name"></button>
+          </div>
+        </div>
+        <!-- The pop-up button in a filter row (order M9.3): a ghost Select named by its own label, with the value in the link color. -->
+        <div data-demo="row" label="ghost in a filter row, sm, md, lg">
+          <div role="group" [attr.aria-label]="copy.en.filters" style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-s);">
+              <button dsSelect emphasis="ghost" size="sm" [aria-label]="copy.en.sort" [items]="sortEn" defaultValue="edited"></button>
+              <button dsSelect emphasis="ghost" size="sm" [aria-label]="copy.en.show" [items]="statusEn" defaultValue="doing"></button>
+            </div>
+          <div role="group" [attr.aria-label]="copy.en.filters" style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-s);">
+              <button dsSelect emphasis="ghost" [aria-label]="copy.en.sort" [items]="sortEn" defaultValue="edited"></button>
+              <button dsSelect emphasis="ghost" [aria-label]="copy.en.show" [items]="statusEn" defaultValue="doing"></button>
+            </div>
+          <div role="group" [attr.aria-label]="copy.en.filters" style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-s);">
+              <button dsSelect emphasis="ghost" size="lg" [aria-label]="copy.en.sort" [items]="sortEn" defaultValue="edited"></button>
+              <button dsSelect emphasis="ghost" size="lg" [aria-label]="copy.en.show" [items]="statusEn" defaultValue="doing"></button>
+            </div>
+        </div>
         <div dsTheme lang="ar">
           <div data-demo="row" label="Arabic">
             <div dsField [label]="copy.ar.sort" style="inline-size: 14rem;">
@@ -69,6 +96,12 @@ function statusOptions(lang: 'en' | 'ar'): SelectItem[] {
             </div>
             <div dsField [label]="copy.ar.sort" style="inline-size: 14rem;">
               <button dsSelect shape="pill" [items]="sortAr"></button>
+            </div>
+          </div>
+          <div data-demo="row" label="Arabic ghost">
+            <div role="group" [attr.aria-label]="copy.ar.filters" style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-s);">
+              <button dsSelect emphasis="ghost" [aria-label]="copy.ar.sort" [items]="sortAr" defaultValue="edited"></button>
+              <button dsSelect emphasis="ghost" [aria-label]="copy.ar.show" [items]="statusAr" defaultValue="doing"></button>
             </div>
           </div>
         </div>
@@ -149,6 +182,7 @@ export default class SelectDemo {
   protected readonly sortEn = sortOptions('en');
   protected readonly sortAr = sortOptions('ar');
   protected readonly statusEn = statusOptions('en');
+  protected readonly statusAr = statusOptions('ar');
   protected readonly statusOne = statusOptions('en').slice(0, 1);
   protected readonly cities = citySections('en');
   protected readonly gulf = cityOptions('en', 'gulf');

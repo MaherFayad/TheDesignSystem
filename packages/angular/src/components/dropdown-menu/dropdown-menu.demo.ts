@@ -68,6 +68,69 @@ const boardsAr = [
   'الشركاء', 'بداية الدليل', 'مرجع الواجهة', 'سجل التغييرات', 'خطة العمل', 'صفحة الحالة', 'الشروط', 'الأرشيف',
 ];
 
+/**
+ * Order M9.4: the copy of the menu with a quick action row, in both
+ * languages. Quick action labels are one or two words; Arabic is noun form.
+ */
+const quickCopy = {
+  en: {
+    trigger: 'Board quick actions',
+    row: 'Quick actions',
+    copyLink: 'Copy link',
+    star: 'Star board',
+    download: 'Download',
+    remove: 'Delete board',
+    rename: 'Rename board',
+    duplicate: 'Duplicate board',
+    move: 'Move to folder',
+    invite: 'Invite people',
+    grid: 'Show grid',
+    publish: 'Publish to the web',
+  },
+  ar: {
+    trigger: 'إجراءات اللوحة السريعة',
+    row: 'إجراءات سريعة',
+    copyLink: 'نسخ الرابط',
+    star: 'تمييز اللوحة',
+    download: 'تنزيل',
+    remove: 'حذف اللوحة',
+    rename: 'إعادة تسمية اللوحة',
+    duplicate: 'تكرار اللوحة',
+    move: 'نقل إلى مجلد',
+    invite: 'دعوة أشخاص',
+    grid: 'إظهار الشبكة',
+    publish: 'النشر على الويب',
+  },
+  long: {
+    trigger: 'Spring launch board actions',
+    row: 'Quick actions for Spring launch',
+    copyLink: 'Copy the public link',
+    star: 'Add to favorites',
+    download: 'Download a copy',
+    remove: 'Delete for everyone',
+    rename: 'Rename the Spring launch board',
+    duplicate: 'Duplicate the board with every comment',
+    move: 'Move to the Design reviews folder',
+    invite: 'Invite people from the marketing team',
+    grid: 'Show the layout grid on every frame',
+    publish: 'Publish a read only copy to the web',
+  },
+  longAr: {
+    trigger: 'إجراءات لوحة إطلاق الربيع',
+    row: 'إجراءات سريعة للوحة إطلاق الربيع',
+    copyLink: 'نسخ رابط المشاركة العام',
+    star: 'إضافة اللوحة للمفضلة',
+    download: 'تنزيل نسخة كاملة',
+    remove: 'حذف اللوحة عند الجميع',
+    rename: 'إعادة تسمية لوحة إطلاق الربيع',
+    duplicate: 'تكرار اللوحة مع كل التعليقات',
+    move: 'نقل إلى مجلد مراجعات التصميم',
+    invite: 'دعوة أشخاص من فريق التسويق',
+    grid: 'إظهار شبكة التخطيط على كل الإطارات',
+    publish: 'نشر نسخة للقراءة فقط على الويب',
+  },
+} as const;
+
 /** The state one BoardMenu keeps. */
 function boardState() {
   return { grid: signal<DropdownMenuChecked>(true), snap: signal<DropdownMenuChecked>(false), sort: signal<string | undefined>('edited') };
@@ -284,6 +347,75 @@ function boardState() {
         </div>
       </section>
 
+      <!-- Order M9.4: a quick action row of three (or four, with Download disabled) over six rows. React's QuickMenu is the #quickMenu template; the Arabic one is declared inside the Arabic dsTheme. -->
+      <section data-demo="case" data-demo-case="quick-actions" heading="Quick actions: a row of two to four at the top of the menu">
+      <ng-template #quickMenu let-trigger="trigger" let-lang="lang" let-four="four">
+        @let t = copyOf(lang);
+        @let grid = quickGrid(trigger);
+        <ng-container dsDropdownMenu>
+          <button dsButton dsDropdownMenuTrigger [attr.data-demo-trigger]="trigger" end="chevron-down">{{ t.trigger }}</button>
+          <ng-template dsDropdownMenuContent>
+            <div dsDropdownMenuQuickActions [label]="t.row">
+              <div dsDropdownMenuQuickAction icon="link">{{ t.copyLink }}</div>
+              <div dsDropdownMenuQuickAction icon="star">{{ t.star }}</div>
+              @if (four) {
+                <div dsDropdownMenuQuickAction icon="download" disabled>{{ t.download }}</div>
+              }
+              <div dsDropdownMenuQuickAction icon="trash" tone="danger">{{ t.remove }}</div>
+            </div>
+            <div dsDropdownMenuItem start="edit">{{ t.rename }}</div>
+            <div dsDropdownMenuItem start="copy">{{ t.duplicate }}</div>
+            <div dsDropdownMenuItem start="folder">{{ t.move }}</div>
+            <div dsDropdownMenuItem start="user-plus">{{ t.invite }}</div>
+            <div dsDropdownMenuSeparator></div>
+            <div dsDropdownMenuCheckboxItem [checked]="grid()" (checkedChange)="grid.set($event)">{{ t.grid }}</div>
+            <div dsDropdownMenuItem start="globe">{{ t.publish }}</div>
+          </ng-template>
+        </ng-container>
+      </ng-template>
+        <div data-demo="row" label="Three over six rows">
+          <ng-container [ngTemplateOutlet]="quickMenu" [ngTemplateOutletContext]="{ trigger: 'quick' }" />
+        </div>
+        <div data-demo="row" label="Four, one disabled">
+          <ng-container [ngTemplateOutlet]="quickMenu" [ngTemplateOutletContext]="{ trigger: 'quick-four', four: true }" />
+        </div>
+        <div data-demo="row" label="Long text">
+          <ng-container [ngTemplateOutlet]="quickMenu" [ngTemplateOutletContext]="{ trigger: 'quick-long', lang: 'long' }" />
+        </div>
+        <div dsTheme [lang]="'ar'" data-demo="content">
+          <ng-template #quickMenuAr let-trigger="trigger" let-lang="lang" let-four="four">
+        @let t = copyOf(lang);
+        @let grid = quickGrid(trigger);
+        <ng-container dsDropdownMenu>
+          <button dsButton dsDropdownMenuTrigger [attr.data-demo-trigger]="trigger" end="chevron-down">{{ t.trigger }}</button>
+          <ng-template dsDropdownMenuContent>
+            <div dsDropdownMenuQuickActions [label]="t.row">
+              <div dsDropdownMenuQuickAction icon="link">{{ t.copyLink }}</div>
+              <div dsDropdownMenuQuickAction icon="star">{{ t.star }}</div>
+              @if (four) {
+                <div dsDropdownMenuQuickAction icon="download" disabled>{{ t.download }}</div>
+              }
+              <div dsDropdownMenuQuickAction icon="trash" tone="danger">{{ t.remove }}</div>
+            </div>
+            <div dsDropdownMenuItem start="edit">{{ t.rename }}</div>
+            <div dsDropdownMenuItem start="copy">{{ t.duplicate }}</div>
+            <div dsDropdownMenuItem start="folder">{{ t.move }}</div>
+            <div dsDropdownMenuItem start="user-plus">{{ t.invite }}</div>
+            <div dsDropdownMenuSeparator></div>
+            <div dsDropdownMenuCheckboxItem [checked]="grid()" (checkedChange)="grid.set($event)">{{ t.grid }}</div>
+            <div dsDropdownMenuItem start="globe">{{ t.publish }}</div>
+          </ng-template>
+        </ng-container>
+      </ng-template>
+          <div data-demo="row" label="عربي">
+            <ng-container [ngTemplateOutlet]="quickMenuAr" [ngTemplateOutletContext]="{ trigger: 'quick-ar', lang: 'ar' }" />
+          </div>
+          <div data-demo="row" label="نص عربي طويل">
+            <ng-container [ngTemplateOutlet]="quickMenuAr" [ngTemplateOutletContext]="{ trigger: 'quick-long-ar', lang: 'longAr', four: true }" />
+          </div>
+        </div>
+      </section>
+
       <section data-demo="case" data-demo-case="disabled" heading="Disabled">
         <div data-demo="row">
           <ng-container dsDropdownMenu>
@@ -311,6 +443,21 @@ export default class DropdownMenuDemo {
   protected readonly boards = boards;
   protected readonly boardsAr = boardsAr;
   private readonly state = { md: boardState(), sm: boardState(), ar: boardState() };
+  /** The copy of one quick menu: en, ar, long or longAr. */
+  protected copyOf(lang: keyof typeof quickCopy | undefined): (typeof quickCopy)[keyof typeof quickCopy] {
+    return quickCopy[lang ?? 'en'];
+  }
+  /** The Show grid check of each quick menu, by its trigger. */
+  private readonly grids = new Map<string, ReturnType<typeof signal<DropdownMenuChecked>>>();
+
+  protected quickGrid(trigger: string): ReturnType<typeof signal<DropdownMenuChecked>> {
+    let grid = this.grids.get(trigger);
+    if (!grid) {
+      grid = signal<DropdownMenuChecked>(true);
+      this.grids.set(trigger, grid);
+    }
+    return grid;
+  }
 
   protected stateOf(trigger: string): ReturnType<typeof boardState> {
     return trigger === 'sm' || trigger === 'ar' ? this.state[trigger] : this.state.md;

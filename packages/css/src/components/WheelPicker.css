@@ -1,0 +1,203 @@
+/*
+ * WheelPicker: scrolling columns with the chosen row in a band (order
+ * M9.16, proposed). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_wheel-picker-row            the block size of one row, and of the band (control md, at least the platform target)
+ *   --_wheel-picker-rows           how many rows show, an odd count (5)
+ *   --_wheel-picker-gap            the room between columns
+ *   --_wheel-picker-padding-inline the room at both ends of the wheel
+ *   --_wheel-picker-font-size, --_wheel-picker-font-weight
+ *   --_wheel-picker-fg             a row outside the band: 4.5:1 on the surface, never faded below it
+ *   --_wheel-picker-fg-selected    the row in the band
+ *   --_wheel-picker-band-bg        the band fill
+ *   --_wheel-picker-band-border-color   the band edge (transparent by default; forced colors draw it)
+ *   --_wheel-picker-radius         the corner of the band and of the focus ring
+ *   --_wheel-picker-option-bg-selected  a fill behind the row in the band (transparent; a platform may fill it)
+ *   --_wheel-picker-ring-color     the focus ring of a column
+ *   --_wheel-picker-width          the inline size of a column; a wheel of one column fills the row
+ *   --_wheel-picker-tilt           how far a row one row from the band turns away on the drum; 0deg is a flat list
+ *   --_wheel-picker-drum           the radius of the drum the rows sit on: one row of arc per tilt, so about the row over the tilt in radians
+ *   --_wheel-picker-depth          the perspective distance of the curve
+ *   --_wheel-picker-d              0 on the root; the component writes it on each row: its distance from the band in rows, -3 to 3
+ *
+ * Each column is a scroll container with mandatory scroll snap, padded so
+ * the first and last rows can rest in the band. The band is drawn once,
+ * behind every column. The curve is a transform on each row from
+ * --_wheel-picker-d: the row is moved back to the band, turned on a drum
+ * whose axis sits --_wheel-picker-drum behind it, and pushed out again, so
+ * rows away from the band crowd together and turn away as on a real wheel.
+ * Nothing animates layout; the scroll itself is the
+ * browser's. While a mouse drags a column (data-dragging) snap is off and
+ * the component glides to a row on release. Under reduced motion the curve
+ * is flat.
+ */
+@layer ds.base {
+  [data-ds='wheel-picker'] {
+    --_wheel-picker-row: max(var(--ds-size-control-md), var(--ds-size-target));
+    --_wheel-picker-rows: 5;
+    --_wheel-picker-gap: var(--ds-space-2xs);
+    --_wheel-picker-padding-inline: var(--ds-space-s);
+    --_wheel-picker-font-size: var(--ds-font-size-3xl);
+    --_wheel-picker-font-weight: var(--ds-font-weight-regular);
+    --_wheel-picker-fg: var(--ds-color-text-muted);
+    --_wheel-picker-fg-selected: var(--ds-color-text-default);
+    --_wheel-picker-band-bg: var(--ds-color-bg-overlay-10);
+    --_wheel-picker-band-border-color: transparent;
+    --_wheel-picker-radius: var(--ds-radius-control);
+    --_wheel-picker-option-bg-selected: transparent;
+    --_wheel-picker-ring-color: var(--ds-color-focus-ring);
+    --_wheel-picker-width: calc(var(--_wheel-picker-row) * 2);
+    --_wheel-picker-tilt: 22deg;
+    --_wheel-picker-drum: calc(var(--_wheel-picker-row) * 2.6);
+    --_wheel-picker-depth: calc(var(--_wheel-picker-row) * 8);
+    --_wheel-picker-d: 0;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: var(--_wheel-picker-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    block-size: calc(var(--_wheel-picker-row) * var(--_wheel-picker-rows));
+    padding-inline: var(--_wheel-picker-padding-inline);
+    color: var(--_wheel-picker-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_wheel-picker-font-size);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--_wheel-picker-font-weight);
+    line-height: var(--ds-font-leading-tight);
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  [data-ds='wheel-picker'] > [data-part='band'] {
+    position: absolute;
+    inset-inline: var(--_wheel-picker-padding-inline);
+    inset-block-start: calc(var(--_wheel-picker-row) * (var(--_wheel-picker-rows) - 1) / 2);
+    box-sizing: border-box;
+    block-size: var(--_wheel-picker-row);
+    border: var(--ds-border-width-default) solid var(--_wheel-picker-band-border-color);
+    border-radius: var(--_wheel-picker-radius);
+    background-color: var(--_wheel-picker-band-bg);
+    pointer-events: none;
+  }
+
+  /* Positioned and later in the DOM than the band, so a column paints over it with no z-index. */
+  [data-ds='wheel-picker'] > [data-part='column'] {
+    position: relative;
+    flex: 0 1 var(--_wheel-picker-width);
+    min-inline-size: 0;
+    box-sizing: border-box;
+    block-size: 100%;
+    margin: 0;
+    padding-block: calc(var(--_wheel-picker-row) * (var(--_wheel-picker-rows) - 1) / 2);
+    padding-inline: 0;
+    border-radius: var(--_wheel-picker-radius);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    touch-action: pan-y;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* One column (after the band, and last): it takes the whole row, for long labels. */
+  [data-ds='wheel-picker'] > [data-part='band'] + [data-part='column']:last-child {
+    flex: 1 1 auto;
+  }
+
+  [data-ds='wheel-picker'] > [data-part='column']::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-ds='wheel-picker'] > [data-part='column'][data-dragging] {
+    scroll-snap-type: none;
+    cursor: grabbing;
+  }
+
+  [data-ds='wheel-picker'] > [data-part='column']:focus-visible {
+    outline: var(--ds-border-width-strong) solid var(--_wheel-picker-ring-color);
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
+  [data-ds='wheel-picker'] [data-part='option'] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    block-size: var(--_wheel-picker-row);
+    padding-inline: var(--ds-space-3xs);
+    overflow: hidden;
+    border-radius: var(--_wheel-picker-radius);
+    color: var(--_wheel-picker-fg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    scroll-snap-align: center;
+    transform: perspective(var(--_wheel-picker-depth)) translateY(calc(var(--_wheel-picker-d) * var(--_wheel-picker-row) * -1))
+      translateZ(calc(var(--_wheel-picker-drum) * -1)) rotateX(calc(var(--_wheel-picker-d) * var(--_wheel-picker-tilt) * -1))
+      translateZ(var(--_wheel-picker-drum));
+    transform-origin: 50% 50%;
+    backface-visibility: hidden;
+    cursor: default;
+  }
+
+  [data-ds='wheel-picker'] [data-part='option'][data-centered] {
+    background-color: var(--_wheel-picker-option-bg-selected);
+    color: var(--_wheel-picker-fg-selected);
+  }
+
+  /* A row that cannot be chosen: struck through as well as dimmed, so it is not told by colour alone. */
+  [data-ds='wheel-picker'] [data-part='option'][data-disabled] {
+    color: var(--ds-color-text-disabled);
+    text-decoration: line-through;
+  }
+
+  [data-ds='wheel-picker'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='wheel-picker'][data-disabled] > [data-part='column'] {
+    overflow-y: hidden;
+    touch-action: none;
+  }
+
+  [data-ds='wheel-picker']:lang(ar) {
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='wheel-picker'] [data-part='option'] {
+      transform: none;
+    }
+  }
+
+  /* Reduced motion from the page's own setting (data-motion="reduce" on the root element). */
+  :root[data-motion='reduce'] [data-ds='wheel-picker'] [data-part='option'] {
+    transform: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='wheel-picker'] > [data-part='band'] {
+      border-color: CanvasText;
+    }
+
+    [data-ds='wheel-picker'] [data-part='option'],
+    [data-ds='wheel-picker'] [data-part='option'][data-centered] {
+      color: CanvasText;
+    }
+
+    [data-ds='wheel-picker'] [data-part='option'][data-disabled] {
+      color: GrayText;
+    }
+
+    [data-ds='wheel-picker'] > [data-part='column']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

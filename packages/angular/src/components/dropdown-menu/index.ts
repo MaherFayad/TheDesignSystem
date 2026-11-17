@@ -7,6 +7,8 @@ export {
   DsDropdownMenuGroup,
   DsDropdownMenuItem,
   DsDropdownMenuLabel,
+  DsDropdownMenuQuickAction,
+  DsDropdownMenuQuickActions,
   DsDropdownMenuRadioGroup,
   DsDropdownMenuRadioItem,
   DsDropdownMenuSeparator,

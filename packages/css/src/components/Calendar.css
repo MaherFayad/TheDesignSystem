@@ -1,0 +1,225 @@
+/*
+ * Calendar: an inline month grid to pick one date (order M9.15, proposed).
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_calendar-size                the day disc and the least size of a day target, by data-size
+ *   --_calendar-gap                 the room around each day inside its cell
+ *   --_calendar-cell-size           one column: the day size and the room around it
+ *   --_calendar-row-gap             the room between the header and the grid
+ *   --_calendar-font-size, --_calendar-font-weight   a day number
+ *   --_calendar-fg                  a day number, 4.5:1 on the surface
+ *   --_calendar-bg-hover            the fill of a day under the pointer
+ *   --_calendar-title-font-size, --_calendar-title-font-weight, --_calendar-title-fg
+ *   --_calendar-weekday-font-size, --_calendar-weekday-fg
+ *   --_calendar-today-fg, --_calendar-today-bg     today: the tint text on a soft tint disc
+ *   --_calendar-bg-checked, --_calendar-fg-checked  the selected day: a solid disc, 3:1 or more on the surface (1.4.11)
+ *   --_calendar-unavailable-fg      an unavailable day: muted text, still 4.5:1, struck through (1.4.1)
+ *   --_calendar-ring-color          the focus ring of a day
+ *   --_calendar-radius              the corner of a day disc
+ *   --_calendar-duration, --_calendar-ease   the color swap of a day
+ *
+ * Names outside the list in anatomy.md: the parts above with a base name.
+ *
+ * The root is as wide as seven columns and never wider than its container
+ * (max-inline-size 100%). The grid fills it with seven equal columns (fixed
+ * table layout), and a day is never wider than its cell, so on a narrow
+ * screen (320px reflow, WCAG 1.4.10) each day shrinks to a seventh of the
+ * width it gets, never under the 24px target at 320px.
+ *
+ * The root is an inline column: the header (title at the inline start, the
+ * two month buttons at the inline end) over a table. Days of the months
+ * before and after keep their place in the grid but are not drawn
+ * (visibility hidden), as on both phone platforms; React Aria marks them
+ * disabled and leaves them out of the arrow order. Right to left needs no
+ * rule: the table and the header follow dir, and the chevrons mirror.
+ *
+ * Motion: the selected disc and today swap colors on duration.base; the
+ * grid fades in on a month change (pattern fade, played by Calendar.tsx).
+ * Under reduced motion every duration token is 0ms, so both are instant.
+ */
+@layer ds.base {
+  [data-ds='calendar'] {
+    --_calendar-size: var(--ds-size-control-md);
+    --_calendar-gap: var(--ds-space-4xs);
+    --_calendar-row-gap: var(--ds-space-2xs);
+    --_calendar-font-size: var(--ds-font-size-m);
+    --_calendar-font-weight: var(--ds-font-weight-regular);
+    --_calendar-fg: var(--ds-color-text-default);
+    --_calendar-bg-hover: var(--ds-color-bg-overlay-10);
+    --_calendar-title-font-size: var(--ds-font-size-m);
+    --_calendar-title-font-weight: var(--ds-font-weight-semibold);
+    --_calendar-title-fg: var(--ds-color-text-bright);
+    --_calendar-weekday-font-size: var(--ds-font-size-2xs);
+    --_calendar-weekday-fg: var(--ds-color-text-muted);
+    --_calendar-today-fg: var(--ds-color-primary-on-surface);
+    --_calendar-today-bg: var(--ds-color-primary-tint);
+    --_calendar-bg-checked: var(--ds-color-primary-fill);
+    --_calendar-fg-checked: var(--ds-color-text-on-primary);
+    --_calendar-unavailable-fg: var(--ds-color-text-muted);
+    --_calendar-ring-color: var(--ds-color-focus-ring);
+    --_calendar-radius: var(--ds-radius-pill);
+    --_calendar-duration: var(--ds-duration-base);
+    --_calendar-ease: var(--ds-ease-default);
+
+    --_calendar-cell-size: calc(var(--_calendar-size) + 2 * var(--_calendar-gap));
+
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--_calendar-row-gap);
+    box-sizing: border-box;
+    inline-size: calc(7 * var(--_calendar-cell-size));
+    max-inline-size: 100%;
+    color: var(--_calendar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  [data-ds='calendar'][data-size='sm'] {
+    --_calendar-size: var(--ds-size-control-sm);
+    --_calendar-font-size: var(--ds-font-size-s);
+    --_calendar-title-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='calendar'][data-size='lg'] {
+    --_calendar-size: var(--ds-size-control-lg);
+    --_calendar-font-size: var(--ds-font-size-l);
+    --_calendar-title-font-size: var(--ds-font-size-l);
+    --_calendar-weekday-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='calendar'] > [data-part='header'] {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-3xs);
+    padding-inline-start: var(--ds-space-2xs);
+  }
+
+  [data-ds='calendar'] > [data-part='header'] > [data-part='title'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    color: var(--_calendar-title-fg);
+    font-size: var(--_calendar-title-font-size);
+    font-weight: var(--_calendar-title-font-weight);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  [data-ds='calendar'] > [data-part='grid'] {
+    inline-size: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+
+  [data-ds='calendar'] [data-part='weekday'] {
+    padding-block: var(--ds-space-3xs);
+    padding-inline: 0;
+    color: var(--_calendar-weekday-fg);
+    font-size: var(--_calendar-weekday-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  [data-ds='calendar'] [data-part='cell'] {
+    padding: var(--_calendar-gap);
+    text-align: center;
+  }
+
+  [data-ds='calendar'] [data-part='day'] {
+    --_calendar-day-bg-now: transparent;
+    --_calendar-day-fg-now: var(--_calendar-fg);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: min(var(--_calendar-size), 100%);
+    aspect-ratio: 1;
+    margin-inline: auto;
+    border-radius: var(--_calendar-radius);
+    background-color: var(--_calendar-day-bg-now);
+    color: var(--_calendar-day-fg-now);
+    cursor: default;
+    font-size: var(--_calendar-font-size);
+    font-weight: var(--_calendar-font-weight);
+    outline: none;
+    transition:
+      background-color var(--_calendar-duration) var(--_calendar-ease),
+      color var(--_calendar-duration) var(--_calendar-ease);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    [data-ds='calendar'] [data-part='day']:hover:not([data-selected], [data-disabled], [data-unavailable]) {
+      --_calendar-day-bg-now: var(--_calendar-bg-hover);
+    }
+  }
+
+  [data-ds='calendar'] [data-part='day'][data-today] {
+    --_calendar-day-bg-now: var(--_calendar-today-bg);
+    --_calendar-day-fg-now: var(--_calendar-today-fg);
+
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-ds='calendar'] [data-part='day'][data-selected] {
+    --_calendar-day-bg-now: var(--_calendar-bg-checked);
+    --_calendar-day-fg-now: var(--_calendar-fg-checked);
+
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* Unavailable: still focusable and read, so it keeps 4.5:1 and is struck through, never color alone. */
+  [data-ds='calendar'] [data-part='day'][data-unavailable] {
+    --_calendar-day-fg-now: var(--_calendar-unavailable-fg);
+
+    text-decoration: line-through;
+  }
+
+  [data-ds='calendar'] [data-part='day'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='calendar'] [data-part='day'][data-outside-month] {
+    visibility: hidden;
+  }
+
+  [data-ds='calendar'] [data-part='day']:focus-visible {
+    outline: var(--ds-border-width-strong) solid var(--_calendar-ring-color);
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /* Arabic names: no case, one size up and the taller Arabic line. */
+  [data-ds='calendar']:lang(ar) [data-part='weekday'] {
+    font-size: var(--ds-font-size-xs);
+    line-height: var(--ds-font-leading-arabic-tight);
+    text-transform: none;
+  }
+
+  [data-ds='calendar']:lang(ar) > [data-part='header'] > [data-part='title'] {
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='calendar'] [data-part='day'][data-today] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='calendar'] [data-part='day'][data-selected] {
+      background-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    [data-ds='calendar'] [data-part='day']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

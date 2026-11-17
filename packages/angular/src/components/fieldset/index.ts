@@ -1,1 +1,1 @@
-export { DsFieldset, type FieldsetSize, type FieldsetText } from './fieldset';
+export { DsFieldset, type FieldsetSize, type FieldsetText, type FieldsetVariant } from './fieldset';

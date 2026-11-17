@@ -28,6 +28,15 @@
 // input, an unnamed aria-hidden span after it, empty at rest (digitLayer in
 // internal/motion-fields.ts). Typing never rolls and empties the layer at
 // once. The box shakes when the value turns invalid (error-shake).
+//
+// Order M9.3, as React: variant stepper is the stepper form. The value is
+// plain text (the same spinbutton input, drawn without a box until it has
+// focus) before a capsule of the two step buttons, minus then plus, split by
+// a hairline (NumberField.css draws it as the increment's start border).
+// The DOM keeps the same parts; only the decrement moves after the value,
+// so the reading order matches what is drawn: value, decrease, increase.
+// The capsule halves are soft pill IconButtons a step under the field
+// height. data-variant is stamped only when set.
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -74,10 +83,13 @@ import { digitLayer, errorShake } from '../../internal/motion-fields';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { DsThemeService } from '../../theme/theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
+import type { ButtonSize } from '../button/button-base';
 import { DsIconButton } from '../icon-button/icon-button';
 
 export type NumberFieldSize = Size;
 export type NumberFieldShape = Extract<Shape, 'default' | 'pill'>;
+/** field: the bordered box with a step button at each end. stepper: the value as text before a capsule of the two step buttons. */
+export type NumberFieldVariant = 'field' | 'stepper';
 /** An icon name, a short text such as "kg" or "SAR", or a template. */
 export type NumberFieldAdornment = IconName | (string & {}) | TemplateRef<unknown>;
 
@@ -134,6 +146,7 @@ const NUMBER_FIELD_ATTRIBUTES = [
   'locale',
   'size',
   'shape',
+  'variant',
   'invalid',
   'disabled',
   'readOnly',
@@ -165,13 +178,14 @@ type StepperSlot = 'increment' | 'decrement';
     'data-ds': 'number-field',
     '[attr.data-size]': 'size()',
     '[attr.data-shape]': 'shape()',
+    '[attr.data-variant]': 'variant() ?? null',
     '[attr.data-invalid]': 'state().invalid ? "" : null',
     '[attr.data-disabled]': 'state().disabled ? "" : null',
     '[attr.data-readonly]': 'state().readOnly ? "" : null',
     '(mousedown)': 'onRootMouseDown($event)',
   },
   template: `
-    @if (showSteppers()) {
+    @if (showSteppers() && !capsule()) {
       <ng-container *ngTemplateOutlet="stepper; context: { $implicit: 'decrement' }" />
     }
     <ng-container *ngTemplateOutlet="adornment; context: { $implicit: start(), part: 'start' }" />
@@ -207,6 +221,10 @@ type StepperSlot = 'increment' | 'decrement';
     <!-- The digit roll layer (field-step): decorative, empty at rest. -->
     <span aria-hidden="true" #layer></span>
     <ng-container *ngTemplateOutlet="adornment; context: { $implicit: end(), part: 'end' }" />
+    <!-- The stepper variant: minus then plus after the value, in reading order (minus at the inline start of the capsule). -->
+    @if (showSteppers() && capsule()) {
+      <ng-container *ngTemplateOutlet="stepper; context: { $implicit: 'decrement' }" />
+    }
     @if (showSteppers()) {
       <ng-container *ngTemplateOutlet="stepper; context: { $implicit: 'increment' }" />
     }
@@ -217,8 +235,9 @@ type StepperSlot = 'increment' | 'decrement';
         [attr.data-part]="slot"
         [icon]="slot === 'increment' ? 'plus' : 'minus'"
         [label]="stepperLabel(slot)"
-        [size]="size() === 'lg' ? 'md' : 'xs'"
-        [shape]="shape() === 'pill' ? 'pill' : 'default'"
+        [size]="stepperSize()"
+        [emphasis]="capsule() ? 'soft' : undefined"
+        [shape]="capsule() || shape() === 'pill' ? 'pill' : 'default'"
         [disabled]="slot === 'increment' ? !canIncrement() : !canDecrement()"
         [attr.id]="slot === 'increment' ? incrementId : decrementId"
         [attr.aria-controls]="inputId()"
@@ -266,6 +285,13 @@ export class DsNumberField implements ControlValueAccessor {
   readonly size = input<NumberFieldSize>('md');
   /** default takes radius.control from the style. pill is always fully round. */
   readonly shape = input<NumberFieldShape>('default');
+  /**
+   * field: the bordered box with a step button at each end (the default
+   * look). stepper: the value as plain text before a capsule holding the
+   * decrement and the increment, split by a hairline. Stamped as
+   * data-variant only when set.
+   */
+  readonly variant = input<NumberFieldVariant | undefined>(undefined);
   /** Marks the value invalid. Inside a Field it follows the Field. */
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly disabled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
@@ -335,6 +361,13 @@ export class DsNumberField implements ControlValueAccessor {
   protected readonly inputId = computed(() => this.state().id ?? `${this.base}control`);
   protected readonly labelledBy = computed(() => this.ariaLabelledby() ?? (this.ariaLabel() === undefined ? this.field?.labelId : undefined));
   protected readonly showSteppers = computed(() => this.steppers() && !this.state().readOnly);
+  protected readonly capsule = computed(() => this.variant() === 'stepper');
+  /** The capsule halves are a step under the field height (the kit draws them 32 tall): xs and sm take xs, md sm, lg md. */
+  protected readonly stepperSize = computed<ButtonSize>(() => {
+    const size = this.size();
+    if (this.capsule()) return size === 'lg' ? 'md' : size === 'md' ? 'sm' : 'xs';
+    return size === 'lg' ? 'md' : 'xs';
+  });
 
   private readonly resolved = computed(() => new Intl.NumberFormat(this.tag(), this.formatOptions() ?? {}).resolvedOptions());
   private readonly isPercent = computed(() => this.resolved().style === 'percent');

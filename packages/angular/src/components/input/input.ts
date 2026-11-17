@@ -22,6 +22,15 @@
 // Motion: the box shakes when the field turns invalid (error-shake), as in
 // React. As the control part of another field it leaves the shake to that
 // field's box.
+//
+// Order M9.1, as React: variant plain (no box, for a row of an inset
+// Fieldset), data-empty on the root while the value is empty, and clearable,
+// which adds the clear part: a CloseButton between the control and the end
+// slot that shows while the box holds focus and a value. A press on it keeps
+// focus on the input, then clears the value with an input event, so
+// [(value)], ngModel and an (input) listener all hear it. Escape in the
+// input clears it too, except inside a dialog, where Escape closes the
+// dialog. The button is in the tab order after the input only while shown.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -46,6 +55,8 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { DsThemeService } from '../../theme/theme';
+import { DsCloseButton } from '../close-button/close-button';
 import type { ShakeBox } from '@the-system/motion';
 import { errorShake } from '../../internal/motion-fields';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -53,8 +64,17 @@ import { DsInputGroupContext } from '../input-group/input-group-context';
 
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;
-/** The box: outlined (a border) or filled (a tint). Unset, the active style and platform choose. */
-export type InputVariant = 'outlined' | 'filled';
+/**
+ * The box: outlined (a border), filled (a tint) or plain (no box: a row of a
+ * grouped card draws the edge). Unset, the active style and platform choose.
+ */
+export type InputVariant = 'outlined' | 'filled' | 'plain';
+
+/** The default names of the clear button by language. Arabic: a noun form. */
+export const inputClearLabels = { en: 'Clear text', ar: 'مسح النص' } as const;
+
+/** Escape inside one of these closes it, so it does not clear the field. */
+const INTERACTIVE_DIALOG = '[role="dialog"], [role="alertdialog"], dialog';
 /** Text types only. A checkbox, a date or a file is its own component. */
 export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password' | 'search';
 /** An icon name, a short text such as "px" or "$", or a template. */
@@ -78,6 +98,8 @@ const INPUT_ATTRIBUTES = [
   'size',
   'shape',
   'variant',
+  'clearable',
+  'clearLabel',
   'type',
   'placeholder',
   'value',
@@ -107,7 +129,7 @@ const INPUT_ATTRIBUTES = [
 @Component({
   selector: 'div[dsInput]',
   exportAs: 'dsInput',
-  imports: [DsIcon, NgTemplateOutlet],
+  imports: [DsCloseButton, DsIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsInput), multi: true }],
   host: {
@@ -116,10 +138,13 @@ const INPUT_ATTRIBUTES = [
     '[attr.data-size]': 'resolvedSize()',
     '[attr.data-shape]': 'resolvedShape()',
     '[attr.data-variant]': 'variant() ?? null',
+    '[attr.data-empty]': 'empty() ? "" : null',
     '[attr.data-invalid]': 'state().invalid ? "" : null',
     '[attr.data-disabled]': 'state().disabled ? "" : null',
     '[attr.data-readonly]': 'state().readOnly ? "" : null',
     '(mousedown)': 'onRootMouseDown($event)',
+    '(focusin)': 'onRootFocusIn()',
+    '(focusout)': 'onRootFocusOut($event)',
   },
   template: `
     <ng-container *ngTemplateOutlet="adornment; context: { $implicit: start(), part: 'start' }" />
@@ -147,10 +172,23 @@ const INPUT_ATTRIBUTES = [
       [readOnly]="state().readOnly"
       [attr.value]="value() ?? null"
       (input)="onInput(native.value)"
+      (keydown)="onControlKeyDown($event)"
       (blur)="onTouched()"
       [attr.type]="type()"
       data-part="control"
     />
+    @if (showClear()) {
+      <!-- Keep focus on the input while a pointer presses the button, so the button does not hide before the click. -->
+      <button
+        dsCloseButton
+        data-part="clear"
+        [label]="clearName()"
+        [size]="resolvedSize() === 'lg' ? 'sm' : 'xs'"
+        shape="pill"
+        (mousedown)="$event.preventDefault()"
+        (click)="clear()"
+      ></button>
+    }
     <ng-container *ngTemplateOutlet="adornment; context: { $implicit: end(), part: 'end' }" />
     <ng-template #adornment let-content let-part="part">
       @if (content !== undefined && content !== null && content !== '') {
@@ -181,6 +219,14 @@ export class DsInput implements ControlValueAccessor {
    * can follow it. Default unset.
    */
   readonly variant = input<InputVariant | undefined>(undefined);
+  /**
+   * Adds the clear part: a CloseButton that shows while the field has a
+   * value and focus, clears it and moves focus back to the input. Escape
+   * also clears it, except inside a dialog. Default false.
+   */
+  readonly clearable = input(false, { transform: booleanAttribute });
+  /** The accessible name of the clear button. Default "Clear text", or "مسح النص" under an Arabic dsTheme. */
+  readonly clearLabel = input<string | undefined>(undefined);
   /** Text types only. Default text. */
   readonly type = input<InputType>('text');
   readonly placeholder = input<string | undefined>(undefined);
@@ -238,6 +284,17 @@ export class DsInput implements ControlValueAccessor {
     required: this.required(),
   }));
 
+  private readonly theme = inject(DsThemeService);
+  /** The box holds focus (the input or the clear button). Tracked for the clear part only. */
+  private readonly focused = signal(false);
+  /** data-empty: the value is empty. The value model follows every input event, so it reads the native value. */
+  protected readonly empty = computed(() => (this.value() ?? '') === '');
+  private readonly canClear = computed(() => this.clearable() && !this.state().disabled && !this.state().readOnly);
+  protected readonly showClear = computed(() => this.canClear() && this.focused() && !this.empty());
+  protected readonly clearName = computed(
+    () => this.clearLabel() ?? (this.theme.value().lang.startsWith('ar') ? inputClearLabels.ar : inputClearLabels.en),
+  );
+
   protected readonly String = String;
   protected readonly isIcon = (content: unknown): content is IconName => typeof content === 'string' && isIconName(content);
   protected readonly isText = (content: unknown): content is string => typeof content === 'string';
@@ -293,6 +350,37 @@ export class DsInput implements ControlValueAccessor {
 
   setDisabledState(disabled: boolean): void {
     this.formDisabled.set(disabled);
+  }
+
+  /** Empties the value as typing would, after moving focus to the input (convention 15). */
+  clear(): void {
+    const el = this.nativeInput;
+    // Focus first: the clear button goes away once the value is empty.
+    el.focus();
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+    if (setter) setter.call(el, '');
+    else el.value = '';
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  protected onControlKeyDown(event: KeyboardEvent): void {
+    if (event.defaultPrevented || event.key !== 'Escape' || !this.canClear()) return;
+    // A key that ends an IME composition is not a command. Inside a dialog, Escape closes the dialog.
+    if (event.isComposing || event.keyCode === 229) return;
+    const el = this.nativeInput;
+    if (el.value === '' || el.closest(INTERACTIVE_DIALOG)) return;
+    event.preventDefault();
+    this.clear();
+  }
+
+  protected onRootFocusIn(): void {
+    if (this.clearable()) this.focused.set(true);
+  }
+
+  protected onRootFocusOut(event: FocusEvent): void {
+    const next = event.relatedTarget as Node | null;
+    if (next && (event.currentTarget as Element).contains(next)) return;
+    this.focused.set(false);
   }
 
   protected onRootMouseDown(event: MouseEvent): void {

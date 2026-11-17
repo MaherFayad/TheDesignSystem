@@ -253,3 +253,40 @@ other label 9.76 or more. Verdict close.
    (registry `public/r/style-*.json` lists style tokens).
 
 ## Proof
+
+All against this order's gallery server (port 5493, stopped at the end).
+
+- `npm run contract -- --framework react --platform ios --component
+  Input,Fieldset,AlertDialog,Switch,TabBar,PageShell,SharePanel`: 341
+  passed, 0 failed (AlertDialog 63, Fieldset 43, Input 43, PageShell 43,
+  SharePanel 63, Switch 43, TabBar 43).
+- `--platform ios --component SelectionMenu,ActionSheet`: 63 and 63 passed.
+- `--platform android --component SelectionMenu,ActionSheet,SharePanel`:
+  63, 63 and 63 passed.
+- `--platform ios --device duo-outer --component TabBar,PageShell`: TabBar
+  52 passed, PageShell 51 passed, 2 skipped each (by profile), duo profile 1
+  passed.
+- Lint gates, `npx vitest run packages/lint`: 19 files, 104 tests pass (the
+  four Desk contrast failures listed are known ones, reported in wave 0).
+- Token tests, `npx vitest run packages/tokens packages/styles`: pass after
+  the snapshot update (the only changed lines are the new token).
+- Web and android unchanged by computed style: every element and its
+  `::before` and `::after`, every property, with this order's files in and
+  out (the eight CSS files swapped on disk for their text from before the
+  order), on fieldset, alert dialog (one field open), switch, tab bar, page
+  shell, input, share panel, action sheet and selection menu, Liquid and
+  Neutral, light and dark: 72 pages. Zero differences on web and android
+  except where intended: the android share panel, action sheet and
+  selection menu (the new android rules), and the web selection menu (the
+  Liquid and Neutral menu paint the component agent asked for, on every
+  platform). One android page shell page differed in the after run only; run
+  again twice with the order's files it matches the before run (0 of 7), a
+  timing artifact.
+- Not run: the full `npm run check` (the lead runs it), `npm run gen` (no
+  new file).
+
+## What still needs a real iPhone
+
+- Tier 2 (Safari) shows no bend at all; the double pass is Chromium only.
+- Whether the row's tint line reads as the kit's quiet focus to a touch
+  user, and whether the spacer interferes with Safari's toolbar collapse.

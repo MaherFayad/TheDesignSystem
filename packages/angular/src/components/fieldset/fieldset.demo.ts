@@ -9,6 +9,7 @@ import { DsCheckbox } from '../checkbox/checkbox';
 import { DsSwitch } from '../switch/switch';
 import { DsField } from '../field/field';
 import { DsInput } from '../input/input';
+import { DsLabel } from '../label/label';
 import { DsFieldset } from './fieldset';
 
 const addressFields: [string, string, string][] = [
@@ -17,6 +18,26 @@ const addressFields: [string, string, string][] = [
   ['City', 'address-level2', 'Riyadh'],
   ['Postal code', 'postal-code', '12211'],
 ];
+
+/** The grouped card of order M9.1: three rows, one empty, plain clearable Inputs. Written inline in each language: a template takes its theme from where it is declared. */
+const contactCopy = {
+  en: {
+    legend: 'Contact details',
+    description: 'We use these only to reach you about your order.',
+    name: 'Name',
+    nameValue: 'Sara Ahmed',
+    email: 'Email',
+    phone: 'Phone',
+  },
+  ar: {
+    legend: 'بيانات التواصل',
+    description: 'نستخدمها بس عشان نتواصل معك بخصوص طلبك.',
+    name: 'الاسم',
+    nameValue: 'سارة أحمد',
+    email: 'البريد الإلكتروني',
+    phone: 'رقم الجوال',
+  },
+} as const;
 
 const manyFields: [string, string][] = [
   ['First name', 'given-name'],
@@ -35,7 +56,7 @@ const manyFields: [string, string][] = [
 
 @Component({
   selector: 'div[data-demo=page]',
-  imports: [DEMO, DsFieldset, DsField, DsInput, DsTheme, DsCheckbox, DsSwitch],
+  imports: [DEMO, DsFieldset, DsField, DsInput, DsLabel, DsTheme, DsCheckbox, DsSwitch],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, and an Arabic row">
@@ -130,6 +151,11 @@ const manyFields: [string, string][] = [
           <div dsField label="المدينة"><div dsInput autoComplete="address-level2" value="الرياض"></div></div>
           <div dsField label="الحي"><div dsInput autoComplete="address-level3" value="العليا"></div></div>
         </fieldset>
+        <fieldset dsFieldset variant="inset" [legend]="contact.ar.legend" [description]="contact.ar.description">
+          <div dsField [label]="contact.ar.name"><div dsInput variant="plain" clearable autoComplete="name" [value]="contact.ar.nameValue"></div></div>
+          <div dsField [label]="contact.ar.email"><div dsInput variant="plain" clearable type="email" autoComplete="email" placeholder="name@example.com"></div></div>
+          <div dsField [label]="contact.ar.phone"><div dsInput variant="plain" clearable type="tel" autoComplete="tel" value="+966 55 012 3456"></div></div>
+        </fieldset>
         <fieldset dsFieldset legend="تنبيهات البريد" error="اختر طريقة وحدة على الأقل عشان نوصلك.">
           <div dsCheckbox label="التعليقات على لوحاتي"></div>
           <div dsCheckbox label="الملخص الأسبوعي"></div>
@@ -139,6 +165,14 @@ const manyFields: [string, string][] = [
 
     <section data-demo="case" data-demo-case="error" heading="A group error">
       <div dsTheme [lang]="'en'" data-demo="content">
+        <fieldset dsFieldset variant="inset" legend="Sign in" error="Add your work email to sign in.">
+          <div dsField label="Email" error="Add the part after the @, for example name@example.com.">
+            <div dsInput variant="plain" clearable type="email" value="sara@"></div>
+          </div>
+          <div dsField label="Password">
+            <div dsInput variant="plain" type="password" value="spring-launch-2026"></div>
+          </div>
+        </fieldset>
         <fieldset dsFieldset legend="How should we reach you" error="Pick at least one way to reach you.">
           <div dsCheckbox label="Email"></div>
           <div dsCheckbox label="Text message"></div>
@@ -158,16 +192,44 @@ const manyFields: [string, string][] = [
 
     <section data-demo="case" data-demo-case="readonly" heading="Read only fields">
       <div dsTheme [lang]="'en'" data-demo="content">
+        <fieldset dsFieldset variant="inset" legend="Account" description="Support asks for these when you write in.">
+          <div dsField label="Workspace" readOnly><div dsInput variant="plain" value="Design team"></div></div>
+          <div dsField label="Plan" readOnly><div dsInput variant="plain" value="Team, yearly"></div></div>
+        </fieldset>
         <fieldset dsFieldset legend="Workspace" description="Support asks for these when you write in.">
           <div dsField label="Workspace ID" readOnly><div dsInput value="ws_4f9a21"></div></div>
           <div dsField label="Region" readOnly><div dsInput value="Middle East (Riyadh)"></div></div>
         </fieldset>
       </div>
     </section>
+
+    <section data-demo="case" data-demo-case="inset" heading="Inset: fields as rows of one card">
+      <div dsTheme [lang]="'en'" data-demo="content">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
+          <fieldset dsFieldset variant="inset" [legend]="contact.en.legend" [description]="contact.en.description">
+          <div dsField [label]="contact.en.name"><div dsInput variant="plain" clearable autoComplete="name" [value]="contact.en.nameValue"></div></div>
+          <div dsField [label]="contact.en.email"><div dsInput variant="plain" clearable type="email" autoComplete="email" placeholder="name@example.com"></div></div>
+          <div dsField [label]="contact.en.phone"><div dsInput variant="plain" clearable type="tel" autoComplete="tel" value="+966 55 012 3456"></div></div>
+        </fieldset>
+          <fieldset dsFieldset variant="inset" legend="Board" description="The label of each row is read by screen readers, not drawn.">
+            <div dsField>
+              <label dsFieldLabel data-visually-hidden="">Board name</label>
+              <div dsInput variant="plain" clearable value="Spring launch"></div>
+            </div>
+            <div dsField>
+              <label dsFieldLabel data-visually-hidden="">Short description</label>
+              <div dsInput variant="plain" clearable placeholder="For example, landing page directions"></div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
   `,
 })
 export default class FieldsetDemo {
   protected readonly sample = sample;
+  protected readonly contact = contactCopy;
   protected readonly sizes = ['sm', 'md', 'lg'] as const;
   protected readonly addressFields = addressFields;
   protected readonly manyFields = manyFields;

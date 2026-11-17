@@ -1,0 +1,288 @@
+{
+  "name": "Calendar",
+  "kind": "component",
+  "family": "forms",
+  "summary": "An inline month grid to pick one date, in the Gregorian or the Umm al-Qura calendar. Values are ISO Gregorian dates in and out, whatever calendar is drawn, and digits stay Western in every language. On web it is the month grid of a popover or a page; on ios the inline month with the title at the inline start, the two month arrows at the inline end and 44 point day discs; on android the Material date picker grid with a round selected day.",
+  "useWhen": [
+    "Picking a date where the days around it matter: a booking, a delivery slot, an appointment",
+    "Showing which days of a month are free and which are booked",
+    "A date a person reads in the Hijri calendar, with Umm al-Qura"
+  ],
+  "avoidWhen": [
+    "A date a person knows by heart and types faster, such as a birth date",
+    "A date range from a start to an end",
+    "A time of day"
+  ],
+  "insteadUse": {
+    "A known date typed in parts": "DateField (order M9.17)",
+    "A compact chip that opens this calendar": "DatePicker (order M9.17)",
+    "A time of day": "TimeField or WheelPicker (orders M9.16 and M9.17)"
+  },
+  "anatomy": [
+    "root",
+    "header",
+    "title",
+    "previous",
+    "next",
+    "grid",
+    "weekday",
+    "cell",
+    "day"
+  ],
+  "slots": {
+    "title": {
+      "accepts": "text"
+    },
+    "weekday": {
+      "accepts": "text"
+    },
+    "day": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The picked date, controlled: an ISO Gregorian date such as 2026-11-17, or null for none."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first picked date, uncontrolled, ISO."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the picked ISO Gregorian date, and the same date as a CalendarDate in the drawn calendar."
+    },
+    "minValue": {
+      "type": "string",
+      "description": "The earliest date that can be picked, ISO. Days before it are disabled (data-disabled)."
+    },
+    "maxValue": {
+      "type": "string",
+      "description": "The latest date that can be picked, ISO. Days after it are disabled (data-disabled)."
+    },
+    "isDateUnavailable": {
+      "type": "function",
+      "description": "Gets the ISO date and the drawn date, returns true for a day that stays focusable and read but cannot be picked: booked, closed (data-unavailable)."
+    },
+    "calendar": {
+      "type": [
+        "gregory",
+        "islamic-umalqura"
+      ],
+      "default": "gregory",
+      "description": "The calendar drawn. A display choice only: the value stays the same ISO Gregorian date, so an app can offer both and switch between them."
+    },
+    "firstDayOfWeek": {
+      "type": [
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "description": "The first column of the week. Default: from the locale's region, Sunday for ar-SA and en-SA. Pass a locale with a region (ar-SA, not ar)."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the names and the week, such as ar-SA or en-SA. Default the language of the nearest Theme. dateLocale from @the-system/shared adds -u-ca and -u-nu-latn, so digits stay Western."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "The day disc: size.control.sm, md or lg (44). On ios the platform raises the day target to 44."
+    },
+    "defaultFocusedValue": {
+      "type": "string",
+      "description": "The month shown first when nothing is picked, ISO. Default today in the user's time zone."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No day can be focused or picked; the month buttons are disabled. Stamps data-disabled on the root."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Days take focus and are read, a press picks nothing. Stamps data-readonly on the root."
+    },
+    "previousLabel": {
+      "type": "string",
+      "description": "The name of the previous month button. Default Previous month, الشهر السابق."
+    },
+    "nextLabel": {
+      "type": "string",
+      "description": "The name of the next month button. Default Next month, الشهر التالي."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name of the calendar, such as Delivery date or موعد التوصيل. React Aria adds the month to it."
+    }
+  },
+  "states": [
+    "data-selected",
+    "data-today",
+    "data-disabled",
+    "data-unavailable",
+    "data-outside-month",
+    "data-readonly"
+  ],
+  "a11y": {
+    "role": "application named by aria-label and the month, from React Aria, holding a grid of the month. Each day is a gridcell (aria-selected) holding a button named with the full date. The visible title is aria-hidden; React Aria's visually hidden heading reads the name and the month instead.",
+    "focus": "Tab stops: the previous button, the next button, then one day of the grid (the picked day, else today, else the first day of the month). Arrows move between days and across months. A 2px ring from color.focus.ring around the day disc.",
+    "keys": {
+      "Tab": "Moves to the month buttons, then into the grid on one day, then out",
+      "ArrowRight": "Next day; the day before in right to left",
+      "ArrowLeft": "Day before; the next day in right to left",
+      "ArrowDown": "The same day next week",
+      "ArrowUp": "The same day last week",
+      "PageDown": "The same day next month",
+      "PageUp": "The same day last month",
+      "Shift+PageDown": "The same day next year",
+      "Shift+PageUp": "The same day last year",
+      "Home": "The first day of the month",
+      "End": "The last day of the month",
+      "Enter": "Picks the focused day",
+      "Space": "Picks the focused day",
+      "Pointer": "A tap on a day picks it; a tap on an arrow shows the month before or after. No drag."
+    },
+    "announce": "Delivery date, November 2026, application. Each day reads its full date: Today, Tuesday, November 17, 2026 selected. A new month from the buttons and a new pick are announced through React Aria's live announcer. Unavailable and disabled days read as dimmed.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "Day targets are size.control.md (32) on web, at least 24 (WCAG 2.2 2.5.8), and 44 on ios through the platform rule.",
+      "Unavailable days keep 4.5:1 text (color.text.muted) and are struck through, never told apart by color alone (1.4.1, 1.4.3). Disabled days, outside min and max, use opacity.disabled.",
+      "The selected day is a solid disc of color.primary.fill, 3:1 or more on the surface (1.4.11), with semibold text. Today is the tint text on a soft tint disc, and the word Today in its name.",
+      "Days of the months before and after keep their place but are not drawn and are out of the arrow order.",
+      "Digits stay Western in every formatter React Aria runs (title, day numbers, day names, the grid name, announcements), in both calendars, proved by a unit test in ar-SA.",
+      "Home and End go to the first and last day of the month, as React Aria does, not of the week.",
+      "In right to left the weekdays run from the right, the previous button sits at the right of the next button, and both chevrons mirror.",
+      "Under forced colors the selected day is Highlight with HighlightText, today has a CanvasText outline and focus is Highlight."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "Names the date the calendar picks: Delivery date, Booking date. Sentence case.",
+      "labels": "The month buttons are Previous month and Next month. Month and weekday names come from Intl."
+    },
+    "ar": {
+      "aria-label": "اسم بصيغة اسمية بدون تشكيل: موعد التوصيل، تاريخ الحجز.",
+      "labels": "أزرار الشهر: الشهر السابق، الشهر التالي. أسماء الشهور والأيام من Intl بالعربية الفصحى المستخدمة في الخليج، والأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "font.family.sans",
+    "font.size.2xs",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.arabic.tight",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.text.on-primary",
+    "color.bg.overlay-10",
+    "color.primary.fill",
+    "color.primary.tint",
+    "color.primary.on-surface",
+    "color.focus.ring",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "duration.base",
+    "ease.default"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria Calendar (react-aria-components) through its render props; date math, labels and locales from packages/shared/src/date.ts on @internationalized/date",
+      "example": "Calendar.demo.tsx",
+      "note": "Motion: the grid fades in on a month change (fade, interaction calendar-month); the selected disc and today swap colors on duration.base. Reduced motion: both instant, as every duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsCalendar] with the same DOM, on Angular Aria or the CDK grid, with the same date.ts helpers."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system view: the inline date picker of iOS (graphical style) and the Material date picker on Android, through @expo/ui, with the calendar set from the same prop."
+    }
+  },
+  "styles": {
+    "web": "A month grid of 32px day discs under a title and two ghost arrow buttons, for a popover or a page.",
+    "ios": "The inline month: the title at the inline start, the arrows at the inline end, short upper case weekdays, 44 point day discs, today in the tint, the selected day a filled disc.",
+    "android": "The Material date picker grid: the month header with arrows, 40dp round day targets in 48dp cells, the selected day a filled circle, today outlined.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Storing the Hijri date the person picked",
+      "right": "Store the ISO Gregorian value; the calendar prop is only how it is drawn"
+    },
+    {
+      "wrong": "Passing ar and expecting a Saudi week",
+      "right": "Pass ar-SA or en-SA: the first day of the week comes from the region"
+    },
+    {
+      "wrong": "Formatting dates with ar-SA alone",
+      "right": "dateLocale from @the-system/shared, which adds the calendar and -u-nu-latn"
+    },
+    {
+      "wrong": "Graying out booked days with color only",
+      "right": "isDateUnavailable, which keeps 4.5:1 text and strikes the day through"
+    }
+  ],
+  "contract": {
+    "optionalParts": [],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='day'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='day'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "PageDown": {
+        "focus": "[data-part='day'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='day'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Enter": {
+        "focus": "[data-part='day'][tabindex='0']",
+        "case": "empty",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

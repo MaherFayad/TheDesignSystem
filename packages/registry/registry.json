@@ -8,6 +8,9 @@
       "type": "registry:lib",
       "title": "Core",
       "description": "Shared logic, icons, motion patterns, style data, the reset and the base CSS. Every other item needs it.",
+      "dependencies": [
+        "@internationalized/date@3.12.4"
+      ],
       "files": [
         {
           "path": "packages/registry/files/ds.css",
@@ -420,6 +423,11 @@
           "target": "@components/ds/shared/bidi.ts"
         },
         {
+          "path": "packages/shared/src/date.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/date.ts"
+        },
+        {
           "path": "packages/shared/src/dialog-focus.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/dialog-focus.ts"
@@ -553,6 +561,11 @@
           "path": "packages/shared/src/toc.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/toc.ts"
+        },
+        {
+          "path": "packages/shared/src/wheel.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/wheel.ts"
         },
         {
           "path": "packages/shared/src/window.ts",
@@ -1858,6 +1871,46 @@
       ],
       "meta": {
         "manifest": "ButtonGroup",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "An inline month grid to pick one date, in the Gregorian or the Umm al-Qura calendar. Values are ISO Gregorian dates in and out, whatever calendar is drawn, and digits stay Western in every language. On web it is the month grid of a popover or a page; on ios the inline month with the title at the inline start, the two month arrows at the inline end and 44 point day discs; on android the Material date picker grid with a round selected day.",
+      "dependencies": [
+        "@internationalized/date@3.12.4",
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Calendar/Calendar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Calendar/Calendar.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Calendar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Calendar/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Calendar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Calendar.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Calendar",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -5711,6 +5764,41 @@
       ],
       "meta": {
         "manifest": "Tour",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "wheel-picker",
+      "type": "registry:ui",
+      "title": "WheelPicker",
+      "description": "One to three scrolling columns, each resting on a value in a band across the middle: the wheel for a time of day or a short list of values. Each column is a spinbutton. On web it is the same wheel, scrolled by the mouse wheel, a mouse drag, a tap on a row or the keys. On ios the rows turn away on a curve around a soft band. On android each column is a plain scrolling list with the row in the band filled and no curve (Material has no wheel; its time pickers are a dial or a field, and the dial is a drag). Proposed.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/WheelPicker/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/WheelPicker/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/WheelPicker/WheelPicker.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/WheelPicker/WheelPicker.tsx"
+        },
+        {
+          "path": "packages/css/src/components/WheelPicker.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/WheelPicker.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "WheelPicker",
         "framework": "react",
         "since": "0.1.0"
       }

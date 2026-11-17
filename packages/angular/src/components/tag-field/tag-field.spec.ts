@@ -85,7 +85,7 @@ describe('DsTagField', () => {
   });
 
   it('Enter adds the typed text and drops duplicates with the shared rule', async () => {
-    const { host, key, input, type, root } = await setup();
+    const { host, key, input, type, root, fixture } = await setup();
     await type('tags', 'Search');
     const enter = await key(input('tags'), 'Enter');
     expect(enter.defaultPrevented).toBe(true);
@@ -94,8 +94,13 @@ describe('DsTagField', () => {
     await type('tags', 'design');
     await key(input('tags'), 'Enter');
     expect(host.tags()).toEqual(['Design', 'Copy', 'Search']);
+    const t0 = performance.now();
     await new Promise((r) => setTimeout(r, 40));
-    expect(root('tags').querySelector('[data-part="status"]')?.textContent).toBe('design is already added');
+    const info = ['raf=' + String(globalThis.requestAnimationFrame).slice(0, 60), 'own=' + Object.prototype.hasOwnProperty.call(window, 'requestAnimationFrame'), 'waited=' + (performance.now() - t0).toFixed(1), 'text40=' + JSON.stringify(root('tags').querySelector('[data-part="status"]')?.textContent), 'sig=' + JSON.stringify((fixture.debugElement.query((d) => d.nativeElement === root('tags'))?.componentInstance as { status: () => string })?.status())];
+    await new Promise((r) => setTimeout(r, 300));
+    info.push('text340=' + JSON.stringify(root('tags').querySelector('[data-part="status"]')?.textContent));
+    expect(root('tags').querySelector('[data-part="status"]')?.textContent, info.join(' | ')).toBe('design is already added');
+    expect(info[3], info.join(' | ')).toBe('"design is already added"');
   });
 
   it('a refusal shows a FieldError after the root that the control points at, until the next add or removal, as React', async () => {

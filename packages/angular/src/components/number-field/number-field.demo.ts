@@ -49,6 +49,18 @@ const kilogram: Intl.NumberFormatOptions = { style: 'unit', unit: 'kilogram' };
         <div dsNumberField aria-label="Weight" [value]="2.5" [formatOptions]="kilogram" [step]="0.1"></div>
         <div dsNumberField aria-label="Guests" [value]="2" start="user" [min]="1" [max]="8" [steppers]="false"></div>
       </div>
+      <!-- Order M9.3: the stepper form, the value as text before a capsule of the two step buttons. -->
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));">
+        <div dsNumberField variant="field" aria-label="Guests, field" [value]="2" [min]="1" [max]="8"></div>
+        @for (size of sizes; track size) {
+          <div dsNumberField variant="stepper" [size]="size" locale="en" [aria-label]="'Guests, ' + size + ', stepper'" [value]="2" [min]="1" [max]="8"></div>
+        }
+      </div>
+      <div dsTheme lang="ar">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));">
+          <div dsNumberField variant="stepper" aria-label="عدد الضيوف" [value]="2" [min]="1" [max]="8"></div>
+        </div>
+      </div>
       <div dsTheme lang="ar">
         <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));">
           <div dsNumberField aria-label="الكمية" [value]="4" [min]="0"></div>
@@ -67,6 +79,9 @@ const kilogram: Intl.NumberFormatOptions = { style: 'unit', unit: 'kilogram' };
     <section data-demo="case" data-demo-case="one" heading="One field with bounds">
       <div dsField label="Seats" description="Between 1 and 50. PageUp and PageDown move by 10.">
         <div dsNumberField [value]="10" [min]="1" [max]="50"></div>
+      </div>
+      <div dsField label="Sessions a day" description="Between 1 and 12.">
+        <div dsNumberField variant="stepper" [value]="3" [min]="1" [max]="12"></div>
       </div>
     </section>
 
@@ -98,9 +113,12 @@ const kilogram: Intl.NumberFormatOptions = { style: 'unit', unit: 'kilogram' };
     </section>
 
     <section data-demo="case" data-demo-case="long-text" heading="A long value and a long label">
-      <div style="max-inline-size: var(--ds-dialog-width-sm);">
+      <div style="max-inline-size: var(--ds-dialog-width-sm); display: grid; gap: var(--ds-space-m);">
         <div dsField label="Total budget for the spring launch campaign across every region and channel">
           <div dsNumberField [value]="987654321012.75" [formatOptions]="sar"></div>
+        </div>
+        <div dsField label="Spare monitors to keep in the storage room on every floor">
+          <div dsNumberField variant="stepper" [value]="1234567" [min]="0"></div>
         </div>
       </div>
     </section>
@@ -113,6 +131,9 @@ const kilogram: Intl.NumberFormatOptions = { style: 'unit', unit: 'kilogram' };
           </div>
           <div dsField label="عدد المقاعد">
             <div dsNumberField [value]="12" [min]="1" [max]="50"></div>
+          </div>
+          <div dsField label="عدد الجلسات المحجوزة لهذا الأسبوع في كل الفروع">
+            <div dsNumberField variant="stepper" [value]="3" [min]="0" [max]="14"></div>
           </div>
         </div>
       </div>

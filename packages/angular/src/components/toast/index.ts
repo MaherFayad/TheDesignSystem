@@ -1,4 +1,15 @@
-export { DsToast, toastDirFor, toastIcons, toastLabels, toastLabelsFor, type ToastAction, type ToastTone } from './toast';
+export {
+  DsToast,
+  toastDirFor,
+  toastIcons,
+  toastLabels,
+  toastLabelsFor,
+  type ToastAction,
+  type ToastAvatar,
+  type ToastStart,
+  type ToastStartContent,
+  type ToastTone,
+} from './toast';
 export { DsToaster, resolveToasterPosition, toastAnnouncement, type ToasterPosition, type ToasterPositionProp } from './toaster';
 export { isInsideToaster, TOASTER_LAYER_ATTRIBUTE } from './is-inside-toaster';
 export {

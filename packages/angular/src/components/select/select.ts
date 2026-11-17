@@ -3,7 +3,7 @@
 // Select. Here the behavior is hand built with the Radix Select DOM, read
 // from node_modules/@radix-ui/react-select/dist/index.mjs:
 //
-//   <button data-ds="select" role="combobox" aria-expanded aria-autocomplete="none" dir data-size data-shape
+//   <button data-ds="select" role="combobox" aria-expanded aria-autocomplete="none" dir data-size data-shape data-emphasis?
 //           data-placeholder? data-invalid? data-disabled? data-readonly? data-loading?>   the host, the Radix Trigger
 //     <span data-part="value" style="pointer-events: none;">   the chosen label (a copy of the item text), or the placeholder
 //     <span data-part="icon" aria-hidden="true">               chevrons-up-down, or a spinner while loading
@@ -70,7 +70,7 @@ import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
 import { DsSpinner } from '../spinner/spinner';
-import { createTypeahead, edgeEnabledIndex, nextEnabledIndex, typeaheadIndex, type Shape, type Size } from '@the-system/shared';
+import { createTypeahead, edgeEnabledIndex, nextEnabledIndex, typeaheadIndex, type Emphasis, type Shape, type Size } from '@the-system/shared';
 import { hideOthers, lockScroll } from '../../behavior/dialog-behavior';
 import { consumeHostAttributes } from '../../internal/host';
 import { rollValue, staggerRows } from '@the-system/motion';
@@ -93,6 +93,8 @@ import {
 
 export type SelectSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SelectShape = Extract<Shape, 'default' | 'pill'>;
+/** outline: the field box (the default look). ghost: the pop-up button (order M9.3). */
+export type SelectEmphasis = Extract<Emphasis, 'outline' | 'ghost'>;
 export type SelectItem = ListBoxItem;
 export type SelectOption = ListBoxOption;
 
@@ -140,6 +142,7 @@ let nextId = 0;
     '[attr.data-placeholder]': 'current() === null ? "" : null',
     '[attr.data-size]': 'size()',
     '[attr.data-shape]': 'shape()',
+    '[attr.data-emphasis]': 'emphasis() ?? null',
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
     '[attr.data-readonly]': 'isReadOnly() ? "" : null',
     '[attr.data-loading]': 'loading() ? "" : null',
@@ -194,6 +197,13 @@ export class DsSelect implements ControlValueAccessor {
   /** Trigger height and the row size of the list. Default md. */
   readonly size = input<SelectSize>('md');
   readonly shape = input<SelectShape>('default');
+  /**
+   * outline: the field box (the default look). ghost: the pop-up button, no
+   * box, the value in the link color and the up and down glyph after it, for
+   * toolbars, filter rows and list rows. The DOM, the keys and the list are
+   * the same. Stamped as data-emphasis only when set (order M9.3).
+   */
+  readonly emphasis = input<SelectEmphasis | undefined>(undefined);
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   /** Native disabled: out of the tab order. Inside a Field it follows the Field. */
   readonly disabled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
@@ -217,7 +227,7 @@ export class DsSelect implements ControlValueAccessor {
   private readonly doc = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly host = consumeHostAttributes([
-    'dsSelect', 'items', 'value', 'defaultValue', 'open', 'defaultOpen', 'placeholder', 'size', 'shape', 'invalid',
+    'dsSelect', 'items', 'value', 'defaultValue', 'open', 'defaultOpen', 'placeholder', 'size', 'shape', 'emphasis', 'invalid',
     'disabled', 'readOnly', 'required', 'loading', 'loadingLabel', 'empty', 'name', 'id', 'aria-label',
     'aria-labelledby', 'aria-describedby',
   ]) as HTMLButtonElement;

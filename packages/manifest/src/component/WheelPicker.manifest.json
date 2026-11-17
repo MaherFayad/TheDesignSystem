@@ -1,0 +1,211 @@
+{
+  "name": "WheelPicker",
+  "kind": "component",
+  "family": "forms",
+  "summary": "One to three scrolling columns, each resting on a value in a band across the middle: the wheel for a time of day or a short list of values. Each column is a spinbutton. On web it is the same wheel, scrolled by the mouse wheel, a mouse drag, a tap on a row or the keys. On ios the rows turn away on a curve around a soft band. On android each column is a plain scrolling list with the row in the band filled and no curve (Material has no wheel; its time pickers are a dial or a field, and the dial is a drag). Proposed.",
+  "useWhen": [
+    "A time of day picked in a popover or a sheet on a phone: alarm, booking slot, reminder",
+    "A short list of values where the neighbours help: a duration in minutes, a count of nights, a day period",
+    "Two or three linked values chosen together: hours, minutes and AM or PM"
+  ],
+  "avoidWhen": [
+    "A value people type faster than they scroll: a year, a postcode, an exact amount",
+    "A long list of words, where reading and search matter more than flicking",
+    "A date with a month grid people scan by week"
+  ],
+  "insteadUse": {
+    "A value people type": "NumberField",
+    "A long list of words": "Select",
+    "A date by month and week": "Calendar",
+    "A few choices side by side": "SegmentedControl"
+  },
+  "anatomy": [
+    "root",
+    "band",
+    "column",
+    "option"
+  ],
+  "slots": {
+    "option": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "columns": {
+      "type": "array",
+      "required": true,
+      "description": "One to three columns, each { id, label, options, value?, defaultValue?, loop? }. label is the accessible name of the column, never drawn (Hours). options are { value, label?, textValue?, disabled? }. value makes the column controlled. wheelTimeColumns in @the-system/shared builds a time wheel in the locale's order with Latin digits and Intl day period words."
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The name of the group of columns, never drawn (convention 7): Alarm time, وقت المنبه."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the column id and its new value when a column comes to rest on a new row, or a key or a tap chooses one."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "description": "Every column wraps from its last row to its first (hours, minutes). A column's own loop wins, so a day period column can stay a short list."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No column changes. Columns stay focusable and say aria-disabled (convention 5). Stamps data-disabled on the root."
+    },
+    "onTick": {
+      "type": "function",
+      "description": "Called each time a new row crosses the band under a finger, a drag or a mouse wheel. The hook for haptic ticks: the feedback helper of order R3.9 is not built, so the wheel makes no haptic of its own yet."
+    }
+  },
+  "states": [
+    "data-selected",
+    "data-centered",
+    "data-disabled",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "group named by label, holding one spinbutton per column. Each spinbutton is named by its column label and reads its value by aria-valuetext (the row text). aria-valuenow is the value for a column of numbers, else the row number. The rows are drawn text, aria-hidden. The band is aria-hidden.",
+    "focus": "One Tab stop per column. Left and Right move focus between columns by what is seen (mirrored in right to left). A 2px ring from color.focus.ring around the focused column.",
+    "keys": {
+      "Tab": "Moves to the next column, and out of the wheel after the last",
+      "ArrowUp": "The next value (a step down the list); wraps in a looping column",
+      "ArrowDown": "The previous value; wraps in a looping column",
+      "PageUp": "Five values on",
+      "PageDown": "Five values back",
+      "Home": "The first value",
+      "End": "The last value",
+      "ArrowRight": "Focus to the column at the right",
+      "ArrowLeft": "Focus to the column at the left",
+      "Digits and letters": "Jump to the first value that starts with what was typed within a second: 4 then 1 is 41, 7 finds 07, p finds PM. Arabic Indic digits count as Latin digits.",
+      "Pointer": "A flick or a drag scrolls a column and it rests on the row in the band. The paths that need no drag (WCAG 2.2 2.5.7): a tap or click on any row in view chooses it, and every key above."
+    },
+    "announce": "Alarm time, group. Hours, spin button, 9. After a step the new value text is read. Disabled rows are skipped by keys and the wheel never rests on one.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "Rows are control md tall and never under the platform target: 32 on web, 44 on ios, 48 on android (WCAG 2.2 2.5.8). The band is one row tall.",
+      "Rows outside the band use color.text.muted at 4.5:1; they turn on the curve but are never faded below it (1.4.3). The row in the band uses color.text.default.",
+      "A disabled row is struck through as well as dimmed, so it is not told by colour alone (1.4.1).",
+      "Reduced motion (the system setting or data-motion reduce on the root element): keys and taps jump instead of gliding, a mouse drag rests where it is let go, and the curve is flat. A finger still scrolls and values still change (2.3.3).",
+      "Digits are Latin in every locale, ar-SA included. The day period words come from Intl for the locale with Arabic marks removed (ص and م).",
+      "Columns follow the reading direction: in Arabic the first column (hours) sits at the right and the day period at the left. The order of the time columns comes from Intl (wheelTimeOrder), so a locale that writes the day period first gets it first.",
+      "Under forced colors the band has a CanvasText edge, rows are CanvasText, disabled rows GrayText and the focus ring Highlight."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Names what the wheel sets: Alarm time, Reminder duration.",
+      "columns": "Short nouns for each column label: Hours, Minutes, AM or PM. Rows are values, not sentences."
+    },
+    "ar": {
+      "label": "اسم بصيغة اسمية بدون تشكيل: وقت المنبه، مدة التذكير.",
+      "columns": "أسماء قصيرة للأعمدة: الساعة، الدقائق، الفترة. الأرقام لاتينية دائما، وكلمتا الفترة من Intl: ص و م."
+    }
+  },
+  "tokens": [
+    "size.control.md",
+    "size.target",
+    "space.3xs",
+    "space.2xs",
+    "space.s",
+    "font.family.sans",
+    "font.size.3xl",
+    "font.weight.regular",
+    "font.leading.tight",
+    "font.leading.arabic.tight",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.disabled",
+    "color.bg.overlay-10",
+    "color.focus.ring",
+    "radius.control",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled"
+  ],
+  "motion": "drag-drop",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "Scroll containers with CSS scroll snap, one spinbutton each; a mouse drag with dragVelocity and DETENT_PROJECTION from @the-system/motion; stepping, loops, typing and the time columns from wheel.ts in @the-system/shared",
+      "example": "WheelPicker.demo.tsx",
+      "note": "Motion: the scroll and the snap are the browser's; keys and taps glide with smooth scrolling; the curve is a transform from each row's distance to the band. Named under drag-drop, the catalog's drag and settle pattern; a wheel pattern of its own is a request to the motion owner. Reduced motion: keys and taps jump and the curve is flat."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsWheelPicker] with the same DOM and the same helpers from wheel.ts."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system view: the wheel picker of @expo/ui on ios (a system picker, ruling 9) and, on android, the Material time input in a dialog, since the clock dial is a drag."
+    }
+  },
+  "styles": {
+    "web": "The same wheel: columns with a soft band across the middle, rows turning away on a curve, scrolled by the mouse wheel, a drag, a tap or the keys.",
+    "ios": "Rows on a curve around a soft rounded band that spans every column; rows outside the band in the secondary label colour. Proposed platform rules are a request to the style owner.",
+    "android": "A plain scrolling list per column, no curve, the row in the band filled with the secondary container and square ends. Proposed platform rules are a request to the style owner.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe. The band is the control layer, so a glass band is allowed (M9.21)."
+  },
+  "mistakes": [
+    {
+      "wrong": "A clock dial or a wheel as the only way to set a time",
+      "right": "WheelPicker, whose rows take a tap and whose columns take the keys, with no drag needed"
+    },
+    {
+      "wrong": "Fading the rows outside the band to a light grey",
+      "right": "color.text.muted at 4.5:1, with the curve doing the depth"
+    },
+    {
+      "wrong": "Arabic Indic digits or a day period written by hand",
+      "right": "wheelTimeColumns({ locale: 'ar-SA' }): Latin digits and the Intl words ص and م"
+    },
+    {
+      "wrong": "Listening for the row under the band on every scroll and saving it",
+      "right": "onChange, which fires once when the column rests"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowUp": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "value-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "value-changes"
+      },
+      "PageUp": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "value-changes"
+      },
+      "PageDown": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']:nth-of-type(3)",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']:last-child",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

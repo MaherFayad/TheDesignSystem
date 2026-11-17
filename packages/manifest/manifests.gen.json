@@ -3378,6 +3378,294 @@
     "since": "0.1.0"
   },
   {
+    "name": "Calendar",
+    "kind": "component",
+    "family": "forms",
+    "summary": "An inline month grid to pick one date, in the Gregorian or the Umm al-Qura calendar. Values are ISO Gregorian dates in and out, whatever calendar is drawn, and digits stay Western in every language. On web it is the month grid of a popover or a page; on ios the inline month with the title at the inline start, the two month arrows at the inline end and 44 point day discs; on android the Material date picker grid with a round selected day.",
+    "useWhen": [
+      "Picking a date where the days around it matter: a booking, a delivery slot, an appointment",
+      "Showing which days of a month are free and which are booked",
+      "A date a person reads in the Hijri calendar, with Umm al-Qura"
+    ],
+    "avoidWhen": [
+      "A date a person knows by heart and types faster, such as a birth date",
+      "A date range from a start to an end",
+      "A time of day"
+    ],
+    "insteadUse": {
+      "A known date typed in parts": "DateField (order M9.17)",
+      "A compact chip that opens this calendar": "DatePicker (order M9.17)",
+      "A time of day": "TimeField or WheelPicker (orders M9.16 and M9.17)"
+    },
+    "anatomy": [
+      "root",
+      "header",
+      "title",
+      "previous",
+      "next",
+      "grid",
+      "weekday",
+      "cell",
+      "day"
+    ],
+    "slots": {
+      "title": {
+        "accepts": "text"
+      },
+      "weekday": {
+        "accepts": "text"
+      },
+      "day": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The picked date, controlled: an ISO Gregorian date such as 2026-11-17, or null for none."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first picked date, uncontrolled, ISO."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the picked ISO Gregorian date, and the same date as a CalendarDate in the drawn calendar."
+      },
+      "minValue": {
+        "type": "string",
+        "description": "The earliest date that can be picked, ISO. Days before it are disabled (data-disabled)."
+      },
+      "maxValue": {
+        "type": "string",
+        "description": "The latest date that can be picked, ISO. Days after it are disabled (data-disabled)."
+      },
+      "isDateUnavailable": {
+        "type": "function",
+        "description": "Gets the ISO date and the drawn date, returns true for a day that stays focusable and read but cannot be picked: booked, closed (data-unavailable)."
+      },
+      "calendar": {
+        "type": [
+          "gregory",
+          "islamic-umalqura"
+        ],
+        "default": "gregory",
+        "description": "The calendar drawn. A display choice only: the value stays the same ISO Gregorian date, so an app can offer both and switch between them."
+      },
+      "firstDayOfWeek": {
+        "type": [
+          "sun",
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "description": "The first column of the week. Default: from the locale's region, Sunday for ar-SA and en-SA. Pass a locale with a region (ar-SA, not ar)."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the names and the week, such as ar-SA or en-SA. Default the language of the nearest Theme. dateLocale from @the-system/shared adds -u-ca and -u-nu-latn, so digits stay Western."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The day disc: size.control.sm, md or lg (44). On ios the platform raises the day target to 44."
+      },
+      "defaultFocusedValue": {
+        "type": "string",
+        "description": "The month shown first when nothing is picked, ISO. Default today in the user's time zone."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "No day can be focused or picked; the month buttons are disabled. Stamps data-disabled on the root."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Days take focus and are read, a press picks nothing. Stamps data-readonly on the root."
+      },
+      "previousLabel": {
+        "type": "string",
+        "description": "The name of the previous month button. Default Previous month, الشهر السابق."
+      },
+      "nextLabel": {
+        "type": "string",
+        "description": "The name of the next month button. Default Next month, الشهر التالي."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name of the calendar, such as Delivery date or موعد التوصيل. React Aria adds the month to it."
+      }
+    },
+    "states": [
+      "data-selected",
+      "data-today",
+      "data-disabled",
+      "data-unavailable",
+      "data-outside-month",
+      "data-readonly"
+    ],
+    "a11y": {
+      "role": "application named by aria-label and the month, from React Aria, holding a grid of the month. Each day is a gridcell (aria-selected) holding a button named with the full date. The visible title is aria-hidden; React Aria's visually hidden heading reads the name and the month instead.",
+      "focus": "Tab stops: the previous button, the next button, then one day of the grid (the picked day, else today, else the first day of the month). Arrows move between days and across months. A 2px ring from color.focus.ring around the day disc.",
+      "keys": {
+        "Tab": "Moves to the month buttons, then into the grid on one day, then out",
+        "ArrowRight": "Next day; the day before in right to left",
+        "ArrowLeft": "Day before; the next day in right to left",
+        "ArrowDown": "The same day next week",
+        "ArrowUp": "The same day last week",
+        "PageDown": "The same day next month",
+        "PageUp": "The same day last month",
+        "Shift+PageDown": "The same day next year",
+        "Shift+PageUp": "The same day last year",
+        "Home": "The first day of the month",
+        "End": "The last day of the month",
+        "Enter": "Picks the focused day",
+        "Space": "Picks the focused day",
+        "Pointer": "A tap on a day picks it; a tap on an arrow shows the month before or after. No drag."
+      },
+      "announce": "Delivery date, November 2026, application. Each day reads its full date: Today, Tuesday, November 17, 2026 selected. A new month from the buttons and a new pick are announced through React Aria's live announcer. Unavailable and disabled days read as dimmed.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "Day targets are size.control.md (32) on web, at least 24 (WCAG 2.2 2.5.8), and 44 on ios through the platform rule.",
+        "Unavailable days keep 4.5:1 text (color.text.muted) and are struck through, never told apart by color alone (1.4.1, 1.4.3). Disabled days, outside min and max, use opacity.disabled.",
+        "The selected day is a solid disc of color.primary.fill, 3:1 or more on the surface (1.4.11), with semibold text. Today is the tint text on a soft tint disc, and the word Today in its name.",
+        "Days of the months before and after keep their place but are not drawn and are out of the arrow order.",
+        "Digits stay Western in every formatter React Aria runs (title, day numbers, day names, the grid name, announcements), in both calendars, proved by a unit test in ar-SA.",
+        "Home and End go to the first and last day of the month, as React Aria does, not of the week.",
+        "In right to left the weekdays run from the right, the previous button sits at the right of the next button, and both chevrons mirror.",
+        "Under forced colors the selected day is Highlight with HighlightText, today has a CanvasText outline and focus is Highlight."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "Names the date the calendar picks: Delivery date, Booking date. Sentence case.",
+        "labels": "The month buttons are Previous month and Next month. Month and weekday names come from Intl."
+      },
+      "ar": {
+        "aria-label": "اسم بصيغة اسمية بدون تشكيل: موعد التوصيل، تاريخ الحجز.",
+        "labels": "أزرار الشهر: الشهر السابق، الشهر التالي. أسماء الشهور والأيام من Intl بالعربية الفصحى المستخدمة في الخليج، والأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "font.family.sans",
+      "font.size.2xs",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.regular",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.leading.arabic.tight",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.text.on-primary",
+      "color.bg.overlay-10",
+      "color.primary.fill",
+      "color.primary.tint",
+      "color.primary.on-surface",
+      "color.focus.ring",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "opacity.disabled",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria Calendar (react-aria-components) through its render props; date math, labels and locales from packages/shared/src/date.ts on @internationalized/date",
+        "example": "Calendar.demo.tsx",
+        "note": "Motion: the grid fades in on a month change (fade, interaction calendar-month); the selected disc and today swap colors on duration.base. Reduced motion: both instant, as every duration token is 0ms."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsCalendar] with the same DOM, on Angular Aria or the CDK grid, with the same date.ts helpers."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system view: the inline date picker of iOS (graphical style) and the Material date picker on Android, through @expo/ui, with the calendar set from the same prop."
+      }
+    },
+    "styles": {
+      "web": "A month grid of 32px day discs under a title and two ghost arrow buttons, for a popover or a page.",
+      "ios": "The inline month: the title at the inline start, the arrows at the inline end, short upper case weekdays, 44 point day discs, today in the tint, the selected day a filled disc.",
+      "android": "The Material date picker grid: the month header with arrows, 40dp round day targets in 48dp cells, the selected day a filled circle, today outlined.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Storing the Hijri date the person picked",
+        "right": "Store the ISO Gregorian value; the calendar prop is only how it is drawn"
+      },
+      {
+        "wrong": "Passing ar and expecting a Saudi week",
+        "right": "Pass ar-SA or en-SA: the first day of the week comes from the region"
+      },
+      {
+        "wrong": "Formatting dates with ar-SA alone",
+        "right": "dateLocale from @the-system/shared, which adds the calendar and -u-nu-latn"
+      },
+      {
+        "wrong": "Graying out booked days with color only",
+        "right": "isDateUnavailable, which keeps 4.5:1 text and strikes the day through"
+      }
+    ],
+    "contract": {
+      "optionalParts": [],
+      "keys": {
+        "ArrowRight": {
+          "focus": "[data-part='day'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ArrowDown": {
+          "focus": "[data-part='day'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "PageDown": {
+          "focus": "[data-part='day'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "Home": {
+          "focus": "[data-part='day'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "Enter": {
+          "focus": "[data-part='day'][tabindex='0']",
+          "case": "empty",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Callout",
     "kind": "component",
     "family": "feedback",
@@ -28294,6 +28582,217 @@
         "body",
         "back"
       ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "WheelPicker",
+    "kind": "component",
+    "family": "forms",
+    "summary": "One to three scrolling columns, each resting on a value in a band across the middle: the wheel for a time of day or a short list of values. Each column is a spinbutton. On web it is the same wheel, scrolled by the mouse wheel, a mouse drag, a tap on a row or the keys. On ios the rows turn away on a curve around a soft band. On android each column is a plain scrolling list with the row in the band filled and no curve (Material has no wheel; its time pickers are a dial or a field, and the dial is a drag). Proposed.",
+    "useWhen": [
+      "A time of day picked in a popover or a sheet on a phone: alarm, booking slot, reminder",
+      "A short list of values where the neighbours help: a duration in minutes, a count of nights, a day period",
+      "Two or three linked values chosen together: hours, minutes and AM or PM"
+    ],
+    "avoidWhen": [
+      "A value people type faster than they scroll: a year, a postcode, an exact amount",
+      "A long list of words, where reading and search matter more than flicking",
+      "A date with a month grid people scan by week"
+    ],
+    "insteadUse": {
+      "A value people type": "NumberField",
+      "A long list of words": "Select",
+      "A date by month and week": "Calendar",
+      "A few choices side by side": "SegmentedControl"
+    },
+    "anatomy": [
+      "root",
+      "band",
+      "column",
+      "option"
+    ],
+    "slots": {
+      "option": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "columns": {
+        "type": "array",
+        "required": true,
+        "description": "One to three columns, each { id, label, options, value?, defaultValue?, loop? }. label is the accessible name of the column, never drawn (Hours). options are { value, label?, textValue?, disabled? }. value makes the column controlled. wheelTimeColumns in @the-system/shared builds a time wheel in the locale's order with Latin digits and Intl day period words."
+      },
+      "label": {
+        "type": "string",
+        "required": true,
+        "description": "The name of the group of columns, never drawn (convention 7): Alarm time, وقت المنبه."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the column id and its new value when a column comes to rest on a new row, or a key or a tap chooses one."
+      },
+      "loop": {
+        "type": "boolean",
+        "default": false,
+        "description": "Every column wraps from its last row to its first (hours, minutes). A column's own loop wins, so a day period column can stay a short list."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "No column changes. Columns stay focusable and say aria-disabled (convention 5). Stamps data-disabled on the root."
+      },
+      "onTick": {
+        "type": "function",
+        "description": "Called each time a new row crosses the band under a finger, a drag or a mouse wheel. The hook for haptic ticks: the feedback helper of order R3.9 is not built, so the wheel makes no haptic of its own yet."
+      }
+    },
+    "states": [
+      "data-selected",
+      "data-centered",
+      "data-disabled",
+      "data-dragging"
+    ],
+    "a11y": {
+      "role": "group named by label, holding one spinbutton per column. Each spinbutton is named by its column label and reads its value by aria-valuetext (the row text). aria-valuenow is the value for a column of numbers, else the row number. The rows are drawn text, aria-hidden. The band is aria-hidden.",
+      "focus": "One Tab stop per column. Left and Right move focus between columns by what is seen (mirrored in right to left). A 2px ring from color.focus.ring around the focused column.",
+      "keys": {
+        "Tab": "Moves to the next column, and out of the wheel after the last",
+        "ArrowUp": "The next value (a step down the list); wraps in a looping column",
+        "ArrowDown": "The previous value; wraps in a looping column",
+        "PageUp": "Five values on",
+        "PageDown": "Five values back",
+        "Home": "The first value",
+        "End": "The last value",
+        "ArrowRight": "Focus to the column at the right",
+        "ArrowLeft": "Focus to the column at the left",
+        "Digits and letters": "Jump to the first value that starts with what was typed within a second: 4 then 1 is 41, 7 finds 07, p finds PM. Arabic Indic digits count as Latin digits.",
+        "Pointer": "A flick or a drag scrolls a column and it rests on the row in the band. The paths that need no drag (WCAG 2.2 2.5.7): a tap or click on any row in view chooses it, and every key above."
+      },
+      "announce": "Alarm time, group. Hours, spin button, 9. After a step the new value text is read. Disabled rows are skipped by keys and the wheel never rests on one.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "Rows are control md tall and never under the platform target: 32 on web, 44 on ios, 48 on android (WCAG 2.2 2.5.8). The band is one row tall.",
+        "Rows outside the band use color.text.muted at 4.5:1; they turn on the curve but are never faded below it (1.4.3). The row in the band uses color.text.default.",
+        "A disabled row is struck through as well as dimmed, so it is not told by colour alone (1.4.1).",
+        "Reduced motion (the system setting or data-motion reduce on the root element): keys and taps jump instead of gliding, a mouse drag rests where it is let go, and the curve is flat. A finger still scrolls and values still change (2.3.3).",
+        "Digits are Latin in every locale, ar-SA included. The day period words come from Intl for the locale with Arabic marks removed (ص and م).",
+        "Columns follow the reading direction: in Arabic the first column (hours) sits at the right and the day period at the left. The order of the time columns comes from Intl (wheelTimeOrder), so a locale that writes the day period first gets it first.",
+        "Under forced colors the band has a CanvasText edge, rows are CanvasText, disabled rows GrayText and the focus ring Highlight."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Names what the wheel sets: Alarm time, Reminder duration.",
+        "columns": "Short nouns for each column label: Hours, Minutes, AM or PM. Rows are values, not sentences."
+      },
+      "ar": {
+        "label": "اسم بصيغة اسمية بدون تشكيل: وقت المنبه، مدة التذكير.",
+        "columns": "أسماء قصيرة للأعمدة: الساعة، الدقائق، الفترة. الأرقام لاتينية دائما، وكلمتا الفترة من Intl: ص و م."
+      }
+    },
+    "tokens": [
+      "size.control.md",
+      "size.target",
+      "space.3xs",
+      "space.2xs",
+      "space.s",
+      "font.family.sans",
+      "font.size.3xl",
+      "font.weight.regular",
+      "font.leading.tight",
+      "font.leading.arabic.tight",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.disabled",
+      "color.bg.overlay-10",
+      "color.focus.ring",
+      "radius.control",
+      "border.width.default",
+      "border.width.strong",
+      "opacity.disabled"
+    ],
+    "motion": "drag-drop",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "Scroll containers with CSS scroll snap, one spinbutton each; a mouse drag with dragVelocity and DETENT_PROJECTION from @the-system/motion; stepping, loops, typing and the time columns from wheel.ts in @the-system/shared",
+        "example": "WheelPicker.demo.tsx",
+        "note": "Motion: the scroll and the snap are the browser's; keys and taps glide with smooth scrolling; the curve is a transform from each row's distance to the band. Named under drag-drop, the catalog's drag and settle pattern; a wheel pattern of its own is a request to the motion owner. Reduced motion: keys and taps jump and the curve is flat."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsWheelPicker] with the same DOM and the same helpers from wheel.ts."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system view: the wheel picker of @expo/ui on ios (a system picker, ruling 9) and, on android, the Material time input in a dialog, since the clock dial is a drag."
+      }
+    },
+    "styles": {
+      "web": "The same wheel: columns with a soft band across the middle, rows turning away on a curve, scrolled by the mouse wheel, a drag, a tap or the keys.",
+      "ios": "Rows on a curve around a soft rounded band that spans every column; rows outside the band in the secondary label colour. Proposed platform rules are a request to the style owner.",
+      "android": "A plain scrolling list per column, no curve, the row in the band filled with the secondary container and square ends. Proposed platform rules are a request to the style owner.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe. The band is the control layer, so a glass band is allowed (M9.21)."
+    },
+    "mistakes": [
+      {
+        "wrong": "A clock dial or a wheel as the only way to set a time",
+        "right": "WheelPicker, whose rows take a tap and whose columns take the keys, with no drag needed"
+      },
+      {
+        "wrong": "Fading the rows outside the band to a light grey",
+        "right": "color.text.muted at 4.5:1, with the curve doing the depth"
+      },
+      {
+        "wrong": "Arabic Indic digits or a day period written by hand",
+        "right": "wheelTimeColumns({ locale: 'ar-SA' }): Latin digits and the Intl words ص and م"
+      },
+      {
+        "wrong": "Listening for the row under the band on every scroll and saving it",
+        "right": "onChange, which fires once when the column rests"
+      }
+    ],
+    "contract": {
+      "keys": {
+        "ArrowUp": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "value-changes"
+        },
+        "ArrowDown": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "value-changes"
+        },
+        "PageUp": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "value-changes"
+        },
+        "PageDown": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "value-changes"
+        },
+        "Home": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']:nth-of-type(3)",
+          "expect": "value-changes"
+        },
+        "End": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "value-changes"
+        },
+        "ArrowRight": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']",
+          "expect": "focus-moves"
+        },
+        "ArrowLeft": {
+          "focus": "[data-ds='wheel-picker']:not([data-disabled]) > [data-part='column']:last-child",
+          "expect": "focus-moves"
+        }
+      }
     },
     "since": "0.1.0"
   },

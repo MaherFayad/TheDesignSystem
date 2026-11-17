@@ -35,6 +35,8 @@
 //     <div data-ds="theme" data-menu-layer>             the portal theme (the layer component's host)
 //       <div data-radix-popper-content-wrapper>         fixed, translate (behavior/popper.ts)
 //         <div data-ds="dropdown-menu" role="menu">     the root, then the items from the template
+//           <div data-part="quick-actions" role="group" aria-label>   order M9.4: two to four quick actions, first
+//             <div data-part="quick-action" role="menuitem" data-tone?>
 //           <span data-part="highlight" aria-hidden>  the marker of the lit row, last child (order 1.23)
 //
 // Why not Angular Aria Menu or the CDK Menu: both own the trigger and the
@@ -94,8 +96,11 @@ import { CHECK_DRAW_ID, drawCheck, exitGhost } from '@the-system/motion';
 import { injectHighlightMarker } from '../../internal/selection-marker';
 import { ROW_SLIDE_ID, rowSlide } from './row-slide';
 
-/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). */
-const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']";
+/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). Order M9.4: the quick actions too. */
+const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'], [data-part='quick-action']";
+
+/** The quick actions of a quick action row (order M9.4). */
+const QUICK_ACTION_SELECTOR = "[data-part='quick-action']";
 
 /** Menu sizes: sm rows are 24px, md rows follow menu.item.height (28px at default density). */
 export type DropdownMenuSize = Extract<Size, 'sm' | 'md'>;
@@ -827,6 +832,8 @@ export class DsDropdownMenuSubContent extends MenuPanelHost {
     };
     // ArrowLeft (ArrowRight in rtl) closes it and returns to the trigger.
     const keydown = (event: KeyboardEvent) => {
+      // A key handled inside the menu (Left and Right in a quick action row) does not close it, as Radix composes handlers.
+      if (event.defaultPrevented) return;
       const closeKey = this.themeService.value().dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
       if (event.key !== closeKey || !menu.contains(event.target as Node)) return;
       this.sub.setOpen(false);
@@ -1192,6 +1199,79 @@ export class DsDropdownMenuSubTrigger extends MenuItemBase {
   }
 }
 
+// ------------------------------------------------------------------ quick actions (order M9.4)
+
+/**
+ * A row of two to four quick actions, first in the menu (part quick-actions,
+ * role group named by `label`). ArrowDown and ArrowUp walk every item of the
+ * menu in order, the quick actions first; ArrowLeft and ArrowRight move
+ * inside the row in reading order (mirrored in right to left layouts),
+ * wrapping at the ends and skipping disabled ones. The key is prevented, so
+ * a submenu the row sits in does not close. The twin of
+ * onQuickRowKeyDown in React's menuShared.tsx.
+ */
+@Directive({
+  selector: '[dsDropdownMenuQuickActions]',
+  host: {
+    role: 'group',
+    'data-part': 'quick-actions',
+    '[attr.aria-label]': 'label()',
+    '(keydown)': 'onKeyDown($event)',
+  },
+})
+export class DsDropdownMenuQuickActions {
+  /** Names the row for screen readers (role group), for example "Quick actions". Required. */
+  readonly label = input.required<string>();
+
+  constructor() {
+    consumeHostAttributes(['dsDropdownMenuQuickActions', 'label']);
+  }
+
+  protected onKeyDown(event: KeyboardEvent): void {
+    if (event.defaultPrevented || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+    if (event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+    const row = event.currentTarget as HTMLElement;
+    const actions = Array.from(row.querySelectorAll<HTMLElement>(QUICK_ACTION_SELECTOR)).filter((el) => !el.hasAttribute('data-disabled'));
+    const at = actions.indexOf(event.target as HTMLElement);
+    if (at < 0) return;
+    // Handled here: a submenu does not close.
+    event.preventDefault();
+    const rtl = row.closest('[dir]')?.getAttribute('dir') === 'rtl';
+    const forward = (event.key === 'ArrowRight') !== rtl;
+    const next = actions[(at + (forward ? 1 : -1) + actions.length) % actions.length];
+    next?.focus();
+  }
+}
+
+/**
+ * One quick action (part quick-action, role menuitem): an icon above a short
+ * label, the label being the accessible name. `select` runs on click, Enter
+ * and Space, then the menu closes, as an item.
+ */
+@Component({
+  selector: '[dsDropdownMenuQuickAction]',
+  exportAs: 'dsDropdownMenuQuickAction',
+  imports: [DsIcon, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'menuitem',
+    'data-part': 'quick-action',
+    '[attr.data-tone]': 'tone() === "danger" ? "danger" : null',
+  },
+  template: `<span data-part="start" aria-hidden="true">@if (isIconName(icon())) {<svg dsIcon [name]="$any(icon())" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="$any(icon())" />}</span><span data-part="text"><ng-content /></span>`,
+})
+export class DsDropdownMenuQuickAction extends MenuItemBase {
+  /** The icon above the label: a system icon name or a template. Decorative: the label names the action. */
+  readonly icon = input.required<DropdownMenuSlotContent>();
+  /** danger: a destructive action, drawn in the danger text color. Default neutral. */
+  readonly tone = input<DropdownMenuItemTone>('neutral');
+
+  constructor() {
+    super();
+    consumeHostAttributes(['dsDropdownMenuQuickAction', 'icon', 'tone']);
+  }
+}
+
 // ------------------------------------------------------------------ label, group, separator
 
 /** A short heading over the items that follow. Not focusable, skipped by the arrow keys. */
@@ -1227,6 +1307,8 @@ export const DS_DROPDOWN_MENU = [
   DsDropdownMenuTrigger,
   DsDropdownMenuContent,
   DsDropdownMenuItem,
+  DsDropdownMenuQuickActions,
+  DsDropdownMenuQuickAction,
   DsDropdownMenuCheckboxItem,
   DsDropdownMenuRadioGroup,
   DsDropdownMenuRadioItem,

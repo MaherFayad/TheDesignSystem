@@ -4,6 +4,11 @@
 // toast appear. The variants case also shows each tone as a static dsToast.
 // One toaster per page, mounted in the gallery theme; a toast whose copy is
 // in another language passes lang.
+//
+// The banner (order M9.8): start leads the toast with an Avatar (initials
+// only, no photo) or a system icon, meta carries the time, and on ios a
+// timed toast has no close button. The danger banner keeps its close button
+// on every platform.
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DEMO } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
@@ -21,6 +26,8 @@ const copy: Record<ToastTone, { title: string; description: string; trigger: str
   warning: { title: 'Storage almost full', description: 'You have 200 MB left on this plan.', trigger: 'Show warning toast' },
   danger: { title: 'Could not publish page', description: 'The server did not answer. Your draft is safe.', trigger: 'Show danger toast' },
 };
+
+const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000);
 
 const files = ['brief.pdf', 'hero.png', 'logo.svg', 'notes.md', 'palette.json', 'type.css', 'grid.fig', 'cover.jpg'];
 
@@ -55,6 +62,18 @@ const longDescription =
           }
         }
       </div>
+      <div data-demo="row">
+        <button dsButton data-demo-trigger="banner" (click)="showMessage()">Show message banner</button>
+        <button dsButton data-demo-trigger="banner-quiet" (click)="showQuietBanner()">Show banner without close button</button>
+        <button dsButton data-demo-trigger="banner-danger" tone="danger" (click)="showDangerBanner()">Show danger banner</button>
+      </div>
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr))">
+        <div dsToast lang="en" [start]="sara" title="Sara Haddad"
+          description="The new floor plan is in the shared folder. Can you check the kitchen wall before the call?" [meta]="twoMinutesAgo"></div>
+        <div dsToast lang="en" start="mail" title="Invoice sent to Omar" description="He gets a copy by email." meta="Yesterday"></div>
+        <div dsToast lang="en" tone="danger" [start]="sara" title="Could not send your reply to Sara"
+          description="You are offline. The reply is kept as a draft." meta="now" [onClose]="noop"></div>
+      </div>
     </section>
 
     <section data-demo="case" data-demo-case="one" heading="One toast">
@@ -88,7 +107,10 @@ const longDescription =
         <div data-demo="row">
           <button dsButton data-demo-trigger="" (click)="showArabicSuccess()">إظهار تنبيه النجاح</button>
           <button dsButton data-demo-trigger="" (click)="showArabicDanger()">إظهار تنبيه الخطأ</button>
+          <button dsButton data-demo-trigger="banner-ar" (click)="showArabicMessage()">إظهار تنبيه الرسالة</button>
         </div>
+        <div dsToast lang="ar" [start]="saraAr" title="سارة الحداد"
+          description="مخطط الدور الجديد في المجلد المشترك. تقدر تراجع جدار المطبخ قبل المكالمة؟" [meta]="fiveMinutesAgo"></div>
         <div dsToast tone="danger" title="تعذر نشر الصفحة"
           description="الخادم ما رد على الطلب، والمسودة محفوظة في حسابك. جرب النشر مرة ثانية بعد شوي، وإذا تكررت المشكلة نزل الملف وأرسله لفريق الدعم."></div>
       </div>
@@ -112,6 +134,11 @@ export default class ToastDemo {
   protected readonly copy = copy;
   protected readonly longTitle = longTitle;
   protected readonly longDescription = longDescription;
+  protected readonly sara = { avatar: { name: 'Sara Haddad' } };
+  protected readonly saraAr = { avatar: { name: 'سارة الحداد' } };
+  protected readonly twoMinutesAgo = minutesAgo(2);
+  protected readonly fiveMinutesAgo = minutesAgo(5);
+  protected readonly noop = () => undefined;
   protected readonly open = signal<Record<ToastTone, boolean>>({ neutral: true, info: true, success: true, warning: true, danger: true });
   /** One stable close handler per specimen, so the input does not change on every render. */
   protected readonly hideFns = Object.fromEntries(tones.map((t) => [t, () => this.setOpen(t, false)])) as Record<ToastTone, () => void>;
@@ -134,6 +161,51 @@ export default class ToastDemo {
 
   protected showDescription(): void {
     toast.info({ lang: 'en', title: copy.info.title, description: copy.info.description });
+  }
+
+  protected showMessage(): void {
+    toast({
+      lang: 'en',
+      start: { avatar: { name: 'Sara Haddad' } },
+      title: 'Sara Haddad',
+      description: 'The new floor plan is in the shared folder. Can you check the kitchen wall before the call?',
+      meta: new Date(),
+      dedupeKey: false,
+    });
+  }
+
+  protected showQuietBanner(): void {
+    toast({
+      lang: 'en',
+      start: 'mail',
+      title: 'Invoice sent to Omar',
+      description: 'He gets a copy by email.',
+      meta: minutesAgo(5),
+      closable: false,
+    });
+  }
+
+  protected showDangerBanner(): void {
+    toast.danger({
+      lang: 'en',
+      start: { avatar: { name: 'Sara Haddad' } },
+      title: 'Could not send your reply to Sara',
+      description: 'You are offline. The reply is kept as a draft.',
+      meta: new Date(),
+      // Ignored: a danger toast stays until closed, so it keeps its close button.
+      closable: false,
+    });
+  }
+
+  protected showArabicMessage(): void {
+    toast({
+      lang: 'ar',
+      start: { avatar: { name: 'سارة الحداد' } },
+      title: 'سارة الحداد',
+      description: 'مخطط الدور الجديد في المجلد المشترك. تقدر تراجع جدار المطبخ قبل المكالمة؟',
+      meta: new Date(),
+      dedupeKey: false,
+    });
   }
 
   protected copyLink(): void {

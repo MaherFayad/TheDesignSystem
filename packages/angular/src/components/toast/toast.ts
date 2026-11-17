@@ -12,15 +12,30 @@
 // and close. action is a Button and close a CloseButton, each carrying the
 // toast's data-part next to its own data-ds, and the Radix announce exclude
 // attributes, as React renders them.
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import type { IconName } from '@the-system/icons';
+//
+// Order M9.8, as React: the banner parts. start leads the toast in place of
+// the tone icon: a system icon name (the icon, hidden from assistive tech),
+// a person (`{ avatar: { name, src } }`, a decorative Avatar: the title
+// names the person), a template, or a short text. meta is a short text or a
+// Date at the trailing top, after the description in the DOM so it is read
+// after it; a Date renders in <time datetime> as a relative time through
+// toastMeta() from packages/shared ("now", "5m ago"), with Western digits in
+// Arabic, and refreshes every half minute while the toast shows.
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, TemplateRef, computed, effect, inject, input, signal, type Signal } from '@angular/core';
+import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
-import type { ToastAction, ToastTone } from '@the-system/shared';
+import { isToastAvatar, toastMeta, type ToastAction, type ToastAvatar, type ToastMetaText, type ToastTone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DsCloseButton } from '../close-button/close-button';
+import { DsToastAvatar } from './toast-avatar';
 
-export type { ToastAction, ToastTone } from '@the-system/shared';
+export type { ToastAction, ToastAvatar, ToastStart, ToastTone } from '@the-system/shared';
+
+/** What leads a toast in place of its tone icon: a system icon name, a person, a template or a short text. */
+export type ToastStartContent = IconName | ToastAvatar | TemplateRef<unknown> | (string & {});
 
 /** The icon of each tone. */
 export const toastIcons: Readonly<Record<ToastTone, IconName>> = {
@@ -57,6 +72,47 @@ export interface ToastPartsData {
   action?: ToastAction;
   closeLabel: string;
   closable: boolean;
+  /** Leads the toast in place of the tone icon. */
+  start?: ToastStartContent;
+  /** A short text or a time at the trailing top, read after the description. */
+  meta?: string | Date;
+  /** The language a Date in meta is written in. */
+  lang?: string;
+}
+
+/** How often a relative time in meta is written again while the toast shows, in ms. */
+const META_REFRESH = 30_000;
+
+/**
+ * The clock a toast's meta reads: Date.now() when the meta changes, then
+ * every half minute while the meta is a Date, as React's ToastMetaPart.
+ * Call it in an injection context with the parts signal.
+ */
+export function toastMetaClock(parts: Signal<ToastPartsData>): Signal<number> {
+  const now = signal(Date.now());
+  effect((onCleanup) => {
+    const meta = parts().meta;
+    if (!(meta instanceof Date)) return;
+    now.set(Date.now());
+    const id = setInterval(() => now.set(Date.now()), META_REFRESH);
+    onCleanup(() => clearInterval(id));
+  });
+  return now;
+}
+
+/** The meta part's text and time, or null when there is nothing to show. */
+export function toastMetaOf(p: ToastPartsData, now: number): ToastMetaText | null {
+  if (p.meta === undefined || p.meta === '') return null;
+  const meta = toastMeta(p.meta, p.lang, now);
+  return meta.text === '' ? null : meta;
+}
+
+/** Which form a start value takes in the template. */
+export function toastStartKind(start: ToastStartContent | undefined): 'none' | 'icon' | 'avatar' | 'template' | 'text' {
+  if (start === undefined || start === null || (start as unknown) === '') return 'none';
+  if (typeof start === 'string') return isIconName(start) ? 'icon' : 'text';
+  if (start instanceof TemplateRef) return 'template';
+  return isToastAvatar(start) ? 'avatar' : 'none';
 }
 
 /**
@@ -67,12 +123,37 @@ export interface ToastPartsData {
  */
 export const TOAST_PARTS_TEMPLATE = `
   @let p = parts();
-  <span data-part="icon"><svg dsIcon [name]="icons[p.tone]" size="md"></svg></span>
+  @let startKind = startKindOf(p.start);
+  @switch (startKind) {
+    @case ('icon') {
+      <span data-part="start" aria-hidden="true"><svg dsIcon [name]="$any(p.start)" size="md"></svg></span>
+    }
+    @case ('avatar') {
+      <span data-part="start"><span dsToastAvatar [name]="$any(p.start).avatar.name" [src]="$any(p.start).avatar.src"></span></span>
+    }
+    @case ('template') {
+      <span data-part="start"><ng-container [ngTemplateOutlet]="$any(p.start)" /></span>
+    }
+    @case ('text') {
+      <span data-part="start">{{ p.start }}</span>
+    }
+    @default {
+      <span data-part="icon"><svg dsIcon [name]="icons[p.tone]" size="md"></svg></span>
+    }
+  }
   @if (p.title !== undefined && p.title !== '') {
     <div data-part="title">{{ p.title }}@if (p.count > 1) {<span data-part="count" aria-hidden="true">×<ng-container>{{ p.count }}</ng-container></span>}</div>
   }
   @if (p.description !== undefined && p.description !== '') {
     <div data-part="description">{{ p.description }}</div>
+  }
+  @let meta = metaOf(p, now());
+  @if (meta) {
+    @if (meta.dateTime !== undefined) {
+      <time data-part="meta" [attr.datetime]="meta.dateTime">{{ meta.text }}</time>
+    } @else {
+      <span data-part="meta">{{ meta.text }}</span>
+    }
   }
   @if (p.action; as action) {
     <button dsButton data-part="action" size="sm" emphasis="soft" data-radix-toast-announce-exclude=""
@@ -83,7 +164,7 @@ export const TOAST_PARTS_TEMPLATE = `
   }
 `;
 
-export const TOAST_PARTS_IMPORTS = [DsIcon, DsButton, DsCloseButton] as const;
+export const TOAST_PARTS_IMPORTS = [DsIcon, DsButton, DsCloseButton, DsToastAvatar, NgTemplateOutlet] as const;
 
 /**
  * One notice, drawn as a toast, with no timer, queue or live region, and no
@@ -123,9 +204,16 @@ export class DsToast {
   readonly lang = input<string | undefined>(undefined);
   /** The direction, when it should differ from the one lang gives. */
   readonly dir = input<'ltr' | 'rtl' | undefined>(undefined);
+  /** Leads the toast in place of the tone icon: a system icon name, `{ avatar: { name, src } }`, a template or a short text. */
+  readonly start = input<ToastStartContent | undefined>(undefined);
+  /** A short text or a Date at the trailing top, read after the description. A Date reads as a relative time. */
+  readonly meta = input<string | Date | undefined>(undefined);
 
+  private readonly theme = inject(DsThemeService);
   protected readonly icons = toastIcons;
   protected readonly toastDirFor = toastDirFor;
+  protected readonly startKindOf = toastStartKind;
+  protected readonly metaOf = toastMetaOf;
 
   protected readonly parts = computed<ToastPartsData>(() => ({
     tone: this.tone(),
@@ -135,10 +223,14 @@ export class DsToast {
     action: this.action(),
     closeLabel: this.closeLabel() ?? toastLabelsFor(this.lang()).close,
     closable: this.onClose() !== undefined,
+    start: this.start(),
+    meta: this.meta(),
+    lang: this.lang() ?? this.theme.value().lang,
   }));
+  protected readonly now = toastMetaClock(this.parts);
 
   constructor() {
-    consumeHostAttributes(['dsToast', 'tone', 'title', 'description', 'count', 'action', 'onClose', 'closeLabel', 'lang', 'dir']);
+    consumeHostAttributes(['dsToast', 'tone', 'title', 'description', 'count', 'action', 'onClose', 'closeLabel', 'lang', 'dir', 'start', 'meta']);
   }
 
   protected runAction(action: ToastAction): void {
