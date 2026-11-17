@@ -242,8 +242,9 @@ function hueFamily(h: number): ColorFamily {
   return h < FAMILIES[0]![0] ? 'pink' : family;
 }
 
-/** Chroma under this reads as a grey. */
+/** Chroma under this reads as a grey; a very light tint keeps its hue down to the second value. */
 const GREY_CHROMA = 0.025;
+const GREY_CHROMA_PALE = 0.012;
 
 /**
  * The family and shade of a colour, from its OKLCH hue, lightness and
@@ -254,7 +255,7 @@ export function colorDescribe(color: ColorRgba | string): { family: ColorFamily;
   const rgba = typeof color === 'string' ? colorParse(color) : color;
   if (!rgba) return { family: 'black', shade: 'base' };
   const { l, c, h } = colorToOklch(rgba);
-  if (c < GREY_CHROMA) {
+  if (c < (l > 0.9 ? GREY_CHROMA_PALE : GREY_CHROMA)) {
     if (l >= 0.97) return { family: 'white', shade: 'base' };
     if (l <= 0.16) return { family: 'black', shade: 'base' };
     const shade: ColorShade = l < 0.35 ? 'very-dark' : l < 0.52 ? 'dark' : l < 0.72 ? 'base' : l < 0.87 ? 'light' : 'very-light';
@@ -269,7 +270,7 @@ export function colorDescribe(color: ColorRgba | string): { family: ColorFamily;
   else if (l < Math.min(top.l - 0.12, 0.62)) shade = 'dark';
   else if (l > 0.9 && vivid < 0.4) shade = 'very-light';
   else if (l > Math.max(top.l + 0.05, 0.7) || (l > 0.8 && vivid < 0.6)) shade = 'light';
-  if (family === 'orange' && l < 0.6) {
+  if (family === 'orange' && l < 0.55) {
     family = 'brown';
     if (shade === 'dark' && l >= 0.45) shade = 'base';
   }
