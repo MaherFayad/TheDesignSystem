@@ -68,7 +68,8 @@ import {
   type WeekDay,
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { Button, type ButtonSize } from '../Button/Button';
+import { Button } from '../Button/Button';
+import type { ButtonSize } from '../Button/ButtonBase';
 import { Calendar } from '../Calendar/Calendar';
 import { Dialog, DialogBody, DialogContent, DialogTrigger } from '../Dialog/Dialog';
 import { useField } from '../Field/Field';

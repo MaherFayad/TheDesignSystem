@@ -1,0 +1,217 @@
+/*
+ * ColorField: a colour typed as hex, or one channel as a number (order
+ * M9.18, proposed). The field box of NumberField and Input (border, radius,
+ * glow, ring, states) around a native input (the control part), with a
+ * preview swatch at the start. Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these; states swap them):
+ *   --_color-field-height, --_color-field-padding-inline, --_color-field-gap,
+ *   --_color-field-font-size, --_color-field-radius, --_color-field-bg,
+ *   --_color-field-fg, --_color-field-border-color (-hover, -focus,
+ *   -invalid), --_color-field-ring (the focus ring), --_color-field-shadow-focus
+ *   (the focus glow), --_color-field-duration-in, --_color-field-ease-in,
+ *   --_color-field-duration-out, --_color-field-ease-out,
+ *   --_color-field-enter-scale (the glow, as on NumberField),
+ *   --_color-field-duration, --_color-field-ease (the border colour change).
+ *
+ * Names outside the list in anatomy.md:
+ *   --_color-field-preview-size   the preview swatch, a step under the field height
+ *
+ * The value is a hex code or a number, not words: it runs left to right in
+ * every language, on the reading side of the box, in tabular figures. The
+ * preview is a ColorSwatch root (ColorSwatch.css draws it, with its 3:1
+ * edge); it is hidden from assistive tech because the input holds the value.
+ *
+ * Motion (pattern fade, as Input): on focus the ring shows at once (WCAG
+ * 2.4.7) and the glow fades in from --_color-field-enter-scale; on blur it
+ * fades out. Under reduced motion every duration token is 0ms and the glow
+ * does not grow.
+ */
+@layer ds.base {
+  [data-ds='color-field'] {
+    --_color-field-height: var(--ds-size-control-md);
+    --_color-field-padding-inline: var(--ds-space-m);
+    --_color-field-gap: var(--ds-space-xs);
+    --_color-field-font-size: var(--ds-font-size-s);
+    --_color-field-radius: var(--ds-radius-control);
+    --_color-field-bg: transparent;
+    --_color-field-fg: var(--ds-color-text-default);
+    --_color-field-border-color: var(--ds-color-border-control);
+    --_color-field-border-color-hover: var(--ds-color-border-control-hover);
+    --_color-field-border-color-focus: var(--ds-color-border-control-hover);
+    --_color-field-border-color-invalid: var(--ds-color-state-danger-text);
+    --_color-field-ring: var(--ds-focus-shadow-ring);
+    --_color-field-shadow-focus: var(--ds-elevation-input-focus);
+    --_color-field-duration-in: var(--ds-duration-spring-soft);
+    --_color-field-duration-out: var(--ds-duration-quick);
+    --_color-field-ease-in: var(--ds-ease-spring-soft);
+    --_color-field-ease-out: var(--ds-ease-exit);
+    --_color-field-enter-scale: var(--ds-scale-enter);
+    --_color-field-duration: var(--ds-duration-base);
+    --_color-field-ease: var(--ds-ease-out);
+    --_color-field-preview-size: var(--ds-size-icon-lg);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--_color-field-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_color-field-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--_color-field-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_color-field-border-color);
+    border-radius: var(--_color-field-radius);
+    background-color: var(--_color-field-bg);
+    color: var(--_color-field-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_color-field-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+    transition: border-color var(--_color-field-duration) var(--_color-field-ease);
+    cursor: text;
+  }
+
+  /* The glow, as on NumberField. It leaves on blur with the out timing. */
+  [data-ds='color-field']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_color-field-shadow-focus);
+    opacity: 0;
+    transform: scale(var(--_color-field-enter-scale));
+    pointer-events: none;
+    transition:
+      opacity var(--_color-field-duration-out) var(--_color-field-ease-out),
+      transform var(--_color-field-duration-out) var(--_color-field-ease-out);
+  }
+
+  [data-ds='color-field'] > * {
+    position: relative;
+  }
+
+  [data-ds='color-field'][data-size='xs'] {
+    --_color-field-height: var(--ds-size-control-xs);
+    --_color-field-padding-inline: var(--ds-space-xs);
+    --_color-field-gap: var(--ds-space-2xs);
+    --_color-field-preview-size: var(--ds-size-icon-md);
+  }
+
+  [data-ds='color-field'][data-size='sm'] {
+    --_color-field-height: var(--ds-size-control-sm);
+    --_color-field-padding-inline: var(--ds-space-s);
+    --_color-field-gap: var(--ds-space-2xs);
+    --_color-field-preview-size: var(--ds-size-icon-md);
+  }
+
+  /* Site fields: 44px and a fixed 16px, so phones do not zoom on focus. */
+  [data-ds='color-field'][data-size='lg'],
+  [data-ds='color-field'][data-size='lg']:lang(ar) {
+    --_color-field-height: var(--ds-size-control-lg);
+    --_color-field-padding-inline: var(--ds-space-l);
+    --_color-field-gap: var(--ds-space-s);
+    --_color-field-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  [data-ds='color-field'][data-shape='pill'] {
+    --_color-field-radius: var(--ds-radius-pill);
+  }
+
+  [data-ds='color-field'] > [data-part='start'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    cursor: default;
+  }
+
+  [data-ds='color-field'] > [data-part='start'] > [data-part='preview'] {
+    --_color-swatch-size: var(--_color-field-preview-size);
+  }
+
+  [data-ds='color-field'] > [data-part='control'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: calc(100% + var(--ds-border-width-default) * 2);
+    margin-block: calc(var(--ds-border-width-default) * -1);
+    margin-inline: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: inherit;
+    direction: ltr;
+    text-align: start;
+    outline: none;
+  }
+
+  [data-ds='color-field']:dir(rtl) > [data-part='control'] {
+    text-align: end;
+  }
+
+  [data-ds='color-field'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  [data-ds='color-field']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_color-field-border-color: var(--_color-field-border-color-hover);
+  }
+
+  [data-ds='color-field']:focus-within {
+    --_color-field-border-color: var(--_color-field-border-color-focus);
+    box-shadow: var(--_color-field-ring);
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='color-field']:focus-within::before {
+    opacity: 1;
+    transform: none;
+    transition-duration: var(--_color-field-duration-in);
+    transition-timing-function: var(--_color-field-ease-in);
+  }
+
+  [data-ds='color-field'][data-invalid],
+  [data-ds='color-field'][data-invalid]:focus-within {
+    --_color-field-border-color: var(--_color-field-border-color-invalid);
+  }
+
+  [data-ds='color-field'][data-readonly] {
+    --_color-field-bg: var(--ds-color-bg-overlay-5);
+    border-style: dashed;
+    cursor: default;
+  }
+
+  [data-ds='color-field'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='color-field'][data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='color-field'] {
+      --_color-field-enter-scale: 1;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='color-field'] {
+      border-color: ButtonText;
+    }
+
+    [data-ds='color-field']:focus-within {
+      outline-color: Highlight;
+    }
+  }
+}
