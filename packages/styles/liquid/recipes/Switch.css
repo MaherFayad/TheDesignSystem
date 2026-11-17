@@ -153,14 +153,24 @@
     --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.58);
     --_switch-thumb-size-pressed: 1.4;
     --_switch-stretch: 1.1;
-    --_switch-thumb-solid-pressed: 0.12;
+    --_switch-thumb-solid-pressed: 0.08;
     --_switch-thumb-highlight-opacity-pressed: 1;
   }
 
-  /* Held, the lens drops the off thumb's control edge (a 2px ring at rest in light): the rim and the lift draw it. [data-state] lifts these over the light rule above. */
+  /*
+   * Held, the lens drops the off thumb's control edge (a 2px ring at rest in light): the rim and the lift draw it. [data-state] lifts these over the light rule above.
+   * Order M6: the rim is the clear material of the platform's chrome, measured beside the vendor's kit: a thin bright upper edge, a fainter lower one and ring, a soft shade inside the lower edge, and the lift; no thick ring.
+   */
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
-    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-glass-highlight), var(--ds-elevation-card-hover);
+    /* The ring that keeps the lens at 3:1 on the track is a hairline here, as the kit draws the lens edge; white on the fill it still measures over 3:1. */
+    --_switch-thumb-ring-width: var(--ds-border-width-default);
+    --_switch-thumb-shadow:
+      inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 75%, transparent),
+      inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
+      inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
+      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent),
+      var(--ds-elevation-card-hover);
   }
 
   /* Where the lens cannot be drawn, the held thumb stays solid: it still lifts and stretches. */

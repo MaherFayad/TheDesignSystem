@@ -60,23 +60,31 @@
    * platform's switch on a phone. The wide capsule, 63 by 28 with a 38 by
    * 24 thumb, and from pointerdown the white thumb lifts into a raised clear
    * lens larger than the track: it grows by 1.4, stretches a little toward
-   * its travel and turns clear, with a rim in the thumb's own white and a
-   * deeper lift. Neutral's glass-highlight is a dark divider, so the rim is
-   * the thumb color (currentColor), which also keeps the lens edged on the
-   * dark scheme's blue fill (order 1.29, B3). Reduced motion keeps the clear
+   * its travel and turns clear, with a white rim and a deeper lift (order
+   * M6: the white comes from the glass backdrop token, since Neutral's
+   * glass-highlight is a dark divider; it keeps the lens edged on the dark
+   * scheme's blue fill, order 1.29, B3). Reduced motion keeps the clear
    * lens and drops the growth and the travel (Switch.css).
    */
   [data-style='neutral'][data-platform='ios'] [data-ds='switch'] {
     --_switch-thumb-size-pressed: 1.4;
     --_switch-stretch: 1.1;
-    --_switch-thumb-solid-pressed: 0.12;
+    --_switch-thumb-solid-pressed: 0.08;
     --_switch-thumb-backdrop: brightness(1.12) saturate(1.6);
     --_switch-thumb-highlight-opacity-pressed: 0;
   }
 
+  /* Order M6: the held lens takes the rim of the platform's clear material (a thin bright upper edge, a fainter lower one, a soft inner shade, the lift), drawn in white, not the thumb color, so it is the same lens as Liquid's. */
   [data-style='neutral'][data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
-    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-strong) currentColor, var(--ds-elevation-card-hover);
+    /* The ring that keeps the lens at 3:1 on the track is a hairline here, as the kit draws the lens edge; white on the fill it still measures over 3:1. */
+    --_switch-thumb-ring-width: var(--ds-border-width-default);
+    --_switch-thumb-shadow:
+      inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 75%, transparent),
+      inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
+      inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
+      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent),
+      var(--ds-elevation-card-hover);
   }
 
   @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {

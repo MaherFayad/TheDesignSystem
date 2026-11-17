@@ -981,7 +981,7 @@
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 4%) 84%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
     }
   }
 
@@ -1036,7 +1036,8 @@
    */
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
-      [data-platform='ios'] [data-ds='tab-bar'] {
+      [data-platform='ios'] [data-ds='tab-bar'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
         background-color: var(--ds-color-material-glass-solid);
         border-color: var(--_tab-bar-border-color);
         box-shadow: var(--ds-elevation-glass);
@@ -1044,7 +1045,8 @@
         backdrop-filter: none;
       }
 
-      [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
         background-color: var(--_menu-bg);
         border-color: var(--_menu-border-color);
         box-shadow: var(--_menu-shadow);
@@ -1052,7 +1054,8 @@
         backdrop-filter: none;
       }
 
-      [data-platform='ios'] [data-ds='toast'] {
+      [data-platform='ios'] [data-ds='toast'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
         background-color: var(--_toast-bg);
         border-color: var(--_toast-border-color);
         box-shadow: var(--_toast-shadow);
@@ -1062,7 +1065,10 @@
 
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
-      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
         --_button-bg-hover: var(--ds-color-material-glass-solid);
         --_button-bg-active: var(--ds-color-material-glass-solid);
@@ -1073,11 +1079,14 @@
         backdrop-filter: none;
       }
 
-      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
+      [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
+        background-color: var(--ds-color-bg-overlay-10);
         box-shadow: none;
       }
 
-      [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
         background-color: var(--_segmented-control-thumb-bg);
         box-shadow: var(--_segmented-control-thumb-shadow);
         -webkit-backdrop-filter: none;
@@ -1088,7 +1097,9 @@
 
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'],
-    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] {
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
       background-color: var(--ds-color-material-glass-solid);
       border-color: var(--_tab-bar-border-color);
       box-shadow: var(--ds-elevation-glass);
@@ -1097,7 +1108,9 @@
     }
 
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
-    [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
       background-color: var(--_menu-bg);
       border-color: var(--_menu-border-color);
       box-shadow: var(--_menu-shadow);
@@ -1106,7 +1119,9 @@
     }
 
     [data-contrast='more'][data-platform='ios'] [data-ds='toast'],
-    [data-contrast='more'] [data-platform='ios'] [data-ds='toast'] {
+    [data-contrast='more'] [data-platform='ios'] [data-ds='toast'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='toast'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       background-color: var(--_toast-bg);
       border-color: var(--_toast-border-color);
       box-shadow: var(--_toast-shadow);
@@ -1119,7 +1134,13 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
-    [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: var(--ds-color-material-glass-solid);
       --_button-bg-hover: var(--ds-color-material-glass-solid);
       --_button-bg-active: var(--ds-color-material-glass-solid);
@@ -1131,12 +1152,17 @@
     }
 
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible),
-    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
+      background-color: var(--ds-color-bg-overlay-10);
       box-shadow: none;
     }
 
     [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
-    [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+    [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
       background-color: var(--_segmented-control-thumb-bg);
       box-shadow: var(--_segmented-control-thumb-shadow);
       -webkit-backdrop-filter: none;
@@ -1148,13 +1174,19 @@
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       [data-platform='ios'] [data-ds='tab-bar'],
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
-      [data-platform='ios'] [data-ds='toast'] {
+      [data-platform='ios'] [data-ds='toast'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
+      [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
         background-color: var(--ds-color-material-glass-solid);
       }
 
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
-      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
         --_button-bg-hover: var(--ds-color-material-glass-solid);
         --_button-bg-active: var(--ds-color-material-glass-solid);
