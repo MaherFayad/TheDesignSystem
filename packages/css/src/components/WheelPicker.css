@@ -18,17 +18,18 @@
  *   --_wheel-picker-option-bg-selected  a fill behind the row in the band (transparent; a platform may fill it)
  *   --_wheel-picker-ring-color     the focus ring of a column
  *   --_wheel-picker-width          the inline size of a column; a wheel of one column fills the row
- *   --_wheel-picker-tilt           how far a row one row from the band turns away on the drum; 0deg is a flat list
- *   --_wheel-picker-drum           the radius of the drum the rows sit on: one row of arc per tilt, so about the row over the tilt in radians
+ *   --_wheel-picker-tilt           how far a row one row from the band turns away; with shift at 0, 0deg is a flat list
+ *   --_wheel-picker-shift          how far a row one row from the band moves toward it; a row d rows away moves d cubed times this, close to a drum
  *   --_wheel-picker-depth          the perspective distance of the curve
  *   --_wheel-picker-d              0 on the root; the component writes it on each row: its distance from the band in rows, -3 to 3
  *
  * Each column is a scroll container with mandatory scroll snap, padded so
  * the first and last rows can rest in the band. The band is drawn once,
  * behind every column. The curve is a transform on each row from
- * --_wheel-picker-d: the row is moved back to the band, turned on a drum
- * whose axis sits --_wheel-picker-drum behind it, and pushed out again, so
- * rows away from the band crowd together and turn away as on a real wheel.
+ * --_wheel-picker-d: the row moves toward the band by d cubed times
+ * --_wheel-picker-shift and turns away by d times --_wheel-picker-tilt, so
+ * rows away from the band crowd together and turn away as on a drum. A
+ * platform that wants a flat list sets tilt to 0deg and shift to 0.
  * Nothing animates layout; the scroll itself is the
  * browser's. While a mouse drags a column (data-dragging) snap is off and
  * the component glides to a row on release. Under reduced motion the curve
@@ -51,7 +52,7 @@
     --_wheel-picker-ring-color: var(--ds-color-focus-ring);
     --_wheel-picker-width: calc(var(--_wheel-picker-row) * 2);
     --_wheel-picker-tilt: 22deg;
-    --_wheel-picker-drum: calc(var(--_wheel-picker-row) * 2.6);
+    --_wheel-picker-shift: calc(var(--_wheel-picker-row) / 40);
     --_wheel-picker-depth: calc(var(--_wheel-picker-row) * 8);
     --_wheel-picker-d: 0;
 
@@ -61,6 +62,7 @@
     gap: var(--_wheel-picker-gap);
     box-sizing: border-box;
     inline-size: 100%;
+    min-inline-size: 0;
     max-inline-size: 100%;
     block-size: calc(var(--_wheel-picker-row) * var(--_wheel-picker-rows));
     padding-inline: var(--_wheel-picker-padding-inline);
@@ -91,6 +93,8 @@
     position: relative;
     flex: 0 1 var(--_wheel-picker-width);
     min-inline-size: 0;
+    /* Its inline size never comes from its rows, so a long label ends in an ellipsis instead of widening the page. */
+    contain: inline-size;
     box-sizing: border-box;
     block-size: 100%;
     margin: 0;
@@ -136,15 +140,26 @@
     overflow: hidden;
     border-radius: var(--_wheel-picker-radius);
     color: var(--_wheel-picker-fg);
-    text-overflow: ellipsis;
     white-space: nowrap;
     scroll-snap-align: center;
-    transform: perspective(var(--_wheel-picker-depth)) translateY(calc(var(--_wheel-picker-d) * var(--_wheel-picker-row) * -1))
-      translateZ(calc(var(--_wheel-picker-drum) * -1)) rotateX(calc(var(--_wheel-picker-d) * var(--_wheel-picker-tilt) * -1))
-      translateZ(var(--_wheel-picker-drum));
+    cursor: default;
+  }
+
+  /*
+   * The curve is drawn on the row's inner span. The row box itself never
+   * transforms: a scroll snap area follows its box's transform, and the
+   * snap points must stay one row apart.
+   */
+  [data-ds='wheel-picker'] [data-part='option'] > span {
+    display: block;
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform: perspective(var(--_wheel-picker-depth))
+      translateY(calc(var(--_wheel-picker-d) * var(--_wheel-picker-d) * var(--_wheel-picker-d) * var(--_wheel-picker-shift) * -1))
+      rotateX(calc(var(--_wheel-picker-d) * var(--_wheel-picker-tilt) * -1));
     transform-origin: 50% 50%;
     backface-visibility: hidden;
-    cursor: default;
   }
 
   [data-ds='wheel-picker'] [data-part='option'][data-centered] {
@@ -172,13 +187,13 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='wheel-picker'] [data-part='option'] {
+    [data-ds='wheel-picker'] [data-part='option'] > span {
       transform: none;
     }
   }
 
   /* Reduced motion from the page's own setting (data-motion="reduce" on the root element). */
-  :root[data-motion='reduce'] [data-ds='wheel-picker'] [data-part='option'] {
+  :root[data-motion='reduce'] [data-ds='wheel-picker'] [data-part='option'] > span {
     transform: none;
   }
 

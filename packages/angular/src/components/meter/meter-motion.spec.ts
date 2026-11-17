@@ -112,12 +112,18 @@ describe('DsMeter motion', () => {
   });
 
   it('off screen: held by data-held until seen, then fills through data-revealing', async () => {
-    const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
-    const rect = proto['getBoundingClientRect'];
-    proto['getBoundingClientRect'] = () => ({ top: 5000, bottom: 5040 }) as DOMRect;
+    // An own descriptor, put back as it was: writing the inherited method back would leave an own
+    // property on HTMLElement.prototype that hides a later spy on Element.prototype in the same worker.
+    const own = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'getBoundingClientRect');
+    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+      configurable: true,
+      writable: true,
+      value: () => ({ top: 5000, bottom: 5040 }) as DOMRect,
+    });
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();
-    proto['getBoundingClientRect'] = rect;
+    if (own) Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', own);
+    else Reflect.deleteProperty(HTMLElement.prototype, 'getBoundingClientRect');
     const el = indicator(fixture);
     expect(el.hasAttribute('data-held')).toBe(true);
     expect(el.hasAttribute('data-revealing')).toBe(false);

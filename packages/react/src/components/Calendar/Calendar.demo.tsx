@@ -7,7 +7,7 @@
 // always holds one month, it has no loading state, and a day that cannot
 // be picked is unavailable, not an error.
 import { useState } from 'react';
-import { fromIsoDate, monthTitle, type CalendarSystem } from '@the-system/shared';
+import { formatFullDate, type CalendarSystem } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { SegmentedControl, SegmentedControlItem } from '../SegmentedControl';
 import { Calendar, type CalendarSize } from './index';
@@ -21,7 +21,7 @@ const note = { margin: 0, marginBlockStart: 'var(--ds-space-xs)', fontVariantNum
 function Booking({ locale, calendar, label }: { locale: string; calendar: CalendarSystem; label: string }) {
   const [value, setValue] = useState<string | null>('2026-11-17');
   return (
-    <div>
+    <div style={{ minInlineSize: 0, maxInlineSize: '100%' }}>
       <Calendar
         aria-label={label}
         locale={locale}
@@ -45,14 +45,14 @@ function CalendarChoice({ locale }: { locale: 'en-SA' | 'ar-SA' }) {
   const [value, setValue] = useState<string | null>('2026-11-17');
   const ar = locale === 'ar-SA';
   return (
-    <div style={{ display: 'grid', gap: 'var(--ds-space-s)', justifyItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 'var(--ds-space-s)', justifyItems: 'start' }}>
       <SegmentedControl aria-label={ar ? 'نوع التقويم' : 'Calendar'} value={calendar} onValueChange={(v) => setCalendar(v as CalendarSystem)}>
-        <SegmentedControlItem value="islamic-umalqura">{ar ? 'هجري أم القرى' : 'Hijri, Umm al-Qura'}</SegmentedControlItem>
+        <SegmentedControlItem value="islamic-umalqura">{ar ? 'هجري' : 'Hijri'}</SegmentedControlItem>
         <SegmentedControlItem value="gregory">{ar ? 'ميلادي' : 'Gregorian'}</SegmentedControlItem>
       </SegmentedControl>
       <Calendar aria-label={ar ? 'تاريخ الموعد' : 'Appointment date'} locale={locale} calendar={calendar} value={value} onChange={setValue} />
       <p style={note}>
-        {value ? `${monthTitle(value, locale, calendar)}, ${fromIsoDate(value, calendar).day}` : ''}
+        {value ? formatFullDate(value, locale, calendar) : ''}
       </p>
       <p style={note} lang="en" dir="ltr">
         ISO: {value ?? 'none'}

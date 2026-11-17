@@ -47,6 +47,7 @@ import {
   Switch,
   TabBar,
   TabBarItem,
+  TabBarSearch,
   Theme,
   useTheme,
 } from '@the-system/react';
@@ -599,9 +600,9 @@ function DuoPhone({ words: w, view, placement }: { words: Words; view: View; pla
         <div data-gallery="phone-tabs">
           <TabBar aria-label={w.tabs}>
             <TabBarItem href="#home" icon="home" label={w.home} />
-            <TabBarItem href="#search" icon="search" label={w.search} />
             <TabBarItem href="#inbox" icon="inbox" label={w.inbox} badge={3} />
             <TabBarItem href="#settings" icon="settings" label={w.title} active />
+            <TabBarSearch href="#search" label={w.search} />
           </TabBar>
         </div>
       </div>

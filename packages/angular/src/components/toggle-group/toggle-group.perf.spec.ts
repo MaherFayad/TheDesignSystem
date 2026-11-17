@@ -20,7 +20,10 @@ import { DsToggleGroup, DsToggleGroupItem } from './toggle-group';
 type Entry = 'read' | 'write';
 
 const log: Entry[] = [];
-const saved: { proto: Record<string, unknown>; gcs: typeof window.getComputedStyle } = { proto: {}, gcs: window.getComputedStyle };
+// The own descriptors of HTMLElement.prototype, put back as they were. Copying the inherited
+// methods back would leave own properties that hide a later stub on Element.prototype in the
+// same worker (a spec file that runs after this one).
+const saved: { proto: Record<string, PropertyDescriptor | undefined>; gcs: typeof window.getComputedStyle } = { proto: {}, gcs: window.getComputedStyle };
 const style = document.createElement('style');
 
 /** The index of an element among its parent's element children. */
@@ -32,7 +35,7 @@ beforeEach(() => {
   style.textContent = '[data-part="item"] > [data-part="label"] { color: rgb(20, 20, 20); } [data-part="item"][data-state="on"] > [data-part="label"] { color: rgb(250, 250, 250); }';
   document.head.append(style);
   const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
-  for (const key of ['animate', 'getAnimations', 'getBoundingClientRect']) saved.proto[key] = proto[key];
+  for (const key of ['animate', 'getAnimations', 'getBoundingClientRect']) saved.proto[key] = Object.getOwnPropertyDescriptor(HTMLElement.prototype, key);
   proto.animate = function (this: HTMLElement) {
     log.push('write');
     return { finished: Promise.resolve(), cancel() {}, playState: 'running', effect: null, currentTime: 0 } as unknown as Animation;
@@ -64,7 +67,10 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
-  Object.assign(HTMLElement.prototype, saved.proto);
+  for (const [key, own] of Object.entries(saved.proto)) {
+    if (own) Object.defineProperty(HTMLElement.prototype, key, own);
+    else Reflect.deleteProperty(HTMLElement.prototype, key);
+  }
   style.remove();
 });
 

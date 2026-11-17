@@ -8,6 +8,7 @@ import {
   refractionEnvOf,
   refractionFilter,
   refractionId,
+  refractionIsBar,
   refractionKey,
   refractionRadius,
   refractionReach,
@@ -16,7 +17,10 @@ import {
   toBase64,
 } from './refraction';
 
-const capsule = { width: 200, height: 64, radius: 999 };
+// A capsule short of a bar (2.5 times as long as it is tall): the share of the short side.
+const capsule = { width: 160, height: 64, radius: 999 };
+// The tab bar at 393 wide: a bar.
+const bar = { width: 353, height: 64, radius: 999 };
 
 describe('refraction map', () => {
   it('clamps the radius to half the short side', () => {
@@ -37,29 +41,29 @@ describe('refraction map', () => {
     expect(refractionReach({ width: 400, height: 300, radius: 26 }, 30)).toBeCloseTo(45);
     // At 25px from the end of the cap there is still a move; at 25px from the top there is none.
     expect(refractionAt(capsule, 23.04, 25, 32).dx).toBeGreaterThan(0);
-    expect(refractionAt(capsule, 23.04, 100, 25).dy).toBe(0);
+    expect(refractionAt(capsule, 23.04, 80, 25).dy).toBe(0);
     // The end of a cap moves further than a flat side at the same depth.
-    expect(refractionAt(capsule, 23.04, 4, 32).dx).toBeGreaterThan(refractionAt(capsule, 23.04, 100, 4).dy);
+    expect(refractionAt(capsule, 23.04, 4, 32).dx).toBeGreaterThan(refractionAt(capsule, 23.04, 80, 4).dy);
   });
 
   it('does not move the middle', () => {
-    const s = refractionAt(capsule, 19.2, 100, 32);
+    const s = refractionAt(capsule, 19.2, 80, 32);
     expect(s).toEqual({ dx: 0, dy: 0, glare: 0 });
   });
 
   it('moves inward near the edge, strongest at the rim', () => {
     const band = 23.04;
     const left = refractionAt(capsule, band, 1, 32);
-    const right = refractionAt(capsule, band, 199, 32);
-    const top = refractionAt(capsule, band, 100, 1);
-    const bottom = refractionAt(capsule, band, 100, 63);
+    const right = refractionAt(capsule, band, 159, 32);
+    const top = refractionAt(capsule, band, 80, 1);
+    const bottom = refractionAt(capsule, band, 80, 63);
     // The end of the cap takes the full move; a flat side the share of its narrower band (23.04 of 27.2).
     expect(left.dx).toBeGreaterThan(0.9);
     expect(right.dx).toBeLessThan(-0.9);
     expect(top.dy).toBeGreaterThan(0.75);
     expect(bottom.dy).toBeLessThan(-0.75);
-    const nearer = refractionAt(capsule, band, 100, 2).dy;
-    const farther = refractionAt(capsule, band, 100, 12).dy;
+    const nearer = refractionAt(capsule, band, 80, 2).dy;
+    const farther = refractionAt(capsule, band, 80, 12).dy;
     expect(nearer).toBeGreaterThan(farther);
     expect(farther).toBeGreaterThan(0);
   });
@@ -78,20 +82,20 @@ describe('refraction map', () => {
 
   it('puts the glare on the upper leading arc more than on the lower trailing one', () => {
     const band = 23.04;
-    expect(refractionAt(capsule, band, 16.4, 11.2).glare).toBeGreaterThan(refractionAt(capsule, band, 183.6, 52.8).glare);
-    expect(refractionAt(capsule, band, 183.6, 52.8).glare).toBeGreaterThan(0);
+    expect(refractionAt(capsule, band, 16.4, 11.2).glare).toBeGreaterThan(refractionAt(capsule, band, 143.6, 52.8).glare);
+    expect(refractionAt(capsule, band, 143.6, 52.8).glare).toBeGreaterThan(0);
   });
 
   it('draws a map with the neutral value in the middle and a scale of twice the deepest move', () => {
     const map = buildRefractionMap(capsule);
-    expect(map.width).toBe(200);
+    expect(map.width).toBe(160);
     expect(map.height).toBe(64);
-    expect(map.data.length).toBe(200 * 64 * 3);
-    const mid = (32 * 200 + 100) * 3;
+    expect(map.data.length).toBe(160 * 64 * 3);
+    const mid = (32 * 160 + 80) * 3;
     expect([map.data[mid], map.data[mid + 1], map.data[mid + 2]]).toEqual([128, 128, 0]);
     // Twice 0.6 of the widest band (27.2 at the end of the cap).
     expect(map.scale).toBeCloseTo(32.64);
-    const left = (32 * 200 + 0) * 3;
+    const left = (32 * 160 + 0) * 3;
     expect(map.data[left]).toBeGreaterThan(230);
   });
 
@@ -115,7 +119,57 @@ describe('refraction map', () => {
     }
     last = -Infinity;
     for (let y = 0; y < 32; y++) {
-      const o = (y * map.width + 100) * 3 + 1;
+      const o = (y * map.width + 80) * 3 + 1;
+      const sampled = y + 0.5 + (map.scale * (map.data[o]! - 127.5)) / 255;
+      expect(sampled).toBeGreaterThanOrEqual(last - 0.6);
+      last = sampled;
+    }
+  });
+});
+
+describe('refraction map on a bar', () => {
+  it('tells a bar: a capsule three times as long as it is tall, either way', () => {
+    expect(refractionIsBar(bar)).toBe(true);
+    expect(refractionIsBar({ width: 58, height: 210, radius: 29 })).toBe(true);
+    expect(refractionIsBar({ width: 352, height: 46, radius: 23 })).toBe(true);
+    expect(refractionIsBar(capsule)).toBe(false);
+    expect(refractionIsBar({ width: 44, height: 44, radius: 22 })).toBe(false);
+    expect(refractionIsBar({ width: 400, height: 100, radius: 8 })).toBe(false);
+  });
+
+  it('takes a band of 12 on the flat sides and 30 at the caps, never past the cap radius', () => {
+    expect(refractionBand(bar)).toBe(12);
+    expect(refractionReach(bar, 12)).toBe(30);
+    expect(refractionReach({ width: 58, height: 210, radius: 29 }, 12)).toBe(29);
+    // A thin bar keeps the share of its short side when that is under 12.
+    expect(refractionBand({ width: 120, height: 24, radius: 12 })).toBeCloseTo(8.64);
+  });
+
+  it('leaves a text line under the middle of the bar alone and bends the caps', () => {
+    // 13px under the top edge, the middle of a 64 bar: no move.
+    expect(refractionAt(bar, 12, 176, 13)).toEqual({ dx: 0, dy: 0, glare: 0 });
+    // 25px in from the end of the cap: still a move.
+    expect(refractionAt(bar, 12, 25, 32).dx).toBeGreaterThan(0);
+    expect(refractionAt(bar, 12, 328, 32).dx).toBeLessThan(0);
+    // At the rim the cap moves the full share, the flat side 12 of 30.
+    expect(refractionAt(bar, 12, 0.5, 32).dx).toBeGreaterThan(0.9);
+    expect(refractionAt(bar, 12, 176, 0.5).dy).toBeCloseTo(0.4 * (1 - 0.5 / 12) ** 1.6, 5);
+  });
+
+  it('draws a map with a scale of twice 0.6 of the cap band, and never folds it', () => {
+    const map = buildRefractionMap(bar);
+    expect(map.band).toBe(12);
+    expect(map.scale).toBeCloseTo(36);
+    let last = -Infinity;
+    for (let x = 0; x < 40; x++) {
+      const o = (32 * map.width + x) * 3;
+      const sampled = x + 0.5 + (map.scale * (map.data[o]! - 127.5)) / 255;
+      expect(sampled).toBeGreaterThanOrEqual(last - 0.6);
+      last = sampled;
+    }
+    last = -Infinity;
+    for (let y = 0; y < 32; y++) {
+      const o = (y * map.width + 176) * 3 + 1;
       const sampled = y + 0.5 + (map.scale * (map.data[o]! - 127.5)) / 255;
       expect(sampled).toBeGreaterThanOrEqual(last - 0.6);
       last = sampled;
@@ -172,6 +226,12 @@ describe('refraction filter', () => {
     for (const part of REFRACTION_SELECTOR.split(/,\s(?=\[data-platform)/)) expect(part.startsWith("[data-platform='ios'] ")).toBe(true);
     expect(REFRACTION_SELECTOR).toContain("[data-ds='tab-bar']");
     expect(REFRACTION_SELECTOR).not.toContain("[data-ds='switch']");
+  });
+
+  it('bends the search disc, the selection menu and the action sheet panel', () => {
+    expect(REFRACTION_SELECTOR).toContain("[data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']");
+    expect(REFRACTION_SELECTOR).toContain("[data-ds='selection-menu']");
+    expect(REFRACTION_SELECTOR).toContain("[data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']");
   });
 });
 

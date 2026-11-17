@@ -8,7 +8,7 @@
 //   <div data-ds="wheel-picker" role="group" aria-label data-disabled?>
 //     <div data-part="band" aria-hidden="true">                 the selection band, behind the columns
 //     <div data-part="column" role="spinbutton" tabindex="0" aria-label aria-valuenow aria-valuetext data-dragging?>
-//       <div data-part="option" aria-hidden="true" data-selected? data-centered? data-disabled?>41</div>
+//       <div data-part="option" aria-hidden="true" data-selected? data-centered? data-disabled?><span>41</span></div>
 //       ...
 //
 // Decisions:
@@ -32,8 +32,11 @@
 //   which looks the same.
 // - The curve: on scroll each row near the band gets --_wheel-picker-d, its
 //   distance from the band in rows, written straight to its style (no React
-//   render per frame). The CSS turns it into a transform. The row in the
-//   band gets data-centered while it is there. Nothing animates layout.
+//   render per frame). The CSS turns it into a transform of the row's inner
+//   span, never of the row itself: a scroll snap area follows its box's
+//   transform, so a transformed row would move the snap points and the
+//   wheel would rest a row off. The row in the band gets data-centered while
+//   it is there. Nothing animates layout.
 // - Reduced motion: keys and taps jump instead of gliding, and the CSS
 //   drops the curve. A finger still scrolls, and values still change.
 // - Haptic ticks: onTick is called each time a new row crosses the band
@@ -141,6 +144,10 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
   const frame = useRef(0);
   const drag = useRef<{ id: number; y: number; top: number; moved: boolean; samples: DragSample[] } | null>(null);
   const swallowClick = useRef(false);
+  // The row a glide we started is headed for. Until the scroll rests there, a
+  // rest elsewhere (a glide cut short by the next key) glides on instead of
+  // choosing the row it passed. A finger, a drag or a mouse wheel clears it.
+  const aim = useRef<number | null>(null);
   const typed = useRef({ text: '', at: 0 });
   const [dragging, setDragging] = useState(false);
   const commitRef = useRef(onCommit);
@@ -161,12 +168,16 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     const el = elRef.current;
     const h = rowHeight.current;
     if (!el || h <= 0) return;
-    const top = row * h;
-    if (Math.abs(el.scrollTop - top) < 0.5) return;
+    const top = Math.min(Math.max(row, 0), Math.max(rows - 1, 0)) * h;
+    if (Math.abs(el.scrollTop - top) < 0.5) {
+      aim.current = null;
+      return;
+    }
+    aim.current = Math.round(top / h);
     const behavior: ScrollBehavior = glide && !prefersReducedMotion() ? 'smooth' : 'instant';
     if (typeof el.scrollTo === 'function') el.scrollTo({ top, behavior });
     else el.scrollTop = top;
-  }, []);
+  }, [rows]);
 
   /** Writes each nearby row's distance from the band, and marks the row in the band. */
   const paint = useCallback(() => {
@@ -200,6 +211,13 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     const h = rowHeight.current;
     if (!el || h <= 0 || count === 0 || drag.current || finger.current) return;
     const row = wheelRowAt(el.scrollTop, h, rows);
+    if (aim.current !== null) {
+      if (row !== aim.current || Math.abs(el.scrollTop - row * h) > 1) {
+        scrollToRow(aim.current, true);
+        return;
+      }
+      aim.current = null;
+    }
     const index = wheelWrap(row, count);
     const enabled = wheelNearestEnabled(options, index, copies > 1);
     if (enabled < 0) return;
@@ -248,6 +266,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
       return;
     }
     const row = copies > 1 ? wheelMiddleRow(selectedRef.current, count, copies) : selectedRef.current;
+    aim.current = null;
     el.scrollTop = row * h;
     centered.current = -1;
     paint();
@@ -266,6 +285,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
       const h = first ? first.offsetHeight : 0;
       if (h <= 0 || Math.abs(h - before) < 0.5 || drag.current || finger.current) return;
       rowHeight.current = h;
+      aim.current = null;
       el.scrollTop = (copies > 1 ? wheelMiddleRow(selectedRef.current, count, copies) : selectedRef.current) * h;
       paint();
     });
@@ -285,7 +305,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     const el = elRef.current;
     const h = rowHeight.current;
     if (!el || h <= 0 || count === 0 || drag.current || finger.current) return;
-    const row = wheelRowAt(el.scrollTop, h, rows);
+    const row = aim.current ?? wheelRowAt(el.scrollTop, h, rows);
     if (wheelWrap(row, count) === selected) return;
     scrollToRow(copies > 1 ? wheelNearestRow(row, selected, count, copies) : selected, true);
   }, [selected, copies, count, rows, scrollToRow]);
@@ -307,6 +327,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     const onTouchStart = () => {
       finger.current = true;
       user.current = true;
+      aim.current = null;
     };
     const onTouchEnd = () => {
       finger.current = false;
@@ -314,6 +335,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     };
     const onWheel = () => {
       user.current = true;
+      aim.current = null;
     };
     el.addEventListener('scroll', onScroll, { passive: true });
     el.addEventListener('scrollend', onScrollEnd);
@@ -341,7 +363,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
     const el = elRef.current;
     const h = rowHeight.current;
     if (el && h > 0) {
-      const from = wheelRowAt(el.scrollTop, h, rows);
+      const from = aim.current ?? wheelRowAt(el.scrollTop, h, rows);
       scrollToRow(row ?? (copies > 1 ? wheelNearestRow(from, index, count, copies) : index), true);
     }
     if (index === selectedRef.current) return;
@@ -393,6 +415,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
       if (Math.abs(dy) < DRAG_SLOP) return;
       d.moved = true;
       user.current = true;
+      aim.current = null;
       event.currentTarget.setPointerCapture?.(event.pointerId);
       setDragging(true);
     }
@@ -451,7 +474,7 @@ function WheelPickerColumn({ column, loop, disabled, onCommit, onTick }: ColumnP
         data-selected={index === selected ? '' : undefined}
         data-disabled={o.disabled ? '' : undefined}
       >
-        {wheelOptionText(o)}
+        <span>{wheelOptionText(o)}</span>
       </div>,
     );
   }

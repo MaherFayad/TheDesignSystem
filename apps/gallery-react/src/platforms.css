@@ -156,6 +156,12 @@
     color: var(--ds-color-text-muted);
   }
 
+  /* Order L2: page dots for the cards, on the platform's glass platter. */
+  [data-platform='ios'] [data-gallery='phone-art-dots'] {
+    display: flex;
+    justify-content: center;
+  }
+
   [data-platform='ios'] [data-gallery='phone-art-cover'] {
     aspect-ratio: 1;
     border-radius: var(--ds-radius-card);
