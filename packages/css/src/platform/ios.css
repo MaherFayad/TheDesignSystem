@@ -863,6 +863,43 @@
     font-weight: var(--ds-font-weight-semibold);
   }
 
+  /*
+   * Order M9.5 (the M9.8 request): a banner led by the start part has no
+   * tone icon, so a tone other than neutral keeps a cue: a small mark in the
+   * tone's icon color on the picture's lower trailing corner, ringed in the
+   * banner's own fill. The hairline edge could not carry it on a 24 corner.
+   */
+  [data-platform='ios'] [data-ds='toast'][data-tone]:not([data-tone='neutral']) > [data-part='start'] {
+    position: relative;
+  }
+
+  /*
+   * The time on the banner: a step quieter than the text, but darker than
+   * the muted text, so it keeps 4.5:1 where the light glass banner sits over
+   * dark content (measured 3.0:1 with the muted text).
+   */
+  [data-platform='ios'] [data-ds='toast'] {
+    --_toast-meta-fg: color-mix(in srgb, var(--ds-color-text-default) 55%, var(--ds-color-text-muted));
+  }
+
+  /* The message in the text color, as the kit's banner draws it: the muted text fell to 3.1:1 over dark content. */
+  [data-platform='ios'] [data-ds='toast'] > [data-part='description'] {
+    color: var(--ds-color-text-default);
+  }
+
+  [data-platform='ios'] [data-ds='toast'][data-tone]:not([data-tone='neutral']) > [data-part='start']::after {
+    content: '';
+    position: absolute;
+    inset-block-end: calc(-1 * var(--ds-border-width-strong));
+    inset-inline-end: calc(-1 * var(--ds-border-width-strong));
+    box-sizing: border-box;
+    inline-size: var(--ds-space-fixed-xl);
+    block-size: var(--ds-space-fixed-xl);
+    border: var(--ds-border-width-strong) solid var(--_toast-bg);
+    border-radius: var(--ds-shape-corner-full);
+    background-color: var(--_toast-icon);
+  }
+
   /* ------------------------------------------------------------ the clear material (order M6, proposed) */
 
   /*
@@ -1095,9 +1132,9 @@
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       /* Order G2: the buttons are thick clear glass like the tab bar, not a tinted pill: a low tint (labels keep 10:1 or more, measured). */
-      --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
-      --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
-      --_button-bg-active: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
+      --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 38%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 38%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-material-glass-solid) 38%, transparent);
 
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
@@ -1105,8 +1142,8 @@
 
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'] [data-ds='toast'] {
-      /* Order G2: lowered from 74 percent, which washed the content behind more than the reference; the rows keep 4.5:1 with a faint shade behind their text (below). */
-      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 60%, transparent);
+      /* Order G2: lowered from 74 to 64 percent, which washed the content behind more than the reference; the rows keep 4.5:1 with a faint shade behind their text (below). */
+      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 64%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
     }
@@ -1115,14 +1152,15 @@
      * Order G2: a faint shade behind the text of each menu row, in light, so
      * the panel tint can stay low (the content behind keeps its colour round
      * the rows and in the edge band) while each label keeps 4.5:1 over the
-     * darkest content (measured from pixels). Soft edges, no box: the shade
-     * fades out over a spacing step. Not a fill: the row's hover veil and
-     * focus ring are its own.
+     * darkest content (measured from pixels). It follows the letters (a soft
+     * halo in the panel's own tint), so there is no box and no band across
+     * the row. The row's hover veil and focus ring are its own.
      */
     [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-      border-radius: var(--ds-radius-sm);
-      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 40%, transparent);
-      box-shadow: 0 0 var(--ds-space-fixed-xl) var(--ds-space-fixed-m) color-mix(in srgb, var(--ds-color-material-glass-solid) 40%, transparent);
+      text-shadow:
+        0 0 var(--ds-space-fixed-4xs) var(--ds-color-material-glass-solid),
+        0 0 var(--ds-space-fixed-2xs) var(--ds-color-material-glass-solid),
+        0 0 var(--ds-space-fixed-m) var(--ds-color-material-glass-solid);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
@@ -1132,9 +1170,9 @@
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
@@ -1253,8 +1291,7 @@
 
       /* No shade behind the menu rows on the solid paint (order G2). */
       [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-        background-color: transparent;
-        box-shadow: none;
+        text-shadow: none;
       }
 
       /* The solid paint keeps its border: no rim. */
@@ -1346,8 +1383,7 @@
 
     [data-contrast='more'] [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'],
     [data-contrast='more'][data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-      background-color: transparent;
-      box-shadow: none;
+      text-shadow: none;
     }
 
     /* No rim with more contrast. */
@@ -1392,8 +1428,7 @@
       }
 
       [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-        background-color: transparent;
-        box-shadow: none;
+        text-shadow: none;
       }
 
       /* No rim where the glass cannot be drawn. */
@@ -1593,6 +1628,11 @@
     gap: var(--ds-space-fixed-s);
   }
 
+  /* A row with no start part: its text begins where the hairline begins, not one gap later (the empty start column keeps its gap). */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item']:not(:has(> [data-part='start'])) > :is([data-part='title'], [data-part='description']) {
+    margin-inline-start: calc(-1 * var(--_list-gap));
+  }
+
   [data-platform='ios'] [data-ds='list'] > [data-part='section']:has(> [data-ds='list'][data-variant='inset']) {
     --_list-section-text-inset: calc(2 * var(--ds-space-fixed-m));
   }
@@ -1728,6 +1768,15 @@
       color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
     }
 
+    /* The stepper (M9.3): the line between the halves is a light gray, as in the kit, not the control's outline color. */
+    [data-platform='ios'] [data-ds='number-field'][data-variant='stepper'] {
+      --_number-field-stepper-divider: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 20%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='number-field'][data-variant='stepper'] {
+      --_number-field-stepper-divider: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, var(--ds-color-glass-backdrop-dark));
+    }
+
     /* The popover arrow: no edge, and its tip rounded by a stroke in the popover's own fill. */
     [data-platform='ios'] [data-ds='popover'] [data-part='arrow'] {
       stroke: var(--_popover-bg);
@@ -1780,10 +1829,41 @@
     }
 
     [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'] {
-      inset-block: calc((100% - var(--ds-size-touch-ios) + var(--ds-space-fixed-m)) / 2 - var(--ds-space-fixed-m));
-      block-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+      overflow: clip;
+    }
+
+    /* Armed: the edge disc runs on to the far edge as one capsule, its round end by the row; its group clips it. */
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:first-child > [data-part='start'],
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:last-child > [data-part='start'] {
+      position: relative;
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:first-child > [data-part='start']::before,
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:last-child > [data-part='start']::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inline-size: 1000%;
       border-radius: var(--ds-shape-corner-full);
-      background-color: var(--_swipe-actions-tone-solid);
+      background-color: inherit;
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:first-child > [data-part='start']::before {
+      inset-inline-end: 0;
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:last-child > [data-part='start']::before {
+      inset-inline-start: 0;
+    }
+
+    /* The faded actions leave the line, so the capsule's round end sits by the row. */
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:not(:first-child),
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:not(:last-child) {
+      display: none;
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'] > [data-part='action'] > [data-part='start'] > [data-ds='icon'] {
+      position: relative;
     }
 
     /* The neutral disc in the kit's gray, a step off the row surface. */
@@ -1797,12 +1877,19 @@
       --_swipe-actions-tone-solid: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
     }
 
-    /* The alert's field well (M9.6): a quiet fill on the alert, a step off its surface. */
+    /*
+     * The alert's field well (M9.6): a quiet fill on the alert, a step off
+     * its surface. A grouped card in a sheet takes the same well: the sheet
+     * may be the raised surface itself (Neutral), where a raised card would
+     * not show.
+     */
+    [data-platform='ios'] [data-ds='sheet'] [data-ds='fieldset'][data-variant='inset'],
     [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
       --_fieldset-card-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
       --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent);
     }
 
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] [data-ds='fieldset'][data-variant='inset'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
       --_fieldset-card-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 8%, transparent);
       --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
@@ -2280,5 +2367,97 @@
     padding-block: var(--ds-space-fixed-m);
     padding-inline: calc(2 * var(--ds-space-fixed-l)) var(--ds-space-fixed-xl);
     font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  /*
+   * Order M9.5 (the M9.8 request): the banner with a start part, toward the
+   * kit's notification, 64 tall with one line: 10 at the leading side and 12
+   * at the trailing side, 8 from the 38 leading picture to the text, the
+   * time at the trailing top at 15.
+   */
+  [data-platform='ios'] [data-ds='toast']:has(> [data-part='start']) {
+    padding-inline: var(--ds-space-fixed-l) var(--ds-space-fixed-xl);
+    column-gap: var(--ds-space-fixed-m);
+  }
+
+  [data-platform='ios'] [data-ds='toast'] > [data-part='start'] [data-ds='avatar'] {
+    --_avatar-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-s));
+  }
+
+  [data-platform='ios'] [data-ds='toast'] > [data-part='meta'] {
+    font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  /* ------------------------------------------------------------ alert with fields and the sheet confirm (order M9.5, proposed) */
+
+  /*
+   * Order M9.6 asked: the fields of an alert sit in one well, 14 in from the
+   * card's edges like the action capsules, its corner concentric with the
+   * card. Each row stacks its label over its field, so the field takes the
+   * whole width of the 300 wide alert.
+   */
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+    --_fieldset-card-radius: calc(var(--_dialog-radius) - var(--ds-space-fixed-xl) - var(--ds-space-fixed-4xs));
+    --_fieldset-card-padding: calc(2 * var(--ds-space-fixed-m));
+
+    padding-block: calc(2 * var(--ds-space-fixed-m)) 0;
+    padding-inline: calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs));
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--ds-space-fixed-4xs);
+    padding-block: var(--ds-space-fixed-m);
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] > * {
+    grid-column: 1;
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] > [data-part='label'] {
+    --_label-font-size: var(--ds-type-body-small-font-size);
+
+    grid-row: auto;
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'] {
+    --_input-height: calc(var(--ds-size-target-min) + var(--ds-space-fixed-m));
+  }
+
+  /*
+   * The sheet confirm (order M9.6 asked): a round button 44 at the top
+   * trailing corner, on the close button's row, the check alone. The label
+   * stays the accessible name and is not drawn; a Tooltip shows it on hover.
+   */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-padding-inline: 0;
+    --_button-gap: 0;
+
+    position: absolute;
+    inset-block-start: calc(2 * var(--ds-space-fixed-m));
+    inset-inline-end: calc(2 * var(--ds-space-fixed-m));
+    inline-size: var(--ds-size-touch-ios);
+    min-inline-size: var(--ds-size-touch-ios);
+    margin: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'][data-detent] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] {
+    inset-block-start: calc(2 * var(--ds-space-fixed-m) + var(--ds-size-target-min));
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] > [data-part='label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
   }
 }

@@ -947,6 +947,191 @@
     font-weight: var(--ds-font-weight-bold);
   }
 
+  /* ------------------------------------------------------------ the families of orders M9.1 to M9.7 (order M9.5, proposed) */
+
+  /*
+   * Grouped field rows (M9.1): Material has no grouped card, so the rows
+   * stand as filled fields one under another, each label over its field, no
+   * card fill, no edge and no hairline. The plain field sets its fill, its
+   * border color and its padding as properties (Input.css), so the filled
+   * field and its indicator line are set again here as properties.
+   */
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] {
+    --_fieldset-card-bg: transparent;
+    --_fieldset-card-border-color: transparent;
+    --_fieldset-card-padding: 0px;
+    --_fieldset-hairline-color: transparent;
+    --_fieldset-header-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] > [data-part='legend'] {
+    color: var(--ds-color-primary-on-surface);
+    font-size: var(--ds-type-label-large-font-size);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] {
+    gap: calc(2 * var(--ds-space-fixed-m));
+  }
+
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--ds-space-fixed-2xs);
+  }
+
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > * {
+    grid-column: 1;
+  }
+
+  [data-platform='android'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > [data-part='label'] {
+    grid-row: auto;
+  }
+
+  [data-platform='android'] [data-ds='input'][data-variant='plain'] {
+    --_input-radius: 0;
+
+    padding-inline: var(--_input-padding-inline);
+    border-color: var(--_input-border-color);
+    background-color: var(--_input-bg);
+  }
+
+  /* The clear button is the trailing icon of the filled field: the icon alone, in the 48 target. */
+  [data-platform='android'] [data-ds='input'] > [data-part='clear'] [data-ds='icon'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
+  /* List sections (M9.2): the subheader in label large, medium weight, in the primary text color, at the row's 16 side. */
+  [data-platform='android'] [data-ds='list']:has(> [data-part='section']) {
+    --_list-section-gap: var(--ds-space-fixed-m);
+    --_list-section-header-fg: var(--ds-color-primary-on-surface);
+    --_list-section-header-font-size: var(--ds-type-label-large-font-size);
+    --_list-section-header-font-weight: var(--ds-font-weight-medium);
+    --_list-section-footer-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='section'] > :is([data-part='section-header'], [data-part='section-footer']) {
+    padding-block: var(--ds-space-fixed-m);
+  }
+
+  /*
+   * The index bar (M9.2): the fast scroll of Material. The keys stay 24 by
+   * 24; while a finger drags, a large letter bubble shows beside the column,
+   * toward the list. The bubble reads the key from the key's data-key
+   * attribute; until the component writes it (a request in the order
+   * report) no bubble is drawn. A transform on the key itself would move
+   * the box the scrub measures, so the bubble is its own layer.
+   */
+  [data-platform='android'] [data-ds='section-index']:not([data-dragging]) {
+    --_section-index-item-bg-active: transparent;
+  }
+
+  [data-platform='android'] [data-ds='section-index'][data-dragging] > [data-part='item'][data-active][data-key] {
+    position: relative;
+  }
+
+  [data-platform='android'] [data-ds='section-index'][data-dragging] > [data-part='item'][data-active][data-key]::before {
+    content: attr(data-key);
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(100% + var(--ds-space-fixed-m));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-xl));
+    block-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-xl));
+    border-radius: var(--ds-shape-corner-full) var(--ds-shape-corner-full) 0 var(--ds-shape-corner-full);
+    background-color: var(--ds-color-primary-fill);
+    color: var(--ds-color-primary-text);
+    font-size: var(--ds-type-headline-medium-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  [data-platform='android'] [data-ds='section-index'][data-dragging] > [data-part='item'][data-active][data-key]:dir(rtl)::before {
+    border-radius: var(--ds-shape-corner-full) var(--ds-shape-corner-full) var(--ds-shape-corner-full) 0;
+  }
+
+  /* The pop-up button (M9.3): a text button with its dropdown glyph, 40 tall, label large, a capsule state layer. */
+  [data-platform='android'] [data-ds='select'][data-emphasis='ghost']:not([data-part]) {
+    --_select-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_select-font-size: var(--ds-type-label-large-font-size);
+    --_select-ghost-fg: var(--ds-color-primary-on-surface);
+    --_select-ghost-padding-inline: var(--ds-space-fixed-xl);
+
+    border-width: 0;
+    border-radius: var(--ds-shape-corner-full);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* The stepper (M9.3): an outlined capsule, the halves clear, the line between them in the outline color. */
+  [data-platform='android'] [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
+    border-color: var(--ds-color-border-control);
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Quick actions (M9.4): the row keeps the menu's 12 side room, as the rows do. */
+  [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-quick-padding-block: var(--ds-space-fixed-m);
+    --_menu-quick-font-size: var(--ds-type-label-medium-font-size);
+  }
+
+  [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions'] {
+    padding-inline: var(--ds-space-fixed-xl);
+  }
+
+  /* Material menus and popovers have no arrow (order M9.5); a style recipe may show it again. */
+  [data-platform='android'] [data-ds='popover'] [data-part='arrow'] {
+    display: none;
+  }
+
+  /* The alert's fields (M9.6): outlined fields with a 4 corner, one under another. */
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+    padding-block: calc(2 * var(--ds-space-fixed-m)) 0;
+    padding-inline: var(--_dialog-padding);
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] [data-ds='input'][data-variant='plain'] {
+    --_input-radius: var(--ds-radius-xs);
+    --_input-bg: transparent;
+    --_input-border-color: var(--ds-color-border-control);
+
+    border-width: var(--ds-border-width-default);
+    border-radius: var(--ds-radius-xs);
+  }
+
+  /* The sheet confirm (M9.6): a text button in the top bar, its label shown, in the primary text color. */
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] {
+    --_button-bg: transparent;
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+    --_button-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-padding-inline: var(--ds-space-fixed-xl);
+    --_button-font-size: var(--ds-type-label-large-font-size);
+
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--ds-color-primary-on-surface);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] > [data-part='start'] {
+    display: none;
+  }
+
+  /* Swipe actions (M9.7): square ends, each action at least the 48 target wide. */
+  [data-platform='android'] [data-ds='swipe-actions'] {
+    --_swipe-actions-action-min: var(--ds-size-touch-android);
+    --_swipe-actions-radius: 0;
+  }
+
   /*
    * ------------------------------------------------------------ reduced motion: the ripple shows whole at once, nothing grows or travels.
    * Under the media query the duration tokens are already 0ms, so every
@@ -1311,6 +1496,11 @@
   }
 
   /* ------------------------------------------------------------ toast: a snackbar at the bottom, start aligned, one row with the action at the end */
+
+  /* A snackbar has no leading picture and no time (order M9.5, the M9.8 request): its own areas would put them in implicit cells. */
+  [data-platform='android'] [data-ds='toast'] > :is([data-part='start'], [data-part='meta']) {
+    display: none;
+  }
 
   :root:not(:has([data-ds='sheet'] > [data-part='panel'][data-state='open'])) [data-platform='android'] [data-ds='toaster'] {
     --_toaster-dir: -1;

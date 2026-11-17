@@ -23,10 +23,11 @@
 //   screen=outer|inner  orient=portrait|landscape  fold=flat|folded
 //   mode=safari|full    view=settings|sheet        placement=auto|bottom|side
 // A key left out shows every value.
-import { type CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import {
   Button,
   Field,
+  IconButton,
   Input,
   Link,
   List,
@@ -352,6 +353,8 @@ const copy = {
   en: {
     title: 'Settings',
     edit: 'Edit list',
+    add: 'Add a board',
+    actions: 'More actions',
     range: 'Sync range',
     day: 'Day',
     week: 'Week',
@@ -387,6 +390,8 @@ const copy = {
   ar: {
     title: 'الإعدادات',
     edit: 'تعديل القائمة',
+    add: 'إضافة لوحة',
+    actions: 'إجراءات أكثر',
     range: 'مدة المزامنة',
     day: 'يوم',
     week: 'أسبوع',
@@ -510,6 +515,17 @@ export function DuoScreen({ params }: { params: URLSearchParams }) {
   const rtl = theme.dir === 'rtl';
   const fold = foldOverrides(frame, mode);
   const css = { ...(mode === 'full' ? insetOverrides(frame.full, rtl) : {}), ...fold.style } as CSSProperties;
+  // The folded frames also set the stand in the iOS layer reads for the fold
+  // (data-ds-test-fold of the contract harness, src/fold.ts), on the html
+  // element, so a sheet in its portal sees it too. vertical: a band down the
+  // middle (landscape); horizontal: a band across (portrait).
+  const standIn = fold.attr === 'horizontal' ? 'vertical' : fold.attr === 'vertical' ? 'horizontal' : undefined;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (standIn) root.setAttribute('data-ds-test-fold', standIn);
+    else root.removeAttribute('data-ds-test-fold');
+    return () => root.removeAttribute('data-ds-test-fold');
+  }, [standIn]);
   return (
     <Theme data-gallery="duo-theme" data-gallery-segments={fold.attr} data-duo-mode={mode} css={css}>
       <DuoPhone words={theme.lang === 'ar' || theme.lang.startsWith('ar-') ? copy.ar : copy.en} view={view} placement={placement} />
@@ -532,7 +548,12 @@ function DuoPhone({ words: w, view, placement }: { words: Words; view: View; pla
             </Link>
           }
           items={[]}
-          end={<Button emphasis="ghost">{w.edit}</Button>}
+          end={
+            <>
+              <IconButton icon="plus" label={w.add} />
+              <IconButton icon="more" label={w.actions} />
+            </>
+          }
         />
         <div data-gallery="phone-body">
           <ArtTop w={w} />

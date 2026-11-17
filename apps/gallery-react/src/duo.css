@@ -226,18 +226,11 @@
   }
 
   /*
-   * Full screen: the screen keeps clear of the emulated insets until the iOS
-   * layer pads by them itself (order DU2). The tab bar is fixed, so it pads
-   * on its own.
+   * The insets and the side column are the iOS layer's (order DU2,
+   * platform/ios-shell.css): the shell's regions keep clear of them. The
+   * tab bar's wrapper only holds the bar at the bottom; the bar places itself.
    */
-  [data-gallery='duo-theme'][data-duo-mode='full'] [data-gallery='phone'] {
-    padding-block-start: var(--ds-inset-safe-top);
-    padding-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
-  }
-
-  [data-platform='ios'] [data-gallery='duo-theme'][data-duo-mode='full'] [data-gallery='phone-tabs'] {
-    padding-block-end: var(--ds-inset-safe-bottom);
-    padding-inline-end: var(--ds-inset-safe-end);
-    padding-inline-start: var(--ds-inset-safe-start);
+  [data-platform='ios'] [data-gallery='duo-shell'] [data-gallery='phone-tabs'] {
+    inset-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
   }
 }

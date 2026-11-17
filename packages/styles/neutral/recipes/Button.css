@@ -166,4 +166,28 @@
     --_button-fg-hover: revert-layer;
     --_button-fg-active: revert-layer;
   }
+
+  /*
+   * ios (order M9.5, the M9.3 request): the halves of a stepper NumberField
+   * are the kit's gray capsule, a fill with no outline and no lift. The
+   * hairline between them stays (NumberField.css). The minus and plus keep
+   * the text color, so the glyphs identify the control at 3:1 and more.
+   */
+  [data-style='neutral'][data-platform='ios'] [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
+    --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 7%, var(--ds-color-glass-backdrop-bright));
+    --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 7%, var(--ds-color-glass-backdrop-bright));
+    --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, var(--ds-color-glass-backdrop-bright));
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: 0 0 transparent;
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
+    --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
+    --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
+    --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 25%, var(--ds-color-glass-backdrop-dark));
+  }
 }

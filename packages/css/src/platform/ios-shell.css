@@ -1,0 +1,516 @@
+/*
+ * The phone shell on ios: where the bars sit (order DU2 of
+ * docs/plan/reset-duo.md, proposed). Read with ios.css, in the same two
+ * layers, only on [data-platform='ios']. Same DOM in every placement: the
+ * column is a placement of existing parts (the Navbar's end actions and the
+ * TabBar), never a new part, and nothing here reorders parts (no `order`, no
+ * grid that changes the reading sequence), so the focus order stays the DOM
+ * order: the top row, the top of the column, the content, the tab bar at the
+ * bottom of the column (order DU1).
+ *
+ * - The PageShell root is a size container named ds-shell. Size containment
+ *   means the shell no longer takes its height from its content, so on ios
+ *   it is one screen tall, or fills a taller frame of definite height (an
+ *   app root, a demo frame), and its main region scrolls when it holds
+ *   something to focus. It also contains layout, so the
+ *   docked column parts (position: fixed) sit on the shell, not on the
+ *   viewport: in a demo frame they stay inside the frame.
+ * - placement side (data-placement="side"), and auto when the shell is at
+ *   least 440 wide and at most 700 tall, put the Navbar's end actions at the
+ *   top and the TabBar at the bottom of one column at the side, with the same
+ *   glass ios.css gives the bottom bar. placement bottom (data-placement=
+ *   "bottom") keeps the bottom bar of order M1.
+ * - The column sits on the hardware side, the physical right, in both
+ *   reading directions, as the vendor's guidelines say for native apps. That
+ *   is the inline end in English and the inline start in Arabic. Unverified
+ *   for web pages (plan section 12).
+ * - Sheets take the device's geometry from the viewport (a sheet renders in a
+ *   portal, outside the shell): 8 in from the edges on screens wider than
+ *   440 and narrower than breakpoint.desktop; on a short screen (the outer
+ *   screen) the sheet spans the width over the column and carries its own
+ *   close and confirm in a small column; on a wide screen at least 500 tall
+ *   (the inner screen in landscape) a centred floating card. Partly folded,
+ *   the card moves into the inline start segment in landscape and the sheet
+ *   stays in the bottom segment in portrait, read from the segment media
+ *   queries and env(viewport-segment-*), or from the harness stand in
+ *   data-ds-test-fold on the html element (contract-tests src/fold.ts).
+ *
+ * Condition lengths: the lint gate takes only breakpoint token values in
+ * @media and @container conditions. The plan's 440 and 700 (and the 500 of
+ * the card) are written as calc() over breakpoint.phone (30rem, 480) and
+ * breakpoint.medium (600px): 30rem * 11 / 12 is 440, 600px * 7 / 6 is 700,
+ * 600px * 5 / 6 is 500.
+ *
+ * Specificity: the generated barrel imports this file before ios.css (the
+ * platform files load in name order), so every rule that sets a property
+ * ios.css also sets carries one more attribute or pseudo class than the
+ * ios.css rule (the placement attribute, :not([data-placement='bottom']), the
+ * page-shell ancestor, the sheet panel's data-state).
+ *
+ * Private properties (platform owned, --_ios-*):
+ *   --_ios-rail          side on a shell (side, or auto in the query) and inherited below it; none otherwise
+ *   --_ios-rail-item     48, a column item and a top bar button on the device (kit)
+ *   --_ios-rail-gap      8, between items of the actions
+ *   --_ios-rail-edge     the safe area inset on the physical right
+ *   --_ios-rail-size     the column: 84 (48 and three 12s, kit), or the inset there when that is wider
+ *   --_ios-rail-head     where the column's actions start: under the top inset, and in portrait clear of the camera at the top of the column
+ *   --_ios-rail-foot     where the tab bar ends: over the bottom inset, and in landscape clear of the camera at the bottom of the column
+ */
+@layer ds.platform {
+  [data-platform='ios'] :is([data-ds='page-shell'], [data-ds='tab-bar'], [data-ds='navbar']) {
+    --_ios-rail-item: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+    --_ios-rail-gap: var(--ds-space-fixed-m);
+    --_ios-rail-edge: var(--ds-inset-safe-end);
+    --_ios-rail-size: max(calc(var(--_ios-rail-item) + 3 * var(--ds-space-fixed-xl)), var(--_ios-rail-edge));
+    --_ios-rail-head: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-top));
+    --_ios-rail-foot: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-bottom), var(--_ios-rail-edge));
+  }
+
+  /* The physical right is the inline start in a right to left page. */
+  [data-platform='ios'] :is([data-ds='page-shell'], [data-ds='tab-bar'], [data-ds='navbar']):dir(rtl) {
+    --_ios-rail-edge: var(--ds-inset-safe-start);
+  }
+
+  /*
+   * Where the column sits in a side inset (full screen), the camera is in the
+   * column. In landscape it is at the bottom of the column (kit, outer
+   * screen), so the tab bar ends above a stretch as tall as the inset is
+   * wide. In portrait the camera and the status sit at the top (kit, 84 by
+   * 169), so the actions start under twice the inset. With no side inset (in
+   * Safari) both ends keep 12.
+   */
+  @container ds-shell (orientation: portrait) {
+    [data-platform='ios'] [data-ds='page-shell'] :is([data-ds='tab-bar'], [data-ds='navbar']) {
+      --_ios-rail-head: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-top), calc(2 * var(--_ios-rail-edge)));
+      --_ios-rail-foot: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-bottom));
+    }
+  }
+
+  /*
+   * A landscape shell at least 500 tall (the inner screen): its camera is at
+   * the top of the column (kit, 84 by 119), and there is room to keep both
+   * ends clear.
+   */
+  @container ds-shell (orientation: landscape) and (block-size > calc(600px * 5 / 6)) { /* breakpoint.medium */
+    [data-platform='ios'] [data-ds='page-shell'] :is([data-ds='tab-bar'], [data-ds='navbar']) {
+      --_ios-rail-head: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-top), var(--_ios-rail-edge));
+    }
+  }
+}
+
+@layer ds.chrome {
+  /* ------------------------------------------------------------ the shell: one screen, a size container */
+
+  [data-platform='ios'] [data-ds='page-shell'] {
+    --_ios-rail: none;
+
+    container: ds-shell / size;
+    contain: layout;
+    /*
+     * One screen: dialog.height.max is 80 percent of the screen height; no
+     * token names the whole of it yet. A definite block size, not a minimum:
+     * Chromium reads a size container whose block size is auto as 0 tall in
+     * its queries, whatever its minimum. In a frame of definite height the
+     * base min-block-size of 100% still makes the shell fill the frame.
+     */
+    block-size: calc(var(--ds-dialog-height-max) * 1.25);
+  }
+
+  /*
+   * The content scrolls inside the shell, so the bars stay where they are.
+   * Only a main that holds something to focus scrolls: a scroller with
+   * nothing focusable in it cannot be scrolled from the keyboard in every
+   * browser (WCAG 2.1.1, axe scrollable-region-focusable), and main's own
+   * tabindex is -1. Text alone overflows the shell and the page scrolls.
+   */
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has(:is(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex='-1']))) {
+    overflow-y: auto;
+  }
+
+  /* Every region keeps clear of the side insets, each side on its own. */
+  [data-platform='ios'] [data-ds='page-shell'] > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']) {
+    margin-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
+  }
+
+  /* ------------------------------------------------------------ side placement on the shell */
+
+  [data-platform='ios'] [data-ds='page-shell'][data-placement='side'] {
+    --_ios-rail: side;
+  }
+
+  /*
+   * Content padding at the column's side: no region runs under the column,
+   * so a focused control in the content is never under it (WCAG 2.4.11), and
+   * main, the scroller, keeps the same room as scroll padding.
+   */
+  [data-platform='ios'] [data-ds='page-shell'][data-placement='side'] > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']):dir(ltr) {
+    margin-inline-end: var(--_ios-rail-size);
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'][data-placement='side'] > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']):dir(rtl) {
+    margin-inline-start: var(--_ios-rail-size);
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'][data-placement='side'] > [data-part='main'] {
+    scroll-padding-block: var(--_ios-rail-head) var(--_ios-rail-foot);
+  }
+
+  /* A footer that holds only the tab bar has nothing left in the flow: no band. */
+  [data-platform='ios'] [data-ds='page-shell'][data-placement='side'] > [data-part='footer']:has(> [data-ds='tab-bar']:only-child) {
+    padding: 0;
+    border-block-start-width: 0;
+  }
+
+  /* ------------------------------------------------------------ auto: the same, when the shell is wide and short */
+
+  @container ds-shell (inline-size >= calc(30rem * 11 / 12)) and (block-size <= calc(600px * 7 / 6)) { /* breakpoint.phone breakpoint.medium */
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']) {
+      --_ios-rail: side;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']):dir(ltr) {
+      margin-inline-end: var(--_ios-rail-size);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']):dir(rtl) {
+      margin-inline-start: var(--_ios-rail-size);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='main'] {
+      scroll-padding-block: var(--_ios-rail-head) var(--_ios-rail-foot);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='footer']:has(> [data-ds='tab-bar']:only-child) {
+      padding: 0;
+      border-block-start-width: 0;
+    }
+  }
+
+  /* ------------------------------------------------------------ bottom placement on a wide shell (the inner screen in portrait) */
+
+  /*
+   * Kit: on the inner screen the tab bar stays content width and centred,
+   * not full width, and the top bar's buttons are 48 tall. A shell at least
+   * breakpoint.medium wide; a phone in portrait never is.
+   */
+  @container ds-shell (inline-size >= 600px) { /* breakpoint.medium */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar'] {
+      inline-size: fit-content;
+      margin-inline: auto;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar'] > [data-part='item'] {
+      flex: none;
+      min-inline-size: calc(var(--ds-size-touch-ios) + 2 * var(--ds-space-fixed-l));
+      padding-inline: var(--ds-space-fixed-m);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar'] > [data-part='menu-button'] {
+      --_button-height: var(--_ios-rail-item);
+    }
+  }
+
+  /* ------------------------------------------------------------ the tab bar as a column: a vertical capsule, icons only */
+
+  /*
+   * Kit: a vertical capsule of 48 square items, the current one's lens as on
+   * the bottom bar. The label is hidden from view and stays in the link, so
+   * it is still the item's name. Outside a docked shell (a bar placed side by
+   * hand in a page) the capsule stands at the inline end of its own box.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    inline-size: fit-content;
+    margin: 0;
+    margin-inline-start: auto;
+    padding: var(--ds-space-fixed-2xs);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='item'] {
+    flex: none;
+    inline-size: var(--_ios-rail-item);
+    min-inline-size: var(--_ios-rail-item);
+    block-size: var(--_ios-rail-item);
+    min-block-size: var(--_ios-rail-item);
+    padding: 0;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='item'] > [data-part='item-label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* A style's band above a bottom bar has no edge to reach in a column. */
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']::before {
+    content: none;
+  }
+
+  /* The same capsule on a bar a docked shell puts in its column (side, or auto in the query). */
+  @container style(--_ios-rail: side) {
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0;
+      inline-size: fit-content;
+      padding: var(--ds-space-fixed-2xs);
+    }
+
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='item'] {
+      flex: none;
+      inline-size: var(--_ios-rail-item);
+      min-inline-size: var(--_ios-rail-item);
+      block-size: var(--_ios-rail-item);
+      min-block-size: var(--_ios-rail-item);
+      padding: 0;
+    }
+
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='item'] > [data-part='item-label'] {
+      position: absolute;
+      inline-size: var(--ds-border-width-default);
+      block-size: var(--ds-border-width-default);
+      margin: calc(-1 * var(--ds-border-width-default));
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    [data-platform='ios'] [data-ds='tab-bar']:not([data-placement='bottom'])::before {
+      content: none;
+    }
+
+    /*
+     * Docked: at the bottom of the column, centred in it, on the shell (the
+     * shell contains layout, so fixed is relative to it). On a short shell
+     * the capsule keeps room for two action buttons above it and scrolls
+     * rather than cover them or clip an item (WCAG 1.4.10).
+     */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) {
+      position: fixed;
+      z-index: var(--ds-z-topbar);
+      inset-block: auto var(--_ios-rail-foot);
+      max-block-size: calc(100% - var(--_ios-rail-head) - var(--_ios-rail-foot) - 2 * var(--_ios-rail-item) - 2 * var(--_ios-rail-gap));
+      margin: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']):dir(ltr) {
+      inset-inline: auto calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2 - var(--ds-space-fixed-2xs) - var(--ds-border-width-default));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']):dir(rtl) {
+      inset-inline: calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2 - var(--ds-space-fixed-2xs) - var(--ds-border-width-default)) auto;
+    }
+  }
+
+  /* ------------------------------------------------------------ the Navbar's actions in the column */
+
+  /*
+   * Back or close and the prominent actions go to the top of the column, one
+   * under the other, 48 round glass buttons. Text buttons stay in the top row
+   * (plan 5.2): an end group that holds a text Button is left where it is.
+   * The title stays at the top of the content.
+   */
+  [data-platform='ios'] [data-ds='navbar'][data-placement='side'] {
+    align-items: flex-start;
+  }
+
+  [data-platform='ios'] [data-ds='navbar'][data-placement='side'] > [data-part='end']:not(:has([data-ds='button'])) {
+    flex-direction: column;
+    gap: var(--_ios-rail-gap);
+  }
+
+  [data-platform='ios'] [data-ds='navbar'][data-placement='side'] > [data-part='end']:not(:has([data-ds='button'])) :is([data-ds='icon-button'], [data-ds='toggle-button']) {
+    --_button-height: var(--_ios-rail-item);
+  }
+
+  @container style(--_ios-rail: side) {
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar']:not([data-placement='bottom']) > [data-part='end']:not(:has([data-ds='button'])) {
+      position: fixed;
+      z-index: var(--ds-z-topbar);
+      inset-block: var(--_ios-rail-head) auto;
+      flex-direction: column;
+      gap: var(--_ios-rail-gap);
+      margin: 0;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar']:not([data-placement='bottom']) > [data-part='end']:not(:has([data-ds='button'])):dir(ltr) {
+      inset-inline: auto calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar']:not([data-placement='bottom']) > [data-part='end']:not(:has([data-ds='button'])):dir(rtl) {
+      inset-inline: calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2) auto;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar']:not([data-placement='bottom']) > [data-part='end']:not(:has([data-ds='button'])) :is([data-ds='icon-button'], [data-ds='toggle-button']) {
+      --_button-height: var(--_ios-rail-item);
+    }
+  }
+
+  /* ------------------------------------------------------------ sheets on the device's sizes */
+
+  /*
+   * Screens wider than 440 and narrower than breakpoint.desktop: the
+   * foldable's screens, and a phone in landscape. A phone in portrait is
+   * never wider than 440, so it keeps the M1 sheet. The sheet floats 8 in
+   * from the edges, each safe area side on its own, with all corners round.
+   */
+  @media (width > calc(30rem * 11 / 12)) and (width < 68.75rem) { /* breakpoint.phone breakpoint.desktop */
+    [data-platform='ios'] [data-ds='sheet'] {
+      padding-inline: calc(var(--ds-space-fixed-m) + var(--ds-inset-safe-start)) calc(var(--ds-space-fixed-m) + var(--ds-inset-safe-end));
+      padding-block-end: max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom));
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] {
+      inline-size: 100%;
+      padding-block-end: 0;
+      border-block-end-width: var(--ds-border-width-default);
+      border-end-start-radius: var(--_dialog-radius);
+      border-end-end-radius: var(--_dialog-radius);
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='footer'] {
+      padding-block-end: var(--_dialog-band-padding-block);
+    }
+  }
+
+  /*
+   * The outer screen (and a phone in landscape): short, and not the card
+   * below. The sheet spans the width over the column, 8 in from the screen's
+   * edges, under the camera's inset at the top, and carries its own small
+   * column on the hardware side: close at the top, confirm under it.
+   */
+  @media (width > calc(30rem * 11 / 12)) and (width < 68.75rem) and (height <= calc(600px * 7 / 6)) and ((width < 48rem) or (height <= calc(600px * 5 / 6))) { /* breakpoint.phone breakpoint.desktop breakpoint.medium breakpoint.tablet */
+    [data-platform='ios'] [data-ds='sheet'] {
+      padding-block-start: max(calc(var(--ds-space-5xl) + var(--ds-inset-safe-top)), calc(var(--_sheet-toast-end) + var(--ds-space-s)), max(var(--ds-inset-safe-start), var(--ds-inset-safe-end)));
+      padding-inline: var(--ds-space-fixed-m);
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] {
+      display: grid;
+      align-items: start;
+      gap: var(--ds-space-fixed-m) var(--ds-space-fixed-xl);
+      padding-inline: calc(2 * var(--ds-space-fixed-m));
+      text-align: start;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header']:dir(ltr) {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header']:dir(rtl) {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='title'], [data-part='description']):dir(ltr) {
+      grid-column: 1;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='title'], [data-part='description']):dir(rtl) {
+      grid-column: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='title'] {
+      grid-row: 1;
+      align-self: center;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='description'] {
+      grid-row: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='close'], [data-part='confirm']) {
+      position: static;
+      justify-self: center;
+      margin: 0;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='close'] {
+      --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+
+      grid-row: 1;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='confirm'] {
+      grid-row: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='close'], [data-part='confirm']):dir(ltr) {
+      grid-column: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='close'], [data-part='confirm']):dir(rtl) {
+      grid-column: 1;
+    }
+  }
+
+  /*
+   * The inner screen in landscape: wide and at least 500 tall. A centred
+   * floating card about two thirds of the width (kit 653 of 951), 8 above the
+   * bottom, centred in the room beside the column.
+   */
+  @media (width >= 48rem) and (width < 68.75rem) and (height > calc(600px * 5 / 6)) and (height <= calc(600px * 7 / 6)) { /* breakpoint.tablet breakpoint.desktop breakpoint.medium */
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] {
+      inline-size: min(100%, var(--ds-dialog-width-xl));
+    }
+  }
+
+  /*
+   * Partly folded, landscape: two segments side by side and a band down the
+   * middle. The card moves into the inline start segment, its width that
+   * segment less the margins, and never crosses the band. The band is read
+   * from env(viewport-segment-*) where the browser has it; the stand in of
+   * the harness has no segments, and the band then sits in the middle of the
+   * screen, 40 wide (kit).
+   */
+  @media (horizontal-viewport-segments: 2) {
+    [data-platform='ios'] [data-ds='sheet']:dir(ltr) {
+      padding-inline-end: calc(100% - env(viewport-segment-left 0 0, 0px) - env(viewport-segment-width 0 0, 50%) + var(--ds-space-fixed-m));
+    }
+
+    [data-platform='ios'] [data-ds='sheet']:dir(rtl) {
+      padding-inline-end: calc(env(viewport-segment-left 1 0, 50%) + var(--ds-space-fixed-m));
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] {
+      inline-size: 100%;
+    }
+  }
+
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] [data-ds='sheet'] {
+    padding-inline-end: calc(50% + 2 * var(--ds-space-fixed-l) + var(--ds-space-fixed-m));
+  }
+
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] {
+    inline-size: 100%;
+  }
+
+  /*
+   * Partly folded, portrait: one segment above the other. The sheet stays in
+   * the bottom segment: its top never comes above the band. Without segments
+   * (the stand in) the bottom segment is taken as half the room, less half
+   * the band.
+   */
+  @media (vertical-viewport-segments: 2) {
+    [data-platform='ios'] [data-ds='sheet'],
+    [data-platform='ios'] [data-ds='sheet'][data-size] {
+      --_dialog-height-max: calc(env(viewport-segment-height 0 1, 50%) - max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom)) - var(--ds-space-fixed-m));
+    }
+  }
+
+  :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'],
+  :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'][data-size] {
+    --_dialog-height-max: calc(50% - 2 * var(--ds-space-fixed-l) - max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom)) - var(--ds-space-fixed-m));
+  }
+}

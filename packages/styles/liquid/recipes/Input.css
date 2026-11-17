@@ -14,6 +14,11 @@
     --_input-bg: var(--ds-color-bg-surface);
   }
 
+  /* ios (order M9.5): a plain field in a grouped row keeps the small corner of its focus ring, not the field box corner. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='input'][data-variant='plain'] {
+    --_input-radius: var(--ds-radius-xs);
+  }
+
   /* ios (order F1): the Input inside a SearchField is its text only; the field draws the fill, so the surface above does not draw a box inside the capsule. */
   [data-style='liquid'][data-platform='ios'] [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
     --_input-bg: transparent;
