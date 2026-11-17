@@ -13,6 +13,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'n
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
+import { parseDevices } from './src/fold';
 import { kebabCase, loadManifests, readyComponents, reportFile } from './src/lib';
 import { galleryExists, launchGallery, probeRoutes, type Gallery } from './src/server';
 
@@ -35,6 +36,8 @@ interface Args {
   grep?: string;
   /** A name for the report file, in place of the one built from the options. */
   tag?: string;
+  /** Device profiles (src/fold.ts), one Playwright project each (DS_DEVICE). */
+  device?: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -52,8 +55,9 @@ function parseArgs(argv: string[]): Args {
     else if (flag === '--target-min') out.targetMin = value();
     else if (flag === '--grep') out.grep = value();
     else if (flag === '--tag') out.tag = value();
+    else if (flag === '--device') out.device = value();
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run contract -- --framework react|angular [--url http://host:port] [--component Button[,Input]] [--style liquid] [--styles liquid,neutral] [--platform ios] [--target-min 44] [--grep "target size"] [--tag name]');
+      console.log('npm run contract -- --framework react|angular [--url http://host:port] [--component Button[,Input]] [--style liquid] [--styles liquid,neutral] [--platform ios] [--target-min 44] [--grep "target size"] [--tag name] [--device duo-outer[,duo-inner-landscape-folded] | duo]');
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${a}`);
@@ -63,6 +67,14 @@ function parseArgs(argv: string[]): Args {
   if (!['react', 'angular'].includes(out.framework)) {
     console.error(`--framework must be react or angular, not ${out.framework}`);
     process.exit(2);
+  }
+  if (out.device !== undefined) {
+    try {
+      out.device = parseDevices(out.device).map((p) => p.name).join(',');
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exit(2);
+    }
   }
   return out;
 }
@@ -112,13 +124,20 @@ function summary(file: string): void {
   }
 }
 
+/** The report name part for --device: the profile, or duo for more than one. */
+function deviceTag(device: string | undefined): string | undefined {
+  if (!device) return undefined;
+  const names = device.split(',');
+  return names.length === 1 ? names[0] : 'duo';
+}
+
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   const partial = args.components.length > 0 && !args.tag;
   const runDir = join(here, '.out', String(process.pid));
   // A run on another style, style list, platform or target size writes its own
   // report (contract-react-liquid.json, contract-react-ios.json), never the base one.
-  const suffix = args.tag ?? [args.style, args.styles && args.styles !== args.style ? args.styles.replace(/,/g, '-') : undefined, args.platform, args.targetMin ? `min${args.targetMin}` : undefined].filter(Boolean).join('-');
+  const suffix = args.tag ?? [args.style, args.styles && args.styles !== args.style ? args.styles.replace(/,/g, '-') : undefined, args.platform, args.targetMin ? `min${args.targetMin}` : undefined, deviceTag(args.device)].filter(Boolean).join('-');
   const report = reportFile(repo, args.framework, partial, process.pid, suffix);
   const tag = suffix ? `${args.framework}-${suffix}` : args.framework;
   // Playwright writes into the run folder; a full run then moves the JSON into place.
@@ -172,6 +191,7 @@ async function main(): Promise<number> {
       DS_STYLES: args.styles ?? '',
       DS_PLATFORM: args.platform ?? '',
       DS_TARGET_MIN: args.targetMin ?? '',
+      DS_DEVICE: args.device ?? '',
     };
     const status = await new Promise<number>((ok) => {
       const pw = spawn('npx', ['playwright', 'test', '--config', join(here, 'playwright.config.ts'), ...(args.grep ? ['--grep', args.grep] : [])], { cwd: repo, env, stdio: 'inherit' });

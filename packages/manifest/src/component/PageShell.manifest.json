@@ -125,10 +125,20 @@
       "type": "boolean",
       "default": false,
       "description": "A preview of a page inside another page (a gallery, docs, a template picker): the same frame with no landmarks; main becomes a region named Main content."
+    },
+    "placement": {
+      "type": [
+        "auto",
+        "bottom",
+        "side"
+      ],
+      "default": "auto",
+      "description": "Where the bars of a phone shell sit, passed down to every TabBar and Navbar inside that sets none of its own. auto: the CSS decides from this root's size, which is a size container named ds-shell; on ios the bars form a column at the inline end when the shell is at least 27.5rem wide and at most 43.75rem tall, otherwise they stay at the top and the bottom. No JavaScript measures, so the server render matches. bottom: always top and bottom. side: always the column. Stamps data-placement on the root only when not auto. Use side by hand only for a phone or foldable screen whose bars must sit in the column whatever its size (a fixed device frame, a landscape only screen). Never in a desktop app, a desktop web page or under macos: there bars stay where they are and auto already keeps them there."
     }
   },
   "states": [
-    "data-sidebar=expanded|collapsed|hidden"
+    "data-sidebar=expanded|collapsed|hidden",
+    "data-placement=bottom|side"
   ],
   "a11y": {
     "role": "No role on the root. header is the banner, main the main landmark (one per page, id main), aside a complementary landmark with a label, footer the contentinfo. The navigation landmark is the Sidebar or Rail inside the nav part.",
@@ -146,7 +156,10 @@
       "While the column is hidden on a wide screen (sidebar hidden), the menu button and the Drawer are the way to the navigation, as on phones.",
       "No motion: the column swaps at once. The Drawer brings its own motion (pattern sheet).",
       "The shell takes the height of its parent (min-block-size 100%). Give html and body a height for a full screen frame; no viewport height token exists yet.",
-      "No native title attribute."
+      "No native title attribute.",
+      "Placement (order DU1): the root is the size container ds-shell that the ios placement queries read. Placement never changes the DOM order, so the reading and focus order stay header, navigation, main, aside, footer in every placement (WCAG 1.3.2, 2.4.3): the Navbar's actions at the top of the column come before main, the TabBar at the bottom of the column after it.",
+      "Every placement works in portrait and landscape; nothing locks the orientation (WCAG 1.3.4).",
+      "A nested PageShell sets its own placement (auto by default); it does not take its parent's."
     ]
   },
   "content": {

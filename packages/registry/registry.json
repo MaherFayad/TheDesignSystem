@@ -480,6 +480,16 @@
           "target": "@components/ds/shared/platform.ts"
         },
         {
+          "path": "packages/shared/src/refraction-dom.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/refraction-dom.ts"
+        },
+        {
+          "path": "packages/shared/src/refraction.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/refraction.ts"
+        },
+        {
           "path": "packages/shared/src/resize.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/resize.ts"
@@ -3474,6 +3484,7 @@
         "@ds/core",
         "@ds/drawer",
         "@ds/icon-button",
+        "@ds/page-shell",
         "@ds/sidebar",
         "@ds/theme"
       ],
@@ -3652,6 +3663,11 @@
           "path": "packages/react/src/components/PageShell/PageShell.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/PageShell/PageShell.tsx"
+        },
+        {
+          "path": "packages/react/src/components/PageShell/placement.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PageShell/placement.ts"
         },
         {
           "path": "packages/css/src/components/PageShell.css",
@@ -4958,6 +4974,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/page-shell",
         "@ds/theme"
       ],
       "files": [

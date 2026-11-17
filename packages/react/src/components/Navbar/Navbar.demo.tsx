@@ -80,6 +80,20 @@ export default function NavbarDemo() {
             />
           </DemoRow>
         ))}
+        <DemoRow label="Placement side: the end actions go to a column at the inline end on ios">
+          <Navbar
+            label="Board"
+            placement="side"
+            brand={<Brand>Spring launch</Brand>}
+            items={[]}
+            end={
+              <>
+                <IconButton icon="search" label="Search the board" size="lg" />
+                <IconButton icon="plus" label="Add a card" size="lg" />
+              </>
+            }
+          />
+        </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           <Navbar
@@ -92,6 +106,20 @@ export default function NavbarDemo() {
               </Button>
             }
           />
+          <DemoRow label="عمود جانبي">
+            <Navbar
+              label="اللوحة"
+              placement="side"
+              brand={<Brand>إطلاق الربيع</Brand>}
+              items={[]}
+              end={
+                <>
+                  <IconButton icon="search" label="البحث في اللوحة" size="lg" />
+                  <IconButton icon="plus" label="إضافة بطاقة" size="lg" />
+                </>
+              }
+            />
+          </DemoRow>
         </Theme>
       </DemoCase>
 

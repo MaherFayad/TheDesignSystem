@@ -2,9 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
+import { Navbar } from '../Navbar';
+import { TabBar, TabBarItem } from '../TabBar';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
 import PageShellDemo from './PageShell.demo';
 import { PageShell, usePageShell, type PageShellProps } from './index';
@@ -214,3 +217,68 @@ describe('PageShell', () => {
     expect(footer).not.toContain('--ds-color');
   });
 });
+
+// Order DU1 (docs/plan/reset-duo.md). WCAG 2.2 covered here: 2.4.3 Focus
+// order and 1.3.2 Meaningful sequence (placement never reorders the DOM),
+// 1.3.4 Orientation (every placement keeps every part). The column's
+// geometry, its 48px targets (2.5.8) and its scroll padding (2.4.11) are
+// the CSS of order DU2 on the container this root is (ds-shell).
+describe('PageShell placement', () => {
+  function Phone({ placement }: { placement?: 'auto' | 'bottom' | 'side' }) {
+    return (
+      <PageShell
+        embedded
+        placement={placement}
+        header={<Navbar label="Main" items={[]} end={<Button size="sm">Share</Button>} />}
+        footer={
+          <TabBar aria-label="Sections" size="lg">
+            <TabBarItem href="#home" icon="home" label="Home" active />
+            <TabBarItem href="#inbox" icon="inbox" label="Inbox" />
+            <TabBarItem href="#profile" icon="user" label="Profile" />
+          </TabBar>
+        }
+      >
+        <p>Content</p>
+      </PageShell>
+    );
+  }
+
+  it('stamps no data-placement for auto, on the root or a bar, in the server render too', () => {
+    render(<Phone />);
+    expect(document.querySelector('[data-placement]')).toBeNull();
+    expect(renderToString(<Phone />)).not.toContain('data-placement');
+  });
+
+  it.each(['bottom', 'side'] as const)('stamps "%s" on the root and passes it to the TabBar and the Navbar', (placement) => {
+    render(<Phone placement={placement} />);
+    expect(rootEl()?.getAttribute('data-placement')).toBe(placement);
+    expect(document.querySelector('[data-ds="tab-bar"]')?.getAttribute('data-placement')).toBe(placement);
+    expect(document.querySelector('[data-ds="navbar"]')?.getAttribute('data-placement')).toBe(placement);
+    expect(renderToString(<Phone placement={placement} />).match(new RegExp(`data-placement="${placement}"`, 'g'))).toHaveLength(3);
+  });
+
+  it('keeps the parts and the tab order in every placement', () => {
+    const tabOrder = () =>
+      Array.from(rootEl()?.querySelectorAll<HTMLElement>('a[href], button') ?? []).map((n) => n.textContent?.trim());
+    const { unmount } = render(<Phone />);
+    const parts = childParts();
+    const order = tabOrder();
+    unmount();
+    render(<Phone placement="side" />);
+    expect(childParts()).toEqual(parts);
+    expect(tabOrder()).toEqual(order);
+    expect(order.indexOf('Share')).toBeLessThan(order.indexOf('Home'));
+  });
+
+  it('a nested PageShell does not pass its parent placement on', () => {
+    render(
+      <PageShell embedded placement="side" mainId="outer">
+        <PageShell embedded mainId="inner" footer={<TabBar aria-label="Inner"><TabBarItem href="#a" icon="home" label="Home" /></TabBar>}>
+          <p>Inner</p>
+        </PageShell>
+      </PageShell>,
+    );
+    expect(document.querySelector('[data-ds="tab-bar"]')?.hasAttribute('data-placement')).toBe(false);
+  });
+});
+

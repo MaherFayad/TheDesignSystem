@@ -1,0 +1,285 @@
+/*
+ * Refraction on the iOS glass (order F2, proposed). Read after ios.css, in
+ * the same two layers, on the parts of the clear material of order M6: the
+ * tab bar and the lens of its current tab, the navigation bar and sheet
+ * buttons, the menu, the toast banner, the segmented thumb and the held
+ * switch thumb. Only where a style takes the platform's glass (Liquid and
+ * Neutral set --_ios-glass) and only on [data-platform='ios'].
+ *
+ * The platform's glass is thick and clear: the middle shows the content
+ * behind nearly as it is, and a band along the edge bends it, stretches it
+ * toward the rim and brightens it, as the thick edge of a lens does. The M6
+ * material was a tint over a heavy blur. Two tiers replace the blur; the
+ * tint, the rim and the shadow stay as ios.css draws them (orders M6, F1).
+ *
+ * - Tier 2, the first paint and every browser: thick glass without a bend.
+ *   A low blur on the part, and a band along the edge (the part's ::before,
+ *   where the part has one free) with a stronger blur, brightness and
+ *   saturation, cut out with soft gradient masks so there is no line where
+ *   it starts. The navigation and sheet buttons have no free pseudo element
+ *   (::before is the glow, ::after the rim), so they take the low blur only.
+ *   The held switch thumb keeps this band in tier 1 too (see below).
+ * - Tier 1, Chromium only: the real bend. An SVG filter per size of part
+ *   (packages/shared/src/refraction.ts) moves the backdrop by a map that is
+ *   zero in the middle and strong in a band along the edge, and adds a soft
+ *   glare there; the part reads it from --_ios-refraction, then a very low
+ *   blur and the platform's saturation. Only Chromium paints an SVG filter
+ *   in backdrop-filter; Safari parses it and paints nothing, so @supports
+ *   cannot gate it. A probe on the root Theme sets data-refraction="true" on
+ *   the document element once the filters are mounted, and only there.
+ *
+ * Specificity: the generated barrel imports this file before ios.css (the
+ * platform files load in name order), so every rule here starts with :root
+ * and the tier attribute, two steps over the ios.css rule it replaces. The
+ * fallbacks at the end use the same weight, later in this file.
+ *
+ * Fallbacks stay: under reduced transparency, more contrast, forced colors
+ * and without backdrop-filter the parts keep the solid paint of ios.css and
+ * the band is gone. Reduced motion changes nothing: the effect is still.
+ */
+@layer ds.platform {
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    /* ------------------------------------------------------------ tier 2: the first paint and every browser */
+
+    /* Small chrome: a low blur, so the middle stays clear. */
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'],
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
+    }
+
+    /* Panels hold rows of text over the content: a little more blur than the bars, still a third of the M6 material. */
+    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='toast'] {
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
+    }
+
+    /* The lens of the current tab sits on the bar's own glass: it brightens it a little. */
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
+      -webkit-backdrop-filter: brightness(1.04) saturate(1.6);
+      backdrop-filter: brightness(1.04) saturate(1.6);
+    }
+
+    /* ------------------------------------------------------------ tier 1: the bend (Chromium, after the probe) */
+
+    /* The filter from --_ios-refraction (unset until its map is decoded: then the low blur alone), then a very low blur and the saturation. */
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'],
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
+      backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
+    }
+
+    :root[data-refraction='true'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='toast'] {
+      -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
+      backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
+    }
+
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
+      -webkit-backdrop-filter: var(--_ios-refraction,) brightness(1.04) saturate(1.6);
+      backdrop-filter: var(--_ios-refraction,) brightness(1.04) saturate(1.6);
+    }
+  }
+
+  /*
+   * Fallbacks: the parts take back what ios.css gives them there (no backdrop
+   * filter). The weight of these selectors equals the tiers above.
+   */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+    }
+  }
+
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='toast'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='toast'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
+    @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+    }
+  }
+}
+
+/*
+ * The band of tier 2, in ds.chrome so it holds over the styles' recipes:
+ * Liquid hides the tab bar's ::before on ios (its scroll edge fade, dropped
+ * in order M6), which leaves it free for the band. Under the part's content
+ * (z-index below the part, which is a stacking context through its own
+ * backdrop filter or transform) and over its tint. Two soft masks, along
+ * the inline and the block edges, so the band fades in over its width and
+ * follows the corners through border-radius. No stroke and no ring: the rim
+ * is ios.css's (order F1).
+ */
+@layer ds.chrome {
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar']::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='toast']::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: calc(0 - var(--ds-z-raised));
+      border-radius: inherit;
+      background: none;
+      box-shadow: none;
+      opacity: 1;
+      pointer-events: none;
+      animation: none;
+      transition: none;
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.1) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.1) saturate(1.8);
+      -webkit-mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark));
+      -webkit-mask-composite: source-over;
+      mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark));
+      mask-composite: add;
+    }
+
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: calc(0 - var(--ds-z-raised));
+      border-radius: inherit;
+      background: none;
+      box-shadow: none;
+      opacity: 1;
+      pointer-events: none;
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
+      -webkit-mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark));
+      -webkit-mask-composite: source-over;
+      mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark));
+      mask-composite: add;
+    }
+
+    /* The held switch thumb keeps this band in every browser: in Chromium the bend on a thumb that grows and stretches as it is held drew a ragged edge on the track's end, so it is not on the tier 1 list. */
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: calc(0 - var(--ds-z-raised));
+      border-radius: inherit;
+      background: none;
+      box-shadow: none;
+      opacity: 1;
+      pointer-events: none;
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
+      -webkit-mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-s), transparent calc(100% - var(--ds-space-fixed-s)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-s), transparent calc(100% - var(--ds-space-fixed-s)), var(--ds-color-glass-backdrop-dark));
+      -webkit-mask-composite: source-over;
+      mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-s), transparent calc(100% - var(--ds-space-fixed-s)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-s), transparent calc(100% - var(--ds-space-fixed-s)), var(--ds-color-glass-backdrop-dark));
+      mask-composite: add;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
+        display: none;
+      }
+    }
+  }
+
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='toast']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
+      display: none;
+    }
+  }
+
+  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
+    @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
+        display: none;
+      }
+    }
+  }
+}

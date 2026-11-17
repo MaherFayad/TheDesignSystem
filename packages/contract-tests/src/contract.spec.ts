@@ -7,6 +7,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { applyAndCheck, duoProfile } from './fold';
 import {
   anatomyFindings,
   axeMatrix,
@@ -115,6 +116,14 @@ async function open(page: Page, kebab: string, axes: Axes): Promise<void> {
   await page.evaluate(async () => {
     await document.fonts.ready;
   });
+  // A device profile (run.ts --device, one project per profile): apply its
+  // safe area, posture and fold after the navigation, and fail loudly when
+  // one did not take effect.
+  const duo = duoProfile(test.info().project.name);
+  if (duo) {
+    const { findings } = await applyAndCheck(page, duo);
+    expect(findings, `device profile ${duo.name} on ${path}`).toEqual([]);
+  }
 }
 
 /** True when the component opens and closes and the demo has a trigger for it. */

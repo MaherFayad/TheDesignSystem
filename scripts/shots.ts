@@ -1,6 +1,7 @@
 // npm run shots -- [--framework react|angular] [--url http://...] [--component a,b]
 //                  [--style a,b] [--scheme a,b] [--out dir] [--work dir]
 //                  [--keep subset|all|none] [--ready] [--no-verify] [--workers n]
+//                  [--platform web|ios|android|macos] [--device duo-outer]
 // npm run shots -- --compare react angular
 //
 // The screenshot matrix. For every component with a gallery route it
@@ -32,6 +33,14 @@
 // differs and a table to docs/reports/shots/matrix/compare-A-B/. A framework without
 // captures is captured first; a gallery that is missing or does not start
 // is a skip with a note, not a failure.
+//
+// --platform adds the platform to every URL. --device takes one device
+// profile of packages/contract-tests/src/fold.ts (the folding iPhone, order
+// DU4): the viewport, user agent and touch of the profile at device scale
+// factor 1, and its safe area, posture and fold through the DevTools protocol
+// after each load; a shot whose overrides did not take effect fails. The
+// matrix then goes to docs/reports/shots/matrix/<framework>-<device>/ and the
+// work folder <framework>-<device>, so the base matrix is never touched.
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -40,6 +49,7 @@ import { chromium, type Browser, type Page } from '@playwright/test';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { DENSITIES, demoPath, discoverStyles, hasOpenChecks, isControl, kebabCase, loadManifests, openedKebab, triggerSelector, type Axes, type Manifest } from '../packages/contract-tests/src/lib';
+import { applyAndCheck, duoContextOptions, parseDevices, type DuoProfile } from '../packages/contract-tests/src/fold';
 import { freshOpen, markSeen } from '../packages/contract-tests/src/page';
 import { galleryExists, launchGallery, probeRoutes, type Gallery } from '../packages/contract-tests/src/server';
 
@@ -61,6 +71,10 @@ interface Args {
   verify: boolean;
   workers: number;
   compare?: [string, string];
+  /** Added to every URL. */
+  platform?: string;
+  /** One device profile (fold.ts): its viewport, user agent, touch, safe area, posture and fold. */
+  device?: DuoProfile;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -88,8 +102,19 @@ function parseArgs(argv: string[]): Args {
     else if (flag === '--no-verify') out.verify = false;
     else if (flag === '--workers') out.workers = Math.max(1, Number(value()) || 1);
     else if (flag === '--compare') out.compare = [argv[++i] ?? '', argv[++i] ?? ''];
+    else if (flag === '--platform') out.platform = value();
+    else if (flag === '--device') {
+      try {
+        const list = parseDevices(value());
+        if (list.length !== 1) throw new Error('--device takes one profile per shots run');
+        out.device = list[0];
+      } catch (err) {
+        console.error(err instanceof Error ? err.message : String(err));
+        process.exit(2);
+      }
+    }
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run shots -- [--framework react|angular] [--url URL] [--component a,b] [--style a,b] [--scheme a,b] [--out DIR] [--work DIR] [--keep subset|all|none] [--ready] [--no-verify] [--workers N]');
+      console.log('npm run shots -- [--framework react|angular] [--url URL] [--component a,b] [--style a,b] [--scheme a,b] [--out DIR] [--work DIR] [--keep subset|all|none] [--ready] [--no-verify] [--workers N] [--platform ios] [--device duo-outer]');
       console.log('npm run shots -- --compare react angular');
       process.exit(0);
     } else {
@@ -108,8 +133,8 @@ function parseArgs(argv: string[]): Args {
 }
 
 const matrixRoot = join(repo, 'docs/reports/shots/matrix');
-const defaultOut = (framework: string) => join(matrixRoot, framework);
-const defaultWork = (framework: string) => join(repo, 'node_modules/.cache/ds-shots', framework);
+const defaultOut = (framework: string, device?: DuoProfile) => join(matrixRoot, device ? `${framework}-${device.name}` : framework);
+const defaultWork = (framework: string, device?: DuoProfile) => join(repo, 'node_modules/.cache/ds-shots', device ? `${framework}-${device.name}` : framework);
 
 /**
  * The subset whose images are committed, five per component: the base shot
@@ -250,13 +275,17 @@ async function openTrigger(page: Page, selector: string): Promise<void> {
 }
 
 /** One capture in a fresh context. Returns the PNG bytes, or throws. */
-async function capture(browser: Browser, url: string, s: Shot, trigger: string, opens: string): Promise<Buffer> {
-  const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+async function capture(browser: Browser, url: string, s: Shot, trigger: string, opens: string, on: { platform?: string; device?: DuoProfile } = {}): Promise<Buffer> {
+  const context = await browser.newContext(on.device ? { ...duoContextOptions(on.device, { deviceScaleFactor: 1 }), reducedMotion: 'reduce' } : { viewport: VIEWPORT, deviceScaleFactor: 1, reducedMotion: 'reduce' });
   try {
     const page = await context.newPage();
-    const axes: Axes = { style: s.style, scheme: s.scheme, density: s.density, dir: s.dir, lang: s.lang, case: 'variants' };
+    const axes: Axes = { style: s.style, scheme: s.scheme, density: s.density, platform: on.platform, dir: s.dir, lang: s.lang, case: 'variants' };
     await page.goto(`${url}${demoPath(s.kebab, axes)}`);
     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
+    if (on.device) {
+      const { findings } = await applyAndCheck(page, on.device);
+      if (findings.length) throw new Error(`device profile ${on.device.name}: ${findings.join('; ')}`);
+    }
     await settle(page);
     if (s.open) {
       // The first visible trigger, in the variants case when it has one. A
@@ -351,19 +380,22 @@ interface Manifesto {
   framework: string;
   viewport: typeof VIEWPORT;
   deviceScaleFactor: number;
+  platform?: string;
+  /** The device profile name, when the run had --device. */
+  device?: string;
   case: string;
   shots: Captured[];
 }
 
-function writeIndex(out: string, framework: string, shots: Captured[], work: string): void {
+function writeIndex(out: string, framework: string, shots: Captured[], work: string, on: { platform?: string; device?: DuoProfile } = {}): void {
   const byComponent = new Map<string, Captured[]>();
   for (const s of shots) byComponent.set(s.component, [...(byComponent.get(s.component) ?? []), s]);
   const total = shots.reduce((n, s) => n + s.bytes, 0);
   const unstable = shots.filter((s) => s.stable === false);
   const lines: string[] = [
-    `# Screenshot matrix, ${framework}`,
+    `# Screenshot matrix, ${framework}${on.device ? `, ${on.device.name}` : ''}`,
     '',
-    'Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.',
+    `Made by \`npm run shots\`. Each shot is the \`variants\` case at \`chrome=0\`, ${on.device ? `${on.device.viewport.width} by ${on.device.viewport.height} viewport of the device profile ${on.device.name} (safe area, posture and fold applied in Chromium)` : `${VIEWPORT.width} by ${VIEWPORT.height} viewport`}${on.platform ? `, platform ${on.platform}` : ''}, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: \`<component>/<style>-<scheme>-<dir>[-<density>][-open].png\`. Density is default unless named.`,
     '',
     `${shots.length} shots, ${byComponent.size} components, ${mb(total)} after lossless recompression. Stable (two captures byte equal): ${shots.filter((s) => s.stable === true).length}; unstable: ${unstable.length}; not verified: ${shots.filter((s) => s.stable === null).length}.`,
     '',
@@ -407,6 +439,7 @@ function writeIndex(out: string, framework: string, shots: Captured[], work: str
 /** Captures the matrix for one framework. Returns the exit code, or 'skip' when the gallery is not there. */
 async function runCapture(args: Args, framework: string, out: string): Promise<number | 'skip'> {
   const filtered = args.components.length > 0 || args.styles.length > 0 || args.schemes.length > 0;
+  const on = { platform: args.platform, device: args.device };
   if (!args.url && !galleryExists(repo, framework)) {
     console.log(`${framework} gallery: not available. ${relative(repo, join(repo, framework === 'react' ? 'apps/gallery-react' : 'apps/gallery-angular'))} has no package.json, so no shots for ${framework}.`);
     return 'skip';
@@ -464,7 +497,7 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
     console.log(`${framework}: ${components.length} components, ${styles.map((s) => `${s.id} (${s.schemes.join(', ')})`).join(', ')}; ${shots.length} shots${args.verify ? ', each taken twice' : ''}.`);
     console.log(`Controls (size prop on the control scale, focusable, no open state): ${components.filter(isControl).map((m) => m.name).join(', ') || 'none'}. Overlays: ${[...overlays].map((k) => (opensMap.get(k) !== k ? `${k} (opens ${opensMap.get(k)})` : k)).join(', ') || 'none'}.`);
 
-    const work = args.work ?? defaultWork(framework);
+    const work = args.work ?? defaultWork(framework, args.device);
     mkdirSync(out, { recursive: true });
     mkdirSync(work, { recursive: true });
     const results: Captured[] = [];
@@ -476,7 +509,7 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
       const trigger = triggers.get(s.kebab) ?? '[data-demo-trigger]';
       const opens = opensMap.get(s.kebab) ?? s.kebab;
       try {
-        const first = await capture(browser, url, s, trigger, opens);
+        const first = await capture(browser, url, s, trigger, opens, on);
         let stable: boolean | null = null;
         let note: string | undefined;
         const { bytes, codec } = await recompress(first);
@@ -484,7 +517,7 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
           // Chromium's PNG encoder can change bytes for the same pixels, so
           // stability is judged on the recompressed bytes, which follow the
           // pixels only.
-          const second = await capture(browser, url, s, trigger, opens);
+          const second = await capture(browser, url, s, trigger, opens, on);
           stable = first.equals(second) || bytes.equals((await recompress(second)).bytes);
           if (!stable) {
             const d = pngDiff(first, second);
@@ -527,9 +560,9 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
         if (statSync(p).isDirectory() && readdirSync(p).length === 0) rmSync(p, { recursive: true });
       }
     }
-    const record: Manifesto = { framework, viewport: VIEWPORT, deviceScaleFactor: 1, case: 'variants', shots: all };
+    const record: Manifesto = { framework, viewport: args.device ? { ...args.device.viewport } : VIEWPORT, deviceScaleFactor: 1, ...(on.platform ? { platform: on.platform } : {}), ...(args.device ? { device: args.device.name } : {}), case: 'variants', shots: all };
     writeFileSync(recordFile, `${JSON.stringify(record, null, 2)}\n`);
-    writeIndex(out, framework, all, work);
+    writeIndex(out, framework, all, work, on);
 
     const unstable = results.filter((r) => r.stable === false);
     const pngBytes = results.reduce((n, r) => n + r.bytes, 0);
@@ -610,7 +643,7 @@ async function runCompare(args: Args, a: string, b: string): Promise<number> {
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   if (args.compare) return runCompare(args, args.compare[0], args.compare[1]);
-  const code = await runCapture(args, args.framework, args.out ?? defaultOut(args.framework));
+  const code = await runCapture(args, args.framework, args.out ?? defaultOut(args.framework, args.device));
   return code === 'skip' ? 0 : code;
 }
 

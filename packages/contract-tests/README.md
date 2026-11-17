@@ -17,6 +17,8 @@ npm run contract -- --framework react --style liquid --styles liquid   # the who
 npm run contract -- --framework react --platform ios --component Button,Switch --tag ios-controls
 npm run contract -- --framework react --platform android --grep "target size" --target-min 48 --tag android-min48
 npm run contract -- --framework react --component Slider,RangeSlider --grep "sideways" --tag reflow   # the reflow matrix only
+npm run contract -- --framework react --platform ios --component TabBar --device duo-outer   # the folding iPhone, outer screen in Safari
+npm run contract -- --framework react --platform ios --component TabBar --device duo         # every folding iPhone profile
 ```
 
 Options that narrow or move a run (each sets an environment variable the spec reads):
@@ -29,9 +31,10 @@ Options that narrow or move a run (each sets an environment variable the spec re
 | `--target-min <px>` | `DS_TARGET_MIN` | the minimum target size, default 24 (WCAG 2.5.8); 44 and 48 are the platform guides, not WCAG |
 | `--grep <regex>` | (playwright `--grep`) | runs only the tests whose title matches |
 | `--tag <name>` | | the report name, `docs/reports/contract-<framework>-<name>.json` |
+| `--device <names>` | `DS_DEVICE` | device profiles of `src/fold.ts`, comma list, or `duo` for all; one Playwright project per profile (below) |
 
-A run with any of `--style`, `--styles`, `--platform`, `--target-min` or
-`--tag` writes `docs/reports/contract-<framework>-<suffix>.json` and leaves
+A run with any of `--style`, `--styles`, `--platform`, `--target-min`,
+`--device` or `--tag` writes `docs/reports/contract-<framework>-<suffix>.json` and leaves
 the base report alone; with `--tag`, a `--component` run writes there too.
 
 `run.ts` starts the gallery (React: `vite` in `apps/gallery-react` with `PORT`
@@ -59,9 +62,59 @@ Environment the spec reads: `DS_GALLERY_URL`, `DS_FRAMEWORK` (default
 `scripts/shots.ts` and `scripts/a11y.ts` share it.
 
 Unit tests for the helpers: `src/lib.test.ts` and `src/page.test.ts` run in
-Vitest with `npm run check`. `src/reflow.test.ts` runs the reflow scan in
+Vitest with `npm run check`. `src/fold.test.ts` runs every device profile in
+Chromium and reads the size, safe areas, posture and fold back. `src/reflow.test.ts` runs the reflow scan in
 Chromium on two fixtures in `packages/lint/fixtures/reflow/`, one that fits
 320px and one that does not. The Playwright suite is not part of check.
+
+## Device profiles: the folding iPhone
+
+Order DU4 of `docs/plan/reset-duo.md`. `src/fold.ts` holds eleven profiles
+with the sizes of the plan's facts table, each on the iPhone 15 Pro
+descriptor (user agent, touch, mobile) at device scale factor 3:
+
+| Name | Size | Safe area (top, right, bottom, left) | Fold, posture |
+| --- | --- | --- | --- |
+| `duo-outer-portrait-safari` (alias `duo-outer`) | 382 by 580 | 0 | none |
+| `duo-outer-landscape-safari` | 594 by 368 | 0 | none |
+| `duo-inner-portrait-safari` (alias `duo-inner`) | 669 by 867 | 0 | none |
+| `duo-inner-landscape-safari` | 951 by 585 | 0 | none |
+| `duo-inner-split-safari` | 385 by 571 | 0 | none |
+| `duo-outer-portrait-full` | 466 by 678 | 0, 84, 0, 0 | none |
+| `duo-outer-landscape-full` | 678 by 466 | 0, 84, 0, 0 | none |
+| `duo-inner-portrait-full` | 669 by 951 | 84, 0, 95, 0 | none |
+| `duo-inner-landscape-full` | 951 by 669 | 0, 84, 0, 0 | none |
+| `duo-inner-portrait-folded` | 669 by 951 | 84, 0, 95, 0 | band 40 at 455 across, folded |
+| `duo-inner-landscape-folded` (alias `duo-folded`) | 951 by 669 | 0, 84, 0, 0 | band 40 at 455 down, folded |
+
+Safari heights are the small viewport (toolbars shown). Safari safe areas are
+0 because Safari keeps the page out of its column; the real values are not
+published. Full screen safe areas and the fold band come from the vendor's
+community kit and are not verified on a device.
+
+With `--device`, every test runs once per profile (the project name is the
+profile), `open()` applies the profile after each load and fails when a value
+did not take effect, and `src/duo.spec.ts` adds: the profile check on the
+gallery page, reflow at the profile's size (every style, en ltr and ar rtl,
+platform ios unless `--platform` says otherwise; at 382 wide with
+`duo-outer`), and the side column checks, skipped by name until DU2 switches
+them on. Without `--device`, `duo.spec.ts` defines no test. `npm run shots --
+--device <one profile> [--platform ios]` takes the same names.
+
+How it is emulated in Chromium (`applyDuo`, proven by `src/fold.test.ts`):
+
+| What | Protocol command | Result in Chromium 153 |
+| --- | --- | --- |
+| Safe area | `Emulation.setSafeAreaInsetsOverride` | works; survives navigation |
+| Posture | `Emulation.setDevicePostureOverride` | works; `navigator.devicePosture` resets on navigation, so it is applied after each load |
+| Fold | `Emulation.setDisplayFeaturesOverride` | accepted, no effect; not used |
+| Fold | `Emulation.setDeviceMetricsOverride` with `displayFeature` | works; used |
+
+The protocol session stays open for the page's life: a detach clears the
+fold and the posture. `standInDuo` is a stand in for an engine without the
+protocol (WebKit): `data-ds-test-fold`, `data-ds-test-posture`,
+`--ds-test-fold-offset`, `--ds-test-fold-size` on the html element and inline
+`--ds-inset-safe-*` on every `[data-style]` element. It is not emulation.
 
 ## Which components
 

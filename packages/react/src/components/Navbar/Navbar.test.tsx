@@ -1,8 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { AnchorHTMLAttributes } from 'react';
+import { renderToString } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { Theme } from '../../theme';
+import { PageShell } from '../PageShell';
 import NavbarDemo from './Navbar.demo';
 import { Navbar, type NavbarItem } from './index';
 
@@ -171,3 +173,57 @@ describe('Navbar', () => {
     expect(container.querySelector('[title]')).toBeNull();
   });
 });
+
+// Order DU1 (docs/plan/reset-duo.md). WCAG 2.2 covered here: 2.4.3 Focus
+// order (the same DOM and tab order in every placement: brand, links, end
+// actions, then the menu button, the column's top to bottom after the top
+// row), 2.1.1 Keyboard (the links keep their row keys), 1.3.4 Orientation
+// (no placement removes a part). Target size (2.5.8) and focus not obscured
+// (2.4.11) are drawn by the CSS of order DU2.
+describe('Navbar placement', () => {
+  const placed = (placement?: 'auto' | 'bottom' | 'side') => (
+    <Navbar label="Main" brand={<a href="#home">Brand</a>} items={items} end={<a href="#account">Account</a>} placement={placement} />
+  );
+
+  it('stamps no data-placement for auto, in the client and the server render', () => {
+    const { container } = render(placed());
+    expect(root(container).hasAttribute('data-placement')).toBe(false);
+    expect(renderToString(placed('auto'))).not.toContain('data-placement');
+  });
+
+  it.each(['bottom', 'side'] as const)('stamps data-placement="%s", and inherits it from PageShell', (placement) => {
+    const { container, unmount } = render(placed(placement));
+    expect(root(container).getAttribute('data-placement')).toBe(placement);
+    unmount();
+    const shell = render(
+      <PageShell embedded placement={placement} header={placed()}>
+        <p>Content</p>
+      </PageShell>,
+    );
+    expect(root(shell.container).getAttribute('data-placement')).toBe(placement);
+  });
+
+  it('its own placement wins over the PageShell', () => {
+    const { container } = render(
+      <PageShell embedded placement="side" header={placed('auto')}>
+        <p>Content</p>
+      </PageShell>,
+    );
+    expect(root(container).hasAttribute('data-placement')).toBe(false);
+  });
+
+  it('keeps the parts and the tab order in every placement; the links stay a horizontal row', () => {
+    const order = (el: HTMLElement) =>
+      Array.from(el.querySelectorAll<HTMLElement>('a[href], button')).map((n) => n.textContent?.trim() || n.getAttribute('aria-label'));
+    const { container, unmount } = render(placed('auto'));
+    const auto = order(root(container));
+    const parts = Array.from(root(container).children).map((c) => c.getAttribute('data-part'));
+    unmount();
+    const side = render(placed('side'));
+    expect(order(root(side.container))).toEqual(auto);
+    expect(Array.from(root(side.container).children).map((c) => c.getAttribute('data-part'))).toEqual(parts);
+    expect(root(side.container).getAttribute('data-orientation')).toBe('horizontal');
+    expect(auto.indexOf('Account')).toBeGreaterThan(auto.indexOf('Pricing'));
+  });
+});
+

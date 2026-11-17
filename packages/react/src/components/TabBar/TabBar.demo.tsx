@@ -2,6 +2,7 @@ import type { IconName } from '@the-system/icons';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { TabBar, TabBarItem, type TabBarSize } from './index';
+import type { TabBarPlacement } from './TabBar';
 
 interface Dest {
   icon: IconName;
@@ -21,10 +22,22 @@ const dests: Dest[] = [
 
 const sizes: TabBarSize[] = ['md', 'lg'];
 
-function AppBar({ lang = 'en', size, count = 5, activeIndex = 0 }: { lang?: 'en' | 'ar'; size?: TabBarSize; count?: number; activeIndex?: number }) {
+function AppBar({
+  lang = 'en',
+  size,
+  count = 5,
+  activeIndex = 0,
+  placement,
+}: {
+  lang?: 'en' | 'ar';
+  size?: TabBarSize;
+  count?: number;
+  activeIndex?: number;
+  placement?: TabBarPlacement;
+}) {
   return (
     <div style={{ inlineSize: '100%', maxInlineSize: 'calc(var(--ds-menu-width-min) * 2)' }}>
-      <TabBar aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'} size={size}>
+      <TabBar aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'} size={size} placement={placement}>
         {dests.slice(0, count).map((d, i) => (
           <TabBarItem key={d.en} href={`#${d.en.toLowerCase()}`} icon={d.icon} label={d[lang]} badge={d.badge} active={i === activeIndex} />
         ))}
@@ -45,6 +58,9 @@ export default function TabBarDemo() {
         <DemoRow label="Badge on the current item">
           <AppBar activeIndex={2} />
         </DemoRow>
+        <DemoRow label="Placement side: a column at the inline end on ios, arrow keys up and down">
+          <AppBar size="lg" placement="side" />
+        </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           {sizes.map((size) => (
@@ -52,6 +68,9 @@ export default function TabBarDemo() {
               <AppBar lang="ar" size={size} />
             </DemoRow>
           ))}
+          <DemoRow label="عمود جانبي">
+            <AppBar lang="ar" size="lg" placement="side" />
+          </DemoRow>
         </Theme>
       </DemoCase>
 

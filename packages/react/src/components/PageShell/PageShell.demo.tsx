@@ -4,6 +4,9 @@ import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { sample } from '../../demo';
 import { Button } from '../Button';
+import { IconButton } from '../IconButton';
+import { Navbar } from '../Navbar';
+import { TabBar, TabBarItem } from '../TabBar';
 import { Rail, RailItem } from '../Rail';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
 import { PageShell, usePageShell, type PageShellProps, type PageShellSidebar } from './index';
@@ -85,6 +88,51 @@ function Shell({ id, sidebar, ...props }: Omit<PageShellProps, 'mainId' | 'embed
   );
 }
 
+const phoneTabs: Record<'en' | 'ar', [IconName, string][]> = {
+  en: [
+    ['home', 'Home'],
+    ['inbox', 'Inbox'],
+    ['user', 'Profile'],
+  ],
+  ar: [
+    ['home', 'الرئيسية'],
+    ['inbox', 'الوارد'],
+    ['user', 'الحساب'],
+  ],
+};
+
+/** A phone shell: a Navbar with actions on top, a TabBar in the footer. placement side puts both in the column on ios. */
+function PhoneShell({ id, lang }: { id: string; lang: 'en' | 'ar' }) {
+  const ar = lang === 'ar';
+  return (
+    <Frame>
+      <PageShell
+        embedded
+        mainId={id}
+        placement="side"
+        header={
+          <Navbar
+            label={ar ? 'اللوحة' : 'Board'}
+            brand={<strong>{ar ? 'إطلاق الربيع' : 'Spring launch'}</strong>}
+            items={[]}
+            end={<IconButton icon="plus" size="lg" label={ar ? 'إضافة بطاقة' : 'Add a card'} />}
+          />
+        }
+        footer={
+          <TabBar aria-label={ar ? 'أقسام التطبيق' : 'Sections'} size="lg">
+            {phoneTabs[lang].map(([icon, text], i) => (
+              <TabBarItem key={text} href={`#${id}-${i}`} icon={icon} label={text} active={i === 0} />
+            ))}
+          </TabBar>
+        }
+      >
+        <h3>{ar ? 'البطاقات' : 'Cards'}</h3>
+        <p>{ar ? 'الأزرار والتبويبات في عمود جنب المحتوى.' : 'The actions and the tabs sit in a column beside the content.'}</p>
+      </PageShell>
+    </Frame>
+  );
+}
+
 const boards = ['Spring launch', 'Brand refresh', 'Mobile app', 'Annual report', 'Hiring plan', 'Customer research'];
 
 export default function PageShellDemo() {
@@ -120,6 +168,11 @@ export default function PageShellDemo() {
           <h3>Home</h3>
           <p>A rail keeps the page wide.</p>
         </Shell>
+        <p data-demo="label">Placement side: the Navbar actions and the TabBar in a column at the inline end on ios</p>
+        <PhoneShell id="shell-side" lang="en" />
+        <Theme lang="ar" dir="rtl">
+          <PhoneShell id="shell-side-ar" lang="ar" />
+        </Theme>
         <p data-demo="label">Arabic</p>
         <Theme lang="ar" dir="rtl">
           <Frame>

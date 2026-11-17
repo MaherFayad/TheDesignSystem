@@ -12,6 +12,8 @@ export * from './otp';
 export * from './pagination';
 export * from './phone';
 export * from './platform';
+export * from './refraction';
+export * from './refraction-dom';
 export * from './resize';
 export * from './scrub';
 export * from './shortcut';

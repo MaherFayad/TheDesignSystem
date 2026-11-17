@@ -7,6 +7,8 @@ import { routes } from './routes.gen';
 const InteractionsPage = lazy(() => import('./Interactions'));
 const PlatformsPage = lazy(() => import('./Platforms').then((m) => ({ default: m.PlatformsPage })));
 const PlatformScreen = lazy(() => import('./Platforms').then((m) => ({ default: m.PlatformScreen })));
+const DuoPage = lazy(() => import('./Duo').then((m) => ({ default: m.DuoPage })));
+const DuoScreen = lazy(() => import('./Duo').then((m) => ({ default: m.DuoScreen })));
 
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
@@ -56,6 +58,8 @@ export function App() {
   else if (path === '/interactions') page = <InteractionsPage />;
   else if (path === '/platforms') page = <PlatformsPage params={params} />;
   else if (path === '/platforms/screen') page = <PlatformScreen params={params} />;
+  else if (path === '/platforms/duo') page = <DuoPage params={params} />;
+  else if (path === '/platforms/duo/screen') page = <DuoScreen params={params} />;
   else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
@@ -103,6 +107,7 @@ function Shell({ params, title, platform }: { params: URLSearchParams; title: st
         <Link href={`/all${query}`}>Every demo</Link>
         <Link href={`/interactions${query}`}>Interactions</Link>
         <Link href={`/platforms${query}`}>Platforms</Link>
+        <Link href={`/platforms/duo${query}`}>Foldable iPhone</Link>
         {title && <span data-gallery="current">{title}</span>}
       </nav>
       <form data-gallery="axes" aria-label="Theme axes" onSubmit={(e) => e.preventDefault()}>
