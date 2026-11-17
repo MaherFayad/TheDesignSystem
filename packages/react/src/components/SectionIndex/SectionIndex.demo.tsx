@@ -53,10 +53,12 @@ interface ContactsProps {
   height: string;
   label: string;
   collapse?: 'auto' | 'never';
+  /** Rows that open a contact. Off in the long lists, which keeps the page light: the scroller is then the Tab stop. */
+  linked?: boolean;
 }
 
 /** A sectioned contact list in a scrolling frame with the index at its inline end. */
-function Contacts({ id, people, locale, height, label, collapse }: ContactsProps) {
+function Contacts({ id, people, locale, height, label, collapse, linked = false }: ContactsProps) {
   const groups = useMemo(() => groupByInitial(people, (n) => n, locale), [people, locale]);
   const sections = useMemo<SectionIndexSection[]>(() => {
     const ids = new Map(groups.map((g, i) => [g.key, `${id}-${i}`]));
@@ -64,12 +66,13 @@ function Contacts({ id, people, locale, height, label, collapse }: ContactsProps
   }, [groups, id, locale]);
   return (
     <div style={frame(height)}>
-      <div style={scroller}>
+      {/* A scroller with no links inside is a Tab stop of its own, so keyboard people can scroll it (axe scrollable-region-focusable). */}
+      <div style={scroller} tabIndex={linked ? undefined : 0} role={linked ? undefined : 'region'} aria-label={linked ? undefined : label}>
         <List variant="inset" aria-label={label}>
           {groups.map((g, i) => (
             <ListSection key={g.key} id={`${id}-${i}`} header={g.key}>
               {g.items.map((name, k) => (
-                <ListItem key={name} title={name} href={`#${id}-${i}-${k}`} />
+                <ListItem key={name} title={name} href={linked ? `#${id}-${i}-${k}` : undefined} />
               ))}
             </ListSection>
           ))}
@@ -85,24 +88,24 @@ export default function SectionIndexDemo() {
     <DemoPage>
       <DemoCase id="variants" title="Collapse auto and never in a column 20rem tall">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-space-l)' }}>
-          <Contacts id="si-auto" people={contactsEn.slice(0, 60)} locale="en" height="20rem" label="Contacts, collapse auto" />
-          <Contacts id="si-never" people={contactsEn.slice(0, 60)} locale="en" height="20rem" label="Contacts, collapse never" collapse="never" />
+          <Contacts id="si-auto" people={contactsEn.slice(0, 24)} locale="en" height="20rem" label="Contacts, collapse auto" />
+          <Contacts id="si-never" people={contactsEn.slice(0, 24)} locale="en" height="20rem" label="Contacts, collapse never" collapse="never" />
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="One section: every key goes to it">
-        <Contacts id="si-one" people={['Sara Alqahtani', 'Saad Alharbi', 'Sami Alotaibi']} locale="en" height="40rem" label="Contacts with one section" />
+        <Contacts id="si-one" people={['Sara Alqahtani', 'Saad Alharbi', 'Sami Alotaibi']} locale="en" height="40rem" label="Contacts with one section" linked />
       </DemoCase>
 
-      <DemoCase id="many" title="200 contacts with the index beside them">
+      <DemoCase id="many" title="Contacts: 200 rows with the index beside them">
         <Contacts id="si-many" people={contactsEn} locale="en" height="calc(100svh - 8rem)" label="Contacts" />
       </DemoCase>
 
-      <DemoCase id="too-many" title="The same 200 contacts in a short frame: keys collapse into dots">
-        <Contacts id="si-short" people={contactsEn} locale="en" height="22rem" label="Contacts in a short frame" />
+      <DemoCase id="too-many" title="80 contacts in a short frame: keys collapse into dots">
+        <Contacts id="si-short" people={contactsEn.slice(0, 80)} locale="en" height="22rem" label="Contacts in a short frame" />
       </DemoCase>
 
-      <DemoCase id="long-arabic" title="200 contacts in Arabic, the index at the left" lang="ar">
+      <DemoCase id="long-arabic" title="Arabic contacts: 200 rows, the index at the left" lang="ar">
         <Contacts id="si-ar" people={contactsAr} locale="ar" height="calc(100svh - 8rem)" label="جهات الاتصال" />
       </DemoCase>
     </DemoPage>

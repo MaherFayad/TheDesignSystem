@@ -162,6 +162,7 @@ describe('SectionIndex', () => {
     expect(keys.slice(0, 3)).toEqual(['ا', 'ب', 'ت']);
     expect(keys[28]).toBe('#');
     // 200 contacts, every one a row in a section.
-    expect(container.querySelectorAll('[data-demo-case="many"] [data-part="item"][data-linked]')).toHaveLength(200);
+    expect(container.querySelectorAll('[data-demo-case="many"] li[data-part="item"]')).toHaveLength(200);
+    expect(container.querySelectorAll('[data-demo-case="long-arabic"] li[data-part="item"]')).toHaveLength(200);
   });
 });

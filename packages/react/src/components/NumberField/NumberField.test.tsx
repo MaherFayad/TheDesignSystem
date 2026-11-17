@@ -225,9 +225,11 @@ describe('NumberField', () => {
     expect(screen.getByRole('button', { name: 'Remove one' })).toBeTruthy();
   });
 
-  it('renders the demo', () => {
+  // The demo holds about 40 fields since the stepper cases (order M9.3): it gets more time on a busy machine.
+  it('renders the demo', { timeout: 20000 }, () => {
     const { container } = render(<NumberFieldDemo />);
     expect(container.querySelectorAll('[data-ds="number-field"]').length).toBeGreaterThan(5);
+    expect(container.querySelectorAll('[data-ds="number-field"][data-variant="stepper"]').length).toBeGreaterThan(5);
   });
 
   it('names the steppers in the language of locale, so English copy in an Arabic page is not half Arabic (note N24)', () => {

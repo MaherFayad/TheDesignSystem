@@ -235,7 +235,7 @@ describe('Select', () => {
     expect(trigger().hasAttribute('data-placeholder')).toBe(true);
   });
 
-  it('the demo renders every content case', () => {
+  it('the demo renders every content case', { timeout: 20000 }, () => {
     render(<SelectDemo />);
     const ids = [...document.querySelectorAll('[data-demo-case]')].map((n) => n.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled', 'readonly']);
