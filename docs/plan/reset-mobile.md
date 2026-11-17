@@ -112,3 +112,48 @@ Three small orders, disjoint files. Agents do not commit.
 Known and left alone: the Angular test suite has timing tests that fail on
 some runs with no Angular change (dropdown menu exit copy, switch drag). Not
 part of the mobile fixes.
+
+## M6, iOS glass material (owner: "I don't see the glass effect in iOS at all but outlines")
+
+Cause, measured by the lead: the glass tokens the iOS chrome uses are 84 to
+94 percent opaque (`material.glass` 0.84, `material.glass-strong` 0.92 in
+Liquid light), so the blur behind them cannot be seen, and the demo screen
+has nothing coloured behind the bars. What is left to the eye is the border.
+
+Owner agent: ds-style. Scope: `packages/css/src/platform/ios.css`, the Liquid
+and Neutral recipes that repaint iOS chrome, the iOS block of
+`apps/gallery-react/src/platforms.css` and the gallery's iOS phone screen
+content. No new token names; build the material from existing tokens with
+`color-mix()` and `calc()`.
+
+- **Material.** On `ios` in Liquid and Neutral, the tab bar, its lens, the
+  navigation and sheet buttons, the menu, the toast banner, the segmented
+  thumb and the held switch lens are clear glass: a low tint (start near 30
+  percent of `material.glass-solid` in light, lower in dark), a real
+  backdrop blur with saturation, a bright rim on the upper edge and a faint
+  dark rim on the lower edge drawn with inset shadows or a masked gradient
+  ring (not a flat one colour border), a soft inner glow, and a soft drop
+  shadow. The lens of the current tab is brighter than the bar.
+- **Three strengths.** Build `clear`, `regular` and `frosted` as one private
+  property on the iOS root so the owner can pick; ship the one closest to the
+  reference as the default.
+- **Content behind.** The gallery iOS phone screen gets our own coloured
+  content that scrolls under the bars (generated gradients and shapes, no
+  third party art), so the glass has something to show.
+- **Fallbacks stay.** `prefers-reduced-transparency`, `prefers-contrast:
+  more`, forced colours and no backdrop filter support keep the solid
+  material.
+- **Contrast.** Labels on the glass meet 4.5:1 (WCAG 2.2 1.4.3) and glyphs
+  3:1 (1.4.11) over the lightest and the darkest content of the demo; measure
+  from pixels, not from tokens. If clear glass cannot meet it, raise the tint
+  only as far as needed and say so.
+- **Refraction.** An SVG displacement filter in `backdrop-filter` works in
+  Chromium and not in Safari on iOS. Do not ship it as the look; note it as
+  an optional later step.
+
+Acceptance: sheets with the reference left and ours right over coloured
+content, light and dark, at 1x and at 3x on the tab bar, the navigation
+buttons, the menu and the held switch; the three strengths side by side;
+`platform=web` and `platform=android` unchanged by computed style;
+`npm run contract -- --framework react --platform ios` for TabBar, Navbar,
+DropdownMenu, Toast, Switch, SegmentedControl, Sheet; `npm run check`.
