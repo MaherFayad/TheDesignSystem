@@ -77,6 +77,7 @@ export * from './components/ScrollArea/index';
 export * from './components/ScrubInput/index';
 export * from './components/SearchField/index';
 export * from './components/Section/index';
+export * from './components/SectionIndex/index';
 export * from './components/SegmentedControl/index';
 export * from './components/Select/index';
 export * from './components/Separator/index';

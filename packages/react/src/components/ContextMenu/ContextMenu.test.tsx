@@ -10,6 +10,8 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuLabel,
+  ContextMenuQuickAction,
+  ContextMenuQuickActions,
   ContextMenuSeparator,
   ContextMenuSub,
   ContextMenuSubContent,
@@ -244,11 +246,11 @@ describe('ContextMenu', () => {
     const user = userEvent.setup();
     render(<ContextMenuDemo />);
     const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'quick-actions', 'disabled']);
     expect(document.querySelectorAll('[data-demo-case="variants"] [data-demo-trigger]')).toHaveLength(3);
     const labels = (root: Element) =>
       Array.from(root.querySelectorAll('[data-part="text"], [data-part="label"]')).map((el) => el.textContent);
-    for (const id of ['variants', 'many']) {
+    for (const id of ['variants', 'many', 'quick-actions']) {
       const tile = document.querySelector<HTMLElement>(`[data-demo-case="${id}"] [role="group"][tabindex="0"]`)!;
       fireEvent.contextMenu(tile);
       await waitFor(() => expect(rootEl()).not.toBeNull());
@@ -276,6 +278,52 @@ describe('ContextMenu', () => {
     fireEvent.contextMenu(item);
     fireEvent.keyDown(item, { key: 'F10', shiftKey: true });
     expect(rootEl()).toBeNull();
+  });
+
+  it('order M9.4: a quick action row first in the menu, a named group; the arrows move as in DropdownMenu', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div tabIndex={0} role="group" aria-label="Q3 roadmap">
+            Q3 roadmap
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuQuickActions label="Quick actions">
+            <ContextMenuQuickAction icon="link">Copy link</ContextMenuQuickAction>
+            <ContextMenuQuickAction icon="star" onSelect={onSelect}>
+              Star board
+            </ContextMenuQuickAction>
+            <ContextMenuQuickAction icon="trash" tone="danger">
+              Delete board
+            </ContextMenuQuickAction>
+          </ContextMenuQuickActions>
+          <ContextMenuItem start="edit">Rename board</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>,
+    );
+    act(() => target().focus());
+    await user.keyboard('{Shift>}{F10}{/Shift}');
+    const menu = await screen.findByRole('menu');
+    const row = screen.getByRole('group', { name: 'Quick actions' });
+    expect(menu.firstElementChild).toBe(row);
+    expect(row.getAttribute('data-part')).toBe('quick-actions');
+    expect(row.querySelectorAll('[data-part="quick-action"][role="menuitem"]')).toHaveLength(3);
+    expect(screen.getByRole('menuitem', { name: 'Delete board' }).getAttribute('data-tone')).toBe('danger');
+    await waitFor(() => expect(document.activeElement?.textContent).toBe('Copy link'));
+    await user.keyboard('{ArrowLeft}');
+    expect(document.activeElement?.textContent).toBe('Delete board');
+    await user.keyboard('{ArrowLeft}');
+    expect(document.activeElement?.textContent).toBe('Star board');
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement?.textContent).toBe('Delete board');
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement?.textContent).toBe('Rename board');
+    await user.keyboard('{ArrowUp}{ArrowUp}{Enter}');
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(rootEl()).toBeNull());
   });
 
   it('a demo Show menu button opens the menu of its tile', async () => {

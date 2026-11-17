@@ -142,7 +142,8 @@
       "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
       "A form that checks on submit moves focus to the first invalid control.",
       "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
-      "The label part is a Label root (data-ds label) and the error part a FieldError root (data-ds field-error). The required mark and the error icon belong to those components' anatomy."
+      "The label part is a Label root (data-ds label) and the error part a FieldError root (data-ds field-error). The required mark and the error icon belong to those components' anatomy.",
+      "In the body of an inset Fieldset a Field is one row: the label at the leading edge, the control filling the rest, a description or error under both. A label with data-visually-hidden gives the control the whole row and stays its name."
     ]
   },
   "content": {
@@ -169,7 +170,10 @@
     "font.size.s",
     "font.leading.normal",
     "color.text.muted",
-    "color.text.default"
+    "color.text.default",
+    "size.control.lg",
+    "space.2xs",
+    "border.width.default"
   ],
   "frameworks": {
     "react": {
@@ -190,7 +194,10 @@
   "styles": {
     "studio": "Lays out the Label, the control, a muted description and the FieldError",
     "desk": "The same, in Instrument Sans",
-    "neutral": "Takes the tokens of the Neutral style, no recipe."
+    "neutral": "Takes the tokens of the Neutral style, no recipe.",
+    "web": "Lays out the Label, the control, a muted description and the FieldError. In an inset Fieldset, one row of the card.",
+    "ios": "The label rises a little on focus; in an inset Fieldset one row of the grouped card, 52 tall (order M9.5, proposed).",
+    "android": "The same layout; in an inset Fieldset one filled field of the stack (order M9.5, proposed)."
   },
   "mistakes": [
     {

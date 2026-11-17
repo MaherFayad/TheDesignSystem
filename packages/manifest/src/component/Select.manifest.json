@@ -2,11 +2,12 @@
   "name": "Select",
   "kind": "component",
   "family": "selection",
-  "summary": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open.",
+  "summary": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open. On web it is a field box, or with emphasis ghost a borderless value for toolbars and filter rows; on ios the ghost form is the pop-up button (the value in the tint with an up and down glyph) and the list is the platform menu; on android the ghost form is a text button with a dropdown arrow and the list is a Material menu.",
   "useWhen": [
     "One value from a short list of about 4 to 12 options that people read rather than search, such as a sort order, a status or a time zone region",
     "A form row with little room, where the options need not all show at once",
-    "A value that must be one of the options, with a sensible default or a placeholder"
+    "A value that must be one of the options, with a sensible default or a placeholder",
+    "A value picked in a toolbar, a filter row or at the end of a list row, where a field box is too heavy: emphasis ghost"
   ],
   "avoidWhen": [
     "A long list (more than about 12 options) that people find faster by typing",
@@ -106,6 +107,14 @@
       "default": "default",
       "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
     },
+    "emphasis": {
+      "type": [
+        "outline",
+        "ghost"
+      ],
+      "default": "outline",
+      "description": "outline: the field box. ghost: the pop-up button (order M9.3, proposed): no box, the value and the up and down glyph in the link color, as wide as its value, for toolbars, filter rows and list rows. The height, keys and list are those of outline. Stamped as data-emphasis only when passed."
+    },
     "invalid": {
       "type": "boolean",
       "default": false,
@@ -188,7 +197,8 @@
       "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
       "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
       "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item.",
-      "Order 1.29: the chevron flips on its block axis (scaleY of the cosine of --_select-turn) instead of turning through a sideways shape. The placeholder reads --_select-placeholder-fg, text-muted by default, which keeps 4.5:1 on each style's field fill."
+      "Order 1.29: the chevron flips on its block axis (scaleY of the cosine of --_select-turn) instead of turning through a sideways shape. The placeholder reads --_select-placeholder-fg, text-muted by default, which keeps 4.5:1 on each style's field fill.",
+      "Order M9.3 (proposed), emphasis ghost: the same combobox, keys and list as outline. With no box, the value text meets 4.5:1 (color.text.link) and the glyph 3:1, which together identify the control (WCAG 1.4.11). The focus ring is the same ring as outline. Invalid colors the value with the danger text (the Field error says why); read only draws the value as plain text with no glyph. In forced colors the ghost trigger gets a ButtonText edge. A ghost Select still needs a name: a Field label or aria-label."
     ]
   },
   "content": {
@@ -269,7 +279,8 @@
     "duration.base",
     "ease.default",
     "ease.emphasized",
-    "z.menu"
+    "z.menu",
+    "color.text.link"
   ],
   "motion": "menu-scale",
   "frameworks": {
@@ -277,7 +288,7 @@
       "status": "ready",
       "behavior": "radix:Select (Root, Trigger, Value, Icon, Content in popper position, Viewport, Item, ItemText, Group, Label, Separator, ScrollUpButton, ScrollDownButton)",
       "example": "Select.demo.tsx",
-      "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close."
+      "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close. Order M9.3: emphasis (outline, ghost) is in React; the Angular input waits for order M9.14, and Select.css already draws data-emphasis for both."
     },
     "angular": {
       "status": "ready",
@@ -293,7 +304,8 @@
   "styles": {
     "studio": "The trigger is the Input box: a transparent pill with the control border, the glow and the ring on focus or while open, chevrons up and down at the end. The list is the Studio menu surface: surface-3, the card radius, the menu shadow; the lit row takes the overlay step.",
     "desk": "The same trigger. The list is the Desk menu glass: the strong material and blur, a hairline, the panel radius with field radius rows, regular weight; the lit row is the yellow primary fill with dark text. Under reduced transparency and more contrast the glass turns solid.",
-    "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface."
+    "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface. Ghost draws the value in the Neutral link color with no box.",
+    "liquid": "On ios the outline trigger is the platform field and ghost is the pop-up button: the value in the tint, the up and down glyph after it, the list on the Liquid menu glass. Platform paint for ghost on ios and android lands in order M9.5."
   },
   "mistakes": [
     {
@@ -319,6 +331,14 @@
     {
       "wrong": "A read only Select drawn as disabled",
       "right": "readOnly: focusable and readable, with a dashed border"
+    },
+    {
+      "wrong": "A ghost Select with no label or aria-label in a toolbar",
+      "right": "aria-label on the Select (Sort by) or a Field label, so the pop-up button has a name"
+    },
+    {
+      "wrong": "A ghost Select for an action (Share, Delete)",
+      "right": "A Button, or a DropdownMenu for a list of actions"
     }
   ],
   "contract": {

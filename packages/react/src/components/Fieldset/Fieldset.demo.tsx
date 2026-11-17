@@ -1,7 +1,7 @@
 import { Theme } from '../../theme';
 import { DemoCase, DemoGrid, DemoPage, sample } from '../../demo';
 import { Checkbox } from '../Checkbox/Checkbox';
-import { Field } from '../Field/Field';
+import { Field, FieldLabel } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Switch } from '../Switch/Switch';
 import { Fieldset } from './index';
@@ -27,6 +27,40 @@ const manyFields: [string, string][] = [
   ['Website', 'url'],
   ['Billing contact', 'name'],
 ];
+
+/** The grouped card of order M9.1: three rows, one empty, plain clearable Inputs. */
+function ContactCard({ arabic = false }: { arabic?: boolean }) {
+  const t = arabic
+    ? {
+        legend: 'بيانات التواصل',
+        description: 'نستخدمها بس عشان نتواصل معك بخصوص طلبك.',
+        name: 'الاسم',
+        nameValue: 'سارة أحمد',
+        email: 'البريد الإلكتروني',
+        phone: 'رقم الجوال',
+      }
+    : {
+        legend: 'Contact details',
+        description: 'We use these only to reach you about your order.',
+        name: 'Name',
+        nameValue: 'Sara Ahmed',
+        email: 'Email',
+        phone: 'Phone',
+      };
+  return (
+    <Fieldset variant="inset" legend={t.legend} description={t.description}>
+      <Field label={t.name}>
+        <Input variant="plain" clearable autoComplete="name" defaultValue={t.nameValue} />
+      </Field>
+      <Field label={t.email}>
+        <Input variant="plain" clearable type="email" autoComplete="email" placeholder="name@example.com" />
+      </Field>
+      <Field label={t.phone}>
+        <Input variant="plain" clearable type="tel" autoComplete="tel" defaultValue="+966 55 012 3456" />
+      </Field>
+    </Fieldset>
+  );
+}
 
 /** Fieldset in every content case that applies. Loading does not apply: a group has no pending state of its own. */
 export default function FieldsetDemo() {
@@ -138,6 +172,7 @@ export default function FieldsetDemo() {
             <Input autoComplete="address-level3" defaultValue="العليا" />
           </Field>
         </Fieldset>
+        <ContactCard arabic />
         <Fieldset legend="تنبيهات البريد" error="اختر طريقة وحدة على الأقل عشان نوصلك.">
           <Checkbox label="التعليقات على لوحاتي" />
           <Checkbox label="الملخص الأسبوعي" />
@@ -145,6 +180,14 @@ export default function FieldsetDemo() {
       </DemoCase>
 
       <DemoCase id="error" title="A group error" lang="en">
+        <Fieldset variant="inset" legend="Sign in" error="Add your work email to sign in.">
+          <Field label="Email" error="Add the part after the @, for example name@example.com.">
+            <Input variant="plain" clearable type="email" defaultValue="sara@" />
+          </Field>
+          <Field label="Password">
+            <Input variant="plain" type="password" defaultValue="spring-launch-2026" />
+          </Field>
+        </Fieldset>
         <Fieldset legend="How should we reach you" error="Pick at least one way to reach you.">
           <Checkbox label="Email" />
           <Checkbox label="Text message" />
@@ -162,6 +205,14 @@ export default function FieldsetDemo() {
       </DemoCase>
 
       <DemoCase id="readonly" title="Read only fields" lang="en">
+        <Fieldset variant="inset" legend="Account" description="Support asks for these when you write in.">
+          <Field label="Workspace" readOnly>
+            <Input variant="plain" defaultValue="Design team" />
+          </Field>
+          <Field label="Plan" readOnly>
+            <Input variant="plain" defaultValue="Team, yearly" />
+          </Field>
+        </Fieldset>
         <Fieldset legend="Workspace" description="Support asks for these when you write in.">
           <Field label="Workspace ID" readOnly>
             <Input defaultValue="ws_4f9a21" />
@@ -170,6 +221,21 @@ export default function FieldsetDemo() {
             <Input defaultValue="Middle East (Riyadh)" />
           </Field>
         </Fieldset>
+      </DemoCase>
+      <DemoCase id="inset" title="Inset: fields as rows of one card" lang="en">
+        <DemoGrid min="18rem">
+          <ContactCard />
+          <Fieldset variant="inset" legend="Board" description="The label of each row is read by screen readers, not drawn.">
+            <Field>
+              <FieldLabel data-visually-hidden="">Board name</FieldLabel>
+              <Input variant="plain" clearable defaultValue="Spring launch" />
+            </Field>
+            <Field>
+              <FieldLabel data-visually-hidden="">Short description</FieldLabel>
+              <Input variant="plain" clearable placeholder="For example, landing page directions" />
+            </Field>
+          </Fieldset>
+        </DemoGrid>
       </DemoCase>
     </DemoPage>
   );

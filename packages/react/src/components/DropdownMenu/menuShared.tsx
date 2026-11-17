@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
   type FocusEvent,
+  type KeyboardEvent,
   type ReactNode,
   type Ref,
   type RefObject,
@@ -58,8 +59,33 @@ export function physicalSide(side: MenuSide, dir: 'ltr' | 'rtl'): 'top' | 'botto
   return side === 'inline-end' ? end : start;
 }
 
-/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). */
-const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']";
+/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). Order M9.4: the quick actions too. */
+const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'], [data-part='quick-action']";
+
+/** The quick actions of a quick action row (order M9.4). */
+export const QUICK_ACTION_SELECTOR = "[data-part='quick-action']";
+
+/**
+ * Order M9.4: ArrowLeft and ArrowRight inside a quick action row move focus
+ * to the previous or next quick action, in reading order (mirrored in right
+ * to left layouts), wrapping at the ends and skipping disabled ones. The row
+ * is a group inside the menu, so ArrowDown and ArrowUp stay with Radix and
+ * walk every item in order, the quick actions first. Put this on the row.
+ */
+export function onQuickRowKeyDown(event: KeyboardEvent<HTMLElement>): void {
+  if (event.defaultPrevented || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+  if (event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+  const row = event.currentTarget;
+  const actions = Array.from(row.querySelectorAll<HTMLElement>(QUICK_ACTION_SELECTOR)).filter((el) => !el.hasAttribute('data-disabled'));
+  const at = actions.indexOf(event.target as HTMLElement);
+  if (at < 0) return;
+  // Handled here: a submenu does not close, a Menubar does not switch menus.
+  event.preventDefault();
+  const rtl = row.closest('[dir]')?.getAttribute('dir') === 'rtl';
+  const forward = (event.key === 'ArrowRight') !== rtl;
+  const next = actions[(at + (forward ? 1 : -1) + actions.length) % actions.length];
+  next?.focus();
+}
 
 /** The marker of a menu: render it as the last child of every menu content. */
 export { HighlightMarker as MenuHighlight };

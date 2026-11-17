@@ -166,6 +166,6 @@ describe('Fieldset', () => {
   it('renders every demo case', () => {
     const { container } = render(<FieldsetDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((n) => n.getAttribute('data-demo-case'));
-    expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error', 'disabled', 'readonly']);
+    expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error', 'disabled', 'readonly', 'inset']);
   });
 });

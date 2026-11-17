@@ -67,12 +67,4 @@
   }
 
   /* Forced colors: SegmentedControl.css hides the indicator and draws the track border; the system takes the fills. */
-  /* ios (order F1): the track is the kit's gray (packages/css/src/platform/ios.css), not the style's surface. */
-  [data-style='liquid'][data-platform='ios'] [data-ds='segmented-control'] {
-    --_segmented-control-bg: revert-layer;
-  }
-
-  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] {
-    --_segmented-control-thumb-bg: revert-layer;
-  }
 }

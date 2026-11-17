@@ -17,8 +17,9 @@
 //     <div data-ds="theme" data-menu-layer>              the portal Theme, display: contents
 //       <div data-radix-popper-content-wrapper>          Radix positioning
 //         <div data-ds="context-menu" role="menu" data-size data-state data-side data-align>
-//           ... the DropdownMenu parts: label, item, checkbox-item, radio-item,
-//               indicator, start, text, shortcut, end, group, separator, sub-trigger
+//           ... the DropdownMenu parts: quick-actions and quick-action (order M9.4),
+//               label, item, checkbox-item, radio-item, indicator, start, text,
+//               shortcut, end, group, separator, sub-trigger
 //     <div data-ds="theme" data-menu-layer>              one layer per open submenu
 //       <div data-ds="context-menu" data-part="sub-content" role="menu" data-size data-state>
 //
@@ -56,6 +57,7 @@ import {
   TRIGGER_GAP,
   VIEWPORT_GUTTER,
   assignRef,
+  onQuickRowKeyDown,
   physicalSide,
   textOf,
   useMenuLayer,
@@ -331,6 +333,55 @@ export function ContextMenuRadioItem({ start, end, shortcut, textValue, children
         {children}
       </ItemContent>
     </RadixMenu.RadioItem>
+  );
+}
+
+// ------------------------------------------------------------------ quick actions (order M9.4)
+
+export interface ContextMenuQuickActionsProps extends Omit<ComponentProps<typeof RadixMenu.Group>, 'asChild' | 'aria-label' | 'aria-labelledby'> {
+  /** Names the row for screen readers (role group), for example "Quick actions". Required. */
+  label: string;
+  /** Two to four ContextMenuQuickAction elements. */
+  children?: ReactNode;
+}
+
+/**
+ * A row of two to four quick actions, first in the menu (part quick-actions,
+ * role group named by `label`). ArrowDown and ArrowUp walk every item in
+ * order, the quick actions first; ArrowLeft and ArrowRight move inside the
+ * row, mirrored in right to left layouts.
+ */
+export function ContextMenuQuickActions({ label, onKeyDown, children, ...rest }: ContextMenuQuickActionsProps) {
+  return (
+    <RadixMenu.Group
+      {...rest}
+      aria-label={label}
+      data-part="quick-actions"
+      onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
+        onKeyDown?.(event);
+        onQuickRowKeyDown(event);
+      }}
+    >
+      {children}
+    </RadixMenu.Group>
+  );
+}
+
+export interface ContextMenuQuickActionProps extends Omit<ComponentProps<typeof RadixMenu.Item>, 'asChild'> {
+  /** The icon above the label: a system icon name or a node. Decorative: the label names the action. */
+  icon: ContextMenuSlotContent;
+  /** danger: a destructive action, drawn in the danger text color. Default neutral. */
+  tone?: ContextMenuItemTone;
+  /** The short visible label, which is also the accessible name. English: one or two words. Arabic: a noun form. */
+  children?: ReactNode;
+}
+
+/** One quick action (part quick-action, role menuitem): an icon above a short label. onSelect runs, then the menu closes. */
+export function ContextMenuQuickAction({ icon, tone = 'neutral', textValue, children, ...rest }: ContextMenuQuickActionProps) {
+  return (
+    <RadixMenu.Item {...rest} textValue={textValue ?? textOf(children)} data-part="quick-action" data-tone={tone === 'danger' ? 'danger' : undefined}>
+      <ItemContent start={icon}>{children}</ItemContent>
+    </RadixMenu.Item>
   );
 }
 

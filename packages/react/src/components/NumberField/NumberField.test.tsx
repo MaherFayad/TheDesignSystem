@@ -239,4 +239,72 @@ describe('NumberField', () => {
     const names = screen.getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? '');
     for (const n of names) expect(n).not.toMatch(/[\u0600-\u06FF]/);
   });
+  describe('variant (order M9.3)', () => {
+    it('stamps no data-variant by default, and the field keeps a stepper at each end', () => {
+      const { container } = render(<NumberField aria-label="Seats" defaultValue={2} />);
+      const box = root(container);
+      expect(box.hasAttribute('data-variant')).toBe(false);
+      const parts = [...box.children].map((c) => c.getAttribute('data-part'));
+      expect(parts[0]).toBe('decrement');
+      expect(parts[parts.length - 1]).toBe('increment');
+    });
+
+    it('stepper: the value first, then minus and plus, soft pill IconButtons out of the tab order', () => {
+      const { container } = render(<NumberField variant="stepper" aria-label="Guests" defaultValue={2} min={1} max={8} />);
+      const box = root(container);
+      expect(box.getAttribute('data-variant')).toBe('stepper');
+      const parts = [...box.children].map((c) => c.getAttribute('data-part')).filter(Boolean);
+      expect(parts).toEqual(['control', 'decrement', 'increment']);
+      for (const name of ['decrement', 'increment']) {
+        const button = part(container, name)!;
+        expect(button.getAttribute('data-ds')).toBe('icon-button');
+        expect(button.getAttribute('data-emphasis')).toBe('soft');
+        expect(button.getAttribute('data-shape')).toBe('pill');
+        expect(button.getAttribute('tabindex')).toBe('-1');
+      }
+      expect(part(container, 'increment')!.getAttribute('aria-label')).toMatch(/Increase/);
+      expect(part(container, 'decrement')!.getAttribute('aria-label')).toMatch(/Decrease/);
+      // The value is still a real field someone can type in.
+      expect(screen.getByRole('textbox', { name: 'Guests' }).tagName).toBe('INPUT');
+    });
+
+    it('stepper halves are one size under the field: xs and sm take xs, md sm, lg md', () => {
+      const expected = { xs: 'xs', sm: 'xs', md: 'sm', lg: 'md' } as const;
+      for (const size of ['xs', 'sm', 'md', 'lg'] as const) {
+        const { container } = render(<NumberField variant="stepper" aria-label={size} size={size} />);
+        expect(part(container, 'increment')!.getAttribute('data-size')).toBe(expected[size]);
+      }
+    });
+
+    it('stepper keys and buttons step the value as the field does', () => {
+      const onChange = vi.fn();
+      const { container } = render(<NumberField variant="stepper" aria-label="Guests" defaultValue={2} min={1} max={8} onChange={onChange} />);
+      const input = screen.getByRole('textbox', { name: 'Guests' }) as HTMLInputElement;
+      act(() => input.focus());
+      fireEvent.keyDown(input, { key: 'ArrowUp' });
+      expect(input.value).toBe('3');
+      fireEvent.click(part(container, 'decrement')!);
+      expect(input.value).toBe('2');
+      expect(onChange).toHaveBeenCalled();
+    });
+
+    // The words stay React Aria's, as today and as Angular renders them: خفض and زيادة.
+    it('stepper names its buttons in Arabic in an Arabic Theme', () => {
+      render(
+        <Theme lang="ar">
+          <NumberField variant="stepper" aria-label="الضيوف" defaultValue={2} />
+        </Theme>,
+      );
+      const names = screen.getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? '');
+      expect(names.some((n) => n.includes('خفض'))).toBe(true);
+      expect(names.some((n) => n.includes('زيادة'))).toBe(true);
+    });
+
+    it('stepper read only hides the capsule and keeps the value', () => {
+      const { container } = render(<NumberField variant="stepper" aria-label="Guests" defaultValue={2} readOnly />);
+      expect(part(container, 'decrement')).toBeNull();
+      expect(part(container, 'increment')).toBeNull();
+      expect((part(container, 'control') as HTMLInputElement).value).toBe('2');
+    });
+  });
 });

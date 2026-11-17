@@ -1,11 +1,13 @@
 // List demo. Cases: variants, empty, one, many, too-many, long-text,
-// long-arabic, disabled. No loading, error or readonly: a list that loads
+// long-arabic, disabled. Sections (order M9.2) show in variants (each
+// variant), many (settings groups with headers and footers) and
+// long-arabic. No loading, error or readonly: a list that loads
 // shows Skeleton rows, and a failed load is the page's message.
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
 import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
-import { List, ListItem, type ListSize, type ListVariant } from './index';
+import { List, ListItem, ListSection, type ListSize, type ListVariant } from './index';
 
 const variants: ListVariant[] = ['plain', 'divided', 'inset'];
 const sizes: ListSize[] = ['md', 'sm'];
@@ -57,6 +59,19 @@ export default function ListDemo() {
             ))}
           </DemoGrid>
         ))}
+        <DemoGrid min="18rem">
+          {variants.map((variant) => (
+            <List key={variant} variant={variant} aria-label={`Settings in sections, ${variant}`}>
+              <ListSection header="Notifications" footer="Previews show the first line of each message.">
+                <ListItem start="bell" title="Show previews" href={`#previews-${variant}`} end="Always" />
+                <ListItem start="mail" title="Mail" href={`#mail-alerts-${variant}`} />
+              </ListSection>
+              <ListSection header="Account">
+                <ListItem start="user" title="Profile" href={`#profile-${variant}`} />
+              </ListSection>
+            </List>
+          ))}
+        </DemoGrid>
         <Theme lang="ar">
           <DemoGrid min="18rem">
             <List variant="divided" aria-label="الوارد">
@@ -86,6 +101,20 @@ export default function ListDemo() {
           <ListItem start="dot" title="Connect a domain" description="Point your DNS to the address in Settings." end="Next" />
           <ListItem start="dot" title="Publish the first page" />
         </List>
+        <div style={{ maxInlineSize: '24rem' }}>
+          <List variant="inset" aria-label="Settings">
+            <ListSection header="Network" footer="Large files wait for Wi-Fi unless you turn on mobile data.">
+              <ListItem start="download" title="Sync over mobile data" href="#sync" end="Off" />
+              <ListItem start="file" title="Wi-Fi only for large files" href="#wifi" end="On" />
+            </ListSection>
+            <ListSection header="Privacy" footer="Boards you share keep the access you gave them.">
+              <ListItem start="lock" title="Lock with passcode" href="#lock" />
+              <ListItem start="eye" title="Who can see your boards" href="#visibility" end="Team" />
+              <ListItem start="user" title="Blocked people" href="#blocked" end="2" />
+            </ListSection>
+            <ListSection header="Empty section" empty="No devices yet. Devices you sign in on show here." />
+          </List>
+        </div>
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: twelve folders">
@@ -128,6 +157,17 @@ export default function ListDemo() {
             actions={<IconButton size="xs" icon="more" label="عرض خيارات مراجعة الدليل" />}
           />
         </List>
+        <div style={{ maxInlineSize: '24rem' }}>
+          <List variant="inset" aria-label="الإعدادات">
+            <ListSection header="الإشعارات" footer="المعاينة تعرض أول سطر من كل رسالة، وتقدر توقفها لأي محادثة من إعداداتها.">
+              <ListItem start="bell" title="عرض المعاينة" href="#previews-ar" end="دايم" />
+              <ListItem start="mail" title="البريد" href="#mail-ar" end="12" />
+            </ListSection>
+            <ListSection header="الخصوصية وأمان الحساب على كل الأجهزة اللي سجلت دخولك منها">
+              <ListItem start="lock" title="قفل التطبيق برمز" href="#lock-ar" />
+            </ListSection>
+          </List>
+        </div>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled row">

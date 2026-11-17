@@ -2,7 +2,7 @@
   "name": "Input",
   "kind": "component",
   "family": "forms",
-  "summary": "A single line text input: a native input in a bordered box with optional start and end adornments.",
+  "summary": "A single line text input: a native input in a bordered box with optional start and end adornments, or a plain field with no box for a row of a grouped card. On web a bordered box; on ios a gray rounded field, or a plain row of an inset group with a round clear button; on android Material's filled field.",
   "useWhen": [
     "A short value typed on one line: a name, an email, a link, a number",
     "A search box, with the search icon at the start",
@@ -23,7 +23,8 @@
     "root",
     "control",
     "start",
-    "end"
+    "end",
+    "clear"
   ],
   "slots": {
     "start": {
@@ -104,25 +105,37 @@
     "variant": {
       "type": [
         "outlined",
-        "filled"
+        "filled",
+        "plain"
       ],
-      "description": "outlined: a border all round. filled: a tinted box. Stamped as data-variant only when passed, so a style or platform can follow it."
+      "description": "outlined: a border all round. filled: a tinted box. plain: no box, no border and no fill, for a row of an inset Fieldset, where the row hairline and the card edge show the field. Stamped as data-variant only when passed, so a style or platform can follow it."
+    },
+    "clearable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Adds the clear part: a CloseButton that shows while the field has a value and focus, clears the value and moves focus back to the input. Escape clears too, except inside a dialog."
+    },
+    "clearLabel": {
+      "type": "string",
+      "description": "The accessible name of the clear button. Default Clear text, or مسح النص under an Arabic Theme."
     }
   },
   "states": [
     "data-invalid",
     "data-disabled",
-    "data-readonly"
+    "data-readonly",
+    "data-empty"
   ],
   "a11y": {
     "role": "textbox, from the native input (spinbutton for type number, searchbox for type search)",
-    "focus": "The input is the only tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box.",
+    "focus": "The input is the tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box; a plain field shows the ring alone. With clearable, the clear button is a second tab stop after the input, only while it shows.",
     "keys": {
       "Tab": "Moves focus to the input, and on to the next control",
       "Shift+Tab": "Moves focus back",
       "Home, End": "Move the caret to the start or the end of the value",
       "ArrowUp, ArrowDown": "Change the value for type number",
-      "Escape": "Clears the value for type search, as the browser does"
+      "Escape": "Clears the value for type search, as the browser does. With clearable, clears the value when the field is not inside a dialog; inside a dialog Escape closes the dialog.",
+      "Enter, Space": "On the clear button: clears the value and moves focus back to the input"
     },
     "announce": "Name from the Field label. The Field description and error through aria-describedby. aria-invalid and aria-required from the Field.",
     "native": {
@@ -138,19 +151,24 @@
       "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable.",
       "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
       "Disabled uses native disabled and draws with opacity.disabled, like every control.",
-      "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it."
+      "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it.",
+      "The clear button is named Clear text (مسح النص). It shows only while the box holds focus and a value, so it never sits in the tab order of an empty field. A pointer press on it keeps focus on the input.",
+      "A plain field has no boundary of its own (WCAG 1.4.11): use it in a row of an inset Fieldset, whose hairlines and card edge show it, and whose focus ring shows the field in use.",
+      "data-empty is present while the value is empty, for a style or platform that draws the empty field differently."
     ]
   },
   "content": {
     "en": {
       "label": "Always a visible Field label, a noun in sentence case. aria-label only for a toolbar search box.",
       "placeholder": "An example value at most: For example, spring launch. Never the label, never an instruction the person needs after typing.",
-      "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field."
+      "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field.",
+      "clear": "The clear button's name is Clear text. Name what it clears only when two fields in a row are clearable: Clear email."
     },
     "ar": {
       "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل",
       "placeholder": "مثال على القيمة بس، مو بديل عن العنوان",
-      "latin": "البريد والروابط والأرقام تنكتب من اليسار لليمين حتى داخل العربي"
+      "latin": "البريد والروابط والأرقام تنكتب من اليسار لليمين حتى داخل العربي",
+      "clear": "اسم زر المسح: مسح النص"
     }
   },
   "tokens": [
@@ -184,7 +202,9 @@
     "opacity.disabled",
     "color.state.danger.text",
     "color.bg.surface",
-    "radius.xs"
+    "radius.xs",
+    "duration.quick",
+    "ease.out"
   ],
   "motion": "fade",
   "frameworks": {
@@ -192,7 +212,7 @@
       "status": "ready",
       "behavior": "native input",
       "example": "Input.demo.tsx",
-      "note": "Motion: fade. Only the focus glow fades (an opacity transition in Input.css)."
+      "note": "Motion: fade. The focus glow fades (an opacity transition in Input.css), and the clear button fades in when it shows (@starting-style)."
     },
     "angular": {
       "status": "ready",
@@ -206,7 +226,10 @@
   },
   "styles": {
     "studio": "Bordered transparent pill, the control border, a soft inner glow and the 2px achromatic ring on focus",
-    "desk": "The same pill and glow, in Instrument Sans"
+    "desk": "The same pill and glow, in Instrument Sans",
+    "web": "The bordered box of the active style. plain draws no box; it sits in a row of an inset Fieldset card.",
+    "ios": "A gray rounded field 44 tall with text at 17. plain is a row of an inset group: no box, a round clear button at the trailing end while editing (paint by the platform look order M9.5, proposed).",
+    "android": "Material's filled field with its indicator line, outlined when variant outlined; plain is drawn as the filled field in a stack of rows (paint by order M9.5, proposed)."
   },
   "mistakes": [
     {
@@ -228,7 +251,20 @@
     {
       "wrong": "type date or checkbox on Input",
       "right": "The DatePicker or Checkbox component"
+    },
+    {
+      "wrong": "A plain Input on its own on a page, with nothing to show where it is",
+      "right": "A plain Input in a row of a Fieldset with variant inset, or an outlined or filled Input"
+    },
+    {
+      "wrong": "A clear button built from an IconButton in the end slot",
+      "right": "clearable, which shows the clear part only while it can act and returns focus to the input"
     }
   ],
-  "since": "0.1.0"
+  "since": "0.1.0",
+  "contract": {
+    "optionalParts": [
+      "clear"
+    ]
+  }
 }

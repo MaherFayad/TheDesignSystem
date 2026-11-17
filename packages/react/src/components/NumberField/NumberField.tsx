@@ -23,6 +23,13 @@
 // useDigitLayer.ts), so the input keeps its text for editing and the roll
 // is clipped to the input's box. Typing never rolls and empties the layer at
 // once. The box shakes when the value turns invalid (error-shake).
+//
+// Order M9.3 (proposed): variant stepper is the stepper form. The value is
+// plain text (the same spinbutton input, drawn without a box until it has
+// focus) before a capsule of the two step buttons, minus then plus, split by
+// a hairline. The DOM keeps the same parts; only the decrement moves after
+// the value, so the reading order matches what is drawn. data-variant is
+// stamped only when the prop is passed.
 import {
   use,
   useEffect,
@@ -66,6 +73,8 @@ import { useDigitLayer, type DigitLayer } from './useDigitLayer';
 
 export type NumberFieldSize = Size;
 export type NumberFieldShape = Extract<Shape, 'default' | 'pill'>;
+/** field: the bordered box with a step button at each end. stepper: the value as text before a capsule of the two step buttons. */
+export type NumberFieldVariant = 'field' | 'stepper';
 /** An icon name, a short text such as "kg" or "SAR", or any node. */
 export type NumberFieldAdornment = IconName | (string & {}) | ReactNode;
 
@@ -111,6 +120,13 @@ export interface NumberFieldProps
   size?: NumberFieldSize;
   /** default takes radius.control from the style. pill is always fully round. */
   shape?: NumberFieldShape;
+  /**
+   * field: the bordered box with a step button at each end (the default
+   * look). stepper: the value as plain text before a capsule holding the
+   * decrement and the increment, split by a hairline. Stamped as
+   * data-variant only when passed.
+   */
+  variant?: NumberFieldVariant;
   /** Marks the value invalid. Inside a Field it follows the Field. */
   invalid?: boolean;
   /** Shows the step buttons. They hide while read only. Default true. */
@@ -211,13 +227,15 @@ interface StepperProps {
   slot: 'increment' | 'decrement';
   size: IconButtonProps['size'];
   shape: NumberFieldShape;
+  /** The capsule of the stepper variant takes the neutral soft fill; the field ends take the ghost button. */
+  capsule: boolean;
   label: string | undefined;
   /** The id of the field's visible label: the button is named "Increase" plus that label. */
   labelledBy: string | undefined;
 }
 
 /** A React Aria step button rendered as the system IconButton. */
-function Stepper({ slot, size, shape, label, labelledBy }: StepperProps) {
+function Stepper({ slot, size, shape, capsule, label, labelledBy }: StepperProps) {
   return (
     <AriaButton
       slot={slot}
@@ -237,7 +255,8 @@ function Stepper({ slot, size, shape, label, labelledBy }: StepperProps) {
             icon={slot === 'increment' ? 'plus' : 'minus'}
             label={String(rest['aria-label'] ?? '')}
             size={size}
-            shape={shape === 'pill' ? 'pill' : 'default'}
+            emphasis={capsule ? 'soft' : undefined}
+            shape={capsule || shape === 'pill' ? 'pill' : 'default'}
             disabled={renderProps.isDisabled}
           />
         );
@@ -433,6 +452,7 @@ export function NumberField({
   locale,
   size = 'md',
   shape = 'default',
+  variant,
   invalid,
   disabled,
   readOnly,
@@ -466,7 +486,10 @@ export function NumberField({
   // PageUp and PageDown step as React Aria does: 0.01 for a percent with no step, else 1.
   const pageStep = step ?? (formatOptions?.style === 'percent' ? 0.01 : 1);
   useWesternInput(rootEl, tag);
-  const stepperSize: IconButtonProps['size'] = size === 'lg' ? 'md' : 'xs';
+  const capsule = variant === 'stepper';
+  // The capsule halves are a step under the field height (the kit draws them 32 tall): xs and sm take xs, md sm, lg md.
+  const capsuleSize: IconButtonProps['size'] = size === 'lg' ? 'md' : size === 'md' ? 'sm' : 'xs';
+  const stepperSize: IconButtonProps['size'] = capsule ? capsuleSize : size === 'lg' ? 'md' : 'xs';
   const showSteppers = steppers && !control.readOnly;
   useErrorShake(inner, Boolean(control['aria-invalid']));
   const digits = useDigitLayer(inner);
@@ -525,6 +548,7 @@ export function NumberField({
               data-ds="number-field"
               data-size={size}
               data-shape={shape}
+              data-variant={variant}
               data-invalid={control['aria-invalid'] ? '' : undefined}
               data-disabled={control.disabled ? '' : undefined}
               data-readonly={control.readOnly ? '' : undefined}
@@ -532,13 +556,21 @@ export function NumberField({
           );
         }}
       >
-        {showSteppers && <Stepper slot="decrement" size={stepperSize} shape={shape} label={decrementLabel} labelledBy={labelledBy} />}
+        {showSteppers && !capsule && (
+          <Stepper slot="decrement" size={stepperSize} shape={shape} capsule={false} label={decrementLabel} labelledBy={labelledBy} />
+        )}
         <Adornment part="start" value={start} />
         <Control locale={tag} step={pageStep} min={min} max={max} ref={ref} inner={inner} native={{ ...rest, placeholder }} digits={digits} />
         {/* The digit roll layer (field-step): decorative, empty at rest. */}
         <span aria-hidden="true" ref={digits.layer} />
         <Adornment part="end" value={end} />
-        {showSteppers && <Stepper slot="increment" size={stepperSize} shape={shape} label={incrementLabel} labelledBy={labelledBy} />}
+        {/* The stepper variant: minus then plus after the value, in reading order (minus at the inline start of the capsule). */}
+        {showSteppers && capsule && (
+          <Stepper slot="decrement" size={stepperSize} shape={shape} capsule label={decrementLabel} labelledBy={labelledBy} />
+        )}
+        {showSteppers && (
+          <Stepper slot="increment" size={stepperSize} shape={shape} capsule={capsule} label={incrementLabel} labelledBy={labelledBy} />
+        )}
       </AriaNumberField>
     </I18nProvider>
   );

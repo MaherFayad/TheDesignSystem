@@ -2,11 +2,12 @@
   "name": "NumberField",
   "kind": "component",
   "family": "forms",
-  "summary": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds.",
+  "summary": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds. With variant stepper the value is plain text before a gray capsule of minus and plus. On web both forms are drawn as here; on ios the stepper is the platform stepper capsule with its 44pt press area; on android the stepper is an outlined capsule.",
   "useWhen": [
     "A count or an amount someone types or nudges: seats, guests, a quantity in a cart",
     "A number with bounds and a step, where the step buttons and the arrow keys help",
-    "A money amount, a percent or a measure formatted for the locale (SAR, 15%, 2.5 kg)"
+    "A money amount, a percent or a measure formatted for the locale (SAR, 15%, 2.5 kg)",
+    "A small count nudged one at a time in a settings row or a list row (guests, sessions, copies): variant stepper"
   ],
   "avoidWhen": [
     "A Studio inspector value someone drags to change (width, rotation, opacity)",
@@ -96,6 +97,14 @@
       "default": "default",
       "description": "default takes radius.control from the style. pill is always fully round, with round steppers."
     },
+    "variant": {
+      "type": [
+        "field",
+        "stepper"
+      ],
+      "default": "field",
+      "description": "field: the bordered box with a step button at each end. stepper (order M9.3, proposed): the value as plain text before a capsule holding minus and plus split by a hairline; the input stays a real spinbutton you can type in, drawn without a box until it has focus. The capsule halves are a size under the field (xs and sm take xs, md sm, lg md). Stamped as data-variant only when passed."
+    },
     "invalid": {
       "type": "boolean",
       "description": "Marks the value invalid. Inside a Field it follows the Field."
@@ -169,7 +178,8 @@
       "A typed value that is not a number goes back to the last value on blur.",
       "The mouse wheel never changes the value, so a page scroll over the field is safe.",
       "A caller's onKeyDown does not receive PageUp and PageDown; the field handles them.",
-      "No native title attribute. Use the Field description for the bounds."
+      "No native title attribute. Use the Field description for the bounds.",
+      "Order M9.3 (proposed), variant stepper: the same textbox, keys and step buttons. The decrement moves after the value in the DOM, so the reading order is value, Decrease, Increase, as drawn. The step buttons keep their names (React Aria's words: Decrease and Increase, Arabic خفض and زيادة, plus the field name) and stay out of the tab order. The capsule halves are drawn a size under the field; on ios and android the IconButton hit part grows the press area to the platform target with no visual change (WCAG 2.5.8). Focus keeps the ring around the root and gives the value a quiet fill (WCAG 2.4.7). In right to left the capsule sits at the left of the value; minus stays at the inline start of the capsule (right) and plus at the inline end."
     ]
   },
   "content": {
@@ -225,7 +235,7 @@
       "status": "ready",
       "behavior": "react-aria-components NumberField, rendered with our elements through its render prop",
       "example": "NumberField.demo.tsx",
-      "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
+      "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type. Order M9.3: variant (field, stepper) is in React; the Angular input waits for order M9.14, and NumberField.css already draws data-variant stepper."
     },
     "angular": {
       "status": "ready",
@@ -239,7 +249,9 @@
   },
   "styles": {
     "studio": "The Input pill with round ghost steppers at the two ends, the glow and the 2px ring on focus",
-    "desk": "The same box and steppers, in Instrument Sans"
+    "desk": "The same box and steppers, in Instrument Sans",
+    "liquid": "The field is the Liquid control box; the stepper is a gray capsule with a hairline between minus and plus, painted per platform in order M9.5.",
+    "neutral": "Tokens only: the Neutral control box, and the stepper capsule in the neutral soft fill."
   },
   "mistakes": [
     {
@@ -261,16 +273,44 @@
     {
       "wrong": "Stacked chevron steppers inside a 32px box",
       "right": "The two 24px steppers at the ends, so each is a full target"
+    },
+    {
+      "wrong": "A stepper capsule with the value hidden, or a value inside the capsule",
+      "right": "variant stepper: the value stays visible as text before the capsule, so the keyboard and screen readers reach it"
     }
   ],
   "contract": {
     "keys": {
-      "ArrowUp": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
-      "ArrowDown": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
-      "PageUp": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
-      "PageDown": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
-      "Home": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
-      "End": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" }
+      "ArrowUp": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageUp": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageDown": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      }
     }
   },
   "since": "0.1.0"

@@ -15,9 +15,4 @@
     --_hover-card-shadow: var(--ds-elevation-panel);
     --_hover-card-enter-stretch: var(--_hover-card-enter-scale);
   }
-
-  /* ios (order F1): the popover's shadow is the kit's large soft one (packages/css/src/platform/ios.css). */
-  [data-style='neutral'][data-platform='ios'] [data-ds='popover'] {
-    --_popover-shadow: revert-layer;
-  }
 }

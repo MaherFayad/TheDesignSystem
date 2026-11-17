@@ -10,6 +10,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuQuickAction,
+  DropdownMenuQuickActions,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -115,6 +117,110 @@ function BoardMenu({ size, lang = 'en', trigger }: { size?: DropdownMenuSize; la
         <DropdownMenuItem start="trash" tone="danger" shortcut="Del">
           {t.remove}
         </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/**
+ * Order M9.4: the copy of the menu with a quick action row, in both
+ * languages. Quick action labels are one or two words; Arabic is noun form.
+ */
+const quickCopy = {
+  en: {
+    trigger: 'Board quick actions',
+    row: 'Quick actions',
+    copyLink: 'Copy link',
+    star: 'Star board',
+    download: 'Download',
+    remove: 'Delete board',
+    rename: 'Rename board',
+    duplicate: 'Duplicate board',
+    move: 'Move to folder',
+    invite: 'Invite people',
+    grid: 'Show grid',
+    publish: 'Publish to the web',
+  },
+  ar: {
+    trigger: 'إجراءات اللوحة السريعة',
+    row: 'إجراءات سريعة',
+    copyLink: 'نسخ الرابط',
+    star: 'تمييز اللوحة',
+    download: 'تنزيل',
+    remove: 'حذف اللوحة',
+    rename: 'إعادة تسمية اللوحة',
+    duplicate: 'تكرار اللوحة',
+    move: 'نقل إلى مجلد',
+    invite: 'دعوة أشخاص',
+    grid: 'إظهار الشبكة',
+    publish: 'النشر على الويب',
+  },
+  long: {
+    trigger: 'Spring launch board actions',
+    row: 'Quick actions for Spring launch',
+    copyLink: 'Copy the public link',
+    star: 'Add to favorites',
+    download: 'Download a copy',
+    remove: 'Delete for everyone',
+    rename: 'Rename the Spring launch board',
+    duplicate: 'Duplicate the board with every comment',
+    move: 'Move to the Design reviews folder',
+    invite: 'Invite people from the marketing team',
+    grid: 'Show the layout grid on every frame',
+    publish: 'Publish a read only copy to the web',
+  },
+  longAr: {
+    trigger: 'إجراءات لوحة إطلاق الربيع',
+    row: 'إجراءات سريعة للوحة إطلاق الربيع',
+    copyLink: 'نسخ رابط المشاركة العام',
+    star: 'إضافة اللوحة للمفضلة',
+    download: 'تنزيل نسخة كاملة',
+    remove: 'حذف اللوحة عند الجميع',
+    rename: 'إعادة تسمية لوحة إطلاق الربيع',
+    duplicate: 'تكرار اللوحة مع كل التعليقات',
+    move: 'نقل إلى مجلد مراجعات التصميم',
+    invite: 'دعوة أشخاص من فريق التسويق',
+    grid: 'إظهار شبكة التخطيط على كل الإطارات',
+    publish: 'نشر نسخة للقراءة فقط على الويب',
+  },
+} as const;
+
+/**
+ * A quick action row of three (or four, with Download disabled) over six
+ * rows: the shape of the platform's edit and context menus.
+ */
+function QuickMenu({ lang = 'en', trigger, four = false }: { lang?: keyof typeof quickCopy; trigger?: string; four?: boolean }) {
+  const t = quickCopy[lang];
+  const [grid, setGrid] = useState(true);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button data-demo-trigger={trigger} end="chevron-down">
+          {t.trigger}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuQuickActions label={t.row}>
+          <DropdownMenuQuickAction icon="link">{t.copyLink}</DropdownMenuQuickAction>
+          <DropdownMenuQuickAction icon="star">{t.star}</DropdownMenuQuickAction>
+          {four && (
+            <DropdownMenuQuickAction icon="download" disabled>
+              {t.download}
+            </DropdownMenuQuickAction>
+          )}
+          <DropdownMenuQuickAction icon="trash" tone="danger">
+            {t.remove}
+          </DropdownMenuQuickAction>
+        </DropdownMenuQuickActions>
+        <DropdownMenuItem start="edit">{t.rename}</DropdownMenuItem>
+        <DropdownMenuItem start="copy">{t.duplicate}</DropdownMenuItem>
+        <DropdownMenuItem start="folder">{t.move}</DropdownMenuItem>
+        <DropdownMenuItem start="user-plus">{t.invite}</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuCheckboxItem checked={grid} onCheckedChange={setGrid}>
+          {t.grid}
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuItem start="globe">{t.publish}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -300,6 +406,26 @@ export default function DropdownMenuDemo() {
             </DropdownMenuContent>
           </DropdownMenu>
         </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="quick-actions" title="Quick actions: a row of two to four at the top of the menu">
+        <DemoRow label="Three over six rows">
+          <QuickMenu trigger="quick" />
+        </DemoRow>
+        <DemoRow label="Four, one disabled">
+          <QuickMenu trigger="quick-four" four />
+        </DemoRow>
+        <DemoRow label="Long text">
+          <QuickMenu trigger="quick-long" lang="long" />
+        </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="عربي">
+            <QuickMenu trigger="quick-ar" lang="ar" />
+          </DemoRow>
+          <DemoRow label="نص عربي طويل">
+            <QuickMenu trigger="quick-long-ar" lang="longAr" four />
+          </DemoRow>
+        </Theme>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">

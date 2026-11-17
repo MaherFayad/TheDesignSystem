@@ -2,11 +2,12 @@
   "name": "List",
   "kind": "component",
   "family": "data-display",
-  "summary": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
+  "summary": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links, and a list can group its rows into sections with a header and a footer. On web it is rows on the page; on ios inset grouped cards of 52pt rows with section text above and below each card; on android 56dp rows with the section header as a small label.",
   "useWhen": [
     "A short list of things people open: mail, files, boards, members",
     "Rows that each carry one or two actions, such as delete or more",
-    "Ordered steps or a ranking, as an ol"
+    "Ordered steps or a ranking, as an ol",
+    "Rows grouped under headings: settings groups, contacts by letter (ListSection, with SectionIndex for long lists)"
   ],
   "avoidWhen": [
     "Picking one or more options from the rows",
@@ -30,10 +31,14 @@
     "end",
     "actions",
     "separator",
-    "empty"
+    "empty",
+    "section",
+    "section-header",
+    "section-footer"
   ],
   "parts": {
-    "ListItem": "item"
+    "ListItem": "item",
+    "ListSection": "section"
   },
   "slots": {
     "item": {
@@ -69,6 +74,19 @@
       "max": 3
     },
     "empty": {
+      "accepts": "text",
+      "max": 1
+    },
+    "section": {
+      "accepts": [
+        "ListItem"
+      ]
+    },
+    "section-header": {
+      "accepts": "text",
+      "max": 1
+    },
+    "section-footer": {
       "accepts": "text",
       "max": 1
     }
@@ -138,6 +156,27 @@
       "type": "boolean",
       "default": false,
       "description": "Dims the start icon and the title. A link loses its href, keeps focus with role link and aria-disabled (anatomy rule 5), and linkProps.onClick does not run. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
+    },
+    "ListSection.header": {
+      "type": "node",
+      "description": "The section heading above its rows (part section-header, an h3 by default). It names the section's nested list and takes focus (tabindex -1) when a SectionIndex jumps to the section."
+    },
+    "ListSection.footer": {
+      "type": "node",
+      "description": "A note under the rows (part section-footer, a p): what the settings of the section do. It is the description of the section's nested list."
+    },
+    "ListSection.level": {
+      "type": "number",
+      "default": 3,
+      "description": "The heading level of the header, 2 to 6, to fit the page outline."
+    },
+    "ListSection.empty": {
+      "type": "node",
+      "description": "Shown when the section has no rows, as in List."
+    },
+    "ListSection.id": {
+      "type": "string",
+      "description": "Put the id a SectionIndex targets here; the jump scrolls to the section and focuses its heading."
     }
   },
   "states": [
@@ -146,8 +185,8 @@
     "data-pressed"
   ],
   "a11y": {
-    "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one.",
-    "focus": "Each linked row is one Tab stop on its title link; its actions follow. A disabled row link stays focusable with aria-disabled. Rows without a link and the list itself are not focusable. A 2px ring from color.focus.ring draws inside the whole row.",
+    "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one. A list of sections is a ul with role group (named) or none (unnamed) holding li elements with role presentation; each holds a heading and a nested list named by it, so a reader says list, 4 items per section.",
+    "focus": "Each linked row is one Tab stop on its title link; its actions follow. A disabled row link stays focusable with aria-disabled. Rows without a link and the list itself are not focusable. A 2px ring from color.focus.ring draws inside the whole row. A section heading is not a Tab stop; it takes focus (tabindex -1) when a SectionIndex jumps to it, with the same 2px ring.",
     "keys": {
       "Tab": "Moves to the next row link or row action",
       "Shift+Tab": "Moves to the previous row link or row action",
@@ -165,7 +204,9 @@
       "Under forced colors the focus ring is Highlight, the active row gets a CanvasText outline and separators are CanvasText.",
       "data-linked marks a row with a link, for CSS only; it is structure, not a state.",
       "An active row without a link carries aria-current on the li.",
-      "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it."
+      "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it.",
+      "Sections (order M9.2, proposed): the nested list of a section is its own List root with the outer size and variant, so an inset list draws one card per section and every row rule applies. The outer list of sections draws no fill and carries no data-variant. Rows and sections do not mix in one List.",
+      "Header and footer take the start edge and line up with the row text, so they align right in Arabic. The header is muted text at font.size.s (4.5:1); the footer the same at regular weight."
     ]
   },
   "content": {
@@ -209,7 +250,8 @@
     "border.width.default",
     "border.width.strong",
     "opacity.disabled",
-    "color.focus.ring"
+    "color.focus.ring",
+    "font.weight.regular"
   ],
   "motion": "list-stagger",
   "frameworks": {
@@ -229,9 +271,13 @@
     }
   },
   "styles": {
+    "web": "Rows on the page; sections stack with the header above and the footer below each group.",
+    "ios": "Inset grouped cards with 52pt rows and a chevron on rows that go somewhere; the section header and footer sit outside the card in small muted text.",
+    "android": "56dp rows with a ripple from the touch point; the section header is a small label above its rows.",
     "studio": "Flat rows, a 5 percent overlay on hover, a 10 percent overlay for the active row; inset groups on surface 2.",
     "desk": "The same on the Desk tokens; inset groups read as a panel inside a window.",
-    "neutral": "The same on the Neutral tokens; no recipe."
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the card corner and hairline follow the platform on ios."
   },
   "mistakes": [
     {
@@ -253,6 +299,14 @@
     {
       "wrong": "A long sentence as the title, cut to one line with an ellipsis that a pointer user cannot read in full",
       "right": "A short title of a few words, with the rest in description, which wraps to two lines"
+    },
+    {
+      "wrong": "A heading outside the List and a second List for each group",
+      "right": "ListSection with header and footer, so each group is a named list and a SectionIndex can jump to it"
+    },
+    {
+      "wrong": "ListItem rows and ListSection parts in one List",
+      "right": "Every row inside a ListSection once the list has sections"
     }
   ],
   "since": "0.1.0"

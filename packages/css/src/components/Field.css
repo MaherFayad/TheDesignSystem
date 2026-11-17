@@ -37,6 +37,18 @@
  *     --_field-float-scale   the size of the label while it rests (1 keeps it)
  *     --_field-float-now     the working transform the state rules set
  *     --_field-float-dir     1, or -1 in right to left text
+ *
+ * Order M9.1 (proposed): a Field in the body of an inset Fieldset is one row
+ * of the grouped card. The label sits at the leading edge in a column of
+ * --_field-label-width, the control fills the rest, a description or an
+ * error spans the row under them. A row with no label in the flow (none, or
+ * one with data-visually-hidden) gives the control the whole row. Rows after
+ * the first draw the hairline on their top edge, from the text edge to the
+ * trailing edge (the card pads both). The label does not rise on focus.
+ *   --_field-row-height    the row's least height (size.control.lg; a
+ *                          platform makes it taller)
+ *   --_field-row-padding   the space above and below the row's content
+ *   --_field-row-gap       the space between the label and the control
  */
 @layer ds.base {
   [data-ds='field'] {
@@ -182,6 +194,54 @@
   }
 
   /* The error part is the system FieldError, styled in FieldError.css. */
+
+  /* ------------------------------------------------------------ a row of an inset Fieldset */
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] {
+    --_field-row-height: var(--ds-size-control-lg);
+    --_field-row-padding: 0px;
+    --_field-row-gap: var(--ds-space-l);
+    --_field-lift: 0px;
+
+    display: grid;
+    grid-template-columns: minmax(0, var(--_field-label-width)) minmax(0, 1fr);
+    column-gap: var(--_field-row-gap);
+    row-gap: 0;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--_field-row-height);
+    padding-block: var(--_field-row-padding);
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > * {
+    grid-column: 2;
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > [data-part='label'] {
+    grid-column: 1;
+    grid-row: 1;
+    overflow-wrap: anywhere;
+  }
+
+  /* A description or an error spans the row, under the label and the control. */
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > :is([data-part='description'], [data-part='error']) {
+    grid-column: 1 / -1;
+    padding-block-end: var(--ds-space-xs);
+  }
+
+  /* No label in the flow: the control takes the whole row. */
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field']:not(:has(> [data-part='label']:not([data-visually-hidden]))) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field']:not(:has(> [data-part='label']:not([data-visually-hidden]))) > * {
+    grid-column: 1;
+  }
+
+  /* The hairline between rows: the top edge of every row after the first. */
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] + [data-ds='field'] {
+    border-block-start: var(--ds-border-width-default) solid var(--_fieldset-hairline-color);
+  }
 
   /* Reduced motion: the duration tokens are 0ms, and the label does not rise at all. */
   @media (prefers-reduced-motion: reduce) {

@@ -11,6 +11,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuQuickAction,
+  DropdownMenuQuickActions,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -26,6 +28,8 @@ import {
   ContextMenuGroup,
   ContextMenuItem,
   ContextMenuLabel,
+  ContextMenuQuickAction,
+  ContextMenuQuickActions,
   ContextMenuRadioGroup,
   ContextMenuRadioItem,
   ContextMenuSeparator,
@@ -43,6 +47,8 @@ import {
  * click, with the same words in the same order.
  */
 const contextKit = {
+  QuickActions: ContextMenuQuickActions,
+  QuickAction: ContextMenuQuickAction,
   Item: ContextMenuItem,
   CheckboxItem: ContextMenuCheckboxItem,
   RadioGroup: ContextMenuRadioGroup,
@@ -59,6 +65,8 @@ type Kit = typeof contextKit;
 
 // The DropdownMenu parts take the same props; only the Radix event types differ.
 const dropdownKit = {
+  QuickActions: DropdownMenuQuickActions,
+  QuickAction: DropdownMenuQuickAction,
   Item: DropdownMenuItem,
   CheckboxItem: DropdownMenuCheckboxItem,
   RadioGroup: DropdownMenuRadioGroup,
@@ -277,6 +285,82 @@ function BoardMenu({ size, lang = 'en', demoTrigger, target, label }: { size?: C
   );
 }
 
+/** Order M9.4: the copy of the menu with a quick action row. Arabic: noun form labels, no diacritics. */
+const quickCopy = {
+  en: {
+    file: 'Launch plan',
+    meta: 'Board, edited yesterday',
+    more: 'More actions for Launch plan',
+    show: 'Show menu for Launch plan',
+    row: 'Quick actions',
+    copy: 'Copy link',
+    star: 'Star board',
+    remove: 'Delete board',
+    open: 'Open board',
+    rename: 'Rename board',
+    duplicate: 'Duplicate board',
+    move: 'Move to folder',
+    invite: 'Invite people',
+    download: 'Download board',
+  },
+  ar: {
+    file: 'خطة الإطلاق',
+    meta: 'لوحة، تعديل أمس',
+    more: 'إجراءات أكثر لخطة الإطلاق',
+    show: 'قائمة الخطة',
+    row: 'إجراءات سريعة',
+    copy: 'نسخ الرابط',
+    star: 'تمييز اللوحة',
+    remove: 'حذف اللوحة',
+    open: 'فتح اللوحة',
+    rename: 'إعادة تسمية اللوحة',
+    duplicate: 'تكرار اللوحة',
+    move: 'نقل إلى مجلد',
+    invite: 'دعوة أشخاص',
+    download: 'تنزيل اللوحة',
+  },
+  longAr: {
+    file: 'خطة إطلاق منتجات موسم الربيع',
+    meta: 'لوحة، تعديل أمس من فريق التسويق',
+    more: 'إجراءات أكثر لخطة إطلاق منتجات موسم الربيع',
+    show: 'قائمة خطة الربيع',
+    row: 'إجراءات سريعة لخطة الإطلاق',
+    copy: 'نسخ رابط المشاركة العام',
+    star: 'إضافة اللوحة للمفضلة',
+    remove: 'حذف اللوحة عند الجميع',
+    open: 'فتح اللوحة في نافذة جديدة',
+    rename: 'إعادة تسمية خطة إطلاق منتجات الربيع',
+    duplicate: 'تكرار اللوحة مع كل التعليقات',
+    move: 'نقل إلى مجلد مراجعات التصميم',
+    invite: 'دعوة أشخاص من فريق التسويق',
+    download: 'تنزيل اللوحة بصيغة PDF',
+  },
+} as const;
+
+/** Three quick actions over six rows, as a context menu and as the DropdownMenu on the tile. */
+function QuickBoardMenu({ lang = 'en', demoTrigger, label }: { lang?: keyof typeof quickCopy; demoTrigger?: string; label: string }) {
+  const t = quickCopy[lang];
+  const menu: MenuBody = (k) => (
+    <>
+      <k.QuickActions label={t.row}>
+        <k.QuickAction icon="link">{t.copy}</k.QuickAction>
+        <k.QuickAction icon="star">{t.star}</k.QuickAction>
+        <k.QuickAction icon="trash" tone="danger">
+          {t.remove}
+        </k.QuickAction>
+      </k.QuickActions>
+      <k.Item start="external">{t.open}</k.Item>
+      <k.Item start="edit">{t.rename}</k.Item>
+      <k.Item start="copy">{t.duplicate}</k.Item>
+      <k.Item start="folder">{t.move}</k.Item>
+      <k.Separator />
+      <k.Item start="user-plus">{t.invite}</k.Item>
+      <k.Item start="download">{t.download}</k.Item>
+    </>
+  );
+  return <FileMenu name={t.file} meta={t.meta} more={t.more} show={t.show} menu={menu} label={label} demoTrigger={demoTrigger} />;
+}
+
 const boards = [
   'Spring launch', 'Brand refresh', 'Checkout flow', 'Onboarding', 'Pricing page', 'Help center', 'Mobile app', 'Design review',
   'Icons', 'Type scale', 'Color study', 'Empty states', 'Error pages', 'Dashboard', 'Settings', 'Notifications',
@@ -404,6 +488,14 @@ export default function ContextMenuDemo() {
             </>
           )}
         />
+      </DemoCase>
+
+      <DemoCase id="quick-actions" title="Quick actions: a row of two to four at the top of the menu">
+        <QuickBoardMenu label="Three over six rows" demoTrigger="quick" />
+        <Theme lang="ar" data-demo="content">
+          <QuickBoardMenu label="عربي" demoTrigger="quick-ar" lang="ar" />
+          <QuickBoardMenu label="نص عربي طويل" demoTrigger="quick-long-ar" lang="longAr" />
+        </Theme>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">

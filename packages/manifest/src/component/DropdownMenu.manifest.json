@@ -2,7 +2,7 @@
   "name": "DropdownMenu",
   "kind": "component",
   "family": "overlays",
-  "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+  "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
   "useWhen": [
     "More actions than fit next to the object they act on",
     "A set of related commands behind one button, such as the actions of a board",
@@ -25,6 +25,8 @@
   },
   "anatomy": [
     "root",
+    "quick-actions",
+    "quick-action",
     "label",
     "item",
     "checkbox-item",
@@ -42,6 +44,8 @@
   ],
   "parts": {
     "DropdownMenuContent": "root",
+    "DropdownMenuQuickActions": "quick-actions",
+    "DropdownMenuQuickAction": "quick-action",
     "DropdownMenuLabel": "label",
     "DropdownMenuItem": "item",
     "DropdownMenuCheckboxItem": "checkbox-item",
@@ -55,6 +59,7 @@
   "slots": {
     "root": {
       "accepts": [
+        "DropdownMenuQuickActions",
         "DropdownMenuLabel",
         "DropdownMenuItem",
         "DropdownMenuCheckboxItem",
@@ -65,6 +70,13 @@
       ],
       "min": 1,
       "max": 12
+    },
+    "quick-actions": {
+      "accepts": [
+        "DropdownMenuQuickAction"
+      ],
+      "min": 2,
+      "max": 4
     },
     "group": {
       "accepts": [
@@ -170,6 +182,22 @@
       "default": "neutral",
       "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
     },
+    "DropdownMenuQuickActions.label": {
+      "type": "string",
+      "description": "DropdownMenuQuickActions, required: names the row for screen readers (role group), for example Quick actions. The row holds two to four DropdownMenuQuickAction elements and comes first in the menu."
+    },
+    "DropdownMenuQuickAction.icon": {
+      "type": "node",
+      "description": "DropdownMenuQuickAction, required: the icon above the label, a system icon name or a node. Decorative: the visible label is the accessible name, so the row is never icon only."
+    },
+    "DropdownMenuQuickAction.tone": {
+      "type": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "A quick action's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. disabled, onSelect and textValue work as on an item."
+    },
     "start": {
       "type": "node",
       "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
@@ -226,17 +254,17 @@
     "data-disabled"
   ],
   "a11y": {
-    "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby).",
+    "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby). Order M9.4: the quick action row is a group named by its label, holding menuitems.",
     "focus": "Opened with Enter, Space or ArrowDown on the trigger: focus on the first item. Opened with ArrowUp: focus on the last item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the trigger.",
     "keys": {
-      "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones",
-      "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item",
+      "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones; the quick actions come first, in reading order",
+      "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item, through the quick actions too",
       "Home": "Moves to the first item",
       "End": "Moves to the last item",
       "Enter": "On the trigger, opens the menu. On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
       "Space": "The same as Enter",
-      "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft",
-      "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+      "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft. In the quick action row, moves to the next quick action, wrapping at the end and skipping disabled ones (in right to left layouts this is ArrowLeft)",
+      "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight. In the quick action row, moves to the previous quick action, wrapping at the start (in right to left layouts this is ArrowRight)",
       "Escape": "Closes the menu, or only the open submenu, and returns focus to the trigger",
       "Typeahead": "Typing letters moves to the next item whose label starts with them"
     },
@@ -249,7 +277,10 @@
       "The menu never grows past the viewport: it takes the room Radix measures on the open side, minus collisionPadding, and scrolls inside. Rows are at least 24px tall (size.target-min).",
       "Shortcut hints are plain text set left to right, so key names read the same inside Arabic.",
       "The submenu chevron is chevron-forward and mirrors in right to left layouts; the submenu opens toward the inline end and Radix follows the direction set by Theme.",
-      "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+      "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). ArrowRight and ArrowLeft are checked on a quick action of the quick-actions case (focus moves inside the row). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+      "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
+      "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
+      "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
       "No native title attribute."
     ]
   },
@@ -259,12 +290,14 @@
       "items": "Verb plus noun, sentence case: Duplicate board, Copy link. Options are nouns or short phrases: Show grid, Name. No ending punctuation, no ellipsis unless the item opens a dialog that asks for more.",
       "label": "A short noun over the group: Board, Sort by.",
       "danger": "Name what is destroyed: Delete board, never Delete alone or Remove.",
-      "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu."
+      "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu.",
+      "quickActions": "One or two words, sentence case, a verb or a verb plus a noun: Copy link, Star board, Delete board. Two to four, the most used first. Name the row: Quick actions."
     },
     "ar": {
       "items": "Noun form labels, white Saudi dialect, no diacritics: تكرار اللوحة، نسخ الرابط، حذف اللوحة.",
       "label": "A short noun: اللوحة، الترتيب حسب.",
-      "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+      "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D.",
+      "quickActions": "Noun form, short: نسخ الرابط، تمييز اللوحة، حذف اللوحة. Name the row: إجراءات سريعة."
     }
   },
   "tokens": [
@@ -376,11 +409,25 @@
     {
       "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
       "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+    },
+    {
+      "wrong": "A quick action row with icons and no labels",
+      "right": "An icon above a short visible label on every platform: the label is the accessible name"
+    },
+    {
+      "wrong": "A quick action row in the middle of the menu, or a separator added right after it",
+      "right": "The row first in the content; it draws its own line under it"
+    },
+    {
+      "wrong": "One quick action, or five and more",
+      "right": "Two to four; the rest are rows"
     }
   ],
   "contract": {
     "trigger": "[data-demo-trigger]",
     "optionalParts": [
+      "quick-actions",
+      "quick-action",
       "label",
       "checkbox-item",
       "radio-item",
@@ -403,6 +450,16 @@
       "ArrowUp": {
         "focus": "[data-demo-trigger]",
         "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowRight": {
+        "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+        "focus": "[data-ds='dropdown-menu'] [data-part='quick-action']",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+        "focus": "[data-ds='dropdown-menu'] [data-part='quick-action']",
         "expect": "focus-moves"
       }
     }

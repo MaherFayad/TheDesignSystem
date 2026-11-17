@@ -14,6 +14,10 @@
  *   [data-ds='dropdown-menu'][data-part='sub-content']   a submenu, a root of its own
  *   [data-ds='context-menu']                    ContextMenu: the same parts, the same rules
  *   [data-ds='dropdown-menu'][data-part='content']       a Menubar menu (Menubar.css draws the row)
+ *     [data-part='quick-actions']               order M9.4: role group, a row of two to four
+ *                                               quick actions, first in the menu
+ *       > [data-part='quick-action']            role menuitem, data-tone danger: an icon
+ *                                               (start) above a short label (text)
  *     [data-part='label']                       a heading over a group
  *     [data-part='item']                        role menuitem, data-tone danger
  *     [data-part='checkbox-item']               role menuitemcheckbox
@@ -59,6 +63,22 @@
  *   --_menu-highlight-bg          the fill of the highlight marker (the lit row color)
  *   --_menu-highlight-duration, -highlight-ease   the marker's slide
  *   --_menu-nudge-duration-in, -nudge-duration-out  the chevron lean and its way back
+ *   --_menu-quick-gap             order M9.4: the space between two quick actions
+ *   --_menu-quick-padding-block   the block padding inside a quick action
+ *   --_menu-quick-label-gap       the space between the icon and the label of a quick action
+ *   --_menu-quick-font-size       the label size of a quick action
+ *   --_menu-quick-divider-color   the line under the quick action row (the separator color)
+ *
+ * Quick actions, order M9.4 (proposed). A row of two to four menuitems
+ * at the top of the menu, each an icon above a short label, in equal
+ * columns that follow the reading order (the first at the right in
+ * Arabic). The row is never icon only: the label is the accessible name.
+ * Each quick action is at least the row height of the menu on both axes
+ * (44 on ios, size.target-min elsewhere). It reads the item colors, the
+ * lit fill (the highlight marker slides to it as to any row), the ring
+ * and the danger tone of a row. A line in the separator color closes the
+ * row when anything follows it; a separator put right after the row is
+ * not drawn twice.
  *
  * Motion, order 1.22 (proposed). Interaction "menu-origin" (pattern
  * "menu-scale"): the menu comes out of its trigger side (data-side): it
@@ -162,6 +182,11 @@
     --_menu-item-shadow: 0 0 transparent;
     --_menu-highlight-duration: var(--ds-duration-spring-snappy);
     --_menu-highlight-ease: var(--ds-ease-spring-snappy);
+    --_menu-quick-gap: var(--ds-space-4xs);
+    --_menu-quick-padding-block: var(--ds-space-xs);
+    --_menu-quick-label-gap: var(--ds-space-3xs);
+    --_menu-quick-font-size: var(--ds-font-size-xs);
+    --_menu-quick-divider-color: var(--_menu-separator-color);
 
     /* Positioned so the z-index applies: Radix copies it onto its positioning wrapper. */
     position: relative;
@@ -259,6 +284,10 @@
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-size='sm']:lang(ar) {
     --_menu-item-font-size: var(--ds-font-size-s);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):lang(ar) {
+    --_menu-quick-font-size: var(--ds-font-size-s);
   }
 
   /* ------------------------------------------------------------ items */
@@ -383,8 +412,8 @@
     cursor: not-allowed;
   }
 
-  /* Rows with no indicator and no start line their text up with the rows that have one. */
-  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(:is([data-part='indicator'], [data-part='start'])) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'], [data-part='label']):not(:has(> :is([data-part='indicator'], [data-part='start']))) {
+  /* Rows with no indicator and no start line their text up with the rows that have one (the icon of a quick action does not count). */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(:not([data-part='quick-action']) > :is([data-part='indicator'], [data-part='start'])) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'], [data-part='label']):not(:has(> :is([data-part='indicator'], [data-part='start']))) {
     padding-inline-start: calc(var(--_menu-item-padding-inline) + var(--_menu-inset));
   }
 
@@ -423,6 +452,122 @@
   /* On a lit row the hints take the row color, so they keep its contrast (GB .mb-item:focus .mb-hint). */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-highlighted], [data-state='open']) > :is([data-part='shortcut'], [data-part='end']) {
     color: inherit;
+  }
+
+  /* ------------------------------------------------------------ quick actions (order M9.4) */
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions'] {
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--_menu-quick-gap);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Anything after the row (the marker is always last) gets the line between them. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions']:has(+ :not([data-part='highlight'])) {
+    margin-block-end: var(--ds-space-3xs);
+    padding-block-end: var(--ds-space-3xs);
+    border-block-end: var(--ds-border-width-default) solid var(--_menu-quick-divider-color);
+  }
+
+  /* The row already draws its line: a separator put right after it is not drawn twice. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions'] + [data-part='separator'] {
+    display: none;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'] {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--_menu-quick-label-gap);
+    box-sizing: border-box;
+    min-inline-size: max(var(--_menu-item-height), var(--ds-size-target-min));
+    min-block-size: max(var(--_menu-item-height), var(--ds-size-target-min));
+    margin: 0;
+    padding-block: var(--_menu-quick-padding-block);
+    padding-inline: var(--ds-space-3xs);
+    border-radius: var(--_menu-item-radius);
+    color: var(--_menu-item-fg);
+    font-size: var(--_menu-quick-font-size);
+    font-weight: var(--_menu-item-font-weight);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The label stays its own height, so the icons of a row line up when one label wraps. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'] > [data-part='text'] {
+    flex: 0 1 auto;
+    max-inline-size: 100%;
+  }
+
+  /* The lit fill (the ::after hover veil) and the keyboard ring (the ::before focus layer), as on a row. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action']::after {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-canvas);
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_menu-item-bg);
+    pointer-events: none;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action']::before {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-raised);
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--_menu-item-ring);
+    pointer-events: none;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'] > * {
+    position: relative;
+    z-index: var(--ds-z-raised);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'][data-tone='danger'] {
+    --_menu-item-fg: var(--_menu-item-fg-danger);
+    --_menu-item-bg-highlight: var(--_menu-item-bg-danger-highlight);
+    --_menu-item-fg-highlight: var(--_menu-item-fg-danger-highlight);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'][data-highlighted] {
+    --_menu-item-bg: var(--_menu-item-bg-highlight);
+    --_menu-item-fg: var(--_menu-item-fg-highlight);
+  }
+
+  /* A destructive quick action lights in its own color: the marker takes it while it is lit. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(> [data-part='quick-actions'] > [data-part='quick-action'][data-tone='danger'][data-highlighted]) {
+    --_menu-highlight-bg: var(--_menu-item-bg-danger-highlight);
+  }
+
+  @media (forced-colors: none) {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(> [data-part='highlight']) [data-part='quick-action'][data-highlighted] {
+      --_menu-item-bg: transparent;
+    }
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action']:focus-visible {
+    --_menu-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menu-item-ring-color);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
   }
 
   /* ------------------------------------------------------------ label, group, separator */
@@ -529,6 +674,12 @@
     animation-delay: min(calc(var(--ds-delay-stagger) * (var(--_menu-item-step) + 1)), var(--ds-duration-base));
   }
 
+  /* The quick action row arrives first, as one row: the inside of each action rises, never its fill or ring. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > [data-part='quick-actions'] > [data-part='quick-action'] > * {
+    animation: ds-menu-row-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: min(calc(var(--ds-delay-stagger) * (var(--_menu-item-step) + 1)), var(--ds-duration-base));
+  }
+
   /* The submenu chevron leans toward its submenu while its row is lit or its submenu open, and comes back faster. */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
     transition: transform var(--_menu-nudge-duration-out) var(--ds-ease-exit);
@@ -617,6 +768,10 @@
     :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
       transition: none;
     }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='quick-actions'] > [data-part='quick-action'] > * {
+      animation: none;
+    }
   }
 
   :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
@@ -641,6 +796,10 @@
 
   :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
     transition: none;
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='quick-actions'] > [data-part='quick-action'] > * {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */
@@ -688,6 +847,18 @@
     }
 
     :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='item'][data-tone='danger'] {
+      --_menu-item-fg: CanvasText;
+    }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'][data-highlighted] {
+      forced-color-adjust: none;
+    }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action']:focus-visible {
+      outline-color: CanvasText;
+    }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-action'][data-tone='danger'] {
       --_menu-item-fg: CanvasText;
     }
 

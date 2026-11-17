@@ -11,7 +11,7 @@
 //
 // The DOM:
 //
-//   <button data-ds="select" role="combobox" aria-expanded data-size data-shape
+//   <button data-ds="select" role="combobox" aria-expanded data-size data-shape data-emphasis?
 //           data-placeholder? data-invalid? data-disabled? data-readonly? data-loading?>   Radix Trigger, the root
 //     <span data-part="value">                     the chosen label, or the placeholder
 //     <span data-part="icon">                      chevrons-up-down, or a spinner while loading
@@ -37,6 +37,12 @@
 // data-state (open) is on the content only: the trigger reads as open
 // through aria-expanded, so the closed trigger stamps no data-state.
 // Radix Select has no exit presence: the content leaves at once on close.
+//
+// Order M9.3 (proposed): emphasis ghost is the pop-up button form. The
+// trigger loses its box and draws the value in the link color with the up
+// and down glyph after it. The DOM, the keys and the list are the same as
+// outline. data-emphasis is stamped only when the prop is passed, so a
+// Select without it renders as before.
 // With no option the list does not open (an empty listbox is not valid): the
 // trigger is described by the empty words instead, as it is while loading.
 import { useId, useLayoutEffect, useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
@@ -44,7 +50,7 @@ import { rollValue } from '@the-system/motion';
 import { createPortal } from 'react-dom';
 import { Select as RadixSelect } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
-import type { Shape, Size } from '@the-system/shared';
+import type { Emphasis, Shape, Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
 import { flattenListBoxItems, isListBoxSection, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
@@ -57,6 +63,7 @@ import { HighlightMarker, useHighlightMarker } from '../ListBox/highlightMarker'
 
 export type SelectSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SelectShape = Extract<Shape, 'default' | 'pill'>;
+export type SelectEmphasis = Extract<Emphasis, 'outline' | 'ghost'>;
 export type SelectItem = ListBoxItem;
 export type SelectOption = ListBoxOption;
 
@@ -92,6 +99,13 @@ export interface SelectProps
   size?: SelectSize;
   /** default: the style's control radius. pill: fully round. Default default. */
   shape?: SelectShape;
+  /**
+   * outline: the field box (the default look). ghost: the pop-up button, no
+   * box, the value in the link color and the up and down glyph after it, for
+   * toolbars, filter rows and list rows. Stamped as data-emphasis only when
+   * passed.
+   */
+  emphasis?: SelectEmphasis;
   /** Marks the value invalid. Inside a Field it follows the Field. */
   invalid?: boolean;
   /** Native disabled: out of the tab order. Inside a Field it follows the Field. */
@@ -137,6 +151,7 @@ export function Select({
   placeholder,
   size = 'md',
   shape = 'default',
+  emphasis,
   invalid,
   disabled,
   readOnly,
@@ -296,6 +311,7 @@ export function Select({
         data-state={undefined}
         data-size={size}
         data-shape={shape}
+        data-emphasis={emphasis}
         data-invalid={control['aria-invalid'] ? '' : undefined}
         data-readonly={controlReadOnly ? '' : undefined}
         data-loading={loading ? '' : undefined}

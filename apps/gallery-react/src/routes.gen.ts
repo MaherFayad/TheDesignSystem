@@ -85,6 +85,7 @@ export const routes: DemoRoute[] = [
   { name: 'ScrubInput', slug: 'scrub-input', load: () => import('../../../packages/react/src/components/ScrubInput/ScrubInput.demo') },
   { name: 'SearchField', slug: 'search-field', load: () => import('../../../packages/react/src/components/SearchField/SearchField.demo') },
   { name: 'Section', slug: 'section', load: () => import('../../../packages/react/src/components/Section/Section.demo') },
+  { name: 'SectionIndex', slug: 'section-index', load: () => import('../../../packages/react/src/components/SectionIndex/SectionIndex.demo') },
   { name: 'SegmentedControl', slug: 'segmented-control', load: () => import('../../../packages/react/src/components/SegmentedControl/SegmentedControl.demo') },
   { name: 'Select', slug: 'select', load: () => import('../../../packages/react/src/components/Select/Select.demo') },
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },

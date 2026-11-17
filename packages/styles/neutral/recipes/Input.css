@@ -42,9 +42,4 @@
   [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']) {
     --_combobox-border-color-focus: var(--ds-color-primary-border);
   }
-
-  /* ios (order F1): the Input inside a SearchField is its text only; the field draws the fill, so the surface above does not draw a box inside the capsule. */
-  [data-style='neutral'][data-platform='ios'] [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
-    --_input-bg: transparent;
-  }
 }

@@ -1,0 +1,120 @@
+/*
+ * SectionIndex: a column of section keys beside a long list (order M9.2,
+ * proposed). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_section-index-size          the least block size of a key and the inline size of the column (size.target-min, 24px)
+ *   --_section-index-padding-block the room above the first key and below the last
+ *   --_section-index-font-size, --_section-index-font-weight
+ *   --_section-index-fg            a key: link text, 4.5:1 on the page
+ *   --_section-index-item-bg-active, --_section-index-fg-active   the current key
+ *   --_section-index-gap           the gap dot, a mark at 3:1 (convention 16)
+ *   --_section-index-ring-color    the focus ring of a key
+ *   --_section-index-radius        the corner of a key's fill and ring
+ *
+ * The column is a flex column that fills the block size its layout gives
+ * it (block-size 100%) and centers its keys. Keys keep their least size:
+ * the component collapses keys into gap dots instead of shrinking them.
+ * touch-action none keeps a finger on the column from scrolling the page,
+ * so a press and move scrubs. Colors swap at once; nothing animates.
+ */
+@layer ds.base {
+  [data-ds='section-index'] {
+    --_section-index-size: var(--ds-size-target-min);
+    --_section-index-padding-block: var(--ds-space-2xs);
+    --_section-index-font-size: var(--ds-font-size-xs);
+    --_section-index-font-weight: var(--ds-font-weight-semibold);
+    --_section-index-fg: var(--ds-color-text-link);
+    --_section-index-fg-active: var(--ds-color-text-link);
+    --_section-index-item-bg-active: var(--ds-color-bg-overlay-10);
+    --_section-index-gap: var(--ds-color-primary-border);
+    --_section-index-ring-color: var(--ds-color-focus-ring);
+    --_section-index-radius: var(--ds-radius-pill);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_section-index-size);
+    block-size: 100%;
+    max-block-size: 100%;
+    min-block-size: 0;
+    margin: 0;
+    padding-block: var(--_section-index-padding-block);
+    padding-inline: 0;
+    color: var(--_section-index-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_section-index-font-size);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--_section-index-font-weight);
+    line-height: var(--ds-font-leading-tight);
+    touch-action: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  [data-ds='section-index'] > [data-part='item'],
+  [data-ds='section-index'] > [data-part='gap'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_section-index-size);
+    block-size: var(--_section-index-size);
+  }
+
+  [data-ds='section-index'] > [data-part='item'] {
+    border-radius: var(--_section-index-radius);
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='section-index'] > [data-part='item'][data-active] {
+    background-color: var(--_section-index-item-bg-active);
+    color: var(--_section-index-fg-active);
+  }
+
+  [data-ds='section-index'] > [data-part='item']:focus-visible {
+    outline: var(--ds-border-width-strong) solid var(--_section-index-ring-color);
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
+  /* The dot drawn for keys the column hides: a mark, a third of a key. */
+  [data-ds='section-index'] > [data-part='gap']::after {
+    content: '';
+    inline-size: var(--ds-space-3xs);
+    block-size: var(--ds-space-3xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_section-index-gap);
+  }
+
+  /* Arabic letters need a taller line and one size up to stay readable. */
+  [data-ds='section-index']:lang(ar) {
+    --_section-index-font-size: var(--ds-font-size-s);
+
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='section-index'] > [data-part='item'] {
+      color: LinkText;
+    }
+
+    [data-ds='section-index'] > [data-part='item'][data-active] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='section-index'] > [data-part='item']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='section-index'] > [data-part='gap']::after {
+      background-color: CanvasText;
+    }
+  }
+}

@@ -6,6 +6,8 @@ import { FieldError } from '../FieldError/FieldError';
 import { useFormFieldError } from '../Form/Form';
 
 export type FieldsetSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+/** inset: a grouped card of rows, the legend above it as the section header and the description under it as the footer. */
+export type FieldsetVariant = 'inset';
 
 export interface FieldsetProps extends Omit<ComponentProps<'fieldset'>, 'title'> {
   /** The name of the group, in a native legend. Required: a screen reader reads it with the first field. */
@@ -22,6 +24,13 @@ export interface FieldsetProps extends Omit<ComponentProps<'fieldset'>, 'title'>
   name?: string;
   /** Legend size and the space between the fields. Default md. */
   size?: FieldsetSize;
+  /**
+   * inset: the fields are rows of one card, split by hairlines, with the
+   * legend above the card and the description under it. Give each row an
+   * Input with variant plain. Stamped as data-variant. Default unset: the
+   * fields stack.
+   */
+  variant?: FieldsetVariant;
   /** Native disabled: disables every control inside, buttons included. */
   disabled?: boolean;
   /**
@@ -43,6 +52,11 @@ const noop = () => () => undefined;
  * legend is the group's name and a screen reader reads it when focus enters
  * the first field. Native disabled disables every control inside.
  *
+ * With variant inset the body is a card of rows (order M9.1): each Field
+ * child is one row, label at the leading edge and the control filling the
+ * rest. The description draws under the card as its footer; in the DOM it
+ * stays before the body, so it is read before the fields.
+ *
  * DOM order: legend, description, error, body. The group error sits above
  * the fields, so it is seen before a long list of choices, and it joins the
  * group's aria-describedby.
@@ -57,6 +71,7 @@ export function Fieldset({
   error: errorProp,
   name,
   size = 'md',
+  variant,
   disabled = false,
   invalid,
   children,
@@ -110,6 +125,7 @@ export function Fieldset({
       data-ds="fieldset"
       data-name={name}
       data-size={size}
+      data-variant={variant}
       data-disabled={disabled ? '' : undefined}
       data-invalid={isInvalid ? '' : undefined}
     >

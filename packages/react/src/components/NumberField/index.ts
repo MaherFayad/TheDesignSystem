@@ -1,2 +1,2 @@
 export { NumberField } from './NumberField';
-export type { NumberFieldAdornment, NumberFieldProps, NumberFieldShape, NumberFieldSize } from './NumberField';
+export type { NumberFieldAdornment, NumberFieldProps, NumberFieldShape, NumberFieldSize, NumberFieldVariant } from './NumberField';

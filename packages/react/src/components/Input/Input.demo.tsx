@@ -113,6 +113,9 @@ export default function InputDemo() {
         <Field label="رقم الجوال" orientation="horizontal">
           <Input type="tel" placeholder="05x xxx xxxx" />
         </Field>
+        <Field label="اسم الفريق" description="اضغط على الحقل ويطلع لك زر مسح النص.">
+          <Input clearable defaultValue="فريق التصميم في الرياض" />
+        </Field>
       </DemoCase>
 
       <DemoCase id="loading" title="Value being checked">
@@ -159,6 +162,20 @@ export default function InputDemo() {
           </Field>
           <Field label="اسم اللوحة" lang="ar" dir="rtl">
             <Input variant="filled" defaultValue="إطلاق الربيع" />
+          </Field>
+        </DemoGrid>
+      </DemoCase>
+      {/* Order M9.1: plain has no box (a row of an inset Fieldset draws the edge); clearable shows Clear text while the field has focus and a value. */}
+      <DemoCase id="plain" title="Plain and clearable">
+        <DemoGrid min="14rem">
+          <Field label="Board name" description="Focus the field to see the clear button.">
+            <Input clearable defaultValue="Spring launch" />
+          </Field>
+          <Field label="Team name">
+            <Input variant="plain" clearable defaultValue="Design" />
+          </Field>
+          <Field label="Search term">
+            <Input variant="plain" clearable placeholder="For example, hero" />
           </Field>
         </DemoGrid>
       </DemoCase>

@@ -12,6 +12,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuQuickAction,
+  DropdownMenuQuickActions,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -384,9 +386,148 @@ describe('DropdownMenu', () => {
       </Theme>,
     );
     const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'quick-actions', 'disabled']);
     expect(document.querySelectorAll('[data-demo-case="variants"] [data-demo-trigger]').length).toBeGreaterThanOrEqual(3);
     expect(document.querySelectorAll('button:not([data-ds])')).toHaveLength(0);
+  });
+});
+
+// ------------------------------------------------------------------ quick actions, order M9.4
+
+describe('quick actions (order M9.4)', () => {
+  function Quick({ onSelect, four = false }: { onSelect?: (event: Event) => void; four?: boolean }) {
+    return (
+      <Basic>
+        <DropdownMenuQuickActions label="Quick actions">
+          <DropdownMenuQuickAction icon="link" onSelect={onSelect}>
+            Copy link
+          </DropdownMenuQuickAction>
+          <DropdownMenuQuickAction icon="star">Star board</DropdownMenuQuickAction>
+          {four && (
+            <DropdownMenuQuickAction icon="download" disabled>
+              Download
+            </DropdownMenuQuickAction>
+          )}
+          <DropdownMenuQuickAction icon="trash" tone="danger">
+            Delete board
+          </DropdownMenuQuickAction>
+        </DropdownMenuQuickActions>
+        <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
+        <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
+      </Basic>
+    );
+  }
+
+  it('stamps the row and its actions: a named group of menuitems, an icon above a label, the danger tone', async () => {
+    const user = userEvent.setup();
+    render(<Quick />);
+    const menu = await openWithKeyboard(user);
+    const row = screen.getByRole('group', { name: 'Quick actions' });
+    expect(row.getAttribute('data-part')).toBe('quick-actions');
+    expect(menu.firstElementChild).toBe(row);
+    const actions = Array.from(row.querySelectorAll<HTMLElement>('[data-part="quick-action"]'));
+    expect(actions).toHaveLength(3);
+    for (const a of actions) {
+      expect(a.getAttribute('role')).toBe('menuitem');
+      expect(a.querySelector('[data-part="start"]')?.getAttribute('aria-hidden')).toBe('true');
+      expect(a.querySelector('[data-part="start"] svg')).not.toBeNull();
+    }
+    // The visible label is the accessible name.
+    expect(screen.getByRole('menuitem', { name: 'Copy link' })).toBe(actions[0]);
+    expect(actions[0]?.querySelector('[data-part="text"]')?.textContent).toBe('Copy link');
+    expect(actions[0]?.hasAttribute('data-tone')).toBe(false);
+    expect(actions[2]?.getAttribute('data-tone')).toBe('danger');
+  });
+
+  it('ArrowDown and ArrowUp walk every item in order, the quick actions first', async () => {
+    const user = userEvent.setup();
+    render(<Quick />);
+    await openWithKeyboard(user);
+    const name = () => document.activeElement?.textContent;
+    expect(name()).toBe('Copy link');
+    await user.keyboard('{ArrowDown}');
+    expect(name()).toBe('Star board');
+    await user.keyboard('{ArrowDown}');
+    expect(name()).toBe('Delete board');
+    await user.keyboard('{ArrowDown}');
+    expect(name()).toBe('Rename board');
+    await user.keyboard('{ArrowUp}');
+    expect(name()).toBe('Delete board');
+  });
+
+  it('ArrowRight and ArrowLeft move inside the row, wrap at the ends and skip a disabled action', async () => {
+    const user = userEvent.setup();
+    render(<Quick four />);
+    await openWithKeyboard(user);
+    const name = () => document.activeElement?.textContent;
+    expect(name()).toBe('Copy link');
+    await user.keyboard('{ArrowRight}');
+    expect(name()).toBe('Star board');
+    await user.keyboard('{ArrowRight}');
+    expect(name()).toBe('Delete board');
+    await user.keyboard('{ArrowRight}');
+    expect(name()).toBe('Copy link');
+    await user.keyboard('{ArrowLeft}');
+    expect(name()).toBe('Delete board');
+    expect(document.activeElement?.getAttribute('data-highlighted')).not.toBeNull();
+    // Outside the row the arrows keep their menu meaning: nothing moves on a plain item.
+    await user.keyboard('{ArrowDown}');
+    expect(name()).toBe('Rename board');
+    await user.keyboard('{ArrowRight}');
+    expect(name()).toBe('Rename board');
+  });
+
+  it('in RTL the row reads right to left: ArrowLeft goes to the next action', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme dir="rtl" lang="ar">
+        <Quick />
+      </Theme>,
+    );
+    await openWithKeyboard(user);
+    const name = () => document.activeElement?.textContent;
+    await user.keyboard('{ArrowLeft}');
+    expect(name()).toBe('Star board');
+    await user.keyboard('{ArrowRight}');
+    expect(name()).toBe('Copy link');
+  });
+
+  it('a quick action selects like an item: onSelect runs and the menu closes', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(<Quick onSelect={onSelect} />);
+    await openWithKeyboard(user);
+    await user.keyboard('{Enter}');
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(rootEl()).toBeNull());
+  });
+
+  it('the demo has a quick action case in English and Arabic with a trigger for the contract', () => {
+    render(
+      <Theme>
+        <DropdownMenuDemo />
+      </Theme>,
+    );
+    const quick = document.querySelector('[data-demo-case="quick-actions"]');
+    expect(quick?.querySelector('[data-demo-trigger="quick"]')).not.toBeNull();
+    expect(quick?.querySelector('[data-demo-trigger="quick-ar"]')).not.toBeNull();
+    expect(quick?.querySelector('[data-demo-trigger="quick-long-ar"]')).not.toBeNull();
+  });
+
+  describe('DropdownMenu.css', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/DropdownMenu.css'), 'utf8');
+
+    it('a quick action is at least the row height of the menu on both axes, never under the target floor', () => {
+      expect(css).toContain('min-inline-size: max(var(--_menu-item-height), var(--ds-size-target-min));');
+      expect(css).toContain('min-block-size: max(var(--_menu-item-height), var(--ds-size-target-min));');
+    });
+
+    it('the rise of the quick actions stops under both reduced motion settings', () => {
+      expect(css).toContain("    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='quick-actions'] > [data-part='quick-action'] > * {\n      animation: none;");
+      expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='quick-actions'] > [data-part='quick-action'] > * {\n    animation: none;");
+    });
   });
 });
 

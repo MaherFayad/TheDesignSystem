@@ -500,6 +500,11 @@
           "target": "@components/ds/shared/scrub.ts"
         },
         {
+          "path": "packages/shared/src/section-index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/section-index.ts"
+        },
+        {
           "path": "packages/shared/src/shortcut.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/shortcut.ts"
@@ -2206,7 +2211,7 @@
       "name": "context-menu",
       "type": "registry:ui",
       "title": "ContextMenu",
-      "description": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
+      "description": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],
@@ -2437,7 +2442,7 @@
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "DropdownMenu",
-      "description": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+      "description": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],
@@ -2631,7 +2636,7 @@
       "name": "fieldset",
       "type": "registry:ui",
       "title": "Fieldset",
-      "description": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+      "description": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside. Variant inset draws the fields as rows of one card: a bordered card of rows on web, the inset grouped card of settings screens on ios, a stack of filled fields on android.",
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
@@ -3004,8 +3009,9 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A single line text input: a native input in a bordered box with optional start and end adornments.",
+      "description": "A single line text input: a native input in a bordered box with optional start and end adornments, or a plain field with no box for a row of a grouped card. On web a bordered box; on ios a gray rounded field, or a plain row of an inset group with a round clear button; on android Material's filled field.",
       "registryDependencies": [
+        "@ds/close-button",
         "@ds/core",
         "@ds/field",
         "@ds/theme"
@@ -3274,7 +3280,7 @@
       "name": "list",
       "type": "registry:ui",
       "title": "List",
-      "description": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
+      "description": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links, and a list can group its rows into sections with a header and a footer. On web it is rows on the page; on ios inset grouped cards of 52pt rows with section text above and below each card; on android 56dp rows with the section header as a small label.",
       "registryDependencies": [
         "@ds/core",
         "@ds/list-box",
@@ -3561,7 +3567,7 @@
       "name": "number-field",
       "type": "registry:ui",
       "title": "NumberField",
-      "description": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds.",
+      "description": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds. With variant stepper the value is plain text before a gray capsule of minus and plus. On web both forms are drawn as here; on ios the stepper is the platform stepper capsule with its 44pt press area; on android the stepper is an outlined capsule.",
       "dependencies": [
         "react-aria-components@1.22.1"
       ],
@@ -4301,6 +4307,41 @@
       }
     },
     {
+      "name": "section-index",
+      "type": "registry:ui",
+      "title": "SectionIndex",
+      "description": "A column of section keys beside a long list with sections: a press on a key jumps to its section, a press that moves along the column scrubs through them. On web, ios and android it is the same column at the inline end of the list (the left in Arabic); on android a letter bubble shows while scrubbing.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SectionIndex/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SectionIndex/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SectionIndex/SectionIndex.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SectionIndex/SectionIndex.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SectionIndex.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SectionIndex.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "SectionIndex",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "segmented-control",
       "type": "registry:ui",
       "title": "SegmentedControl",
@@ -4345,7 +4386,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open.",
+      "description": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open. On web it is a field box, or with emphasis ghost a borderless value for toolbars and filter rows; on ios the ghost form is the pop-up button (the value in the tint with an up and down glyph) and the list is the platform menu; on android the ghost form is a text button with a dropdown arrow and the list is a Material menu.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],

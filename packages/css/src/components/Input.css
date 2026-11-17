@@ -30,6 +30,20 @@
  *   --_input-duration, --_input-ease   the border color change (focus, hover, invalid)
  * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
  * draws back on the out timing. The ring is not on this layer and shows at once.
+ *
+ * Order M9.1 (proposed): variant plain and the clear part.
+ * - plain has no box: no fill, no border, no inline padding, no glow. It is
+ *   the field of a row in an inset Fieldset, where the row hairline and the
+ *   card edge carry the boundary (WCAG 1.4.11). The focus ring stays (2.4.7).
+ *   The fill, the border color and the padding are set as properties, not
+ *   swapped through --_input-*, so no platform or recipe box shows through;
+ *   a platform that draws plain fields its own way (Android's filled field)
+ *   sets them again in its layer.
+ * - The clear part is a CloseButton between the control and the end slot.
+ *   It shows while the box has focus and a value (React renders it then).
+ *   It fades in on the fade pattern:
+ *     --_input-clear-duration, --_input-clear-ease   the fade in
+ * - data-empty is present while the value is empty.
  */
 @layer ds.base {
   [data-ds='input'] {
@@ -148,6 +162,46 @@
    */
   [data-ds='input'][data-variant='filled'] {
     --_input-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  /* plain: no box. The ring still shows on focus (2.4.7); its corners take radius.xs. */
+  [data-ds='input'][data-variant='plain'] {
+    --_input-radius: var(--ds-radius-xs);
+    --_input-shadow-focus: none;
+    --_input-bloom-spread: 0px;
+
+    padding-inline: 0;
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  /* Read only plain: no dashed box to show it, so the value takes the muted text color. */
+  [data-ds='input'][data-variant='plain'][data-readonly] {
+    --_input-fg: var(--ds-color-text-muted);
+
+    background-color: transparent;
+  }
+
+  /* The clear part: a CloseButton at the end of the value, before the end slot. */
+  [data-ds='input'] > [data-part='clear'] {
+    --_input-clear-duration: var(--ds-duration-quick);
+    --_input-clear-ease: var(--ds-ease-out);
+
+    flex: none;
+    transition: opacity var(--_input-clear-duration) var(--_input-clear-ease);
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  /* Focus on the clear button shows that button's own ring, not the box's ring as well. */
+  [data-ds='input']:has(> [data-part='clear']:focus-visible) {
+    box-shadow: none;
+  }
+
+  [data-ds='input']:has(> [data-part='clear']:focus-visible)::before {
+    opacity: 0;
   }
 
   /* The native input: no box of its own. Long values scroll inside, never cut with an ellipsis. */
@@ -326,11 +380,19 @@
       --_input-duration-in: 0s;
       --_input-duration-out: 0s;
     }
+
+    [data-ds='input'] > [data-part='clear'] {
+      --_input-clear-duration: 0s;
+    }
   }
 
   :root[data-motion='reduce'] [data-ds='input'] {
     --_input-duration: 0s;
     --_input-duration-in: 0s;
     --_input-duration-out: 0s;
+  }
+
+  :root[data-motion='reduce'] [data-ds='input'] > [data-part='clear'] {
+    --_input-clear-duration: 0s;
   }
 }

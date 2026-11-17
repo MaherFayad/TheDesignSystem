@@ -2,12 +2,13 @@
   "name": "Fieldset",
   "kind": "component",
   "family": "forms",
-  "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+  "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside. Variant inset draws the fields as rows of one card: a bordered card of rows on web, the inset grouped card of settings screens on ios, a stack of filled fields on android.",
   "useWhen": [
     "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
     "A long form split into named sections, each with its own legend",
     "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one. Inside a Form, set name to the name the controls share.",
-    "Turning off a whole section at once with native disabled"
+    "Turning off a whole section at once with native disabled",
+    "A short group of text fields drawn as rows of one card, as on a settings or account screen: variant inset with plain Inputs"
   ],
   "avoidWhen": [
     "One field alone: the legend would repeat its label",
@@ -91,6 +92,12 @@
     "invalid": {
       "type": "boolean",
       "description": "When not passed, the group is invalid while it shows an error. false hides the error."
+    },
+    "variant": {
+      "type": [
+        "inset"
+      ],
+      "description": "inset: the fields are rows of one card, split by hairlines from the text edge to the trailing edge, with the legend above the card as its header and the description under it as its footer. Give each row an Input with variant plain. Stamped as data-variant. Unset: the fields stack."
     }
   },
   "states": [
@@ -115,19 +122,22 @@
       "The group error sits above the body, so it is seen before a long list of choices. Inside a Form, give the Fieldset the name its controls share: a Form validator error for that name then shows in the error part, the summary link names the group by its legend, and focus on submit moves to the first control of the group.",
       "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
       "Keep the legend short: some screen readers read it again before every control in the group.",
-      "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry."
+      "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry.",
+      "With variant inset the description draws under the card, as its footer, but stays before the fields in the DOM and in the group's aria-describedby, so it is read first. A row with no visible label keeps a FieldLabel with data-visually-hidden: the placeholder is never the only name."
     ]
   },
   "content": {
     "en": {
       "legend": "A noun phrase or a question in sentence case that names the group: Delivery address, How should we reach you. No colon.",
       "description": "One sentence that helps fill the group. Not a repeat of the legend.",
-      "error": "What to do with the group: Pick at least one way to reach you. Never only Required."
+      "error": "What to do with the group: Pick at least one way to reach you. Never only Required.",
+      "inset": "A legend of one or two words over the card: Contact details. A footer of one sentence that says what the group is for."
     },
     "ar": {
       "legend": "اسم المجموعة أو سؤال واضح بدون تشكيل: عنوان التوصيل",
       "description": "جملة وحدة توضح وش يعبي",
-      "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك"
+      "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك",
+      "inset": "عنوان قصير فوق البطاقة: بيانات التواصل"
     }
   },
   "tokens": [
@@ -145,7 +155,13 @@
     "font.leading.normal",
     "color.text.default",
     "color.text.muted",
-    "opacity.disabled"
+    "opacity.disabled",
+    "radius.panel",
+    "color.bg.surface",
+    "color.border.control",
+    "color.border.default",
+    "border.width.default",
+    "font.weight.regular"
   ],
   "motion": "none",
   "frameworks": {
@@ -167,7 +183,10 @@
   "styles": {
     "studio": "A semibold legend one step above the field label, a muted description, the fields stacked with a roomy gap.",
     "desk": "The same layout, in Instrument Sans",
-    "neutral": "Takes the tokens of the Neutral style, no recipe."
+    "neutral": "Takes the tokens of the Neutral style, no recipe.",
+    "web": "Stacked fields by default. inset: a bordered card of rows on the style's surface, a quiet header and footer at the rows' text edge.",
+    "ios": "inset: the grouped card of the platform on the gray page, rows 52 tall, hairlines from the text to the trailing edge, a small muted header and footer (row height and paint by order M9.5, proposed).",
+    "android": "inset: the rows render as a stack of Material filled fields (paint by order M9.5, proposed)."
   },
   "mistakes": [
     {
@@ -185,6 +204,10 @@
     {
       "wrong": "A long legend with the instructions in it",
       "right": "A short legend, and the instructions in description"
+    },
+    {
+      "wrong": "An inset Fieldset with outlined Inputs, a box in a box",
+      "right": "Inputs with variant plain in the rows of the inset card"
     }
   ],
   "since": "0.1.0"

@@ -41,6 +41,17 @@ export default function NumberFieldDemo() {
           <NumberField aria-label="Weight" defaultValue={2.5} formatOptions={{ style: 'unit', unit: 'kilogram' }} step={0.1} />
           <NumberField aria-label="Guests" defaultValue={2} start="user" min={1} max={8} steppers={false} />
         </DemoGrid>
+        <DemoGrid min="10rem">
+          <NumberField variant="field" aria-label="Guests, field" defaultValue={2} min={1} max={8} />
+          {sizes.map((size) => (
+            <NumberField key={size} variant="stepper" size={size} locale="en" aria-label={`Guests, ${size}, stepper`} defaultValue={2} min={1} max={8} />
+          ))}
+        </DemoGrid>
+        <Theme lang="ar">
+          <DemoGrid min="12rem">
+            <NumberField variant="stepper" aria-label="عدد الضيوف" defaultValue={2} min={1} max={8} />
+          </DemoGrid>
+        </Theme>
         <Theme lang="ar">
           <DemoGrid min="12rem">
             <NumberField aria-label="الكمية" defaultValue={4} min={0} />
@@ -59,6 +70,9 @@ export default function NumberFieldDemo() {
       <DemoCase id="one" title="One field with bounds">
         <Field label="Seats" description="Between 1 and 50. PageUp and PageDown move by 10.">
           <NumberField defaultValue={10} min={1} max={50} />
+        </Field>
+        <Field label="Sessions a day" description="Between 1 and 12.">
+          <NumberField variant="stepper" defaultValue={3} min={1} max={12} />
         </Field>
       </DemoCase>
 
@@ -90,9 +104,12 @@ export default function NumberFieldDemo() {
       </DemoCase>
 
       <DemoCase id="long-text" title="A long value and a long label">
-        <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)' }}>
+        <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-m)' }}>
           <Field label="Total budget for the spring launch campaign across every region and channel">
             <NumberField defaultValue={987654321012.75} formatOptions={{ style: 'currency', currency: 'SAR' }} />
+          </Field>
+          <Field label="Spare monitors to keep in the storage room on every floor">
+            <NumberField variant="stepper" defaultValue={1234567} min={0} />
           </Field>
         </div>
       </DemoCase>
@@ -105,6 +122,9 @@ export default function NumberFieldDemo() {
           <Field label="عدد المقاعد">
             <NumberField defaultValue={12} min={1} max={50} />
           </Field>
+          <Field label="عدد الجلسات المحجوزة لهذا الأسبوع في كل الفروع">
+            <NumberField variant="stepper" defaultValue={3} min={0} max={14} />
+          </Field>
         </div>
       </DemoCase>
 
@@ -112,17 +132,26 @@ export default function NumberFieldDemo() {
         <Field label="Seats" error="Enter a number from 1 to 50.">
           <NumberField defaultValue={0} min={0} max={50} />
         </Field>
+        <Field label="Guests" error="Enter a number from 1 to 8.">
+          <NumberField variant="stepper" defaultValue={0} min={0} max={8} />
+        </Field>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
         <Field label="Seats" disabled description="Seats are set by your plan.">
           <NumberField defaultValue={10} />
         </Field>
+        <Field label="Guests" disabled description="Guests are set by the booking.">
+          <NumberField variant="stepper" defaultValue={2} />
+        </Field>
       </DemoCase>
 
       <DemoCase id="readonly" title="Read only">
         <Field label="Seats" readOnly description="Ask an admin to change it.">
           <NumberField defaultValue={10} />
+        </Field>
+        <Field label="Guests" readOnly description="Ask the host to change it.">
+          <NumberField variant="stepper" defaultValue={2} />
         </Field>
       </DemoCase>
     </DemoPage>

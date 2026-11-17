@@ -71,6 +71,19 @@
  * - --_select-placeholder-fg: the placeholder's color, text-muted, which
  *   keeps 4.5:1 on each style's field fill (N46: the placeholder token is
  *   4.12:1 on the Desk light fill).
+ *
+ * Order M9.3 (proposed), emphasis ghost ([data-emphasis='ghost']): the
+ * pop-up button. No box: no border color, no fill, a small inline padding,
+ * as wide as its value. The value and the up and down glyph take
+ * --_select-ghost-fg, the link color (4.5:1 for the text, so the glyph
+ * passes 3:1 and the pair identifies the control, WCAG 1.4.11). The
+ * height, the ring and every key stay those of outline. The box properties
+ * are written as declarations on the ghost rule, not through --_select-bg
+ * and friends, because the platform files and some recipes set those for
+ * the field box in later layers; a platform or style changes the ghost
+ * through --_select-ghost-fg and --_select-ghost-padding-inline.
+ *   --_select-ghost-fg               the value and glyph color
+ *   --_select-ghost-padding-inline   the inline padding around value and glyph
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the trigger */
@@ -225,6 +238,35 @@
   [data-ds='select'][data-disabled]:not([data-part]) {
     opacity: var(--ds-opacity-disabled);
     cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ emphasis ghost: the pop-up button (order M9.3, proposed) */
+
+  [data-ds='select'][data-emphasis='ghost']:not([data-part]) {
+    --_select-ghost-fg: var(--ds-color-text-link);
+    --_select-ghost-padding-inline: var(--ds-space-2xs);
+    --_select-fg: var(--_select-ghost-fg);
+    --_select-placeholder-fg: var(--_select-ghost-fg);
+
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    padding-inline: var(--_select-ghost-padding-inline);
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  [data-ds='select'][data-emphasis='ghost']:not([data-part]) > [data-part='icon'] {
+    color: inherit;
+  }
+
+  /* Invalid has no border to color: the value takes the danger text, and the Field error says why. */
+  [data-ds='select'][data-emphasis='ghost'][data-invalid]:not([data-part]) {
+    --_select-ghost-fg: var(--ds-color-state-danger-text);
+  }
+
+  /* Read only is not pressable: the value reads as plain text, no glyph (as outline). */
+  [data-ds='select'][data-emphasis='ghost'][data-readonly]:not([data-part]) {
+    --_select-ghost-fg: var(--ds-color-text-default);
   }
 
   /* ------------------------------------------------------------ the content: the menu surface */
@@ -539,6 +581,11 @@
   @media (forced-colors: active) {
     [data-ds='select']:not([data-part])::before {
       display: none;
+    }
+
+    /* A ghost trigger gets its edge back, so it is still found as a control. */
+    [data-ds='select'][data-emphasis='ghost']:not([data-part], [data-disabled]) {
+      border-color: ButtonText;
     }
 
     /* Invalid is a system color too, so it is drawn heavier, never color alone. */

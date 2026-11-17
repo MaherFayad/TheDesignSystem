@@ -33,6 +33,21 @@
  *   --_number-field-duration, --_number-field-ease   the border color change (focus, hover, invalid)
  * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
  * draws back on the out timing. The ring is not on this layer and shows at once.
+ *
+ * Order M9.3 (proposed), the stepper variant ([data-variant='stepper']): no
+ * box, no fill and no padding; the value is plain text (the input keeps its
+ * spinbutton role and draws a quiet fill only while focused) and sits before
+ * a capsule of the two IconButtons, minus then plus. The capsule is the two
+ * neutral soft buttons with their inner corners squared (Button's corner
+ * properties, as SplitButton does) and a hairline between them drawn with
+ * the increment's start border, so it flips in RTL with the logical sides.
+ * The ring of :focus-within stays on the root and wraps value and capsule.
+ * The halves keep their full height and grow wider than tall; on platforms
+ * with a larger touch target the IconButton's own hit part grows the press
+ * area to it (platform files), with no change to what is drawn.
+ *   --_number-field-stepper-width    the inline size of one capsule half
+ *   --_number-field-stepper-divider  the hairline between the halves
+ *   --_number-field-control-bg-focus the quiet fill of the value while focused
  */
 @layer ds.base {
   [data-ds='number-field'] {
@@ -237,6 +252,81 @@
 
   [data-ds='number-field'] > [data-part='increment'] {
     margin-inline-end: calc(var(--_number-field-stepper-inset) - var(--_number-field-padding-inline));
+  }
+
+  /* ------------------------------------------------------------ the stepper variant (order M9.3, proposed) */
+
+  [data-ds='number-field'][data-variant='stepper'] {
+    --_number-field-bg: transparent;
+    --_number-field-border-color: transparent;
+    --_number-field-border-color-hover: transparent;
+    --_number-field-border-color-focus: transparent;
+    --_number-field-padding-inline: 0px;
+    --_number-field-gap: var(--ds-space-s);
+    --_number-field-bloom-spread: 0px;
+    --_number-field-stepper-divider: var(--ds-color-border-control);
+    --_number-field-control-bg-focus: var(--ds-color-bg-overlay-5);
+
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    cursor: default;
+  }
+
+  /*
+   * The value reads as text and is as wide as its text where the browser
+   * sizes fields to their content (else its own default width). It keeps the
+   * full height, so the input stays a full target.
+   */
+  [data-ds='number-field'][data-variant='stepper'] > [data-part='control'] {
+    flex: 0 1 auto;
+    inline-size: auto;
+    min-inline-size: var(--ds-size-target-min);
+    padding-inline: var(--ds-space-2xs);
+    field-sizing: content;
+    cursor: text;
+  }
+
+  [data-ds='number-field'][data-variant='stepper'] > [data-part='control']:focus {
+    background-color: var(--_number-field-control-bg-focus);
+  }
+
+  /* The two halves of the capsule: wider than tall, the inner corners square, no inset from a box edge. */
+  [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
+    --_number-field-stepper-width: calc(var(--_button-height) + var(--ds-space-m));
+
+    inline-size: var(--_number-field-stepper-width);
+    margin-inline: 0;
+  }
+
+  [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button'][data-part='decrement'] {
+    --_button-radius-start-end: 0;
+    --_button-radius-end-end: 0;
+  }
+
+  /* The increment follows the decrement with no gap and draws the hairline with its start border. */
+  [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button'][data-part='increment'] {
+    --_button-radius-start-start: 0;
+    --_button-radius-end-start: 0;
+
+    margin-inline-start: calc(var(--_number-field-gap) * -1);
+    border-inline-start-color: var(--_number-field-stepper-divider);
+  }
+
+  /* Read only: the steppers are not shown and the value stays plain text, with no dashed box and no fill. */
+  [data-ds='number-field'][data-variant='stepper'][data-readonly] {
+    --_number-field-bg: transparent;
+
+    border-style: solid;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
+      border-color: ButtonText;
+    }
+
+    [data-ds='number-field'][data-variant='stepper'] > [data-part='control']:focus {
+      outline: var(--ds-border-width-default) solid Highlight;
+    }
   }
 
   [data-ds='number-field']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {

@@ -5594,7 +5594,7 @@
     "name": "ContextMenu",
     "kind": "component",
     "family": "overlays",
-    "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
+    "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
     "useWhen": [
       "Shortcuts to the actions of an object people already work with by pointer: a file, a canvas layer, a table row",
       "Dense work surfaces where a visible button per object would crowd the page, as long as each object also has a visible way to its actions",
@@ -5617,6 +5617,8 @@
     },
     "anatomy": [
       "root",
+      "quick-actions",
+      "quick-action",
       "label",
       "item",
       "checkbox-item",
@@ -5634,6 +5636,8 @@
     ],
     "parts": {
       "ContextMenuContent": "root",
+      "ContextMenuQuickActions": "quick-actions",
+      "ContextMenuQuickAction": "quick-action",
       "ContextMenuLabel": "label",
       "ContextMenuItem": "item",
       "ContextMenuCheckboxItem": "checkbox-item",
@@ -5647,6 +5651,7 @@
     "slots": {
       "root": {
         "accepts": [
+          "ContextMenuQuickActions",
           "ContextMenuLabel",
           "ContextMenuItem",
           "ContextMenuCheckboxItem",
@@ -5657,6 +5662,13 @@
         ],
         "min": 1,
         "max": 12
+      },
+      "quick-actions": {
+        "accepts": [
+          "ContextMenuQuickAction"
+        ],
+        "min": 2,
+        "max": 4
       },
       "group": {
         "accepts": [
@@ -5724,6 +5736,22 @@
         "default": "neutral",
         "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
       },
+      "ContextMenuQuickActions.label": {
+        "type": "string",
+        "description": "ContextMenuQuickActions, required: names the row for screen readers (role group), for example Quick actions. The row holds two to four ContextMenuQuickAction elements and comes first in the menu."
+      },
+      "ContextMenuQuickAction.icon": {
+        "type": "node",
+        "description": "ContextMenuQuickAction, required: the icon above the label, a system icon name or a node. Decorative: the visible label is the accessible name, so the row is never icon only."
+      },
+      "ContextMenuQuickAction.tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "A quick action's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. disabled, onSelect and textValue work as on an item."
+      },
       "start": {
         "type": "node",
         "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
@@ -5780,19 +5808,19 @@
       "data-disabled"
     ],
     "a11y": {
-      "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger is the item itself and keeps its own role and name.",
+      "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger is the item itself and keeps its own role and name. Order M9.4: the quick action row is a group named by its label, holding menuitems.",
       "focus": "Opened with Shift+F10 or the Menu key: the menu opens under the focused item and focus goes to the first item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the element that had it.",
       "keys": {
         "Shift+F10": "On the focused item or an element inside the trigger, opens the menu under it with focus on the first item",
         "ContextMenu": "The Menu key: the same as Shift+F10",
-        "ArrowDown": "Moves to the next item, skipping disabled ones",
-        "ArrowUp": "Moves to the previous item",
+        "ArrowDown": "Moves to the next item, skipping disabled ones. The quick actions come first, in reading order",
+        "ArrowUp": "Moves to the previous item, through the quick actions too",
         "Home": "Moves to the first item",
         "End": "Moves to the last item",
         "Enter": "On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
         "Space": "The same as Enter",
-        "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In right to left layouts this is ArrowLeft",
-        "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+        "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In right to left layouts this is ArrowLeft. In the quick action row, moves to the next quick action, wrapping at the end and skipping disabled ones (in right to left layouts this is ArrowLeft)",
+        "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight. In the quick action row, moves to the previous quick action, wrapping at the start (in right to left layouts this is ArrowRight)",
         "Escape": "Closes the menu, or only the open submenu, and returns focus to where it was",
         "Typeahead": "Typing letters moves to the next item whose label starts with them"
       },
@@ -5805,8 +5833,11 @@
         "Checked state is shown by a check icon, a minus for indeterminate, never by color alone (WCAG 1.4.1).",
         "A danger item is drawn in the danger text color and its label names the action (Delete board).",
         "The menu opens toward the inline end of the pointer, so to the left in Arabic, and flips near the viewport edge. It never grows past the viewport and scrolls inside. Rows are at least 24px tall.",
-        "Contract keys: Shift+F10 and the Menu key are checked on a focused tile (focus moves into the menu). The other keys work inside an open menu and are covered by the unit tests.",
+        "Contract keys: Shift+F10 and the Menu key are checked on a focused tile (focus moves into the menu). ArrowRight and ArrowLeft are checked on a quick action of the quick-actions case (focus moves inside the row). The other keys work inside an open menu and are covered by the unit tests.",
         "The demo's Show menu buttons focus a tile and send Shift+F10, so the gallery and the contract suite can open the menu with a plain click.",
+        "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
+        "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
+        "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
         "No native title attribute."
       ]
     },
@@ -5815,12 +5846,14 @@
         "items": "Verb plus noun, sentence case: Rename board, Copy link. The same words as the item's DropdownMenu, in the same order.",
         "label": "A short noun over the group: Board, Sort layers by.",
         "danger": "Name what is destroyed: Delete board, never Delete alone.",
-        "count": "Up to 12 entries at the top level, the most used first. Move the rest into a submenu."
+        "count": "Up to 12 entries at the top level, the most used first. Move the rest into a submenu.",
+        "quickActions": "One or two words, sentence case, a verb or a verb plus a noun: Copy link, Star board, Delete board. Two to four, the most used first. Name the row: Quick actions."
       },
       "ar": {
         "items": "Noun form labels, white Saudi dialect, no diacritics: فتح اللوحة، إعادة تسمية اللوحة، حذف اللوحة.",
         "label": "A short noun: اللوحة.",
-        "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+        "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D.",
+        "quickActions": "Noun form, short: نسخ الرابط، تمييز اللوحة، حذف اللوحة. Name the row: إجراءات سريعة."
       }
     },
     "tokens": [
@@ -5927,11 +5960,25 @@
       {
         "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
         "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+      },
+      {
+        "wrong": "A quick action row with icons and no labels",
+        "right": "An icon above a short visible label on every platform: the label is the accessible name"
+      },
+      {
+        "wrong": "A quick action row in the middle of the menu, or a separator added right after it",
+        "right": "The row first in the content; it draws its own line under it"
+      },
+      {
+        "wrong": "One quick action, or five and more",
+        "right": "Two to four; the rest are rows"
       }
     ],
     "contract": {
       "trigger": "[data-demo-trigger]",
       "optionalParts": [
+        "quick-actions",
+        "quick-action",
         "label",
         "checkbox-item",
         "radio-item",
@@ -5954,6 +6001,16 @@
         "ContextMenu": {
           "focus": "[data-demo-target]",
           "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ArrowRight": {
+          "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+          "focus": "[data-ds='context-menu'] [data-part='quick-action']",
+          "expect": "focus-moves"
+        },
+        "ArrowLeft": {
+          "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+          "focus": "[data-ds='context-menu'] [data-part='quick-action']",
           "expect": "focus-moves"
         }
       }
@@ -7237,7 +7294,7 @@
     "name": "DropdownMenu",
     "kind": "component",
     "family": "overlays",
-    "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+    "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
     "useWhen": [
       "More actions than fit next to the object they act on",
       "A set of related commands behind one button, such as the actions of a board",
@@ -7260,6 +7317,8 @@
     },
     "anatomy": [
       "root",
+      "quick-actions",
+      "quick-action",
       "label",
       "item",
       "checkbox-item",
@@ -7277,6 +7336,8 @@
     ],
     "parts": {
       "DropdownMenuContent": "root",
+      "DropdownMenuQuickActions": "quick-actions",
+      "DropdownMenuQuickAction": "quick-action",
       "DropdownMenuLabel": "label",
       "DropdownMenuItem": "item",
       "DropdownMenuCheckboxItem": "checkbox-item",
@@ -7290,6 +7351,7 @@
     "slots": {
       "root": {
         "accepts": [
+          "DropdownMenuQuickActions",
           "DropdownMenuLabel",
           "DropdownMenuItem",
           "DropdownMenuCheckboxItem",
@@ -7300,6 +7362,13 @@
         ],
         "min": 1,
         "max": 12
+      },
+      "quick-actions": {
+        "accepts": [
+          "DropdownMenuQuickAction"
+        ],
+        "min": 2,
+        "max": 4
       },
       "group": {
         "accepts": [
@@ -7405,6 +7474,22 @@
         "default": "neutral",
         "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
       },
+      "DropdownMenuQuickActions.label": {
+        "type": "string",
+        "description": "DropdownMenuQuickActions, required: names the row for screen readers (role group), for example Quick actions. The row holds two to four DropdownMenuQuickAction elements and comes first in the menu."
+      },
+      "DropdownMenuQuickAction.icon": {
+        "type": "node",
+        "description": "DropdownMenuQuickAction, required: the icon above the label, a system icon name or a node. Decorative: the visible label is the accessible name, so the row is never icon only."
+      },
+      "DropdownMenuQuickAction.tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "A quick action's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. disabled, onSelect and textValue work as on an item."
+      },
       "start": {
         "type": "node",
         "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
@@ -7461,17 +7546,17 @@
       "data-disabled"
     ],
     "a11y": {
-      "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby).",
+      "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby). Order M9.4: the quick action row is a group named by its label, holding menuitems.",
       "focus": "Opened with Enter, Space or ArrowDown on the trigger: focus on the first item. Opened with ArrowUp: focus on the last item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the trigger.",
       "keys": {
-        "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones",
-        "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item",
+        "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones; the quick actions come first, in reading order",
+        "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item, through the quick actions too",
         "Home": "Moves to the first item",
         "End": "Moves to the last item",
         "Enter": "On the trigger, opens the menu. On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
         "Space": "The same as Enter",
-        "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft",
-        "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+        "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft. In the quick action row, moves to the next quick action, wrapping at the end and skipping disabled ones (in right to left layouts this is ArrowLeft)",
+        "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight. In the quick action row, moves to the previous quick action, wrapping at the start (in right to left layouts this is ArrowRight)",
         "Escape": "Closes the menu, or only the open submenu, and returns focus to the trigger",
         "Typeahead": "Typing letters moves to the next item whose label starts with them"
       },
@@ -7484,7 +7569,10 @@
         "The menu never grows past the viewport: it takes the room Radix measures on the open side, minus collisionPadding, and scrolls inside. Rows are at least 24px tall (size.target-min).",
         "Shortcut hints are plain text set left to right, so key names read the same inside Arabic.",
         "The submenu chevron is chevron-forward and mirrors in right to left layouts; the submenu opens toward the inline end and Radix follows the direction set by Theme.",
-        "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+        "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). ArrowRight and ArrowLeft are checked on a quick action of the quick-actions case (focus moves inside the row). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+        "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
+        "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
+        "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
         "No native title attribute."
       ]
     },
@@ -7494,12 +7582,14 @@
         "items": "Verb plus noun, sentence case: Duplicate board, Copy link. Options are nouns or short phrases: Show grid, Name. No ending punctuation, no ellipsis unless the item opens a dialog that asks for more.",
         "label": "A short noun over the group: Board, Sort by.",
         "danger": "Name what is destroyed: Delete board, never Delete alone or Remove.",
-        "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu."
+        "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu.",
+        "quickActions": "One or two words, sentence case, a verb or a verb plus a noun: Copy link, Star board, Delete board. Two to four, the most used first. Name the row: Quick actions."
       },
       "ar": {
         "items": "Noun form labels, white Saudi dialect, no diacritics: تكرار اللوحة، نسخ الرابط، حذف اللوحة.",
         "label": "A short noun: اللوحة، الترتيب حسب.",
-        "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+        "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D.",
+        "quickActions": "Noun form, short: نسخ الرابط، تمييز اللوحة، حذف اللوحة. Name the row: إجراءات سريعة."
       }
     },
     "tokens": [
@@ -7611,11 +7701,25 @@
       {
         "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
         "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+      },
+      {
+        "wrong": "A quick action row with icons and no labels",
+        "right": "An icon above a short visible label on every platform: the label is the accessible name"
+      },
+      {
+        "wrong": "A quick action row in the middle of the menu, or a separator added right after it",
+        "right": "The row first in the content; it draws its own line under it"
+      },
+      {
+        "wrong": "One quick action, or five and more",
+        "right": "Two to four; the rest are rows"
       }
     ],
     "contract": {
       "trigger": "[data-demo-trigger]",
       "optionalParts": [
+        "quick-actions",
+        "quick-action",
         "label",
         "checkbox-item",
         "radio-item",
@@ -7638,6 +7742,16 @@
         "ArrowUp": {
           "focus": "[data-demo-trigger]",
           "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ArrowRight": {
+          "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+          "focus": "[data-ds='dropdown-menu'] [data-part='quick-action']",
+          "expect": "focus-moves"
+        },
+        "ArrowLeft": {
+          "open": "[data-demo-case=\"quick-actions\"] [data-demo-trigger=\"quick\"]",
+          "focus": "[data-ds='dropdown-menu'] [data-part='quick-action']",
           "expect": "focus-moves"
         }
       }
@@ -8252,7 +8366,8 @@
         "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
         "A form that checks on submit moves focus to the first invalid control.",
         "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
-        "The label part is a Label root (data-ds label) and the error part a FieldError root (data-ds field-error). The required mark and the error icon belong to those components' anatomy."
+        "The label part is a Label root (data-ds label) and the error part a FieldError root (data-ds field-error). The required mark and the error icon belong to those components' anatomy.",
+        "In the body of an inset Fieldset a Field is one row: the label at the leading edge, the control filling the rest, a description or error under both. A label with data-visually-hidden gives the control the whole row and stays its name."
       ]
     },
     "content": {
@@ -8279,7 +8394,10 @@
       "font.size.s",
       "font.leading.normal",
       "color.text.muted",
-      "color.text.default"
+      "color.text.default",
+      "size.control.lg",
+      "space.2xs",
+      "border.width.default"
     ],
     "frameworks": {
       "react": {
@@ -8300,7 +8418,10 @@
     "styles": {
       "studio": "Lays out the Label, the control, a muted description and the FieldError",
       "desk": "The same, in Instrument Sans",
-      "neutral": "Takes the tokens of the Neutral style, no recipe."
+      "neutral": "Takes the tokens of the Neutral style, no recipe.",
+      "web": "Lays out the Label, the control, a muted description and the FieldError. In an inset Fieldset, one row of the card.",
+      "ios": "The label rises a little on focus; in an inset Fieldset one row of the grouped card, 52 tall (order M9.5, proposed).",
+      "android": "The same layout; in an inset Fieldset one filled field of the stack (order M9.5, proposed)."
     },
     "mistakes": [
       {
@@ -8462,12 +8583,13 @@
     "name": "Fieldset",
     "kind": "component",
     "family": "forms",
-    "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+    "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside. Variant inset draws the fields as rows of one card: a bordered card of rows on web, the inset grouped card of settings screens on ios, a stack of filled fields on android.",
     "useWhen": [
       "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
       "A long form split into named sections, each with its own legend",
       "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one. Inside a Form, set name to the name the controls share.",
-      "Turning off a whole section at once with native disabled"
+      "Turning off a whole section at once with native disabled",
+      "A short group of text fields drawn as rows of one card, as on a settings or account screen: variant inset with plain Inputs"
     ],
     "avoidWhen": [
       "One field alone: the legend would repeat its label",
@@ -8551,6 +8673,12 @@
       "invalid": {
         "type": "boolean",
         "description": "When not passed, the group is invalid while it shows an error. false hides the error."
+      },
+      "variant": {
+        "type": [
+          "inset"
+        ],
+        "description": "inset: the fields are rows of one card, split by hairlines from the text edge to the trailing edge, with the legend above the card as its header and the description under it as its footer. Give each row an Input with variant plain. Stamped as data-variant. Unset: the fields stack."
       }
     },
     "states": [
@@ -8575,19 +8703,22 @@
         "The group error sits above the body, so it is seen before a long list of choices. Inside a Form, give the Fieldset the name its controls share: a Form validator error for that name then shows in the error part, the summary link names the group by its legend, and focus on submit moves to the first control of the group.",
         "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
         "Keep the legend short: some screen readers read it again before every control in the group.",
-        "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry."
+        "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry.",
+        "With variant inset the description draws under the card, as its footer, but stays before the fields in the DOM and in the group's aria-describedby, so it is read first. A row with no visible label keeps a FieldLabel with data-visually-hidden: the placeholder is never the only name."
       ]
     },
     "content": {
       "en": {
         "legend": "A noun phrase or a question in sentence case that names the group: Delivery address, How should we reach you. No colon.",
         "description": "One sentence that helps fill the group. Not a repeat of the legend.",
-        "error": "What to do with the group: Pick at least one way to reach you. Never only Required."
+        "error": "What to do with the group: Pick at least one way to reach you. Never only Required.",
+        "inset": "A legend of one or two words over the card: Contact details. A footer of one sentence that says what the group is for."
       },
       "ar": {
         "legend": "اسم المجموعة أو سؤال واضح بدون تشكيل: عنوان التوصيل",
         "description": "جملة وحدة توضح وش يعبي",
-        "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك"
+        "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك",
+        "inset": "عنوان قصير فوق البطاقة: بيانات التواصل"
       }
     },
     "tokens": [
@@ -8605,7 +8736,13 @@
       "font.leading.normal",
       "color.text.default",
       "color.text.muted",
-      "opacity.disabled"
+      "opacity.disabled",
+      "radius.panel",
+      "color.bg.surface",
+      "color.border.control",
+      "color.border.default",
+      "border.width.default",
+      "font.weight.regular"
     ],
     "motion": "none",
     "frameworks": {
@@ -8627,7 +8764,10 @@
     "styles": {
       "studio": "A semibold legend one step above the field label, a muted description, the fields stacked with a roomy gap.",
       "desk": "The same layout, in Instrument Sans",
-      "neutral": "Takes the tokens of the Neutral style, no recipe."
+      "neutral": "Takes the tokens of the Neutral style, no recipe.",
+      "web": "Stacked fields by default. inset: a bordered card of rows on the style's surface, a quiet header and footer at the rows' text edge.",
+      "ios": "inset: the grouped card of the platform on the gray page, rows 52 tall, hairlines from the text to the trailing edge, a small muted header and footer (row height and paint by order M9.5, proposed).",
+      "android": "inset: the rows render as a stack of Material filled fields (paint by order M9.5, proposed)."
     },
     "mistakes": [
       {
@@ -8645,6 +8785,10 @@
       {
         "wrong": "A long legend with the instructions in it",
         "right": "A short legend, and the instructions in description"
+      },
+      {
+        "wrong": "An inset Fieldset with outlined Inputs, a box in a box",
+        "right": "Inputs with variant plain in the rows of the inset card"
       }
     ],
     "since": "0.1.0"
@@ -10829,7 +10973,7 @@
     "name": "Input",
     "kind": "component",
     "family": "forms",
-    "summary": "A single line text input: a native input in a bordered box with optional start and end adornments.",
+    "summary": "A single line text input: a native input in a bordered box with optional start and end adornments, or a plain field with no box for a row of a grouped card. On web a bordered box; on ios a gray rounded field, or a plain row of an inset group with a round clear button; on android Material's filled field.",
     "useWhen": [
       "A short value typed on one line: a name, an email, a link, a number",
       "A search box, with the search icon at the start",
@@ -10850,7 +10994,8 @@
       "root",
       "control",
       "start",
-      "end"
+      "end",
+      "clear"
     ],
     "slots": {
       "start": {
@@ -10931,25 +11076,37 @@
       "variant": {
         "type": [
           "outlined",
-          "filled"
+          "filled",
+          "plain"
         ],
-        "description": "outlined: a border all round. filled: a tinted box. Stamped as data-variant only when passed, so a style or platform can follow it."
+        "description": "outlined: a border all round. filled: a tinted box. plain: no box, no border and no fill, for a row of an inset Fieldset, where the row hairline and the card edge show the field. Stamped as data-variant only when passed, so a style or platform can follow it."
+      },
+      "clearable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Adds the clear part: a CloseButton that shows while the field has a value and focus, clears the value and moves focus back to the input. Escape clears too, except inside a dialog."
+      },
+      "clearLabel": {
+        "type": "string",
+        "description": "The accessible name of the clear button. Default Clear text, or مسح النص under an Arabic Theme."
       }
     },
     "states": [
       "data-invalid",
       "data-disabled",
-      "data-readonly"
+      "data-readonly",
+      "data-empty"
     ],
     "a11y": {
       "role": "textbox, from the native input (spinbutton for type number, searchbox for type search)",
-      "focus": "The input is the only tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box.",
+      "focus": "The input is the tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box; a plain field shows the ring alone. With clearable, the clear button is a second tab stop after the input, only while it shows.",
       "keys": {
         "Tab": "Moves focus to the input, and on to the next control",
         "Shift+Tab": "Moves focus back",
         "Home, End": "Move the caret to the start or the end of the value",
         "ArrowUp, ArrowDown": "Change the value for type number",
-        "Escape": "Clears the value for type search, as the browser does"
+        "Escape": "Clears the value for type search, as the browser does. With clearable, clears the value when the field is not inside a dialog; inside a dialog Escape closes the dialog.",
+        "Enter, Space": "On the clear button: clears the value and moves focus back to the input"
       },
       "announce": "Name from the Field label. The Field description and error through aria-describedby. aria-invalid and aria-required from the Field.",
       "native": {
@@ -10965,19 +11122,24 @@
         "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable.",
         "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
         "Disabled uses native disabled and draws with opacity.disabled, like every control.",
-        "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it."
+        "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it.",
+        "The clear button is named Clear text (مسح النص). It shows only while the box holds focus and a value, so it never sits in the tab order of an empty field. A pointer press on it keeps focus on the input.",
+        "A plain field has no boundary of its own (WCAG 1.4.11): use it in a row of an inset Fieldset, whose hairlines and card edge show it, and whose focus ring shows the field in use.",
+        "data-empty is present while the value is empty, for a style or platform that draws the empty field differently."
       ]
     },
     "content": {
       "en": {
         "label": "Always a visible Field label, a noun in sentence case. aria-label only for a toolbar search box.",
         "placeholder": "An example value at most: For example, spring launch. Never the label, never an instruction the person needs after typing.",
-        "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field."
+        "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field.",
+        "clear": "The clear button's name is Clear text. Name what it clears only when two fields in a row are clearable: Clear email."
       },
       "ar": {
         "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل",
         "placeholder": "مثال على القيمة بس، مو بديل عن العنوان",
-        "latin": "البريد والروابط والأرقام تنكتب من اليسار لليمين حتى داخل العربي"
+        "latin": "البريد والروابط والأرقام تنكتب من اليسار لليمين حتى داخل العربي",
+        "clear": "اسم زر المسح: مسح النص"
       }
     },
     "tokens": [
@@ -11011,7 +11173,9 @@
       "opacity.disabled",
       "color.state.danger.text",
       "color.bg.surface",
-      "radius.xs"
+      "radius.xs",
+      "duration.quick",
+      "ease.out"
     ],
     "motion": "fade",
     "frameworks": {
@@ -11019,7 +11183,7 @@
         "status": "ready",
         "behavior": "native input",
         "example": "Input.demo.tsx",
-        "note": "Motion: fade. Only the focus glow fades (an opacity transition in Input.css)."
+        "note": "Motion: fade. The focus glow fades (an opacity transition in Input.css), and the clear button fades in when it shows (@starting-style)."
       },
       "angular": {
         "status": "ready",
@@ -11033,7 +11197,10 @@
     },
     "styles": {
       "studio": "Bordered transparent pill, the control border, a soft inner glow and the 2px achromatic ring on focus",
-      "desk": "The same pill and glow, in Instrument Sans"
+      "desk": "The same pill and glow, in Instrument Sans",
+      "web": "The bordered box of the active style. plain draws no box; it sits in a row of an inset Fieldset card.",
+      "ios": "A gray rounded field 44 tall with text at 17. plain is a row of an inset group: no box, a round clear button at the trailing end while editing (paint by the platform look order M9.5, proposed).",
+      "android": "Material's filled field with its indicator line, outlined when variant outlined; plain is drawn as the filled field in a stack of rows (paint by order M9.5, proposed)."
     },
     "mistakes": [
       {
@@ -11055,9 +11222,22 @@
       {
         "wrong": "type date or checkbox on Input",
         "right": "The DatePicker or Checkbox component"
+      },
+      {
+        "wrong": "A plain Input on its own on a page, with nothing to show where it is",
+        "right": "A plain Input in a row of a Fieldset with variant inset, or an outlined or filled Input"
+      },
+      {
+        "wrong": "A clear button built from an IconButton in the end slot",
+        "right": "clearable, which shows the clear part only while it can act and returns focus to the input"
       }
     ],
-    "since": "0.1.0"
+    "since": "0.1.0",
+    "contract": {
+      "optionalParts": [
+        "clear"
+      ]
+    }
   },
   {
     "name": "InputGroup",
@@ -12242,11 +12422,12 @@
     "name": "List",
     "kind": "component",
     "family": "data-display",
-    "summary": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
+    "summary": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links, and a list can group its rows into sections with a header and a footer. On web it is rows on the page; on ios inset grouped cards of 52pt rows with section text above and below each card; on android 56dp rows with the section header as a small label.",
     "useWhen": [
       "A short list of things people open: mail, files, boards, members",
       "Rows that each carry one or two actions, such as delete or more",
-      "Ordered steps or a ranking, as an ol"
+      "Ordered steps or a ranking, as an ol",
+      "Rows grouped under headings: settings groups, contacts by letter (ListSection, with SectionIndex for long lists)"
     ],
     "avoidWhen": [
       "Picking one or more options from the rows",
@@ -12270,10 +12451,14 @@
       "end",
       "actions",
       "separator",
-      "empty"
+      "empty",
+      "section",
+      "section-header",
+      "section-footer"
     ],
     "parts": {
-      "ListItem": "item"
+      "ListItem": "item",
+      "ListSection": "section"
     },
     "slots": {
       "item": {
@@ -12309,6 +12494,19 @@
         "max": 3
       },
       "empty": {
+        "accepts": "text",
+        "max": 1
+      },
+      "section": {
+        "accepts": [
+          "ListItem"
+        ]
+      },
+      "section-header": {
+        "accepts": "text",
+        "max": 1
+      },
+      "section-footer": {
         "accepts": "text",
         "max": 1
       }
@@ -12378,6 +12576,27 @@
         "type": "boolean",
         "default": false,
         "description": "Dims the start icon and the title. A link loses its href, keeps focus with role link and aria-disabled (anatomy rule 5), and linkProps.onClick does not run. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
+      },
+      "ListSection.header": {
+        "type": "node",
+        "description": "The section heading above its rows (part section-header, an h3 by default). It names the section's nested list and takes focus (tabindex -1) when a SectionIndex jumps to the section."
+      },
+      "ListSection.footer": {
+        "type": "node",
+        "description": "A note under the rows (part section-footer, a p): what the settings of the section do. It is the description of the section's nested list."
+      },
+      "ListSection.level": {
+        "type": "number",
+        "default": 3,
+        "description": "The heading level of the header, 2 to 6, to fit the page outline."
+      },
+      "ListSection.empty": {
+        "type": "node",
+        "description": "Shown when the section has no rows, as in List."
+      },
+      "ListSection.id": {
+        "type": "string",
+        "description": "Put the id a SectionIndex targets here; the jump scrolls to the section and focuses its heading."
       }
     },
     "states": [
@@ -12386,8 +12605,8 @@
       "data-pressed"
     ],
     "a11y": {
-      "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one.",
-      "focus": "Each linked row is one Tab stop on its title link; its actions follow. A disabled row link stays focusable with aria-disabled. Rows without a link and the list itself are not focusable. A 2px ring from color.focus.ring draws inside the whole row.",
+      "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one. A list of sections is a ul with role group (named) or none (unnamed) holding li elements with role presentation; each holds a heading and a nested list named by it, so a reader says list, 4 items per section.",
+      "focus": "Each linked row is one Tab stop on its title link; its actions follow. A disabled row link stays focusable with aria-disabled. Rows without a link and the list itself are not focusable. A 2px ring from color.focus.ring draws inside the whole row. A section heading is not a Tab stop; it takes focus (tabindex -1) when a SectionIndex jumps to it, with the same 2px ring.",
       "keys": {
         "Tab": "Moves to the next row link or row action",
         "Shift+Tab": "Moves to the previous row link or row action",
@@ -12405,7 +12624,9 @@
         "Under forced colors the focus ring is Highlight, the active row gets a CanvasText outline and separators are CanvasText.",
         "data-linked marks a row with a link, for CSS only; it is structure, not a state.",
         "An active row without a link carries aria-current on the li.",
-        "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it."
+        "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it.",
+        "Sections (order M9.2, proposed): the nested list of a section is its own List root with the outer size and variant, so an inset list draws one card per section and every row rule applies. The outer list of sections draws no fill and carries no data-variant. Rows and sections do not mix in one List.",
+        "Header and footer take the start edge and line up with the row text, so they align right in Arabic. The header is muted text at font.size.s (4.5:1); the footer the same at regular weight."
       ]
     },
     "content": {
@@ -12449,7 +12670,8 @@
       "border.width.default",
       "border.width.strong",
       "opacity.disabled",
-      "color.focus.ring"
+      "color.focus.ring",
+      "font.weight.regular"
     ],
     "motion": "list-stagger",
     "frameworks": {
@@ -12469,9 +12691,13 @@
       }
     },
     "styles": {
+      "web": "Rows on the page; sections stack with the header above and the footer below each group.",
+      "ios": "Inset grouped cards with 52pt rows and a chevron on rows that go somewhere; the section header and footer sit outside the card in small muted text.",
+      "android": "56dp rows with a ripple from the touch point; the section header is a small label above its rows.",
       "studio": "Flat rows, a 5 percent overlay on hover, a 10 percent overlay for the active row; inset groups on surface 2.",
       "desk": "The same on the Desk tokens; inset groups read as a panel inside a window.",
-      "neutral": "The same on the Neutral tokens; no recipe."
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the card corner and hairline follow the platform on ios."
     },
     "mistakes": [
       {
@@ -12493,6 +12719,14 @@
       {
         "wrong": "A long sentence as the title, cut to one line with an ellipsis that a pointer user cannot read in full",
         "right": "A short title of a few words, with the rest in description, which wraps to two lines"
+      },
+      {
+        "wrong": "A heading outside the List and a second List for each group",
+        "right": "ListSection with header and footer, so each group is a named list and a SectionIndex can jump to it"
+      },
+      {
+        "wrong": "ListItem rows and ListSection parts in one List",
+        "right": "Every row inside a ListSection once the list has sections"
       }
     ],
     "since": "0.1.0"
@@ -14314,11 +14548,12 @@
     "name": "NumberField",
     "kind": "component",
     "family": "forms",
-    "summary": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds.",
+    "summary": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds. With variant stepper the value is plain text before a gray capsule of minus and plus. On web both forms are drawn as here; on ios the stepper is the platform stepper capsule with its 44pt press area; on android the stepper is an outlined capsule.",
     "useWhen": [
       "A count or an amount someone types or nudges: seats, guests, a quantity in a cart",
       "A number with bounds and a step, where the step buttons and the arrow keys help",
-      "A money amount, a percent or a measure formatted for the locale (SAR, 15%, 2.5 kg)"
+      "A money amount, a percent or a measure formatted for the locale (SAR, 15%, 2.5 kg)",
+      "A small count nudged one at a time in a settings row or a list row (guests, sessions, copies): variant stepper"
     ],
     "avoidWhen": [
       "A Studio inspector value someone drags to change (width, rotation, opacity)",
@@ -14408,6 +14643,14 @@
         "default": "default",
         "description": "default takes radius.control from the style. pill is always fully round, with round steppers."
       },
+      "variant": {
+        "type": [
+          "field",
+          "stepper"
+        ],
+        "default": "field",
+        "description": "field: the bordered box with a step button at each end. stepper (order M9.3, proposed): the value as plain text before a capsule holding minus and plus split by a hairline; the input stays a real spinbutton you can type in, drawn without a box until it has focus. The capsule halves are a size under the field (xs and sm take xs, md sm, lg md). Stamped as data-variant only when passed."
+      },
       "invalid": {
         "type": "boolean",
         "description": "Marks the value invalid. Inside a Field it follows the Field."
@@ -14481,7 +14724,8 @@
         "A typed value that is not a number goes back to the last value on blur.",
         "The mouse wheel never changes the value, so a page scroll over the field is safe.",
         "A caller's onKeyDown does not receive PageUp and PageDown; the field handles them.",
-        "No native title attribute. Use the Field description for the bounds."
+        "No native title attribute. Use the Field description for the bounds.",
+        "Order M9.3 (proposed), variant stepper: the same textbox, keys and step buttons. The decrement moves after the value in the DOM, so the reading order is value, Decrease, Increase, as drawn. The step buttons keep their names (React Aria's words: Decrease and Increase, Arabic خفض and زيادة, plus the field name) and stay out of the tab order. The capsule halves are drawn a size under the field; on ios and android the IconButton hit part grows the press area to the platform target with no visual change (WCAG 2.5.8). Focus keeps the ring around the root and gives the value a quiet fill (WCAG 2.4.7). In right to left the capsule sits at the left of the value; minus stays at the inline start of the capsule (right) and plus at the inline end."
       ]
     },
     "content": {
@@ -14529,7 +14773,8 @@
       "focus.shadow.ring",
       "duration.base",
       "ease.default",
-      "opacity.disabled"
+      "opacity.disabled",
+      "color.border.default"
     ],
     "motion": "fade",
     "frameworks": {
@@ -14537,7 +14782,7 @@
         "status": "ready",
         "behavior": "react-aria-components NumberField, rendered with our elements through its render prop",
         "example": "NumberField.demo.tsx",
-        "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
+        "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type. Order M9.3: variant (field, stepper) is in React; the Angular input waits for order M9.14, and NumberField.css already draws data-variant stepper."
       },
       "angular": {
         "status": "ready",
@@ -14551,7 +14796,9 @@
     },
     "styles": {
       "studio": "The Input pill with round ghost steppers at the two ends, the glow and the 2px ring on focus",
-      "desk": "The same box and steppers, in Instrument Sans"
+      "desk": "The same box and steppers, in Instrument Sans",
+      "liquid": "The field is the Liquid control box; the stepper is a gray capsule with a hairline between minus and plus, painted per platform in order M9.5.",
+      "neutral": "Tokens only: the Neutral control box, and the stepper capsule in the neutral soft fill."
     },
     "mistakes": [
       {
@@ -14573,6 +14820,10 @@
       {
         "wrong": "Stacked chevron steppers inside a 32px box",
         "right": "The two 24px steppers at the ends, so each is a full target"
+      },
+      {
+        "wrong": "A stepper capsule with the value hidden, or a value inside the capsule",
+        "right": "variant stepper: the value stays visible as text before the capsule, so the keyboard and screen readers reach it"
       }
     ],
     "contract": {
@@ -19064,6 +19315,191 @@
     "since": "0.1.0"
   },
   {
+    "name": "SectionIndex",
+    "kind": "component",
+    "family": "navigation",
+    "summary": "A column of section keys beside a long list with sections: a press on a key jumps to its section, a press that moves along the column scrubs through them. On web, ios and android it is the same column at the inline end of the list (the left in Arabic); on android a letter bubble shows while scrubbing.",
+    "useWhen": [
+      "A long list sorted by name with one section per letter: contacts, countries, members",
+      "A list of more than about 50 rows that people search by its first letter"
+    ],
+    "avoidWhen": [
+      "A short list that fits on two screens",
+      "A list that is not sorted by the keys the column shows",
+      "Sections of a long page of text"
+    ],
+    "insteadUse": {
+      "A short list": "List",
+      "Finding one row by any part of its name": "SearchField above the List",
+      "Sections of a long page": "TableOfContents"
+    },
+    "anatomy": [
+      "root",
+      "item",
+      "gap"
+    ],
+    "slots": {
+      "item": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "sections": {
+        "type": "array",
+        "required": true,
+        "description": "The keys in column order, each { key, label?, target }: the key drawn, an accessible name when it differs (keep the key in it), and the id of the section it jumps to. Build them with indexAlphabet, groupByInitial and indexEntries from @the-system/shared: A to Z then # in English, the 28 Arabic letters then # in Arabic, every key going to its own section or the next one."
+      },
+      "label": {
+        "type": "string",
+        "required": true,
+        "description": "The name of the nav landmark, never drawn (anatomy convention 7): Contacts index, فهرس جهات الاتصال."
+      },
+      "onSelect": {
+        "type": "function",
+        "description": "Called with the key and its target on every jump: Enter, a tap, or each key a scrub crosses."
+      },
+      "active": {
+        "type": "string",
+        "description": "The current key, for a list that tracks the section in view. Without it the last key chosen is current. Sets data-active and aria-current location on that key."
+      },
+      "collapse": {
+        "type": [
+          "auto",
+          "never"
+        ],
+        "default": "auto",
+        "description": "auto: when the column is too short for every key at 24px, keys are kept evenly from first to last with a gap dot for the rest (data-collapsed on the root). never: every key shows and the layout makes room."
+      }
+    },
+    "states": [
+      "data-active",
+      "data-collapsed",
+      "data-dragging"
+    ],
+    "a11y": {
+      "role": "navigation landmark named by label, holding one link per key shown. Gap dots are aria-hidden.",
+      "focus": "One Tab stop: the key focus was last on, else the current key, else the first. Up and Down move between keys. Enter jumps to the section and moves focus to its heading (tabindex -1), so a reader announces the section and the next Tab continues from there. A 2px ring from color.focus.ring.",
+      "keys": {
+        "Tab": "Moves into the column on one key, and out of it",
+        "ArrowDown": "Moves focus to the next key",
+        "ArrowUp": "Moves focus to the previous key",
+        "Home": "Moves focus to the first key",
+        "End": "Moves focus to the last key",
+        "Enter": "Jumps to the section of the focused key and moves focus to its heading",
+        "Pointer": "A tap on a key jumps to its section with no drag (the path that needs no drag, WCAG 2.5.7). A press that moves along the column scrubs: each key the pointer crosses jumps at once, and focus moves to the last section heading on release."
+      },
+      "announce": "Navigation, Contacts index. Each key is a link named by its key, or its label. After a jump the section heading is focused and read.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "Every key is at least 24 by 24 CSS px (WCAG 2.2 2.5.8). A column too short for every key collapses keys into gap dots instead of shrinking them; scrubbing over a dot reaches the keys it hides. Hidden keys are not Tab or arrow stops; their sections stay reachable in the list.",
+        "Keys are link text at 4.5:1 (color.text.link). The gap dot is a mark at 3:1 (color.primary.border, convention 16). The current key is marked by a fill and aria-current, not by color alone.",
+        "The column sets touch-action none, so a finger on it scrubs instead of scrolling the page. The press takes pointer capture.",
+        "The column takes the place the layout gives it. Put it after the list's scroller in the DOM so it sits at the inline end: the right in English, the left in Arabic. Keys read from top to bottom in both directions.",
+        "The href of each key is a fragment link to its section, so the column still works before the script runs.",
+        "Under forced colors keys are LinkText, the current key has a CanvasText outline, the focus outline is Highlight and gap dots are CanvasText."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Names what the column indexes: Contacts index.",
+        "keys": "One upper case letter per key, A to Z, then # for names that start with a digit, a symbol or another script."
+      },
+      "ar": {
+        "label": "اسم بصيغة اسمية بدون تشكيل: فهرس جهات الاتصال.",
+        "keys": "الحروف الثمانية والعشرون بترتيب الألفباء، بعدها # للأسماء اللي تبدأ برقم أو رمز أو حرف لاتيني. الأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "size.target-min",
+      "space.3xs",
+      "space.2xs",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.leading.arabic.tight",
+      "color.text.link",
+      "color.bg.overlay-10",
+      "color.primary.border",
+      "color.focus.ring",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "nav of anchors with roving tabindex, pointer capture for scrubbing, collapseIndex and slotKey from @the-system/shared",
+        "example": "SectionIndex.demo.tsx",
+        "note": "No motion: the jump is instant, as on the platforms, and the current key swaps its fill at once. Reduced motion changes nothing."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: nav[dsSectionIndex] with the same anchors and the same shared helpers."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws the column (no system view on either platform): a View beside a SectionList with a pan responder, accessibilityRole adjustable with increment and decrement actions for the path that needs no drag."
+      }
+    },
+    "styles": {
+      "web": "A column of small link colored keys at the inline end of a long list.",
+      "ios": "The same column, keys close together in the tint, no fill behind the column.",
+      "android": "The same column; while scrubbing the current key shows as a large letter bubble beside it (Material fast scroll).",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Shrinking the keys to fit a short column",
+        "right": "collapse auto, which keeps 24px keys and draws gap dots"
+      },
+      {
+        "wrong": "A column of Latin letters over an Arabic list",
+        "right": "indexAlphabet('ar'): the 28 Arabic letters in order, then #"
+      },
+      {
+        "wrong": "Keys that scroll the list but leave focus on the column",
+        "right": "Targets that are ListSection ids, so Enter moves focus to the section heading"
+      },
+      {
+        "wrong": "Placing the column with left or right",
+        "right": "DOM order after the scroller, so it takes the inline end in both directions"
+      }
+    ],
+    "contract": {
+      "keys": {
+        "ArrowDown": {
+          "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+          "expect": "focus-moves"
+        },
+        "ArrowUp": {
+          "focus": "[data-ds='section-index'] > [data-part='item']:last-of-type",
+          "expect": "focus-moves"
+        },
+        "End": {
+          "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+          "expect": "focus-moves"
+        },
+        "Home": {
+          "focus": "[data-ds='section-index'] > [data-part='item']:last-of-type",
+          "expect": "focus-moves"
+        },
+        "Enter": {
+          "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+          "expect": "focus-moves"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "SegmentedControl",
     "kind": "component",
     "family": "actions",
@@ -19320,11 +19756,12 @@
     "name": "Select",
     "kind": "component",
     "family": "selection",
-    "summary": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open.",
+    "summary": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open. On web it is a field box, or with emphasis ghost a borderless value for toolbars and filter rows; on ios the ghost form is the pop-up button (the value in the tint with an up and down glyph) and the list is the platform menu; on android the ghost form is a text button with a dropdown arrow and the list is a Material menu.",
     "useWhen": [
       "One value from a short list of about 4 to 12 options that people read rather than search, such as a sort order, a status or a time zone region",
       "A form row with little room, where the options need not all show at once",
-      "A value that must be one of the options, with a sensible default or a placeholder"
+      "A value that must be one of the options, with a sensible default or a placeholder",
+      "A value picked in a toolbar, a filter row or at the end of a list row, where a field box is too heavy: emphasis ghost"
     ],
     "avoidWhen": [
       "A long list (more than about 12 options) that people find faster by typing",
@@ -19424,6 +19861,14 @@
         "default": "default",
         "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
       },
+      "emphasis": {
+        "type": [
+          "outline",
+          "ghost"
+        ],
+        "default": "outline",
+        "description": "outline: the field box. ghost: the pop-up button (order M9.3, proposed): no box, the value and the up and down glyph in the link color, as wide as its value, for toolbars, filter rows and list rows. The height, keys and list are those of outline. Stamped as data-emphasis only when passed."
+      },
       "invalid": {
         "type": "boolean",
         "default": false,
@@ -19506,7 +19951,8 @@
         "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
         "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
         "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item.",
-        "Order 1.29: the chevron flips on its block axis (scaleY of the cosine of --_select-turn) instead of turning through a sideways shape. The placeholder reads --_select-placeholder-fg, text-muted by default, which keeps 4.5:1 on each style's field fill."
+        "Order 1.29: the chevron flips on its block axis (scaleY of the cosine of --_select-turn) instead of turning through a sideways shape. The placeholder reads --_select-placeholder-fg, text-muted by default, which keeps 4.5:1 on each style's field fill.",
+        "Order M9.3 (proposed), emphasis ghost: the same combobox, keys and list as outline. With no box, the value text meets 4.5:1 (color.text.link) and the glyph 3:1, which together identify the control (WCAG 1.4.11). The focus ring is the same ring as outline. Invalid colors the value with the danger text (the Field error says why); read only draws the value as plain text with no glyph. In forced colors the ghost trigger gets a ButtonText edge. A ghost Select still needs a name: a Field label or aria-label."
       ]
     },
     "content": {
@@ -19587,7 +20033,8 @@
       "duration.base",
       "ease.default",
       "ease.emphasized",
-      "z.menu"
+      "z.menu",
+      "color.text.link"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -19595,7 +20042,7 @@
         "status": "ready",
         "behavior": "radix:Select (Root, Trigger, Value, Icon, Content in popper position, Viewport, Item, ItemText, Group, Label, Separator, ScrollUpButton, ScrollDownButton)",
         "example": "Select.demo.tsx",
-        "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close."
+        "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close. Order M9.3: emphasis (outline, ghost) is in React; the Angular input waits for order M9.14, and Select.css already draws data-emphasis for both."
       },
       "angular": {
         "status": "ready",
@@ -19611,7 +20058,8 @@
     "styles": {
       "studio": "The trigger is the Input box: a transparent pill with the control border, the glow and the ring on focus or while open, chevrons up and down at the end. The list is the Studio menu surface: surface-3, the card radius, the menu shadow; the lit row takes the overlay step.",
       "desk": "The same trigger. The list is the Desk menu glass: the strong material and blur, a hairline, the panel radius with field radius rows, regular weight; the lit row is the yellow primary fill with dark text. Under reduced transparency and more contrast the glass turns solid.",
-      "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface."
+      "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface. Ghost draws the value in the Neutral link color with no box.",
+      "liquid": "On ios the outline trigger is the platform field and ghost is the pop-up button: the value in the tint, the up and down glyph after it, the list on the Liquid menu glass. Platform paint for ghost on ios and android lands in order M9.5."
     },
     "mistakes": [
       {
@@ -19637,6 +20085,14 @@
       {
         "wrong": "A read only Select drawn as disabled",
         "right": "readOnly: focusable and readable, with a dashed border"
+      },
+      {
+        "wrong": "A ghost Select with no label or aria-label in a toolbar",
+        "right": "aria-label on the Select (Sort by) or a Field label, so the pop-up button has a name"
+      },
+      {
+        "wrong": "A ghost Select for an action (Share, Delete)",
+        "right": "A Button, or a DropdownMenu for a list of actions"
       }
     ],
     "contract": {

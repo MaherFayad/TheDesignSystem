@@ -22,9 +22,24 @@
 // plays again on a re-render, an added row or a reorder, and not when the
 // rows come from server HTML that is already on screen (hydration). Under
 // reduced motion the pattern plays a fade with no delay.
+//
+// Sections (order M9.2, proposed): a List whose children are ListSection
+// elements is a column of sections. Each section is an li with role
+// presentation that holds a heading (part section-header, tabindex -1 so a
+// SectionIndex jump can move focus to it), a nested List of its rows
+// (labelled by the heading, so a reader says "list, 4 items" per section)
+// and an optional footer (part section-footer, the nested list's
+// description). The outer ul then takes role group when it has a name and
+// role none when it has not, because its children are not list items. The
+// nested List takes the outer size and variant, so the card look of an
+// inset list is drawn per section. Rows and sections do not mix in one
+// List.
 import {
   Children,
+  createContext,
   isValidElement,
+  useContext,
+  useId,
   useCallback,
   useLayoutEffect,
   useRef,
@@ -120,8 +135,21 @@ function useFirstPaintStagger(hasRows: boolean, ref: Ref<HTMLElement> | undefine
  */
 export function List({ size = 'md', variant = 'plain', ordered = false, empty, children, ref, ...rest }: ListProps) {
   const rows = Children.toArray(children).filter(isValidElement);
-  const setRef = useFirstPaintStagger(rows.length > 0, ref);
+  const sectioned = rows.length > 0 && rows.every((row) => row.type === ListSection);
+  const setRef = useFirstPaintStagger(rows.length > 0 && !sectioned, ref);
   const common = { 'data-ds': 'list', 'data-size': size, 'data-variant': variant } as const;
+  if (sectioned) {
+    // The outer list of a sectioned List holds sections, not rows: no variant of its own (each section draws it).
+    const named = Boolean(rest['aria-label'] || rest['aria-labelledby']);
+    const Tag = ordered ? 'ol' : 'ul';
+    return (
+      <SectionContext.Provider value={{ size, variant, ordered }}>
+        <Tag {...(rest as HTMLAttributes<HTMLUListElement>)} role={named ? 'group' : 'none'} data-ds="list" data-size={size} ref={setRef}>
+          {rows}
+        </Tag>
+      </SectionContext.Provider>
+    );
+  }
   // list-style: none makes Safari and VoiceOver drop the list role, so it is set again.
   const listRole = { role: 'list' } as const;
   if (rows.length === 0) {
@@ -145,6 +173,55 @@ export function List({ size = 'md', variant = 'plain', ordered = false, empty, c
     <ul {...listRole} {...(rest as HTMLAttributes<HTMLUListElement>)} {...common} ref={setRef}>
       {rows}
     </ul>
+  );
+}
+
+/** What a section reads from its List: the rows of every section share the list's size, variant and order. */
+const SectionContext = createContext<{ size: ListSize; variant: ListVariant; ordered: boolean }>({ size: 'md', variant: 'plain', ordered: false });
+
+export type ListSectionLevel = 2 | 3 | 4 | 5 | 6;
+
+export interface ListSectionProps extends Omit<HTMLAttributes<HTMLLIElement>, 'title'> {
+  /** The section heading, drawn above the rows. It names the section's list and is where a SectionIndex jump puts focus. */
+  header?: ReactNode;
+  /** A note under the rows: what the section's settings do. Read as the description of the section's list. */
+  footer?: ReactNode;
+  /** The heading level of the header. Default 3. */
+  level?: ListSectionLevel;
+  /** Shown when the section has no rows. */
+  empty?: ReactNode;
+  /** ListItem elements. */
+  children?: ReactNode;
+  ref?: Ref<HTMLLIElement>;
+}
+
+/**
+ * One section of a List: a heading, the rows as a nested list and a footer.
+ * Put the id a SectionIndex targets on the section; the jump focuses the
+ * heading inside it.
+ */
+export function ListSection({ header, footer, level = 3, empty, children, ref, ...rest }: ListSectionProps) {
+  const { size, variant, ordered } = useContext(SectionContext);
+  const id = useId();
+  const headerId = header !== undefined && header !== null ? `${id}-header` : undefined;
+  const footerId = footer !== undefined && footer !== null ? `${id}-footer` : undefined;
+  const Heading = `h${level}` as const;
+  return (
+    <li {...rest} ref={ref} role="presentation" data-part="section">
+      {headerId && (
+        <Heading data-part="section-header" id={headerId} tabIndex={-1}>
+          {header}
+        </Heading>
+      )}
+      <List size={size} variant={variant} ordered={ordered} empty={empty} aria-labelledby={headerId} aria-describedby={footerId}>
+        {children}
+      </List>
+      {footerId && (
+        <p data-part="section-footer" id={footerId}>
+          {footer}
+        </p>
+      )}
+    </li>
   );
 }
 

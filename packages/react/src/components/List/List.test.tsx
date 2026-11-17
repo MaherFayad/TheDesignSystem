@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
 import ListDemo from './List.demo';
-import { List, ListItem } from './index';
+import { List, ListItem, ListSection } from './index';
 
 const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="list"]')!;
 
@@ -152,6 +152,61 @@ describe('List', () => {
     expect(root(container).className).toBe('x');
     expect(list).toBe(root(container));
     expect(row).toBe(container.querySelector('[data-part="item"]'));
+  });
+
+  it('renders sections as presentation items holding a heading, a nested list named by it, and a footer', () => {
+    const { container } = render(
+      <List aria-label="Settings" variant="inset" size="sm">
+        <ListSection id="net" header="Network" footer="Large files wait for Wi-Fi.">
+          <ListItem title="Mobile data" />
+          <ListItem title="Wi-Fi" />
+        </ListSection>
+        <ListSection header="Privacy" level={2}>
+          <ListItem title="Passcode" />
+        </ListSection>
+      </List>,
+    );
+    const outer = root(container);
+    expect(outer.tagName).toBe('UL');
+    expect(outer.getAttribute('role')).toBe('group');
+    expect(outer.getAttribute('aria-label')).toBe('Settings');
+    expect(outer.hasAttribute('data-variant')).toBe(false);
+    const sections = outer.querySelectorAll(':scope > [data-part="section"]');
+    expect(sections).toHaveLength(2);
+    const first = sections[0]!;
+    expect(first.tagName).toBe('LI');
+    expect(first.getAttribute('role')).toBe('presentation');
+    expect(first.id).toBe('net');
+    const heading = screen.getByRole('heading', { name: 'Network', level: 3 });
+    expect(heading.getAttribute('data-part')).toBe('section-header');
+    expect(heading.getAttribute('tabindex')).toBe('-1');
+    const nested = screen.getByRole('list', { name: 'Network' });
+    expect(nested.getAttribute('data-ds')).toBe('list');
+    expect(nested.getAttribute('data-variant')).toBe('inset');
+    expect(nested.getAttribute('data-size')).toBe('sm');
+    expect(nested.querySelectorAll(':scope > [data-part="item"]')).toHaveLength(2);
+    const footer = first.querySelector('[data-part="section-footer"]')!;
+    expect(footer.tagName).toBe('P');
+    expect(nested.getAttribute('aria-describedby')).toBe(footer.id);
+    expect(screen.getByRole('heading', { name: 'Privacy', level: 2 })).toBeTruthy();
+    expect(sections[1]!.querySelector('[data-part="section-footer"]')).toBeNull();
+  });
+
+  it('gives an unnamed list of sections role none, an ordered one an ol, and an empty section its message', () => {
+    const { container } = render(
+      <List ordered>
+        <ListSection header="Steps">
+          <ListItem title="One" />
+        </ListSection>
+        <ListSection empty="No steps yet" />
+      </List>,
+    );
+    const outer = root(container);
+    expect(outer.tagName).toBe('OL');
+    expect(outer.getAttribute('role')).toBe('none');
+    expect(outer.querySelector('[data-part="section"] ol[data-ds="list"]')).not.toBeNull();
+    expect(outer.querySelectorAll('[data-part="section"]')[1]!.querySelector('[data-part="empty"]')?.textContent).toBe('No steps yet');
+    expect(outer.querySelectorAll('[data-part="section-header"]')).toHaveLength(1);
   });
 
   it('renders the demo cases in order', () => {

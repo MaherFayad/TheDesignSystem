@@ -1,0 +1,185 @@
+{
+  "name": "SectionIndex",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "A column of section keys beside a long list with sections: a press on a key jumps to its section, a press that moves along the column scrubs through them. On web, ios and android it is the same column at the inline end of the list (the left in Arabic); on android a letter bubble shows while scrubbing.",
+  "useWhen": [
+    "A long list sorted by name with one section per letter: contacts, countries, members",
+    "A list of more than about 50 rows that people search by its first letter"
+  ],
+  "avoidWhen": [
+    "A short list that fits on two screens",
+    "A list that is not sorted by the keys the column shows",
+    "Sections of a long page of text"
+  ],
+  "insteadUse": {
+    "A short list": "List",
+    "Finding one row by any part of its name": "SearchField above the List",
+    "Sections of a long page": "TableOfContents"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "gap"
+  ],
+  "slots": {
+    "item": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "sections": {
+      "type": "array",
+      "required": true,
+      "description": "The keys in column order, each { key, label?, target }: the key drawn, an accessible name when it differs (keep the key in it), and the id of the section it jumps to. Build them with indexAlphabet, groupByInitial and indexEntries from @the-system/shared: A to Z then # in English, the 28 Arabic letters then # in Arabic, every key going to its own section or the next one."
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The name of the nav landmark, never drawn (anatomy convention 7): Contacts index, فهرس جهات الاتصال."
+    },
+    "onSelect": {
+      "type": "function",
+      "description": "Called with the key and its target on every jump: Enter, a tap, or each key a scrub crosses."
+    },
+    "active": {
+      "type": "string",
+      "description": "The current key, for a list that tracks the section in view. Without it the last key chosen is current. Sets data-active and aria-current location on that key."
+    },
+    "collapse": {
+      "type": [
+        "auto",
+        "never"
+      ],
+      "default": "auto",
+      "description": "auto: when the column is too short for every key at 24px, keys are kept evenly from first to last with a gap dot for the rest (data-collapsed on the root). never: every key shows and the layout makes room."
+    }
+  },
+  "states": [
+    "data-active",
+    "data-collapsed",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "navigation landmark named by label, holding one link per key shown. Gap dots are aria-hidden.",
+    "focus": "One Tab stop: the key focus was last on, else the current key, else the first. Up and Down move between keys. Enter jumps to the section and moves focus to its heading (tabindex -1), so a reader announces the section and the next Tab continues from there. A 2px ring from color.focus.ring.",
+    "keys": {
+      "Tab": "Moves into the column on one key, and out of it",
+      "ArrowDown": "Moves focus to the next key",
+      "ArrowUp": "Moves focus to the previous key",
+      "Home": "Moves focus to the first key",
+      "End": "Moves focus to the last key",
+      "Enter": "Jumps to the section of the focused key and moves focus to its heading",
+      "Pointer": "A tap on a key jumps to its section with no drag (the path that needs no drag, WCAG 2.5.7). A press that moves along the column scrubs: each key the pointer crosses jumps at once, and focus moves to the last section heading on release."
+    },
+    "announce": "Navigation, Contacts index. Each key is a link named by its key, or its label. After a jump the section heading is focused and read.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "Every key is at least 24 by 24 CSS px (WCAG 2.2 2.5.8). A column too short for every key collapses keys into gap dots instead of shrinking them; scrubbing over a dot reaches the keys it hides. Hidden keys are not Tab or arrow stops; their sections stay reachable in the list.",
+      "Keys are link text at 4.5:1 (color.text.link). The gap dot is a mark at 3:1 (color.primary.border, convention 16). The current key is marked by a fill and aria-current, not by color alone.",
+      "The column sets touch-action none, so a finger on it scrubs instead of scrolling the page. The press takes pointer capture.",
+      "The column takes the place the layout gives it. Put it after the list's scroller in the DOM so it sits at the inline end: the right in English, the left in Arabic. Keys read from top to bottom in both directions.",
+      "The href of each key is a fragment link to its section, so the column still works before the script runs.",
+      "Under forced colors keys are LinkText, the current key has a CanvasText outline, the focus outline is Highlight and gap dots are CanvasText."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Names what the column indexes: Contacts index.",
+      "keys": "One upper case letter per key, A to Z, then # for names that start with a digit, a symbol or another script."
+    },
+    "ar": {
+      "label": "اسم بصيغة اسمية بدون تشكيل: فهرس جهات الاتصال.",
+      "keys": "الحروف الثمانية والعشرون بترتيب الألفباء، بعدها # للأسماء اللي تبدأ برقم أو رمز أو حرف لاتيني. الأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "size.target-min",
+    "space.3xs",
+    "space.2xs",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.arabic.tight",
+    "color.text.link",
+    "color.bg.overlay-10",
+    "color.primary.border",
+    "color.focus.ring",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "nav of anchors with roving tabindex, pointer capture for scrubbing, collapseIndex and slotKey from @the-system/shared",
+      "example": "SectionIndex.demo.tsx",
+      "note": "No motion: the jump is instant, as on the platforms, and the current key swaps its fill at once. Reduced motion changes nothing."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: nav[dsSectionIndex] with the same anchors and the same shared helpers."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws the column (no system view on either platform): a View beside a SectionList with a pan responder, accessibilityRole adjustable with increment and decrement actions for the path that needs no drag."
+    }
+  },
+  "styles": {
+    "web": "A column of small link colored keys at the inline end of a long list.",
+    "ios": "The same column, keys close together in the tint, no fill behind the column.",
+    "android": "The same column; while scrubbing the current key shows as a large letter bubble beside it (Material fast scroll).",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Shrinking the keys to fit a short column",
+      "right": "collapse auto, which keeps 24px keys and draws gap dots"
+    },
+    {
+      "wrong": "A column of Latin letters over an Arabic list",
+      "right": "indexAlphabet('ar'): the 28 Arabic letters in order, then #"
+    },
+    {
+      "wrong": "Keys that scroll the list but leave focus on the column",
+      "right": "Targets that are ListSection ids, so Enter moves focus to the section heading"
+    },
+    {
+      "wrong": "Placing the column with left or right",
+      "right": "DOM order after the scroller, so it takes the inline end in both directions"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='section-index'] > [data-part='item']:last-of-type",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-ds='section-index'] > [data-part='item']:last-of-type",
+        "expect": "focus-moves"
+      },
+      "Enter": {
+        "focus": "[data-ds='section-index'] > [data-part='item'][tabindex='0']",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

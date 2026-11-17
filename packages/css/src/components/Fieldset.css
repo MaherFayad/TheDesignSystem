@@ -17,6 +17,20 @@
  *
  * The legend floats, so it lays out like any other child of the fieldset
  * and the gap applies to it.
+ *
+ * Order M9.1 (proposed): variant inset, the grouped card. The body is a card
+ * of rows; each Field child is one row (Field.css lays the row out and draws
+ * the hairline between rows). The legend is the section header above the
+ * card and the description the footer under it (CSS order; the DOM keeps
+ * legend, description, error, body). Both sit at the rows' text edge.
+ *   --_fieldset-card-bg            the card's fill
+ *   --_fieldset-card-radius        the card's corner
+ *   --_fieldset-card-border-color  the card's edge, at 3:1 against the page
+ *                                  (WCAG 1.4.11: the plain fields in it have no box)
+ *   --_fieldset-card-padding       the rows' text edge, inside the card
+ *   --_fieldset-hairline-color     the line between rows (Field.css reads it)
+ *   --_fieldset-header-font-size   the header and the footer text size
+ *   --_fieldset-header-fg          the header color
  */
 @layer ds.base {
   [data-ds='fieldset'] {
@@ -76,6 +90,48 @@
     margin-block-start: var(--_fieldset-gap);
   }
 
+  /* ------------------------------------------------------------ inset: the grouped card */
+
+  [data-ds='fieldset'][data-variant='inset'] {
+    --_fieldset-card-bg: var(--ds-color-bg-surface);
+    --_fieldset-card-radius: var(--ds-radius-panel);
+    --_fieldset-card-border-color: var(--ds-color-border-control);
+    --_fieldset-card-padding: var(--ds-space-xl);
+    --_fieldset-hairline-color: var(--ds-color-border-default);
+    --_fieldset-header-font-size: var(--ds-font-size-s);
+    --_fieldset-header-fg: var(--ds-color-text-muted);
+    --_fieldset-fg: var(--_fieldset-header-fg);
+  }
+
+  /* The header above the card, the error, the card, then the footer under it. */
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='legend'] {
+    order: 0;
+    padding-inline: var(--_fieldset-card-padding);
+    font-size: var(--_fieldset-header-font-size);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='error'] {
+    order: 1;
+    padding-inline: var(--_fieldset-card-padding);
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] {
+    order: 2;
+    gap: 0;
+    margin-block-start: 0;
+    padding-inline: var(--_fieldset-card-padding);
+    border: var(--ds-border-width-default) solid var(--_fieldset-card-border-color);
+    border-radius: var(--_fieldset-card-radius);
+    background-color: var(--_fieldset-card-bg);
+  }
+
+  [data-ds='fieldset'][data-variant='inset'] > [data-part='description'] {
+    order: 3;
+    padding-inline: var(--_fieldset-card-padding);
+    font-size: var(--_fieldset-header-font-size);
+  }
+
   /*
    * Disabled: native disabled stops every control inside, but the controls
    * do not know it, so every part takes the one disabled look, opacity.disabled.
@@ -95,6 +151,10 @@
   @media (forced-colors: active) {
     [data-ds='fieldset'][data-disabled] {
       --_fieldset-fg: GrayText;
+    }
+
+    [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] {
+      --_fieldset-card-border-color: CanvasText;
     }
   }
 }

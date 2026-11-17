@@ -1,8 +1,22 @@
 'use client';
-import { useCallback, useRef, type ComponentProps, type MouseEvent, type ReactNode, type Ref } from 'react';
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ComponentProps,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
+import { CloseButton } from '../CloseButton/CloseButton';
 import { useFieldControl } from '../Field/Field';
 import type { ShakeBox } from '@the-system/motion';
 import { useErrorShake } from './useErrorShake';
@@ -10,8 +24,14 @@ import { useErrorShake } from './useErrorShake';
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;
 /** Text types only. A checkbox, a date or a file is its own component. */
-/** The box: outlined (a border) or filled (a tint). Unset, the active style and platform choose. */
-export type InputVariant = 'outlined' | 'filled';
+/**
+ * The box: outlined (a border), filled (a tint) or plain (no box: a row of a
+ * grouped card draws the edge). Unset, the active style and platform choose.
+ */
+export type InputVariant = 'outlined' | 'filled' | 'plain';
+
+/** The default names of the clear button by language. Arabic: a noun form. */
+export const inputClearLabels = { en: 'Clear text', ar: 'مسح النص' } as const;
 
 export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password' | 'search';
 /** An icon name, a short text such as "px" or "$", or any node. */
@@ -27,11 +47,20 @@ export interface InputProps
    */
   shape?: InputShape;
   /**
-   * outlined: a border all round. filled: a tinted box. Stamped as
+   * outlined: a border all round. filled: a tinted box. plain: no box, no
+   * border, no fill, for a row of an inset Fieldset. Stamped as
    * data-variant only when passed, so a platform (Android draws filled
    * fields) can follow it. Default unset.
    */
   variant?: InputVariant;
+  /**
+   * Adds the clear part: a CloseButton that shows while the field has a
+   * value and focus, clears it and moves focus back to the input. Escape
+   * also clears it, except inside a dialog. Default false.
+   */
+  clearable?: boolean;
+  /** The accessible name of the clear button. Default "Clear text", or "مسح النص" under an Arabic Theme. */
+  clearLabel?: string;
   /** Marks the value invalid. Inside a Field it follows the Field. */
   invalid?: boolean;
   /** Text types only. Default text. */
@@ -48,6 +77,16 @@ export interface InputProps
   rootProps?: Omit<ComponentProps<'div'>, 'title' | 'children'>;
   /** Goes to the native input. */
   ref?: Ref<HTMLInputElement>;
+}
+
+const INTERACTIVE_DIALOG = '[role="dialog"], [role="alertdialog"], dialog';
+
+/** Sets the value as typing would, so a controlled owner hears onChange with the new value. */
+function setNativeValue(input: HTMLInputElement, value: string) {
+  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  if (setter) setter.call(input, value);
+  else input.value = value;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
@@ -84,11 +123,17 @@ function Adornment({ part, value }: { part: 'start' | 'end'; value: InputAdornme
  * field does not jump sides while someone types a Latin word into Arabic.
  * Email, url, tel and number values are Latin by nature: the CSS runs them
  * left to right and keeps them on the reading side of the form.
+ *
+ * The root carries `data-empty` while the value is empty. With `clearable`,
+ * the clear part shows while the box holds focus and a value; it is in the
+ * tab order after the input only while it shows.
  */
 export function Input({
   size = 'md',
   shape = 'default',
   variant,
+  clearable = false,
+  clearLabel,
   invalid,
   disabled,
   readOnly,
@@ -102,10 +147,22 @@ export function Input({
   id,
   ref,
   'aria-describedby': describedBy,
+  onChange,
+  onKeyDown,
   ...rest
 }: InputProps) {
   const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
   const inner = useRef<HTMLInputElement | null>(null);
+  const { lang } = useTheme();
+  const [empty, setEmpty] = useState(() => String(rest.value ?? rest.defaultValue ?? '') === '');
+  const [focused, setFocused] = useState(false);
+  // The value can change without an input event (a controlled value, a form reset, autofill): read it after every render.
+  useLayoutEffect(() => {
+    const input = inner.current;
+    if (!input) return;
+    const next = input.value === '';
+    setEmpty((e) => (e === next ? e : next));
+  });
   useErrorShake(inner, Boolean(control['aria-invalid']), ownBox);
 
   const setRef = useCallback(
@@ -145,22 +202,85 @@ export function Input({
     input.focus();
   };
 
+  const canClear = clearable && !control.disabled && !control.readOnly;
+  const showClear = canClear && focused && !empty;
+
+  const clear = () => {
+    const input = inner.current;
+    if (!input) return;
+    // Focus first (convention 15): the clear button goes away once the value is empty.
+    input.focus();
+    setNativeValue(input, '');
+    setEmpty(true);
+  };
+
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+    setEmpty(event.target.value === '');
+  };
+
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.key !== 'Escape' || !canClear) return;
+    // A key that ends an IME composition is not a command. Inside a dialog, Escape closes the dialog.
+    if (event.nativeEvent.isComposing || event.keyCode === 229) return;
+    if (event.currentTarget.value === '' || event.currentTarget.closest(INTERACTIVE_DIALOG)) return;
+    event.preventDefault();
+    clear();
+  };
+
+  const onRootFocus = (event: FocusEvent<HTMLDivElement>) => {
+    rootProps?.onFocus?.(event);
+    setFocused(true);
+  };
+
+  const onRootBlur = (event: FocusEvent<HTMLDivElement>) => {
+    rootProps?.onBlur?.(event);
+    const next = event.relatedTarget as Node | null;
+    if (next && event.currentTarget.contains(next)) return;
+    setFocused(false);
+  };
+
+  const name = clearLabel ?? (lang.startsWith('ar') ? inputClearLabels.ar : inputClearLabels.en);
+
   return (
     <div
       {...rootProps}
       className={className}
       style={style}
       onMouseDown={onRootMouseDown}
+      onFocus={clearable ? onRootFocus : rootProps?.onFocus}
+      onBlur={clearable ? onRootBlur : rootProps?.onBlur}
       data-ds="input"
       data-size={size}
       data-shape={shape}
       data-variant={variant}
+      data-empty={empty ? '' : undefined}
       data-invalid={control['aria-invalid'] ? '' : undefined}
       data-disabled={control.disabled ? '' : undefined}
       data-readonly={control.readOnly ? '' : undefined}
     >
       <Adornment part="start" value={start} />
-      <input {...rest} {...control} ref={setRef} type={type} data-part="control" />
+      <input
+        {...rest}
+        {...control}
+        ref={setRef}
+        type={type}
+        onChange={onInputChange}
+        onKeyDown={onInputKeyDown}
+        data-part="control"
+      />
+      {showClear && (
+        <CloseButton
+          data-part="clear"
+          label={name}
+          size={size === 'lg' ? 'sm' : 'xs'}
+          shape="pill"
+          // Keep focus on the input while a pointer presses the button, so the button does not hide before the click.
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={clear}
+        />
+      )}
       <Adornment part="end" value={end} />
     </div>
   );

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
@@ -237,5 +239,44 @@ describe('Select', () => {
     render(<SelectDemo />);
     const ids = [...document.querySelectorAll('[data-demo-case]')].map((n) => n.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled', 'readonly']);
+  });
+  describe('emphasis (order M9.3)', () => {
+    it('stamps no data-emphasis by default, so the outline trigger is unchanged', () => {
+      render(<Sort defaultValue="edited" />);
+      expect(trigger().hasAttribute('data-emphasis')).toBe(false);
+    });
+
+    it('stamps outline and ghost when passed, with the same role, parts and glyph', () => {
+      render(
+        <>
+          <Sort emphasis="outline" />
+          <Select emphasis="ghost" aria-label="Show" items={sortOptions('en')} defaultValue="name" />
+        </>,
+      );
+      expect(trigger().getAttribute('data-emphasis')).toBe('outline');
+      const ghost = screen.getByRole('combobox', { name: 'Show' });
+      expect(ghost.getAttribute('data-emphasis')).toBe('ghost');
+      expect(ghost.querySelector('[data-part="value"]')?.textContent).toBe('Name');
+      expect(ghost.querySelector('[data-part="icon"] svg')).not.toBeNull();
+    });
+
+    it('a ghost trigger opens the list with the keyboard, as outline does', async () => {
+      const user = userEvent.setup();
+      render(<Select emphasis="ghost" aria-label="Show" items={sortOptions('en')} defaultValue="name" />);
+      const ghost = screen.getByRole('combobox', { name: 'Show' });
+      ghost.focus();
+      await user.keyboard('{Enter}');
+      await waitFor(() => expect(ghost.getAttribute('aria-expanded')).toBe('true'));
+      expect(content()).not.toBeNull();
+    });
+
+    it('the ghost CSS draws no box and the value in the link color, and keeps the ring', () => {
+      const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Select.css'), 'utf8');
+      const rule = /\[data-ds='select'\]\[data-emphasis='ghost'\]:not\(\[data-part\]\) \{([^}]*)\}/.exec(css)?.[1] ?? '';
+      expect(rule).toMatch(/--_select-ghost-fg: var\(--ds-color-text-link\)/);
+      expect(rule).toMatch(/border-color: transparent/);
+      expect(rule).toMatch(/background-color: transparent/);
+      expect(rule).not.toMatch(/::before|box-shadow/);
+    });
   });
 });
