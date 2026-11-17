@@ -101,7 +101,7 @@ describe('colorName', () => {
 
   it('names how see through a colour is, with Western digits and the Arabic comma', () => {
     expect(colorName('#0d428966', 'en')).toBe('Blue, dark, 60% transparent');
-    expect(colorName('#0d428966', 'ar')).toBe('أزرق غامق، شفافية 60%');
+    expect(colorName('#0d428966', 'ar')).toBe('أزرق غامق، شفافية 60\u200e%\u200e');
     expect(colorName('#00000000', 'en')).toBe('Transparent');
     expect(colorName('#00000000', 'ar')).toBe('شفاف');
   });

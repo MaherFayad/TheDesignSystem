@@ -323,7 +323,8 @@ const SHADE_WORDS: Record<ColorLanguage, Record<ColorShade, string>> = {
  * The name of a colour for people and screen readers, from its hue and
  * lightness: "Blue, dark" and "أزرق غامق". A see through colour adds how
  * see through it is, with Western digits: "Blue, dark, 40% transparent",
- * "أزرق غامق، شفافية 40%". A fully see through colour is "Transparent",
+ * "أزرق غامق، شفافية 40%" (in Arabic the percent sign sits between left to
+ * right marks, from Intl). A fully see through colour is "Transparent",
  * "شفاف". Pass a locale or a language (en, ar, ar-SA).
  */
 export function colorName(color: ColorRgba | string, locale: string | undefined = 'en'): string {
@@ -335,13 +336,16 @@ export function colorName(color: ColorRgba | string, locale: string | undefined 
   const word = FAMILY_WORDS[lang][family];
   const shadeWord = SHADE_WORDS[lang][shade];
   const clear = Math.round((1 - rgba.a) * 100);
+  // Intl keeps the digits Western and, in Arabic, wraps the percent sign in
+  // left to right marks so "20%" stays whole next to a Latin run.
+  const percent = new Intl.NumberFormat(colorLocale(lang), { style: 'percent' }).format(clear / 100);
   if (lang === 'ar') {
     const base = shadeWord ? `${word} ${shadeWord}` : word;
-    return clear > 0 ? `${base}، شفافية ${clear}%` : base;
+    return clear > 0 ? `${base}، شفافية ${percent}` : base;
   }
   const parts = [word];
   if (shadeWord) parts.push(shadeWord);
-  if (clear > 0) parts.push(`${clear}% transparent`);
+  if (clear > 0) parts.push(`${percent} transparent`);
   return parts.join(', ');
 }
 
