@@ -94,6 +94,8 @@
    * lightest or darkest content (measured from pixels): the dark tab bar
    * (Liquid 4.14, Neutral 3.87) and the light menu (Liquid 4.37). The tint
    * goes up there, not the blur, and only for the strength the styles ship.
+   * Order G2 took the light menu's raise out: its rows keep 4.5:1 with the
+   * shade behind their text in ios.css, so the panel stays clear.
    * Tier 1 runs in Chromium only, which knows every feature in this
    * condition, so the condition keeps the fallbacks of ios.css whole.
    */
@@ -101,10 +103,6 @@
     @container style(--_ios-glass: regular) {
       :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] {
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 74%, transparent);
-      }
-
-      :root[data-refraction='true'] [data-platform='ios']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
-        background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 80%, transparent);
       }
 
       :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
@@ -199,15 +197,15 @@
       pointer-events: none;
       animation: none;
       transition: none;
-      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.1) saturate(1.8);
-      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.1) saturate(1.8);
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.16) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) brightness(1.16) saturate(1.8);
       -webkit-mask:
-        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark)),
-        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark));
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 2), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 2)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 2), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 2)), var(--ds-color-glass-backdrop-dark));
       -webkit-mask-composite: source-over;
       mask:
-        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark)),
-        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 1.5), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 1.5)), var(--ds-color-glass-backdrop-dark));
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 2), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 2)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent calc(var(--ds-space-fixed-xl) * 2), transparent calc(100% - calc(var(--ds-space-fixed-xl) * 2)), var(--ds-color-glass-backdrop-dark));
       mask-composite: add;
     }
 
@@ -223,8 +221,8 @@
       box-shadow: none;
       opacity: 1;
       pointer-events: none;
-      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
-      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.08) saturate(1.8);
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.12) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) brightness(1.12) saturate(1.8);
       -webkit-mask:
         linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark)),
         linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark));
@@ -232,6 +230,38 @@
       mask:
         linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark)),
         linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-m), transparent calc(100% - var(--ds-space-fixed-m)), var(--ds-color-glass-backdrop-dark));
+      mask-composite: add;
+    }
+
+    /*
+     * The navigation and sheet buttons (order G2): their ::before was the
+     * pointer glow of Button.css, which ios turns off (--_button-glow 0), so
+     * it is free for the same band as the bar: the buttons are thick clear
+     * glass with a bright bent edge, not a tinted pill.
+     */
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: calc(0 - var(--ds-z-raised));
+      border-radius: inherit;
+      background: none;
+      box-shadow: none;
+      opacity: 1;
+      pointer-events: none;
+      transition: none;
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1.5)) brightness(1.16) saturate(1.8);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1.5)) brightness(1.16) saturate(1.8);
+      -webkit-mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-xl), transparent calc(100% - var(--ds-space-fixed-xl)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-xl), transparent calc(100% - var(--ds-space-fixed-xl)), var(--ds-color-glass-backdrop-dark));
+      -webkit-mask-composite: source-over;
+      mask:
+        linear-gradient(to right, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-xl), transparent calc(100% - var(--ds-space-fixed-xl)), var(--ds-color-glass-backdrop-dark)),
+        linear-gradient(to bottom, var(--ds-color-glass-backdrop-dark), transparent var(--ds-space-fixed-xl), transparent calc(100% - var(--ds-space-fixed-xl)), var(--ds-color-glass-backdrop-dark));
       mask-composite: add;
     }
 
@@ -267,6 +297,9 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
@@ -284,6 +317,12 @@
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
@@ -300,6 +339,9 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
