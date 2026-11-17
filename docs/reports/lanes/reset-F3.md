@@ -25,6 +25,20 @@ menu, filter menu and banner states).
 | `packages/styles/neutral/recipes/Button.css` | On ios, a soft neutral button is the kit's gray capsule (it was white, and navy in dark) |
 | `packages/shared/src/refraction.ts`, `refraction-dom.test.ts` | `start`, the back button, the bar group and the accessory are tracked; the buttons inside a group are not |
 
+## Status per item
+
+| Item | Status |
+| --- | --- |
+| 1 Panels dense, halo gone, danger label | done |
+| 2 Top bar, page padding, grounds, bottom room | partly: the settings screen's own 4 and its sticky bar holder are screen requests (1); no collapsing title (request 5) |
+| 3 Bar forms (start, back disc, group, accessory, compact, neutral fill) | done; the compact bar keeps one platter (see the iPhone list) |
+| 4 List rows and section headers | done |
+| 5 Pop-up value, swipe room, field line, toast line | done |
+| 6 Neutral dark gray on black | done in our CSS; the screen host's drawn frame stays navy (request 3) |
+| 7 Sidebar and split view | partly: tint row, quiet divider and the header beside a PageShell column done; the settings split view's title over its list is a request (4) |
+| 8 Glyphs 22, capsules 48 | done |
+| 9 Dates, wheels, colours, android | partly: iOS and android rules in; the android time dialog boxes not done (request 6); the android contract run not run |
+
 ## What changed per item
 
 1. **Panels.** The light tint of the menu, the long press menu, the action
@@ -233,16 +247,25 @@ rule now has the same shape and holds again (8.06).
 Against this order's gallery server (port 5841, stopped at the end).
 
 - iOS contract, List, Navbar, TabBar, Button, DropdownMenu, ContextMenu,
-  Toast, ActionSheet, Select, Fieldset, Input: CONTRACT_GROUP_1
+  Toast, ActionSheet, Select, Fieldset, Input: 565 passed, 20 skipped by
+  profile, 8 failed (TabBar reflow at 320, fixed below). This run began
+  mid order: the panel density, the danger label colours, the dark text
+  button weight and the accessory content rules came after it and were not
+  run through it again (only TabBar was).
 - TabBar alone after the fix for its 320 reflow (the compact accessory and a
   hand placed column's accessory pushed the page sideways): 43 passed.
 - iOS contract, Calendar, DatePicker, DateField, TimeField, WheelPicker,
   ColorSwatchPicker, ColorSlider, ColorField, ColorArea, ColorPicker,
-  SplitView, PageShell: CONTRACT_GROUP_2
-- android contract, List, Calendar, WheelPicker, DatePicker, DateField,
-  TimeField, ColorSwatchPicker, ColorField, ColorPicker: CONTRACT_ANDROID
-- `--device duo-outer --component TabBar,Navbar,PageShell`: CONTRACT_DUO
-- `npx vitest run packages/lint packages/shared`: 51 files, 621 tests pass.
+  SplitView, PageShell: 556 passed.
+- android contract (List, Calendar, WheelPicker, DatePicker, DateField,
+  TimeField, ColorSwatchPicker, ColorField, ColorPicker): not run (the lead
+  closed the round).
+- `--device duo-outer --component TabBar,Navbar,PageShell`: 154 passed, 25
+  skipped by profile, 1 failed: Navbar keyboard map, Studio dark, the outer
+  screen in Safari (Enter and Space change nothing). It fails the same with
+  the three ios files put back as they were before this order, so it is not
+  from this order.
+- `npx vitest run packages/lint packages/shared`: 51 files, 620 tests pass. `npm run typecheck` clean.
 - Web: every changed selector in the four platform files carries
   `[data-platform='ios']` or `[data-platform='android']` (checked over the
   diff), the Neutral recipe rule is under `[data-platform='ios']`, so web is
