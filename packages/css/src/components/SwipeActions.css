@@ -274,15 +274,14 @@
    * stays anchored.
    */
   /*
-   * A pointer that hovers: the button keeps its place and size but is not
-   * painted and takes no press until the row is hovered, so the pointer that
-   * comes to press it draws it on the way.
+   * A pointer that hovers: the button keeps its place, size and press but
+   * is not painted until the row is hovered; a mouse can only reach it over
+   * the row, so it is always drawn by the time it is pressed.
    */
   @media (hover: hover) and (pointer: fine) {
     :not(:focus-within, :hover) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true'])),
     [data-ds='swipe-actions']:not([data-part]):not(:focus-within, :hover) > span:has(> [data-part='menu']:not([aria-expanded='true'])) {
       opacity: 0;
-      pointer-events: none;
     }
   }
 
