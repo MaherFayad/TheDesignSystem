@@ -296,3 +296,165 @@ tracked and no filter is built.
    strength; `clear` and `frosted` keep the M6 tints.
 7. Strengths: the tiers set the same blur for all three strengths; only the
    tint differs between them, as in M6.
+
+## G2, second pass on the glass (Liquid and Neutral, light and dark)
+
+Order G2, after the lead looked at the F2 sheets. Proposed until the owner
+signs it on a phone. Not committed by me. Files: `ios-refraction.css`,
+`refraction.ts` and its test, the clear material section of `ios.css`, the
+held lens rules of the Liquid and Neutral Switch recipes. `refraction-dom.ts`
+needed no change.
+
+Sheets (reference left, ours before, ours after, 4x, Liquid and Neutral,
+light and dark) are in scratch only, since they hold kit and vendor crops:
+`g2/sheet-p{1-switch,2-panels,3-buttons,4-tabbar}-tier{1,2}.png`. Our own
+before and after crops and the 1x phone screens are in
+`docs/reports/reset/G2/`.
+
+### 1. Held switch lens
+
+Cause of the blob: the lens lifted what it sat on (`brightness(1.12)
+saturate(1.6)`, then the band `brightness(1.08) saturate(1.8)`), so the light
+gray off track went white and the green went neon; Liquid also lit a white
+sheen inside the lens. Now, on ios only: the lens passes the track as it is
+(`saturate(1.05)`, no lift, no blur on the thumb itself: a blur there smeared
+both ends of the green), the paint stays 8 percent white (the kit's lens is
+the track mixed with about 10 percent white, measured: track 52 199 89, lens
+70 204 104), no sheen, and the edge is a soft light along the top (80 percent
+white, 2px blur), a fainter one along the bottom (45) and the soft lift; in
+dark 40, 18 and a deeper lift. No ring, no stroke. The band in `::before` is
+softer (`blur(* 0.75) brightness(1.04) saturate(1.15)`, 4px along the ends,
+8px along the top and bottom), so the track's edge bends softly where it
+passes under the rim. The rest thumb is untouched: plain white, soft shadow.
+
+Tier: I kept tier 2 for the thumb in both tiers. The track shows through
+crisp and its end softens at the rim, which is close to the kit; tier 1 on a
+thumb that grows by 1.4 and stretches while held would need the map redrawn
+per frame of the press (the ResizeObserver sees the layout box, not the
+transform), and F2's ragged track end came from that. Not attempted again.
+
+Verdict: Liquid and Neutral light, close (the lens over our white card reads
+as a white rim round the track, as clear glass on white does; the kit shows
+it on gray). Dark, close (the gray or green track shows through, the lens is
+a soft light edge and a shadow).
+
+### 2. Light menus and toast
+
+The light panel tint of the `regular` strength went from 74 to 64 percent,
+and tier 1's raise to 80 percent was taken out (dark keeps its F2 values).
+At 64 percent alone the menu rows fell under 4.5:1 over the darkest demo
+content, so, as the order prefers, the rows carry a faint local shade: a soft
+halo in the panel's own tint that follows the letters of each label
+(`text-shadow` of `material.glass-solid` at 2, 4 and 8px), light only, off
+under every fallback. A row band behind the text was tried first and read as
+boxes over the content at the end of each row. A heavier weight was not
+used: at 17px it does not reach large text, so 4.5:1 still applies.
+
+Verdict: light, close: the colour behind now reads through the panel (pink,
+peach and green as colour, not pastel), the halo is visible only as a slight
+lift round the letters. Dark, unchanged by this point, same family.
+
+### 3. Navigation and sheet buttons
+
+Their `::before` was Button.css's pointer glow (ios turns it off; Liquid's
+sheen turns it back on for a soft fill). In tier 2 it now holds the same band
+as the bar (12px, `blur(* 1.5) brightness(1.16) saturate(1.2)`); in tier 1
+it is empty (opacity 0) and the bend and glare draw the edge. The tint went
+from 52 to 38 percent in light and 62 to 54 percent in dark, and the buttons
+take a lower saturation than the bar (1.15, not 1.6): with the lower tint
+the bar's saturation turned a button over the blue card into a neon cyan
+pill. The F1 rim and the shadow are unchanged; no stroke was added.
+
+Verdict: tier 1 light, close (clear middle, the blue behind at its own hue,
+bright bent upper edge); tier 2 light, close (frosted bright edge, clearer
+middle); dark both tiers, close. Sheet close button: nothing coloured behind
+it in the demo, so it reads as before.
+
+### 4. A stronger bend
+
+`refraction.ts`: the band is 0.36 of the short side, 4 to 30px (was 0.3, 4
+to 24), and at the ends of the long side it is wider by half again, capped at
+0.85 of the half short side, so the caps bend most, as on the reference. The
+profile is `(1 - depth / band) ^ 1.6` with a deepest move of 0.6 of the band
+(was a square and 0.5): the sampled point never goes backwards while
+1.6 * 0.6 <= 1, and the start of the band stays smooth. Glare gain 0.55 to
+0.65, glare light 0.08 to 0.10. For the 64px tab bar: band 23px on the flat
+sides and 27px at the caps, deepest move 14 and 16px (was a 19px band and a
+9.6px move).
+Tests: band numbers, the cap band, no fold along the cap and down the top
+edge (27 pass). Tier 2's band matches: 24px (was 18), `brightness(1.16)`
+(was 1.1) on bars and panels, `1.12` on the lens and the segmented thumb.
+
+At 1x (`docs/reports/reset/G2/phone-1x-tier1-liquid-{light,dark}.png`,
+settings scrolled so the blue action button passes under the bar): the blue
+curves up round both caps and along the top edge without zooming; nothing
+folds or tears. Where the content under a cap is one flat colour (the pink
+card) or the current tab's lens covers the cap, there is nothing to see bent,
+as on the phone.
+
+Verdict: tier 1, close in light and dark (the bend now reads at 1x); tier 2,
+same family (a brighter, wider frosted edge, no bend: CSS cannot move
+pixels).
+
+### The bright band inside the menu edge (F1)
+
+At 4x before G2 it showed in light as a white strip under the top rim of the
+menu: the glare on a narrow band. With the wider band the glare spreads and
+fades in, and in the after crops it reads as the lit upper edge of the glass,
+not a line; in dark a faint lift on the upper leading arc. Kept.
+
+### Contrast, from pixels (WCAG 2.2 1.4.3 text 4.5:1, 1.4.11 glyphs 3:1)
+
+Same probe as F2 (six scroll positions on settings, the menu, toast and sheet
+screens, 2x), with two changes: a label is hidden by its glyph colour only, so
+a halo it carries stays in the backdrop, and each item is read two ways: over
+the pixels under and 2px round its letters (the backdrop of the text), and,
+in brackets, over its whole box (F2's way). Minimum per item, tier 1 / tier 2:
+
+| Item | Liquid light | Liquid dark | Neutral light | Neutral dark |
+| --- | --- | --- | --- | --- |
+| Tab label | 7.96 / 7.96 | 6.17 / 5.46 | 7.45 / 7.69 | 5.28 / 5.74 |
+| Tab label, current | 5.87 / 5.87 | 5.62 / 5.50 | 6.22 / 6.28 | 5.45 / 5.45 |
+| Tab glyph | 7.96 / 7.96 | 6.00 / 5.21 | 6.52 / 7.45 | 4.75 / 4.72 |
+| Tab glyph, current | 5.87 / 5.87 | 5.62 / 5.38 | 6.22 / 6.22 | 5.52 / 5.35 |
+| Bar button label | 8.67 / 8.67 | 5.75 / 5.94 | 8.14 / 8.15 | 5.48 / 5.56 |
+| Menu item | 4.63 / 4.62 (3.86 / 4.06) | 4.81 / 4.82 | 4.78 / 4.78 (4.03 / 4.13) | 4.90 / 5.76 |
+| Menu glyph | 4.34 / 4.31 | 4.70 / 4.75 | 4.55 / 4.55 | 4.78 / 5.76 |
+| Toast title | 9.08 / 12.67 | 11.73 / 13.77 | 8.69 / 12.30 | 10.86 / 12.94 |
+| Toast close glyph | 5.96 / 7.06 | 6.64 / 7.01 | 5.05 / 6.10 | 6.87 / 7.47 |
+| Sheet close glyph | 18.71 / 18.87 | 14.31 / 14.50 | 17.87 / 17.87 | 13.67 / 13.86 |
+
+Every label passes over its letters. Over the whole box, the light menu item
+does not (3.86 to 4.13): the label's box runs to the end of the row, and its
+empty end sits over unshaded content. If the lead reads 1.4.3 by box, the
+fix is the old tint (74 percent) or a row band, and I would rather keep the
+halo. Box values equal the letter values elsewhere, within 0.3.
+
+### Web, Android, Studio and Desk
+
+Computed style (15 properties on every element and its `::before` and
+`::after`, animations finished) with this order's hunks in and out (the
+served CSS modules swapped for the files with only G2's hunks taken back,
+other agents' hunks kept): web and android in all four styles, light and
+dark, settings, menu, sheet and toast, 64 pages, zero changed values; ios in
+Studio and Desk, 16 pages, zero changed values.
+
+### What still needs a real iPhone
+
+- Tier 2 is what Safari on iOS gets: the soft band, the halo and the lens
+  have only been seen in Chromium with tier 1 switched off.
+- Whether the bend at 16px on a cap reads as glass at arm's length, and its
+  cost on the phone's GPU (the map is the same size; the band is wider).
+- The held lens's movement: the stills are at rest in the press; the grow,
+  stretch and spring were not judged frame by frame here.
+
+### Decisions I made
+
+1. Held lens stays on tier 2 in both tiers (above).
+2. Menu rows keep 4.5:1 with a letter halo, not a whiter panel and not a
+   heavier weight; measured over the letters.
+3. The buttons' glow layer becomes the band on ios; Liquid's sheen on a soft
+   nav button is dropped there.
+4. Buttons get a lower saturation than the bar.
+5. A wider band at the caps of the long side, not a wider band everywhere,
+   so the middle of a 64px bar keeps a clear strip.

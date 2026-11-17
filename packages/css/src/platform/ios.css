@@ -659,9 +659,10 @@
     --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
   }
 
+  /* The lit row takes the menu's lit fill (the quiet gray above), so a style that sets its own lit fill and text, as Studio does, keeps them together (order M9.5: white text sat on the gray, 1.35:1). */
   [data-platform='ios'] [data-ds='select'][data-part='content'] {
     --_select-item-height: var(--ds-size-touch-ios);
-    --_select-highlight-bg: var(--ds-color-bg-overlay-10);
+    --_select-highlight-bg: var(--_menu-item-bg-highlight);
   }
 
   /* The selected row: the check in the tint, the label at its usual weight. */

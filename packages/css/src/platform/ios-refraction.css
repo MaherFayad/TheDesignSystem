@@ -16,9 +16,9 @@
  *   A low blur on the part, and a band along the edge (the part's ::before,
  *   where the part has one free) with a stronger blur, brightness and
  *   saturation, cut out with soft gradient masks so there is no line where
- *   it starts. The navigation and sheet buttons have no free pseudo element
- *   (::before is the glow, ::after the rim), so they take the low blur only.
- *   The held switch thumb keeps this band in tier 1 too (see below).
+ *   it starts. The navigation and sheet buttons lend their ::before (the
+ *   pointer glow, not needed on ios) to the band since order G2. The held
+ *   switch thumb keeps this band in tier 1 too (see below).
  * - Tier 1, Chromium only: the real bend. An SVG filter per size of part
  *   (packages/shared/src/refraction.ts) moves the backdrop by a map that is
  *   zero in the middle and strong in a band along the edge, and adds a soft
