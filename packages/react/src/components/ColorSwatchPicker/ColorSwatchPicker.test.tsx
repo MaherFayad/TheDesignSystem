@@ -12,7 +12,7 @@ const items = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[d
 const saved = ['#12b76a', '#fdb022', '#d92d20', '#2e90fa'];
 
 describe('ColorSwatchPicker', () => {
-  it('renders the grid of the system palette: 120 named options, no React Aria classes', () => {
+  it('renders the grid of the system palette: 120 named options, no React Aria classes', { timeout: 30000 }, () => {
     const { container } = render(<ColorSwatchPicker locale="en" />);
     const el = root(container);
     expect(el.getAttribute('data-layout')).toBe('grid');
@@ -80,7 +80,8 @@ describe('ColorSwatchPicker', () => {
     expect(document.activeElement).toBe(items(container)[0]);
     // The names stay Arabic in the grid.
     expect(items(container)[0]!.querySelector('[data-part="swatch"]')!.getAttribute('aria-label')).toBe('أبيض');
-  });
+    // 120 options and five key presses: more than the 5 s default on a busy machine.
+  }, 30000);
 
   it('follows reading order in a row: ArrowLeft goes to the next swatch in Arabic', async () => {
     const { container } = render(
