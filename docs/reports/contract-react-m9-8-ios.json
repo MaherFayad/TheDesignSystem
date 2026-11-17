@@ -19,16 +19,16 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results",
+        "outputDir": "/home/user/TheDesignSystem/packages/contract-tests/.out/558/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "",
         "name": "",
@@ -49,7 +49,7 @@
       [
         "json",
         {
-          "outputFile": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/contract-react-m9-8-ios.json"
+          "outputFile": "/home/user/TheDesignSystem/packages/contract-tests/.out/558/contract-react-m9-8-ios.json"
         }
       ]
     ],
@@ -62,7 +62,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.63.0",
-    "workers": 4,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
@@ -74,12 +74,21 @@
       "specs": [
         {
           "title": "Toast: anatomy, desk",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
-              "annotations": [],
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "anatomy read from the static examples and from every root a trigger opened"
+                },
+                {
+                  "type": "note",
+                  "description": "optional parts in desk: action, close, count, description, meta, progress, start, title"
+                }
+              ],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
@@ -87,40 +96,27 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 90230,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 16,
-                        "line": 167
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:382:15"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 74921,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:23.426Z",
-                  "annotations": [],
-                  "attachments": [
+                  "startTime": "2026-11-17T11:41:00.834Z",
+                  "annotations": [
                     {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-desk/error-context.md"
+                      "type": "note",
+                      "description": "anatomy read from the static examples and from every root a trigger opened"
+                    },
+                    {
+                      "type": "note",
+                      "description": "optional parts in desk: action, close, count, description, meta, progress, start, title"
                     }
-                  ]
+                  ],
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-97ed62840143803b154c",
@@ -130,12 +126,16 @@
         },
         {
           "title": "Toast: anatomy, liquid",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
               "annotations": [
+                {
+                  "type": "note",
+                  "description": "anatomy read from the static examples and from every root a trigger opened"
+                },
                 {
                   "type": "note",
                   "description": "optional parts in liquid: action, close, count, description, meta, progress, start, title"
@@ -146,55 +146,29 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "failed",
-                  "duration": 11501,
-                  "error": {
-                    "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
-                    "stack": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60",
-                    "location": {
-                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                      "column": 60,
-                      "line": 394
-                    },
-                    "snippet": "  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 60,
-                        "line": 394
-                      },
-                      "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 78272,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:24.385Z",
+                  "startTime": "2026-11-17T11:42:16.208Z",
                   "annotations": [
+                    {
+                      "type": "note",
+                      "description": "anatomy read from the static examples and from every root a trigger opened"
+                    },
                     {
                       "type": "note",
                       "description": "optional parts in liquid: action, close, count, description, meta, progress, start, title"
                     }
                   ],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-liquid/error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                    "column": 60,
-                    "line": 394
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-0957420126487e9ab006",
@@ -204,12 +178,16 @@
         },
         {
           "title": "Toast: anatomy, neutral",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
               "annotations": [
+                {
+                  "type": "note",
+                  "description": "anatomy read from the static examples and from every root a trigger opened"
+                },
                 {
                   "type": "note",
                   "description": "optional parts in neutral: action, close, count, description, meta, progress, start, title"
@@ -220,55 +198,29 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "failed",
-                  "duration": 12860,
-                  "error": {
-                    "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
-                    "stack": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60",
-                    "location": {
-                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                      "column": 60,
-                      "line": 394
-                    },
-                    "snippet": "  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 60,
-                        "line": 394
-                      },
-                      "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 71215,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:22.578Z",
+                  "startTime": "2026-11-17T11:43:34.672Z",
                   "annotations": [
+                    {
+                      "type": "note",
+                      "description": "anatomy read from the static examples and from every root a trigger opened"
+                    },
                     {
                       "type": "note",
                       "description": "optional parts in neutral: action, close, count, description, meta, progress, start, title"
                     }
                   ],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-neutral/error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                    "column": 60,
-                    "line": 394
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-81118f3d519d2c177ac4",
@@ -278,53 +230,49 @@
         },
         {
           "title": "Toast: anatomy, studio",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
-              "annotations": [],
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "anatomy read from the static examples and from every root a trigger opened"
+                },
+                {
+                  "type": "note",
+                  "description": "optional parts in studio: action, close, count, description, meta, progress, start, title"
+                }
+              ],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "timedOut",
-                  "duration": 90272,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 16,
-                        "line": 167
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:382:15"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 59610,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:23.276Z",
-                  "annotations": [],
-                  "attachments": [
+                  "startTime": "2026-11-17T11:44:45.921Z",
+                  "annotations": [
                     {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-studio/error-context.md"
+                      "type": "note",
+                      "description": "anatomy read from the static examples and from every root a trigger opened"
+                    },
+                    {
+                      "type": "note",
+                      "description": "optional parts in studio: action, close, count, description, meta, progress, start, title"
                     }
-                  ]
+                  ],
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-43289a27eb2ca6549b45",
@@ -334,53 +282,41 @@
         },
         {
           "title": "Toast: variant attributes",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
-              "annotations": [],
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "variants read from the static examples and from every root a trigger in the variants case opened"
+                }
+              ],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 4,
-                  "parallelIndex": 1,
-                  "status": "timedOut",
-                  "duration": 91028,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 16,
-                        "line": 167
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:404:13"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 65216,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:42.240Z",
-                  "annotations": [],
-                  "attachments": [
+                  "startTime": "2026-11-17T11:45:45.545Z",
+                  "annotations": [
                     {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-variant-attributes/error-context.md"
+                      "type": "note",
+                      "description": "variants read from the static examples and from every root a trigger in the variants case opened"
                     }
-                  ]
+                  ],
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-c7ca679c701ac1fe2c5e",
@@ -401,15 +337,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 87544,
+                  "duration": 64936,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:23:43.043Z",
+                  "startTime": "2026-11-17T11:46:50.879Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -452,15 +388,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 6,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 41359,
+                  "duration": 15179,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:00.286Z",
+                  "startTime": "2026-11-17T11:47:55.829Z",
                   "annotations": [
                     {
                       "type": "note",
@@ -503,15 +439,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10052,
+                  "duration": 5155,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:01.420Z",
+                  "startTime": "2026-11-17T11:48:11.108Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -537,15 +473,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8943,
+                  "duration": 3989,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:11.803Z",
+                  "startTime": "2026-11-17T11:48:16.297Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -571,15 +507,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7971,
+                  "duration": 3536,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:12.779Z",
+                  "startTime": "2026-11-17T11:48:20.301Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -594,53 +530,41 @@
         },
         {
           "title": "Toast: target size open, desk",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
-              "annotations": [],
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "10 roots opened and measured"
+                }
+              ],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 8,
-                  "parallelIndex": 1,
-                  "status": "timedOut",
-                  "duration": 90525,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 52,
-                        "line": 168
-                      },
-                      "message": "Error: locator.waitFor: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-demo-case]').first()\u001b[22m\n\n\n  166 |   if (!closed) {\n  167 |     await page.goto(page.url());\n> 168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n      |                                                    ^\n  169 |   }\n  170 | }\n  171 |\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:168:52)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:582:15"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 56402,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:19.518Z",
-                  "annotations": [],
-                  "attachments": [
+                  "startTime": "2026-11-17T11:48:23.867Z",
+                  "annotations": [
                     {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-desk/error-context.md"
+                      "type": "note",
+                      "description": "10 roots opened and measured"
                     }
-                  ]
+                  ],
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-b80f58d681699d16e049",
@@ -661,15 +585,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10403,
+                  "duration": 2395,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:20.776Z",
+                  "startTime": "2026-11-17T11:49:20.282Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -695,15 +619,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10439,
+                  "duration": 2563,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:21.265Z",
+                  "startTime": "2026-11-17T11:49:22.694Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -729,15 +653,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10442,
+                  "duration": 2385,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:31.262Z",
+                  "startTime": "2026-11-17T11:49:25.275Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -752,53 +676,41 @@
         },
         {
           "title": "Toast: target size open, liquid",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 90000,
-              "annotations": [],
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "10 roots opened and measured"
+                }
+              ],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 90666,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
-                        "column": 52,
-                        "line": 168
-                      },
-                      "message": "Error: locator.waitFor: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-demo-case]').first()\u001b[22m\n\n\n  166 |   if (!closed) {\n  167 |     await page.goto(page.url());\n> 168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n      |                                                    ^\n  169 |   }\n  170 | }\n  171 |\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:168:52)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:582:15"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 54444,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:31.800Z",
-                  "annotations": [],
-                  "attachments": [
+                  "startTime": "2026-11-17T11:49:27.685Z",
+                  "annotations": [
                     {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-liquid/error-context.md"
+                      "type": "note",
+                      "description": "10 roots opened and measured"
                     }
-                  ]
+                  ],
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-be80baa7e69cd310f5e5",
@@ -819,15 +731,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6590,
+                  "duration": 2840,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:41.815Z",
+                  "startTime": "2026-11-17T11:50:22.148Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -853,15 +765,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 6,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8661,
+                  "duration": 3409,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:43.124Z",
+                  "startTime": "2026-11-17T11:50:25.017Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -887,15 +799,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6932,
+                  "duration": 2822,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:48.423Z",
+                  "startTime": "2026-11-17T11:50:28.451Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -910,7 +822,7 @@
         },
         {
           "title": "Toast: target size open, neutral",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -926,39 +838,25 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 6,
-                  "parallelIndex": 3,
-                  "status": "timedOut",
-                  "duration": 90417,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    }
-                  ],
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 54496,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:51.956Z",
+                  "startTime": "2026-11-17T11:50:31.315Z",
                   "annotations": [
                     {
                       "type": "note",
                       "description": "10 roots opened and measured"
                     }
                   ],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-neutral/error-context.md"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "90a218284ea7aefb289c-5b1d4a9f815a528ac4ad",
@@ -979,15 +877,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6821,
+                  "duration": 2830,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:25:55.465Z",
+                  "startTime": "2026-11-17T11:51:25.834Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1013,15 +911,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6967,
+                  "duration": 2456,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:26:02.385Z",
+                  "startTime": "2026-11-17T11:51:28.687Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1047,15 +945,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6443,
+                  "duration": 2659,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:26:09.401Z",
+                  "startTime": "2026-11-17T11:51:31.164Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1086,15 +984,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 79382,
+                  "duration": 53454,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:26:16.012Z",
+                  "startTime": "2026-11-17T11:51:33.838Z",
                   "annotations": [
                     {
                       "type": "note",
@@ -1125,15 +1023,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4243,
+                  "duration": 2567,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:26:54.752Z",
+                  "startTime": "2026-11-17T11:52:27.305Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1159,15 +1057,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6881,
+                  "duration": 2319,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:26:59.383Z",
+                  "startTime": "2026-11-17T11:52:29.890Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1193,15 +1091,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6988,
+                  "duration": 2696,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:06.789Z",
+                  "startTime": "2026-11-17T11:52:32.240Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1227,15 +1125,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8158,
+                  "duration": 2600,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:06.312Z",
+                  "startTime": "2026-11-17T11:52:34.948Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1261,15 +1159,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7253,
+                  "duration": 2495,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:14.476Z",
+                  "startTime": "2026-11-17T11:52:37.577Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1295,15 +1193,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7195,
+                  "duration": 2779,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:14.542Z",
+                  "startTime": "2026-11-17T11:52:40.086Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1329,15 +1227,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5930,
+                  "duration": 2323,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:21.937Z",
+                  "startTime": "2026-11-17T11:52:42.879Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1363,15 +1261,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5725,
+                  "duration": 2073,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:21.963Z",
+                  "startTime": "2026-11-17T11:52:45.217Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1397,15 +1295,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10283,
+                  "duration": 3620,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:26.692Z",
+                  "startTime": "2026-11-17T11:52:47.301Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1431,15 +1329,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9881,
+                  "duration": 3959,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:27.702Z",
+                  "startTime": "2026-11-17T11:52:50.943Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1465,15 +1363,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7975,
+                  "duration": 3438,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:28.078Z",
+                  "startTime": "2026-11-17T11:52:54.915Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1499,15 +1397,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9293,
+                  "duration": 3684,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:35.464Z",
+                  "startTime": "2026-11-17T11:52:58.363Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1533,15 +1431,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10467,
+                  "duration": 3346,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:36.094Z",
+                  "startTime": "2026-11-17T11:53:02.058Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1567,15 +1465,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10604,
+                  "duration": 3490,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:37.673Z",
+                  "startTime": "2026-11-17T11:53:05.420Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1601,15 +1499,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10229,
+                  "duration": 3443,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:37.765Z",
+                  "startTime": "2026-11-17T11:53:08.935Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1635,15 +1533,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8379,
+                  "duration": 3522,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:44.880Z",
+                  "startTime": "2026-11-17T11:53:12.393Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1669,15 +1567,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9059,
+                  "duration": 3718,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:46.653Z",
+                  "startTime": "2026-11-17T11:53:15.925Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1703,15 +1601,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11012,
+                  "duration": 4158,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:48.066Z",
+                  "startTime": "2026-11-17T11:53:19.658Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1737,15 +1635,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10673,
+                  "duration": 3362,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:48.313Z",
+                  "startTime": "2026-11-17T11:53:23.829Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1771,15 +1669,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9290,
+                  "duration": 3996,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:53.354Z",
+                  "startTime": "2026-11-17T11:53:27.207Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1805,15 +1703,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9310,
+                  "duration": 3041,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:56.040Z",
+                  "startTime": "2026-11-17T11:53:31.218Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1839,15 +1737,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11871,
+                  "duration": 3514,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:59.003Z",
+                  "startTime": "2026-11-17T11:53:34.284Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1873,15 +1771,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12202,
+                  "duration": 3817,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:27:59.246Z",
+                  "startTime": "2026-11-17T11:53:37.815Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1907,15 +1805,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11045,
+                  "duration": 4194,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:02.655Z",
+                  "startTime": "2026-11-17T11:53:41.652Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1941,15 +1839,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10186,
+                  "duration": 3539,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:05.588Z",
+                  "startTime": "2026-11-17T11:53:45.865Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1975,15 +1873,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11601,
+                  "duration": 3945,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:10.898Z",
+                  "startTime": "2026-11-17T11:53:49.419Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2009,15 +1907,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11065,
+                  "duration": 3178,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:11.551Z",
+                  "startTime": "2026-11-17T11:53:53.378Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2043,15 +1941,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12574,
+                  "duration": 3915,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:13.814Z",
+                  "startTime": "2026-11-17T11:53:56.580Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2077,15 +1975,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11868,
+                  "duration": 3506,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:15.949Z",
+                  "startTime": "2026-11-17T11:54:00.504Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2111,15 +2009,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11087,
+                  "duration": 3831,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:22.549Z",
+                  "startTime": "2026-11-17T11:54:04.023Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2145,15 +2043,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9502,
+                  "duration": 3217,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:22.722Z",
+                  "startTime": "2026-11-17T11:54:07.867Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2179,15 +2077,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10162,
+                  "duration": 3676,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:26.436Z",
+                  "startTime": "2026-11-17T11:54:11.098Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2213,15 +2111,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8947,
+                  "duration": 2967,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:27.864Z",
+                  "startTime": "2026-11-17T11:54:14.795Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2247,15 +2145,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9101,
+                  "duration": 3317,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:32.342Z",
+                  "startTime": "2026-11-17T11:54:17.774Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2281,15 +2179,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9545,
+                  "duration": 2846,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:33.648Z",
+                  "startTime": "2026-11-17T11:54:21.105Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2315,15 +2213,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 5,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12848,
+                  "duration": 3368,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:36.728Z",
+                  "startTime": "2026-11-17T11:54:23.965Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2349,15 +2247,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10234,
+                  "duration": 2736,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:36.863Z",
+                  "startTime": "2026-11-17T11:54:27.346Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2383,15 +2281,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 11,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10401,
+                  "duration": 3683,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:41.477Z",
+                  "startTime": "2026-11-17T11:54:30.116Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2417,15 +2315,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8542,
+                  "duration": 3276,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:43.536Z",
+                  "startTime": "2026-11-17T11:54:33.815Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2451,15 +2349,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 10,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7041,
+                  "duration": 3490,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T11:28:47.292Z",
+                  "startTime": "2026-11-17T11:54:37.106Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2477,11 +2375,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-17T11:23:18.615Z",
-    "duration": 335959.787,
-    "expected": 55,
+    "startTime": "2026-11-17T11:40:57.539Z",
+    "duration": 823198.052,
+    "expected": 63,
     "skipped": 0,
-    "unexpected": 8,
+    "unexpected": 0,
     "flaky": 0
   }
 }

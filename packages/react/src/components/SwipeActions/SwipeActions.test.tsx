@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.restoreAllMocks());
 
-const actions = (onSelect = vi.fn()) => ({
+const actions = (onSelect: () => void = vi.fn()) => ({
   start: [{ label: 'Archive', icon: 'inbox', tone: 'accent', undoable: true, onSelect }] as SwipeAction[],
   end: [
     { label: 'Delete', icon: 'trash', tone: 'danger', onSelect },
