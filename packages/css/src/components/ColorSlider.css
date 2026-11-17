@@ -40,6 +40,11 @@
  * thumb reads larger under the finger without a transform; React Aria owns
  * the thumb's transform), and settles on release. Under reduced motion every
  * duration token is 0ms.
+ *
+ * The thumb's surface ring is an inset shadow, not a border, as on
+ * ColorArea, so the hidden input (100% of the thumb's padding box, from
+ * React Aria) covers the whole target and is never under size.target-min
+ * (2.5.8). The dragging and focus lists keep the inset ring first.
  */
 @layer ds.base {
   [data-ds='color-slider'] {
@@ -123,13 +128,13 @@
     inset-block-start: 50%;
     inline-size: var(--_color-slider-thumb);
     block-size: var(--_color-slider-thumb);
-    border: var(--ds-border-width-strong) solid var(--_color-slider-thumb-border);
     border-radius: var(--ds-radius-pill);
     background:
       linear-gradient(var(--_color-slider-thumb-bg), var(--_color-slider-thumb-bg)),
       repeating-conic-gradient(var(--_color-slider-tile) 0 25%, var(--_color-slider-tile-alt) 0 50%) 0 0 /
         calc(var(--_color-slider-tile-size) * 2) calc(var(--_color-slider-tile-size) * 2);
     box-shadow:
+      inset 0 0 0 var(--ds-border-width-strong) var(--_color-slider-thumb-border),
       0 0 0 var(--_color-slider-lift-now) var(--_color-slider-thumb-border),
       0 0 0 calc(var(--_color-slider-lift-now) + var(--ds-border-width-default)) var(--_color-slider-border-color);
     transition: box-shadow var(--_color-slider-duration) var(--_color-slider-ease);
@@ -145,6 +150,7 @@
   /* Focus shows at once (WCAG 2.4.7): the ring is not part of the transition timing a person waits on. */
   [data-ds='color-slider'] [data-part='thumb'][data-focus-visible]:focus-within {
     box-shadow:
+      inset 0 0 0 var(--ds-border-width-strong) var(--_color-slider-thumb-border),
       0 0 0 var(--_color-slider-lift-now) var(--_color-slider-thumb-border),
       0 0 0 calc(var(--_color-slider-lift-now) + var(--ds-border-width-default)) var(--_color-slider-border-color),
       var(--_color-slider-ring);

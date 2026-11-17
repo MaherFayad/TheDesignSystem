@@ -65,7 +65,7 @@
 // reduced motion.
 import { useCallback, useEffect, useState, type ComponentProps, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { parseColor, type Color } from 'react-aria-components';
-import { colorEyeDropperAvailable, colorName, colorPickFromScreen, type Size } from '@the-system/shared';
+import { colorEyeDropperAvailable, colorName, colorPickerWords, colorPickFromScreen, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
 import { ColorArea } from '../ColorArea/ColorArea';
@@ -78,7 +78,6 @@ import { IconButton } from '../IconButton/IconButton';
 import { Popover, PopoverBody, PopoverContent, PopoverTrigger } from '../Popover/Popover';
 import { Sheet, SheetBody, SheetContent, SheetTrigger } from '../Sheet/Sheet';
 import { Tabs, TabsList, TabsPanel, TabsTrigger } from '../Tabs/Tabs';
-import { colorPickerWords } from './pickerWords';
 
 export type ColorPickerVariant = 'compact' | 'inline';
 export type ColorPickerView = 'grid' | 'spectrum' | 'sliders';
@@ -130,31 +129,6 @@ const toColor = (value: string | Color): Color => {
 };
 const hexOf = (color: Color) => (color.getChannelValue('alpha') < 1 ? color.toString('hexa') : color.toString('hex')).toLowerCase();
 const opaqueHex = (color: Color) => color.toString('hex').toLowerCase();
-
-/** Our own eyedropper glyph (no system icon name for it yet). */
-function EyedropperGlyph() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="24"
-      height="24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-      data-ds="icon"
-      data-size="lg"
-    >
-      <path d="M15 4.5l4.5 4.5" />
-      <path d="M13.5 6l4.5 4.5-1.5 1.5-4.5-4.5z" />
-      <path d="M12 7.5l-7 7V19h4.5l7-7" />
-    </svg>
-  );
-}
 
 interface PanelProps {
   color: Color;
@@ -271,7 +245,7 @@ function Panel({ color, setColor, view, setView, saved, addSaved, showOpacity, l
         {eyedropper && (
           <IconButton
             data-part="eyedropper"
-            icon={<EyedropperGlyph />}
+            icon="eyedropper"
             label={words.eyedropper}
             emphasis="ghost"
             shape="pill"

@@ -5213,7 +5213,7 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from areaText.ts (to move to packages/shared/src/color.ts)",
+        "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from colorAreaWords and colorAreaValueText in packages/shared/src/color.ts",
         "example": "ColorArea.demo.tsx",
         "note": "Motion: while dragged the thumb's surface ring grows by border.width.strong (a box shadow; React Aria owns the thumb's transform) and settles on release, on duration.base. Reduced motion: the ring changes at once, as every duration token is 0ms."
       },
@@ -5672,7 +5672,7 @@
         "accessibilityRole": "button"
       },
       "notes": [
-        "Every name, role word and value text inside comes from packages/shared/src/color.ts and the picker's words (pickerWords.ts, to move there), never from React Aria's Arabic strings.",
+        "Every name, role word and value text inside comes from packages/shared/src/color.ts and its colorPickerWords, never from React Aria's Arabic strings.",
         "The eyedropper is feature tested after mount (colorEyeDropperAvailable) and is not rendered where the browser has none: WebKit, Firefox and a server render.",
         "WCAG 2.2 1.4.1: the picked swatch in the grid and the saved row shows a ring and a check, not colour alone.",
         "WCAG 2.2 1.4.10: the panel has no fixed width and fits a 320px screen."
@@ -5734,6 +5734,8 @@
       }
     ],
     "contract": {
+      "trigger": "[data-ds='color-picker'][data-variant='compact'] [data-part='trigger']",
+      "opens": "color-picker",
       "optionalParts": [
         "eyedropper"
       ],
@@ -5901,7 +5903,7 @@
         "React Aria adds its own colour name to the value text; in Arabic it keeps the English word order (ساطع أزرق سماوي) and a Latin comma, so the value text is replaced after each render with the number and colorName from @the-system/shared.",
         "Digits stay Western: React Aria runs with an -u-nu-latn locale, so the value reads 214 درجة and 50٪ is 50%, never Arabic Indic digits.",
         "WCAG 2.2 1.4.11: the track and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
-        "WCAG 2.2 2.5.8: the thumb is at least 24 by 24.",
+        "WCAG 2.2 2.5.8: the thumb and its hidden input are at least 24 by 24; the surface ring is an inset shadow, not a border, so the input fills the thumb.",
         "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
       ]
     },
@@ -8782,6 +8784,8 @@
       }
     ],
     "contract": {
+      "trigger": "[data-ds='date-picker'][data-variant='compact'] [data-part='date']",
+      "opens": "calendar",
       "optionalParts": [
         "label",
         "time",
@@ -12838,7 +12842,8 @@
           "previous-track",
           "radio",
           "library",
-          "share"
+          "share",
+          "eyedropper"
         ],
         "required": true,
         "description": "A system icon name. Directional names say forward and back."

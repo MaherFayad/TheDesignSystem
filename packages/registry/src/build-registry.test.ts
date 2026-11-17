@@ -40,6 +40,13 @@ function closure(name: string, seen = new Set<string>()): Set<string> {
   return seen;
 }
 
+/** The npm dependencies an install of these items brings. */
+function npmOf(names: Iterable<string>): string[] {
+  const out = new Set<string>();
+  for (const n of names) for (const d of byName.get(n)?.dependencies ?? []) out.add(d);
+  return [...out].sort();
+}
+
 describe('registry build', () => {
   it('validates against the shadcn schemas', () => {
     const v = validators();
@@ -111,6 +118,61 @@ describe('registry build', () => {
     const react = readJson(join(root, 'packages/react/package.json')) as { dependencies: Record<string, string> };
     expect(byName.get('dialog')!.dependencies).toContain(`radix-ui@${react.dependencies['radix-ui']}`);
     expect(byName.get('style-studio')!.dependencies?.some((d) => d.startsWith('@fontsource-variable/inter@'))).toBe(true);
+  });
+
+  it('keeps the date library out of items whose files do not import it', () => {
+    const DATE = '@internationalized/date';
+    for (const item of result.items) {
+      const imports = item.files.some((f) => /\.tsx?$/.test(f.target) && f.content!.includes(`'${DATE}'`));
+      if (!imports) expect(item.dependencies ?? [], item.name).not.toContainEqual(expect.stringMatching(/^@internationalized\/date@/));
+    }
+    for (const name of ['kbd', 'button', 'list', 'toast']) {
+      const reach = [...closure(name)];
+      expect(npmOf(reach), name).not.toContainEqual(expect.stringMatching(/^@internationalized\/date@/));
+      for (const n of reach) {
+        for (const f of byName.get(n)!.files) {
+          expect(f.target, `${name} installs ${f.target}`).not.toMatch(/\/shared\/(date|index)\.ts$/);
+          expect(f.content, `${name} installs ${f.target}`).not.toContain(DATE);
+        }
+      }
+    }
+  });
+
+  it('gives each date component the date library through its own files or the shared-date item', () => {
+    for (const name of ['calendar', 'date-field', 'time-field', 'date-picker']) {
+      expect(npmOf(closure(name)), name).toContainEqual(expect.stringMatching(/^@internationalized\/date@/));
+    }
+    const lib = byName.get('shared-date')!;
+    expect(lib.files.map((f) => f.target)).toEqual([`${TARGET_ROOT}/shared/date.ts`]);
+    expect(lib.registryDependencies).toEqual(['@ds/core']);
+    expect(byName.get('calendar')!.registryDependencies).toContain('@ds/shared-date');
+    expect(byName.get('core')!.dependencies).toBeUndefined();
+  });
+
+  it('lists only npm packages that the files of the item import', () => {
+    for (const item of result.items) {
+      const used = new Set<string>();
+      for (const f of item.files) {
+        const specs = f.target.endsWith('.css')
+          ? [...f.content!.matchAll(/@import\s+'([^.'][^']*)'/g)].map((m) => m[1]!)
+          : /\.tsx?$/.test(f.target)
+            ? ts.preProcessFile(f.content!, true, true).importedFiles.map((i) => i.fileName).filter((s) => !s.startsWith('.'))
+            : [];
+        for (const s of specs) used.add(s.startsWith('@') ? s.split('/').slice(0, 2).join('/') : s.split('/')[0]!);
+      }
+      for (const dep of item.dependencies ?? []) {
+        const name = dep.replace(/@[^@/]*$/, '');
+        expect(used.has(name), `${item.name} lists ${dep} but no file of it imports ${name}`).toBe(true);
+      }
+    }
+  });
+
+  it('never ships a package barrel, so a component reaches only the shared files it imports', () => {
+    for (const item of result.items) {
+      for (const f of item.files) expect(f.target, item.name).not.toMatch(/\/(shared|motion)\/index\.ts$/);
+    }
+    const kbd = byName.get('kbd')!.files.find((f) => f.target.endsWith('/Kbd/Kbd.tsx'))!;
+    expect(kbd.content).toMatch(/from '\.\.\/\.\.\/\.\.\/shared\/shortcut'/);
   });
 
   it('writes a catalog without file contents', () => {

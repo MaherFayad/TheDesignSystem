@@ -3,7 +3,8 @@ import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import ColorAreaDemo from './ColorArea.demo';
-import { ColorArea, colorAreaValueText } from './index';
+import { colorAreaValueText } from '@the-system/shared';
+import { ColorArea } from './index';
 import { parseColor } from 'react-aria-components';
 
 const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="color-area"]')!;

@@ -111,7 +111,7 @@
       "React Aria adds its own colour name to the value text; in Arabic it keeps the English word order (ساطع أزرق سماوي) and a Latin comma, so the value text is replaced after each render with the number and colorName from @the-system/shared.",
       "Digits stay Western: React Aria runs with an -u-nu-latn locale, so the value reads 214 درجة and 50٪ is 50%, never Arabic Indic digits.",
       "WCAG 2.2 1.4.11: the track and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
-      "WCAG 2.2 2.5.8: the thumb is at least 24 by 24.",
+      "WCAG 2.2 2.5.8: the thumb and its hidden input are at least 24 by 24; the surface ring is an inset shadow, not a border, so the input fills the thumb.",
       "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
     ]
   },

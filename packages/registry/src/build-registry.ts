@@ -15,7 +15,15 @@
 // Because the tree is kept, relative imports between components work as they
 // are. Imports of the workspace packages (`@the-system/shared` and so on) are
 // rewritten to relative paths into `ds/`, since those packages are private
-// and never published. Each component `index.ts` also gets one side effect
+// and never published. A named import of a package barrel that only holds
+// `export * from` lines (`@the-system/shared`, `@the-system/motion`) is first
+// split into one import per source file, so an installed component reaches
+// only the files it uses and the barrel itself never ships.
+//
+// Core holds the shared files. A shared file whose import closure reaches an
+// npm package (date.ts and @internationalized/date) gets its own lib item,
+// `<package>-<file>`, and only the items whose files import it depend on it.
+// So a Kbd never installs a calendar library. Each component `index.ts` also gets one side effect
 // import of its CSS file, and each CSS file starts with the layer order, so a
 // component looks right whatever order the files load in.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -142,6 +150,128 @@ function resolveSpecifier(root: string, fromFile: string, spec: string, scope: s
   return f;
 }
 
+/** True when every statement of the file is `export * from '<relative>'`. */
+function isStarBarrel(file: string): boolean {
+  if (!/\.tsx?$/.test(file)) return false;
+  const sf = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, false);
+  return (
+    sf.statements.length > 0 &&
+    sf.statements.every(
+      (st) => ts.isExportDeclaration(st) && !st.exportClause && !st.isTypeOnly && st.moduleSpecifier && ts.isStringLiteral(st.moduleSpecifier) && st.moduleSpecifier.text.startsWith('.'),
+    )
+  );
+}
+
+/** Every name a module exports, mapped to the file that declares it. Follows `export *` and re-exports with a source. */
+function exportMap(root: string, file: string, scope: string, cache: Map<string, Map<string, string>>): Map<string, string> {
+  const hit = cache.get(file);
+  if (hit) return hit;
+  const out = new Map<string, string>();
+  cache.set(file, out);
+  const sf = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, false);
+  const add = (name: string, from: string) => {
+    const was = out.get(name);
+    if (was && was !== from) throw new Error(`${relative(root, file)} exports ${name} from two files`);
+    out.set(name, from);
+  };
+  // Local names that came in through an import, so `export { name }` can follow them.
+  const imported = new Map<string, { from: string; name: string }>();
+  for (const st of sf.statements) {
+    if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
+    const bindings = st.importClause?.namedBindings;
+    if (!bindings || !ts.isNamedImports(bindings)) continue;
+    const from = resolveSpecifier(root, file, st.moduleSpecifier.text, scope);
+    if (!from) continue;
+    for (const el of bindings.elements) imported.set(el.name.text, { from, name: (el.propertyName ?? el.name).text });
+  }
+  const origin = (target: string, name: string) => exportMap(root, target, scope, cache).get(name) ?? target;
+  const hasExport = (st: ts.Statement) => ts.canHaveModifiers(st) && (ts.getModifiers(st) ?? []).some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+  for (const st of sf.statements) {
+    if (ts.isExportDeclaration(st)) {
+      const target = st.moduleSpecifier && ts.isStringLiteral(st.moduleSpecifier) ? resolveSpecifier(root, file, st.moduleSpecifier.text, scope) : undefined;
+      if (!st.exportClause) {
+        if (target) for (const [n, f] of exportMap(root, target, scope, cache)) add(n, f);
+      } else if (ts.isNamedExports(st.exportClause)) {
+        for (const el of st.exportClause.elements) {
+          // A renamed re-export cannot be split without renaming, so it stays with this file.
+          const via = target ? { from: target, name: el.name.text } : imported.get(el.name.text);
+          add(el.name.text, via && !el.propertyName && via.name === el.name.text ? origin(via.from, via.name) : file);
+        }
+      } else {
+        add(st.exportClause.name.text, file);
+      }
+      continue;
+    }
+    if (ts.isExportAssignment(st)) {
+      add('default', file);
+      continue;
+    }
+    if (!hasExport(st)) continue;
+    if (ts.isVariableStatement(st)) {
+      for (const d of st.declarationList.declarations) if (ts.isIdentifier(d.name)) add(d.name.text, file);
+    } else if (
+      (ts.isFunctionDeclaration(st) || ts.isClassDeclaration(st) || ts.isInterfaceDeclaration(st) || ts.isTypeAliasDeclaration(st) || ts.isEnumDeclaration(st) || ts.isModuleDeclaration(st)) &&
+      st.name
+    ) {
+      add(st.name.text, file);
+    }
+  }
+  return out;
+}
+
+/** The workspace specifier of a package source file, for example `@the-system/shared/date`. */
+function workspaceSpec(root: string, file: string, scope: string): string | undefined {
+  const m = /^packages\/([^/]+)\/src\/(.*)\.tsx?$/.exec(toPosix(relative(root, file)));
+  return m ? `${scope}/${m[1]}/${m[2]!.replace(/\/index$/, '')}` : undefined;
+}
+
+/**
+ * Splits each named import or re-export of a workspace star barrel into one
+ * statement per source file. Namespace imports and side effect imports of a
+ * barrel are left alone (none exist today; the barrel would then ship whole).
+ */
+function splitBarrelImports(root: string, file: string, source: string, scope: string, cache: Map<string, Map<string, string>>): string {
+  if (!/\.tsx?$/.test(file) || !source.includes(`${scope}/`)) return source;
+  const sf = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
+  const edits: { start: number; end: number; text: string }[] = [];
+  for (const st of sf.statements) {
+    const isImport = ts.isImportDeclaration(st);
+    if (!isImport && !ts.isExportDeclaration(st)) continue;
+    const specNode = st.moduleSpecifier;
+    if (!specNode || !ts.isStringLiteral(specNode) || !specNode.text.startsWith(`${scope}/`)) continue;
+    const target = resolveSpecifier(root, file, specNode.text, scope);
+    if (!target || !isStarBarrel(target)) continue;
+    let elements: readonly (ts.ImportSpecifier | ts.ExportSpecifier)[];
+    let typeOnly: boolean;
+    if (isImport) {
+      const clause = st.importClause;
+      if (!clause || clause.name || !clause.namedBindings || !ts.isNamedImports(clause.namedBindings)) continue;
+      elements = clause.namedBindings.elements;
+      typeOnly = clause.isTypeOnly;
+    } else {
+      if (!st.exportClause || !ts.isNamedExports(st.exportClause)) continue;
+      elements = st.exportClause.elements;
+      typeOnly = st.isTypeOnly;
+    }
+    const names = exportMap(root, target, scope, cache);
+    const bySource = new Map<string, string[]>();
+    for (const el of elements) {
+      const name = (el.propertyName ?? el.name).text;
+      const from = names.get(name);
+      if (!from) throw new Error(`${relative(root, file)} imports ${name} from ${specNode.text}, which does not export it`);
+      const spec = workspaceSpec(root, from, scope);
+      if (!spec) throw new Error(`No workspace specifier for ${relative(root, from)}`);
+      bySource.set(spec, [...(bySource.get(spec) ?? []), el.getText(sf)]);
+    }
+    const keyword = `${isImport ? 'import' : 'export'}${typeOnly ? ' type' : ''}`;
+    const text = [...bySource].map(([spec, els]) => `${keyword} { ${els.join(', ')} } from '${spec}';`).join('\n');
+    edits.push({ start: st.getStart(sf), end: st.end, text });
+  }
+  let out = source;
+  for (const e of edits.sort((a, b) => b.start - a.start)) out = out.slice(0, e.start) + e.text + out.slice(e.end);
+  return out;
+}
+
 interface ImportRef {
   spec: string;
   pos: number;
@@ -172,8 +302,8 @@ function relSpec(fromTarget: string, toTarget: string): string {
   return r;
 }
 
-/** Which item a repo file belongs to. */
-function ownerOf(repoPath: string): string {
+/** Which item a repo file belongs to, before lib files leave core. */
+function baseOwnerOf(repoPath: string): string {
   const p = toPosix(repoPath);
   let m = /^packages\/react\/src\/components\/([^/]+)\//.exec(p);
   if (m) return `component:${m[1]}`;
@@ -216,9 +346,10 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
   // 1. Walk the import graph from every entry point, so a file ships only if
   //    some entry reaches it (demo helpers and tests never ship).
   const files = new Map<string, { source: string; imports: { ref: ImportRef; file?: string }[] }>();
+  const exportCache = new Map<string, Map<string, string>>();
   const visit = (file: string) => {
     if (files.has(file)) return;
-    const source = readFileSync(file, 'utf8');
+    const source = splitBarrelImports(root, file, readFileSync(file, 'utf8'), scope, exportCache);
     if (file.endsWith('.json')) {
       files.set(file, { source, imports: [] });
       return;
@@ -258,7 +389,31 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
   visit(themeEntry);
   for (const e of entries) if (e.entry) visit(e.entry);
 
-  // 2. Group files by owner and collect npm and registry dependencies.
+  // 2. A core file whose import closure reaches an npm package becomes its own
+  //    lib item, so that package installs only with the items that use it.
+  const npmReach = new Map<string, boolean>();
+  const reachesNpm = (file: string, stack = new Set<string>()): boolean => {
+    const known = npmReach.get(file);
+    if (known !== undefined) return known;
+    if (stack.has(file)) return false;
+    stack.add(file);
+    const info = files.get(file)!;
+    const hit = info.imports.some((i) => (i.file ? reachesNpm(i.file, stack) : !PEERS.has(bareName(i.ref.spec))));
+    stack.delete(file);
+    npmReach.set(file, hit);
+    return hit;
+  };
+  const libOwner = new Map<string, string>();
+  for (const file of files.keys()) {
+    const repoPath = toPosix(relative(root, file));
+    if (baseOwnerOf(repoPath) !== 'core' || !reachesNpm(file)) continue;
+    const m = /^packages\/([^/]+)\/(?:src\/)?(.*)\.tsx?$/.exec(repoPath);
+    if (!m) throw new Error(`${repoPath} imports an npm package but is not a source file`);
+    libOwner.set(repoPath, `lib:${m[1]}-${kebab(m[2]!.replace(/\//g, '-'))}`);
+  }
+  const ownerOf = (repoPath: string) => libOwner.get(toPosix(repoPath)) ?? baseOwnerOf(repoPath);
+
+  // 3. Group files by owner and collect npm and registry dependencies.
   interface Group {
     files: string[];
     npm: Set<string>;
@@ -287,7 +442,7 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
     }
   }
 
-  // 3. Turn a repo file into a registry file with rewritten imports.
+  // 4. Turn a repo file into a registry file with rewritten imports.
   const toRegistryFile = (file: string, type: RegistryFile['type'], extraImport?: string): RegistryFile => {
     const repoPath = toPosix(relative(root, file));
     const target = targetOf(repoPath);
@@ -308,8 +463,8 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
 
   const ownerToItem = (owner: string): string => {
     if (owner === 'core' || owner === 'theme') return owner;
-    const [, name] = owner.split(':') as [string, string];
-    return kebab(name);
+    const [kind, name] = owner.split(':') as [string, string];
+    return kind === 'lib' ? name : kebab(name);
   };
 
   const npmList = (set: Iterable<string>) =>
@@ -344,6 +499,24 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
     });
   }
 
+  // Lib items: core files that bring an npm package, split by the step 2 rule.
+  for (const owner of [...new Set(libOwner.values())].sort()) {
+    const g = group(owner);
+    const name = ownerToItem(owner);
+    const targets = g.files.map((f) => `ds/${targetOf(toPosix(relative(root, f)))}`);
+    items.push({
+      name,
+      type: 'registry:lib',
+      title: name,
+      description: `Shared logic in ${targets.join(', ')}, kept out of core because it imports ${[...g.npm].sort().join(', ') || 'a lib item'}. Only the items whose files import it depend on it.`,
+      dependencies: npmList(g.npm),
+      registryDependencies: [...new Set(['core', ...[...g.owners].map(ownerToItem)])].filter((d) => d !== name).sort().map(ref),
+      files: g.files.map((f) => toRegistryFile(f, 'registry:lib')),
+      categories: ['core'],
+      meta: { source: config.name, version: config.version },
+    });
+  }
+
   // Theme: the Theme provider, Bidi and the hooks every component reads.
   {
     const g = group('theme');
@@ -353,7 +526,7 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
       title: 'Theme',
       description: reactReady.find((m) => m.name === 'Theme')?.summary ?? 'The theme provider.',
       dependencies: npmList(g.npm),
-      registryDependencies: [ref('core'), ref(`style-${defaultStyle}`)],
+      registryDependencies: [ref('core'), ref(`style-${defaultStyle}`), ...[...g.owners].map(ownerToItem).filter((d) => d !== 'core').sort().map(ref)],
       files: g.files.map((f) => toRegistryFile(f, 'registry:ui')),
       docs: 'Wrap the app in Theme. Its style prop picks the style; add that style item too.',
       categories: ['foundations'],

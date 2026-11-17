@@ -121,7 +121,7 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from areaText.ts (to move to packages/shared/src/color.ts)",
+      "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from colorAreaWords and colorAreaValueText in packages/shared/src/color.ts",
       "example": "ColorArea.demo.tsx",
       "note": "Motion: while dragged the thumb's surface ring grows by border.width.strong (a box shadow; React Aria owns the thumb's transform) and settles on release, on duration.base. Reduced motion: the ring changes at once, as every duration token is 0ms."
     },

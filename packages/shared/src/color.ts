@@ -403,6 +403,100 @@ export function colorWords(locale: string | undefined): ColorWords {
   return WORDS[colorLanguage(locale)];
 }
 
+/** The built in words of a colour area. Arabic in standard Arabic, nouns. */
+export interface ColorAreaWords {
+  /** The default name of the area: "Saturation and brightness", "التشبع والسطوع". */
+  area: string;
+  /** The role a screen reader reads for each hidden input: "2D slider", "منزلق ثنائي الاتجاه". */
+  role: string;
+}
+
+const AREA_WORDS: Record<ColorLanguage, ColorAreaWords> = {
+  en: { area: 'Saturation and brightness', role: '2D slider' },
+  ar: { area: 'التشبع والسطوع', role: 'منزلق ثنائي الاتجاه' },
+};
+
+/** The words of a colour area for a locale or a language. */
+export function colorAreaWords(locale: string | undefined): ColorAreaWords {
+  return AREA_WORDS[colorLanguage(locale)];
+}
+
+/** The part of a colour object (React Aria's Color) the area's value text reads. */
+export interface ColorAreaTextSource {
+  formatChannelValue(channel: ColorChannelName, locale: string): string;
+  toString(format: 'hex'): string;
+}
+
+/**
+ * The value text of one hidden input of a colour area: the channel it moves
+ * first, then the other channel, then the colour's name, in the page's words
+ * and with Western digits. "Saturation 76%, Brightness 85%, Blue" and
+ * "التشبع 76%، السطوع 85%، أزرق". The numbers are formatted for the
+ * language with Western digits (colorLocale of the language, as colorName
+ * does), so ar-SA reads 76% like ar, not 76٪.
+ */
+export function colorAreaValueText(
+  color: ColorAreaTextSource,
+  first: ColorChannelName,
+  second: ColorChannelName,
+  locale: string,
+): string {
+  const words = colorWords(locale);
+  const lang = colorLanguage(locale);
+  const tag = colorLocale(lang);
+  const part = (channel: ColorChannelName) => `${words.channels[channel]} ${color.formatChannelValue(channel, tag)}`;
+  return [part(first), part(second), colorName(color.toString('hex'), locale)].join(lang === 'ar' ? '، ' : ', ');
+}
+
+/** The built in words of a colour picker. Arabic in standard Arabic, nouns, no diacritics. */
+export interface ColorPickerWords {
+  /** The default label: the title of the popover or sheet and the first word of the trigger's name. */
+  title: string;
+  /** The name of the list of views. */
+  views: string;
+  grid: string;
+  spectrum: string;
+  sliders: string;
+  /** The name of the row of saved colours. */
+  saved: string;
+  /** The button that saves the colour now to the row. */
+  save: string;
+  /** The eyedropper button. */
+  eyedropper: string;
+  /** Read after the name of the preview swatch. */
+  current: string;
+}
+
+const PICKER_WORDS: Record<ColorLanguage, ColorPickerWords> = {
+  en: {
+    title: 'Colour',
+    views: 'Colour view',
+    grid: 'Grid',
+    spectrum: 'Spectrum',
+    sliders: 'Sliders',
+    saved: 'Saved colours',
+    save: 'Save colour',
+    eyedropper: 'Pick a colour from the screen',
+    current: 'current colour',
+  },
+  ar: {
+    title: 'اللون',
+    views: 'طريقة عرض الألوان',
+    grid: 'شبكة',
+    spectrum: 'طيف',
+    sliders: 'أشرطة التمرير',
+    saved: 'الألوان المحفوظة',
+    save: 'حفظ اللون',
+    eyedropper: 'اختيار لون من الشاشة',
+    current: 'اللون الحالي',
+  },
+};
+
+/** The words of a colour picker for a locale or a language. */
+export function colorPickerWords(locale: string | undefined): ColorPickerWords {
+  return PICKER_WORDS[colorLanguage(locale)];
+}
+
 /** Hue of each grid column in OKLCH degrees, in the order of the colour map: cyan through blue, purple, red, orange and yellow to green. */
 export const COLOR_GRID_HUES: readonly number[] = [222, 258, 285, 310, 350, 25, 40, 58, 78, 102, 124, 145];
 

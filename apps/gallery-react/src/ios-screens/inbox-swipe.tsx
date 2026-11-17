@@ -340,7 +340,7 @@ export function Screen({ lang }: ScreenProps) {
     );
   } else {
     body = (
-      <List variant="flush" titleLines={3} aria-label={w.list} data-gallery="inbox-list">
+      <List variant="flush" titleLines="all" aria-label={w.list} data-gallery="inbox-list">
         {shown.map((a) => {
           const title = t(a.title, lang);
           const playing = listening === a.id;

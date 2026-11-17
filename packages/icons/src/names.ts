@@ -104,6 +104,7 @@ export const iconNames = [
   'radio',
   'library',
   'share',
+  'eyedropper',
 ] as const;
 
 export type IconName = (typeof iconNames)[number];

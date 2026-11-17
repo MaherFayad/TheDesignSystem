@@ -495,22 +495,39 @@
     border-radius: 0;
   }
 
-  /* Separators start at the text, past the glyph when there is one, and stop at the padding. */
-  [data-platform='ios'] [data-ds='list'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
-    inset-inline: var(--_list-padding-inline);
+  /*
+   * Separators start at the text, past the glyph at its real size when
+   * there is one, and run to the row's end edge (order F3, from the C1
+   * request): the flush list's grid line mechanism on the grouped cards
+   * too, in place of the fixed 24 of the icon. A row with no start part
+   * pulls its title back by the gap (below), so its hairline is pulled
+   * back the same.
+   */
+  [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
+    position: static;
+    grid-row: 1;
+    grid-column: var(--_list-separator-start) / -1;
+    align-self: start;
+    margin-block-start: calc(-1 * var(--_list-padding-block));
+    margin-inline: var(--_list-separator-inset) calc(var(--_list-separator-inset-end) - var(--_list-padding-end));
   }
 
-  [data-platform='ios'] [data-ds='list'] > [data-part='item']:has(> [data-part='start']) + [data-part='item']:has(> [data-part='start']) > [data-part='separator'] {
-    inset-inline-start: calc(var(--_list-padding-inline) + var(--ds-size-icon-lg) + var(--_list-gap));
+  [data-platform='ios'] [data-ds='list'] > [data-part='item']:not(:has(> [data-part='start'])) {
+    --_list-separator-inset: calc(-1 * var(--_list-gap));
   }
 
-  /* Highlight on press is a quiet fill, never a ripple. */
-  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled]) {
+  /* Highlight on press is a quiet fill, never a ripple: on rows that go somewhere and on rows that act in place. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):is(:active, [data-pressed]):not([data-disabled]) {
     --_list-item-bg: var(--_list-item-bg-active);
   }
 
-  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked] {
-    padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl));
+  /* A linked row keeps room for its chevron at the end, unless the chevron is off. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:not([data-no-chevron]) {
+    --_list-padding-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl));
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked][data-no-chevron]::after {
+    content: none;
   }
 
   /* The disclosure chevron: two borders of a square, turned toward the reading end. Drawn, no glyph. */
@@ -530,6 +547,11 @@
 
   [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl)::after {
     transform: translateY(-50%) rotate(-45deg);
+  }
+
+  /* A row whose title wraps: the chevron sits on the first line band, not the middle of the row. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked][data-title-lines]::after {
+    inset-block-start: calc(var(--_list-padding-block) + var(--_list-band) / 2);
   }
 
   /* ------------------------------------------------------------ navigation: Sidebar, Pagination, Stepper (Navbar and TabBar geometry is in ds.chrome below) */
@@ -947,6 +969,8 @@
     --_toast-peek: var(--ds-space-m);
     --_toast-stack-duration: var(--ds-duration-spring-bouncy);
     --_toast-stack-ease: var(--ds-ease-spring-bouncy);
+    /* Order F3 (C3 request): one line of the banner's text, so the start icon lines up with the title. */
+    --_toast-line: calc(var(--ds-type-body-medium-font-size) * var(--ds-font-leading-snug));
   }
 
   [data-platform='ios'] [data-ds='toast'] > [data-part='title'] {
@@ -1793,6 +1817,55 @@
       --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, transparent);
     }
 
+    /*
+     * Sidebar and split view on a wide shell (order F3): the selected row is
+     * the tint fill with white text and glyphs, as the platform's sidebars
+     * (the text keeps 4.5:1 on the fill, measured); the divider is the
+     * quiet hairline of the grouped list.
+     */
+    [data-platform='ios'] [data-ds='sidebar'] {
+      --_sidebar-item-bg-active: var(--ds-color-primary-fill);
+      --_sidebar-item-fg-active: var(--ds-color-text-on-primary);
+      --_sidebar-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sidebar'] {
+      --_sidebar-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] {
+      --_page-shell-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='page-shell'] {
+      --_page-shell-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* The split view's line at rest is the same quiet hairline; hover and drag keep their stronger line. */
+    [data-platform='ios'] [data-ds='split-view'] {
+      --_resizable-panels-line: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='split-view'] {
+      --_resizable-panels-line: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'] [data-ds='split-view'] [data-ds='list'] > [data-part='item'][data-active] {
+      --_list-item-bg: var(--ds-color-primary-fill);
+      --_list-fg: var(--ds-color-text-on-primary);
+      --_list-description-fg: var(--ds-color-text-on-primary);
+
+      color: var(--ds-color-text-on-primary);
+    }
+
+    [data-platform='ios'] [data-ds='split-view'] [data-ds='list'] > [data-part='item'][data-active] > :is([data-part='start'], [data-part='end']) {
+      color: var(--ds-color-text-on-primary);
+    }
+
+    [data-platform='ios'] [data-ds='split-view'] [data-ds='list'] > [data-part='item'][data-active][data-linked]::after {
+      border-color: var(--ds-color-text-on-primary);
+    }
+
     [data-platform='ios'][data-scheme='dark'] [data-ds='list'] > [data-part='item'] > [data-part='start'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
@@ -1858,12 +1931,23 @@
     block-size: var(--ds-size-icon-sm);
   }
 
-  /* List sections (M9.2): the header and the footer at the rows' text edge, the header 15 semibold, the footer 13, a wider gap between groups. */
+  /*
+   * List sections (M9.2, type in order F3): the header and the footer at the
+   * rows' text edge, the header 17 regular in the secondary colour (as the
+   * references, it was 15 semibold), the footer 13, a wider gap between
+   * groups. A plain list (no grouped card in its sections) runs its
+   * sections on with a short gap, as the platform's plain lists do.
+   */
   [data-platform='ios'] [data-ds='list']:has(> [data-part='section']) {
     --_list-section-gap: calc(2 * var(--ds-space-fixed-xl));
-    --_list-section-header-font-size: var(--ds-type-body-medium-font-size);
-    --_list-section-header-font-weight: var(--ds-font-weight-semibold);
+    --_list-section-header-font-size: var(--ds-type-body-large-font-size);
+    --_list-section-header-font-weight: var(--ds-font-weight-regular);
+    --_list-section-header-fg: var(--ds-color-text-muted);
     --_list-section-footer-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='list']:has(> [data-part='section']):not(:has(> [data-part='section'] > [data-ds='list']:is([data-variant='inset'], [data-variant='divided']))) {
+    --_list-section-gap: var(--ds-space-fixed-m);
   }
 
   [data-platform='ios'] [data-ds='list'] > [data-part='section'] {
@@ -1871,7 +1955,7 @@
   }
 
   /* A row with no start part: its text begins where the hairline begins, not one gap later (the empty start column keeps its gap). */
-  [data-platform='ios'] [data-ds='list'] > [data-part='item']:not(:has(> [data-part='start'])) > :is([data-part='title'], [data-part='description']) {
+  [data-platform='ios'] [data-ds='list'] > [data-part='item']:not(:has(> [data-part='start'])) > :is([data-part='title'], [data-part='description'], [data-part='control']) {
     margin-inline-start: calc(-1 * var(--_list-gap));
   }
 
@@ -1893,6 +1977,18 @@
     --_select-ghost-padding-inline: var(--ds-space-fixed-2xs);
 
     font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /*
+   * Inside a list row (order F3): the value in regular weight and the
+   * secondary label colour, as the references' rows draw it; the standalone
+   * pop-up button keeps the tint and the semibold value (kit). Invalid keeps
+   * its danger colour.
+   */
+  [data-platform='ios'] [data-ds='list'] [data-ds='select'][data-emphasis='ghost']:not([data-part], [data-invalid]) {
+    --_select-ghost-fg: var(--ds-color-text-muted);
+
+    font-weight: var(--ds-font-weight-regular);
   }
 
   [data-platform='ios'] [data-ds='select'][data-emphasis='ghost']:not([data-part]) > [data-part='icon'] > [data-ds='icon'] {
@@ -1961,13 +2057,14 @@
     --_swipe-actions-menu-inset: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl));
   }
 
-  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']):focus-within {
-    padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']):is(:focus-within, :has(> [data-part='swipe'] [data-part='menu'][aria-expanded='true'])) {
+    --_list-padding-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
   }
 
+  /* Order F3 (C3 request): the menu button's room only while it shows, a hovering pointer or its menu open, so the title keeps the room at rest. */
   @media (hover: hover) and (pointer: fine) {
-    [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']) {
-      padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
+    [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']):hover {
+      --_list-padding-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
     }
   }
 
@@ -1993,12 +2090,13 @@
     /*
      * Order P1: a plain field in a grouped row or in the alert's well draws
      * no ring box on focus, as the kit: the caret takes the tint and the row
-     * label keeps its focused tint (Field.css). The page cannot tell a
-     * keyboard from a finger here (a text field always matches
-     * :focus-visible, and the system keeps no input modality flag), so every
-     * focus also draws one quiet mark the kit does not: the row's lower edge
-     * in the tint, 2px, across the row's text width (WCAG 2.2 2.4.7; its
-     * contrast against the card is in docs/reports/lanes/reset-P1.md). The
+     * label keeps its focused tint (Field.css). A text field always matches
+     * :focus-visible, so a focus that did not come from a pointer or a
+     * finger draws one quiet mark the kit does not: the row's lower edge in
+     * the tint, 2px, across the row's text width (WCAG 2.2 2.4.7; its
+     * contrast against the card is in docs/reports/lanes/reset-P1.md). Order
+     * F3 (C3 request): the root's modality flag hides it after a pointer or
+     * touch press; before any input and after keyboard use it shows. The
      * transparent outline of Input.css stays for forced colors.
      */
     [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'],
@@ -2011,8 +2109,8 @@
       caret-color: var(--ds-color-primary-on-surface);
     }
 
-    [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within),
-    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within) {
+    :root:not([data-modality='pointer']) [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within),
+    :root:not([data-modality='pointer']) [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within) {
       box-shadow: inset 0 calc(-1 * var(--ds-border-width-strong)) 0 0 var(--ds-color-primary-on-surface);
     }
 
@@ -2429,7 +2527,7 @@
     border-radius: var(--ds-shape-corner-full);
   }
 
-  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])):not([data-compact]) > [data-part='accessory'] {
+  [data-platform='ios'] [data-ds='tab-bar']:where(:has(> [data-part='search']:not([data-expanded]))):not([data-compact]) > [data-part='accessory'] {
     inline-size: calc(100% + 2 * var(--ds-border-width-default) + var(--_ios-search-gap) + var(--_ios-search-size));
   }
 

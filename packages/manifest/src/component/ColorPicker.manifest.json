@@ -145,7 +145,7 @@
       "accessibilityRole": "button"
     },
     "notes": [
-      "Every name, role word and value text inside comes from packages/shared/src/color.ts and the picker's words (pickerWords.ts, to move there), never from React Aria's Arabic strings.",
+      "Every name, role word and value text inside comes from packages/shared/src/color.ts and its colorPickerWords, never from React Aria's Arabic strings.",
       "The eyedropper is feature tested after mount (colorEyeDropperAvailable) and is not rendered where the browser has none: WebKit, Firefox and a server render.",
       "WCAG 2.2 1.4.1: the picked swatch in the grid and the saved row shows a ring and a check, not colour alone.",
       "WCAG 2.2 1.4.10: the panel has no fixed width and fits a 320px screen."
@@ -207,6 +207,8 @@
     }
   ],
   "contract": {
+    "trigger": "[data-ds='color-picker'][data-variant='compact'] [data-part='trigger']",
+    "opens": "color-picker",
     "optionalParts": [
       "eyedropper"
     ],

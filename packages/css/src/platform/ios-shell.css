@@ -209,6 +209,31 @@
     padding-inline: calc(2 * var(--ds-space-fixed-m));
   }
 
+  /*
+   * A shell with its navigation column (order F3): the column runs the
+   * full height and the header sits over main only, as the platform's
+   * sidebar does; the large title starts at the content, not over the
+   * sidebar. Only the grid areas change, never the order of the parts.
+   */
+  @media (width >= 68.75rem) { /* breakpoint.desktop */
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='nav']:not([hidden])) {
+      grid-template-areas:
+        'nav header header'
+        'nav main aside'
+        'nav footer footer';
+    }
+  }
+
+  @media (width >= 48rem) and (width < 68.75rem) { /* breakpoint.tablet breakpoint.desktop */
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='nav']:not([hidden])) {
+      grid-template-areas:
+        'nav header'
+        'nav main'
+        'nav aside'
+        'nav footer';
+    }
+  }
+
   /* Every region keeps clear of the side insets, each side on its own. */
   [data-platform='ios'] [data-ds='page-shell'] > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']) {
     margin-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);

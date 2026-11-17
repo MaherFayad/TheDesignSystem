@@ -8,9 +8,6 @@
       "type": "registry:lib",
       "title": "Core",
       "description": "Shared logic, icons, motion patterns, style data, the reset and the base CSS. Every other item needs it.",
-      "dependencies": [
-        "@internationalized/date@3.12.4"
-      ],
       "files": [
         {
           "path": "packages/registry/files/ds.css",
@@ -118,11 +115,6 @@
           "target": "@components/ds/motion/helpers/flip-list.ts"
         },
         {
-          "path": "packages/motion/src/helpers/index.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/motion/helpers/index.ts"
-        },
-        {
           "path": "packages/motion/src/helpers/indicator.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/helpers/indicator.ts"
@@ -181,11 +173,6 @@
           "path": "packages/motion/src/helpers/toggle-layer.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/helpers/toggle-layer.ts"
-        },
-        {
-          "path": "packages/motion/src/index.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/motion/index.ts"
         },
         {
           "path": "packages/motion/src/interactions.ts",
@@ -363,11 +350,6 @@
           "target": "@components/ds/motion/preset.ts"
         },
         {
-          "path": "packages/motion/src/primitives.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/motion/primitives.ts"
-        },
-        {
           "path": "packages/motion/src/primitives/button-morph.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/primitives/button-morph.ts"
@@ -398,11 +380,6 @@
           "target": "@components/ds/motion/primitives/stagger.ts"
         },
         {
-          "path": "packages/motion/src/spring.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/motion/spring.ts"
-        },
-        {
           "path": "packages/motion/src/tokens.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/tokens.ts"
@@ -428,11 +405,6 @@
           "target": "@components/ds/shared/color.ts"
         },
         {
-          "path": "packages/shared/src/date.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/shared/date.ts"
-        },
-        {
           "path": "packages/shared/src/dialog-focus.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/dialog-focus.ts"
@@ -446,11 +418,6 @@
           "path": "packages/shared/src/form.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/form.ts"
-        },
-        {
-          "path": "packages/shared/src/index.ts",
-          "type": "registry:lib",
-          "target": "@components/ds/shared/index.ts"
         },
         {
           "path": "packages/shared/src/initials.ts",
@@ -639,6 +606,32 @@
         }
       ],
       "docs": "Import ds/ds.css and one ds/style-<id>.css once at the app root. Dialog and Tooltip read process.env.NODE_ENV: in a Vite app add \"node\" to compilerOptions.types.",
+      "categories": [
+        "core"
+      ],
+      "meta": {
+        "source": "The system",
+        "version": "0.1.0"
+      }
+    },
+    {
+      "name": "shared-date",
+      "type": "registry:lib",
+      "title": "shared-date",
+      "description": "Shared logic in ds/shared/date.ts, kept out of core because it imports @internationalized/date. Only the items whose files import it depend on it.",
+      "dependencies": [
+        "@internationalized/date@3.12.4"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/shared/src/date.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/date.ts"
+        }
+      ],
       "categories": [
         "core"
       ],
@@ -1897,6 +1890,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/icon-button",
+        "@ds/shared-date",
         "@ds/theme"
       ],
       "files": [
@@ -2171,11 +2165,6 @@
       ],
       "files": [
         {
-          "path": "packages/react/src/components/ColorArea/areaText.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/ColorArea/areaText.ts"
-        },
-        {
           "path": "packages/react/src/components/ColorArea/ColorArea.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/ColorArea/ColorArea.tsx"
@@ -2271,11 +2260,6 @@
           "path": "packages/react/src/components/ColorPicker/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/ColorPicker/index.ts"
-        },
-        {
-          "path": "packages/react/src/components/ColorPicker/pickerWords.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/ColorPicker/pickerWords.ts"
         },
         {
           "path": "packages/css/src/components/ColorPicker.css",
@@ -2673,6 +2657,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
+        "@ds/shared-date",
         "@ds/theme"
       ],
       "files": [
@@ -2722,6 +2707,7 @@
         "@ds/dialog",
         "@ds/field",
         "@ds/popover",
+        "@ds/shared-date",
         "@ds/theme",
         "@ds/time-field",
         "@ds/wheel-picker"
@@ -5850,6 +5836,7 @@
         "@ds/core",
         "@ds/date-field",
         "@ds/field",
+        "@ds/shared-date",
         "@ds/theme"
       ],
       "files": [

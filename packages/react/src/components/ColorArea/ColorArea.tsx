@@ -49,10 +49,9 @@ import {
   type Color,
   type ColorSpace,
 } from 'react-aria-components';
-import { colorLocale, colorWords, type ColorChannelName } from '@the-system/shared';
+import { colorAreaValueText, colorAreaWords, colorLocale, colorWords, type ColorChannelName } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { flag, mergeRefs, racOwnProps } from '../ColorSwatch/racProps';
-import { colorAreaValueText, colorAreaWords } from './areaText';
 
 export type ColorAreaChannel = ColorChannelName;
 

@@ -94,17 +94,6 @@
     align-self: flex-start;
   }
 
-  /*
-   * The sliders' thumb holds its hidden input inside a border of
-   * border.width.strong, so a 24px thumb leaves a 20px input (2.5.8). Inside
-   * the panel the thumb grows by both borders, so the input is 24 or more.
-   * A fix in ColorSlider.css (an inset ring in place of the border) is
-   * requested; this rule can then go.
-   */
-  [data-ds='color-picker'] [data-ds='color-slider'] {
-    --_color-slider-thumb: max(var(--_color-slider-thickness), calc(var(--ds-size-target-min) + var(--ds-border-width-strong) * 2));
-  }
-
   /* The swatch inside the trigger is drawn at the trigger's icon size. */
   [data-ds='color-picker'] > [data-part='trigger'] [data-ds='color-swatch'] {
     --_color-swatch-size: var(--ds-size-icon-lg);

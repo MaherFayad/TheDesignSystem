@@ -119,6 +119,7 @@ const line: IconSetSource = {
     radio: 'radio',
     library: 'library',
     share: 'share',
+    eyedropper: 'pipette',
   },
 };
 

@@ -461,13 +461,14 @@
     transition: none;
   }
 
+  /* The menu button's room only while it shows (order F3, from the C3 request): a hovering pointer, focus in the row, or its menu open. */
   @media (hover: hover) and (pointer: fine) {
-    [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) {
+    [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']):hover {
       --_list-padding-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
     }
   }
 
-  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']):focus-within {
+  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']):is(:focus-within, :has(> [data-part='swipe'] [data-part='menu'][aria-expanded='true'])) {
     --_list-padding-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
   }
 

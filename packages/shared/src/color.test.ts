@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  colorAreaValueText,
+  colorAreaWords,
   colorContrast,
   colorDescribe,
   colorEyeDropperAvailable,
@@ -8,6 +10,7 @@ import {
   colorLocale,
   colorName,
   colorParse,
+  colorPickerWords,
   colorPickFromScreen,
   colorSwatchEdgeNeeded,
   colorSwatchGrid,
@@ -174,6 +177,44 @@ describe('locales and words', () => {
     expect(colorWords('ar').add).toBe('إضافة لون');
     expect(colorWords('ar').channels.alpha).toBe('العتامة');
     expect(colorWords('en').swatch).toBe('colour swatch');
+  });
+});
+
+describe('colour area and picker words', () => {
+  const blue = {
+    formatChannelValue: (channel: string, locale: string) =>
+      new Intl.NumberFormat(locale, { style: 'percent' }).format(channel === 'saturation' ? 0.76 : 0.85),
+    toString: () => '#3466d9',
+  };
+
+  it('names the area and its role in both languages', () => {
+    expect(colorAreaWords('en').area).toBe('Saturation and brightness');
+    expect(colorAreaWords('ar-SA').area).toBe('التشبع والسطوع');
+    expect(colorAreaWords('ar').role).toBe('منزلق ثنائي الاتجاه');
+    expect(colorAreaWords(undefined).role).toBe('2D slider');
+  });
+
+  it('reads the moved channel first, then the other, then the name', () => {
+    const en = colorAreaValueText(blue, 'saturation', 'brightness', 'en');
+    expect(en.startsWith('Saturation 76%, Brightness 85%, ')).toBe(true);
+    expect(en.endsWith(colorName('#3466d9', 'en'))).toBe(true);
+    expect(colorAreaValueText(blue, 'brightness', 'saturation', 'en').startsWith('Brightness 85%, Saturation 76%')).toBe(true);
+  });
+
+  it('reads Arabic with the Arabic comma and Western digits', () => {
+    const ar = colorAreaValueText(blue, 'saturation', 'brightness', 'ar-SA');
+    // The Arabic percent carries direction marks; the words and digits are what is read.
+    expect(ar.replace(/[\u200e\u200f]/g, '').startsWith('التشبع 76%، السطوع 85%، ')).toBe(true);
+    expect(ar.endsWith(colorName('#3466d9', 'ar'))).toBe(true);
+    expect(ARABIC_INDIC.test(ar)).toBe(false);
+  });
+
+  it('has the picker words in both languages', () => {
+    expect(colorPickerWords('en').title).toBe('Colour');
+    expect(colorPickerWords('en').eyedropper).toBe('Pick a colour from the screen');
+    expect(colorPickerWords('ar-SA').title).toBe('اللون');
+    expect(colorPickerWords('ar').sliders).toBe('أشرطة التمرير');
+    expect(colorPickerWords('ar').saved).toBe('الألوان المحفوظة');
   });
 });
 

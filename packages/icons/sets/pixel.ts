@@ -123,6 +123,7 @@ const pixel: IconSetSource = {
     radio: 'radio',
     library: 'library',
     share: 'share',
+    eyedropper: 'pipette',
   },
 };
 
