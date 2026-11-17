@@ -234,3 +234,42 @@ cannot be the test. No web animation or effect library may be added.
   the bar measured with `npm run perceive` against the M6 material; web and
   android unchanged. Safari itself cannot be run here: checking tier 2 on a
   real iPhone is a human gate.
+
+## Fix round from the first three test screens (M10.1, M10.4, M10.5)
+
+The screens were built only from system components and compared with Mobbin
+references. What they found, grouped into orders. Looks stay proposed.
+
+- **C1, List (ds-component).** Titles wrap (up to 3 lines, a prop; one line
+  stays the default where a row is dense); a plain full width list on `ios`
+  with hairlines that start at the text and clear a large cover; a row that
+  acts in place without being a link and without a chevron; the chevron of a
+  linked row can be turned off; a full width control row (a slider row); a
+  row footer slot for a row's own buttons.
+- **C2, bars and buttons (ds-component).** Navbar pushed form: back button
+  on the button row, large title on its own row below; a glass group that
+  holds two or more bar buttons as one capsule; TabBar accessory slot (a
+  mini player) and its compact form; Button gray fill with a tinted label;
+  icons: shuffle, music note, next track, radio, library, share.
+- **C3, focus and small fixes (ds-component).** A keyboard modality flag on
+  the root (set by keyboard use, cleared by pointer or touch) that CSS can
+  read, so pointer presses draw no ring or box on the stepper, the pop-up
+  button and its options, and the grouped field line shows for keyboard
+  only; Switch with no label has no empty gap column; SwipeActions: the
+  armed label follows the edge, long labels wrap or clip inside the
+  capsule, the menu button does not take title room on touch; Toast: the
+  start icon aligns with the title, and an undo banner may time out.
+- **T1, tools (ds-qa).** `ds doctor` knows the trigger and content wrappers
+  of DropdownMenu and ContextMenu and a StatusDot named by `label`; the
+  screen host does not nest a main inside a main.
+- **F3, iOS look (ds-style, after L2).** Light panels (menu, toast, action
+  sheet) go back to the denser tint: on real screens text behind showed
+  through the labels (the lead's earlier choice of a letter halo is
+  withdrawn); no hairline or band under the top bar at rest; large title 20
+  in; page padding 16; section header type as the references (regular,
+  secondary colour, larger); pop-up value regular weight in the label
+  colour inside list rows; bottom toolbar glyphs about 22 in the tint;
+  sidebar selected row in the tint with white text; capsule buttons 48 tall
+  where the reference has them; Neutral dark stays neutral gray inside the
+  screen host (it showed navy there); content never rests under the bottom
+  bar on the phone frame.
