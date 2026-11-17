@@ -16,7 +16,10 @@
 //   for the sort, then a radio group for the filter);
 // - rows: List (divided) with ListItem `swipe` and SwipeActions, start side
 //   read and favourite, end side archive (first, on the full swipe, it can
-//   be undone) and delete (never on the full swipe);
+//   be undone) and delete (never on the full swipe); variant flush with
+//   titles of up to three lines (titleLines), no chevron on the rows
+//   (chevron false), and a footer under the byline with a listen capsule
+//   and a more button (order C1);
 // - the banner: Toaster with position auto and toast() with start, meta and
 //   closable;
 // - the bottom toolbar: Toolbar in the PageShell footer;
@@ -28,6 +31,7 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuQuickAction,
   DropdownMenuQuickActions,
@@ -97,6 +101,9 @@ const words = {
     archive: 'Archive',
     del: 'Delete',
     menu: (title: string) => `Actions for ${title}`,
+    listen: 'Listen',
+    pause: 'Pause',
+    more: (title: string) => `More for ${title}`,
     unreadDot: 'Unread',
     byline: (a: Article, lang: Lang) => `${t(a.source, lang)}, ${readingTime(a.minutes, lang)}`,
     archived: 'Article archived',
@@ -137,6 +144,9 @@ const words = {
     archive: 'أرشفة',
     del: 'حذف',
     menu: (title: string) => `خيارات ${title}`,
+    listen: 'استماع',
+    pause: 'إيقاف مؤقت',
+    more: (title: string) => `المزيد عن ${title}`,
     unreadDot: 'غير مقروء',
     byline: (a: Article, lang: Lang) => `${t(a.source, lang)}، ${readingTime(a.minutes, lang)}`,
     archived: 'انحفظ المقال في الأرشيف',
@@ -179,6 +189,8 @@ export function Screen({ lang }: ScreenProps) {
   const [favourites, setFavourites] = useState<Set<string>>(() => new Set(INITIAL_FAVOURITES));
   const [filter, setFilter] = useState<Filter>('all');
   const [sort, setSort] = useState<Sort>('newest');
+  /** The article read aloud, if any: its listen capsule turns into a pause capsule. */
+  const [listening, setListening] = useState<string | null>(null);
 
   /** A timed banner with no close button: it leaves by its timer, a swipe up, or Escape when focused. */
   const banner = (title: string, start: string, description?: string) => toast({ title, description, start, meta: new Date(), lang, closable: false });
@@ -341,13 +353,15 @@ export function Screen({ lang }: ScreenProps) {
     );
   } else {
     body = (
-      <List variant="divided" aria-label={w.list} data-gallery="inbox-list">
+      <List variant="flush" titleLines={3} aria-label={w.list} data-gallery="inbox-list">
         {shown.map((a) => {
           const title = t(a.title, lang);
+          const playing = listening === a.id;
           return (
             <ListItem
               key={a.id}
               href={`#${a.id}`}
+              chevron={false}
               start={
                 <span data-gallery="inbox-cover">
                   <Art art={a.art} />
@@ -357,6 +371,25 @@ export function Screen({ lang }: ScreenProps) {
               description={w.byline(a, lang)}
               end={unread.has(a.id) ? <StatusDot {...unreadDot} /> : undefined}
               swipe={<SwipeActions start={startActions(a)} end={endActions(a)} menuLabel={w.menu(title)} />}
+              footer={
+                <>
+                  <Button size="sm" shape="pill" emphasis="soft" start={playing ? 'pause' : 'play'} onClick={() => setListening(playing ? null : a.id)}>
+                    {playing ? w.pause : w.listen}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <IconButton icon="more" label={w.more(title)} emphasis="ghost" size="sm" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {[...startActions(a), ...endActions(a)].map((action) => (
+                        <DropdownMenuItem key={action.label} start={action.icon} tone={action.tone === 'danger' ? 'danger' : undefined} onSelect={action.onSelect}>
+                          {action.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              }
             />
           );
         })}

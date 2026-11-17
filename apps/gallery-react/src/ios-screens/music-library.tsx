@@ -14,7 +14,7 @@
 // and surface is a system component; music-library.css lays out the page
 // only. Content comes from ./kit, with more songs of our own below so most
 // letters hold more than one song.
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon } from '@the-system/icons/react';
 import {
   Button,
@@ -93,7 +93,7 @@ const moreTracks: readonly Track[] = [
 
 const allTracks: readonly Track[] = [...kitTracks, ...moreTracks];
 
-/** The song the mini player holds, and the one being downloaded. */
+/** The song the mini player holds at first, and the one being downloaded. A tap on a row plays that song (order C1). */
 const NOW_PLAYING = 'blue-diriyah';
 const DOWNLOADING = 'cardamom-morning';
 /** Songs saved to the phone: a download glyph after them. */
@@ -233,7 +233,7 @@ function SongMenuItems({ w, kind, downloaded }: { w: Words; kind: 'context' | 'd
   );
 }
 
-function SongRow({ track, lang, w }: { track: Track; lang: Lang; w: Words }) {
+function SongRow({ track, lang, w, playing, onPlay }: { track: Track; lang: Lang; w: Words; playing: boolean; onPlay: (id: string) => void }) {
   const title = t(track.title, lang);
   const downloaded = DOWNLOADED.has(track.id);
   const end =
@@ -253,7 +253,8 @@ function SongRow({ track, lang, w }: { track: Track; lang: Lang; w: Words }) {
           start={<Cover art={track.art} />}
           title={title}
           description={artistName(track, lang)}
-          href={`#play-${track.id}`}
+          onSelect={() => onPlay(track.id)}
+          active={playing}
           end={end}
           actions={
             <DropdownMenu>
@@ -319,7 +320,8 @@ export function Screen({ variant, lang }: ScreenProps) {
       return target ? [{ key: e.key, target }] : [];
     });
   }, [groups, locale]);
-  const playing = allTracks.find((track) => track.id === NOW_PLAYING);
+  const [nowPlaying, setNowPlaying] = useState(NOW_PLAYING);
+  const playing = allTracks.find((track) => track.id === nowPlaying);
   // The Sidebar is the regular width form: only the inner screen in landscape has the room (plan section 5).
   const wide = variant.frame === 'duo-inner' && variant.orient === 'landscape';
 
@@ -355,11 +357,11 @@ export function Screen({ variant, lang }: ScreenProps) {
           <SectionIndex sections={sections} label={w.index} />
         </div>
         <div data-gallery="ml-songs">
-          <List variant="plain" aria-label={w.list}>
+          <List variant="flush" aria-label={w.list}>
             {groups.map((g, i) => (
               <ListSection key={g.key} id={`ml-section-${i}`} header={g.key} level={2}>
                 {g.items.map((track) => (
-                  <SongRow key={track.id} track={track} lang={lang} w={w} />
+                  <SongRow key={track.id} track={track} lang={lang} w={w} playing={track.id === nowPlaying} onPlay={setNowPlaying} />
                 ))}
               </ListSection>
             ))}

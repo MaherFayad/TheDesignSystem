@@ -2,16 +2,25 @@
 // long-arabic, disabled. Sections (order M9.2) show in variants (each
 // variant), many (settings groups with headers and footers) and
 // long-arabic. Variants also shows swipe rows (order M9.7); the
-// SwipeActions demo has the full set. No loading, error or readonly: a list that loads
-// shows Skeleton rows, and a failed load is the page's message.
+// SwipeActions demo has the full set. Order C1: variants shows flush lists,
+// rows that act in place (onSelect) beside large covers, a linked row with no
+// chevron and a control row; long-text and long-arabic show wrapped titles
+// (titleLines) and a row footer; disabled shows a disabled action row. No
+// loading, error or readonly: a list that loads shows Skeleton rows, and a
+// failed load is the page's message.
+import { useState } from 'react';
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
 import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
+import { Avatar } from '../Avatar';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
+import { Slider } from '../Slider';
 import { SwipeActions } from '../SwipeActions';
 import { List, ListItem, ListSection, type ListSize, type ListVariant } from './index';
 
-const variants: ListVariant[] = ['plain', 'divided', 'inset'];
+const variants: ListVariant[] = ['plain', 'divided', 'inset', 'flush'];
 const sizes: ListSize[] = ['md', 'sm'];
 
 const mail = [
@@ -48,6 +57,48 @@ function MailRows({ items, actions = true, lang = 'en' }: { items: typeof mail; 
   );
 }
 
+const songs = [
+  { id: 'amber', title: 'Amber gate', artist: 'Maha Saleh' },
+  { id: 'blue', title: 'Blue Diriyah', artist: 'Night Caravan' },
+  { id: 'cardamom', title: 'Cardamom morning', artist: 'Juniper Trio' },
+];
+
+const songsAr = [
+  { id: 'amber-ar', title: 'بوابة العنبر', artist: 'مها صالح' },
+  { id: 'blue-ar', title: 'الدرعية الزرقاء', artist: 'قافلة الليل' },
+];
+
+/** Rows that act in place: a tap plays the song, no link and no chevron. A large cover, so the hairline clears it. */
+function SongRows({ items, lang = 'en' }: { items: typeof songs; lang?: 'en' | 'ar' }) {
+  const [playing, setPlaying] = useState(items[0]?.id);
+  return (
+    <List variant="flush" aria-label={lang === 'ar' ? 'الأغاني' : 'Songs'}>
+      {items.map((song) => (
+        <ListItem
+          key={song.id}
+          start={<Avatar name={song.title} size="lg" decorative />}
+          title={song.title}
+          description={song.artist}
+          active={song.id === playing}
+          onSelect={() => setPlaying(song.id)}
+          actions={<IconButton size="sm" emphasis="ghost" icon="more" label={lang === 'ar' ? `خيارات ${song.title}` : `More for ${song.title}`} />}
+        />
+      ))}
+    </List>
+  );
+}
+
+function VolumeRow({ lang = 'en' }: { lang?: 'en' | 'ar' }) {
+  const [volume, setVolume] = useState(60);
+  return (
+    <ListItem
+      start="bell-off"
+      end={<Icon name="bell" size="md" />}
+      control={<Slider aria-label={lang === 'ar' ? 'مستوى الصوت' : 'Bell volume'} min={0} max={100} step={5} value={volume} onValueChange={setVolume} />}
+    />
+  );
+}
+
 export default function ListDemo() {
   return (
     <DemoPage>
@@ -73,6 +124,18 @@ export default function ListDemo() {
               </ListSection>
             </List>
           ))}
+        </DemoGrid>
+        <DemoGrid min="18rem">
+          <SongRows items={songs} />
+          <List variant="flush" aria-label="Boards, no chevrons">
+            <ListItem href="#board-brand" start="grid" title="Brand board" description="Edited today" chevron={false} />
+            <ListItem href="#board-launch" start="grid" title="Launch plan" description="Edited Monday" chevron={false} />
+          </List>
+          <List variant="inset" aria-label="Sound">
+            <ListSection header="Bell volume" footer="The bell follows this level even on silent.">
+              <VolumeRow />
+            </ListSection>
+          </List>
         </DemoGrid>
         <DemoGrid min="18rem">
           <List variant="inset" aria-label="Inbox with swipe actions">
@@ -105,6 +168,12 @@ export default function ListDemo() {
             </List>
             <List variant="inset" aria-label="الوارد">
               <MailRows items={mailAr} lang="ar" />
+            </List>
+            <SongRows items={songsAr} lang="ar" />
+            <List variant="inset" aria-label="الصوت">
+              <ListSection header="مستوى صوت الجرس">
+                <VolumeRow lang="ar" />
+              </ListSection>
             </List>
           </DemoGrid>
         </Theme>
@@ -165,6 +234,26 @@ export default function ListDemo() {
           />
           <ListItem start="link" title="https://example.com/boards/brand/2026/q4/guidelines-final-reviewed-copy" />
         </List>
+        <div style={{ maxInlineSize: '20rem' }}>
+          <List variant="flush" titleLines={3} aria-label="Saved articles">
+            <ListItem
+              href="#article-walls"
+              chevron={false}
+              start={<Avatar name="Mud walls" size="lg" decorative />}
+              title="Why mud walls keep old houses in Najd cool through the longest summer afternoons"
+              description="Rawdah Review, 8 min read"
+              footer={
+                <>
+                  <Button size="sm" shape="pill" emphasis="soft" start="play">
+                    Listen
+                  </Button>
+                  <IconButton size="sm" emphasis="ghost" icon="more" label="More for Why mud walls keep old houses cool" />
+                </>
+              }
+            />
+            <ListItem title="Number of sessions in one focus block" titleLines={2} actions={<IconButton size="sm" icon="plus" label="Add a session" />} />
+          </List>
+        </div>
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
@@ -183,6 +272,25 @@ export default function ListDemo() {
             actions={<IconButton size="xs" icon="more" label="عرض خيارات مراجعة الدليل" />}
           />
         </List>
+        <div style={{ maxInlineSize: '20rem' }}>
+          <List variant="flush" titleLines={3} aria-label="المقالات المحفوظة">
+            <ListItem
+              href="#article-walls-ar"
+              chevron={false}
+              start={<Avatar name="بيوت الطين" size="lg" decorative />}
+              title="ليش بيوت الطين في نجد تبقى باردة حتى في أطول عصريات الصيف"
+              description="مجلة الروضة، قراءة 8 دقائق"
+              footer={
+                <>
+                  <Button size="sm" shape="pill" emphasis="soft" start="play">
+                    استماع
+                  </Button>
+                  <IconButton size="sm" emphasis="ghost" icon="more" label="خيارات مقال بيوت الطين" />
+                </>
+              }
+            />
+          </List>
+        </div>
         <div style={{ maxInlineSize: '24rem' }}>
           <List variant="inset" aria-label="الإعدادات">
             <ListSection header="الإشعارات" footer="المعاينة تعرض أول سطر من كل رسالة، وتقدر توقفها لأي محادثة من إعداداتها.">
@@ -200,6 +308,7 @@ export default function ListDemo() {
         <List variant="divided" aria-label="Boards">
           <ListItem href="#open" start="grid" title="Brand board" description="Open" />
           <ListItem href="#locked" start="lock" title="Finance board" description="You need access from an admin" disabled />
+          <ListItem start="music" title="Offline mix" description="Download it first to play it here" onSelect={() => undefined} disabled />
         </List>
       </DemoCase>
     </DemoPage>

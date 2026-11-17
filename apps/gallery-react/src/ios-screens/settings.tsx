@@ -10,6 +10,7 @@
 // split into a list of categories and the detail of the chosen one, as a
 // settings app does on a wide screen.
 import { useState, type MouseEvent } from 'react';
+import { Icon } from '@the-system/icons/react';
 import {
   Field,
   Fieldset,
@@ -144,7 +145,7 @@ interface GroupProps {
 function TimerGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" aria-label={w('interval')}>
+    <List variant="inset" titleLines={3} aria-label={w('interval')}>
       <ListSection footer={w('intervalNote')}>
         <ListItem
           start="clock"
@@ -216,7 +217,7 @@ function TimerGroups({ lang, s, set }: GroupProps) {
 function DisplayGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" aria-label={w('display')}>
+    <List variant="inset" titleLines={3} aria-label={w('display')}>
       <ListSection header={w('display')}>
         <ListItem
           title={w('size')}
@@ -256,7 +257,7 @@ function DisplayGroups({ lang, s, set }: GroupProps) {
 function SoundGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" aria-label={w('sound')}>
+    <List variant="inset" titleLines={3} aria-label={w('sound')}>
       <ListSection header={w('sound')}>
         <ListItem
           title={w('bell')}
@@ -265,7 +266,9 @@ function SoundGroups({ lang, s, set }: GroupProps) {
       </ListSection>
       <ListSection header={w('volume')} footer={w('volumeNote')}>
         <ListItem
-          title={
+          start="bell-off"
+          end={<Icon name="bell" size="md" />}
+          control={
             <Slider
               aria-label={w('volume')}
               min={0}

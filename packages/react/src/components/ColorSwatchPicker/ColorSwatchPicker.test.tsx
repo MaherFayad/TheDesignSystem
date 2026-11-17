@@ -137,6 +137,7 @@ describe('ColorSwatchPicker', () => {
   it('disables every swatch and the add button', () => {
     const { container } = render(<ColorSwatchPicker layout="row" colors={saved} locale="en" disabled onAdd={() => {}} />);
     expect(root(container).getAttribute('data-disabled')).toBe('');
+    expect(root(container).querySelector('[data-part="list"]')!.getAttribute('aria-disabled')).toBe('true');
     expect(items(container).every((i) => i.hasAttribute('data-disabled'))).toBe(true);
     expect(root(container).querySelector('[data-part="add"]')!.getAttribute('aria-disabled')).toBe('true');
   });

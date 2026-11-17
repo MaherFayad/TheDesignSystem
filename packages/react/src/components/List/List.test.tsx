@@ -3,11 +3,20 @@ import { userEvent } from '@testing-library/user-event';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot } from 'react-dom/client';
 import { act, type ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
 import ListDemo from './List.demo';
 import { List, ListItem, ListSection } from './index';
+
+// jsdom has no ResizeObserver; Radix Slider (the control row) measures the thumb with it.
+beforeAll(() => {
+  globalThis.ResizeObserver ??= class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+});
 
 const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="list"]')!;
 

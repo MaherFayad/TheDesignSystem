@@ -122,10 +122,11 @@ export function ColorSwatchPicker({
     () => ({
       render: (domProps: ComponentProps<'div'>) => {
         const { style: _style, ...own } = racOwnProps(domProps as Record<string, unknown>) as ComponentProps<'div'>;
-        return <div {...own} data-part="list" dir={grid ? 'ltr' : undefined} />;
+        // Disabled stays focusable and says so (anatomy.md, convention 5).
+        return <div {...own} aria-disabled={disabled || undefined} data-part="list" dir={grid ? 'ltr' : undefined} />;
       },
     }),
-    [grid],
+    [grid, disabled],
   );
 
   return (
