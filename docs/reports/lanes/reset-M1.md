@@ -202,3 +202,171 @@ Verdicts are mine, by eye, beside the reference sheets.
 3. The glass lens of the switch is drawn by the Liquid and Neutral recipes;
    the platform file draws the plain press Studio and Desk keep.
 4. The 3:1 ruling keeps Liquid's off switch edge in light.
+
+## M6
+
+Order M6 of `docs/plan/reset-mobile.md`, the iOS glass material, after the
+owner said "I don't see the glass effect in iOS at all but outlines".
+Proposed until the owner signs it on a phone. Not committed by me.
+
+### What changed
+
+- `packages/css/src/platform/ios.css`: a new section, "the clear material
+  (order M6, proposed)", in `ds.platform`. On the tab bar and its lens, the
+  navigation bar's buttons, the sheet's close button, the menu, the toast
+  banner and the segmented thumb: a tint of the style's solid glass mixed
+  with `transparent` (lifted with white in dark), a backdrop blur of the
+  style's `blur.backdrop` times a step with saturation, a rim of inset
+  shadows (bright upper edge, fainter lower edge and ring, a soft inner glow,
+  a dark hairline outside) and the style's glass lift. The flat border is
+  transparent while the material is on. Small chrome is clearer than panels,
+  as in the vendor's kit. No new token name; `color-mix()` and `calc()` over
+  tokens only.
+- One private property picks the strength: `--_ios-glass` is `clear`,
+  `regular` or `frosted`, read with style queries
+  (`@container style(--_ios-glass: ...)`). A style opts in by setting it.
+  Liquid and Neutral set `regular` on their root in their Switch recipes,
+  after DECISIONS.md, the iOS glass switch. Studio and Desk do not set it.
+- Fallbacks: under `prefers-reduced-transparency`, `prefers-contrast: more`,
+  `[data-contrast='more']`, forced colors and no `backdrop-filter`, every
+  part takes back the solid paint of M1 (checked in light and dark, both
+  styles, from computed styles).
+- `packages/styles/liquid/recipes/TabBar.css`: on ios Liquid hands back its
+  edge, shadow, blur and lens (`revert-layer`) and drops the scroll edge
+  fade, which read as fog over the content. Its contrast rules still win.
+- `packages/styles/liquid/recipes/Toast.css`: on ios Liquid hands back its
+  blur.
+- `packages/styles/{liquid,neutral}/recipes/Switch.css`: the opt in, and the
+  held lens rim is the same material (thin bright edge, inner shade, lift).
+  The lens ring that keeps 3:1 on the track is a hairline on the held iOS
+  lens (it was 2px); white on the on fill it measures 3.68 Liquid light,
+  3.41 Liquid dark, 3.98 Neutral light, 3.67 Neutral dark. The thumb tint
+  while held is 8% (was 12%).
+- `apps/gallery-react/src/Platforms.tsx` and `platforms.css`: our own
+  coloured content on the iOS phone screen (gradient covers and simple shapes
+  in the chart tokens' colours, two cards, four tiles, a list, a wide
+  banner), hidden on the other platforms. On ios the navigation bar stays at
+  the top so content scrolls under its buttons, and the large title fades on
+  scroll where the browser has scroll linked animation.
+
+### References
+
+- The vendor's own apps on Mobbin (the M1 crops, kept in scratch):
+  https://mobbin.com/screens/97b9afbb-a285-4693-bc73-efd070107178 (light tab
+  bar, buttons), https://mobbin.com/screens/c5f56c6e-1acc-40d1-bd73-3f00539bcd22
+  (dark list, bottom glass buttons),
+  https://mobbin.com/screens/d09f35c1-c150-4580-b8a9-08fc8b7858fa (context
+  menu), https://mobbin.com/screens/fc377805-7b0a-4357-bf4d-8d22caf32074
+  (segmented control), https://mobbin.com/screens/f3ce79fa-8661-4833-a601-04c40cc95ef5
+  (switch), https://mobbin.com/screens/f47c250a-246c-4f45-86d9-d9b6bda422f3
+  (sheet close), and the blue playlist screen used in M1.
+- The vendor's iOS and iPadOS 27 community kit in Figma, read only (pages
+  Materials, Tab Bars, Menus, Toggles), for measurements. No asset, name or
+  image of it is in the repo.
+
+Measured from pixels: the kit's small glass over gray stripes is about 50%
+white in light and a light gray at about 18% in dark; its medium and large
+panels are about 73% white in light; its menu over a blue band is about 72%
+near white in light and lets some blue through in dark. The music app's
+light tab bar is about 58% white over a dark photo; its dark glass buttons
+lift black content to about #24. The rim in the kit is a bright inner line
+on both long edges with a dark hairline outside it and a glow band inside.
+
+### Strength shipped
+
+`regular`, the closest to the references: bars and buttons 52% of the
+solid glass in light (kit small glass about 50%, music app about 58%), panels
+74% (kit menu about 72%); dark bars 62% of the solid glass lifted 10% white,
+dark panels 89%. `clear` (34%, 56% panels) is closest to the kit's small
+glass in dark but fails label contrast (below). `frosted` (72%, 86%) passes
+everything and reads as a white pill again. The owner picks by changing the
+one value in the two Switch recipes.
+
+### Verdict by eye (reference left, ours right, light and dark rows)
+
+- Tab bar: same family. Colour and blurred shapes show through, the rim and
+  lift read as glass, not an outline. Differs: our lens in light is a denser
+  white glass where the reference lens is a clearer gray (needed for 4.5:1
+  on the tint label); the reference's lighter blur keeps text behind more
+  legible; no refraction at the ends.
+- Navigation buttons: same family in both schemes.
+- Menu: same family; colour carried in light, a dark glass with a little
+  colour in dark. Differs: a little denser in dark than the kit (contrast).
+- Toast banner: same family as the menu (the system has no toast).
+- Sheet close: same family.
+- Segmented thumb: close. It sits on its own track, so there is little
+  behind to show.
+- Held switch: close. Thin bright rim, inner shade and lift now; the kit's
+  lens reaches farther past the track (M1 geometry, scale 1.4) and shows a
+  refraction band we do not draw.
+
+### Contrast, from pixels (WCAG 2.2 1.4.3 and 1.4.11)
+
+Probe: each label or glyph is captured as is and with its text and glyph
+transparent; the text color is compared with every backdrop pixel in its
+box, at six scroll positions over the lightest and darkest content of the
+demo (white cards, the gradient covers, the black or navy page). Minimum
+per item, `regular`:
+
+| Item | Liquid light | Liquid dark | Neutral light | Neutral dark |
+| --- | --- | --- | --- | --- |
+| Tab label | 7.68 | 5.86 | 7.41 | 5.15 |
+| Tab label, current (tint on lens) | 5.25 | 5.40 | 5.63 | 4.55 |
+| Tab glyph | 7.94 | 4.02 | 6.88 | 4.59 |
+| Tab glyph, current | 5.26 | 5.41 | 5.65 | 4.55 |
+| Bar button label | 10.60 | 6.94 | 10.02 | 5.16 |
+| Menu item | 4.59 | 4.75 | 4.85 | 4.87 |
+| Menu glyph | 4.78 | 4.81 | 5.05 | 4.96 |
+| Toast title | 14.38 | 14.12 | 14.20 | 11.01 |
+| Toast close glyph | 7.55 | 7.18 | 6.81 | 6.38 |
+| Sheet close glyph | 12.88 | 5.08 | 12.55 | 4.18 |
+
+Tints raised only for contrast: the lens (to 60% light, 90% dark) and the
+dark panels (84% to 89%). `clear` fails: menu items 3.19 to 3.85, dark bar
+button label 2.57 to 3.57, Neutral dark tab label 4.03, Liquid dark tab glyph
+2.24. `frosted` passes everything (lowest 4.69).
+
+### Studio and Desk
+
+They never used the glass material on iOS chrome (their glass tokens are
+their solid surface and their blur is 0) and do not opt in, so they keep the
+M1 paint. Computed style compare against the pre M6 commit, ios, Studio
+and Desk, 36 pages: no paint property changed; the only changes are boxes,
+height, inset and the navbar's sticky position on the gallery phone
+screens, from the new content.
+
+### Checks
+
+- `platform=web` and `platform=android`: computed style compare (23
+  properties, pseudo elements and boxes) against the pre M6 commit, 72 pages
+  each, four styles, a held switch included: zero change.
+- `npm run contract -- --framework react --platform ios --component
+  TabBar,Navbar,DropdownMenu,Toast,Switch,SegmentedControl,Sheet --tag
+  ios-M6`: DropdownMenu, Sheet and Toast 63 passed each; SegmentedControl,
+  Switch and TabBar 43 each; Navbar 43 passed and 20 skipped, as in M1. The
+  320px reflow tests pass. Report `docs/reports/contract-react-ios-M6.json`.
+- `npm run check`: every step passes.
+
+### Evidence
+
+`docs/reports/reset/M6/`, ours only, each under 500 KB:
+`screen-<screen>-<style>-<scheme>.png` (settings scrolled so colour sits
+behind the bars, menu, sheet, toast; all four styles, light and dark),
+`<style>-<scheme>-<part>.png` 3x crops (tabbar, nav, menu, switch held,
+toast, close), `strengths-liquid-<scheme>.png` (clear, regular, frosted),
+`before-settings-liquid-light.png`, and
+`fallback-reduced-transparency-liquid-light.png`.
+
+### Decisions I made
+
+1. The material is in `ios.css`, gated by a style query on `--_ios-glass`,
+   which the style sets. Material belongs to the style, so the style opts in;
+   the platform file names no style. The lint reads `var()` only, so the
+   style query reading a private property no component declares passes; the
+   lead may want the gate checked by a rule.
+2. A browser without style queries for custom properties gets the M1 paint.
+3. The order asked for a lens brighter than the bar: in light the reference
+   lens is grayer and clearer, but a clear lens put the tint label at 3.09,
+   so the lens is a denser glass in both schemes.
+4. Refraction with an SVG displacement map in `backdrop-filter` works in
+   Chromium only; not shipped, left as an optional later step.
