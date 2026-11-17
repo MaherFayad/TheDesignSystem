@@ -568,7 +568,8 @@
    * tab's lens sits on the bar. Expanded into its field it is part of the
    * capsule again and draws nothing of its own.
    */
-  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
     border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
     background-color: var(--_tab-bar-bg);
     box-shadow: var(--ds-elevation-glass);
@@ -588,7 +589,8 @@
       backdrop-filter: none;
     }
 
-    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
@@ -642,7 +644,7 @@
     text-decoration-line: none;
   }
 
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
   [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'] {
     --_button-bg: var(--ds-color-material-glass);
     --_button-bg-hover: var(--ds-color-material-glass);
@@ -656,6 +658,42 @@
 
     -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /*
+   * The bar group (order F3): the capsule takes the glass of the search disc
+   * (below, in the tab bar's names), the buttons in it none: a clear fill
+   * with a quiet veil on hover and press, no border, no lift and no blur.
+   */
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] {
+    --_tab-bar-bg: var(--ds-color-material-glass-strong);
+    --_tab-bar-border-color: var(--ds-color-material-glass-border);
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']) {
+    --_button-bg: transparent;
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-shadow: none;
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* What the accessory holds (a Toolbar) sits on its glass: no fill, edge or blur of its own. */
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='accessory'] > [data-ds='toolbar'] {
+    --_toolbar-bg: transparent;
+    --_toolbar-border-color: transparent;
+    --_toolbar-padding: 0px;
+
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   [data-platform='ios'] [data-ds='sidebar'] {
@@ -989,6 +1027,7 @@
      */
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
@@ -999,6 +1038,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
@@ -1006,7 +1046,7 @@
         0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
     }
 
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-border-color: transparent;
@@ -1015,7 +1055,7 @@
         0 var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-shadow:
@@ -1033,11 +1073,12 @@
      */
     [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'] [data-ds='toast']::after,
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       content: '';
@@ -1063,11 +1104,12 @@
     /* Right to left: the light comes from the upper start, which is now the right. */
     [data-platform='ios'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='toast']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *):dir(rtl)::after,
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
       background-image: linear-gradient(
@@ -1082,11 +1124,12 @@
     /* Dark: a faint light edge, never a dark ring. */
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       background-image: linear-gradient(
@@ -1100,11 +1143,12 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
       background-image: linear-gradient(
@@ -1162,13 +1206,14 @@
   /* The three strengths. Liquid and Neutral ship regular, the one closest to the references. */
   @container style(--_ios-glass: clear) {
     [data-platform='ios'] [data-ds='tab-bar'],
-    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
     }
 
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
@@ -1188,11 +1233,12 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
@@ -1209,13 +1255,14 @@
 
   @container style(--_ios-glass: regular) {
     [data-platform='ios'] [data-ds='tab-bar'],
-    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
     }
 
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       /* Order G2: the buttons are thick clear glass like the tab bar, not a tinted pill: a low tint (labels keep 10:1 or more, measured). */
@@ -1230,33 +1277,19 @@
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
-      /* Order G2: lowered from 74 to 64 percent, which washed the content behind more than the reference; the rows keep 4.5:1 with a faint shade behind their text (below). */
-      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 64%, transparent);
+      /* Order F3 (lead decision): back to a dense frosted tint. At 64 percent with a shade behind the letters (order G2) the text behind the menu, the toast and the long press menu showed through and ran into the labels on real screens. */
+      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 74%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
     }
 
-    /*
-     * Order G2: a faint shade behind the text of each menu row, in light, so
-     * the panel tint can stay low (the content behind keeps its colour round
-     * the rows and in the edge band) while each label keeps 4.5:1 over the
-     * darkest content (measured from pixels). It follows the letters (a soft
-     * halo in the panel's own tint), so there is no box and no band across
-     * the row. The row's hover veil and focus ring are its own.
-     */
-    [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-      text-shadow:
-        0 0 var(--ds-space-fixed-4xs) var(--ds-color-material-glass-solid),
-        0 0 var(--ds-space-fixed-2xs) var(--ds-color-material-glass-solid),
-        0 0 var(--ds-space-fixed-m) var(--ds-color-material-glass-solid);
-    }
-
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
@@ -1286,13 +1319,14 @@
 
   @container style(--_ios-glass: frosted) {
     [data-platform='ios'] [data-ds='tab-bar'],
-    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
     }
 
-    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
@@ -1312,11 +1346,12 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
-    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
@@ -1342,7 +1377,9 @@
       [data-platform='ios'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+      [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
         background-color: var(--ds-color-material-glass-solid);
         border-color: var(--_tab-bar-border-color);
         box-shadow: var(--ds-elevation-glass);
@@ -1377,10 +1414,10 @@
         backdrop-filter: none;
       }
 
-      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
@@ -1413,19 +1450,16 @@
         backdrop-filter: none;
       }
 
-      /* No shade behind the menu rows on the solid paint (order G2). */
-      [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-        text-shadow: none;
-      }
 
       /* The solid paint keeps its border: no rim. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
         content: none;
@@ -1439,9 +1473,13 @@
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'][data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'] [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: var(--ds-color-material-glass-solid);
       border-color: var(--_tab-bar-border-color);
       box-shadow: var(--ds-elevation-glass);
@@ -1482,16 +1520,16 @@
       backdrop-filter: none;
     }
 
-    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: var(--ds-color-material-glass-solid);
@@ -1528,28 +1566,26 @@
       backdrop-filter: none;
     }
 
-    [data-contrast='more'] [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'],
-    [data-contrast='more'][data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-      text-shadow: none;
-    }
 
     /* No rim with more contrast. */
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+    [data-contrast='more'][data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='toast']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+    [data-contrast='more'] [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       content: none;
@@ -1563,7 +1599,9 @@
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       [data-platform='ios'] [data-ds='toast'],
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
+      [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
@@ -1571,10 +1609,10 @@
         background-color: var(--ds-color-material-glass-solid);
       }
 
-      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
@@ -1582,18 +1620,16 @@
         --_button-bg-active: var(--ds-color-material-glass-solid);
       }
 
-      [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
-        text-shadow: none;
-      }
 
       /* No rim where the glass cannot be drawn. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
+      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
-      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
         content: none;
@@ -1633,6 +1669,27 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
       --_list-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /*
+     * The page (order F3). The platform has two page grounds: the plain
+     * one (white) under a plain list, and the grouped gray under grouped
+     * cards. A shell that holds a grouped list or a grouped field set
+     * (variant inset or divided) takes the gray, every other shell the
+     * white. In dark both are the kit's black, in every style that takes
+     * the platform's look: Neutral's navy page stays off ios.
+     */
+    [data-platform='ios'] [data-ds='page-shell'] {
+      --_page-shell-bg: var(--ds-color-glass-backdrop-bright);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:has([data-ds='list']:is([data-variant='inset'], [data-variant='divided']), [data-ds='fieldset'][data-variant='inset']) {
+      --_page-shell-bg: var(--ds-color-bg-body);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='page-shell'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='page-shell']:has([data-ds='list']:is([data-variant='inset'], [data-variant='divided']), [data-ds='fieldset'][data-variant='inset']) {
+      --_page-shell-bg: var(--ds-color-glass-backdrop-dark);
     }
 
     /* Progress bar: 4 tall, on a plain gray track that stays visible in dark (kit #e4e4e4 and #2b2b2e). */
@@ -1706,6 +1763,34 @@
     [data-platform='ios'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
       color: var(--ds-color-primary-fill);
+    }
+
+    /* Order F3: a bottom toolbar's glyphs in the glyph blue; a mini player in the tab bar's accessory keeps the text colour. */
+    [data-platform='ios'] [data-ds='toolbar']:not([data-part='accessory'] > *) > [data-part='item']:is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']) {
+      --_button-fg: var(--ds-color-primary-fill);
+      --_button-fg-hover: var(--ds-color-primary-fill);
+      --_button-fg-active: var(--ds-color-primary-fill);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='toolbar']:not([data-part='accessory'] > *) > [data-part='item']:is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']) {
+      --_button-fg: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
+      --_button-fg-hover: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
+      --_button-fg-active: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
+    }
+
+    /* The neutral fill of a soft capsule: the kit's plain gray, not a tinted gray. */
+    [data-platform='ios'] [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
+      --_button-border-color: transparent;
+      --_button-border-color-hover: transparent;
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 18%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='list'] > [data-part='item'] > [data-part='start'],
@@ -2251,12 +2336,29 @@
     font-weight: inherit;
   }
 
-  [data-platform='ios'] [data-ds='navbar'] > [data-part='end'] {
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) {
     gap: var(--ds-space-fixed-m);
   }
 
+  /*
+   * The pushed form (order C2, look in order F3): the large title on its own
+   * row right under the button row, 34 bold, 20 in from the leading edge
+   * (the bar's 16 and 4), as the brand form.
+   */
+  [data-platform='ios'] [data-ds='navbar']:has(> [data-part='heading']) {
+    --_navbar-heading-font-size: var(--ds-type-display-large-font-size);
+    --_navbar-heading-line-height: var(--ds-type-display-large-line-height);
+
+    row-gap: 0;
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='heading'] {
+    padding-inline-start: var(--ds-space-fixed-2xs);
+    font-family: var(--ds-type-display-large-font-family);
+  }
+
   /* Bar buttons: 44 tall capsules, an icon alone is a circle; the label at 17. */
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
   [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'] {
     --_button-height: var(--ds-size-touch-ios);
     --_button-radius: var(--ds-shape-corner-full);
@@ -2264,6 +2366,105 @@
     --_button-font-size: var(--ds-type-body-large-font-size);
 
     font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* Order F3: the glyphs of the bar buttons at about 22, as the references draw them (the chevron back, sort, more). */
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) :is([data-ds='icon-button'], [data-ds='button']) [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+    block-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+  }
+
+  /*
+   * A bottom toolbar (order F3): its glyphs about 22, in the tint (the
+   * colour is in ds.platform). A toolbar inside the tab bar's accessory is a
+   * mini player: its glyphs keep the text colour and the 22.
+   */
+  [data-platform='ios'] [data-ds='toolbar'] > [data-part='item'] [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+    block-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+  }
+
+  /* The soft capsule with the neutral fill (order C2): 48 tall, the size of the references' Play and Shuffle capsules, the label at 17. */
+  [data-platform='ios'] [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
+    --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+    --_button-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  /*
+   * The bar group (order C2, look in order F3): one glass capsule, 44 tall,
+   * that holds two or more round 44 buttons. The buttons inside draw no
+   * glass, border or lift of their own; each keeps a round corner, so its
+   * hover and press veil is a disc inside the capsule, not a square.
+   */
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] {
+    position: relative;
+    border-width: 0;
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] > * {
+    border-width: 0;
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  /*
+   * The tab bar's accessory (order C2, look in order F3): its own glass
+   * capsule, 48 tall, 8 over the bar, across the bar and its search disc.
+   * Out of the flow, so the bar keeps its 62. The page keeps the room over
+   * the bar (ios-shell.css).
+   */
+  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='accessory']):not([data-compact]) {
+    position: relative;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar']:not([data-compact]) > [data-part='accessory'] {
+    position: absolute;
+    inset-block-end: calc(100% + var(--ds-border-width-default) + var(--ds-space-fixed-m));
+    inset-inline-start: calc(-1 * var(--ds-border-width-default));
+    box-sizing: border-box;
+    inline-size: calc(100% + 2 * var(--ds-border-width-default));
+    block-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+    padding-block: 0;
+    padding-inline: var(--ds-space-fixed-m);
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])):not([data-compact]) > [data-part='accessory'] {
+    inline-size: calc(100% + 2 * var(--ds-border-width-default) + var(--_ios-search-gap) + var(--_ios-search-size));
+  }
+
+  /*
+   * Compact: the current item is a disc as tall as an item (54) in the
+   * platter, its label hidden from view and kept as the link's name; the
+   * accessory capsule takes the rest of the platter; the search disc stays
+   * beside it.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'][data-compact] {
+    gap: var(--ds-space-fixed-2xs);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='item'][data-active] {
+    inline-size: var(--_tab-bar-item-height);
+    min-inline-size: var(--_tab-bar-item-height);
+    padding: 0;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='item'][data-active] > [data-part='item-label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='accessory'] {
+    box-sizing: border-box;
+    block-size: var(--_tab-bar-item-height);
+    padding-block: 0;
+    padding-inline: var(--ds-space-fixed-m);
+    border-radius: var(--ds-shape-corner-full);
   }
 
   /* ------------------------------------------------------------ tab bar: a floating capsule, the icon over a short label */

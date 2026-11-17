@@ -32,7 +32,9 @@ export const REFRACTION_ID_PREFIX = 'ds-refraction';
 /**
  * The glass parts that bend, inside an ios Theme. The same list as
  * `packages/css/src/platform/ios-refraction.css`: the tab bar, the lens of
- * its current tab and its search disc, the navigation bar and sheet buttons,
+ * its current tab, its search disc and its accessory, the navigation bar
+ * buttons at either end (the back button among them) and their group
+ * capsule, the sheet buttons,
  * the menu and the selection menu, the action sheet's panel, the toast
  * banner and the segmented thumb. The held switch thumb is not on it: it
  * grows and stretches while held, and the bend drew a ragged edge on the
@@ -42,7 +44,9 @@ export const REFRACTION_PARTS: readonly string[] = [
   "[data-ds='tab-bar']",
   "[data-ds='tab-bar'] > [data-part='item']",
   "[data-ds='tab-bar'] > [data-part='search']",
-  "[data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])",
+  "[data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)",
+  "[data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached]",
+  "[data-ds='tab-bar'] > [data-part='accessory']",
   "[data-ds='navbar'] > [data-part='menu-button']",
   "[data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']",
   ":is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])",

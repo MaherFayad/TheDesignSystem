@@ -137,13 +137,20 @@
    * 2.4.11). In the side column the bar is not over the content: no room.
    */
   [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side'])) {
-    scroll-padding-block-end: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l));
+    --_ios-bar-room: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l));
+
+    scroll-padding-block-end: var(--_ios-bar-room);
+  }
+
+  /* Order F3: a full bar with an accessory over it keeps the accessory's 48 and its 8 more. */
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side'], [data-compact]):has(> [data-part='accessory'])) {
+    --_ios-bar-room: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l) + var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + var(--ds-space-fixed-m));
   }
 
   [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side']))::after {
     content: '';
     display: block;
-    block-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l));
+    block-size: var(--_ios-bar-room);
   }
 
   @container style(--_ios-rail: side) {
@@ -154,6 +161,21 @@
     [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom']))::after {
       content: none;
     }
+
+    /*
+     * Order F3: in the column the accessory is fixed on the shell at the foot
+     * of the content (below); main keeps its 48, 8 over it and the foot,
+     * as a spacer and as scroll padding.
+     */
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > [data-part='accessory']) {
+      scroll-padding-block-end: calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-m));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > [data-part='accessory'])::after {
+      content: '';
+      display: block;
+      block-size: calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-m));
+    }
   }
 
   /* Under auto the flag is set on main itself, which main's own style query cannot see: the size query decides there. */
@@ -161,6 +183,30 @@
     [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])) {
       scroll-padding-block-end: var(--_ios-rail-foot);
     }
+  }
+
+  /*
+   * Order F3, after the test screens: no hairline under the header and no
+   * padding of its own, so the Navbar's 16 is the bar's edge (the back
+   * button 16 in, the large title 20 in, as the references). Main keeps 16
+   * at each side, so a grouped list's card sits 16 from the screen's edges
+   * with no room added by the page.
+   */
+  [data-platform='ios'] [data-ds='page-shell'] {
+    --_page-shell-header-padding-inline: 0px;
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] {
+    border-block-end-width: 0;
+  }
+
+  /* No hairline over a footer that holds a bottom toolbar either: the toolbar is its own capsule. */
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='footer'] {
+    border-block-start-width: 0;
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='main'] {
+    padding-inline: calc(2 * var(--ds-space-fixed-m));
   }
 
   /* Every region keeps clear of the side insets, each side on its own. */
@@ -249,7 +295,7 @@
       padding-inline: var(--ds-space-fixed-m);
     }
 
-    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
     [data-platform='ios'] [data-ds='page-shell'] [data-ds='navbar'] > [data-part='menu-button'] {
       --_button-height: var(--_ios-rail-item);
     }
@@ -415,6 +461,37 @@
 
     [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search']:not([data-expanded]):dir(rtl) {
       inset-inline: calc((var(--_ios-rail-size) - var(--_ios-rail-item)) / 2) auto;
+    }
+
+    /*
+     * The accessory in the column (order C2, look in order F3): it leaves
+     * the capsule and is fixed on the shell at the foot of the content, 48
+     * tall, from the content's start padding to 12 before the column.
+     */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='accessory'] {
+      position: fixed;
+      inset-block: auto var(--_ios-rail-foot);
+      box-sizing: border-box;
+      inline-size: auto;
+      block-size: var(--_ios-rail-item);
+      margin: 0;
+      padding-block: 0;
+      padding-inline: var(--ds-space-fixed-m);
+      border-radius: var(--ds-shape-corner-full);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='accessory']:dir(ltr) {
+      inset-inline: calc(var(--ds-inset-safe-start) + 2 * var(--ds-space-fixed-m)) calc(var(--_ios-rail-size) + var(--ds-space-fixed-xl));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='accessory']:dir(rtl) {
+      inset-inline: calc(var(--_ios-rail-size) + var(--ds-space-fixed-xl)) calc(var(--ds-inset-safe-end) + 2 * var(--ds-space-fixed-m));
+    }
+
+    /* A docked bar with an accessory has no backdrop filter of its own (ios-refraction.css; here for a style without the glass), so the shell holds the fixed accessory. */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:has(> [data-part='accessory']):not([data-placement='bottom']) {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
     }
   }
 

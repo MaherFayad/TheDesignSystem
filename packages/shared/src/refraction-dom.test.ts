@@ -86,6 +86,32 @@ describe('refraction in the DOM', () => {
     release();
   });
 
+  it('bends the back button, the bar group and the accessory, not the buttons in the group (order F3)', async () => {
+    document.body.innerHTML = `<div data-platform="ios" style="--_ios-glass: regular">
+      <nav data-ds="navbar">
+        <div data-part="start"><button data-ds="icon-button" data-part="back" style="border-radius: 999px"></button></div>
+        <div data-part="end"><div data-ds="button-group" data-attached="" style="border-radius: 999px"><button data-ds="icon-button" style="border-radius: 999px"></button><button data-ds="icon-button" style="border-radius: 999px"></button></div></div>
+      </nav>
+      <nav data-ds="tab-bar" style="border-radius: 999px"><div data-part="accessory" style="border-radius: 999px"></div></nav>
+    </div>`;
+    const back = document.querySelector<HTMLElement>("[data-part='back']")!;
+    const group = document.querySelector<HTMLElement>("[data-ds='button-group']")!;
+    const inner = group.firstElementChild as HTMLElement;
+    const accessory = document.querySelector<HTMLElement>("[data-part='accessory']")!;
+    sized(back, 44, 44);
+    sized(group, 88, 44);
+    sized(inner, 44, 44);
+    sized(document.querySelector<HTMLElement>("[data-ds='tab-bar']")!, 297, 64);
+    sized(accessory, 361, 48);
+    const release = acquireRefraction(document);
+    await flush();
+    expect(back.style.getPropertyValue(REFRACTION_PROPERTY)).toBe('url(#ds-refraction-44x44r22)');
+    expect(group.style.getPropertyValue(REFRACTION_PROPERTY)).toBe('url(#ds-refraction-88x44r22)');
+    expect(accessory.style.getPropertyValue(REFRACTION_PROPERTY)).toBe('url(#ds-refraction-361x48r24)');
+    expect(inner.style.getPropertyValue(REFRACTION_PROPERTY)).toBe('');
+    release();
+  });
+
   it('shares a filter between parts of the same size', async () => {
     document.body.innerHTML = `<div data-platform="ios" style="--_ios-glass: regular"><div data-ds="toast" style="border-radius: 20px"></div><div data-ds="toast" style="border-radius: 20px"></div></div>`;
     for (const el of document.querySelectorAll<HTMLElement>("[data-ds='toast']")) sized(el, 300, 80);

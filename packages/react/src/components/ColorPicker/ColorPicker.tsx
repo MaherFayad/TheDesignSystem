@@ -137,8 +137,8 @@ function EyedropperGlyph() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width="16"
-      height="16"
+      width="24"
+      height="24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -147,7 +147,7 @@ function EyedropperGlyph() {
       aria-hidden="true"
       focusable="false"
       data-ds="icon"
-      data-size="md"
+      data-size="lg"
     >
       <path d="M15 4.5l4.5 4.5" />
       <path d="M13.5 6l4.5 4.5-1.5 1.5-4.5-4.5z" />
@@ -182,6 +182,13 @@ function Panel({ color, setColor, view, setView, saved, addSaved, showOpacity, l
   const alpha = color.getChannelValue('alpha');
   const keepAlpha = (picked: Color) => toColor(picked).withChannelValue('alpha', alpha);
   const fromSlider = (_: string, c: Color) => setColor(toColor(c));
+  // A hex read as hsb has a fractional hue (211.18°). The area and the hue
+  // slider get a copy with whole numbers to show and read; the colour itself
+  // is kept exact, so a grid pick still matches its swatch.
+  const shown = (['hue', 'saturation', 'brightness'] as const).reduce(
+    (c, channel) => c.withChannelValue(channel, Math.round(c.getChannelValue(channel))),
+    color,
+  );
   const savedValue = saved.find((s) => s.toLowerCase() === hexOf(color));
 
   const pickFromScreen = async () => {
@@ -203,8 +210,8 @@ function Panel({ color, setColor, view, setView, saved, addSaved, showOpacity, l
     ),
     spectrum: () => (
       <>
-        <ColorArea locale={lang} value={color} onChange={fromSlider} disabled={disabled} />
-        <ColorSlider channel="hue" colorSpace="hsb" locale={lang} value={color} onChange={fromSlider} disabled={disabled} />
+        <ColorArea locale={lang} value={shown} onChange={fromSlider} disabled={disabled} />
+        <ColorSlider channel="hue" colorSpace="hsb" locale={lang} value={shown} onChange={fromSlider} disabled={disabled} />
       </>
     ),
     sliders: () => (
@@ -369,7 +376,7 @@ export function ColorPicker({
           </SheetContent>
         </Sheet>
       ) : (
-        <Popover open={open} onOpenChange={setOpen} size="md">
+        <Popover open={open} onOpenChange={setOpen} size="lg">
           <PopoverTrigger>{trigger}</PopoverTrigger>
           <PopoverContent title={title} side="bottom" align="start" arrow={false}>
             <PopoverBody>{panel()}</PopoverBody>
