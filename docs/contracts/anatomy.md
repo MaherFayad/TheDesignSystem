@@ -239,6 +239,14 @@ follows it.
     | Banner | `data-sticky` |
     | FloatingActionButton | `data-position`, `data-extended` |
     | PageShell, TabBar, Navbar | `data-placement` (`bottom`, `side`; absent for `auto`) |
+    | Fieldset, NumberField, Pagination, DatePicker | `data-variant` (proposed, plan `reset-ios-families.md`) |
+    | Input | `data-variant` gains `plain`; `data-empty` |
+    | AlertDialog action | `data-primary` |
+    | TabBar search item | `data-expanded` |
+    | SwipeActions | `data-side` on its `actions` parts |
+    | SectionIndex | `data-collapsed` |
+    | ActionSheet | `data-placement` |
+    | Calendar | `data-today`, `data-unavailable`, `data-outside-month` |
     | Toast | `data-position`, `data-swipe` |
     | Toaster | `data-stacked`, `data-expanded`, `data-paused` |
     | Input | `data-variant` |

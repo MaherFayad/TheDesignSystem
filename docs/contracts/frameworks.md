@@ -218,3 +218,15 @@ import '@the-system/tokens/css';      // tokens for every style
 import '@the-system/css';             // reset, base, components
 import '@the-system/styles';          // recipes for every style
 ```
+
+## System services (proposed, plan `reset-ios-families.md`)
+
+Rule: share goes to the system sheet first (`navigator.share` on the web,
+`Share` on React Native) through `share()` in `packages/shared`. `SharePanel`
+is the fallback and the place for the app's own targets.
+
+Rule: clipboard and eyedropper are feature tested, never assumed.
+
+Rule: dates in React run on React Aria; date math lives in
+`packages/shared/src/date.ts` on `@internationalized/date`. Digits stay Latin
+through `-u-nu-latn`.

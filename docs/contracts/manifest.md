@@ -40,3 +40,9 @@ their own block under `frameworks`. A `frameworks.<x>.example` names a file in
 that framework's component folder.
 
 See section 3.8 of PLAN.md for a full example.
+
+## Gestures (proposed, plan `reset-ios-families.md`)
+
+`a11y.keys` must name the path that needs no drag for every gesture a
+component has (SwipeActions, SectionIndex, WheelPicker, ColorArea, Pagination
+dots). WCAG 2.2 2.5.7 asks for it.
