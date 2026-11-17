@@ -193,3 +193,44 @@ enters the repo, no kit image is committed, and nothing is written to Figma.
   and inner screens once M8 lands. Our own content, no third party artwork,
   text or marks; references stay in scratch with their Mobbin links cited.
   A screen is the acceptance test for the families on it.
+
+## F2, refraction on iOS glass (owner: "also make liquid effect not blur")
+
+The M6 material is a tint over a heavy blur. The vendor's material is thick
+clear glass: little blur in the middle, and the content behind bends and
+brightens near the edge. Owner agent: ds-style, with the files below.
+
+Facts (from developer write ups, not yet from a WebKit source): an SVG
+filter in `backdrop-filter: url(#id)` gives real refraction in Chromium
+only. Safari parses the value and paints nothing for it, so `@supports`
+cannot be the test. No web animation or effect library may be added.
+
+- **Tier 1, real refraction (Chromium).** An inline SVG filter with
+  `feDisplacementMap`, whose map is drawn for the size and corner of each
+  glass part (bends strongly in a band near the edge, none in the middle),
+  plus a small specular layer. Used in `backdrop-filter` with a low blur.
+  Switched on by an attribute a small probe sets on the root, off by
+  default, so a browser that paints nothing for it never gets it.
+- **Tier 2, thick glass without displacement (Safari and the rest).** Low
+  blur in the middle and a band near the edge with stronger blur,
+  brightness and saturation through a mask, so the edge reads as bent glass
+  and the middle stays clear. Pure CSS.
+- **Fallbacks stay.** Reduced transparency, more contrast, forced colours
+  and no backdrop filter keep the solid paint. Reduced motion does not
+  change a still effect.
+- **Parts.** Tab bar and its lens, navigation and sheet buttons, menu, toast
+  banner, segmented thumb, held switch lens; Liquid and Neutral.
+- **Contrast.** With less blur the content behind is sharper, so labels are
+  measured again from pixels over the lightest and darkest content: 4.5:1
+  for text (WCAG 2.2 1.4.3), 3:1 for glyphs (1.4.11). Raise the tint, not
+  the blur, if a label fails.
+- **Files.** New: `packages/css/src/platform/ios-refraction.css` (same
+  layers as `ios.css`, after it), a map builder and probe in
+  `packages/shared/src/`, the React wiring that mounts the filter and sets
+  the attribute, tests. `ios.css` belongs to order F1 while it runs.
+- **Proof.** 4x crops, reference left and ours right, light and dark, for
+  tier 1 and for tier 2 (tier 2 forced in Chromium); a clip of content
+  scrolling under the tab bar for each tier; frame cost of scrolling under
+  the bar measured with `npm run perceive` against the M6 material; web and
+  android unchanged. Safari itself cannot be run here: checking tier 2 on a
+  real iPhone is a human gate.

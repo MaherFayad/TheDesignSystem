@@ -31,12 +31,20 @@
 // - `embedded` draws the same frame without landmarks, for a page shown
 //   inside another page (a gallery, docs, a template picker). Landmarks must
 //   be unique on a page, and main must not sit inside another main.
+// - `placement` (order DU1) says where the bars sit on a phone shell: auto
+//   (CSS decides, from a container query on this root, container name
+//   ds-shell), bottom or side. It stamps data-placement only when not auto
+//   and passes down through PlacementContext to every TabBar and Navbar
+//   inside that has no placement of its own (./placement.ts). The DOM order
+//   never changes with placement, so the focus order stays header, nav,
+//   main, aside, footer in every placement.
 import { createContext, use, useEffect, useMemo, useState, type ComponentProps, type ReactNode, type Ref } from 'react';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
 import { Drawer, DrawerBody, DrawerContent } from '../Drawer';
 import { IconButton } from '../IconButton';
 import { SkipLink } from '../SkipLink';
+import { PlacementContext, placementAttr, type BarPlacement } from './placement';
 
 /** The navigation column: drawn full, drawn as icons, or not drawn (reached through the menu button). */
 export type PageShellSidebar = 'expanded' | 'collapsed' | 'hidden';
@@ -127,6 +135,14 @@ export interface PageShellProps extends Omit<ComponentProps<'div'>, 'title' | 'c
    * landmarks (main becomes a labelled region). Default false.
    */
   embedded?: boolean;
+  /**
+   * Where the TabBar and the Navbar's actions sit on a phone shell. auto:
+   * CSS decides from the shell's size (a side column when it is wide and
+   * short, on `ios`). bottom: always at the top and the bottom. side: always
+   * in a column at the inline end. Passed down to every TabBar and Navbar
+   * inside that sets none of its own. Default auto, which stamps nothing.
+   */
+  placement?: BarPlacement;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -146,6 +162,7 @@ export function PageShell({
   menuLabel,
   drawerTitle,
   embedded = false,
+  placement = 'auto',
   ref,
   ...rest
 }: PageShellProps) {
@@ -175,62 +192,64 @@ export function PageShell({
 
   return (
     <PageShellContext value={value}>
-      <div {...rest} ref={ref} data-ds="page-shell" data-sidebar={sidebar}>
-        <SkipLink data-part="skip" href={`#${mainId}`}>
-          {skipLabel ?? words.skip}
-        </SkipLink>
-        {/* No empty banner: the header renders for its content, or for the menu button while the column is hidden. */}
-        {(hasHeader || (hasNav && sidebar === 'hidden')) && (
-          <Header data-part="header">
-            {hasNav && (
-              <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} side="start" size="sm">
-                <IconButton
-                  data-part="menu"
-                  icon="menu"
-                  label={menuLabel ?? words.menu}
-                  aria-haspopup="dialog"
-                  aria-expanded={drawerOpen}
-                  // Not a DrawerTrigger: that would stamp data-state on a part of a shell that has no open state.
-                  // Focus still returns here on close: DialogBase gives it back to what had it on open.
-                  onClick={() => setDrawerOpen(true)}
-                />
-                <DrawerContent title={drawerTitle ?? words.drawer}>
-                  <DrawerBody
-                    // Following a link closes the Drawer, so a client routed page does not open under it.
-                    onClick={(event) => {
-                      if ((event.target as Element).closest?.('a[href]')) setDrawerOpen(false);
-                    }}
-                  >
-                    {nav}
-                  </DrawerBody>
-                </DrawerContent>
-              </Drawer>
-            )}
-            {header}
-          </Header>
-        )}
-        {hasNav && (
-          // The column is not drawn while hidden: its links are in the Drawer then, never twice in the page.
-          <div data-part="nav" hidden={sidebar === 'hidden' || undefined}>
-            {sidebar !== 'hidden' && nav}
-          </div>
-        )}
-        <Main
-          data-part="main"
-          id={mainId}
-          tabIndex={-1}
-          role={embedded ? 'region' : undefined}
-          aria-label={embedded ? words.main : undefined}
-        >
-          {children}
-        </Main>
-        {aside !== undefined && aside !== null && aside !== false && (
-          <Aside data-part="aside" aria-label={asideLabel ?? words.aside} role={embedded ? 'group' : undefined}>
-            {aside}
-          </Aside>
-        )}
-        {footer !== undefined && footer !== null && footer !== false && <Footer data-part="footer">{footer}</Footer>}
-      </div>
+      <PlacementContext value={placement}>
+        <div {...rest} ref={ref} data-ds="page-shell" data-sidebar={sidebar} data-placement={placementAttr(placement)}>
+          <SkipLink data-part="skip" href={`#${mainId}`}>
+            {skipLabel ?? words.skip}
+          </SkipLink>
+          {/* No empty banner: the header renders for its content, or for the menu button while the column is hidden. */}
+          {(hasHeader || (hasNav && sidebar === 'hidden')) && (
+            <Header data-part="header">
+              {hasNav && (
+                <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} side="start" size="sm">
+                  <IconButton
+                    data-part="menu"
+                    icon="menu"
+                    label={menuLabel ?? words.menu}
+                    aria-haspopup="dialog"
+                    aria-expanded={drawerOpen}
+                    // Not a DrawerTrigger: that would stamp data-state on a part of a shell that has no open state.
+                    // Focus still returns here on close: DialogBase gives it back to what had it on open.
+                    onClick={() => setDrawerOpen(true)}
+                  />
+                  <DrawerContent title={drawerTitle ?? words.drawer}>
+                    <DrawerBody
+                      // Following a link closes the Drawer, so a client routed page does not open under it.
+                      onClick={(event) => {
+                        if ((event.target as Element).closest?.('a[href]')) setDrawerOpen(false);
+                      }}
+                    >
+                      {nav}
+                    </DrawerBody>
+                  </DrawerContent>
+                </Drawer>
+              )}
+              {header}
+            </Header>
+          )}
+          {hasNav && (
+            // The column is not drawn while hidden: its links are in the Drawer then, never twice in the page.
+            <div data-part="nav" hidden={sidebar === 'hidden' || undefined}>
+              {sidebar !== 'hidden' && nav}
+            </div>
+          )}
+          <Main
+            data-part="main"
+            id={mainId}
+            tabIndex={-1}
+            role={embedded ? 'region' : undefined}
+            aria-label={embedded ? words.main : undefined}
+          >
+            {children}
+          </Main>
+          {aside !== undefined && aside !== null && aside !== false && (
+            <Aside data-part="aside" aria-label={asideLabel ?? words.aside} role={embedded ? 'group' : undefined}>
+              {aside}
+            </Aside>
+          )}
+          {footer !== undefined && footer !== null && footer !== false && <Footer data-part="footer">{footer}</Footer>}
+        </div>
+      </PlacementContext>
     </PageShellContext>
   );
 }

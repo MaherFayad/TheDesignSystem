@@ -34,6 +34,15 @@
 //   slides from the link the pointer just left. No DOM is added.
 // - `sticky` keeps the bar at the top and reserves the same room as
 //   scroll padding on the page (WCAG 2.4.11).
+// - `placement` (order DU1, docs/plan/reset-duo.md) is auto, bottom or
+//   side, inherited from the nearest PageShell when not set. It stamps
+//   data-placement only when not auto; under auto the CSS decides from the
+//   PageShell's size (container ds-shell). In a side placement the brand
+//   and the links stay in the top row and the end actions (or, on phones,
+//   the menu button) go to the column at the inline end. The DOM order
+//   never changes, so focus goes brand, links, end actions, menu button in
+//   every placement, which is the column's top to bottom order after the
+//   top row. The links keep Radix's horizontal arrow keys: they stay a row.
 import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -46,6 +55,10 @@ import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
 import { inFrame, planFollow, planInk } from '@the-system/motion';
 import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
+import { placementAttr, usePlacement, type BarPlacement } from '../PageShell/placement';
+
+/** Where the bar's actions sit: CSS decides (auto), always in the top row, or always in a column at the inline end. */
+export type NavbarPlacement = BarPlacement;
 
 /** The links of the bar itself, not those in a panel. */
 const BAR_LINK = '[data-part="list"] > [data-part="item"] > [data-part="link"]';
@@ -106,6 +119,15 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
    * of the nav inside it. Default "Menu" and "Site menu", in Arabic too.
    */
   menuLabels?: { button: string; panel: string };
+  /**
+   * Where the actions sit on a phone shell. auto: CSS decides from the
+   * PageShell's size (a column at the inline end when the shell is wide and
+   * short, on `ios`). bottom: always in the top row. side: always in the
+   * column; the brand and links stay in the top row. Default: the nearest
+   * PageShell's placement, else auto. Stamps data-placement only when not
+   * auto.
+   */
+  placement?: NavbarPlacement;
   ref?: Ref<HTMLElement>;
 }
 
@@ -120,9 +142,11 @@ export function Navbar({
   linkAs = 'a',
   defaultOpenMenu,
   menuLabels: labels,
+  placement: placementProp,
   ref,
   ...rest
 }: NavbarProps) {
+  const placement = usePlacement(placementProp);
   const { lang } = useTheme();
   const words = labels ?? menuLabels[lang === 'ar' ? 'ar' : 'en'];
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -212,6 +236,7 @@ export function Navbar({
       data-ds="navbar"
       data-size={size}
       data-sticky={sticky ? '' : undefined}
+      data-placement={placementAttr(placement)}
     >
       {brand !== undefined && <div data-part="brand">{brand}</div>}
       <NavigationMenu.List data-part="list">
