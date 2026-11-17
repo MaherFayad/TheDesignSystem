@@ -1328,7 +1328,7 @@
      * tint goes up so the label keeps 4.5:1 (WCAG 2.2 1.4.3); the blur stays.
      * Round icon buttons keep the clearer glass: their glyphs keep 3:1.
      */
-    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='end'] [data-ds='button']:not([data-emphasis='solid']) {
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) [data-ds='button']:not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *) {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
       --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
       --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 86%, transparent);
@@ -3204,17 +3204,18 @@
     font-weight: var(--ds-font-weight-medium);
   }
 
+  /* Light: a quarter of the bright text color in the danger red (order F3), so the label keeps 4.5:1 when black content sits behind the sheet. */
   [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel'])[data-tone='danger'] {
-    --_button-fg: var(--ds-color-state-danger-text);
-    --_button-fg-hover: var(--ds-color-state-danger-text);
-    --_button-fg-active: var(--ds-color-state-danger-text);
+    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 75%, var(--ds-color-text-bright));
+    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 75%, var(--ds-color-text-bright));
+    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 75%, var(--ds-color-text-bright));
   }
 
-  /* Dark: the danger red on the gray capsule over the dark glass measured 4.30 (Liquid, order P1), and 4.23 over the demo page with the dilated ink read of order L2; a third of the bright text color lifts it over 4.5. */
+  /* Dark: the danger red on the gray capsule over the dark glass measured 4.30 (Liquid, order P1), and 4.23 over the demo page with the dilated ink read of order L2; a third of the bright text color lifted it over 4.5. Order F3: over white content it was 3.46, and 4.38 with the denser sheet; nearly half the bright text color lifts it over 4.5 there too. */
   [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel'])[data-tone='danger'] {
-    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
-    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
-    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 66%, var(--ds-color-text-bright));
+    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 55%, var(--ds-color-text-bright));
+    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 55%, var(--ds-color-text-bright));
+    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 55%, var(--ds-color-text-bright));
   }
 
   [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > [data-part='cancel'] {

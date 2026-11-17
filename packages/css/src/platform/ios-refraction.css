@@ -181,8 +181,25 @@
         background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
       }
 
-      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
-      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='action-sheet'] [data-part='panel'] {
+      /*
+       * Order F3 (L2 request): the action sheet's danger label over solid
+       * content of the other scheme fell to 2.0 (L2) and 2.7 at 74 percent
+       * in light, 3.46 in dark: its gray capsule takes on the content
+       * behind. The sheet is denser in both tiers and both schemes, as the
+       * platform's sheets are; the fallbacks keep their solid paint.
+       */
+      @supports (backdrop-filter: none) or (-webkit-backdrop-filter: none) {
+        :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios']:not([data-scheme='dark'], [data-contrast='more'], [data-contrast='more'] *) [data-ds='action-sheet'] [data-part='panel'] {
+          background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 92%, transparent);
+        }
+
+        /* Dark: the danger label over white content fell to 3.46 (Liquid) at 89 percent; the dark sheet is denser too. */
+        :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='action-sheet'] [data-part='panel'] {
+          background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 3%) 97%, transparent);
+        }
+      }
+
+      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
         background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
       }
     }
