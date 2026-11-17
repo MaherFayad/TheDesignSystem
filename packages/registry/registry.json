@@ -505,6 +505,16 @@
           "target": "@components/ds/shared/section-index.ts"
         },
         {
+          "path": "packages/shared/src/selection.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/selection.ts"
+        },
+        {
+          "path": "packages/shared/src/share.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/share.ts"
+        },
+        {
           "path": "packages/shared/src/shortcut.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/shortcut.ts"
@@ -1322,6 +1332,47 @@
       ],
       "meta": {
         "manifest": "Accordion",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "action-sheet",
+      "type": "registry:ui",
+      "title": "ActionSheet",
+      "description": "A short list of actions on one object, opened from the control that names it: the person picks one action or cancels. On ios a card anchored to the control that opened it, over its corner, with stacked capsules and Cancel as the last, quieter one; on android a bottom sheet of text rows; on web a card anchored to the trigger when there is room beside it, else in the center. Order M9.10, proposed.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dialog",
+        "@ds/popover",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ActionSheet/ActionSheet.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ActionSheet/ActionSheet.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ActionSheet/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ActionSheet/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ActionSheet.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ActionSheet.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "ActionSheet",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -3701,7 +3752,7 @@
       "name": "pagination",
       "type": "registry:ui",
       "title": "Pagination",
-      "description": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312.",
+      "description": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312. The dots variant draws one dot per page and nothing else, for a short flat set of pages: on ios on a small platter, on web and android without it.",
       "registryDependencies": [
         "@ds/button",
         "@ds/core",
@@ -3719,6 +3770,11 @@
           "path": "packages/react/src/components/Pagination/Pagination.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Pagination/Pagination.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Pagination/PaginationDots.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Pagination/PaginationDots.tsx"
         },
         {
           "path": "packages/css/src/components/Pagination.css",
@@ -4436,6 +4492,45 @@
       }
     },
     {
+      "name": "selection-menu",
+      "type": "registry:ui",
+      "title": "SelectionMenu",
+      "description": "A horizontal menu of actions over a selection or a point: the edit menu capsule (cut, copy, paste and the app's own actions). It is for selections the app draws (a message, a canvas object, a chip, a block of read only text), never inside a native text field. On web, ios and android it is the same capsule above the selection, below it when there is no room above; on ios its entries are 44 tall, on android 48 (Material's text selection toolbar has the same form). Proposed, order M9.11.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SelectionMenu/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SelectionMenu/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SelectionMenu/SelectionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SelectionMenu/SelectionMenu.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SelectionMenu.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SelectionMenu.css"
+        }
+      ],
+      "categories": [
+        "overlay"
+      ],
+      "meta": {
+        "manifest": "SelectionMenu",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",
@@ -4468,6 +4563,46 @@
       ],
       "meta": {
         "manifest": "Separator",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "share-panel",
+      "type": "registry:ui",
+      "title": "SharePanel",
+      "description": "The share button and the app's own share panel. A press shares through the system share sheet first (share() in @the-system/shared calls navigator.share on the web) and opens the panel only where there is none. The panel shows the item, the app's own people, its own targets and actions on the item, with Copy link and More options built in. On ios and android it is a Sheet from the bottom edge (the system sheet comes first, as Chrome on Android and Safari on iOS have it); on web and macos it is a Popover from the share button.",
+      "registryDependencies": [
+        "@ds/avatar",
+        "@ds/button",
+        "@ds/copy-button",
+        "@ds/core",
+        "@ds/popover",
+        "@ds/sheet",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SharePanel/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SharePanel/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SharePanel/SharePanel.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SharePanel/SharePanel.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SharePanel.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SharePanel.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "SharePanel",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -5055,7 +5190,7 @@
       "name": "tab-bar",
       "type": "registry:ui",
       "title": "TabBar",
-      "description": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked.",
+      "description": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked. An optional search item goes last: on web and android it is the last item of the bar, on ios a round item beside the capsule (under it in the side column), and while current it can turn into a search field.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],

@@ -1,0 +1,305 @@
+/*
+ * SelectionMenu (order M9.11, proposed): a horizontal menu of actions over a
+ * selection or a point, the edit menu capsule. No source repo has one; the
+ * shape follows the reference kit's edit menu as measured in the order
+ * (a capsule as tall as one row, text actions split by short hairlines, the
+ * forward control a round platter at the trailing end), drawn here only
+ * with our tokens.
+ *
+ *   [data-ds='theme'][data-selection-menu-layer]   the portal Theme, draws no box
+ *   [data-ds='selection-menu']                     root: role menu, horizontal, Radix Popover Content
+ *     > [data-part='more']                         role menuitem: back (first) or forward (last), a chevron
+ *     > [data-part='separator']                    a short hairline between two entries, aria-hidden
+ *     > [data-part='item']                         role menuitem, data-tone danger, data-disabled
+ *       > [data-ds='icon']                         an optional icon before the label
+ *       > span                                     the label, on one line
+ *
+ * The menu surface family (anatomy.md, convention 1): the root reads
+ * --_menu-*, declared here on its own root as Select does, so the recipe
+ * shape that draws DropdownMenu and ContextMenu can draw this capsule too
+ * by adding [data-ds='selection-menu'] to its list. Names used:
+ *
+ *   --_menu-bg, -fg, -border-color, -radius, -shadow, -backdrop, -padding
+ *   --_menu-item-height, -item-padding-inline, -item-gap, -item-radius,
+ *   --_menu-item-font-size, -item-font-weight
+ *   --_menu-item-bg, -item-fg                    swapped by state
+ *   --_menu-item-bg-highlight, -item-fg-highlight
+ *   --_menu-item-fg-danger
+ *   --_menu-item-ring, -item-ring-color          the focus ring, an inset box shadow
+ *   --_menu-separator-color
+ *   --_menu-enter-scale, -shift, -enter-y, -duration-in, -duration-out, -ease-in, -ease-out
+ *
+ * And two of its own, for the forward and back control:
+ *   --_selection-menu-more-bg      the round platter behind the chevron
+ *   --_selection-menu-more-inset   the space between the platter and the edge of the capsule
+ *   --_selection-menu-separator-size   the length of a hairline, along the row
+ *
+ * Size: every entry is at least the platform touch target tall
+ * (size.target: 24 on web, 44 on ios, 48 on android), so the capsule is one
+ * row tall and the items fill it, as on the platforms (WCAG 2.5.8).
+ *
+ * Motion, interaction "selection-menu-pop" (pattern "menu-scale"): the
+ * capsule comes out of the selection side (data-side): it travels
+ * distance.shift toward its place and grows from scale.menu-enter while it
+ * fades in, on the snappy spring, and leaves faster (duration.quick,
+ * ease.exit), taking no pointer. Paging swaps the row at once. Only
+ * transform and opacity animate. Under reduced motion the animations are
+ * none: the capsule appears and leaves at once, and Radix removes it at once.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ portal layer */
+
+  [data-ds='theme'][data-selection-menu-layer] {
+    display: contents;
+  }
+
+  /* ------------------------------------------------------------ root: the capsule */
+
+  [data-ds='selection-menu'] {
+    --_menu-bg: var(--ds-color-bg-surface-3);
+    --_menu-fg: var(--ds-color-text-default);
+    --_menu-border-color: transparent;
+    --_menu-radius: var(--ds-radius-pill);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-padding: 0px;
+    --_menu-item-height: var(--ds-menu-item-height);
+    --_menu-item-padding-inline: var(--ds-space-xl);
+    --_menu-item-gap: var(--ds-space-s);
+    --_menu-item-radius: var(--ds-radius-pill);
+    --_menu-item-font-size: var(--ds-font-size-m);
+    --_menu-item-font-weight: var(--ds-font-weight-regular);
+    --_menu-item-bg: transparent;
+    --_menu-item-fg: var(--_menu-fg);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--_menu-fg);
+    --_menu-item-fg-danger: var(--ds-color-state-danger-text);
+    --_menu-item-ring: 0 0 transparent;
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-separator-color: var(--ds-color-border-default);
+    --_menu-enter-scale: var(--ds-scale-menu-enter);
+    --_menu-shift: var(--ds-distance-shift);
+    --_menu-enter-y: 0px;
+    --_menu-duration-in: var(--ds-duration-spring-snappy);
+    --_menu-duration-out: min(var(--ds-duration-quick), var(--_menu-duration-in));
+    --_menu-ease-in: var(--ds-ease-spring-snappy);
+    --_menu-ease-out: var(--ds-ease-exit);
+    --_selection-menu-more-bg: var(--ds-color-bg-overlay-5);
+    --_selection-menu-more-inset: var(--ds-space-2xs);
+    --_selection-menu-separator-size: calc(var(--_menu-item-height) / 2);
+
+    /* Positioned so the z-index applies: Radix copies it onto its positioning wrapper. */
+    position: relative;
+    z-index: var(--ds-z-menu);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: var(--radix-popover-content-available-width);
+    margin: 0;
+    padding: var(--_menu-padding);
+    overflow: hidden;
+    border: var(--ds-border-width-default) solid var(--_menu-border-color);
+    border-radius: var(--_menu-radius);
+    background-color: var(--_menu-bg);
+    -webkit-backdrop-filter: var(--_menu-backdrop);
+    backdrop-filter: var(--_menu-backdrop);
+    box-shadow: var(--_menu-shadow);
+    color: var(--_menu-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_menu-item-font-size);
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+    transform-origin: var(--radix-popover-content-transform-origin);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    outline: none;
+  }
+
+  /* Arabic: the label one step up, as in the other menus. */
+  [data-ds='selection-menu']:lang(ar) {
+    --_menu-item-font-size: var(--ds-font-size-l);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* The travel comes from the selection side: a capsule above the selection comes up out of it. */
+  [data-ds='selection-menu'][data-side='top'] {
+    --_menu-enter-y: var(--_menu-shift);
+  }
+
+  [data-ds='selection-menu'][data-side='bottom'] {
+    --_menu-enter-y: calc(var(--_menu-shift) * -1);
+  }
+
+  [data-ds='selection-menu'][data-state='open'] {
+    animation: ds-selection-menu-in var(--_menu-duration-in) var(--_menu-ease-in);
+  }
+
+  [data-ds='selection-menu'][data-state='closed'] {
+    animation: ds-selection-menu-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ entries */
+
+  [data-ds='selection-menu'] > :is([data-part='item'], [data-part='more']) {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_menu-item-gap);
+    box-sizing: border-box;
+    min-block-size: max(var(--_menu-item-height), var(--ds-size-target));
+    margin: 0;
+    border-radius: var(--_menu-item-radius);
+    background-color: var(--_menu-item-bg);
+    box-shadow: var(--_menu-item-ring);
+    color: var(--_menu-item-fg);
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--ds-duration-fast) var(--ds-ease-standard),
+      box-shadow var(--ds-duration-fast) var(--ds-ease-standard);
+  }
+
+  [data-ds='selection-menu'] > [data-part='item'] {
+    padding-inline: var(--_menu-item-padding-inline);
+    font-weight: var(--_menu-item-font-weight);
+  }
+
+  [data-ds='selection-menu'] > [data-part='item'] > [data-ds='icon'] {
+    flex: none;
+  }
+
+  /* The forward and back control: a square as tall as the row, its platter inset by -more-inset. */
+  [data-ds='selection-menu'] > [data-part='more'] {
+    --_menu-item-bg: var(--_selection-menu-more-bg);
+
+    inline-size: max(var(--_menu-item-height), var(--ds-size-target));
+    padding: var(--_selection-menu-more-inset);
+    background-clip: content-box;
+  }
+
+  [data-ds='selection-menu'] > [data-part='item'][data-tone='danger'] {
+    --_menu-item-fg: var(--_menu-item-fg-danger);
+  }
+
+  @media (hover: hover) {
+    [data-ds='selection-menu'] > [data-part='item']:not([data-disabled]):hover {
+      --_menu-item-bg: var(--_menu-item-bg-highlight);
+      --_menu-item-fg: var(--_menu-item-fg-highlight);
+    }
+
+    [data-ds='selection-menu'] > [data-part='item'][data-tone='danger']:not([data-disabled]):hover {
+      --_menu-item-fg: var(--_menu-item-fg-danger);
+    }
+
+    [data-ds='selection-menu'] > [data-part='more']:hover {
+      --_selection-menu-more-bg: var(--_menu-item-bg-highlight);
+    }
+  }
+
+  [data-ds='selection-menu'] > [data-part='item']:not([data-disabled]):active {
+    --_menu-item-bg: var(--_menu-item-bg-highlight);
+  }
+
+  [data-ds='selection-menu'] > :is([data-part='item'], [data-part='more']):focus-visible {
+    --_menu-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menu-item-ring-color);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  /* The platter of the forward control keeps its ring inside the platter. */
+  [data-ds='selection-menu'] > [data-part='more']:focus-visible {
+    --_selection-menu-more-bg: var(--_menu-item-bg-highlight);
+  }
+
+  [data-ds='selection-menu'] > [data-part='item'][data-disabled] {
+    cursor: default;
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  /* ------------------------------------------------------------ separator */
+
+  [data-ds='selection-menu'] > [data-part='separator'] {
+    flex: none;
+    align-self: center;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--_selection-menu-separator-size);
+    background-color: var(--_menu-separator-color);
+  }
+
+  /* No hairline next to the round platter: the platter is its own edge. */
+  [data-ds='selection-menu'] > [data-part='separator']:has(+ [data-part='more']),
+  [data-ds='selection-menu'] > [data-part='more'] + [data-part='separator'] {
+    background-color: transparent;
+  }
+
+  /* ------------------------------------------------------------ motion: interaction "selection-menu-pop", pattern "menu-scale" */
+
+  @keyframes ds-selection-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @keyframes ds-selection-menu-out {
+    to {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='selection-menu'][data-state='open'],
+    [data-ds='selection-menu'][data-state='closed'] {
+      animation: none;
+    }
+
+    [data-ds='selection-menu'] > :is([data-part='item'], [data-part='more']) {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ more contrast and forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-ds='selection-menu'] {
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='selection-menu'] {
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors drop the shadow: the border draws the capsule, the system colors draw the lit entry. */
+  @media (forced-colors: active) {
+    [data-ds='selection-menu'] {
+      --_menu-bg: Canvas;
+      --_menu-fg: CanvasText;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+      --_menu-item-fg-danger: CanvasText;
+      --_selection-menu-more-bg: Canvas;
+    }
+
+    [data-ds='selection-menu'] > :is([data-part='item'], [data-part='more']):hover {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='selection-menu'] > :is([data-part='item'], [data-part='more']):focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

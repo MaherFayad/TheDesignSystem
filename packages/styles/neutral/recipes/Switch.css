@@ -87,6 +87,23 @@
       0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
   }
 
+  /*
+   * Order P1, light, held off: the lens sits over the light gray track and a
+   * white card, where a light rim alone read as a white ring round a gray
+   * pill. As the kit's held off toggle: a soft shade inside the edge, a faint
+   * darker lower edge and a soft two step lift, so the lens separates from
+   * white as glass. No ring, no stroke. Light only; dark keeps its rule.
+   */
+  [data-style='neutral'][data-platform='ios']:not([data-scheme='dark']) [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='neutral'][data-platform='ios']:not([data-scheme='dark']) [data-ds='switch'][data-state='unchecked'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
+    --_switch-thumb-shadow:
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
+      inset 0 calc(-1 * var(--ds-border-width-default)) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 26%, transparent),
+      inset 0 0 var(--ds-space-fixed-l) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent),
+      0 var(--ds-border-width-default) var(--ds-space-fixed-3xs) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent),
+      0 var(--ds-space-fixed-2xs) calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
+  }
+
   [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
     --_switch-thumb-shadow:
@@ -132,12 +149,12 @@
    * platform green, the off track a plain gray fill, and there is no track
    * edge and no thumb ring in any state: the shapes separate by fill and a
    * soft low shadow. The 3:1 outline ruling is waived for this one control
-   * on ios. The green is the closest token there is (the window zoom light,
-   * mixed toward the success fill in dark); a platform green token is asked
-   * of the lead. An invalid or read only switch keeps its edge.
+   * on ios. The green is the platform green, color.state.success.platform
+   * (order P1: light 34c759, dark 30d158, as the vendor kit). An invalid or
+   * read only switch keeps its edge.
    */
   [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
-    --_switch-fill: var(--ds-color-window-light-zoom);
+    --_switch-fill: var(--ds-color-state-success-platform);
     --_switch-fill-border: transparent;
     --_switch-border-color: transparent;
     --_switch-border-color-hover: transparent;
@@ -147,7 +164,6 @@
   }
 
   [data-style='neutral'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
-    --_switch-fill: color-mix(in srgb, var(--ds-color-window-light-zoom) 75%, var(--ds-color-state-success-fill));
     --_switch-thumb-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 30%, transparent);
   }
 

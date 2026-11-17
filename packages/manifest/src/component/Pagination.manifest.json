@@ -2,24 +2,27 @@
   "name": "Pagination",
   "kind": "component",
   "family": "navigation",
-  "summary": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312.",
+  "summary": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312. The dots variant draws one dot per page and nothing else, for a short flat set of pages: on ios on a small platter, on web and android without it.",
   "useWhen": [
     "A list or table split into pages of a fixed size, where readers need to know where they are and jump to a page",
     "Search results or an archive where a page number can be shared in a URL, with getHref",
-    "A data table footer that shows which rows are on screen, with itemCount and pageSize"
+    "A data table footer that shows which rows are on screen, with itemCount and pageSize",
+    "A short flat set of pages read one at a time, such as onboarding screens or the slides of a carousel, with variant dots"
   ],
   "avoidWhen": [
     "A feed read from top to bottom, where loading more on scroll or a Load more button fits better",
     "Steps of a task done in order",
     "Fewer items than one page holds, unless the summary is still useful",
-    "Moving between slides of a carousel"
+    "Moving between slides of a carousel with page numbers: use variant dots, beside the carousel's own previous and next buttons",
+    "Dots for a list of more than about 12 pages, where nobody can count the dots"
   ],
   "insteadUse": {
     "A feed that grows as the reader scrolls": "Button with Load more items, or infinite loading",
     "Steps of a task in order": "Stepper",
     "Views of one page": "Tabs",
     "Slides of a carousel": "Carousel controls",
-    "The path to the current page": "Breadcrumbs"
+    "The path to the current page": "Breadcrumbs",
+    "More than about 12 pages read one at a time": "Pagination with numbers"
   },
   "anatomy": [
     "root",
@@ -29,7 +32,9 @@
     "ellipsis",
     "next",
     "last",
-    "summary"
+    "summary",
+    "track",
+    "dot"
   ],
   "props": {
     "page": {
@@ -103,27 +108,40 @@
     "label": {
       "type": "string",
       "default": "Pagination",
-      "description": "The accessible name of the nav landmark, not visible text. Under an Arabic Theme the default is التنقل بين الصفحات."
+      "description": "The accessible name of the nav landmark, not visible text. Default Pagination (التنقل بين الصفحات); for dots Pages (الصفحات)."
     },
     "formatSummary": {
       "type": "(start, end, total) => string",
       "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic ما فيه عناصر."
+    },
+    "variant": {
+      "type": [
+        "numbers",
+        "dots"
+      ],
+      "default": "numbers",
+      "description": "numbers: first, previous, page numbers, next and last. dots: one dot per page in a track, nothing else; the current dot is wider and brighter. Stamps data-variant=\"dots\" (absent for numbers). The dots ignore itemCount, pageSize, siblings, boundaries, showEnds, getHref, size, shape and formatSummary. When the dots do not fit at 24 each in the width they have (about 12 at 393 wide), the root takes data-compact: the dots shrink and the track becomes one control at least 44 tall, a press on its leading half goes back, on its trailing half forward."
     }
   },
   "states": [
     "data-active",
     "data-disabled",
     "data-compact",
-    "data-pressed"
+    "data-pressed",
+    "data-variant=dots"
   ],
   "a11y": {
-    "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
-    "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens.",
+    "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref. Dots: a nav named Pages of buttons, one per page.",
+    "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens. Dots: one tab stop, the current dot (roving tab index); the arrow keys move focus and select at once.",
     "keys": {
       "Tab": "Moves through the controls",
-      "Enter": "Goes to that page"
+      "Enter": "Goes to that page",
+      "ArrowRight, ArrowLeft": "Dots: the next or previous page, moved to and selected at once, mirrored in RTL; no wrap",
+      "Home, End": "Dots: the first or last page",
+      "Space": "Dots: selects the focused dot",
+      "Pointer, no drag": "Dots: a press on a dot goes to its page; compact, a press on the leading half of the track goes back one page and on the trailing half forward one (WCAG 2.5.7: no gesture needs a drag)"
     },
-    "announce": "Each page reads as Page 5, the current one as Page 5, current page. The ends read First page, Previous page, Next page, Last page. Ellipses are aria-hidden. The summary is plain text before the controls.",
+    "announce": "Each page reads as Page 5, the current one as Page 5, current page. The ends read First page, Previous page, Next page, Last page. Ellipses are aria-hidden. The summary is plain text before the controls. Dots read Page 3 of 5, the current one Page 3 of 5, current page; Arabic صفحة 3 من 5.",
     "native": {
       "accessibilityRole": "button",
       "accessibilityState": [
@@ -138,17 +156,24 @@
       "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
       "The page row keeps the same length as the current page moves (pageRange), so controls do not jump under the pointer.",
       "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3).",
-      "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled."
+      "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled.",
+      "Dots (order M9.9): each dot is a 24 by 24 target (size.target-min) drawing an 8 dot, so dots never come closer than 24 center to center (WCAG 2.5.8). The vendor's own control packs dots 16 apart; ours are wider apart on purpose.",
+      "Dots: inactive dots in color.text.muted, the current one in color.text.bright and twice as wide, with aria-current, never color alone (WCAG 1.4.1); 3:1 or more against the page, and against a platform platter (WCAG 1.4.11).",
+      "Dots compact: decided after layout from the dots' flex basis and the root's width, never during render, so the server render (never compact) matches. The compact track is at least 44 tall (size.touch-ios), one control for the pointer; the keys stay on the dots.",
+      "Dots and swipe: a carousel's swipe needs a path with no drag (WCAG 2.5.7); the dots are that path, beside the carousel's previous and next buttons.",
+      "Dots motion: the current dot widens by clip-path and its color swaps on CSS transitions (duration.spring-snappy, duration.base); under reduced motion both change at once."
     ]
   },
   "content": {
     "en": {
       "summary": "First to last item of the total: 21 to 40 of 312. Name the items in formatSummary when the page does not: 21 to 40 of 312 boards.",
-      "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule."
+      "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule.",
+      "dots": "Dot names are built in: Page 3 of 5. Name the nav after what the pages are when Pages is not enough: Onboarding screens."
     },
     "ar": {
       "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
-      "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics."
+      "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics.",
+      "dots": "صفحة 3 من 5، Western digits. Nav name: الصفحات، or what the pages are: صفحات التعريف بالتطبيق."
     }
   },
   "tokens": [
@@ -178,7 +203,15 @@
     "scale.anticipate",
     "delay.stagger",
     "distance.nudge",
-    "distance.shift"
+    "distance.shift",
+    "size.target-min",
+    "size.touch-ios",
+    "space.fixed-m",
+    "space.fixed-s",
+    "radius.pill",
+    "color.text.default",
+    "duration.base",
+    "ease.out"
   ],
   "motion": "press",
   "frameworks": {
@@ -186,7 +219,7 @@
       "status": "ready",
       "behavior": "nav of system Button and IconButton (asChild links with getHref); pageRange and itemRange from @the-system/shared",
       "example": "Pagination.demo.tsx",
-      "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift)."
+      "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift). Order M9.9 (proposed): variant dots, one system Button per page in a track, roving tab index, compact half control; the current dot widens by clip-path on a CSS transition."
     },
     "angular": {
       "status": "planned",
@@ -194,13 +227,14 @@
     },
     "native": {
       "status": "planned",
-      "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones."
+      "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones. Dots (R5): the system page control on iOS, a drawn row of dots on Android, each with accessibilityState selected and adjustable actions for the next and previous page."
     }
   },
   "styles": {
     "studio": "Ghost page buttons at regular weight, the current page bold with a soft fill and a muted text color border, pixel chevrons on the ends.",
     "desk": "The same from the Desk tokens: pill controls, the current page bordered.",
-    "neutral": "Takes the tokens of the Neutral style, no recipe."
+    "neutral": "Takes the tokens of the Neutral style, no recipe. Dots: on ios a small solid platter behind the dots; elsewhere none.",
+    "liquid": "Numbers from the Liquid tokens. Dots: on ios a small glass platter behind the dots (look request of order M9.9); on web and android no platter."
   },
   "mistakes": [
     {
@@ -222,6 +256,18 @@
     {
       "wrong": "Eastern Arabic digits in the page numbers",
       "right": "Western digits, the default in both languages"
+    },
+    {
+      "wrong": "A row of 8px dots packed 16 apart, each its own button",
+      "right": "variant dots, which keeps a 24 target for each dot"
+    },
+    {
+      "wrong": "Dots as the only way to move between carousel slides on a swipe only screen",
+      "right": "Dots plus the swipe, and previous and next buttons where the slides hold actions"
+    },
+    {
+      "wrong": "Forty dots across a phone",
+      "right": "Numbers past about 12 pages; dots past the width turn into one half and half control"
     }
   ],
   "contract": {
@@ -229,7 +275,12 @@
       "first",
       "last",
       "ellipsis",
-      "summary"
+      "summary",
+      "page",
+      "previous",
+      "next",
+      "track",
+      "dot"
     ]
   },
   "since": "0.1.0"

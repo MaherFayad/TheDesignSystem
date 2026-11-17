@@ -30,6 +30,31 @@
  * end arrows wind up and go. Without the span (a port that has not added
  * it) the page draws its own fill, the round 1 look.
  *
+ * Dots (order M9.9, proposed): data-variant="dots" draws one dot per page
+ * in a track part and nothing else. Each dot is a system Button with
+ * data-part dot, a 24 by 24 target (size.target-min, WCAG 2.5.8) holding an
+ * aria-hidden span that draws the dot. The current dot is wider and brighter
+ * and has aria-current, never color alone. Its width changes by clip-path
+ * (no layout property moves) and its color swaps, on token durations; under
+ * reduced motion both swap at once. Names outside the list in anatomy.md:
+ *
+ *   --_pagination-dot-slot            the box of each dot: the target size
+ *   --_pagination-dot-size            the drawn dot
+ *   --_pagination-dot-width-active    the drawn width of the current dot
+ *   --_pagination-dot-fg, -fg-hover, -fg-active   the dot colors (3:1 or more against the track)
+ *   --_pagination-dot-fg-now          the working color the state rules set
+ *   --_pagination-track-bg, -track-radius, -track-padding-inline, -track-padding-block
+ *                                     the platter a platform may draw behind the dots (none here)
+ *   --_pagination-track-height-compact   the least height of the track as one control
+ *
+ * Compact (data-compact on the root, set by the component when the dots do
+ * not fit at full size): the dots shrink with the room, take no pointer,
+ * and the track fills the row and becomes one control at least 44 tall: a
+ * press on its leading half goes back, on its trailing half forward.
+ *
+ * The dot clips its own box (overflow clip), so a platform's hit layer
+ * (the Button hit part) never reaches over the next dot.
+ *
  * Round 3 (order 1.23): --_pagination-press-x and --_pagination-press-y, where the last
  * press landed on an item, in px from its inline start and block start
  * (written on the item on pointerdown, TabBar/pressOrigin.ts), 50% until
@@ -158,11 +183,128 @@
     }
   }
 
+  /* ------------------------------------------------------------ dots */
+
+  [data-ds='pagination'][data-variant='dots'] {
+    --_pagination-dot-slot: var(--ds-size-target-min);
+    --_pagination-dot-size: var(--ds-space-fixed-m);
+    --_pagination-dot-width-active: calc(2 * var(--ds-space-fixed-m));
+    --_pagination-dot-fg: var(--ds-color-text-muted);
+    --_pagination-dot-fg-hover: var(--ds-color-text-default);
+    --_pagination-dot-fg-active: var(--ds-color-text-bright);
+    --_pagination-track-bg: transparent;
+    --_pagination-track-radius: var(--ds-radius-pill);
+    --_pagination-track-padding-inline: 0px;
+    --_pagination-track-padding-block: 0px;
+    --_pagination-track-height-compact: var(--ds-size-touch-ios);
+
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  [data-ds='pagination'][data-variant='dots'] > [data-part='track'] {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-block: var(--_pagination-track-padding-block);
+    padding-inline: var(--_pagination-track-padding-inline);
+    border-radius: var(--_pagination-track-radius);
+    background-color: var(--_pagination-track-bg);
+  }
+
+  [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] {
+    --_button-height: var(--_pagination-dot-slot);
+    --_button-padding-inline: 0px;
+    --_button-press-y: 0px;
+    --_button-shift: 0px;
+    --_button-glow: 0;
+    --_button-press-shade: transparent;
+    --_pagination-dot-fg-now: var(--_pagination-dot-fg);
+
+    /* The basis stays the slot in every form: the component reads it to know whether the dots fit. */
+    flex: 0 1 var(--_pagination-dot-slot);
+    min-inline-size: var(--_pagination-dot-slot);
+    block-size: var(--_pagination-dot-slot);
+    min-block-size: var(--_pagination-dot-slot);
+    padding: 0;
+    overflow: clip;
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  /* The drawn dot: as wide as the current one, clipped down to a round dot while it is not current. */
+  [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] > span[aria-hidden='true']:not([data-part]) {
+    display: block;
+    flex: none;
+    inline-size: min(var(--_pagination-dot-width-active), 100%);
+    block-size: var(--_pagination-dot-size);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_pagination-dot-fg-now);
+    clip-path: inset(0 calc(50% - var(--_pagination-dot-size) / 2) round var(--ds-radius-pill));
+    pointer-events: none;
+    transition:
+      clip-path var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy),
+      background-color var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  @media (hover: hover) {
+    [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot']:hover:not([data-active], [data-disabled]) {
+      --_pagination-dot-fg-now: var(--_pagination-dot-fg-hover);
+    }
+  }
+
+  [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'][data-active] {
+    --_pagination-dot-fg-now: var(--_pagination-dot-fg-active);
+  }
+
+  [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'][data-active] > span[aria-hidden='true']:not([data-part]) {
+    clip-path: inset(0 round var(--ds-radius-pill));
+  }
+
+  /* Compact: the track is one control the width of the row; the dots shrink and take no pointer. */
+  [data-ds='pagination'][data-variant='dots'][data-compact] > [data-part='track'] {
+    flex: 1 1 auto;
+    min-block-size: var(--_pagination-track-height-compact);
+    cursor: pointer;
+  }
+
+  [data-ds='pagination'][data-variant='dots'][data-compact] > [data-part='track'] > [data-part='dot'] {
+    --_pagination-dot-size: var(--ds-space-fixed-s);
+    --_pagination-dot-width-active: calc(2 * var(--ds-space-fixed-s));
+
+    min-inline-size: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] > span[aria-hidden='true']:not([data-part]) {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] > span[aria-hidden='true']:not([data-part]) {
+    transition: none;
+  }
+
   /* ------------------------------------------------------------ forced colors */
 
   @media (forced-colors: active) {
     [data-ds='pagination'] > [data-part='page'] > span[aria-hidden='true']:not([data-part]) {
       display: none;
+    }
+
+    /* The dots are author fills: draw them in system colors, the current one in Highlight. */
+    [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] > span[aria-hidden='true']:not([data-part]) {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+
+    [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'][data-active] > span[aria-hidden='true']:not([data-part]) {
+      background-color: Highlight;
     }
 
     /*

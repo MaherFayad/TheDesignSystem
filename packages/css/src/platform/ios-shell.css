@@ -127,6 +127,42 @@
     overflow-y: auto;
   }
 
+  /*
+   * Order P1: a tab bar placed over the scrolling content (inside main, at
+   * the bottom) leaves room after the last row: the bar (its item, padding
+   * and edge), its margin over the bottom inset, and a gap, so the last row
+   * clears the bar when the content rests at its end. A spacer after the
+   * content, not padding, so a page that zeroes main's padding keeps it;
+   * the scroll padding keeps a focused control clear of the bar (WCAG 2.2
+   * 2.4.11). In the side column the bar is not over the content: no room.
+   */
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side'])) {
+    scroll-padding-block-end: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l));
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side']))::after {
+    content: '';
+    display: block;
+    block-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-l));
+  }
+
+  @container style(--_ios-rail: side) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])) {
+      scroll-padding-block-end: var(--_ios-rail-foot);
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom']))::after {
+      content: none;
+    }
+  }
+
+  /* Under auto the flag is set on main itself, which main's own style query cannot see: the size query decides there. */
+  @container ds-shell (inline-size >= calc(30rem * 11 / 12)) and (block-size <= calc(600px * 7 / 6)) { /* breakpoint.phone breakpoint.medium */
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])) {
+      scroll-padding-block-end: var(--_ios-rail-foot);
+    }
+  }
+
   /* Every region keeps clear of the side insets, each side on its own. */
   [data-platform='ios'] [data-ds='page-shell'] > :is([data-part='header'], [data-part='main'], [data-part='aside'], [data-part='footer']) {
     margin-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);

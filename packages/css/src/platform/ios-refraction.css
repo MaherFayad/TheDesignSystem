@@ -72,10 +72,21 @@
     /* ------------------------------------------------------------ tier 1: the bend (Chromium, after the probe) */
 
     /* The filter from --_ios-refraction (unset until its map is decoded: then the low blur alone), then a very low blur and the saturation. */
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'],
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
       -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
       backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
+    }
+
+    /*
+     * The tab bar (order P1): the bend runs twice, so a stripe or a card edge
+     * under the end caps and the top edge curves at 1x as on the reference.
+     * Each pass moves inward and never back (the map's profile), so the two
+     * together still never fold; the glare is applied twice too, measured
+     * against the labels in docs/reports/lanes/reset-P1.md.
+     */
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'] {
+      -webkit-backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
+      backdrop-filter: var(--_ios-refraction,) var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.6);
     }
 
     /* The navigation and sheet buttons (order G2): a lower saturation than the bar, so a button over one strong colour reads as clear glass and not as a pill of that colour. */

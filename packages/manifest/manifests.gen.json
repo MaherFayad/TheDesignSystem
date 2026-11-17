@@ -249,6 +249,270 @@
     "since": "0.1.0"
   },
   {
+    "name": "ActionSheet",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A short list of actions on one object, opened from the control that names it: the person picks one action or cancels. On ios a card anchored to the control that opened it, over its corner, with stacked capsules and Cancel as the last, quieter one; on android a bottom sheet of text rows; on web a card anchored to the trigger when there is room beside it, else in the center. Order M9.10, proposed.",
+    "useWhen": [
+      "Three to six actions on one object, opened from a more button or a row's menu button: duplicate, move, share, delete",
+      "A phone layout where a menu's small rows would be hard to hit and each action needs a full width target",
+      "One of the actions removes the object and the person should see it next to the safer ones"
+    ],
+    "avoidWhen": [
+      "A question about one action that cannot be undone",
+      "Commands a person runs often from a desktop toolbar",
+      "Picking a value that stays shown in a field",
+      "More than about six actions, or actions in groups with headings"
+    ],
+    "insteadUse": {
+      "A question about one action that cannot be undone": "AlertDialog",
+      "Commands from a toolbar or a desktop app": "DropdownMenu",
+      "Picking a value": "Select",
+      "Many grouped actions": "DropdownMenu with groups, or a Sheet"
+    },
+    "anatomy": [
+      "root",
+      "backdrop",
+      "panel",
+      "title",
+      "description",
+      "actions",
+      "action",
+      "cancel"
+    ],
+    "parts": {
+      "ActionSheetContent": "panel",
+      "ActionSheetAction": "action",
+      "ActionSheetCancel": "cancel"
+    },
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      },
+      "actions": {
+        "accepts": [
+          "ActionSheetAction",
+          "ActionSheetCancel"
+        ],
+        "min": 1,
+        "max": 7
+      }
+    },
+    "props": {
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with false for an action, Cancel, Escape and a press outside."
+      },
+      "placement": {
+        "type": [
+          "auto",
+          "anchored",
+          "bottom",
+          "center"
+        ],
+        "default": "auto",
+        "description": "Where the sheet sits, stamped as data-placement on the root and held while it is open. auto: anchored on ios (the card covers the corner of its trigger); bottom on android; on web and macos anchored when the viewport is at least 360 wide and there is at least 280 of height above or below the trigger, else center. anchored with no trigger falls back to center."
+      },
+      "dismissible": {
+        "type": "boolean",
+        "default": true,
+        "description": "false: Escape and a press outside do nothing, while an action runs."
+      },
+      "title": {
+        "type": "node",
+        "description": "ActionSheetContent: a short title that names the object. Optional: the trigger often names it already."
+      },
+      "description": {
+        "type": "node",
+        "description": "ActionSheetContent: one sentence about what the actions do."
+      },
+      "label": {
+        "type": "string",
+        "description": "ActionSheetContent: the accessible name when there is no title (Actions for Spring launch). Rendered as a visually hidden title."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "ActionSheetContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel."
+      },
+      "ActionSheetTrigger": {
+        "type": "node",
+        "description": "One child element, a system Button or IconButton, rendered as the trigger with aria-haspopup dialog, aria-expanded and aria-controls. An anchored sheet is placed next to it, and focus returns to it."
+      },
+      "ActionSheetAction.tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "ActionSheetAction: danger for an action that deletes or removes. With one, the panel is an alertdialog and focus opens on Cancel."
+      },
+      "ActionSheetAction": {
+        "type": "node",
+        "description": "One action, a Button (size lg, full width, label wraps; soft capsules, ghost rows at the bottom). onClick runs, then the sheet closes unless onClick called event.preventDefault(). disabled keeps it focusable with aria-disabled."
+      },
+      "ActionSheetCancel": {
+        "type": "node",
+        "description": "The way out, always the last item, a ghost Button marked data-dialog-cancel. Default label Cancel, إلغاء in Arabic. Added when none is given."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-placement=anchored|bottom|center"
+    ],
+    "a11y": {
+      "role": "dialog (the panel), or alertdialog when an action is tone danger. Modal: the rest of the page is hidden from assistive tech and focus stays inside. Named by the title, or by label as a visually hidden title; described by the description.",
+      "focus": "On open, focus goes to Cancel when an action is tone danger, else to the first action that is not disabled. On close, focus returns to the trigger, or to the element that had focus before; when that is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
+      "keys": {
+        "ArrowDown": "Moves to the next item (actions, then Cancel) and wraps from the last to the first",
+        "ArrowUp": "Moves to the previous item and wraps from the first to the last",
+        "Home": "Moves to the first action",
+        "End": "Moves to Cancel",
+        "Tab": "Moves through the items inside the sheet and wraps",
+        "Shift+Tab": "Moves back through the items inside the sheet and wraps",
+        "Enter": "Runs the focused item and closes the sheet",
+        "Space": "Runs the focused item and closes the sheet",
+        "Escape": "Cancels and closes the sheet, unless dismissible is false"
+      },
+      "announce": "The role (dialog, or alertdialog with a destructive action), the title and the description are read when it opens, then the focused item.",
+      "notes": [
+        "A press outside the panel cancels, as Cancel does (not for an AlertDialog, which asks a question).",
+        "The anchored card stays on screen: it flips above its trigger and shifts along the edge, 16 px from the viewport edges, and its height is held to the room it has; past that the panel scrolls (WCAG 2.4.11, 1.4.10).",
+        "Items are at least 44 px tall in every style, 48 px on ios (WCAG 2.5.8). A danger label uses the danger text color, 4.5:1 on its fill (WCAG 1.4.3).",
+        "Focus order: actions in the order given, then Cancel (WCAG 2.4.3).",
+        "Right to left: the card lines up with the trigger's outer edge as positioned, the text at the inline start (right), the items in the same order.",
+        "No native title attribute."
+      ],
+      "native": {
+        "accessibilityRole": "menu",
+        "accessibilityState": [
+          "expanded"
+        ]
+      }
+    },
+    "content": {
+      "en": {
+        "title": "Optional, the name of the object: Spring launch. No question: that is an AlertDialog.",
+        "description": "Optional, one sentence: The board is shared with 4 people.",
+        "action": "A verb plus a noun, sentence case: Duplicate board, Move to folder, Delete board. Never OK, Yes, Continue or Confirm.",
+        "cancel": "Cancel, the built in word."
+      },
+      "ar": {
+        "title": "اسم العنصر: إطلاق الربيع",
+        "description": "جملة وحدة: اللوحة مشاركة مع 4 أشخاص.",
+        "action": "Noun form labels, no diacritics: نسخ اللوحة، نقل للمجلد، حذف اللوحة.",
+        "cancel": "إلغاء"
+      }
+    },
+    "tokens": [
+      "dialog.width.sm",
+      "dialog.width.md",
+      "dialog.height.max",
+      "color.bg.surface",
+      "color.bg.scrim",
+      "color.bg.scrim-80",
+      "color.border.default",
+      "color.border.strong",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "radius.panel",
+      "radius.sheet",
+      "radius.control",
+      "elevation.menu",
+      "focus.shadow.ring",
+      "border.width.default",
+      "border.width.strong",
+      "space.xs",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "size.control.lg",
+      "font.family.sans",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.regular",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.leading.normal",
+      "scale.menu-enter",
+      "duration.spring-bouncy",
+      "duration.spring-soft",
+      "duration.quick",
+      "ease.spring-bouncy",
+      "ease.spring-soft",
+      "ease.out",
+      "ease.exit",
+      "z.dialog"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Popover (anchored, modal), radix:Dialog (bottom and center)",
+        "example": "ActionSheet.demo.tsx",
+        "note": "Built on DialogBase (Dialog folder): the themed portal, the focus return, toasts above. The placement is resolved when it opens and picks the primitive. Motion: menu-scale when anchored (it grows out of its trigger's corner on the bouncy spring), the dialog grow in the center, the sheet rise at the bottom; reduced motion has none."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: the same DOM, CDK Overlay with a flexible connected position for anchored, the Angular Dialog layer for bottom and center."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system view: ActionSheetIOS (anchored to its source on iPad) on ios, a drawn bottom sheet of rows on android."
+      }
+    },
+    "styles": {
+      "web": "Anchored to the trigger when there is room, else a centered card; the style's surface, soft capsule actions, a ghost Cancel.",
+      "ios": "The card anchored to the control that opened it, over its corner, 300 wide on the clear glass of menus; title and description at the leading edge; stacked capsules 48 tall, 8 apart, the danger label red on the gray capsule; Cancel last and quieter. No separate cancel group and no scrim (look order M9.13).",
+      "android": "A bottom sheet with rounded top corners over a scrim: the title, then text rows 48 tall at the inline start, Cancel the last row (look order M9.13).",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe yet.",
+      "liquid": "The same on the Liquid tokens; the ios glass comes from the platform file (look order M9.13)."
+    },
+    "mistakes": [
+      {
+        "wrong": "An action sheet that asks a question with Yes and No",
+        "right": "An AlertDialog with Delete board and Keep board"
+      },
+      {
+        "wrong": "A sheet with no Cancel on a phone",
+        "right": "Leave Cancel in: the content adds one when none is given"
+      },
+      {
+        "wrong": "The destructive action first and focused",
+        "right": "Give it tone danger: focus opens on Cancel"
+      },
+      {
+        "wrong": "A sheet opened from a control that does not name the object",
+        "right": "A trigger labelled for the object (More options for Spring launch), or a title"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "backdrop",
+        "title",
+        "description"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Alert",
     "kind": "component",
     "family": "feedback",
@@ -15441,24 +15705,27 @@
     "name": "Pagination",
     "kind": "component",
     "family": "navigation",
-    "summary": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312.",
+    "summary": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312. The dots variant draws one dot per page and nothing else, for a short flat set of pages: on ios on a small platter, on web and android without it.",
     "useWhen": [
       "A list or table split into pages of a fixed size, where readers need to know where they are and jump to a page",
       "Search results or an archive where a page number can be shared in a URL, with getHref",
-      "A data table footer that shows which rows are on screen, with itemCount and pageSize"
+      "A data table footer that shows which rows are on screen, with itemCount and pageSize",
+      "A short flat set of pages read one at a time, such as onboarding screens or the slides of a carousel, with variant dots"
     ],
     "avoidWhen": [
       "A feed read from top to bottom, where loading more on scroll or a Load more button fits better",
       "Steps of a task done in order",
       "Fewer items than one page holds, unless the summary is still useful",
-      "Moving between slides of a carousel"
+      "Moving between slides of a carousel with page numbers: use variant dots, beside the carousel's own previous and next buttons",
+      "Dots for a list of more than about 12 pages, where nobody can count the dots"
     ],
     "insteadUse": {
       "A feed that grows as the reader scrolls": "Button with Load more items, or infinite loading",
       "Steps of a task in order": "Stepper",
       "Views of one page": "Tabs",
       "Slides of a carousel": "Carousel controls",
-      "The path to the current page": "Breadcrumbs"
+      "The path to the current page": "Breadcrumbs",
+      "More than about 12 pages read one at a time": "Pagination with numbers"
     },
     "anatomy": [
       "root",
@@ -15468,7 +15735,9 @@
       "ellipsis",
       "next",
       "last",
-      "summary"
+      "summary",
+      "track",
+      "dot"
     ],
     "props": {
       "page": {
@@ -15542,27 +15811,40 @@
       "label": {
         "type": "string",
         "default": "Pagination",
-        "description": "The accessible name of the nav landmark, not visible text. Under an Arabic Theme the default is التنقل بين الصفحات."
+        "description": "The accessible name of the nav landmark, not visible text. Default Pagination (التنقل بين الصفحات); for dots Pages (الصفحات)."
       },
       "formatSummary": {
         "type": "(start, end, total) => string",
         "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic ما فيه عناصر."
+      },
+      "variant": {
+        "type": [
+          "numbers",
+          "dots"
+        ],
+        "default": "numbers",
+        "description": "numbers: first, previous, page numbers, next and last. dots: one dot per page in a track, nothing else; the current dot is wider and brighter. Stamps data-variant=\"dots\" (absent for numbers). The dots ignore itemCount, pageSize, siblings, boundaries, showEnds, getHref, size, shape and formatSummary. When the dots do not fit at 24 each in the width they have (about 12 at 393 wide), the root takes data-compact: the dots shrink and the track becomes one control at least 44 tall, a press on its leading half goes back, on its trailing half forward."
       }
     },
     "states": [
       "data-active",
       "data-disabled",
       "data-compact",
-      "data-pressed"
+      "data-pressed",
+      "data-variant=dots"
     ],
     "a11y": {
-      "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
-      "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens.",
+      "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref. Dots: a nav named Pages of buttons, one per page.",
+      "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens. Dots: one tab stop, the current dot (roving tab index); the arrow keys move focus and select at once.",
       "keys": {
         "Tab": "Moves through the controls",
-        "Enter": "Goes to that page"
+        "Enter": "Goes to that page",
+        "ArrowRight, ArrowLeft": "Dots: the next or previous page, moved to and selected at once, mirrored in RTL; no wrap",
+        "Home, End": "Dots: the first or last page",
+        "Space": "Dots: selects the focused dot",
+        "Pointer, no drag": "Dots: a press on a dot goes to its page; compact, a press on the leading half of the track goes back one page and on the trailing half forward one (WCAG 2.5.7: no gesture needs a drag)"
       },
-      "announce": "Each page reads as Page 5, the current one as Page 5, current page. The ends read First page, Previous page, Next page, Last page. Ellipses are aria-hidden. The summary is plain text before the controls.",
+      "announce": "Each page reads as Page 5, the current one as Page 5, current page. The ends read First page, Previous page, Next page, Last page. Ellipses are aria-hidden. The summary is plain text before the controls. Dots read Page 3 of 5, the current one Page 3 of 5, current page; Arabic صفحة 3 من 5.",
       "native": {
         "accessibilityRole": "button",
         "accessibilityState": [
@@ -15577,17 +15859,24 @@
         "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
         "The page row keeps the same length as the current page moves (pageRange), so controls do not jump under the pointer.",
         "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3).",
-        "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled."
+        "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled.",
+        "Dots (order M9.9): each dot is a 24 by 24 target (size.target-min) drawing an 8 dot, so dots never come closer than 24 center to center (WCAG 2.5.8). The vendor's own control packs dots 16 apart; ours are wider apart on purpose.",
+        "Dots: inactive dots in color.text.muted, the current one in color.text.bright and twice as wide, with aria-current, never color alone (WCAG 1.4.1); 3:1 or more against the page, and against a platform platter (WCAG 1.4.11).",
+        "Dots compact: decided after layout from the dots' flex basis and the root's width, never during render, so the server render (never compact) matches. The compact track is at least 44 tall (size.touch-ios), one control for the pointer; the keys stay on the dots.",
+        "Dots and swipe: a carousel's swipe needs a path with no drag (WCAG 2.5.7); the dots are that path, beside the carousel's previous and next buttons.",
+        "Dots motion: the current dot widens by clip-path and its color swaps on CSS transitions (duration.spring-snappy, duration.base); under reduced motion both change at once."
       ]
     },
     "content": {
       "en": {
         "summary": "First to last item of the total: 21 to 40 of 312. Name the items in formatSummary when the page does not: 21 to 40 of 312 boards.",
-        "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule."
+        "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule.",
+        "dots": "Dot names are built in: Page 3 of 5. Name the nav after what the pages are when Pages is not enough: Onboarding screens."
       },
       "ar": {
         "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
-        "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics."
+        "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics.",
+        "dots": "صفحة 3 من 5، Western digits. Nav name: الصفحات، or what the pages are: صفحات التعريف بالتطبيق."
       }
     },
     "tokens": [
@@ -15617,7 +15906,15 @@
       "scale.anticipate",
       "delay.stagger",
       "distance.nudge",
-      "distance.shift"
+      "distance.shift",
+      "size.target-min",
+      "size.touch-ios",
+      "space.fixed-m",
+      "space.fixed-s",
+      "radius.pill",
+      "color.text.default",
+      "duration.base",
+      "ease.out"
     ],
     "motion": "press",
     "frameworks": {
@@ -15625,7 +15922,7 @@
         "status": "ready",
         "behavior": "nav of system Button and IconButton (asChild links with getHref); pageRange and itemRange from @the-system/shared",
         "example": "Pagination.demo.tsx",
-        "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift)."
+        "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift). Order M9.9 (proposed): variant dots, one system Button per page in a track, roving tab index, compact half control; the current dot widens by clip-path on a CSS transition."
       },
       "angular": {
         "status": "planned",
@@ -15633,13 +15930,14 @@
       },
       "native": {
         "status": "planned",
-        "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones."
+        "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones. Dots (R5): the system page control on iOS, a drawn row of dots on Android, each with accessibilityState selected and adjustable actions for the next and previous page."
       }
     },
     "styles": {
       "studio": "Ghost page buttons at regular weight, the current page bold with a soft fill and a muted text color border, pixel chevrons on the ends.",
       "desk": "The same from the Desk tokens: pill controls, the current page bordered.",
-      "neutral": "Takes the tokens of the Neutral style, no recipe."
+      "neutral": "Takes the tokens of the Neutral style, no recipe. Dots: on ios a small solid platter behind the dots; elsewhere none.",
+      "liquid": "Numbers from the Liquid tokens. Dots: on ios a small glass platter behind the dots (look request of order M9.9); on web and android no platter."
     },
     "mistakes": [
       {
@@ -15661,6 +15959,18 @@
       {
         "wrong": "Eastern Arabic digits in the page numbers",
         "right": "Western digits, the default in both languages"
+      },
+      {
+        "wrong": "A row of 8px dots packed 16 apart, each its own button",
+        "right": "variant dots, which keeps a 24 target for each dot"
+      },
+      {
+        "wrong": "Dots as the only way to move between carousel slides on a swipe only screen",
+        "right": "Dots plus the swipe, and previous and next buttons where the slides hold actions"
+      },
+      {
+        "wrong": "Forty dots across a phone",
+        "right": "Numbers past about 12 pages; dots past the width turn into one half and half control"
       }
     ],
     "contract": {
@@ -15668,7 +15978,12 @@
         "first",
         "last",
         "ellipsis",
-        "summary"
+        "summary",
+        "page",
+        "previous",
+        "next",
+        "track",
+        "dot"
       ]
     },
     "since": "0.1.0"
@@ -20206,6 +20521,252 @@
     "since": "0.1.0"
   },
   {
+    "name": "SelectionMenu",
+    "kind": "component",
+    "family": "overlay",
+    "summary": "A horizontal menu of actions over a selection or a point: the edit menu capsule (cut, copy, paste and the app's own actions). It is for selections the app draws (a message, a canvas object, a chip, a block of read only text), never inside a native text field. On web, ios and android it is the same capsule above the selection, below it when there is no room above; on ios its entries are 44 tall, on android 48 (Material's text selection toolbar has the same form). Proposed, order M9.11.",
+    "useWhen": [
+      "A person selected text or an object the app draws and needs the actions for it right there: copy, a look up, a highlight, a note",
+      "A long press or a drag selection on a phone, where a context menu would cover the selection",
+      "A short row of two to six actions; more go behind the forward control"
+    ],
+    "avoidWhen": [
+      "Text a person types in an Input, a Textarea or an editable region: the browser's own menu serves it",
+      "A long list of actions with groups, checks or submenus",
+      "Actions on a whole row or a whole page, not on what is selected"
+    ],
+    "insteadUse": {
+      "A long list of actions on an element, opened by a right click or a long press": "ContextMenu",
+      "A list of actions behind a button": "DropdownMenu",
+      "Actions for a bar that stays on screen": "Toolbar"
+    },
+    "anatomy": [
+      "root",
+      "item",
+      "separator",
+      "more"
+    ],
+    "slots": {
+      "item": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "items": {
+        "type": "array",
+        "required": true,
+        "description": "The actions in reading order, each { id, label, icon?, tone?, onSelect, disabled? }. label is the visible text and the accessible name. tone danger draws a destructive action. disabled stays focusable with aria-disabled. Put editActions() first for cut, copy and paste."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "Open, controlled."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "Open at first, uncontrolled."
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with the new open state: after an action, on Escape, on Tab, on a press outside, and when the owner opens it."
+      },
+      "anchor": {
+        "type": "object",
+        "description": "What the menu points at: a Range, a DOMRect, or a function that returns the box now. Without it, the selection the owner opened it for, else the owner's box."
+      },
+      "owner": {
+        "type": "object",
+        "description": "A ref to the element that holds the selection. Given, the menu opens itself on Shift+F10 or the context menu key while the owner has focus, and after a pointer selection inside it, and focus returns to it when the menu closes from inside. It never opens for a selection inside a text field."
+      },
+      "label": {
+        "type": "string",
+        "description": "The accessible name of the menu. Default Selection actions, إجراءات التحديد."
+      },
+      "overflowLabel": {
+        "type": "string",
+        "description": "The accessible name of the forward control on a page that overflows. Default More actions, إجراءات أكثر."
+      },
+      "backLabel": {
+        "type": "string",
+        "description": "The accessible name of the back control. Default Previous actions, الإجراءات السابقة."
+      },
+      "focusOnOpen": {
+        "type": "boolean",
+        "description": "Move focus to the first action on open. Default: only when the menu opened from the keyboard; a pointer selection keeps focus where it is."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "menu with aria-orientation horizontal, named by label, not modal: the page stays usable and a press outside closes it. Each action and the forward and back controls are menuitem. Separators are aria-hidden.",
+      "focus": "One tab stop, a roving tabindex. Opened from the keyboard (Shift+F10, the context menu key), focus moves to the first action; opened by a pointer selection, focus stays on the page and the selection keeps its look. A press on the menu never takes focus or clears the selection. Paging moves focus to the first action of the new page when focus was in the menu. Closing from inside returns focus to the owner. A 2px inset ring from color.focus.ring.",
+      "keys": {
+        "Shift+F10": "On the owner, with a selection or without: opens the menu over the selection (or the owner) and moves focus to the first action",
+        "ContextMenu": "The context menu key: the same as Shift+F10",
+        "ArrowRight": "Moves focus one entry to the right: the next in English, the previous in Arabic",
+        "ArrowLeft": "Moves focus one entry to the left: the previous in English, the next in Arabic",
+        "Home": "Moves focus to the first entry of the row",
+        "End": "Moves focus to the last entry of the row",
+        "Enter, Space": "Runs the focused action and closes the menu; on the forward or back control, shows the next or the previous page",
+        "Escape": "Closes the menu and returns focus to the owner when focus was in the menu",
+        "Tab": "Closes the menu and returns focus to the owner. Not modal"
+      },
+      "announce": "Selection actions, menu, horizontal. Each action by its label. The forward control: More actions. Paste reads the clipboard only inside the press, a user activation.",
+      "native": {
+        "accessibilityRole": "menu"
+      },
+      "notes": [
+        "Entries are at least size.target tall (24 on web, 44 on ios, 48 on android), and the forward control is square (WCAG 2.5.8).",
+        "Labels are text at 4.5:1 on the capsule; the capsule edge, the hairlines and the platter are not the only signal of anything (1.4.3, 1.4.11). Under more contrast the edge and the hairlines take border.strong; under forced colors the capsule is Canvas with a CanvasText border and the lit entry is Highlight.",
+        "The menu opens above the selection, below it when there is no room above, and never covers it when either side has room (2.4.11). It hides while the selection is scrolled out of view.",
+        "Clipboard access is feature tested, never assumed: editActions() offers copy only when text can be written, cut only when also onCut is given, paste only when text can be read and onPaste is given.",
+        "It never opens inside a native input, a textarea or an editable region (isTextEntry in @the-system/shared)."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "One or two words, a verb: Copy, Look up, Highlight, Add note. Sentence case. The built in actions are Cut, Copy and Paste, as on every platform.",
+        "count": "Two to six actions in view; the rest page behind the forward control."
+      },
+      "ar": {
+        "label": "كلمة أو كلمتان بصيغة اسمية بدون تشكيل: نسخ، بحث، تمييز، إضافة ملاحظة. الأفعال المضمنة: قص، نسخ، لصق.",
+        "count": "من إجراءين إلى ستة ظاهرة، والباقي خلف زر الإجراءات الأكثر. الأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "color.bg.surface-3",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.text.default",
+      "color.state.danger.text",
+      "color.border.default",
+      "color.border.strong",
+      "color.focus.ring",
+      "elevation.menu",
+      "radius.pill",
+      "menu.item.height",
+      "size.target",
+      "space.2xs",
+      "space.s",
+      "space.xl",
+      "font.family.sans",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.regular",
+      "font.leading.snug",
+      "font.leading.arabic.snug",
+      "border.width.default",
+      "border.width.strong",
+      "opacity.disabled",
+      "z.menu",
+      "scale.menu-enter",
+      "distance.shift",
+      "duration.spring-snappy",
+      "duration.quick",
+      "duration.fast",
+      "ease.spring-snappy",
+      "ease.exit",
+      "ease.standard"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "Radix Popover (not modal) on a virtual anchor with role menu, a roving tabindex of menuitems, selectionSide, pageActions, rangeRect, isTextEntry, isMenuKey and clipboardAccess from @the-system/shared",
+        "example": "SelectionMenu.demo.tsx",
+        "note": "Interaction selection-menu-pop on pattern menu-scale: the capsule grows from scale.menu-enter out of the selection side on the snappy spring and leaves faster. Under reduced motion it appears and leaves at once. Paging swaps the row at once."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: [dsSelectionMenu] on a CDK overlay with a flexible position strategy and the same shared helpers."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system edit menu (a system view): the text selection menu of a Text or TextInput on ios and android, with the app's own actions added to it. No drawn capsule."
+      }
+    },
+    "styles": {
+      "web": "A capsule as tall as one row above the selection: text actions split by short hairlines, the forward control a round platter at the end.",
+      "ios": "The same capsule, entries 44 tall, the label at the body large size; the platform's edit menu.",
+      "android": "The same capsule, entries 48 tall (the Material text selection toolbar has the same form).",
+      "studio": "The menu surface of Studio (surface 3, the menu shadow) in a capsule; no recipe yet.",
+      "desk": "The menu surface of Desk in a capsule; no recipe yet.",
+      "neutral": "The menu surface of Neutral in a capsule; no recipe yet.",
+      "liquid": "Proposed: the glass of the Liquid menu on the capsule, once its DropdownMenu recipe lists selection-menu."
+    },
+    "mistakes": [
+      {
+        "wrong": "Opening it over text in an Input or a Textarea",
+        "right": "Leave text fields to the browser's own menu; SelectionMenu is for selections the app draws"
+      },
+      {
+        "wrong": "Showing Paste on every page",
+        "right": "editActions({ onPaste }), which shows Paste only where the clipboard can be read"
+      },
+      {
+        "wrong": "Moving focus into the menu after a pointer selection",
+        "right": "Keep focus on the page; Shift+F10 or the context menu key moves focus in"
+      },
+      {
+        "wrong": "Icon only actions with no visible label",
+        "right": "A short label on every action; the icon is optional and drawn before it"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "more",
+        "separator"
+      ],
+      "keys": {
+        "Shift+F10": {
+          "focus": "[data-demo-target]",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ContextMenu": {
+          "focus": "[data-demo-target]",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ArrowRight": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']",
+          "expect": "focus-moves"
+        },
+        "ArrowLeft": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']:last-of-type",
+          "expect": "focus-moves"
+        },
+        "Home": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']:last-of-type",
+          "expect": "focus-moves"
+        },
+        "End": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']",
+          "expect": "focus-moves"
+        },
+        "Enter": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']",
+          "expect": "closes"
+        },
+        "Space": {
+          "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+          "focus": "[data-ds='selection-menu'] > [data-part='item']",
+          "expect": "closes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Separator",
     "kind": "component",
     "family": "layout",
@@ -20343,6 +20904,275 @@
         "right": "One or two words; a sentence belongs in a heading or a paragraph"
       }
     ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "SharePanel",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "The share button and the app's own share panel. A press shares through the system share sheet first (share() in @the-system/shared calls navigator.share on the web) and opens the panel only where there is none. The panel shows the item, the app's own people, its own targets and actions on the item, with Copy link and More options built in. On ios and android it is a Sheet from the bottom edge (the system sheet comes first, as Chrome on Android and Safari on iOS have it); on web and macos it is a Popover from the share button.",
+    "useWhen": [
+      "A Share button on an item with a link: a trip, a post, a document",
+      "Sending an item to people or places inside the app: a chat in the app, a shared list, a board",
+      "Where the system share sheet is missing (Firefox on desktop, Chrome on Linux) and the item still has to be shared"
+    ],
+    "avoidWhen": [
+      "Showing the device's apps or contacts: a web page cannot list them, only the system sheet can",
+      "Choosing among actions that do not share the item: Delete, Rename, Move",
+      "A single Copy link control beside a link"
+    ],
+    "insteadUse": {
+      "Actions on one object that do not share it": "ActionSheet on phones, DropdownMenu on web",
+      "Copying one value": "CopyButton",
+      "Sharing with no panel at all": "share() from @the-system/shared on a Button press"
+    },
+    "anatomy": [
+      "root",
+      "preview",
+      "link",
+      "text",
+      "people",
+      "person",
+      "targets",
+      "target",
+      "actions",
+      "action"
+    ],
+    "slots": {
+      "person": {
+        "accepts": "text"
+      },
+      "target": {
+        "accepts": "text"
+      },
+      "action": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "item": {
+        "type": "object",
+        "required": true,
+        "description": "What is shared: { title, url?, image?, text? }. The title names the panel (the container's title) and is the title of the system share; the url is shown in the preview as host and path, copied by Copy link and passed to the system share; the image is a decorative picture in the preview; the text goes to the system share and shows under the link."
+      },
+      "people": {
+        "type": "array",
+        "default": "[]",
+        "description": "The app's own people, the first row: { id, name, avatar? }. The name is drawn under the avatar and is the button's name; the avatar is decorative. Never the device's contacts: a page cannot read them."
+      },
+      "targets": {
+        "type": "array",
+        "default": "[]",
+        "description": "The app's own places to send to, the second row: { id, label, icon }. icon is a system icon name or a node, decorative next to the label. Our own icons only, never a third party app icon or name."
+      },
+      "actions": {
+        "type": "array",
+        "default": "[]",
+        "description": "Actions on the item, the last row, between Copy link and More options: { id, label, icon, onSelect, disabled? }. A press runs onSelect and closes the panel; a disabled action is aria-disabled and stays in the row."
+      },
+      "onShare": {
+        "type": "function",
+        "description": "Called with (id, kind) for a press on a person (kind person) or a target (kind target). The panel then closes."
+      },
+      "system": {
+        "type": [
+          "prefer",
+          "never"
+        ],
+        "default": "prefer",
+        "description": "The trigger press. prefer calls share(), which opens the system share sheet where it exists and can take the item, and opens the panel only on 'fallback'. never always opens the panel: for an app whose targets are its own; More options still reaches the system sheet."
+      },
+      "onResult": {
+        "type": "function",
+        "description": "Called with the result of each trigger press: 'system' (shared through the system sheet), 'cancelled' (the person closed the system sheet; nothing opens) or 'fallback' (the panel opened)."
+      },
+      "copyLink": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows the built in Copy link action, first in the actions row, when the item has a url and the page can write to the clipboard (feature tested after mount). A copy shows the toast Link copied, or Could not copy link."
+      },
+      "moreOptions": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows the built in More options action, last in the actions row, only where the system share sheet exists and can take the item (feature tested after mount). It calls the system sheet and closes the panel."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state of the panel, with onOpenChange. Opening it directly skips the system sheet."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with true when the panel opens and false for Escape, the close control, an outside press on web, a press on an item, and a drag down on a phone."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close share panel",
+        "description": "The accessible name of the container's close control. Arabic default under lang ar: إغلاق المشاركة."
+      },
+      "lang": {
+        "type": "string",
+        "description": "The language of the built in words (en or ar). Default the theme's language."
+      },
+      "children": {
+        "type": "node",
+        "description": "One element, a system Button: the share button. It gets aria-haspopup dialog and aria-expanded; a press shares, a second press closes the panel. The web popover points at it. Without it the panel is controlled only and is always a Sheet."
+      }
+    },
+    "states": [
+      "open",
+      "closed"
+    ],
+    "a11y": {
+      "role": "The container is a dialog named by the item title: modal on ios and android (the Sheet), not modal on web and macos (the Popover). Inside, each row is a group named People, Share to and Actions. The share button has aria-haspopup dialog and aria-expanded.",
+      "focus": "On open, focus goes to the first item of the first row (data-autofocus). Each row is one Tab stop, the item focus was last on in that row. On close, focus returns to the share button.",
+      "keys": {
+        "Enter": "On the share button: shares, through the system sheet first. On an item: sends to that person or target, or runs the action, and closes the panel",
+        "Space": "The same as Enter",
+        "Tab": "Moves from row to row, then to the container's close control",
+        "ArrowRight": "Moves focus to the next item in the row; in right to left, the previous one",
+        "ArrowLeft": "Moves focus to the previous item in the row; in right to left, the next one",
+        "Home": "Moves focus to the first item in the row",
+        "End": "Moves focus to the last item in the row",
+        "Escape": "Closes the panel and returns focus to the share button"
+      },
+      "announce": "Dialog, then the item title. Each row reads as a group with its name, each item as a button named by its label or the person's name. Copy link confirms with the toast Link copied.",
+      "native": {
+        "accessibilityRole": "button"
+      },
+      "notes": [
+        "The system share sheet comes first (frameworks.md, System services). share() resolves 'cancelled' for an AbortError, so closing the system sheet never opens the panel on top of it.",
+        "A page cannot list the device's apps or contacts. The panel shows only what the app passes in, and More options reaches the system sheet where it exists.",
+        "Tiles are at least 60 wide and 44 tall (WCAG 2.5.8 asks 24 by 24).",
+        "Avatars and target and action icons are decorative: the visible label beside them is the name (WCAG 1.1.1).",
+        "Rows scroll inline when their tiles do not fit, so the page never scrolls sideways at 320 wide (WCAG 1.4.10). A row starts at the inline start: the right in Arabic.",
+        "The link in the preview is isolated left to right (bdi dir ltr), in Arabic too; the line itself keeps the panel's direction, so it starts at the right in Arabic.",
+        "No native title attribute. Under forced colors the drawn tiles keep a CanvasText edge."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "The item's own title, as it reads in the app: Weekend in AlUla.",
+        "people": "Names as the person wrote them.",
+        "targets": "A noun for the place, sentence case: Trip board, Message, Email.",
+        "actions": "A verb plus a noun, sentence case: Add to list, Save image. Built in: Copy link, More options.",
+        "groups": "People, Share to, Actions."
+      },
+      "ar": {
+        "title": "عنوان العنصر كما هو في التطبيق: عطلة في العلا.",
+        "people": "الأسماء كما كتبها أصحابها.",
+        "targets": "اسم المكان بصيغة اسمية بدون تشكيل: لوحة الرحلة، رسالة، بريد.",
+        "actions": "صيغة اسمية بدون تشكيل: إضافة للقائمة، حفظ الصورة. الكلمات المضمنة: نسخ الرابط، خيارات إضافية.",
+        "groups": "الأشخاص، المشاركة عبر، الإجراءات. الأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.l",
+      "size.control.lg",
+      "radius.sm",
+      "radius.card",
+      "radius.pill",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.weight.regular",
+      "font.leading.tight",
+      "font.leading.snug",
+      "font.leading.arabic.tight",
+      "color.text.default",
+      "color.text.muted",
+      "color.bg.surface-3",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.border.hairline",
+      "color.border.strong",
+      "border.width.default"
+    ],
+    "motion": "sheet",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "share() from @the-system/shared on the trigger press; Sheet (radix:Dialog) on ios and android, Popover (radix:Popover) on web and macos; roving tabindex per row",
+        "example": "SharePanel.demo.tsx",
+        "note": "No motion of its own: on ios and android the Sheet's pattern (sheet), on web the Popover's (menu-scale). Reduced motion follows the container."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: the same DOM inside the Angular Sheet and Popover, calling the same share() from @the-system/shared."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5: the system share sheet through Share from react-native (no dependency), which always exists there; the panel for the app's own targets drawn in a system bottom sheet (ruling 8: share is a system view)."
+      }
+    },
+    "styles": {
+      "web": "A popover from the share button with its arrow: the title, the preview, then rows of tiles.",
+      "ios": "The system share sheet first. The panel is a sheet from the bottom edge with a grabber, the title and a round close at the top: the preview, a row of people, a row of rounded square targets, a row of round actions, rows separated by hairlines.",
+      "android": "The system share sheet first (Chrome on Android). The panel is a bottom sheet in Material spacing with the same rows.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe yet (the iOS look is order M9.13).",
+      "liquid": "The same on the Liquid tokens inside the glass sheet; no recipe yet (the iOS look is order M9.13)."
+    },
+    "mistakes": [
+      {
+        "wrong": "Opening the panel before trying the system share sheet",
+        "right": "system prefer (the default): the panel opens only on 'fallback'"
+      },
+      {
+        "wrong": "Opening the panel when the person closed the system sheet",
+        "right": "Treat 'cancelled' as nothing happened"
+      },
+      {
+        "wrong": "Third party app icons or names as targets",
+        "right": "The app's own places with our own icons; More options reaches the other apps through the system sheet"
+      },
+      {
+        "wrong": "Calling share() outside a press",
+        "right": "Call it from a click or a key press: the system sheet needs a user gesture"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "preview",
+        "link",
+        "text",
+        "people",
+        "person",
+        "targets",
+        "target"
+      ],
+      "keys": {
+        "ArrowRight": {
+          "open": "[data-demo-trigger='many']",
+          "focus": "[data-ds='share-panel'] > [role='group'] > [data-part][tabindex='0']",
+          "expect": "focus-moves"
+        },
+        "End": {
+          "open": "[data-demo-trigger='many']",
+          "focus": "[data-ds='share-panel'] > [role='group'] > [data-part][tabindex='0']",
+          "expect": "focus-moves"
+        },
+        "ArrowLeft": {
+          "open": "[data-demo-trigger='many']",
+          "focus": "[data-ds='share-panel'] > [role='group'] > [data-part]:last-child",
+          "expect": "focus-moves"
+        },
+        "Home": {
+          "open": "[data-demo-trigger='many']",
+          "focus": "[data-ds='share-panel'] > [role='group'] > [data-part]:last-child",
+          "expect": "focus-moves"
+        }
+      }
+    },
     "since": "0.1.0"
   },
   {
@@ -23873,7 +24703,7 @@
     "name": "TabBar",
     "kind": "component",
     "family": "navigation",
-    "summary": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked.",
+    "summary": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked. An optional search item goes last: on web and android it is the last item of the bar, on ios a round item beside the capsule (under it in the side column), and while current it can turn into a search field.",
     "useWhen": [
       "Three to five top level destinations of an app on a phone width layout",
       "Destinations a person moves between often and wants one thumb tap away",
@@ -23898,15 +24728,18 @@
       "item-icon",
       "item-label",
       "item-badge",
-      "item-status"
+      "item-status",
+      "search"
     ],
     "parts": {
-      "TabBarItem": "item"
+      "TabBarItem": "item",
+      "TabBarSearch": "search"
     },
     "slots": {
       "root": {
         "accepts": [
-          "TabBarItem"
+          "TabBarItem",
+          "TabBarSearch"
         ],
         "min": 3,
         "max": 5
@@ -23935,20 +24768,20 @@
       },
       "label": {
         "type": "string",
-        "description": "TabBarItem: the visible name, a short noun. Always shown; a long one ends in an ellipsis and stays whole in the link name."
+        "description": "TabBarItem: the visible name, a short noun. Always shown; a long one ends in an ellipsis and stays whole in the link name. TabBarSearch: required, the destination's name and the link name (Search; Arabic بحث); drawn under the glyph on web and android, kept as the name on ios where the round item shows the glyph only."
       },
       "icon": {
         "type": "string",
-        "description": "TabBarItem: a system icon name. Decorative."
+        "description": "TabBarItem: a system icon name. Decorative. TabBarSearch: default search."
       },
       "href": {
         "type": "string",
-        "description": "TabBarItem: the destination."
+        "description": "TabBarItem: the destination. TabBarSearch: the search destination; optional when onSelect is given."
       },
       "active": {
         "type": "boolean",
         "default": false,
-        "description": "TabBarItem: the current destination. Sets aria-current page and data-active: a bolder label and a pill behind the icon."
+        "description": "TabBarItem and TabBarSearch: the current destination. Sets aria-current page and data-active: a bolder label and a pill behind the icon."
       },
       "badge": {
         "type": "number | boolean",
@@ -23962,27 +24795,36 @@
       "asChild": {
         "type": "boolean",
         "default": false,
-        "description": "TabBarItem: renders its one child element (a router link) as the item."
+        "description": "TabBarItem and TabBarSearch: renders its one child element (a router link) as the item."
+      },
+      "onSelect": {
+        "type": "(event) => void",
+        "description": "TabBarSearch: called on a press of the item, before the link is followed; it may call preventDefault. Without href the item is a focusable link (tabindex 0) that only calls onSelect, on a press or Enter."
+      },
+      "field": {
+        "type": "ReactElement (a SearchField)",
+        "description": "TabBarSearch: a SearchField the item turns into while active, stamped data-expanded on the search part. The field takes label as its accessible name unless it has its own aria-label. When the item had focus or was pressed, focus moves into the field, and back to the link when the field goes. Default none: the item stays a link."
       }
     },
     "states": [
       "data-active",
       "data-dot",
       "data-pressed",
-      "data-placement=bottom|side"
+      "data-placement=bottom|side",
+      "data-expanded"
     ],
     "a11y": {
       "role": "navigation (the nav landmark) with a name; each item is a link, the current one with aria-current page.",
-      "focus": "Every item is a tab stop, in reading order, in every placement. The arrow keys move focus along the bar as it is drawn, as a help; they never take an item out of the tab order.",
+      "focus": "Every item, the search item included, is a tab stop, in reading order, in every placement. The arrow keys move focus along the bar as it is drawn, as a help; they never take an item out of the tab order. While the search item is its field, the field is the tab stop and keeps its own arrow keys; the arrows of the bar skip it.",
       "keys": {
         "Tab": "Moves to the next item",
         "Shift+Tab": "Moves to the previous item",
         "Enter": "Follows the link",
-        "ArrowRight, ArrowLeft": "In a row (bottom, or auto drawn as a row): the next or previous item in the reading direction (flipped in RTL), wrapping",
-        "ArrowDown, ArrowUp": "In a column (side, or auto drawn as a column): the next or previous item, top to bottom, wrapping; not flipped in RTL",
+        "ArrowRight, ArrowLeft": "In a row (bottom, or auto drawn as a row): the next or previous item in the reading direction (flipped in RTL), wrapping; the search item is the last stop",
+        "ArrowDown, ArrowUp": "In a column (side, or auto drawn as a column): the next or previous item, top to bottom, wrapping; not flipped in RTL; the search item, under the capsule, is the last stop",
         "Home, End": "The first or last item"
       },
-      "announce": "Each link reads its label, its badge words (Inbox, 3 new) and current page for the active one.",
+      "announce": "Each link reads its label, its badge words (Inbox, 3 new) and current page for the active one. The search item reads Search, current page; while it is a field the field reads as a search box named Search.",
       "notes": [
         "The current item is marked by aria-current, a bolder label and a pill behind its icon, never by color alone (WCAG 1.4.1).",
         "Labels are always visible; icons are decorative.",
@@ -23995,17 +24837,22 @@
         "No aria-orientation: ARIA 1.2 does not allow it on the navigation role, and the bar stays a nav of links. Tab reaches every item in every placement, so the axis need not be announced.",
         "In the column the label is visually hidden by the CSS, never removed: it stays the link name (WCAG 1.1.1, 4.1.2). A hover hint for the column is not built yet: a Tooltip is markup, and under auto only the CSS knows the bar is a column.",
         "The DOM order never changes with placement, so the focus order is the same in a row and in a column (WCAG 2.4.3); in a PageShell the bar comes after main, at the bottom of the column.",
-        "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2)."
+        "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2).",
+        "Search item (order M9.9): the part search, last child of the bar, a link with aria-current page when current, so it behaves as any item (WCAG 4.1.2). Its label stays the link name on ios, where the round item draws only the glyph (WCAG 1.1.1, 2.5.3: the name contains Search).",
+        "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
+        "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
       ]
     },
     "content": {
       "en": {
         "label": "One short noun, sentence case: Home, Search, Inbox. No verbs.",
-        "landmark": "Name it after the app section, never the same name as another nav on the page."
+        "landmark": "Name it after the app section, never the same name as another nav on the page.",
+        "search": "The search item is named Search, or Search plus what it searches: Search the library. Field placeholder: what can be found, as nouns: Songs, artists and lists."
       },
       "ar": {
         "label": "Noun form labels, white Saudi dialect, no diacritics: الرئيسية، البحث، الوارد.",
-        "badge": "Western digits; the badge words read جديد."
+        "badge": "Western digits; the badge words read جديد.",
+        "search": "بحث، أو البحث في المكتبات. Placeholder as nouns: أغاني وفنانين وقوائم."
       }
     },
     "tokens": [
@@ -24044,7 +24891,9 @@
       "ease.spring-bouncy",
       "scale.anticipate",
       "distance.nudge",
-      "delay.stagger"
+      "delay.stagger",
+      "duration.base",
+      "ease.out"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -24052,7 +24901,7 @@
         "status": "ready",
         "behavior": "hand built nav of links",
         "example": "TabBar.demo.tsx",
-        "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves."
+        "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves. Order M9.9 (proposed): TabBarSearch, the search part; while it is its field the field fades in (pattern fade on duration.base, CSS keyframes), none under reduced motion."
       },
       "angular": {
         "status": "planned",
@@ -24061,14 +24910,14 @@
       "native": {
         "status": "planned",
         "behavior": "react-navigation bottom tabs or a hand built bar",
-        "note": "44pt on iOS, 48dp on Android; safe area from react-native-safe-area-context."
+        "note": "44pt on iOS, 48dp on Android; safe area from react-native-safe-area-context. Search item (R5): the system tab bar's search role on iOS, a normal destination on Android."
       }
     },
     "styles": {
       "studio": "A surface-2 bar with a subtle top hairline, muted labels, the current item bright and bold with an overlay-20 pill behind its icon.",
       "desk": "The same parts on Desk tokens: the Desk surface and type.",
-      "neutral": "Token driven; applies once the Neutral pack is merged.",
-      "liquid": "Planned: a glass bar."
+      "neutral": "Token driven. On ios the same platform shape as Liquid, in Neutral's solid material: the search item a separate disc beside the capsule.",
+      "liquid": "On ios the platform paints the glass capsule; the search item is a separate glass disc beside it (under it in the column), with the tint on its glyph when current. While expanded the capsule shrinks to its current item and the field fills the rest (look request of order M9.9)."
     },
     "mistakes": [
       {
@@ -24102,12 +24951,21 @@
       {
         "wrong": "Choosing the placement in JavaScript from the window size",
         "right": "auto: the CSS decides from the PageShell's size, so the server render matches"
+      },
+      {
+        "wrong": "A Search TabBarItem in the middle of the bar on ios",
+        "right": "TabBarSearch, last in the bar, which ios draws as its own round item"
+      },
+      {
+        "wrong": "A search field placed in the bar by hand next to the items",
+        "right": "TabBarSearch with field, which keeps the destination, aria-current and focus"
       }
     ],
     "contract": {
       "optionalParts": [
         "item-badge",
-        "item-status"
+        "item-status",
+        "search"
       ]
     },
     "since": "0.1.0"

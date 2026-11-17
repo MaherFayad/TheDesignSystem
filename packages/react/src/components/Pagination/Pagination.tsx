@@ -16,6 +16,9 @@
 //     <button data-ds="icon-button" data-part="next">           chevron-forward
 //     <button data-ds="icon-button" data-part="last">           chevrons-forward
 //
+// With variant dots (order M9.9) the nav holds a track of dots instead:
+// see PaginationDots.tsx.
+//
 // Decisions:
 // - Page numbers come from pageRange in @the-system/shared: the row keeps the
 //   same length as the page changes, so controls do not jump under the
@@ -47,12 +50,15 @@ import { IconButton } from '../IconButton';
 import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
+import { PaginationDots } from './PaginationDots';
 
 const PAGE = ':scope > [data-part="page"]';
 const HOST = ':scope > [data-part="label"] span[aria-hidden="true"]';
 
 export type PaginationSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type PaginationShape = Extract<Shape, 'default' | 'pill' | 'square'>;
+/** numbers: page numbers with the ends and ellipses. dots: one dot per page, nothing else. */
+export type PaginationVariant = 'numbers' | 'dots';
 
 const digits = new Intl.NumberFormat('en-US');
 const n = (value: number) => digits.format(value);
@@ -82,6 +88,14 @@ const words = {
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'children' | 'onChange'> {
+  /**
+   * numbers (default): first, previous, page numbers, next and last.
+   * dots: one dot per page and nothing else, for a short flat set of pages
+   * (the screens of an onboarding, the slides of a carousel). Stamps
+   * data-variant="dots". The dots ignore itemCount, pageSize, siblings,
+   * boundaries, showEnds, getHref, size, shape and formatSummary.
+   */
+  variant?: PaginationVariant;
   /** The current page, from 1. Controlled, with onPageChange. */
   page?: number;
   /** The first page shown when uncontrolled. Default 1. */
@@ -115,8 +129,15 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'titl
   ref?: Ref<HTMLElement>;
 }
 
-/** Page controls with first, previous, numbers, next and last, and an optional item summary. */
-export function Pagination({
+/**
+ * Page controls with first, previous, numbers, next and last, and an
+ * optional item summary; or, with variant dots, one dot per page.
+ */
+export function Pagination({ variant = 'numbers', ...props }: PaginationProps) {
+  return variant === 'dots' ? <PaginationDots {...props} /> : <PaginationNumbers {...props} />;
+}
+
+function PaginationNumbers({
   page: pageProp,
   defaultPage = 1,
   onPageChange,
@@ -134,7 +155,7 @@ export function Pagination({
   formatSummary,
   ref,
   ...rest
-}: PaginationProps) {
+}: Omit<PaginationProps, 'variant'>) {
   const { lang } = useTheme();
   const t = words[lang === 'ar' ? 'ar' : 'en'];
   // A page size or item count that is not a finite number never reaches the count or the summary.

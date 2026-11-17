@@ -1,0 +1,264 @@
+{
+  "name": "ActionSheet",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A short list of actions on one object, opened from the control that names it: the person picks one action or cancels. On ios a card anchored to the control that opened it, over its corner, with stacked capsules and Cancel as the last, quieter one; on android a bottom sheet of text rows; on web a card anchored to the trigger when there is room beside it, else in the center. Order M9.10, proposed.",
+  "useWhen": [
+    "Three to six actions on one object, opened from a more button or a row's menu button: duplicate, move, share, delete",
+    "A phone layout where a menu's small rows would be hard to hit and each action needs a full width target",
+    "One of the actions removes the object and the person should see it next to the safer ones"
+  ],
+  "avoidWhen": [
+    "A question about one action that cannot be undone",
+    "Commands a person runs often from a desktop toolbar",
+    "Picking a value that stays shown in a field",
+    "More than about six actions, or actions in groups with headings"
+  ],
+  "insteadUse": {
+    "A question about one action that cannot be undone": "AlertDialog",
+    "Commands from a toolbar or a desktop app": "DropdownMenu",
+    "Picking a value": "Select",
+    "Many grouped actions": "DropdownMenu with groups, or a Sheet"
+  },
+  "anatomy": [
+    "root",
+    "backdrop",
+    "panel",
+    "title",
+    "description",
+    "actions",
+    "action",
+    "cancel"
+  ],
+  "parts": {
+    "ActionSheetContent": "panel",
+    "ActionSheetAction": "action",
+    "ActionSheetCancel": "cancel"
+  },
+  "slots": {
+    "title": {
+      "accepts": "text",
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "actions": {
+      "accepts": [
+        "ActionSheetAction",
+        "ActionSheetCancel"
+      ],
+      "min": 1,
+      "max": 7
+    }
+  },
+  "props": {
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with false for an action, Cancel, Escape and a press outside."
+    },
+    "placement": {
+      "type": [
+        "auto",
+        "anchored",
+        "bottom",
+        "center"
+      ],
+      "default": "auto",
+      "description": "Where the sheet sits, stamped as data-placement on the root and held while it is open. auto: anchored on ios (the card covers the corner of its trigger); bottom on android; on web and macos anchored when the viewport is at least 360 wide and there is at least 280 of height above or below the trigger, else center. anchored with no trigger falls back to center."
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": true,
+      "description": "false: Escape and a press outside do nothing, while an action runs."
+    },
+    "title": {
+      "type": "node",
+      "description": "ActionSheetContent: a short title that names the object. Optional: the trigger often names it already."
+    },
+    "description": {
+      "type": "node",
+      "description": "ActionSheetContent: one sentence about what the actions do."
+    },
+    "label": {
+      "type": "string",
+      "description": "ActionSheetContent: the accessible name when there is no title (Actions for Spring launch). Rendered as a visually hidden title."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "ActionSheetContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel."
+    },
+    "ActionSheetTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button or IconButton, rendered as the trigger with aria-haspopup dialog, aria-expanded and aria-controls. An anchored sheet is placed next to it, and focus returns to it."
+    },
+    "ActionSheetAction.tone": {
+      "type": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "ActionSheetAction: danger for an action that deletes or removes. With one, the panel is an alertdialog and focus opens on Cancel."
+    },
+    "ActionSheetAction": {
+      "type": "node",
+      "description": "One action, a Button (size lg, full width, label wraps; soft capsules, ghost rows at the bottom). onClick runs, then the sheet closes unless onClick called event.preventDefault(). disabled keeps it focusable with aria-disabled."
+    },
+    "ActionSheetCancel": {
+      "type": "node",
+      "description": "The way out, always the last item, a ghost Button marked data-dialog-cancel. Default label Cancel, إلغاء in Arabic. Added when none is given."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-placement=anchored|bottom|center"
+  ],
+  "a11y": {
+    "role": "dialog (the panel), or alertdialog when an action is tone danger. Modal: the rest of the page is hidden from assistive tech and focus stays inside. Named by the title, or by label as a visually hidden title; described by the description.",
+    "focus": "On open, focus goes to Cancel when an action is tone danger, else to the first action that is not disabled. On close, focus returns to the trigger, or to the element that had focus before; when that is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
+    "keys": {
+      "ArrowDown": "Moves to the next item (actions, then Cancel) and wraps from the last to the first",
+      "ArrowUp": "Moves to the previous item and wraps from the first to the last",
+      "Home": "Moves to the first action",
+      "End": "Moves to Cancel",
+      "Tab": "Moves through the items inside the sheet and wraps",
+      "Shift+Tab": "Moves back through the items inside the sheet and wraps",
+      "Enter": "Runs the focused item and closes the sheet",
+      "Space": "Runs the focused item and closes the sheet",
+      "Escape": "Cancels and closes the sheet, unless dismissible is false"
+    },
+    "announce": "The role (dialog, or alertdialog with a destructive action), the title and the description are read when it opens, then the focused item.",
+    "notes": [
+      "A press outside the panel cancels, as Cancel does (not for an AlertDialog, which asks a question).",
+      "The anchored card stays on screen: it flips above its trigger and shifts along the edge, 16 px from the viewport edges, and its height is held to the room it has; past that the panel scrolls (WCAG 2.4.11, 1.4.10).",
+      "Items are at least 44 px tall in every style, 48 px on ios (WCAG 2.5.8). A danger label uses the danger text color, 4.5:1 on its fill (WCAG 1.4.3).",
+      "Focus order: actions in the order given, then Cancel (WCAG 2.4.3).",
+      "Right to left: the card lines up with the trigger's outer edge as positioned, the text at the inline start (right), the items in the same order.",
+      "No native title attribute."
+    ],
+    "native": {
+      "accessibilityRole": "menu",
+      "accessibilityState": [
+        "expanded"
+      ]
+    }
+  },
+  "content": {
+    "en": {
+      "title": "Optional, the name of the object: Spring launch. No question: that is an AlertDialog.",
+      "description": "Optional, one sentence: The board is shared with 4 people.",
+      "action": "A verb plus a noun, sentence case: Duplicate board, Move to folder, Delete board. Never OK, Yes, Continue or Confirm.",
+      "cancel": "Cancel, the built in word."
+    },
+    "ar": {
+      "title": "اسم العنصر: إطلاق الربيع",
+      "description": "جملة وحدة: اللوحة مشاركة مع 4 أشخاص.",
+      "action": "Noun form labels, no diacritics: نسخ اللوحة، نقل للمجلد، حذف اللوحة.",
+      "cancel": "إلغاء"
+    }
+  },
+  "tokens": [
+    "dialog.width.sm",
+    "dialog.width.md",
+    "dialog.height.max",
+    "color.bg.surface",
+    "color.bg.scrim",
+    "color.bg.scrim-80",
+    "color.border.default",
+    "color.border.strong",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "radius.panel",
+    "radius.sheet",
+    "radius.control",
+    "elevation.menu",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "space.xs",
+    "space.s",
+    "space.l",
+    "space.xl",
+    "size.control.lg",
+    "font.family.sans",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.normal",
+    "scale.menu-enter",
+    "duration.spring-bouncy",
+    "duration.spring-soft",
+    "duration.quick",
+    "ease.spring-bouncy",
+    "ease.spring-soft",
+    "ease.out",
+    "ease.exit",
+    "z.dialog"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Popover (anchored, modal), radix:Dialog (bottom and center)",
+      "example": "ActionSheet.demo.tsx",
+      "note": "Built on DialogBase (Dialog folder): the themed portal, the focus return, toasts above. The placement is resolved when it opens and picks the primitive. Motion: menu-scale when anchored (it grows out of its trigger's corner on the bouncy spring), the dialog grow in the center, the sheet rise at the bottom; reduced motion has none."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM, CDK Overlay with a flexible connected position for anchored, the Angular Dialog layer for bottom and center."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system view: ActionSheetIOS (anchored to its source on iPad) on ios, a drawn bottom sheet of rows on android."
+    }
+  },
+  "styles": {
+    "web": "Anchored to the trigger when there is room, else a centered card; the style's surface, soft capsule actions, a ghost Cancel.",
+    "ios": "The card anchored to the control that opened it, over its corner, 300 wide on the clear glass of menus; title and description at the leading edge; stacked capsules 48 tall, 8 apart, the danger label red on the gray capsule; Cancel last and quieter. No separate cancel group and no scrim (look order M9.13).",
+    "android": "A bottom sheet with rounded top corners over a scrim: the title, then text rows 48 tall at the inline start, Cancel the last row (look order M9.13).",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe yet.",
+    "liquid": "The same on the Liquid tokens; the ios glass comes from the platform file (look order M9.13)."
+  },
+  "mistakes": [
+    {
+      "wrong": "An action sheet that asks a question with Yes and No",
+      "right": "An AlertDialog with Delete board and Keep board"
+    },
+    {
+      "wrong": "A sheet with no Cancel on a phone",
+      "right": "Leave Cancel in: the content adds one when none is given"
+    },
+    {
+      "wrong": "The destructive action first and focused",
+      "right": "Give it tone danger: focus opens on Cancel"
+    },
+    {
+      "wrong": "A sheet opened from a control that does not name the object",
+      "right": "A trigger labelled for the object (More options for Spring launch), or a title"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "backdrop",
+      "title",
+      "description"
+    ]
+  },
+  "since": "0.1.0"
+}

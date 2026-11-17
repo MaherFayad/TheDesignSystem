@@ -15,6 +15,11 @@
 //       <span data-part="item-icon">                       a system icon, decorative
 //         <span data-part="item-badge">                    a count or a dot, on the icon's corner
 //       <span data-part="item-label">                      always visible
+//     <a data-part="search" href aria-current="page"?>     TabBarSearch, last child (order M9.9)
+//       <span data-part="item-icon">                       the search glyph, decorative
+//       <span data-part="item-label">                      the name; drawn on web and android
+//     <div data-part="search" data-expanded>               the same item while active with a field
+//       <div data-ds="search-field">                       the app's SearchField
 //
 // The badge text is part of the link name ("Inbox, 3 new"); a dot badge
 // says its words in visually hidden text. The bar pads its block end by the
@@ -35,7 +40,19 @@
 // nothing is measured during render. The nav role takes no aria-orientation
 // (ARIA 1.2 does not allow it on navigation), so the axis is not announced:
 // the links are reached with Tab in every placement.
-import type { KeyboardEvent, PointerEvent } from 'react';
+//
+// Search item (order M9.9, docs/plan/reset-ios-families.md, proposed):
+// TabBarSearch is a destination like any item, with its own part, so a
+// platform can draw it apart from the others. It goes last in the bar. On
+// web and android it is the last item of the bar, an icon over its label;
+// on ios the platform draws it as a round item beside the capsule, and in
+// the column (placement side) under the capsule. The DOM is the same in
+// every case. With a `field` (a SearchField) and `active`, the item turns
+// into that field (data-expanded): the link leaves and the field takes its
+// place, as the music app does with its search tab. When the item had focus
+// or was pressed, focus follows into the field, and back to the link when
+// the field goes, so focus is never dropped on the page (WCAG 2.4.3).
+import { useLayoutEffect, useRef, cloneElement, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 import { pressOrigin } from './pressOrigin';
 import { pressHandlers } from '../../internal/pressed';
 import { Children, createContext, isValidElement, use, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
@@ -113,9 +130,12 @@ export interface TabBarItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorEle
   ref?: Ref<HTMLAnchorElement>;
 }
 
-/** The items of this bar, not of a bar nested inside it. */
+/**
+ * The items of this bar, not of a bar nested inside it: every TabBarItem,
+ * and the search item while it is a link (not while it is a field).
+ */
 function itemsOf(bar: HTMLElement): HTMLElement[] {
-  return Array.from(bar.querySelectorAll<HTMLElement>('[data-part="item"]')).filter(
+  return Array.from(bar.querySelectorAll<HTMLElement>('[data-part="item"], [data-part="search"]:not([data-expanded])')).filter(
     (item) => item.closest('[data-ds="tab-bar"]') === bar,
   );
 }
@@ -210,6 +230,149 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
   if (asChild) {
     const child = Children.only(children);
     if (!isValidElement(child)) throw new Error('TabBarItem with asChild needs one element as its child.');
+    return (
+      <Slot.Root {...attrs}>
+        <Slot.Slottable child={child}>{() => parts}</Slot.Slottable>
+      </Slot.Root>
+    );
+  }
+  return <a {...attrs}>{parts}</a>;
+}
+
+export interface TabBarSearchProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'title' | 'children' | 'onSelect'> {
+  /** The name of the destination: Search (Arabic: بحث). The link name everywhere, and the visible label on web and android. */
+  label: string;
+  /** A system icon name, decorative. Default search. */
+  icon?: IconName;
+  /** The current destination: aria-current="page" and data-active. Default false. */
+  active?: boolean;
+  /**
+   * Called on a press of the item, before the link is followed. Without
+   * href, the item is a link to nothing that only calls this (a router that
+   * navigates by hand); with href, the handler may call preventDefault.
+   */
+  onSelect?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  /**
+   * A SearchField the item turns into while it is active (data-expanded).
+   * It takes `label` as its accessible name unless it has its own
+   * aria-label. Default none: the item stays a link.
+   */
+  field?: ReactElement<{ 'aria-label'?: string }>;
+  /** Renders the single child element (a router link) as the item; its children are replaced by the parts. */
+  asChild?: boolean;
+  /** One element when asChild is set. */
+  children?: ReactElement;
+  ref?: Ref<HTMLAnchorElement>;
+}
+
+const FOCUSABLE = 'input, textarea, select, button, a[href], [tabindex]:not([tabindex="-1"])';
+
+/** The search destination of the bar: last in the bar, a round item beside the capsule on ios. */
+export function TabBarSearch({ label, icon = 'search', active = false, onSelect, field, asChild = false, children, ref, ...rest }: TabBarSearchProps) {
+  const barSize = use(TabBarSizeContext);
+  const expanded = active && field !== undefined;
+  const link = useRef<HTMLAnchorElement | null>(null);
+  const box = useRef<HTMLDivElement | null>(null);
+  // True while the item or its field holds focus, or after a press on it:
+  // the person is at the search item, so focus follows when it changes form.
+  const here = useRef(false);
+  const was = useRef(expanded);
+
+  useLayoutEffect(() => {
+    if (was.current === expanded) return;
+    was.current = expanded;
+    if (!here.current) return;
+    const now = typeof document === 'undefined' ? null : document.activeElement;
+    // Leave focus alone when it already moved somewhere real.
+    if (now && now !== document.body && now.isConnected && !(box.current?.contains(now) || link.current === now)) return;
+    if (expanded) box.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    else link.current?.focus();
+  }, [expanded]);
+
+  const track = {
+    onFocus: () => {
+      here.current = true;
+    },
+    onBlur: (event: { relatedTarget: EventTarget | null; currentTarget: HTMLElement }) => {
+      // Focus that moves to another element ends the stay; focus that is
+      // dropped (the element left the page) keeps it, so it can follow.
+      const to = event.relatedTarget as Node | null;
+      if (to && !event.currentTarget.contains(to)) here.current = false;
+    },
+  };
+
+  if (expanded) {
+    const own = field.props['aria-label'];
+    return (
+      <div data-part="search" data-expanded="" data-active="" ref={box} {...track}>
+        {own === undefined ? cloneElement(field, { 'aria-label': label }) : field}
+      </div>
+    );
+  }
+
+  const setLink = (node: HTMLAnchorElement | null) => {
+    link.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
+  };
+  const parts = (
+    <>
+      <span data-part="item-icon">
+        <Icon name={icon} size={barSize === 'lg' ? 'lg' : 'md'} />
+      </span>
+      <span data-part="item-label">{label}</span>
+    </>
+  );
+  const noHref = !asChild && rest.href === undefined;
+  const attrs = {
+    ...rest,
+    ref: setLink,
+    ...pressHandlers<HTMLAnchorElement>(
+      {
+        onPointerDown: (event: PointerEvent<HTMLAnchorElement>) => {
+          pressOrigin(event, 'tab-bar');
+          rest.onPointerDown?.(event);
+        },
+        onPointerUp: rest.onPointerUp,
+        onPointerCancel: rest.onPointerCancel,
+        onLostPointerCapture: rest.onLostPointerCapture,
+        onPointerLeave: rest.onPointerLeave,
+      },
+      rest['aria-disabled'] === true || rest['aria-disabled'] === 'true',
+    ),
+    onFocus: (event: FocusEvent<HTMLAnchorElement>) => {
+      track.onFocus();
+      rest.onFocus?.(event);
+    },
+    onBlur: (event: FocusEvent<HTMLAnchorElement>) => {
+      track.onBlur(event);
+      rest.onBlur?.(event);
+    },
+    onClick: (event: MouseEvent<HTMLAnchorElement>) => {
+      here.current = true;
+      rest.onClick?.(event);
+      onSelect?.(event);
+      if (noHref) event.preventDefault();
+    },
+    // With no href an anchor is not focusable and Enter does nothing: give it both.
+    ...(noHref
+      ? {
+          role: 'link' as const,
+          tabIndex: 0,
+          onKeyDown: (event: KeyboardEvent<HTMLAnchorElement>) => {
+            rest.onKeyDown?.(event);
+            if (!event.defaultPrevented && event.key === 'Enter') event.currentTarget.click();
+          },
+        }
+      : {}),
+    'data-part': 'search',
+    'data-active': active ? '' : undefined,
+    'aria-current': active ? ('page' as const) : rest['aria-current'],
+  };
+
+  if (asChild) {
+    const child = Children.only(children);
+    if (!isValidElement(child)) throw new Error('TabBarSearch with asChild needs one element as its child.');
     return (
       <Slot.Root {...attrs}>
         <Slot.Slottable child={child}>{() => parts}</Slot.Slottable>

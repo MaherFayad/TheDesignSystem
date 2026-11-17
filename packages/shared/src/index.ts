@@ -17,6 +17,8 @@ export * from './refraction-dom';
 export * from './resize';
 export * from './scrub';
 export * from './section-index';
+export * from './selection';
+export * from './share';
 export * from './shortcut';
 export * from './space';
 export * from './stepper';

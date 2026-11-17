@@ -28,6 +28,16 @@
  * media query and :root[data-motion='reduce']) nothing plays. A style turns
  * it off by setting --_tab-bar-duration to 0ms.
  *
+ * Search item (order M9.9, proposed): TabBarSearch is the part `search`,
+ * last in the bar. Here, the look every platform starts from (web): an item
+ * like the others, the icon over its label. A platform draws it apart (ios:
+ * a round item beside the capsule, and under it in the column). With
+ * data-expanded it holds the app's SearchField and takes the room of two
+ * items; the field fades in (motion pattern fade, on duration.base), and
+ * nothing moves under reduced motion. Names outside the list in anatomy.md:
+ *
+ *   --_tab-bar-search-grow        how many item widths the expanded field takes
+ *
  * Round 3 (order 1.23): --_tab-bar-press-x and --_tab-bar-press-y, where the last
  * press landed on an item, in px from its inline start and block start
  * (written on the item on pointerdown, TabBar/pressOrigin.ts), 50% until
@@ -54,6 +64,7 @@
     --_tab-bar-duration: var(--ds-duration-spring-bouncy);
     --_tab-bar-stagger: var(--ds-delay-stagger);
     --_tab-bar-ease: var(--ds-ease-spring-bouncy);
+    --_tab-bar-search-grow: 2;
 
     display: flex;
     align-items: stretch;
@@ -79,7 +90,7 @@
 
   /* ------------------------------------------------------------ item */
 
-  [data-ds='tab-bar'] > [data-part='item'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) {
     --_tab-bar-item-fg: var(--_tab-bar-fg);
     --_tab-bar-item-pill: transparent;
     --_tab-bar-item-weight: var(--_tab-bar-weight);
@@ -106,7 +117,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-icon'] {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -121,12 +132,12 @@
   }
 
   /* Arabic small text is one step up (PLAN.md section 12). */
-  [data-ds='tab-bar'] > [data-part='item']:lang(ar) {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']):lang(ar) {
     font-size: var(--ds-font-size-s);
   }
 
   /* One line, cut with an ellipsis: five short nouns fit at 320px. */
-  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-label'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-label'] {
     max-inline-size: 100%;
     overflow-x: clip;
     overflow-y: visible;
@@ -162,7 +173,7 @@
   }
 
   /* Read by screen readers as part of the link name, not drawn. */
-  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-status'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) > [data-part='item-status'] {
     position: absolute;
     inline-size: var(--ds-border-width-default);
     block-size: var(--ds-border-width-default);
@@ -172,30 +183,48 @@
     white-space: nowrap;
   }
 
+  /* ------------------------------------------------------------ search item, expanded into its field */
+
+  /* The field keeps at least half the bar, so its text has room next to its glyph and clear button. */
+  [data-ds='tab-bar'] > [data-part='search'][data-expanded] {
+    flex: var(--_tab-bar-search-grow) 1 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    min-inline-size: 50%;
+    padding-inline: var(--ds-space-3xs);
+  }
+
+  [data-ds='tab-bar'] > [data-part='search'][data-expanded] > * {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    animation: ds-tab-bar-field-in var(--ds-duration-base) var(--ds-ease-out);
+  }
+
   /* ------------------------------------------------------------ states */
 
-  [data-ds='tab-bar'] > [data-part='item']:hover:not([data-active]) {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']):hover:not([data-active]) {
     --_tab-bar-item-fg: var(--_tab-bar-fg-hover);
   }
 
   /* The current destination: weight, the pill and aria-current, never color alone. */
-  [data-ds='tab-bar'] > [data-part='item'][data-active] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] {
     --_tab-bar-item-fg: var(--_tab-bar-fg-active);
     --_tab-bar-item-pill: var(--_tab-bar-pill-bg);
     --_tab-bar-item-weight: var(--_tab-bar-weight-active);
   }
 
   /* tab-bar-pop: the icon and its pill pop, the label rises a beat later. */
-  [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > [data-part='item-icon'] {
     animation: ds-tab-bar-pop var(--_tab-bar-duration) var(--_tab-bar-ease);
   }
 
-  [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-label'] {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > [data-part='item-label'] {
     animation: ds-tab-bar-rise var(--_tab-bar-duration) var(--_tab-bar-ease) var(--_tab-bar-stagger) backwards;
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
-  [data-ds='tab-bar'] > [data-part='item']:focus-visible {
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']):focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
     box-shadow: var(--_tab-bar-ring);
@@ -214,7 +243,8 @@
       --_tab-bar-stagger: 0s;
     }
 
-    [data-ds='tab-bar'] > [data-part='item'][data-active] > :is([data-part='item-icon'], [data-part='item-label']) {
+    [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > :is([data-part='item-icon'], [data-part='item-label']),
+    [data-ds='tab-bar'] > [data-part='search'][data-expanded] > * {
       animation: none;
     }
   }
@@ -225,14 +255,15 @@
     --_tab-bar-stagger: 0s;
   }
 
-  :root[data-motion='reduce'] [data-ds='tab-bar'] > [data-part='item'][data-active] > :is([data-part='item-icon'], [data-part='item-label']) {
+  :root[data-motion='reduce'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > :is([data-part='item-icon'], [data-part='item-label']),
+  :root[data-motion='reduce'] [data-ds='tab-bar'] > [data-part='search'][data-expanded] > * {
     animation: none;
   }
 
   /* ------------------------------------------------------------ forced colors */
 
   @media (forced-colors: active) {
-    [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+    [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > [data-part='item-icon'] {
       outline: var(--ds-border-width-strong) solid Highlight;
     }
 
@@ -248,6 +279,16 @@
 
     to {
       transform: none;
+    }
+  }
+
+  @keyframes ds-tab-bar-field-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
     }
   }
 

@@ -1,0 +1,233 @@
+/*
+ * SharePanel: the app's own share panel inside a Sheet (ios, android) or a
+ * Popover (web, macos) (order M9.12, proposed). Follows "One convention for
+ * component CSS and props" in docs/contracts/anatomy.md. The container
+ * draws the surface, the title, the close control and the motion; this
+ * file draws what is inside: the preview and three rows of tiles. Designed
+ * from the dials table (PLAN.md 3.7) and the share panel's anatomy; no
+ * source file.
+ *
+ * Private properties on the root (recipes and platform rules override these):
+ *
+ *   --_share-panel-gap                the room between the preview and the rows
+ *   --_share-panel-padding-block      the room below the last row
+ *   --_share-panel-border-color       the hairline between rows
+ *   --_share-panel-preview-size       the preview picture, a square
+ *   --_share-panel-preview-radius     its corner
+ *   --_share-panel-preview-bg         the fill behind a picture that loads late
+ *   --_share-panel-link-fg            the link line
+ *   --_share-panel-item-gap           the room between tiles in a row
+ *   --_share-panel-item-width         the inline size of a tile: at least 60px
+ *                                     (WCAG 2.5.8 asks 24; the order asks 60
+ *                                     by 44), the drawn tile plus room for a
+ *                                     two line label
+ *   --_share-panel-item-radius        the corner of a tile's press and focus area
+ *   --_share-panel-item-bg-hover      the veil under a tile on hover
+ *   --_share-panel-item-font-size     the label under a tile
+ *   --_share-panel-icon-size          the drawn tile of a target or an action
+ *   --_share-panel-target-radius      the tile of a target: a rounded square
+ *   --_share-panel-target-bg, -target-fg
+ *   --_share-panel-action-radius      the tile of an action: a circle
+ *   --_share-panel-action-bg, -action-fg
+ *
+ * Rows scroll inline when their tiles do not fit (WCAG 1.4.10: the page
+ * never scrolls sideways at 320 wide); a row starts at the inline start, so
+ * in Arabic it starts at the right and scrolls toward the left. Nothing
+ * here animates: the container's pattern moves the panel, and the tiles keep
+ * the Button press.
+ */
+@layer ds.base {
+  [data-ds='share-panel'] {
+    --_share-panel-gap: var(--ds-space-s);
+    --_share-panel-padding-block: var(--ds-space-xs);
+    --_share-panel-border-color: var(--ds-color-border-hairline);
+    --_share-panel-preview-size: var(--ds-size-control-lg);
+    --_share-panel-preview-radius: var(--ds-radius-sm);
+    --_share-panel-preview-bg: var(--ds-color-bg-surface-3);
+    --_share-panel-link-fg: var(--ds-color-text-muted);
+    --_share-panel-item-gap: var(--ds-space-2xs);
+    --_share-panel-item-width: calc(var(--ds-size-control-lg) + var(--ds-space-l));
+    --_share-panel-item-radius: var(--ds-radius-card);
+    --_share-panel-item-bg-hover: var(--ds-color-bg-overlay-5);
+    --_share-panel-item-font-size: var(--ds-font-size-xs);
+    --_share-panel-icon-size: var(--ds-size-control-lg);
+    --_share-panel-target-radius: var(--ds-radius-card);
+    --_share-panel-target-bg: var(--ds-color-bg-surface-3);
+    --_share-panel-target-fg: var(--ds-color-text-default);
+    --_share-panel-action-radius: var(--ds-radius-pill);
+    --_share-panel-action-bg: var(--ds-color-bg-overlay-10);
+    --_share-panel-action-fg: var(--ds-color-text-default);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_share-panel-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-block-end: var(--_share-panel-padding-block);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  /* ---------------------------------------------------------- preview */
+
+  [data-ds='share-panel'] > [data-part='preview'] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--ds-space-s);
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  [data-ds='share-panel'] > [data-part='preview'] > img {
+    grid-row: span 2;
+    inline-size: var(--_share-panel-preview-size);
+    block-size: var(--_share-panel-preview-size);
+    border-radius: var(--_share-panel-preview-radius);
+    background-color: var(--_share-panel-preview-bg);
+    object-fit: cover;
+  }
+
+  [data-ds='share-panel'] > [data-part='preview'] > :is([data-part='link'], [data-part='text']) {
+    grid-column: 2;
+    min-inline-size: 0;
+    margin: 0;
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='share-panel'] > [data-part='preview'] > [data-part='link'] {
+    overflow: hidden;
+    color: var(--_share-panel-link-fg);
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-ds='share-panel'] > [data-part='preview'] > [data-part='text'] {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  /* No picture: the lines take the whole row. */
+  [data-ds='share-panel'] > [data-part='preview']:not(:has(> img)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ds='share-panel'] > [data-part='preview']:not(:has(> img)) > :is([data-part='link'], [data-part='text']) {
+    grid-column: 1;
+  }
+
+  /* ---------------------------------------------------------- rows */
+
+  [data-ds='share-panel'] > :is([data-part='people'], [data-part='targets'], [data-part='actions']) {
+    display: flex;
+    gap: var(--_share-panel-item-gap);
+    align-items: flex-start;
+    min-inline-size: 0;
+    padding-block-start: var(--ds-space-xs);
+    border-block-start: var(--ds-border-width-default) solid var(--_share-panel-border-color);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: var(--ds-space-2xs);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  [data-ds='share-panel'] > :is([data-part='people'], [data-part='targets'], [data-part='actions'])::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The first row after the preview, or the first element at all, needs no rule above it. */
+  [data-ds='share-panel'] > :is([data-part='people'], [data-part='targets'], [data-part='actions']):first-child {
+    padding-block-start: 0;
+    border-block-start: 0;
+  }
+
+  /* ---------------------------------------------------------- tiles */
+
+  [data-ds='share-panel'] :is([data-part='person'], [data-part='target'], [data-part='action']) {
+    --_button-height: auto;
+    --_button-padding-inline: var(--ds-space-4xs);
+    --_button-gap: var(--ds-space-2xs);
+    --_button-font-size: var(--_share-panel-item-font-size);
+    --_button-radius: var(--_share-panel-item-radius);
+    --_button-bg: transparent;
+    --_button-bg-hover: var(--_share-panel-item-bg-hover);
+    --_button-bg-active: var(--_share-panel-item-bg-hover);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-fg-hover: var(--ds-color-text-default);
+    --_button-fg-active: var(--ds-color-text-default);
+    --_button-label-align: center;
+
+    /*
+     * The size of a tile is written here, not only through the Button's
+     * private properties: style recipes set those per Button size, and a
+     * recipe layer sits above this one.
+     */
+    flex: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--ds-space-2xs);
+    inline-size: var(--_share-panel-item-width);
+    block-size: auto;
+    min-block-size: var(--ds-size-control-lg);
+    padding-block: var(--ds-space-2xs);
+    padding-inline: var(--ds-space-4xs);
+    font-size: var(--_share-panel-item-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-tight);
+    scroll-snap-align: start;
+  }
+
+  [data-ds='share-panel'] :is([data-part='person'], [data-part='target'], [data-part='action']) > [data-part='label'] {
+    display: -webkit-box;
+    max-inline-size: 100%;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  [data-ds='share-panel'] :is([data-part='target'], [data-part='action']) > [data-part='start'] {
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_share-panel-icon-size);
+    block-size: var(--_share-panel-icon-size);
+  }
+
+  [data-ds='share-panel'] [data-part='target'] > [data-part='start'] {
+    border-radius: var(--_share-panel-target-radius);
+    background-color: var(--_share-panel-target-bg);
+    color: var(--_share-panel-target-fg);
+  }
+
+  [data-ds='share-panel'] [data-part='action'] > [data-part='start'] {
+    border-radius: var(--_share-panel-action-radius);
+    background-color: var(--_share-panel-action-bg);
+    color: var(--_share-panel-action-fg);
+  }
+
+  [data-ds='share-panel']:lang(ar) :is([data-part='person'], [data-part='target'], [data-part='action']) {
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  /* The tiles of a target and an action keep their edge where fills are dropped. */
+  @media (forced-colors: active) {
+    [data-ds='share-panel'] :is([data-part='target'], [data-part='action']) > [data-part='start'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='share-panel'] {
+      --_share-panel-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='share-panel'] {
+    --_share-panel-border-color: var(--ds-color-border-strong);
+  }
+}

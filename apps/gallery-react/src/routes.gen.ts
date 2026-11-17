@@ -9,6 +9,7 @@ export interface DemoRoute {
 
 export const routes: DemoRoute[] = [
   { name: 'Accordion', slug: 'accordion', load: () => import('../../../packages/react/src/components/Accordion/Accordion.demo') },
+  { name: 'ActionSheet', slug: 'action-sheet', load: () => import('../../../packages/react/src/components/ActionSheet/ActionSheet.demo') },
   { name: 'Alert', slug: 'alert', load: () => import('../../../packages/react/src/components/Alert/Alert.demo') },
   { name: 'AlertDialog', slug: 'alert-dialog', load: () => import('../../../packages/react/src/components/AlertDialog/AlertDialog.demo') },
   { name: 'AspectRatio', slug: 'aspect-ratio', load: () => import('../../../packages/react/src/components/AspectRatio/AspectRatio.demo') },
@@ -88,7 +89,9 @@ export const routes: DemoRoute[] = [
   { name: 'SectionIndex', slug: 'section-index', load: () => import('../../../packages/react/src/components/SectionIndex/SectionIndex.demo') },
   { name: 'SegmentedControl', slug: 'segmented-control', load: () => import('../../../packages/react/src/components/SegmentedControl/SegmentedControl.demo') },
   { name: 'Select', slug: 'select', load: () => import('../../../packages/react/src/components/Select/Select.demo') },
+  { name: 'SelectionMenu', slug: 'selection-menu', load: () => import('../../../packages/react/src/components/SelectionMenu/SelectionMenu.demo') },
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },
+  { name: 'SharePanel', slug: 'share-panel', load: () => import('../../../packages/react/src/components/SharePanel/SharePanel.demo') },
   { name: 'Sheet', slug: 'sheet', load: () => import('../../../packages/react/src/components/Sheet/Sheet.demo') },
   { name: 'Sidebar', slug: 'sidebar', load: () => import('../../../packages/react/src/components/Sidebar/Sidebar.demo') },
   { name: 'Skeleton', slug: 'skeleton', load: () => import('../../../packages/react/src/components/Skeleton/Skeleton.demo') },

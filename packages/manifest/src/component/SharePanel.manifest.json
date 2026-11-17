@@ -1,0 +1,269 @@
+{
+  "name": "SharePanel",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "The share button and the app's own share panel. A press shares through the system share sheet first (share() in @the-system/shared calls navigator.share on the web) and opens the panel only where there is none. The panel shows the item, the app's own people, its own targets and actions on the item, with Copy link and More options built in. On ios and android it is a Sheet from the bottom edge (the system sheet comes first, as Chrome on Android and Safari on iOS have it); on web and macos it is a Popover from the share button.",
+  "useWhen": [
+    "A Share button on an item with a link: a trip, a post, a document",
+    "Sending an item to people or places inside the app: a chat in the app, a shared list, a board",
+    "Where the system share sheet is missing (Firefox on desktop, Chrome on Linux) and the item still has to be shared"
+  ],
+  "avoidWhen": [
+    "Showing the device's apps or contacts: a web page cannot list them, only the system sheet can",
+    "Choosing among actions that do not share the item: Delete, Rename, Move",
+    "A single Copy link control beside a link"
+  ],
+  "insteadUse": {
+    "Actions on one object that do not share it": "ActionSheet on phones, DropdownMenu on web",
+    "Copying one value": "CopyButton",
+    "Sharing with no panel at all": "share() from @the-system/shared on a Button press"
+  },
+  "anatomy": [
+    "root",
+    "preview",
+    "link",
+    "text",
+    "people",
+    "person",
+    "targets",
+    "target",
+    "actions",
+    "action"
+  ],
+  "slots": {
+    "person": {
+      "accepts": "text"
+    },
+    "target": {
+      "accepts": "text"
+    },
+    "action": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "item": {
+      "type": "object",
+      "required": true,
+      "description": "What is shared: { title, url?, image?, text? }. The title names the panel (the container's title) and is the title of the system share; the url is shown in the preview as host and path, copied by Copy link and passed to the system share; the image is a decorative picture in the preview; the text goes to the system share and shows under the link."
+    },
+    "people": {
+      "type": "array",
+      "default": "[]",
+      "description": "The app's own people, the first row: { id, name, avatar? }. The name is drawn under the avatar and is the button's name; the avatar is decorative. Never the device's contacts: a page cannot read them."
+    },
+    "targets": {
+      "type": "array",
+      "default": "[]",
+      "description": "The app's own places to send to, the second row: { id, label, icon }. icon is a system icon name or a node, decorative next to the label. Our own icons only, never a third party app icon or name."
+    },
+    "actions": {
+      "type": "array",
+      "default": "[]",
+      "description": "Actions on the item, the last row, between Copy link and More options: { id, label, icon, onSelect, disabled? }. A press runs onSelect and closes the panel; a disabled action is aria-disabled and stays in the row."
+    },
+    "onShare": {
+      "type": "function",
+      "description": "Called with (id, kind) for a press on a person (kind person) or a target (kind target). The panel then closes."
+    },
+    "system": {
+      "type": [
+        "prefer",
+        "never"
+      ],
+      "default": "prefer",
+      "description": "The trigger press. prefer calls share(), which opens the system share sheet where it exists and can take the item, and opens the panel only on 'fallback'. never always opens the panel: for an app whose targets are its own; More options still reaches the system sheet."
+    },
+    "onResult": {
+      "type": "function",
+      "description": "Called with the result of each trigger press: 'system' (shared through the system sheet), 'cancelled' (the person closed the system sheet; nothing opens) or 'fallback' (the panel opened)."
+    },
+    "copyLink": {
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the built in Copy link action, first in the actions row, when the item has a url and the page can write to the clipboard (feature tested after mount). A copy shows the toast Link copied, or Could not copy link."
+    },
+    "moreOptions": {
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the built in More options action, last in the actions row, only where the system share sheet exists and can take the item (feature tested after mount). It calls the system sheet and closes the panel."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state of the panel, with onOpenChange. Opening it directly skips the system sheet."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with true when the panel opens and false for Escape, the close control, an outside press on web, a press on an item, and a drag down on a phone."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close share panel",
+      "description": "The accessible name of the container's close control. Arabic default under lang ar: إغلاق المشاركة."
+    },
+    "lang": {
+      "type": "string",
+      "description": "The language of the built in words (en or ar). Default the theme's language."
+    },
+    "children": {
+      "type": "node",
+      "description": "One element, a system Button: the share button. It gets aria-haspopup dialog and aria-expanded; a press shares, a second press closes the panel. The web popover points at it. Without it the panel is controlled only and is always a Sheet."
+    }
+  },
+  "states": [
+    "open",
+    "closed"
+  ],
+  "a11y": {
+    "role": "The container is a dialog named by the item title: modal on ios and android (the Sheet), not modal on web and macos (the Popover). Inside, each row is a group named People, Share to and Actions. The share button has aria-haspopup dialog and aria-expanded.",
+    "focus": "On open, focus goes to the first item of the first row (data-autofocus). Each row is one Tab stop, the item focus was last on in that row. On close, focus returns to the share button.",
+    "keys": {
+      "Enter": "On the share button: shares, through the system sheet first. On an item: sends to that person or target, or runs the action, and closes the panel",
+      "Space": "The same as Enter",
+      "Tab": "Moves from row to row, then to the container's close control",
+      "ArrowRight": "Moves focus to the next item in the row; in right to left, the previous one",
+      "ArrowLeft": "Moves focus to the previous item in the row; in right to left, the next one",
+      "Home": "Moves focus to the first item in the row",
+      "End": "Moves focus to the last item in the row",
+      "Escape": "Closes the panel and returns focus to the share button"
+    },
+    "announce": "Dialog, then the item title. Each row reads as a group with its name, each item as a button named by its label or the person's name. Copy link confirms with the toast Link copied.",
+    "native": {
+      "accessibilityRole": "button"
+    },
+    "notes": [
+      "The system share sheet comes first (frameworks.md, System services). share() resolves 'cancelled' for an AbortError, so closing the system sheet never opens the panel on top of it.",
+      "A page cannot list the device's apps or contacts. The panel shows only what the app passes in, and More options reaches the system sheet where it exists.",
+      "Tiles are at least 60 wide and 44 tall (WCAG 2.5.8 asks 24 by 24).",
+      "Avatars and target and action icons are decorative: the visible label beside them is the name (WCAG 1.1.1).",
+      "Rows scroll inline when their tiles do not fit, so the page never scrolls sideways at 320 wide (WCAG 1.4.10). A row starts at the inline start: the right in Arabic.",
+      "The link in the preview is isolated left to right (bdi dir ltr), in Arabic too; the line itself keeps the panel's direction, so it starts at the right in Arabic.",
+      "No native title attribute. Under forced colors the drawn tiles keep a CanvasText edge."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "The item's own title, as it reads in the app: Weekend in AlUla.",
+      "people": "Names as the person wrote them.",
+      "targets": "A noun for the place, sentence case: Trip board, Message, Email.",
+      "actions": "A verb plus a noun, sentence case: Add to list, Save image. Built in: Copy link, More options.",
+      "groups": "People, Share to, Actions."
+    },
+    "ar": {
+      "title": "عنوان العنصر كما هو في التطبيق: عطلة في العلا.",
+      "people": "الأسماء كما كتبها أصحابها.",
+      "targets": "اسم المكان بصيغة اسمية بدون تشكيل: لوحة الرحلة، رسالة، بريد.",
+      "actions": "صيغة اسمية بدون تشكيل: إضافة للقائمة، حفظ الصورة. الكلمات المضمنة: نسخ الرابط، خيارات إضافية.",
+      "groups": "الأشخاص، المشاركة عبر، الإجراءات. الأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "space.4xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.l",
+    "size.control.lg",
+    "radius.sm",
+    "radius.card",
+    "radius.pill",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.weight.regular",
+    "font.leading.tight",
+    "font.leading.snug",
+    "font.leading.arabic.tight",
+    "color.text.default",
+    "color.text.muted",
+    "color.bg.surface-3",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.border.hairline",
+    "color.border.strong",
+    "border.width.default"
+  ],
+  "motion": "sheet",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "share() from @the-system/shared on the trigger press; Sheet (radix:Dialog) on ios and android, Popover (radix:Popover) on web and macos; roving tabindex per row",
+      "example": "SharePanel.demo.tsx",
+      "note": "No motion of its own: on ios and android the Sheet's pattern (sheet), on web the Popover's (menu-scale). Reduced motion follows the container."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM inside the Angular Sheet and Popover, calling the same share() from @the-system/shared."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5: the system share sheet through Share from react-native (no dependency), which always exists there; the panel for the app's own targets drawn in a system bottom sheet (ruling 8: share is a system view)."
+    }
+  },
+  "styles": {
+    "web": "A popover from the share button with its arrow: the title, the preview, then rows of tiles.",
+    "ios": "The system share sheet first. The panel is a sheet from the bottom edge with a grabber, the title and a round close at the top: the preview, a row of people, a row of rounded square targets, a row of round actions, rows separated by hairlines.",
+    "android": "The system share sheet first (Chrome on Android). The panel is a bottom sheet in Material spacing with the same rows.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe yet (the iOS look is order M9.13).",
+    "liquid": "The same on the Liquid tokens inside the glass sheet; no recipe yet (the iOS look is order M9.13)."
+  },
+  "mistakes": [
+    {
+      "wrong": "Opening the panel before trying the system share sheet",
+      "right": "system prefer (the default): the panel opens only on 'fallback'"
+    },
+    {
+      "wrong": "Opening the panel when the person closed the system sheet",
+      "right": "Treat 'cancelled' as nothing happened"
+    },
+    {
+      "wrong": "Third party app icons or names as targets",
+      "right": "The app's own places with our own icons; More options reaches the other apps through the system sheet"
+    },
+    {
+      "wrong": "Calling share() outside a press",
+      "right": "Call it from a click or a key press: the system sheet needs a user gesture"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "preview",
+      "link",
+      "text",
+      "people",
+      "person",
+      "targets",
+      "target"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "open": "[data-demo-trigger='many']",
+        "focus": "[data-ds='share-panel'] > [role='group'] > [data-part][tabindex='0']",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "open": "[data-demo-trigger='many']",
+        "focus": "[data-ds='share-panel'] > [role='group'] > [data-part][tabindex='0']",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "open": "[data-demo-trigger='many']",
+        "focus": "[data-ds='share-panel'] > [role='group'] > [data-part]:last-child",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "open": "[data-demo-trigger='many']",
+        "focus": "[data-ds='share-panel'] > [role='group'] > [data-part]:last-child",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

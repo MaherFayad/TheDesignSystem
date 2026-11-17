@@ -1749,6 +1749,32 @@
       --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
     }
 
+    /*
+     * Order P1: a plain field in a grouped row or in the alert's well draws
+     * no ring box on focus, as the kit: the caret takes the tint and the row
+     * label keeps its focused tint (Field.css). The page cannot tell a
+     * keyboard from a finger here (a text field always matches
+     * :focus-visible, and the system keeps no input modality flag), so every
+     * focus also draws one quiet mark the kit does not: the row's lower edge
+     * in the tint, 2px, across the row's text width (WCAG 2.2 2.4.7; its
+     * contrast against the card is in docs/reports/lanes/reset-P1.md). The
+     * transparent outline of Input.css stays for forced colors.
+     */
+    [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'],
+    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'] {
+      --_input-ring: 0 0 0 0 transparent;
+    }
+
+    [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'] > [data-part='control'],
+    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] [data-ds='input'][data-variant='plain'] > [data-part='control'] {
+      caret-color: var(--ds-color-primary-on-surface);
+    }
+
+    [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within),
+    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field']:has([data-ds='input'][data-variant='plain']:focus-within) {
+      box-shadow: inset 0 calc(-1 * var(--ds-border-width-strong)) 0 0 var(--ds-color-primary-on-surface);
+    }
+
     /* The clear disc: a mid gray that keeps 3:1 against the card and the cross in the card's own color. */
     [data-platform='ios'] [data-ds='input'] > [data-part='clear'] {
       --_button-bg: transparent;

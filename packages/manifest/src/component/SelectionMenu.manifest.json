@@ -1,0 +1,234 @@
+{
+  "name": "SelectionMenu",
+  "kind": "component",
+  "family": "overlay",
+  "summary": "A horizontal menu of actions over a selection or a point: the edit menu capsule (cut, copy, paste and the app's own actions). It is for selections the app draws (a message, a canvas object, a chip, a block of read only text), never inside a native text field. On web, ios and android it is the same capsule above the selection, below it when there is no room above; on ios its entries are 44 tall, on android 48 (Material's text selection toolbar has the same form). Proposed, order M9.11.",
+  "useWhen": [
+    "A person selected text or an object the app draws and needs the actions for it right there: copy, a look up, a highlight, a note",
+    "A long press or a drag selection on a phone, where a context menu would cover the selection",
+    "A short row of two to six actions; more go behind the forward control"
+  ],
+  "avoidWhen": [
+    "Text a person types in an Input, a Textarea or an editable region: the browser's own menu serves it",
+    "A long list of actions with groups, checks or submenus",
+    "Actions on a whole row or a whole page, not on what is selected"
+  ],
+  "insteadUse": {
+    "A long list of actions on an element, opened by a right click or a long press": "ContextMenu",
+    "A list of actions behind a button": "DropdownMenu",
+    "Actions for a bar that stays on screen": "Toolbar"
+  },
+  "anatomy": ["root", "item", "separator", "more"],
+  "slots": {
+    "item": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "items": {
+      "type": "array",
+      "required": true,
+      "description": "The actions in reading order, each { id, label, icon?, tone?, onSelect, disabled? }. label is the visible text and the accessible name. tone danger draws a destructive action. disabled stays focusable with aria-disabled. Put editActions() first for cut, copy and paste."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Open, controlled."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false,
+      "description": "Open at first, uncontrolled."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with the new open state: after an action, on Escape, on Tab, on a press outside, and when the owner opens it."
+    },
+    "anchor": {
+      "type": "object",
+      "description": "What the menu points at: a Range, a DOMRect, or a function that returns the box now. Without it, the selection the owner opened it for, else the owner's box."
+    },
+    "owner": {
+      "type": "object",
+      "description": "A ref to the element that holds the selection. Given, the menu opens itself on Shift+F10 or the context menu key while the owner has focus, and after a pointer selection inside it, and focus returns to it when the menu closes from inside. It never opens for a selection inside a text field."
+    },
+    "label": {
+      "type": "string",
+      "description": "The accessible name of the menu. Default Selection actions, إجراءات التحديد."
+    },
+    "overflowLabel": {
+      "type": "string",
+      "description": "The accessible name of the forward control on a page that overflows. Default More actions, إجراءات أكثر."
+    },
+    "backLabel": {
+      "type": "string",
+      "description": "The accessible name of the back control. Default Previous actions, الإجراءات السابقة."
+    },
+    "focusOnOpen": {
+      "type": "boolean",
+      "description": "Move focus to the first action on open. Default: only when the menu opened from the keyboard; a pointer selection keeps focus where it is."
+    }
+  },
+  "states": ["open", "closed", "data-disabled"],
+  "a11y": {
+    "role": "menu with aria-orientation horizontal, named by label, not modal: the page stays usable and a press outside closes it. Each action and the forward and back controls are menuitem. Separators are aria-hidden.",
+    "focus": "One tab stop, a roving tabindex. Opened from the keyboard (Shift+F10, the context menu key), focus moves to the first action; opened by a pointer selection, focus stays on the page and the selection keeps its look. A press on the menu never takes focus or clears the selection. Paging moves focus to the first action of the new page when focus was in the menu. Closing from inside returns focus to the owner. A 2px inset ring from color.focus.ring.",
+    "keys": {
+      "Shift+F10": "On the owner, with a selection or without: opens the menu over the selection (or the owner) and moves focus to the first action",
+      "ContextMenu": "The context menu key: the same as Shift+F10",
+      "ArrowRight": "Moves focus one entry to the right: the next in English, the previous in Arabic",
+      "ArrowLeft": "Moves focus one entry to the left: the previous in English, the next in Arabic",
+      "Home": "Moves focus to the first entry of the row",
+      "End": "Moves focus to the last entry of the row",
+      "Enter, Space": "Runs the focused action and closes the menu; on the forward or back control, shows the next or the previous page",
+      "Escape": "Closes the menu and returns focus to the owner when focus was in the menu",
+      "Tab": "Closes the menu and returns focus to the owner. Not modal"
+    },
+    "announce": "Selection actions, menu, horizontal. Each action by its label. The forward control: More actions. Paste reads the clipboard only inside the press, a user activation.",
+    "native": {
+      "accessibilityRole": "menu"
+    },
+    "notes": [
+      "Entries are at least size.target tall (24 on web, 44 on ios, 48 on android), and the forward control is square (WCAG 2.5.8).",
+      "Labels are text at 4.5:1 on the capsule; the capsule edge, the hairlines and the platter are not the only signal of anything (1.4.3, 1.4.11). Under more contrast the edge and the hairlines take border.strong; under forced colors the capsule is Canvas with a CanvasText border and the lit entry is Highlight.",
+      "The menu opens above the selection, below it when there is no room above, and never covers it when either side has room (2.4.11). It hides while the selection is scrolled out of view.",
+      "Clipboard access is feature tested, never assumed: editActions() offers copy only when text can be written, cut only when also onCut is given, paste only when text can be read and onPaste is given.",
+      "It never opens inside a native input, a textarea or an editable region (isTextEntry in @the-system/shared)."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One or two words, a verb: Copy, Look up, Highlight, Add note. Sentence case. The built in actions are Cut, Copy and Paste, as on every platform.",
+      "count": "Two to six actions in view; the rest page behind the forward control."
+    },
+    "ar": {
+      "label": "كلمة أو كلمتان بصيغة اسمية بدون تشكيل: نسخ، بحث، تمييز، إضافة ملاحظة. الأفعال المضمنة: قص، نسخ، لصق.",
+      "count": "من إجراءين إلى ستة ظاهرة، والباقي خلف زر الإجراءات الأكثر. الأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "color.bg.surface-3",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.state.danger.text",
+    "color.border.default",
+    "color.border.strong",
+    "color.focus.ring",
+    "elevation.menu",
+    "radius.pill",
+    "menu.item.height",
+    "size.target",
+    "space.2xs",
+    "space.s",
+    "space.xl",
+    "font.family.sans",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.regular",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "z.menu",
+    "scale.menu-enter",
+    "distance.shift",
+    "duration.spring-snappy",
+    "duration.quick",
+    "duration.fast",
+    "ease.spring-snappy",
+    "ease.exit",
+    "ease.standard"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "Radix Popover (not modal) on a virtual anchor with role menu, a roving tabindex of menuitems, selectionSide, pageActions, rangeRect, isTextEntry, isMenuKey and clipboardAccess from @the-system/shared",
+      "example": "SelectionMenu.demo.tsx",
+      "note": "Interaction selection-menu-pop on pattern menu-scale: the capsule grows from scale.menu-enter out of the selection side on the snappy spring and leaves faster. Under reduced motion it appears and leaves at once. Paging swaps the row at once."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: [dsSelectionMenu] on a CDK overlay with a flexible position strategy and the same shared helpers."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system edit menu (a system view): the text selection menu of a Text or TextInput on ios and android, with the app's own actions added to it. No drawn capsule."
+    }
+  },
+  "styles": {
+    "web": "A capsule as tall as one row above the selection: text actions split by short hairlines, the forward control a round platter at the end.",
+    "ios": "The same capsule, entries 44 tall, the label at the body large size; the platform's edit menu.",
+    "android": "The same capsule, entries 48 tall (the Material text selection toolbar has the same form).",
+    "studio": "The menu surface of Studio (surface 3, the menu shadow) in a capsule; no recipe yet.",
+    "desk": "The menu surface of Desk in a capsule; no recipe yet.",
+    "neutral": "The menu surface of Neutral in a capsule; no recipe yet.",
+    "liquid": "Proposed: the glass of the Liquid menu on the capsule, once its DropdownMenu recipe lists selection-menu."
+  },
+  "mistakes": [
+    {
+      "wrong": "Opening it over text in an Input or a Textarea",
+      "right": "Leave text fields to the browser's own menu; SelectionMenu is for selections the app draws"
+    },
+    {
+      "wrong": "Showing Paste on every page",
+      "right": "editActions({ onPaste }), which shows Paste only where the clipboard can be read"
+    },
+    {
+      "wrong": "Moving focus into the menu after a pointer selection",
+      "right": "Keep focus on the page; Shift+F10 or the context menu key moves focus in"
+    },
+    {
+      "wrong": "Icon only actions with no visible label",
+      "right": "A short label on every action; the icon is optional and drawn before it"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": ["more", "separator"],
+    "keys": {
+      "Shift+F10": {
+        "focus": "[data-demo-target]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ContextMenu": {
+        "focus": "[data-demo-target]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowRight": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']:last-of-type",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']:last-of-type",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']",
+        "expect": "focus-moves"
+      },
+      "Enter": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']",
+        "expect": "closes"
+      },
+      "Space": {
+        "open": "[data-demo-case=\"variants\"] [data-demo-trigger]",
+        "focus": "[data-ds='selection-menu'] > [data-part='item']",
+        "expect": "closes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

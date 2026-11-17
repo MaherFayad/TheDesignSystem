@@ -1,0 +1,355 @@
+/*
+ * ActionSheet (order M9.10, proposed): a short list of actions on one
+ * object. The root is a fixed layer, as the dialog family's is; the panel
+ * takes one of three forms by data-placement on the root:
+ *
+ *   anchored   a card next to its trigger. The panel sits in a fixed wrapper
+ *              the framework positions (Radix Popper in React); this file
+ *              reads the room it measures: the available width and height
+ *              and the transform origin.
+ *   bottom     a sheet at the block end, full width, top corners rounded,
+ *              rows of text.
+ *   center     a card in the middle, like an alert.
+ *
+ *   [data-ds='theme'][data-dialog-layer]    the portal Theme, draws no box (Dialog.css)
+ *   [data-ds='action-sheet']                root: fixed, data-state, data-placement
+ *     > [data-part='backdrop']              the scrim; transparent when anchored, where it
+ *                                           still takes the press outside the card
+ *     [data-part='panel']                   role dialog or alertdialog (a child of the
+ *                                           root, or of the positioning wrapper when anchored)
+ *       > [data-part='title']
+ *       > [data-part='description']
+ *       > [data-part='actions']             one column of items
+ *           > [data-ds='button'][data-part='action']   capsules, or text rows at the bottom
+ *           > [data-ds='button'][data-part='cancel']   the last item, quieter
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention). Platform files and style recipes override them:
+ *   --_action-sheet-width, -height-max, -gutter
+ *   --_action-sheet-bg, -fg, -border-color, -radius, -shadow, -ring
+ *   --_action-sheet-backdrop        the panel's backdrop filter (a glass panel)
+ *   --_action-sheet-title-fg, -title-font-size, -title-font-weight
+ *   --_action-sheet-description-fg, -description-font-size
+ *   --_action-sheet-padding         the inset of the title and the description
+ *   --_action-sheet-padding-block   the space above the title
+ *   --_action-sheet-gap             the space between two items
+ *   --_action-sheet-item-padding    the inset of the column of items from the panel's edges
+ *   --_action-sheet-item-height, -item-radius, -item-font-size, -item-justify
+ *                                   the items: this file sets the Button's own private
+ *                                   properties from them (--_button-height, -radius,
+ *                                   -font-size, -justify), as Dialog.css does for the Sheet
+ *                                   handle; Button.css declares them
+ *   --_action-sheet-scrim, -scrim-filter   the backdrop color and blur
+ *   --_action-sheet-enter-scale, -enter-y, -duration-in, -duration-out,
+ *   --_action-sheet-ease-in, -ease-out     the motion
+ *
+ * Motion, proposed: anchored, the card grows out of its trigger's corner
+ * (the transform origin the positioning gives) from scale.menu-enter while it
+ * fades in, on the bouncy spring (pattern "menu-scale"); center, it grows in
+ * place the same way (pattern "dialog" without travel); bottom, it rises from
+ * the block end on the soft spring (pattern "sheet"). The backdrop fades.
+ * Exits are faster (duration.quick on ease.exit) and all at once. Only
+ * transform and opacity animate. Under reduced motion, and under
+ * data-motion="reduce" on the root element, the animations are none, so the
+ * framework removes a closed sheet at once.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ root */
+
+  [data-ds='action-sheet'] {
+    --_action-sheet-width: var(--ds-dialog-width-sm);
+    --_action-sheet-height-max: var(--ds-dialog-height-max);
+    --_action-sheet-gutter: var(--ds-space-xl);
+    --_action-sheet-bg: var(--ds-color-bg-surface);
+    --_action-sheet-fg: var(--ds-color-text-default);
+    --_action-sheet-border-color: var(--ds-color-border-default);
+    --_action-sheet-radius: var(--ds-radius-panel);
+    --_action-sheet-shadow: var(--ds-elevation-menu);
+    --_action-sheet-ring: 0 0 transparent;
+    --_action-sheet-backdrop: none;
+    --_action-sheet-title-fg: var(--ds-color-text-bright);
+    --_action-sheet-title-font-size: var(--ds-font-size-l);
+    --_action-sheet-title-font-weight: var(--ds-font-weight-semibold);
+    --_action-sheet-description-fg: var(--ds-color-text-muted);
+    --_action-sheet-description-font-size: var(--ds-font-size-m);
+    --_action-sheet-padding: var(--ds-space-xl);
+    --_action-sheet-padding-block: var(--ds-space-xl);
+    --_action-sheet-gap: var(--ds-space-s);
+    --_action-sheet-item-padding: var(--ds-space-l);
+    --_action-sheet-item-height: var(--ds-size-control-lg);
+    --_action-sheet-item-radius: var(--ds-radius-control);
+    --_action-sheet-item-font-size: var(--ds-font-size-l);
+    --_action-sheet-item-justify: center;
+    --_action-sheet-scrim: var(--ds-color-bg-scrim);
+    --_action-sheet-scrim-filter: none;
+    --_action-sheet-enter-scale: var(--ds-scale-menu-enter);
+    --_action-sheet-enter-y: 0px;
+    --_action-sheet-duration-in: var(--ds-duration-spring-bouncy);
+    --_action-sheet-duration-out: min(var(--ds-duration-quick), var(--_action-sheet-duration-in));
+    --_action-sheet-ease-in: var(--ds-ease-spring-bouncy);
+    --_action-sheet-ease-out: var(--ds-ease-exit);
+
+    position: fixed;
+    z-index: var(--ds-z-dialog);
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    /* The gutter, plus the safe areas of a phone with a notch or a home bar. */
+    padding-block-start: calc(var(--_action-sheet-gutter) + env(safe-area-inset-top, 0px));
+    padding-block-end: calc(var(--_action-sheet-gutter) + env(safe-area-inset-bottom, 0px));
+    padding-inline: calc(var(--_action-sheet-gutter) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+  }
+
+  /* Anchored: the page behind stays as it is; the backdrop only takes the press outside the card. */
+  [data-ds='action-sheet'][data-placement='anchored'] {
+    --_action-sheet-scrim: transparent;
+  }
+
+  /* Bottom: the sheet meets the edges; the home bar's room goes inside the panel. */
+  [data-ds='action-sheet'][data-placement='bottom'] {
+    --_action-sheet-width: var(--ds-dialog-width-md);
+    --_action-sheet-radius: var(--ds-radius-sheet);
+    --_action-sheet-gap: 0px;
+    --_action-sheet-item-padding: var(--ds-space-s);
+    --_action-sheet-item-radius: var(--ds-radius-control);
+    --_action-sheet-item-justify: flex-start;
+    --_action-sheet-enter-scale: 1;
+    --_action-sheet-enter-y: 100%;
+    --_action-sheet-duration-in: var(--ds-duration-spring-soft);
+    --_action-sheet-ease-in: var(--ds-ease-spring-soft);
+
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  /* ------------------------------------------------------------ backdrop */
+
+  [data-ds='action-sheet'] > [data-part='backdrop'] {
+    position: absolute;
+    inset: 0;
+    background-color: var(--_action-sheet-scrim);
+    /* A modal layer turns the page's pointer events off; the backdrop takes the press outside the panel. */
+    pointer-events: auto;
+    -webkit-backdrop-filter: var(--_action-sheet-scrim-filter);
+    backdrop-filter: var(--_action-sheet-scrim-filter);
+  }
+
+  [data-ds='action-sheet'] > [data-part='backdrop'][data-state='open'] {
+    animation: ds-action-sheet-fade-in var(--_action-sheet-duration-in) var(--ds-ease-out);
+  }
+
+  [data-ds='action-sheet'] > [data-part='backdrop'][data-state='closed'] {
+    animation: ds-action-sheet-fade-out var(--_action-sheet-duration-out) var(--_action-sheet-ease-out) forwards;
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  [data-ds='action-sheet'] [data-part='panel'] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: min(var(--_action-sheet-width), 100%);
+    max-block-size: min(var(--_action-sheet-height-max), 100%);
+    min-inline-size: 0;
+    border: var(--ds-border-width-default) solid var(--_action-sheet-border-color);
+    border-radius: var(--_action-sheet-radius);
+    background-color: var(--_action-sheet-bg);
+    -webkit-backdrop-filter: var(--_action-sheet-backdrop);
+    backdrop-filter: var(--_action-sheet-backdrop);
+    box-shadow: var(--_action-sheet-shadow), var(--_action-sheet-ring);
+    color: var(--_action-sheet-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+    text-align: start;
+    /* A long list or a short viewport (400% zoom included): the panel scrolls, every item stays reachable (WCAG 1.4.10). */
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Anchored: the room the positioning measured beside the trigger; the card never runs past the viewport (WCAG 2.4.11). */
+  [data-ds='action-sheet'][data-placement='anchored'] [data-part='panel'] {
+    inline-size: var(--_action-sheet-width);
+    max-inline-size: var(--radix-popover-content-available-width);
+    max-block-size: min(var(--_action-sheet-height-max), var(--radix-popover-content-available-height));
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
+  [data-ds='action-sheet'][data-placement='bottom'] [data-part='panel'] {
+    inline-size: min(var(--_action-sheet-width), 100%);
+    border-block-end: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+
+  [data-ds='action-sheet'] [data-part='panel'][data-state='open'] {
+    animation: ds-action-sheet-in var(--_action-sheet-duration-in) var(--_action-sheet-ease-in);
+  }
+
+  [data-ds='action-sheet'] [data-part='panel'][data-state='closed'] {
+    animation: ds-action-sheet-out var(--_action-sheet-duration-out) var(--_action-sheet-ease-out) forwards;
+  }
+
+  /* The panel takes focus only when it holds nothing focusable. */
+  [data-ds='action-sheet'] [data-part='panel']:focus-visible {
+    --_action-sheet-ring: var(--ds-focus-shadow-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  [data-ds='action-sheet'] [data-part='panel']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* ------------------------------------------------------------ title, description */
+
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='title']:not([data-visually-hidden]) {
+    flex: none;
+    margin: 0;
+    padding-block: var(--_action-sheet-padding-block) 0;
+    padding-inline: var(--_action-sheet-padding);
+    color: var(--_action-sheet-title-fg);
+    font-size: var(--_action-sheet-title-font-size);
+    font-weight: var(--_action-sheet-title-font-weight);
+    line-height: var(--ds-font-leading-tight);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='description'] {
+    flex: none;
+    margin: 0;
+    padding-block: var(--ds-space-xs) 0;
+    padding-inline: var(--_action-sheet-padding);
+    color: var(--_action-sheet-description-fg);
+    font-size: var(--_action-sheet-description-font-size);
+    overflow-wrap: anywhere;
+  }
+
+  /* With no visible title, the description starts at the top. */
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='title'][data-visually-hidden] + [data-part='description'],
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='description']:first-child {
+    padding-block-start: var(--_action-sheet-padding-block);
+  }
+
+  /* ------------------------------------------------------------ actions */
+
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--_action-sheet-gap);
+    padding: var(--_action-sheet-item-padding);
+  }
+
+  /* Space between the words above and the first item. */
+  [data-ds='action-sheet'] [data-part='panel'] > :is([data-part='title']:not([data-visually-hidden]), [data-part='description']) ~ [data-part='actions'] {
+    padding-block-start: var(--_action-sheet-padding-block);
+  }
+
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
+    --_button-height: var(--_action-sheet-item-height);
+    --_button-radius: var(--_action-sheet-item-radius);
+    --_button-font-size: var(--_action-sheet-item-font-size);
+    --_button-justify: var(--_action-sheet-item-justify);
+
+    flex: none;
+    min-block-size: var(--_action-sheet-item-height);
+  }
+
+  /* A row at the bottom reads at the inline start, like a list. */
+  [data-ds='action-sheet'][data-placement='bottom'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
+    text-align: start;
+  }
+
+  /* Cancel is quieter: regular weight, never the action's emphasis. */
+  [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > [data-part='cancel'] {
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* ------------------------------------------------------------ motion */
+
+  @keyframes ds-action-sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_action-sheet-enter-y)) scale(var(--_action-sheet-enter-scale));
+    }
+
+    40% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-action-sheet-out {
+    to {
+      opacity: 0;
+      transform: translateY(var(--_action-sheet-enter-y)) scale(var(--_action-sheet-enter-scale));
+    }
+  }
+
+  @keyframes ds-action-sheet-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ds-action-sheet-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='action-sheet'] > [data-part='backdrop'][data-state],
+    [data-ds='action-sheet'] [data-part='panel'][data-state] {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='action-sheet'] > [data-part='backdrop'][data-state],
+  :root[data-motion='reduce'] [data-ds='action-sheet'] [data-part='panel'][data-state] {
+    animation: none;
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='action-sheet'] {
+      --_action-sheet-backdrop: none;
+      --_action-sheet-scrim-filter: none;
+      --_action-sheet-scrim: var(--ds-color-bg-scrim-80);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='action-sheet'] {
+      --_action-sheet-backdrop: none;
+      --_action-sheet-scrim-filter: none;
+      --_action-sheet-scrim: var(--ds-color-bg-scrim-80);
+      --_action-sheet-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='action-sheet'] {
+    --_action-sheet-backdrop: none;
+    --_action-sheet-scrim-filter: none;
+    --_action-sheet-scrim: var(--ds-color-bg-scrim-80);
+    --_action-sheet-border-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='action-sheet'] {
+      --_action-sheet-bg: Canvas;
+      --_action-sheet-backdrop: none;
+      --_action-sheet-scrim-filter: none;
+      --_action-sheet-border-color: CanvasText;
+    }
+
+    [data-ds='action-sheet'] [data-part='panel']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

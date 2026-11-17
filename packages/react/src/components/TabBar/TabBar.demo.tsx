@@ -1,7 +1,8 @@
 import type { IconName } from '@the-system/icons';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme/Theme';
-import { TabBar, TabBarItem, type TabBarSize } from './index';
+import { SearchField } from '../SearchField';
+import { TabBar, TabBarItem, TabBarSearch, type TabBarSize } from './index';
 import type { TabBarPlacement } from './TabBar';
 
 interface Dest {
@@ -28,19 +29,32 @@ function AppBar({
   count = 5,
   activeIndex = 0,
   placement,
+  search,
 }: {
   lang?: 'en' | 'ar';
   size?: TabBarSize;
   count?: number;
   activeIndex?: number;
   placement?: TabBarPlacement;
+  /** A search item after the tabs: a link, the current page, or the current page turned into its field. */
+  search?: 'link' | 'active' | 'field';
 }) {
+  // The search item takes the place of the Search tab.
+  const tabs = search ? dests.filter((d) => d.icon !== 'search') : dests;
   return (
     <div style={{ inlineSize: '100%', maxInlineSize: 'calc(var(--ds-menu-width-min) * 2)' }}>
       <TabBar aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'} size={size} placement={placement}>
-        {dests.slice(0, count).map((d, i) => (
-          <TabBarItem key={d.en} href={`#${d.en.toLowerCase()}`} icon={d.icon} label={d[lang]} badge={d.badge} active={i === activeIndex} />
+        {tabs.slice(0, count).map((d, i) => (
+          <TabBarItem key={d.en} href={`#${d.en.toLowerCase()}`} icon={d.icon} label={d[lang]} badge={d.badge} active={(search === undefined || search === 'link') && i === activeIndex} />
         ))}
+        {search && (
+          <TabBarSearch
+            href="#search"
+            label={lang === 'ar' ? 'بحث' : 'Search'}
+            active={search !== 'link'}
+            field={search === 'field' ? <SearchField placeholder={lang === 'ar' ? 'أغاني وفنانين وقوائم' : 'Songs, artists and lists'} shape="pill" /> : undefined}
+          />
+        )}
       </TabBar>
     </div>
   );
@@ -61,6 +75,18 @@ export default function TabBarDemo() {
         <DemoRow label="Placement side: a column at the inline end on ios, arrow keys up and down">
           <AppBar size="lg" placement="side" />
         </DemoRow>
+        <DemoRow label="Search item: last in the bar, a round item beside the capsule on ios">
+          <AppBar size="lg" count={4} search="link" />
+        </DemoRow>
+        <DemoRow label="Search item, the current page">
+          <AppBar size="lg" count={4} search="active" />
+        </DemoRow>
+        <DemoRow label="Search item turned into its field while current">
+          <AppBar size="lg" count={4} search="field" />
+        </DemoRow>
+        <DemoRow label="Search item in the column: under the capsule on ios">
+          <AppBar size="lg" count={4} placement="side" search="link" />
+        </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           {sizes.map((size) => (
@@ -71,11 +97,23 @@ export default function TabBarDemo() {
           <DemoRow label="عمود جانبي">
             <AppBar lang="ar" size="lg" placement="side" />
           </DemoRow>
+          <DemoRow label="البحث">
+            <AppBar lang="ar" size="lg" count={4} search="link" />
+          </DemoRow>
+          <DemoRow label="خانة البحث">
+            <AppBar lang="ar" size="lg" count={4} search="field" />
+          </DemoRow>
+          <DemoRow label="البحث في العمود">
+            <AppBar lang="ar" size="lg" count={4} placement="side" search="active" />
+          </DemoRow>
         </Theme>
       </DemoCase>
 
       <DemoCase id="many" title="Three destinations, the fewest a bar holds">
         <AppBar count={3} />
+        <DemoRow label="Two destinations and the search item">
+          <AppBar size="lg" count={2} search="link" />
+        </DemoRow>
       </DemoCase>
 
       <DemoCase id="too-many" title="Five destinations at lg in 320px, the most a bar holds: past five, move the rest into a More page">
@@ -111,6 +149,19 @@ export default function TabBarDemo() {
             <TabBarItem href="#library" icon="folder" label="المكتبات المشتركة" />
             <TabBarItem href="#notifications" icon="bell" label="الإشعارات" badge={128} />
             <TabBarItem href="#settings" icon="settings" label="إعدادات مساحة العمل" />
+          </TabBar>
+        </div>
+        <div style={{ maxInlineSize: 'calc(var(--ds-menu-width-min) * 1.6)' }}>
+          <TabBar aria-label="تنقل المكتبة" size="lg">
+            <TabBarItem href="#home" icon="home" label="الرئيسية" />
+            <TabBarItem href="#library" icon="folder" label="المكتبات المشتركة" />
+            <TabBarItem href="#notifications" icon="bell" label="الإشعارات" badge={128} />
+            <TabBarSearch
+              href="#search"
+              label="البحث في المكتبات"
+              active
+              field={<SearchField placeholder="ملفات ومجلدات وأعضاء الفريق" shape="pill" defaultValue="تقرير المبيعات الشهري" />}
+            />
           </TabBar>
         </div>
       </DemoCase>

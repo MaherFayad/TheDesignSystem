@@ -2,7 +2,7 @@
   "name": "TabBar",
   "kind": "component",
   "family": "navigation",
-  "summary": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked.",
+  "summary": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked. An optional search item goes last: on web and android it is the last item of the bar, on ios a round item beside the capsule (under it in the side column), and while current it can turn into a search field.",
   "useWhen": [
     "Three to five top level destinations of an app on a phone width layout",
     "Destinations a person moves between often and wants one thumb tap away",
@@ -27,15 +27,18 @@
     "item-icon",
     "item-label",
     "item-badge",
-    "item-status"
+    "item-status",
+    "search"
   ],
   "parts": {
-    "TabBarItem": "item"
+    "TabBarItem": "item",
+    "TabBarSearch": "search"
   },
   "slots": {
     "root": {
       "accepts": [
-        "TabBarItem"
+        "TabBarItem",
+        "TabBarSearch"
       ],
       "min": 3,
       "max": 5
@@ -64,20 +67,20 @@
     },
     "label": {
       "type": "string",
-      "description": "TabBarItem: the visible name, a short noun. Always shown; a long one ends in an ellipsis and stays whole in the link name."
+      "description": "TabBarItem: the visible name, a short noun. Always shown; a long one ends in an ellipsis and stays whole in the link name. TabBarSearch: required, the destination's name and the link name (Search; Arabic بحث); drawn under the glyph on web and android, kept as the name on ios where the round item shows the glyph only."
     },
     "icon": {
       "type": "string",
-      "description": "TabBarItem: a system icon name. Decorative."
+      "description": "TabBarItem: a system icon name. Decorative. TabBarSearch: default search."
     },
     "href": {
       "type": "string",
-      "description": "TabBarItem: the destination."
+      "description": "TabBarItem: the destination. TabBarSearch: the search destination; optional when onSelect is given."
     },
     "active": {
       "type": "boolean",
       "default": false,
-      "description": "TabBarItem: the current destination. Sets aria-current page and data-active: a bolder label and a pill behind the icon."
+      "description": "TabBarItem and TabBarSearch: the current destination. Sets aria-current page and data-active: a bolder label and a pill behind the icon."
     },
     "badge": {
       "type": "number | boolean",
@@ -91,27 +94,36 @@
     "asChild": {
       "type": "boolean",
       "default": false,
-      "description": "TabBarItem: renders its one child element (a router link) as the item."
+      "description": "TabBarItem and TabBarSearch: renders its one child element (a router link) as the item."
+    },
+    "onSelect": {
+      "type": "(event) => void",
+      "description": "TabBarSearch: called on a press of the item, before the link is followed; it may call preventDefault. Without href the item is a focusable link (tabindex 0) that only calls onSelect, on a press or Enter."
+    },
+    "field": {
+      "type": "ReactElement (a SearchField)",
+      "description": "TabBarSearch: a SearchField the item turns into while active, stamped data-expanded on the search part. The field takes label as its accessible name unless it has its own aria-label. When the item had focus or was pressed, focus moves into the field, and back to the link when the field goes. Default none: the item stays a link."
     }
   },
   "states": [
     "data-active",
     "data-dot",
     "data-pressed",
-    "data-placement=bottom|side"
+    "data-placement=bottom|side",
+    "data-expanded"
   ],
   "a11y": {
     "role": "navigation (the nav landmark) with a name; each item is a link, the current one with aria-current page.",
-    "focus": "Every item is a tab stop, in reading order, in every placement. The arrow keys move focus along the bar as it is drawn, as a help; they never take an item out of the tab order.",
+    "focus": "Every item, the search item included, is a tab stop, in reading order, in every placement. The arrow keys move focus along the bar as it is drawn, as a help; they never take an item out of the tab order. While the search item is its field, the field is the tab stop and keeps its own arrow keys; the arrows of the bar skip it.",
     "keys": {
       "Tab": "Moves to the next item",
       "Shift+Tab": "Moves to the previous item",
       "Enter": "Follows the link",
-      "ArrowRight, ArrowLeft": "In a row (bottom, or auto drawn as a row): the next or previous item in the reading direction (flipped in RTL), wrapping",
-      "ArrowDown, ArrowUp": "In a column (side, or auto drawn as a column): the next or previous item, top to bottom, wrapping; not flipped in RTL",
+      "ArrowRight, ArrowLeft": "In a row (bottom, or auto drawn as a row): the next or previous item in the reading direction (flipped in RTL), wrapping; the search item is the last stop",
+      "ArrowDown, ArrowUp": "In a column (side, or auto drawn as a column): the next or previous item, top to bottom, wrapping; not flipped in RTL; the search item, under the capsule, is the last stop",
       "Home, End": "The first or last item"
     },
-    "announce": "Each link reads its label, its badge words (Inbox, 3 new) and current page for the active one.",
+    "announce": "Each link reads its label, its badge words (Inbox, 3 new) and current page for the active one. The search item reads Search, current page; while it is a field the field reads as a search box named Search.",
     "notes": [
       "The current item is marked by aria-current, a bolder label and a pill behind its icon, never by color alone (WCAG 1.4.1).",
       "Labels are always visible; icons are decorative.",
@@ -124,17 +136,22 @@
       "No aria-orientation: ARIA 1.2 does not allow it on the navigation role, and the bar stays a nav of links. Tab reaches every item in every placement, so the axis need not be announced.",
       "In the column the label is visually hidden by the CSS, never removed: it stays the link name (WCAG 1.1.1, 4.1.2). A hover hint for the column is not built yet: a Tooltip is markup, and under auto only the CSS knows the bar is a column.",
       "The DOM order never changes with placement, so the focus order is the same in a row and in a column (WCAG 2.4.3); in a PageShell the bar comes after main, at the bottom of the column.",
-      "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2)."
+      "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2).",
+      "Search item (order M9.9): the part search, last child of the bar, a link with aria-current page when current, so it behaves as any item (WCAG 4.1.2). Its label stays the link name on ios, where the round item draws only the glyph (WCAG 1.1.1, 2.5.3: the name contains Search).",
+      "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
+      "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
     ]
   },
   "content": {
     "en": {
       "label": "One short noun, sentence case: Home, Search, Inbox. No verbs.",
-      "landmark": "Name it after the app section, never the same name as another nav on the page."
+      "landmark": "Name it after the app section, never the same name as another nav on the page.",
+      "search": "The search item is named Search, or Search plus what it searches: Search the library. Field placeholder: what can be found, as nouns: Songs, artists and lists."
     },
     "ar": {
       "label": "Noun form labels, white Saudi dialect, no diacritics: الرئيسية، البحث، الوارد.",
-      "badge": "Western digits; the badge words read جديد."
+      "badge": "Western digits; the badge words read جديد.",
+      "search": "بحث، أو البحث في المكتبات. Placeholder as nouns: أغاني وفنانين وقوائم."
     }
   },
   "tokens": [
@@ -173,7 +190,9 @@
     "ease.spring-bouncy",
     "scale.anticipate",
     "distance.nudge",
-    "delay.stagger"
+    "delay.stagger",
+    "duration.base",
+    "ease.out"
   ],
   "motion": "fade-rise",
   "frameworks": {
@@ -181,7 +200,7 @@
       "status": "ready",
       "behavior": "hand built nav of links",
       "example": "TabBar.demo.tsx",
-      "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves."
+      "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves. Order M9.9 (proposed): TabBarSearch, the search part; while it is its field the field fades in (pattern fade on duration.base, CSS keyframes), none under reduced motion."
     },
     "angular": {
       "status": "planned",
@@ -190,14 +209,14 @@
     "native": {
       "status": "planned",
       "behavior": "react-navigation bottom tabs or a hand built bar",
-      "note": "44pt on iOS, 48dp on Android; safe area from react-native-safe-area-context."
+      "note": "44pt on iOS, 48dp on Android; safe area from react-native-safe-area-context. Search item (R5): the system tab bar's search role on iOS, a normal destination on Android."
     }
   },
   "styles": {
     "studio": "A surface-2 bar with a subtle top hairline, muted labels, the current item bright and bold with an overlay-20 pill behind its icon.",
     "desk": "The same parts on Desk tokens: the Desk surface and type.",
-    "neutral": "Token driven; applies once the Neutral pack is merged.",
-    "liquid": "Planned: a glass bar."
+    "neutral": "Token driven. On ios the same platform shape as Liquid, in Neutral's solid material: the search item a separate disc beside the capsule.",
+    "liquid": "On ios the platform paints the glass capsule; the search item is a separate glass disc beside it (under it in the column), with the tint on its glyph when current. While expanded the capsule shrinks to its current item and the field fills the rest (look request of order M9.9)."
   },
   "mistakes": [
     {
@@ -231,12 +250,21 @@
     {
       "wrong": "Choosing the placement in JavaScript from the window size",
       "right": "auto: the CSS decides from the PageShell's size, so the server render matches"
+    },
+    {
+      "wrong": "A Search TabBarItem in the middle of the bar on ios",
+      "right": "TabBarSearch, last in the bar, which ios draws as its own round item"
+    },
+    {
+      "wrong": "A search field placed in the bar by hand next to the items",
+      "right": "TabBarSearch with field, which keeps the destination, aria-current and focus"
     }
   ],
   "contract": {
     "optionalParts": [
       "item-badge",
-      "item-status"
+      "item-status",
+      "search"
     ]
   },
   "since": "0.1.0"
