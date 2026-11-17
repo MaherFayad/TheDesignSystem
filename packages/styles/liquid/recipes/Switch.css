@@ -154,7 +154,9 @@
     --_switch-thumb-size-pressed: 1.4;
     --_switch-stretch: 1.1;
     --_switch-thumb-solid-pressed: 0.08;
-    --_switch-thumb-highlight-opacity-pressed: 1;
+    --_switch-thumb-highlight-opacity-pressed: 0;
+    /* Order G2: no sheen inside the held lens (the rim carries the light), and the lens passes the track as it is (no lift of brightness or colour, which made a neon or white blob). */
+    --_switch-thumb-backdrop: blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.05);
   }
 
   /*
@@ -163,13 +165,29 @@
    */
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
-    /* Order F1: no ring and no hard line. A soft light along the top, a soft shade inside the lower edge and one soft lift; the lens is told from the track by its brightness and its lift. */
+    /*
+     * Order F1: no ring and no hard line. Order G2: the held lens is clear, as
+     * in the vendor's kit: the track shows through it a little lighter (the
+     * thumb paint thinned to 8 percent white) and neither brighter nor more
+     * saturated (the lens is not a light), with a soft light along the top, a
+     * fainter one along the bottom and one soft lift. The edge band that bends
+     * the track's end is in ios-refraction.css.
+     */
     --_switch-thumb-ring-width: 0px;
     --_switch-thumb-edge-width: 0px;
     --_switch-thumb-shadow:
-      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
-      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent),
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 80%, transparent),
+      inset 0 calc(-1 * var(--ds-border-width-default)) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 45%, transparent),
       0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
+  }
+
+  /* Dark: the light along the edge is fainter and the lift deeper, so the lens reads as glass over the dark page, not a lit pill. */
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-disabled], [data-readonly]) > [data-part='control']:active,
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
+    --_switch-thumb-shadow:
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 40%, transparent),
+      inset 0 calc(-1 * var(--ds-border-width-default)) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 18%, transparent),
+      0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 40%, transparent);
   }
 
   /* Where the lens cannot be drawn, the held thumb stays solid: it still lifts and stretches. */

@@ -10,6 +10,7 @@ import {
   refractionId,
   refractionKey,
   refractionRadius,
+  refractionReach,
   refractionResolution,
   refractionSupported,
   toBase64,
@@ -24,10 +25,21 @@ describe('refraction map', () => {
     expect(refractionRadius({ width: 40, height: 100, radius: -3 })).toBe(0);
   });
 
-  it('sizes the band from the short side, within 4 and 24 px', () => {
-    expect(refractionBand(capsule)).toBeCloseTo(19.2);
+  it('sizes the band from the short side, within 4 and 30 px', () => {
+    expect(refractionBand(capsule)).toBeCloseTo(23.04);
     expect(refractionBand({ width: 10, height: 10, radius: 5 })).toBe(4);
-    expect(refractionBand({ width: 400, height: 300, radius: 26 })).toBe(24);
+    expect(refractionBand({ width: 400, height: 300, radius: 26 })).toBe(30);
+  });
+
+  it('widens the band at the ends of the long side, short of the middle of the cap', () => {
+    // 23.04 * 1.5 would be 34.56; the cap keeps 0.85 of its half height: 27.2.
+    expect(refractionReach(capsule, 23.04)).toBeCloseTo(27.2);
+    expect(refractionReach({ width: 400, height: 300, radius: 26 }, 30)).toBeCloseTo(45);
+    // At 25px from the end of the cap there is still a move; at 25px from the top there is none.
+    expect(refractionAt(capsule, 23.04, 25, 32).dx).toBeGreaterThan(0);
+    expect(refractionAt(capsule, 23.04, 100, 25).dy).toBe(0);
+    // The end of a cap moves further than a flat side at the same depth.
+    expect(refractionAt(capsule, 23.04, 4, 32).dx).toBeGreaterThan(refractionAt(capsule, 23.04, 100, 4).dy);
   });
 
   it('does not move the middle', () => {
@@ -36,15 +48,16 @@ describe('refraction map', () => {
   });
 
   it('moves inward near the edge, strongest at the rim', () => {
-    const band = 19.2;
+    const band = 23.04;
     const left = refractionAt(capsule, band, 1, 32);
     const right = refractionAt(capsule, band, 199, 32);
     const top = refractionAt(capsule, band, 100, 1);
     const bottom = refractionAt(capsule, band, 100, 63);
-    expect(left.dx).toBeGreaterThan(0.8);
-    expect(right.dx).toBeLessThan(-0.8);
-    expect(top.dy).toBeGreaterThan(0.8);
-    expect(bottom.dy).toBeLessThan(-0.8);
+    // The end of the cap takes the full move; a flat side the share of its narrower band (23.04 of 27.2).
+    expect(left.dx).toBeGreaterThan(0.9);
+    expect(right.dx).toBeLessThan(-0.9);
+    expect(top.dy).toBeGreaterThan(0.75);
+    expect(bottom.dy).toBeLessThan(-0.75);
     const nearer = refractionAt(capsule, band, 100, 2).dy;
     const farther = refractionAt(capsule, band, 100, 12).dy;
     expect(nearer).toBeGreaterThan(farther);
@@ -64,7 +77,7 @@ describe('refraction map', () => {
   });
 
   it('puts the glare on the upper leading arc more than on the lower trailing one', () => {
-    const band = 19.2;
+    const band = 23.04;
     expect(refractionAt(capsule, band, 16.4, 11.2).glare).toBeGreaterThan(refractionAt(capsule, band, 183.6, 52.8).glare);
     expect(refractionAt(capsule, band, 183.6, 52.8).glare).toBeGreaterThan(0);
   });
@@ -76,7 +89,8 @@ describe('refraction map', () => {
     expect(map.data.length).toBe(200 * 64 * 3);
     const mid = (32 * 200 + 100) * 3;
     expect([map.data[mid], map.data[mid + 1], map.data[mid + 2]]).toEqual([128, 128, 0]);
-    expect(map.scale).toBeCloseTo(19.2);
+    // Twice 0.6 of the widest band (27.2 at the end of the cap).
+    expect(map.scale).toBeCloseTo(32.64);
     const left = (32 * 200 + 0) * 3;
     expect(map.data[left]).toBeGreaterThan(230);
   });
@@ -90,12 +104,19 @@ describe('refraction map', () => {
   });
 
   it('never folds the band at the default depth', () => {
-    // Along a row from the left edge, the sampled point (x + move) must not go backwards.
+    // Along a row from the end of the cap, and down a column from the top, the sampled point (x + move) must not go backwards.
     const map = buildRefractionMap(capsule);
     let last = -Infinity;
     for (let x = 0; x < 40; x++) {
       const o = (32 * map.width + x) * 3;
       const sampled = x + 0.5 + (map.scale * (map.data[o]! - 127.5)) / 255;
+      expect(sampled).toBeGreaterThanOrEqual(last - 0.6);
+      last = sampled;
+    }
+    last = -Infinity;
+    for (let y = 0; y < 32; y++) {
+      const o = (y * map.width + 100) * 3 + 1;
+      const sampled = y + 0.5 + (map.scale * (map.data[o]! - 127.5)) / 255;
       expect(sampled).toBeGreaterThanOrEqual(last - 0.6);
       last = sampled;
     }

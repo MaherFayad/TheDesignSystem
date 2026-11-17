@@ -1094,9 +1094,10 @@
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
-      --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
-      --_button-bg-active: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
+      /* Order G2: the buttons are thick clear glass like the tab bar, not a tinted pill: a low tint (labels keep 10:1 or more, measured). */
+      --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-material-glass-solid) 30%, transparent);
 
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
@@ -1104,9 +1105,24 @@
 
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 74%, transparent);
+      /* Order G2: lowered from 74 percent, which washed the content behind more than the reference; the rows keep 4.5:1 with a faint shade behind their text (below). */
+      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 60%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 3)) saturate(1.6);
+    }
+
+    /*
+     * Order G2: a faint shade behind the text of each menu row, in light, so
+     * the panel tint can stay low (the content behind keeps its colour round
+     * the rows and in the edge band) while each label keeps 4.5:1 over the
+     * darkest content (measured from pixels). Soft edges, no box: the shade
+     * fades out over a spacing step. Not a fill: the row's hover veil and
+     * focus ring are its own.
+     */
+    [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
+      border-radius: var(--ds-radius-sm);
+      background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 40%, transparent);
+      box-shadow: 0 0 var(--ds-space-fixed-xl) var(--ds-space-fixed-m) color-mix(in srgb, var(--ds-color-material-glass-solid) 40%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
@@ -1116,9 +1132,9 @@
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 46%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
@@ -1235,6 +1251,12 @@
         backdrop-filter: none;
       }
 
+      /* No shade behind the menu rows on the solid paint (order G2). */
+      [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
+        background-color: transparent;
+        box-shadow: none;
+      }
+
       /* The solid paint keeps its border: no rim. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
@@ -1322,6 +1344,12 @@
       backdrop-filter: none;
     }
 
+    [data-contrast='more'] [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'],
+    [data-contrast='more'][data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
     /* No rim with more contrast. */
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
@@ -1361,6 +1389,11 @@
         --_button-bg: var(--ds-color-material-glass-solid);
         --_button-bg-hover: var(--ds-color-material-glass-solid);
         --_button-bg-active: var(--ds-color-material-glass-solid);
+      }
+
+      [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > [data-part='text'] {
+        background-color: transparent;
+        box-shadow: none;
       }
 
       /* No rim where the glass cannot be drawn. */
@@ -1487,6 +1520,292 @@
     [data-platform='ios'][data-scheme='dark'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
       color: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
+    }
+  }
+
+  /* ------------------------------------------------------------ the families of orders M9.1 to M9.7 (order M9.5, proposed) */
+
+  /*
+   * Order M9.5, from the requests the component orders left in their CSS
+   * headers, beside the vendor's iOS 27 kit and native apps on Mobbin (links
+   * in docs/reports/lanes/reset-M9.5.md). Geometry that every style shares
+   * is set here; the paint of a style that takes the platform's look in full
+   * (Liquid and Neutral) sits in the container block after it. Shapes
+   * separate by fill and a soft shadow, never by a dark stroke (owner ruling
+   * after the audit).
+   */
+
+  /* Grouped field rows (M9.1): rows 52 tall, the label as the row's text, the header and footer at the rows' text edge. */
+  [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] {
+    --_fieldset-card-padding: calc(2 * var(--ds-space-fixed-m));
+    --_fieldset-card-radius: var(--ds-radius-panel);
+    --_fieldset-header-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='legend'] {
+    font-size: var(--ds-type-body-medium-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] {
+    --_field-row-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    --_field-row-gap: var(--ds-space-fixed-xl);
+  }
+
+  [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] > [data-part='body'] > [data-ds='field'] > [data-part='label'] {
+    --_label-font-size: var(--ds-type-body-large-font-size);
+
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* A plain field keeps the small corner of its focus ring: the field box corner of this file is for boxed fields. */
+  [data-platform='ios'] [data-ds='input'][data-variant='plain'] {
+    --_input-radius: var(--ds-radius-xs);
+  }
+
+  /* The clear button: a small round gray disc with the cross cut out in the field's surface, in a 44 hit area. */
+  [data-platform='ios'] [data-ds='input'] > [data-part='clear'] > [data-part='icon'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-4xs));
+    block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-4xs));
+    border-radius: var(--ds-shape-corner-full);
+  }
+
+  [data-platform='ios'] [data-ds='input'] > [data-part='clear'] > [data-part='icon'] > [data-ds='icon'] {
+    --_icon-stroke-width: 3;
+
+    inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+  }
+
+  /* List sections (M9.2): the header and the footer at the rows' text edge, the header 15 semibold, the footer 13, a wider gap between groups. */
+  [data-platform='ios'] [data-ds='list']:has(> [data-part='section']) {
+    --_list-section-gap: calc(2 * var(--ds-space-fixed-xl));
+    --_list-section-header-font-size: var(--ds-type-body-medium-font-size);
+    --_list-section-header-font-weight: var(--ds-font-weight-semibold);
+    --_list-section-footer-font-size: var(--ds-type-body-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='section'] {
+    gap: var(--ds-space-fixed-s);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='section']:has(> [data-ds='list'][data-variant='inset']) {
+    --_list-section-text-inset: calc(2 * var(--ds-space-fixed-m));
+  }
+
+  /* The index bar (M9.2): the current key has no fill until a finger scrubs. Keys stay 24 by 24 (WCAG 2.2 2.5.8). */
+  [data-platform='ios'] [data-ds='section-index'] {
+    --_section-index-font-size: var(--ds-type-label-small-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='section-index']:not([data-dragging]) {
+    --_section-index-item-bg-active: transparent;
+  }
+
+  /* The pop-up button (M9.3): the value semibold, the up and down glyph smaller than the text. */
+  [data-platform='ios'] [data-ds='select'][data-emphasis='ghost']:not([data-part]) {
+    --_select-ghost-padding-inline: var(--ds-space-fixed-2xs);
+
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-platform='ios'] [data-ds='select'][data-emphasis='ghost']:not([data-part]) > [data-part='icon'] > [data-ds='icon'] {
+    --_icon-stroke-width: 2.5;
+
+    inline-size: calc(var(--ds-size-icon-sm) + var(--ds-space-fixed-4xs));
+    block-size: calc(var(--ds-size-icon-sm) + var(--ds-space-fixed-4xs));
+  }
+
+  /* Quick actions (M9.4): labels 12 under the icon, the line under the row inset like the separators between groups. */
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-quick-gap: var(--ds-space-fixed-2xs);
+    --_menu-quick-padding-block: var(--ds-space-fixed-m);
+    --_menu-quick-label-gap: var(--ds-space-fixed-2xs);
+    --_menu-quick-font-size: var(--ds-type-label-medium-font-size);
+  }
+
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions']:has(+ :not([data-part='highlight'])) {
+    position: relative;
+    margin-block-end: var(--ds-space-fixed-s);
+    padding-block-end: var(--ds-space-fixed-s);
+    border-block-end-color: transparent;
+  }
+
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='quick-actions']:has(+ :not([data-part='highlight']))::after {
+    content: '';
+    position: absolute;
+    inset-block-end: calc(-1 * var(--ds-border-width-default));
+    inset-inline: var(--_menu-item-padding-inline);
+    block-size: var(--ds-border-width-default);
+    background-color: var(--_menu-quick-divider-color);
+    pointer-events: none;
+  }
+
+  /* The popover arrow (order F1 asked, Popover arrow part): wider and flatter, 28 by 10, as the kit draws it. */
+  [data-platform='ios'] [data-ds='popover'] {
+    --_popover-arrow-width: calc(2 * var(--ds-space-fixed-xl) + var(--ds-space-fixed-2xs));
+    --_popover-arrow-height: var(--ds-space-fixed-l);
+  }
+
+  /* The sheet confirm (M9.6): the tint button lifts like the close button beside it. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] {
+    --_button-shadow: var(--ds-elevation-tooltip);
+  }
+
+  /*
+   * Swipe rows (M9.7). The disclosure chevron travels with the row while it
+   * is shifted, so it never sits on the revealed actions. A swipe row that
+   * goes somewhere keeps room for the chevron and the menu button together,
+   * and the menu button sits before the chevron.
+   */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']:is([data-dragging], [data-settling], [data-state='open-start'], [data-state='open-end']))::after {
+    transform: translateX(var(--_list-shift)) translateY(-50%) rotate(45deg);
+    transition: transform var(--_list-duration) var(--_list-ease);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']:is([data-dragging], [data-settling], [data-state='open-start'], [data-state='open-end'])):dir(rtl)::after {
+    transform: translateX(var(--_list-shift)) translateY(-50%) rotate(-45deg);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe'][data-dragging])::after {
+    transition: none;
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked] > [data-part='swipe'] {
+    --_swipe-actions-menu-inset: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl));
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']):focus-within {
+    padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:has(> [data-part='swipe']) {
+      padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl) + var(--_list-swipe-menu));
+    }
+  }
+
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    /*
+     * Grouped field rows: the card is the raised surface with the list's
+     * corner and hairline, and no drawn edge. The plain fields in it have no
+     * box: the row label names each one and the focus ring shows the field
+     * (WCAG 2.2 1.4.11, 2.4.7; the measured ratios are in the order report).
+     */
+    [data-platform='ios'] [data-ds='fieldset'][data-variant='inset'] {
+      --_fieldset-card-bg: var(--ds-color-bg-surface);
+      --_fieldset-card-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
+      --_fieldset-card-border-color: transparent;
+      --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='fieldset'][data-variant='inset'] {
+      --_fieldset-card-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
+      --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* The clear disc: a mid gray that keeps 3:1 against the card and the cross in the card's own color. */
+    [data-platform='ios'] [data-ds='input'] > [data-part='clear'] {
+      --_button-bg: transparent;
+      --_button-bg-hover: transparent;
+      --_button-bg-active: transparent;
+      --_button-border-color: transparent;
+      --_button-border-color-hover: transparent;
+      --_close-button-bloom: transparent;
+    }
+
+    [data-platform='ios'] [data-ds='input'] > [data-part='clear'] > [data-part='icon'] {
+      background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 45%, var(--ds-color-glass-backdrop-bright));
+      color: var(--ds-color-glass-backdrop-bright);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='input'] > [data-part='clear'] > [data-part='icon'] {
+      background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 55%, var(--ds-color-glass-backdrop-dark));
+      color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* The popover arrow: no edge, and its tip rounded by a stroke in the popover's own fill. */
+    [data-platform='ios'] [data-ds='popover'] [data-part='arrow'] {
+      stroke: var(--_popover-bg);
+      stroke-width: var(--ds-space-fixed-3xs);
+      stroke-linejoin: round;
+    }
+
+    /*
+     * Swipe actions: round tone discs with gaps between them and the label
+     * under each disc, as in the kit and the vendor's messages app. The disc
+     * is the action's start part, the button around it a clear 44 or wider
+     * target. Armed (a release runs the edge action), the edge tone runs from
+     * the row to the screen edge as one capsule and the other actions fade.
+     * Glass never sits on these fills.
+     */
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions'] {
+      background-color: transparent;
+      transition:
+        transform var(--_swipe-actions-duration) var(--_swipe-actions-ease),
+        background-color var(--ds-duration-quick) var(--ds-ease-out);
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] {
+      --_button-padding-inline: var(--ds-space-fixed-xs);
+      --_button-gap: var(--ds-space-fixed-4xs);
+      --_button-font-size: var(--ds-type-label-small-font-size);
+
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+      color: var(--ds-color-text-muted);
+      font-weight: var(--ds-font-weight-medium);
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] > [data-part='start'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      inline-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+      block-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+      border-radius: var(--ds-shape-corner-full);
+      background-color: var(--_swipe-actions-tone-solid);
+      color: var(--_swipe-actions-tone-on-solid);
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] > [data-part='start'] > [data-ds='icon'] {
+      inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+      block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    }
+
+    [data-platform='ios'] [data-ds='swipe-actions'][data-armed] > [data-part='actions'] {
+      inset-block: calc((100% - var(--ds-size-touch-ios) + var(--ds-space-fixed-m)) / 2 - var(--ds-space-fixed-m));
+      block-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+      border-radius: var(--ds-shape-corner-full);
+      background-color: var(--_swipe-actions-tone-solid);
+    }
+
+    /* The neutral disc in the kit's gray, a step off the row surface. */
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action']:is(:not([data-tone]), [data-tone='neutral']),
+    [data-platform='ios'] [data-ds='swipe-actions'] > [data-part='actions']:is(:not([data-tone]), [data-tone='neutral']) {
+      --_swipe-actions-tone-solid: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 11%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action']:is(:not([data-tone]), [data-tone='neutral']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='swipe-actions'] > [data-part='actions']:is(:not([data-tone]), [data-tone='neutral']) {
+      --_swipe-actions-tone-solid: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* The alert's field well (M9.6): a quiet fill on the alert, a step off its surface. */
+    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+      --_fieldset-card-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
+      --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+      --_fieldset-card-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 8%, transparent);
+      --_fieldset-hairline-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
     }
   }
 

@@ -63,7 +63,7 @@ export interface RefractionShape {
 export interface RefractionOptions {
   /** Width of the bending band along the edge, CSS px. Default: a share of the short side, see `refractionBand`. */
   band?: number;
-  /** The largest move at the very edge, as a share of the band. Default 0.5: the band is stretched, never folded. */
+  /** The largest move at the very edge, as a share of the band. Default 0.6: the band is stretched, never folded (see `PROFILE`). */
   depth?: number;
   /** Map pixels per CSS px. Default: see `refractionResolution`. */
   resolution?: number;
@@ -75,21 +75,34 @@ export interface RefractionMap {
   height: number;
   /** `width * height * 3` bytes: red and green the move, blue the glare. */
   data: Uint8Array;
-  /** The `scale` of `feDisplacementMap`: twice the largest move in CSS px. */
+  /** The `scale` of `feDisplacementMap`: twice the largest move in CSS px (at the widest band). */
   scale: number;
   /** The band the map was drawn with, CSS px. */
   band: number;
 }
 
-// The band is about a third of the short side, so a 44 high button bends over
-// about 13px and a 64 high tab bar over about 19px, and never more than 24px
-// (a tall menu keeps a clear middle) or less than 4px.
-const BAND_SHARE = 0.3;
+// The band is 0.36 of the short side, so a 44 high button bends over about
+// 16px and a 64 high tab bar over about 23px, and never more than 30px (a
+// tall menu keeps a clear middle) or less than 4px. Order G2 widened it from
+// 0.3 and 24px: at 1x the bend was too faint to see.
+const BAND_SHARE = 0.36;
 const BAND_MIN = 4;
-const BAND_MAX = 24;
-// Default depth: the move at the edge is half the band, which is where the
-// stretch of the band reaches its limit without folding (slope 1 - 2 * depth).
-const DEPTH = 0.5;
+const BAND_MAX = 30;
+// At the ends of the long side (the caps of a bar or a button) the band is
+// wider by this share, as the thick rounded end of a lens bends more than its
+// flat sides: the stripes and card edges behind the end caps are where the
+// reference shows the bend. It grows with how much the edge faces along the
+// long side, so it is continuous round the corner. Never past CAP_LIMIT of
+// the half short side, so the middle of a cap is never pinched to a point.
+const CAP_BOOST = 0.5;
+const CAP_LIMIT = 0.85;
+// The profile of the bevel: the move is (1 - depth / band) ^ PROFILE. The
+// sampled point never goes backwards (no fold) while PROFILE * DEPTH <= 1:
+// the slope at the rim is 1 - PROFILE * DEPTH. 1.6 keeps the start of the
+// band smooth (zero slope there, so no line where it begins) and lets the
+// move at the rim reach 0.6 of the band.
+const PROFILE = 1.6;
+const DEPTH = 0.6;
 // One map pixel per CSS px; a large part (a tall menu) gets half that, since
 // its band is wide and smooth. A small part needs the full count: a coarse
 // map scaled up makes a wavy edge on a curve as tight as a switch thumb's.
@@ -120,6 +133,11 @@ export function refractionBand(shape: RefractionShape): number {
   return clamp(Math.min(shape.width, shape.height) * BAND_SHARE, BAND_MIN, BAND_MAX);
 }
 
+/** The widest the band gets on a shape (at the end of a cap), CSS px: the map's moves are a share of this. */
+export function refractionReach(shape: RefractionShape, band: number): number {
+  return Math.min(band * (1 + CAP_BOOST), Math.max(band, (CAP_LIMIT * Math.min(shape.width, shape.height)) / 2));
+}
+
 /** What the map holds at one point: the inward move (each in -1 to 1, a share of the largest move) and the glare (0 to 1). */
 export interface RefractionSample {
   dx: number;
@@ -130,6 +148,8 @@ export interface RefractionSample {
 /**
  * The map at one point (x, y) of a shape, in CSS px from its top left corner.
  * Outside the shape, and inside it past the band, there is no move and no glare.
+ * `band` is the band along the flat sides; at the ends of the long side it is
+ * wider (`CAP_BOOST`).
  */
 export function refractionAt(shape: RefractionShape, band: number, x: number, y: number): RefractionSample {
   const r = refractionRadius(shape);
@@ -160,14 +180,19 @@ export function refractionAt(shape: RefractionShape, band: number, x: number, y:
   nx *= px < 0 ? -1 : 1;
   ny *= py < 0 ? -1 : 1;
   const depth = -dist;
-  if (depth < 0 || depth >= band || band <= 0) return { dx: 0, dy: 0, glare: 0 };
-  const edge = 1 - depth / band;
-  // The bevel: the move grows with the square of the nearness to the edge, so
+  // How much the edge here faces along the long side: 1 on the end of a cap, 0 on a flat side.
+  const along = shape.width >= shape.height ? Math.abs(nx) : Math.abs(ny);
+  const reach = refractionReach(shape, band);
+  const local = Math.min(band * (1 + CAP_BOOST * along), reach);
+  if (depth < 0 || depth >= local || local <= 0) return { dx: 0, dy: 0, glare: 0 };
+  const edge = 1 - depth / local;
+  // The bevel: the move grows with a power of the nearness to the edge, so
   // the middle of the part is untouched and the bend is strongest at the rim.
-  const move = edge * edge;
+  // It is a share of the widest band, so a wider band at a cap moves further.
+  const move = edge ** PROFILE * (local / reach);
   const facing = nx * LIGHT_X + ny * LIGHT_Y;
   const glare = edge * edge * edge * (GLARE_BASE + (1 - GLARE_BASE) * Math.max(0, facing) + GLARE_FAR * Math.max(0, -facing));
-  return { dx: -nx * move, dy: -ny * move, glare: clamp(glare, 0, 1) };
+  return { dx: clamp(-nx * move, -1, 1), dy: clamp(-ny * move, -1, 1), glare: clamp(glare, 0, 1) };
 }
 
 /** Draws the map of a shape. */
@@ -190,7 +215,7 @@ export function buildRefractionMap(shape: RefractionShape, options: RefractionOp
     }
   }
   // feDisplacementMap moves by scale * (channel - 0.5), so a full channel moves by scale / 2.
-  return { width, height, data, scale: 2 * depth * band, band };
+  return { width, height, data, scale: 2 * depth * refractionReach(shape, band), band };
 }
 
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -275,8 +300,8 @@ export interface FilterNode {
 // The glare: the blue channel of the map becomes white with that alpha, then
 // brightens what is under it in proportion (k1) and adds a little light (k3),
 // so dark content is lifted less than light content, as glass does.
-const GLARE_GAIN = 0.55;
-const GLARE_ADD = 0.08;
+const GLARE_GAIN = 0.65;
+const GLARE_ADD = 0.1;
 
 /**
  * The filter for a shape, as data. User space units in CSS px of the part's
