@@ -8,6 +8,8 @@
 //
 //   div [data-part=input] role=group              React Aria's DateInput
 //     span [data-part=segment][data-type=day] role=spinbutton [data-placeholder]?
+//       data-type is React Aria's segment type in kebab case: day, month, year,
+//       era, hour, minute, day-period
 //     span [data-part=literal] aria-hidden         a separator from Intl: / . - : and spaces
 //     ...
 //
@@ -126,7 +128,7 @@ export function SegmentRow({ arabic }: { arabic: boolean }): ReactElement {
               <span
                 {...(segmentWords(ownProps(domProps as Props), arabic) as ComponentProps<'span'>)}
                 data-part={literal ? 'literal' : 'segment'}
-                data-type={literal ? undefined : s.type}
+                data-type={literal ? undefined : s.type === 'dayPeriod' ? 'day-period' : s.type}
                 data-placeholder={flag(!literal && s.isPlaceholder)}
               />
             );

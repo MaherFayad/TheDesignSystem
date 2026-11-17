@@ -146,7 +146,6 @@
     "color.border.control",
     "color.border.strong",
     "focus.shadow.ring",
-    "scale.stretch",
     "opacity.disabled",
     "duration.base",
     "ease.default"
@@ -157,7 +156,7 @@
       "status": "ready",
       "behavior": "React Aria ColorSlider, SliderTrack, SliderOutput, Label and ColorThumb (react-aria-components) through their render props; words and names from packages/shared/src/color.ts",
       "example": "ColorSlider.demo.tsx",
-      "note": "Motion: while dragged the thumb grows to scale.stretch on the scale property and settles on release, on duration.base. Reduced motion: no growth in time, as every duration token is 0ms."
+      "note": "Motion: while dragged the thumb's surface ring grows by border.width.strong (a box shadow; React Aria owns the thumb's transform) and settles on release, on duration.base. Reduced motion: the ring changes at once, as every duration token is 0ms."
     },
     "angular": {
       "status": "planned",

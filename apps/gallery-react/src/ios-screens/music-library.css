@@ -1,0 +1,147 @@
+/*
+ * M10.1 music-library: page layout only (gallery overrides layer). Every
+ * control and surface is a system component with its own look; this file
+ * places them: the play and shuffle row, the list with its index column
+ * beside it, the cover sizes, and the dock of the mini player over the tab
+ * bar. Tokens only, logical properties only.
+ *
+ * Lengths follow the reference at 393 wide: content 20 in from the sides
+ * (two fixed-l), covers 48 (the iOS target and fixed-2xs), the two capsule
+ * buttons side by side with 16 between them.
+ */
+@layer ds.overrides {
+  /* The shell's main carries no padding here: the page sets its own edges. */
+  [data-ios-screen='music-library'] [data-gallery='ios-screen-shell'] > [data-part='main'] {
+    padding: 0;
+  }
+
+  [data-gallery='ml-title'] {
+    margin: 0;
+    font: inherit;
+  }
+
+  /* ------------------------------------------------------------ page grid: content, then the index column at the inline end */
+
+  [data-gallery='ml-page'] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'actions actions'
+      'songs index'
+      'player player';
+    align-items: start;
+  }
+
+  [data-gallery='ml-actions'] {
+    display: grid;
+    grid-area: actions;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(2 * var(--ds-space-fixed-m));
+    padding-block: var(--ds-space-fixed-m) calc(2 * var(--ds-space-fixed-l));
+    padding-inline: calc(2 * var(--ds-space-fixed-l));
+  }
+
+  [data-gallery='ml-songs'] {
+    grid-area: songs;
+    min-inline-size: 0;
+  }
+
+  /*
+   * The index column: it stays in view while the list scrolls under the
+   * page's header (sticky in main, the scroller), and its keys sit in the
+   * middle of the visible part of main. 100cqb is the shell (container
+   * ds-shell); the header row of the Navbar is taken off.
+   */
+  [data-gallery='ml-index'] {
+    position: sticky;
+    inset-block-start: 0;
+    grid-area: index;
+    /*
+     * Main's height: one screen as the iOS shell draws it (dialog.height.max
+     * times 1.25, ios-shell.css), less the Navbar's row (the top inset, a 44
+     * target, 8 over and under it), the play row (44, 8 over, 20 under) and
+     * the dock over the content (the 48 player, the 62 tab bar, 8 between
+     * them and the bar's margin over the bottom inset).
+     */
+    block-size: calc(
+      var(--ds-dialog-height-max) * 1.25 - var(--ds-inset-safe-top) - 4 * var(--ds-size-touch-ios) - 6 * var(--ds-space-fixed-m) - 2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-2xs) - var(--ds-space-fixed-l) -
+        max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)))
+    );
+    padding-inline: var(--ds-space-fixed-4xs) var(--ds-space-fixed-2xs);
+    box-sizing: border-box;
+  }
+
+  /* The rows start at the page's edge, as the actions do. */
+  [data-gallery='ml-songs'] > [data-ds='list'] {
+    margin: 0;
+    padding-inline-start: calc(2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='ml-cover'] {
+    display: block;
+    inline-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+  }
+
+  [data-gallery='ml-progress'] {
+    display: block;
+    inline-size: calc(3 * var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='ml-saved'] {
+    display: inline-flex;
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='ml-loading'] {
+    display: grid;
+    place-items: center;
+    padding-block: var(--ds-space-fixed-xl);
+  }
+
+  /* ------------------------------------------------------------ the dock: mini player over the tab bar, over the content */
+
+  [data-gallery='ml-dock'] {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
+    z-index: var(--ds-z-topbar);
+    display: grid;
+    gap: var(--ds-space-fixed-m);
+    pointer-events: none;
+  }
+
+  [data-gallery='ml-dock'] > * {
+    pointer-events: auto;
+  }
+
+  /*
+   * The mini player rests over the content, in main, just over the tab bar:
+   * as far from main's end as the room the iOS shell leaves for a bar over
+   * the content (ios-shell.css), less its last gap. In the side column the
+   * bar is not over the content, so it rests over the bottom inset.
+   */
+  [data-gallery='ml-player'] {
+    position: sticky;
+    inset-block-end: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-m));
+    z-index: var(--ds-z-raised);
+    grid-area: player;
+    margin-inline: calc(2 * var(--ds-space-fixed-l));
+  }
+
+  @container ds-shell (inline-size >= calc(30rem * 11 / 12)) and (block-size <= calc(600px * 7 / 6)) { /* breakpoint.phone breakpoint.medium: the side column of ios-shell.css */
+    [data-gallery='ml-player'] {
+      inset-block-end: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-bottom));
+    }
+  }
+
+  /* The song takes the room the two buttons leave. */
+  [data-gallery='ml-player-song'] {
+    flex: 1 1 0;
+    justify-content: flex-start;
+    min-inline-size: 0;
+  }
+
+  [data-gallery='ml-player-song'] [data-gallery='ml-cover'] {
+    inline-size: calc(4 * var(--ds-space-fixed-m));
+  }
+}

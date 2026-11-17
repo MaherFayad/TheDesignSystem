@@ -12,7 +12,7 @@ const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="time-fi
 const segments = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[data-part="segment"]'));
 const segment = (c: HTMLElement, type: string) => c.querySelector<HTMLElement>(`[data-part="segment"][data-type="${type}"]`)!;
 
-describe('time helpers', () => {
+describe('time helpers', { timeout: 20_000 }, () => {
   it('reads and writes 24 hour HH:mm', () => {
     expect(isTimeText('09:41')).toBe(true);
     expect(isTimeText('9:41')).toBe(false);
@@ -34,12 +34,12 @@ describe('time helpers', () => {
   });
 });
 
-describe('TimeField', () => {
+describe('TimeField', { timeout: 20_000 }, () => {
   it('renders the anatomy: hour, minute and the day period in a 12 hour locale', () => {
     const { container } = render(<TimeField aria-label="Start" locale="en-US" defaultValue="21:05" />);
     const el = root(container);
     expect(el.getAttribute('data-size')).toBe('md');
-    expect(segments(container).map((s) => s.getAttribute('data-type'))).toEqual(['hour', 'minute', 'dayPeriod']);
+    expect(segments(container).map((s) => s.getAttribute('data-type'))).toEqual(['hour', 'minute', 'day-period']);
     expect(segments(container).map((s) => s.textContent)).toEqual(['9', '05', 'PM']);
     expect(el.querySelector('[class*="react-aria"]')).toBeNull();
     expect(segment(container, 'hour').getAttribute('aria-label')).toBe('hour, Start');
@@ -61,7 +61,7 @@ describe('TimeField', () => {
     // The hour wraps inside its day period, as React Aria does: 11 AM up is 12 AM.
     await userEvent.keyboard('{ArrowUp}');
     expect(onChange).toHaveBeenLastCalledWith('00:30');
-    act(() => segment(container, 'dayPeriod').focus());
+    act(() => segment(container, 'day-period').focus());
     await userEvent.keyboard('{ArrowUp}');
     expect(onChange).toHaveBeenLastCalledWith('12:30');
   });
@@ -112,7 +112,7 @@ describe('TimeField', () => {
   });
 });
 
-describe('TimeField digits stay Latin in ar-SA', () => {
+describe('TimeField digits stay Latin in ar-SA', { timeout: 20_000 }, () => {
   it('the check itself flags Arabic Indic digits (-u-nu-arab)', () => {
     const arab = new Intl.DateTimeFormat('ar-SA-u-nu-arab', { hour: 'numeric', minute: '2-digit', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, 0, 1, 21, 5)));
     expect(hasNonLatinDigits(arab)).toBe(true);

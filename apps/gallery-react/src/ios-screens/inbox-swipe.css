@@ -1,0 +1,41 @@
+/*
+ * M10.5 inbox-swipe: page layout only, in the overrides layer, tokens only,
+ * logical properties. No component is restyled here: the rules size the
+ * screen's own elements (the title heading, the cover box, the end column,
+ * the footer and empty wrappers) and place them.
+ */
+@layer ds.overrides {
+  /* The large title is the Navbar's brand: a heading that takes the brand's own type. */
+  [data-gallery='inbox-title'] {
+    margin: 0;
+    font: inherit;
+  }
+
+  [data-gallery='inbox-main'] {
+    display: grid;
+    align-content: start;
+    min-block-size: 100%;
+  }
+
+  /* The square cover of a row, 64 wide, as the reference's thumbnail at the leading edge. */
+  [data-gallery='inbox-cover'] {
+    display: block;
+    inline-size: calc(16 * var(--ds-space-fixed-2xs));
+    flex: none;
+  }
+
+  /* The bottom toolbar sits centred, its capsule over the home bar's safe area as the tab bar's does. */
+  [data-gallery='inbox-footer'] {
+    display: flex;
+    justify-content: center;
+    padding-block: 0 calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl));
+    padding-inline: max(var(--ds-space-fixed-l), var(--ds-inset-safe-start)) max(var(--ds-space-fixed-l), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='inbox-empty'] {
+    display: grid;
+    place-items: center;
+    min-block-size: 60dvh;
+    padding-inline: max(var(--ds-space-3xl), var(--ds-inset-safe-start)) max(var(--ds-space-3xl), var(--ds-inset-safe-end));
+  }
+}

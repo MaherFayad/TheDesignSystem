@@ -16,6 +16,11 @@
  *   OKLCH so each row reads as one lightness. No value is taken from a kit.
  * - Locales. `colorLocale` adds `-u-nu-latn`, so digits stay Western in
  *   Arabic, as `dateLocale` does for dates.
+ * - The eyedropper (frameworks.md, "System services"): feature tested, never
+ *   assumed. `colorEyeDropperAvailable` is false where the browser has no
+ *   EyeDropper (WebKit, Firefox, a server render), and `colorPickFromScreen`
+ *   then resolves null without asking anything. A caller hides its button
+ *   when it is not available. No window access at module scope.
  *
  * Every export starts with `color` so the shared barrel never meets a name
  * from another file.
@@ -420,4 +425,33 @@ export function colorSwatchGrid(): string[][] {
     rows.push(COLOR_GRID_HUES.map((h) => colorToHex(colorFromOklch({ l, c: maxChroma(l, h) * GRID_VIVID[row]!, h }))));
   });
   return rows;
+}
+
+/** The part of the EyeDropper API the system uses. */
+interface EyeDropperLike {
+  open(options?: { signal?: AbortSignal }): Promise<{ sRGBHex: string }>;
+}
+
+type EyeDropperHost = { EyeDropper?: new () => EyeDropperLike };
+
+/** True when this browser can pick a colour from the screen. Read it after mount, never on the server. */
+export function colorEyeDropperAvailable(): boolean {
+  return typeof window !== 'undefined' && typeof (window as unknown as EyeDropperHost).EyeDropper === 'function';
+}
+
+/**
+ * Opens the browser's eyedropper and resolves the picked colour as #rrggbb,
+ * or null when the browser has none, the person cancels, or the signal
+ * aborts. Call it from a press, as the browser asks for a user gesture.
+ */
+export async function colorPickFromScreen(signal?: AbortSignal): Promise<string | null> {
+  if (!colorEyeDropperAvailable()) return null;
+  const Ctor = (window as unknown as EyeDropperHost).EyeDropper!;
+  try {
+    const result = await new Ctor().open(signal ? { signal } : undefined);
+    const rgba = colorParse(result.sRGBHex);
+    return rgba ? colorToHex({ ...rgba, a: 1 }) : null;
+  } catch {
+    return null;
+  }
 }

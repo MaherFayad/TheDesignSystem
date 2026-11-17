@@ -1,12 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   colorContrast,
   colorDescribe,
+  colorEyeDropperAvailable,
   colorFromOklch,
   colorLanguage,
   colorLocale,
   colorName,
   colorParse,
+  colorPickFromScreen,
   colorSwatchEdgeNeeded,
   colorSwatchGrid,
   colorToHex,
@@ -172,5 +174,35 @@ describe('locales and words', () => {
     expect(colorWords('ar').add).toBe('إضافة لون');
     expect(colorWords('ar').channels.alpha).toBe('العتامة');
     expect(colorWords('en').swatch).toBe('colour swatch');
+  });
+});
+
+describe('the eyedropper is feature tested', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('is not available where the browser has none, and picks nothing', async () => {
+    vi.stubGlobal('EyeDropper', undefined);
+    expect(colorEyeDropperAvailable()).toBe(false);
+    expect(await colorPickFromScreen()).toBeNull();
+  });
+
+  it('picks a colour as lower case hex where it exists, and gives null on cancel', async () => {
+    // These tests run in node: give it a window that has the API.
+    vi.stubGlobal('window', globalThis);
+    let cancel = false;
+    vi.stubGlobal(
+      'EyeDropper',
+      class {
+        open() {
+          return cancel ? Promise.reject(new DOMException('cancelled', 'AbortError')) : Promise.resolve({ sRGBHex: '#1E6FD9' });
+        }
+      },
+    );
+    expect(colorEyeDropperAvailable()).toBe(true);
+    expect(await colorPickFromScreen()).toBe('#1e6fd9');
+    cancel = true;
+    expect(await colorPickFromScreen()).toBeNull();
   });
 });

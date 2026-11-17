@@ -16,7 +16,7 @@
 // DOM:
 //   div [data-ds=time-field] data-size data-invalid? data-disabled? data-readonly?
 //     div [data-part=input] role=group
-//       span [data-part=segment][data-type=hour|minute|dayPeriod] role=spinbutton data-placeholder?
+//       span [data-part=segment][data-type=hour|minute|day-period] role=spinbutton data-placeholder?
 //       span [data-part=literal] aria-hidden
 //
 // Motion: none of its own, as DateField.

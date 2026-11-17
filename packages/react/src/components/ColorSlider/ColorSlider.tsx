@@ -169,19 +169,22 @@ export function ColorSlider({
         name={name}
         aria-label={named}
         aria-labelledby={ariaLabelledBy}
-        render={(domProps) => (
-          <div
-            {...rest}
-            {...(racOwnProps(domProps as Record<string, unknown>) as ComponentProps<'div'>)}
-            ref={ref}
-            className={className}
-            style={style}
-            data-ds="color-slider"
-            data-orientation={orientation}
-            data-size={size}
-            data-disabled={flag(disabled)}
-          />
-        )}
+        render={(domProps) => {
+          const { ref: ariaRef, ...own } = racOwnProps(domProps as Record<string, unknown>) as ComponentProps<'div'>;
+          return (
+            <div
+              {...rest}
+              {...own}
+              ref={mergeRefs(ariaRef, ref)}
+              className={className}
+              style={style}
+              data-ds="color-slider"
+              data-orientation={orientation}
+              data-size={size}
+              data-disabled={flag(disabled)}
+            />
+          );
+        }}
       >
         {!hideLabel && (
           <AriaLabel render={(domProps) => <label {...(racOwnProps(domProps as Record<string, unknown>) as ComponentProps<'label'>)} data-part="label" />}>

@@ -1,5 +1,5 @@
 // DatePicker demo. Cases: variants (compact and inline, date only and date
-// with time), empty (no value: the Add date and Add time chips), one (an
+// with time, sizes sm and lg), empty (no value: the Add date and Add time chips), one (an
 // event start with bounds and booked days, the ISO value under it),
 // long-text (a long label, and the calendar a person picks), long-arabic
 // (ar-SA in Gregorian and Umm al-Qura, compact and inline, the time chip at
@@ -87,6 +87,14 @@ export default function DatePickerDemo() {
           </Row>
           <Row>
             <DatePicker label="Starts" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+          </Row>
+        </DemoRow>
+        <DemoRow>
+          <Row>
+            <DatePicker label="Size sm" size="sm" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+          </Row>
+          <Row>
+            <DatePicker label="Size lg" size="lg" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
           </Row>
         </DemoRow>
         <DemoRow>

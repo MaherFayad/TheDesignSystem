@@ -96,18 +96,27 @@
   /* The row of segments. It never wraps: a narrow container scrolls the row, never breaks a date. */
   :is([data-ds='date-field'], [data-ds='time-field']) > [data-part='input'] {
     display: flex;
-    align-items: center;
+    align-self: stretch;
+    align-items: stretch;
     min-inline-size: 0;
     overflow-x: auto;
     scrollbar-width: none;
     outline: none;
   }
 
+  /*
+   * A segment is a target of its own: as tall as the box and never narrower
+   * than size.target-min (WCAG 2.2 2.5.8), its text in the middle.
+   */
   :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment'] {
     box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-target-min);
+    min-block-size: var(--ds-size-target-min);
     padding-inline: var(--_date-field-segment-padding-inline);
     border-radius: var(--_date-field-segment-radius);
-    text-align: end;
     outline: none;
     transition:
       background-color var(--_date-field-duration) var(--_date-field-ease),
@@ -119,6 +128,8 @@
   }
 
   :is([data-ds='date-field'], [data-ds='time-field']) [data-part='literal'] {
+    display: inline-flex;
+    align-items: center;
     color: var(--_date-field-literal-fg);
     white-space: pre;
   }

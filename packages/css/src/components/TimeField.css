@@ -6,7 +6,7 @@
  */
 @layer ds.base {
   /* The day period (AM, PM, ص, م) is a word, not a number: it sits at the start of its box. */
-  [data-ds='time-field'] [data-part='segment'][data-type='dayPeriod'] {
-    text-align: start;
+  [data-ds='time-field'] [data-part='segment'][data-type='day-period'] {
+    justify-content: start;
   }
 }

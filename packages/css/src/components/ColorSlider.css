@@ -22,8 +22,8 @@
  *   --_color-slider-border-color  the edge around the thumb and the track,
  *                                 color.border.control, 3:1 or more (1.4.11)
  *   --_color-slider-ring          the focus ring around the thumb
- *   --_color-slider-lift          the thumb scale while dragged (pattern press); 1 turns it off
- *   --_color-slider-lift-now      the working scale the dragging state sets
+ *   --_color-slider-lift          how much the thumb's ring grows while dragged (pattern press); 0px turns it off
+ *   --_color-slider-lift-now      the working growth the dragging state sets
  *   --_color-slider-duration, --_color-slider-ease   the lift and its settle
  *
  * Names outside the list in anatomy.md:
@@ -35,9 +35,11 @@
  * root at 320px (1.4.10). React Aria places the thumb along the track
  * (inline left, its own transform); nothing here animates its place.
  *
- * Motion (pattern press, proposed): while a pointer drags the thumb, it
- * grows to --_color-slider-lift (scale.stretch, as Slider) on the individual scale property, and settles
- * on release. Under reduced motion every duration token is 0ms.
+ * Motion (pattern press, proposed): while a pointer drags the thumb, its
+ * surface ring grows outward by --_color-slider-lift (a box shadow, so the
+ * thumb reads larger under the finger without a transform; React Aria owns
+ * the thumb's transform), and settles on release. Under reduced motion every
+ * duration token is 0ms.
  */
 @layer ds.base {
   [data-ds='color-slider'] {
@@ -53,8 +55,8 @@
     --_color-slider-thumb-border: var(--ds-color-bg-surface);
     --_color-slider-border-color: var(--ds-color-border-control);
     --_color-slider-ring: var(--ds-focus-shadow-ring);
-    --_color-slider-lift: var(--ds-scale-stretch);
-    --_color-slider-lift-now: 1;
+    --_color-slider-lift: var(--ds-border-width-strong);
+    --_color-slider-lift-now: 0px;
     --_color-slider-duration: var(--ds-duration-base);
     --_color-slider-ease: var(--ds-ease-default);
     --_color-slider-tile: var(--ds-color-bg-surface);
@@ -116,7 +118,7 @@
   }
 
   [data-ds='color-slider'] [data-part='thumb'] {
-    --_color-slider-lift-now: 1;
+    --_color-slider-lift-now: 0px;
     box-sizing: border-box;
     inset-block-start: 50%;
     inline-size: var(--_color-slider-thumb);
@@ -127,11 +129,10 @@
       linear-gradient(var(--_color-slider-thumb-bg), var(--_color-slider-thumb-bg)),
       repeating-conic-gradient(var(--_color-slider-tile) 0 25%, var(--_color-slider-tile-alt) 0 50%) 0 0 /
         calc(var(--_color-slider-tile-size) * 2) calc(var(--_color-slider-tile-size) * 2);
-    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_color-slider-border-color);
-    scale: var(--_color-slider-lift-now);
-    transition:
-      scale var(--_color-slider-duration) var(--_color-slider-ease),
-      box-shadow var(--_color-slider-duration) var(--_color-slider-ease);
+    box-shadow:
+      0 0 0 var(--_color-slider-lift-now) var(--_color-slider-thumb-border),
+      0 0 0 calc(var(--_color-slider-lift-now) + var(--ds-border-width-default)) var(--_color-slider-border-color);
+    transition: box-shadow var(--_color-slider-duration) var(--_color-slider-ease);
     forced-color-adjust: none;
     cursor: grab;
   }
@@ -142,12 +143,13 @@
   }
 
   /* Focus shows at once (WCAG 2.4.7): the ring is not part of the transition timing a person waits on. */
-  [data-ds='color-slider'] [data-part='thumb'][data-focus-visible] {
+  [data-ds='color-slider'] [data-part='thumb'][data-focus-visible]:focus-within {
     box-shadow:
-      0 0 0 var(--ds-border-width-default) var(--_color-slider-border-color),
+      0 0 0 var(--_color-slider-lift-now) var(--_color-slider-thumb-border),
+      0 0 0 calc(var(--_color-slider-lift-now) + var(--ds-border-width-default)) var(--_color-slider-border-color),
       var(--_color-slider-ring);
     outline: var(--ds-border-width-strong) solid transparent;
-    transition: scale var(--_color-slider-duration) var(--_color-slider-ease);
+    transition: none;
   }
 
   [data-ds='color-slider'][data-orientation='vertical'] {
@@ -168,8 +170,13 @@
     inset-inline-start: 50%;
   }
 
-  [data-ds='color-slider'][data-disabled] {
+  /* Disabled, as Slider: the track and thumb dim; the label and the value stay readable (4.5:1) in the muted text. */
+  [data-ds='color-slider'][data-disabled] > [data-part='track'] {
     opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='color-slider'][data-disabled] {
+    --_color-slider-label-fg: var(--ds-color-text-muted);
   }
 
   [data-ds='color-slider'][data-disabled] :is([data-part='track'], [data-part='thumb']) {
@@ -181,7 +188,7 @@
       --_color-slider-border-color: CanvasText;
     }
 
-    [data-ds='color-slider'] [data-part='thumb'][data-focus-visible] {
+    [data-ds='color-slider'] [data-part='thumb'][data-focus-visible]:focus-within {
       outline-color: Highlight;
       outline-offset: var(--ds-border-width-strong);
     }

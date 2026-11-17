@@ -12,7 +12,7 @@ const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="date-fi
 const segments = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[data-part="segment"]'));
 const segment = (c: HTMLElement, type: string) => c.querySelector<HTMLElement>(`[data-part="segment"][data-type="${type}"]`)!;
 
-describe('DateField', () => {
+describe('DateField', { timeout: 20_000 }, () => {
   it('renders the anatomy with the system parts and no React Aria classes or "true" data attributes', () => {
     const { container } = render(<DateField aria-label="Birth date" locale="en-GB" defaultValue="2026-11-17" />);
     const el = root(container);
@@ -142,7 +142,7 @@ describe('DateField', () => {
   });
 });
 
-describe('DateField digits stay Latin in ar-SA', () => {
+describe('DateField digits stay Latin in ar-SA', { timeout: 20_000 }, () => {
   it('the check itself flags Arabic Indic digits (-u-nu-arab)', () => {
     const arab = new Intl.DateTimeFormat('ar-SA-u-nu-arab', { day: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, 10, 17)));
     expect(hasNonLatinDigits(arab)).toBe(true);

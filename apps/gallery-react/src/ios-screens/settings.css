@@ -1,0 +1,62 @@
+/*
+ * M10.4 settings: page layout only (gallery overrides layer, tokens only,
+ * logical properties). The components draw themselves; nothing here
+ * restyles a component.
+ */
+@layer ds.overrides {
+  /* The large title is the Navbar's brand; the heading keeps the brand's size. */
+  [data-gallery='settings-title'] {
+    margin: 0;
+    font: inherit;
+  }
+
+  /* The groups, one under the other. */
+  [data-gallery='settings-page'],
+  [data-gallery='settings-pane'] {
+    display: grid;
+    align-content: start;
+    gap: calc(2 * var(--ds-space-fixed-xl));
+  }
+
+  /*
+   * The cards sit 16 in from the screen's sides, as on the platform: main
+   * gives 12 (space.2xl at this width), the page adds 4.
+   */
+  [data-gallery='settings-page'] {
+    padding-inline: var(--ds-space-fixed-2xs);
+  }
+
+  /* The tab bar floats over the content at the bottom of the scrolling main. */
+  [data-gallery='settings-tabs'] {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: var(--ds-z-topbar);
+  }
+
+  /* The split fills the main region of the inner screen in landscape. */
+  [data-gallery='settings-split'] {
+    block-size: 100%;
+  }
+
+  /* Each pane keeps 16 from the screen's edge (main's 12 and 4) and 16 from the divider. */
+  [data-gallery='settings-split'] [data-gallery='settings-pane'] {
+    padding-block: 0 calc(2 * var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='settings-pane'][data-pane='list'] {
+    padding-inline: var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-m));
+  }
+
+  [data-gallery='settings-pane'][data-pane='detail'] {
+    padding-inline: calc(2 * var(--ds-space-fixed-m)) var(--ds-space-fixed-2xs);
+  }
+
+  /* The detail's own title, centred over it as a navigation title is on a wide screen. */
+  [data-gallery='settings-detail-title'] {
+    margin: 0;
+    text-align: center;
+    font-size: var(--ds-type-title-large-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-type-title-large-line-height);
+  }
+}

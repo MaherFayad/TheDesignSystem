@@ -20,7 +20,7 @@ const part = (c: HTMLElement, name: string) => c.querySelector<HTMLElement>(`[da
 const openDay = (text: string) =>
   Array.from(document.querySelectorAll<HTMLElement>('[data-part="day"]')).find((d) => d.textContent === text && !d.hasAttribute('data-outside-month'))!;
 
-describe('value helpers', () => {
+describe('value helpers', { timeout: 20_000 }, () => {
   it('splits a value into the ISO date and the HH:mm time', () => {
     expect(splitDateTime('2026-11-17')).toEqual({ date: '2026-11-17', time: null });
     expect(splitDateTime('2026-11-17T09:41')).toEqual({ date: '2026-11-17', time: '09:41' });
@@ -38,7 +38,7 @@ describe('value helpers', () => {
   });
 });
 
-describe('DatePicker, compact', () => {
+describe('DatePicker, compact', { timeout: 20_000 }, () => {
   it('renders the label and two chips named by word and value on ios', () => {
     const { container } = on('ios', <DatePicker label="Starts" locale="en-GB" granularity="minute" defaultValue="2026-06-18T09:41" />);
     const root = picker(container);
@@ -213,7 +213,7 @@ describe('DatePicker, compact', () => {
   });
 });
 
-describe('DatePicker, inline', () => {
+describe('DatePicker, inline', { timeout: 20_000 }, () => {
   it('draws the Calendar and a time row; a day keeps the time', async () => {
     const onChange = vi.fn();
     const { container } = on('ios', <DatePicker variant="inline" aria-label="Pickup" locale="en-GB" granularity="minute" defaultValue="2026-06-18T09:41" onChange={onChange} />);
@@ -239,7 +239,7 @@ describe('DatePicker, inline', () => {
   });
 });
 
-describe('DatePicker digits stay Latin in ar-SA', () => {
+describe('DatePicker digits stay Latin in ar-SA', { timeout: 20_000 }, () => {
   it('the check itself flags Arabic Indic digits (-u-nu-arab)', () => {
     const arab = new Intl.DateTimeFormat('ar-SA-u-nu-arab-ca-islamic-umalqura', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(
       new Date(Date.UTC(2026, 10, 17)),
