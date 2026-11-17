@@ -110,7 +110,17 @@ padding at the inline end). The contract runs of section 7 prove those.
   `DeviceDescriptor`), a DU4 file being written by another agent.
 - `npx eslint` on the three folders: clean.
 - `npx tsx packages/manifest/validate.ts`: 111 manifests, 0 errors.
-- `npm run check`: see the result at the end of the handback report.
+- `npm run check`: tokens build, gen, typecheck, eslint, manifests, native,
+  docs, the galleries and both consumers pass. Three failures, none in a DU1
+  file, each rerun alone:
+  - vitest, `packages/lint/src/gates/token-vocabulary.test.ts`:
+    `--_ios-refraction` used in `packages/css/src/platform/ios-refraction.css`
+    lines 74 to 85 is declared in no component file. Fails again alone. That
+    CSS belongs to another agent.
+  - vitest, `ProgressCircle.test.tsx`: ENOENT while loading during the full
+    run (other agents writing files). Passes alone, 16 of 16.
+  - `check @the-system/angular`: exited non zero in the full run with 771 of
+    771 tests passing; passes alone (exit 0). No Angular file was touched.
 
 ## For DU2
 

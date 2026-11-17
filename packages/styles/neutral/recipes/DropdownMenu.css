@@ -110,6 +110,7 @@
       --_list-box-option-fg-highlight: HighlightText;
     }
   }
+
   /*
    * ios (order F1, from the audit of the vendor's iOS 27 kit): the menu
    * takes the kit's corner (about 26) and a thin hairline between groups
@@ -117,7 +118,11 @@
    */
   [data-style='neutral'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
     --_menu-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
-    --_menu-separator-color: var(--_ios-hairline);
+    --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
     --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
   }
 }

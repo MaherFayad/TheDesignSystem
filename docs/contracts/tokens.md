@@ -213,7 +213,7 @@ this list, except where a row says the name is shared.
 | `elevation` | `level0` to `level5` | Shadow composites on the web (geometry from the platform, color from the style); an elevation number on native. Beside the style's existing elevation names. |
 | `spring.spatial` | `fast`, `default`, `slow` | Springs for movement. Each is the group of `stiffness`, `damping`, `mass`. |
 | `spring.effects` | `fast`, `default`, `slow` | Springs for color and opacity, which do not overshoot. |
-| `inset.safe` | `top`, `bottom`, `start`, `end` | Fed by `env(safe-area-inset-*)` through `$extensions["ds.env"]`. The build maps `start` and `end` to left and right by `dir`. |
+| `inset.safe` | `top`, `bottom`, `start`, `end` | Fed by `env(safe-area-inset-*)` through `$extensions["ds.env"]`. The build maps `start` and `end` to left and right by `dir`. On the foldable iPhone `start` and `end` differ; no rule may assume opposite insets are equal. |
 | `inset` | `keyboard` | Fed by `env(keyboard-inset-height)`. |
 | `breakpoint` | `compact`, `medium`, `expanded`, `large`, `extra-large` | Shared, in `src/base/breakpoint.json`, not per platform: 0, 600, 840, 1200 and 1600px. |
 | `type` | `display-large`, `display-medium`, `display-small`, `headline-large`, `headline-medium`, `headline-small`, `title-large`, `title-medium`, `title-small`, `body-large`, `body-medium`, `body-small`, `label-large`, `label-medium`, `label-small` | One `typography` composite per role per platform, fixed, not fluid. The CSS build writes one variable per field: `--ds-type-<role>-font-family`, `-font-size`, `-font-weight`, `-letter-spacing`, `-line-height`. Components and styles name a role, never a size step, when the text should follow the platform. |

@@ -172,6 +172,12 @@ Rule: `auto` gives `ios` or `android` on those devices and `web` everywhere
 else. It never gives `macos`. `macos` is chosen only by override (a prop,
 the URL key or the stored choice).
 
+Rule: `ios` covers the foldable iPhone (proposed, `docs/plan/reset-duo.md`).
+`auto` never detects a model and never reads `screen` sizes. Layout on this
+device comes from size (the `ds-shell` container), the safe area insets,
+each side on its own, and, when present, device posture and viewport
+segments.
+
 - `ios`: an iPhone or iPod, an iPad, and an iPad in desktop mode, which
   reports a Mac agent with `navigator.maxTouchPoints` above 1.
 - `android`: user agent client hints with platform `Android`, or an Android

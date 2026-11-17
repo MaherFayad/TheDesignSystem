@@ -180,6 +180,7 @@
     --_dialog-border-color: var(--ds-color-border-strong);
     --_dialog-divider-color: var(--ds-color-border-strong);
   }
+
   /*
    * ios (order F1, owner ruling: Neutral follows the kit for colour on ios):
    * the header and the footer are the panel, with no band and no edge, and
@@ -189,6 +190,10 @@
     --_dialog-border-color: transparent;
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
-    --_dialog-divider-color: var(--_ios-hairline);
+    --_dialog-divider-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-divider-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
   }
 }

@@ -63,30 +63,6 @@
  * still matches these descendant selectors.
  */
 @layer ds.platform {
-  /* ------------------------------------------------------------ the platform's gray ladder (order F1) */
-
-  /*
-   * Order F1, measured on the vendor's iOS 27 kit (docs/reports/lanes/
-   * reset-M7-audit.md, kit foundations): in dark the platform is neutral
-   * gray on black. Private steps of that ladder, mixed from the glass
-   * backdrop tokens (white and black in every style), for the styles that
-   * take the platform's look in full: gray 1 is the grouped card and the
-   * glass tint (#1c1c1e in the kit), gray 2 the elevated surface (#2c2c2e),
-   * gray 3 the next one (#3a3a3c), and the hairline (#38383a). In light the
-   * hairline is the kit's #e6e6e6; the surfaces stay the style's white.
-   */
-  [data-platform='ios'] {
-    --_ios-gray-1: var(--ds-color-material-glass-solid);
-    --_ios-hairline: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
-  }
-
-  [data-platform='ios'][data-scheme='dark'] {
-    --_ios-gray-1: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
-    --_ios-gray-2: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
-    --_ios-gray-3: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
-    --_ios-hairline: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
-  }
-
   /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
 
   /* Sizes: mini 28, small 32, regular 44, large 52. The corners are the style's (ruling 16, order R0.15): no radius here. */
@@ -1046,7 +1022,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 90%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 90%, transparent);
       box-shadow: inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent);
     }
 
@@ -1059,7 +1035,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 32%) 88%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 32%) 88%, transparent);
       box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
     }
   }
@@ -1091,20 +1067,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 72%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 72%, transparent);
     }
   }
 
@@ -1134,20 +1110,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
     }
   }
 
@@ -1177,20 +1153,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 2%) 92%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 2%) 92%, transparent);
     }
   }
 
@@ -1411,17 +1387,27 @@
    * the same property repeats it under its own ios guard.
    */
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
-    /* Grouped list: the kit's card corner (about 26), its hairline, and the gray card in dark. */
+    /*
+     * Grouped list: the kit's card corner (about 26), its hairline (#e6e6e6,
+     * dark #38383a) and the gray card in dark (#1c1c1e). The grays of the
+     * kit's dark ladder are mixed from the glass backdrop tokens (white and
+     * black in every style): 11% white for the card and the glass tint, 17%
+     * for the elevated surface, 23% for the next step, 22% for the hairline.
+     */
     [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
       --_list-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
     }
 
     [data-platform='ios'] [data-ds='list'] {
-      --_list-separator-color: var(--_ios-hairline);
+      --_list-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='list'] {
+      --_list-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
-      --_list-bg: var(--_ios-gray-1);
+      --_list-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
     }
 
     /* Progress bar: 4 tall, on a plain gray track that stays visible in dark (kit #e4e4e4 and #2b2b2e). */
@@ -1435,7 +1421,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='progress-bar'] {
-      --_progress-bar-track: var(--_ios-gray-2);
+      --_progress-bar-track: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
     }
 
     /* Segmented control: the kit's gray track (#eeeeef, dark #1c1c1f) and, in dark, a solid mid gray thumb (#59595b). */
@@ -1444,7 +1430,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] {
-      --_segmented-control-bg: var(--_ios-gray-1);
+      --_segmented-control-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
       --_segmented-control-thumb-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, var(--ds-color-glass-backdrop-dark));
     }
 
@@ -1459,24 +1445,24 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='popover'] {
-      --_popover-bg: var(--_ios-gray-2);
+      --_popover-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
       --_popover-shadow: 0 var(--ds-space-fixed-m) calc(4 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 40%, transparent);
     }
 
     /* Dialogs, alerts and sheets in dark: the elevated gray of the kit. */
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
-      --_dialog-bg: var(--_ios-gray-2);
+      --_dialog-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] {
-      --_dialog-bg: var(--_ios-gray-1);
+      --_dialog-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
     }
 
     /* The actions of an alert in dark: a light glass gray on the panel, as in the kit, not a near black. */
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']):not([data-emphasis='solid'][data-tone='accent']) {
-      --_button-bg: var(--_ios-gray-3);
-      --_button-bg-hover: var(--_ios-gray-3);
-      --_button-bg-active: color-mix(in srgb, var(--_ios-gray-3), var(--ds-color-glass-backdrop-bright) 8%);
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 8%);
     }
 
     /* Bottom toolbar: a capsule, as the kit draws its groups. */

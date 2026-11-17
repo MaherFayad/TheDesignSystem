@@ -238,6 +238,7 @@ follows it.
     | ButtonGroup | `data-attached` |
     | Banner | `data-sticky` |
     | FloatingActionButton | `data-position`, `data-extended` |
+    | PageShell, TabBar, Navbar | `data-placement` (`bottom`, `side`; absent for `auto`) |
     | Toast | `data-position`, `data-swipe` |
     | Toaster | `data-stacked`, `data-expanded`, `data-paused` |
     | Input | `data-variant` |
@@ -254,6 +255,16 @@ follows it.
     | ResizablePanels | `data-collapsed` |
     | Window | `data-kind`, `data-movable`, `data-layered`, `data-zoomed`, `data-minimized` |
     | NotificationCenter | `data-unread`, `data-list`, `data-entry` |
+
+    `placement` (`auto`, `bottom`, `side`) on PageShell, TabBar and Navbar
+    says where the bars of a phone shell sit (proposed, order DU1). `auto`
+    is the default and stamps nothing: the CSS decides with a container
+    query on the PageShell root, which is a size container named
+    `ds-shell`. `bottom` and `side` stamp `data-placement`. PageShell passes
+    its value to every TabBar and Navbar inside that sets none; a bar's own
+    value wins. The column is a placement of existing parts: no new part,
+    and the DOM order never changes with placement. No framework measures
+    the layout during render to choose a placement.
 
     `data-variant` names a layout or look that is not one of the shared
     axes. It never stands in for size, tone, emphasis or shape. A page or
