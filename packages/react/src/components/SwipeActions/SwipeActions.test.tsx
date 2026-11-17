@@ -268,6 +268,7 @@ describe('SwipeActions fixes from the test screens (order C3)', () => {
   it('the menu is drawn and given room only on hover, focus within or while open', () => {
     expect(css).toContain("[data-ds='swipe-actions']:not([data-part]):hover > [data-part='content']");
     expect(css).toContain(":not(:focus-within, :hover) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true']))");
+    expect(css).toContain('opacity: 0;\n      pointer-events: none;');
     // No rule gives the standalone content the room for every mouse.
     expect(css).not.toContain("[data-ds='swipe-actions']:not([data-part]) > [data-part='content'] {\n      padding-inline-end");
   });

@@ -1,5 +1,5 @@
 // ColorSwatchPicker demo. Cases: variants (the grid, and the row in three
-// sizes), empty (the grid with nothing picked), one (one saved colour and
+// sizes), empty (a row with nothing picked), one (one saved colour and
 // the add button), many (ten saved colours), too-many (thirty saved colours
 // that wrap), long-text (swatches with their own long names), long-arabic
 // (the grid keeps its hue order in right to left; the row follows reading
@@ -66,7 +66,7 @@ export default function ColorSwatchPickerDemo() {
       </DemoCase>
 
       <DemoCase id="empty" title="Nothing picked yet">
-        <ColorSwatchPicker aria-label="Highlight colour" locale="en" />
+        <ColorSwatchPicker layout="row" aria-label="Highlight colour" locale="en" colors={saved.slice(0, 6)} />
       </DemoCase>
 
       <DemoCase id="one" title="One saved colour and the add button">

@@ -267,21 +267,22 @@
   }
 
   /*
-   * Not drawn: the menu stays in the tree and the Tab order, visually hidden
-   * until focus arrives (any pointer) or a mouse hovers (a pointer that
-   * hovers). The row is the parent in the part form and the root itself in
+   * Not drawn: the menu stays in the tree and the Tab order, hidden from
+   * sight until focus arrives (any pointer) or a mouse hovers (a pointer
+   * that hovers). The row is the parent in the part form and the root itself in
    * the standalone form. An open menu keeps its button drawn, so the menu
    * stays anchored.
+   */
+  /*
+   * A pointer that hovers: the button keeps its place and size but is not
+   * painted and takes no press until the row is hovered, so the pointer that
+   * comes to press it draws it on the way.
    */
   @media (hover: hover) and (pointer: fine) {
     :not(:focus-within, :hover) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true'])),
     [data-ds='swipe-actions']:not([data-part]):not(:focus-within, :hover) > span:has(> [data-part='menu']:not([aria-expanded='true'])) {
-      inset-block: auto;
-      inline-size: var(--ds-border-width-default);
-      block-size: var(--ds-border-width-default);
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
     }
   }
 

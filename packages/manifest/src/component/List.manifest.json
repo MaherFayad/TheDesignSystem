@@ -149,10 +149,11 @@
       "type": [
         "1",
         "2",
-        "3"
+        "3",
+        "all"
       ],
       "default": "1",
-      "description": "How many lines each row's title may wrap to before an ellipsis (order C1, proposed). A row's own titleLines wins, and the rows of every ListSection take the list's. Above 1 the row stamps data-title-lines, grows downward, and start, end and actions line up with the first line, which sits where a one line row's would."
+      "description": "How many lines each row's title may wrap to before an ellipsis (order C1, proposed); all never cuts it. A row's own titleLines wins, and the rows of every ListSection take the list's. Above 1 the row stamps data-title-lines (2, 3 or all), grows downward, and start, end and actions line up with the first line, which sits where a one line row's would. Use all where a title must stay whole with larger text or text spacing (settings); a count cuts long titles with an ellipsis."
     },
     "empty": {
       "type": "node",
@@ -196,7 +197,8 @@
       "type": [
         "1",
         "2",
-        "3"
+        "3",
+        "all"
       ],
       "description": "The row's own title line count; default the List's titleLines."
     },
@@ -284,9 +286,9 @@
       "Sections (order M9.2, proposed): the nested list of a section is its own List root with the outer size and variant, so an inset list draws one card per section and every row rule applies. The outer list of sections draws no fill and carries no data-variant. Rows and sections do not mix in one List.",
       "Header and footer take the start edge and line up with the row text, so they align right in Arabic. The header is muted text at font.size.s (4.5:1); the footer the same at regular weight.",
       "Swipe rows (order M9.7, proposed): the swipe part is a SwipeActions root and carries its states (data-state closed, open-start or open-end; data-dragging, data-armed, data-settling). The row clips, sets touch-action pan-y, and moves its parts by --_list-shift while the swipe is dragged, open or settling; once closed and settled no transform is left, so the row link covers the row again. The menu button of SwipeActions is the path that needs no drag; Shift+F10 in the row opens it.",
-      "Order C1 (proposed): data-action marks a row that acts in place, data-no-chevron a linked row with chevron false, data-title-lines (2 or 3) a row whose title may wrap. All for CSS only; structure, not states.",
+      "Order C1 (proposed): data-action marks a row that acts in place, data-no-chevron a linked row with chevron false, data-title-lines (2, 3 or all) a row whose title may wrap. All for CSS only; structure, not states.",
       "The action row's title is a span with role button, tabindex 0 and the keys of a native button (Enter on key down, Space on key up, no repeat), because the button gate allows no bare button outside Button and a system Button would make the title a part of Button. WCAG 2.2 2.1.1 and 4.1.2.",
-      "Wrapped titles (titleLines) keep the row's first line where a one line row puts it and grow the row downward, so at 320px wide and at 200 percent text a long title wraps instead of being cut (WCAG 2.2 1.4.10, 1.4.4, 1.4.12). Past the line count it ends with an ellipsis, so give titles that need more room 3.",
+      "Wrapped titles (titleLines) keep the row's first line where a one line row puts it and grow the row downward, so at 320px wide a long title wraps instead of being cut (WCAG 2.2 1.4.10). With all the title is never cut, at 200 percent text or with text spacing (1.4.4, 1.4.12); with a count it ends with an ellipsis past that many lines, so a title cut there must be readable in full where the row leads.",
       "A flush hairline is a grid item that starts at the title's column line, so it clears a start part of any size (a 64px cover); --_list-separator-inset moves it from there and --_list-separator-inset-end sets its distance from the row end (0, full bleed).",
       "A control row (part control) lays out start, the control and end; it is never a link or an action. A footer (part footer) is a last grid row under the text with its own buttons, drawn above the row link."
     ]

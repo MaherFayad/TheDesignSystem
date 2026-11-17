@@ -44,7 +44,7 @@
 // carry the swipe (useSwipeController).
 //
 // Order C1 (proposed), from the first three test screens:
-// - titleLines (List, ListSection rows, ListItem): 1, 2 or 3. Above 1 the
+// - titleLines (List, ListSection rows, ListItem): 1, 2, 3 or all. Above 1 the
 //   title wraps to that many lines, the row grows, and the other parts line
 //   up with the first line (data-title-lines on the row).
 // - variant flush: full width rows with a hairline between them that
@@ -93,8 +93,8 @@ const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [da
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
 export type ListVariant = 'plain' | 'divided' | 'inset' | 'flush';
-/** How many lines a row's title may take before it ends with an ellipsis. */
-export type ListTitleLines = 1 | 2 | 3;
+/** How many lines a row's title may take before it ends with an ellipsis; all never cuts it. */
+export type ListTitleLines = 1 | 2 | 3 | 'all';
 /** Leading or trailing content: a system icon name, or a node. */
 export type ListSlotContent = IconName | ReactElement;
 
@@ -107,7 +107,12 @@ export interface ListProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
    * text edge to the row end, never a card. Default plain.
    */
   variant?: ListVariant;
-  /** How many lines each row's title may wrap to; a row's own titleLines wins. Default 1 (one line with an ellipsis). */
+  /**
+   * How many lines each row's title may wrap to; a row's own titleLines
+   * wins. all never cuts the title, which keeps it whole with larger text
+   * or text spacing (WCAG 2.2 1.4.4, 1.4.12). Default 1 (one line with an
+   * ellipsis).
+   */
   titleLines?: ListTitleLines;
   /** Renders an ol, for rows whose order means something (steps, a ranking). Default false. */
   ordered?: boolean;
@@ -463,7 +468,7 @@ export function ListItem({
       data-linked={linked ? '' : undefined}
       data-action={action ? '' : undefined}
       data-no-chevron={linked && !chevron ? '' : undefined}
-      data-title-lines={lines > 1 && !controlRow ? String(lines) : undefined}
+      data-title-lines={lines !== 1 && !controlRow ? String(lines) : undefined}
       aria-current={!linked && !action && active ? 'true' : rest['aria-current']}
     >
       <span data-part="separator" aria-hidden="true" />

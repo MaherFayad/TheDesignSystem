@@ -43,6 +43,7 @@ describe('List order C1: wrapped titles', () => {
           <ListItem title="Three" />
           <ListItem title="Override" titleLines={1} />
           <ListItem title="Two" titleLines={2} />
+          <ListItem title="Never cut" titleLines="all" />
         </List>
         <List titleLines={2}>
           <ListSection header="Sessions">
@@ -52,7 +53,7 @@ describe('List order C1: wrapped titles', () => {
       </>,
     );
     const rows = rowsOf(container);
-    expect(rows.map((r) => r.getAttribute('data-title-lines'))).toEqual(['3', null, '2', '2']);
+    expect(rows.map((r) => r.getAttribute('data-title-lines'))).toEqual(['3', null, '2', 'all', '2']);
   });
 });
 

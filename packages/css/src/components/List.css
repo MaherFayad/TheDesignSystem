@@ -335,6 +335,11 @@
     --_list-title-lines: 3;
   }
 
+  /* all: the title is never cut, so larger text and text spacing keep it whole. */
+  [data-ds='list'] > [data-part='item'][data-title-lines='all'] {
+    --_list-title-lines: none;
+  }
+
   [data-ds='list'] > [data-part='item'][data-title-lines] {
     --_list-title-line: calc(var(--_list-font-size) * var(--_list-leading));
     --_list-band: calc(var(--_list-height) - 2 * var(--_list-padding-block));

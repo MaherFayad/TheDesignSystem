@@ -145,7 +145,7 @@ interface GroupProps {
 function TimerGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" titleLines={3} aria-label={w('interval')}>
+    <List variant="inset" titleLines="all" aria-label={w('interval')}>
       <ListSection footer={w('intervalNote')}>
         <ListItem
           start="clock"
@@ -217,7 +217,7 @@ function TimerGroups({ lang, s, set }: GroupProps) {
 function DisplayGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" titleLines={3} aria-label={w('display')}>
+    <List variant="inset" titleLines="all" aria-label={w('display')}>
       <ListSection header={w('display')}>
         <ListItem
           title={w('size')}
@@ -257,7 +257,7 @@ function DisplayGroups({ lang, s, set }: GroupProps) {
 function SoundGroups({ lang, s, set }: GroupProps) {
   const w = (k: keyof typeof words) => t(words[k], lang);
   return (
-    <List variant="inset" titleLines={3} aria-label={w('sound')}>
+    <List variant="inset" titleLines="all" aria-label={w('sound')}>
       <ListSection header={w('sound')}>
         <ListItem
           title={w('bell')}
