@@ -169,4 +169,15 @@
   [data-style='neutral'][data-platform='ios'] {
     --_ios-glass: regular;
   }
+
+  /*
+   * ios (order F1, owner ruling: Neutral follows the kit for colour on ios):
+   * in dark the page is the kit's black, not the style's navy. The grouped
+   * card, the elevated surfaces and the hairline take the kit's grays in
+   * packages/css/src/platform/ios.css and the Neutral recipes. This sits here
+   * beside the glass switch, the root rule Neutral has on ios.
+   */
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'][data-ds='theme'] {
+    background-color: var(--ds-color-glass-backdrop-dark);
+  }
 }

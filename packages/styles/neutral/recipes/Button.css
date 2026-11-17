@@ -154,4 +154,16 @@
   [data-style='neutral'][data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
     --_button-radius: var(--ds-shape-corner-full);
   }
+
+  /* ios (order F1): the actions of a sheet or an alert take the platform's quiet gray capsule (packages/css/src/platform/ios.css), not the outline of the web. */
+  [data-style='neutral'][data-platform='ios'] :is([data-ds='sheet'], [data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button']:not([data-emphasis='solid']) {
+    --_button-bg: revert-layer;
+    --_button-bg-hover: revert-layer;
+    --_button-bg-active: revert-layer;
+    --_button-border-color: revert-layer;
+    --_button-border-color-hover: revert-layer;
+    --_button-fg: revert-layer;
+    --_button-fg-hover: revert-layer;
+    --_button-fg-active: revert-layer;
+  }
 }
