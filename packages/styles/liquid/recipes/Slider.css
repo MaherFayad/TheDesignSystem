@@ -22,8 +22,8 @@
     --_slider-bg: var(--ds-color-bg-surface-5);
   }
 
-  /* White on the light page is under 3:1, so the thumb carries the control edge in light. */
-  [data-style='liquid'][data-scheme='light'] :is([data-ds='slider'], [data-ds='range-slider']) {
+  /* White on the light page is under 3:1, so the thumb carries the control edge in light. Not on ios, where the thumb is the platform's capsule with no edge (order F1). */
+  [data-style='liquid'][data-scheme='light']:not([data-platform='ios']) :is([data-ds='slider'], [data-ds='range-slider']) {
     --_slider-thumb-border: var(--ds-color-border-control);
   }
 
@@ -104,5 +104,29 @@
     [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
       background-color: transparent;
     }
+  }
+  /*
+   * ios (order F1): the thumb is the platform's white capsule, drawn by the
+   * ::after in packages/css/src/platform/ios.css, with no edge; the circle of
+   * the thumb steps aside. Held, the capsule turns into the lens with a soft
+   * light along its top, no ring.
+   */
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-thumb-bg: transparent;
+    --_slider-thumb-border: transparent;
+  }
+
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    box-shadow:
+      0 0 0 var(--_slider-halo-now) var(--_slider-halo),
+      0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 18%, transparent);
+  }
+
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+    box-shadow:
+      0 0 0 var(--_slider-halo-now) var(--_slider-halo),
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
+      0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
   }
 }

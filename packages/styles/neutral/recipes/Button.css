@@ -145,4 +145,12 @@
   :root[data-motion='reduce'] [data-style='neutral'] [data-ds='split-button'] {
     --_split-button-drop-press: 0px;
   }
+  /*
+   * ios (order F1, owner ruling: Neutral follows the kit for corners on ios):
+   * a button standing on its own is a capsule. A button that is a part of
+   * another component, or sits in an attached group, keeps its parent's shape.
+   */
+  [data-style='neutral'][data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+    --_button-radius: var(--ds-shape-corner-full);
+  }
 }

@@ -99,4 +99,13 @@
       --_menu-item-fg: HighlightText;
     }
   }
+  /*
+   * ios (order F1, from the audit of the vendor's iOS 27 kit): the menu
+   * takes the kit's corner (about 26) and a thin hairline between groups
+   * (the separator geometry is in packages/css/src/platform/ios.css).
+   */
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
+    --_menu-separator-color: var(--_ios-hairline);
+  }
 }

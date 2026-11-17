@@ -63,6 +63,30 @@
  * still matches these descendant selectors.
  */
 @layer ds.platform {
+  /* ------------------------------------------------------------ the platform's gray ladder (order F1) */
+
+  /*
+   * Order F1, measured on the vendor's iOS 27 kit (docs/reports/lanes/
+   * reset-M7-audit.md, kit foundations): in dark the platform is neutral
+   * gray on black. Private steps of that ladder, mixed from the glass
+   * backdrop tokens (white and black in every style), for the styles that
+   * take the platform's look in full: gray 1 is the grouped card and the
+   * glass tint (#1c1c1e in the kit), gray 2 the elevated surface (#2c2c2e),
+   * gray 3 the next one (#3a3a3c), and the hairline (#38383a). In light the
+   * hairline is the kit's #e6e6e6; the surfaces stay the style's white.
+   */
+  [data-platform='ios'] {
+    --_ios-gray-1: var(--ds-color-material-glass-solid);
+    --_ios-hairline: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-platform='ios'][data-scheme='dark'] {
+    --_ios-gray-1: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
+    --_ios-gray-2: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
+    --_ios-gray-3: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
+    --_ios-hairline: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+  }
+
   /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
 
   /* Sizes: mini 28, small 32, regular 44, large 52. The corners are the style's (ruling 16, order R0.15): no radius here. */
@@ -215,6 +239,35 @@
     align-items: center;
   }
 
+  /*
+   * Order F1: in a style that takes the platform's look in full, the empty
+   * circle is the platform's thin light gray ring (measured on the kit's
+   * Lists page), not the dark control border. It measures under 3:1 on its
+   * card, as the kit's does; the label and the row carry the boundary (see
+   * docs/reports/lanes/reset-F1.md). Invalid keeps the danger edge.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='checkbox']:not([data-invalid]) {
+      --_checkbox-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 22%, var(--ds-color-glass-backdrop-bright));
+      --_checkbox-border-color-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 22%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'] [data-ds='radio-group']:not([data-invalid]) {
+      --_radio-group-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 22%, var(--ds-color-glass-backdrop-bright));
+      --_radio-group-border-color-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 22%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='checkbox']:not([data-invalid]) {
+      --_checkbox-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, var(--ds-color-glass-backdrop-dark));
+      --_checkbox-border-color-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='radio-group']:not([data-invalid]) {
+      --_radio-group-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, var(--ds-color-glass-backdrop-dark));
+      --_radio-group-border-color-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, var(--ds-color-glass-backdrop-dark));
+    }
+  }
+
   /* ------------------------------------------------------------ slider: a thin track and a large round thumb */
 
   [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) {
@@ -234,6 +287,38 @@
     border-radius: var(--ds-radius-pill);
     box-shadow: var(--ds-elevation-card-hover);
     pointer-events: none;
+  }
+
+  /*
+   * Order F1: a style that takes the platform's look in full (it sets
+   * --_ios-glass: Liquid and Neutral) gets the platform's slider: a track 6
+   * tall in a plain gray and a white capsule thumb 38 by 24 with one soft,
+   * low shadow and no edge. The thumb's own circle steps aside for the
+   * capsule. Studio and Desk keep the disc above.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) {
+      --_slider-thickness: var(--ds-space-fixed-s);
+      --_slider-thumb-bg: transparent;
+      --_slider-thumb-border: transparent;
+      --_slider-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 11%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='slider'], [data-ds='range-slider']) {
+      --_slider-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 24%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+      inset-block: calc((var(--_slider-target) - var(--ds-size-control-xs) + 2 * var(--ds-border-width-strong)) / 2);
+      inset-inline: calc((var(--_slider-target) - (var(--ds-size-control-xs) - 2 * var(--ds-border-width-strong)) * 1.58) / 2);
+      border: 0;
+      background-color: var(--ds-color-glass-backdrop-bright);
+      box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 18%, transparent);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+      box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 36%, transparent);
+    }
   }
 
   /* ------------------------------------------------------------ segmented control: a lifted segment that slides */
@@ -334,12 +419,33 @@
 
   /* ------------------------------------------------------------ fields: Input, Textarea, Select trigger */
 
-  [data-platform='ios'] [data-ds='input'] {
+  /* A field on its own. An Input that is a part of another component (the SearchField's control) takes its size from its parent (order F1: it stuck out of the search capsule). */
+  [data-platform='ios'] [data-ds='input']:not([data-part]) {
     --_input-height: var(--ds-size-touch-ios);
     --_input-font-size: var(--ds-font-size-2xl);
     --_input-padding-inline: var(--ds-space-3xl);
     --_input-radius: var(--ds-radius-panel);
     --_input-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  /*
+   * Order F1: the search field of a style that takes the platform's look in
+   * full is the platform's: a gray capsule 36 tall at the default size, no
+   * border, the text at 17. The focus ring stays.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='search-field']:not([data-part], [data-invalid]) {
+      --_search-field-radius: var(--ds-shape-corner-full);
+      --_search-field-bg: var(--ds-color-bg-overlay-10);
+      --_search-field-border-color: transparent;
+      --_search-field-border-color-hover: transparent;
+      --_search-field-border-color-focus: transparent;
+    }
+
+    [data-platform='ios'] [data-ds='search-field']:not([data-part], [data-size='xs'], [data-size='sm'], [data-size='lg']) {
+      --_search-field-height: calc(var(--ds-size-control-xs) + var(--ds-space-fixed-m));
+      --_search-field-font-size: var(--ds-type-body-large-font-size);
+    }
   }
 
   [data-platform='ios'] [data-ds='textarea'] {
@@ -379,7 +485,8 @@
   [data-platform='ios'] [data-ds='list'] {
     --_list-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
     --_list-padding-inline: calc(2 * var(--ds-space-fixed-m));
-    --_list-padding-block: var(--ds-space-fixed-s);
+    /* A row that holds a 44 target (a switch, a circle) stays 52 tall: 4 above and below it (order F1; 6 made it 56). */
+    --_list-padding-block: var(--ds-space-fixed-2xs);
     --_list-gap: var(--ds-space-fixed-xl);
     --_list-font-size: var(--ds-type-body-large-font-size);
     --_list-description-font-size: var(--ds-type-body-medium-font-size);
@@ -597,11 +704,11 @@
     block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
   }
 
-  /* Groups are split by a band, not a hairline. */
+  /* Groups are split by a thin hairline inset from both sides, as the kit draws it (order F1; the 5 tall band of M1 is gone). */
   [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='separator'] {
-    block-size: var(--ds-space-fixed-xs);
-    margin-block: var(--ds-space-fixed-2xs);
-    margin-inline: calc(-1 * var(--_menu-padding));
+    block-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-fixed-s);
+    margin-inline: var(--_menu-item-padding-inline);
   }
 
   /* ------------------------------------------------------------ popover and tooltip */
@@ -809,29 +916,25 @@
    * for later.
    */
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    /*
+     * Order F1: the edge of the glass is not a stroke. One wide, low drop
+     * shadow; the rim is drawn by the ::after below, so no hard line and no
+     * outer ring is left here. No inset glow: it stops at the border, and the
+     * border band without it read as a ring.
+     */
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'] [data-ds='toast'] {
       border-color: transparent;
       box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 95%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 60%, transparent),
-        inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
-        inset 0 0 var(--ds-space-fixed-m) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent),
-        var(--ds-elevation-glass);
+        0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 12%, transparent),
-        inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 7%, transparent),
-        inset 0 0 var(--ds-space-fixed-m) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 5%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 45%, transparent),
-        var(--ds-elevation-glass);
+        0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
     }
 
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
@@ -840,62 +943,124 @@
       --_button-border-color: transparent;
       --_button-border-color-hover: transparent;
       --_button-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 95%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 60%, transparent),
-        inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
-        inset 0 0 var(--ds-space-fixed-m) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent),
-        var(--ds-elevation-tooltip);
+        0 var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 12%, transparent),
-        inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 7%, transparent),
-        inset 0 0 var(--ds-space-fixed-m) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 5%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 45%, transparent),
-        var(--ds-elevation-tooltip);
+        0 var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
     }
 
-    /* The lens of the current tab: a second, denser glass inside the bar with its own rim, so the label in the tint keeps 4.5:1 over any content. The focus ring keeps its shadow. */
+    /*
+     * The rim (order F1): a gradient in a ring as wide as a hairline, cut out
+     * of the middle by a mask, so it lies on the edge only. It is brightest on
+     * the upper leading arc, fades to nothing along the sides and comes back
+     * fainter on the lower trailing arc, as the platform's glass catches light.
+     * It carries no contrast: the tint does (order M6). The press shade layer
+     * of a button is this ::after; on ios the shade is transparent, so the
+     * glass buttons lend it to the rim.
+     */
+    [data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+    [data-platform='ios'] [data-ds='toast']::after,
+    [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: var(--ds-border-width-default);
+      border-radius: inherit;
+      background-image: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 100%, transparent),
+        transparent 30%,
+        transparent 70%,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 45%, transparent)
+      );
+      box-shadow: none;
+      opacity: 1;
+      pointer-events: none;
+      -webkit-mask: linear-gradient(var(--ds-color-glass-backdrop-dark), var(--ds-color-glass-backdrop-dark)) content-box, linear-gradient(var(--ds-color-glass-backdrop-dark), var(--ds-color-glass-backdrop-dark));
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(var(--ds-color-glass-backdrop-dark), var(--ds-color-glass-backdrop-dark)) content-box exclude, linear-gradient(var(--ds-color-glass-backdrop-dark), var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* Right to left: the light comes from the upper start, which is now the right. */
+    [data-platform='ios'] [data-ds='tab-bar']:dir(rtl)::after,
+    [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)::after,
+    [data-platform='ios'] [data-ds='toast']:dir(rtl)::after,
+    [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
+    [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
+      background-image: linear-gradient(
+        225deg,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 100%, transparent),
+        transparent 30%,
+        transparent 70%,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 45%, transparent)
+      );
+    }
+
+    /* Dark: a faint light edge, never a dark ring. */
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']::after,
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='toast']::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
+      background-image: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
+        transparent 30%,
+        transparent 70%,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent)
+      );
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='toast']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
+      background-image: linear-gradient(
+        225deg,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
+        transparent 30%,
+        transparent 70%,
+        color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent)
+      );
+    }
+
+    /* The lens of the current tab: a second, denser glass inside the bar, so the label in the tint keeps 4.5:1 over any content. No ring and no lower line; at most a soft light along the top. The focus ring keeps its shadow. */
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 60%, transparent);
-      box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
-        inset 0 0 var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 25%, transparent);
+      box-shadow: inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 45%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='item'][data-active]:not(:focus-visible) {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 90%, transparent);
-      box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 25%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent),
-        inset 0 0 var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 6%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 90%, transparent);
+      box-shadow: inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent);
     }
 
-    /* The segmented thumb: a bright glass on the track, with the rim and a small lift. */
+    /* The segmented thumb: a bright glass on the track, the rim above and one soft, low lift. */
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 92%, transparent);
-      box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 95%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 60%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent),
-        var(--ds-elevation-tooltip);
+      box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 32%) 88%, transparent);
-      box-shadow:
-        inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 25%, transparent),
-        inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 10%, transparent),
-        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 30%, transparent),
-        var(--ds-elevation-tooltip);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 32%) 88%, transparent);
+      box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
     }
   }
 
@@ -926,20 +1091,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 6%) 72%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 72%, transparent);
     }
   }
 
@@ -969,20 +1134,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
     }
   }
 
@@ -1012,20 +1177,20 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
-      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
-      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
-      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
-      background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 2%) 92%, transparent);
+      background-color: color-mix(in srgb, color-mix(in srgb, var(--_ios-gray-1), var(--ds-color-glass-backdrop-bright) 2%) 92%, transparent);
     }
   }
 
@@ -1092,6 +1257,17 @@
         box-shadow: var(--_segmented-control-thumb-shadow);
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
+      }
+
+      /* The solid paint keeps its border: no rim. */
+      [data-platform='ios'] [data-ds='tab-bar']::after,
+      [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+      [data-platform='ios'] [data-ds='toast']::after,
+      [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+      [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
+        content: none;
       }
     }
   }
@@ -1169,6 +1345,24 @@
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
+
+    /* No rim with more contrast. */
+    [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='toast']::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
+    [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
+      content: none;
+    }
   }
 
   @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
@@ -1192,6 +1386,121 @@
         --_button-bg-hover: var(--ds-color-material-glass-solid);
         --_button-bg-active: var(--ds-color-material-glass-solid);
       }
+
+      /* No rim where the glass cannot be drawn. */
+      [data-platform='ios'] [data-ds='tab-bar']::after,
+      [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::after,
+      [data-platform='ios'] [data-ds='toast']::after,
+      [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
+      [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
+      [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
+        content: none;
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------ the platform's look in full (order F1, proposed) */
+
+  /*
+   * Order F1, from the audit of the vendor's iOS 27 kit (reset-M7-audit.md,
+   * ranks 3, 7, 9, 10 and 13) and the owner's rulings: a style that takes the
+   * platform's look in full (it sets --_ios-glass: Liquid and Neutral) takes
+   * its grouped card corner, its hairline, its control tracks and, in dark,
+   * its gray ladder. Studio and Desk keep their own paint. A recipe that sets
+   * the same property repeats it under its own ios guard.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    /* Grouped list: the kit's card corner (about 26), its hairline, and the gray card in dark. */
+    [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
+      --_list-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
+    }
+
+    [data-platform='ios'] [data-ds='list'] {
+      --_list-separator-color: var(--_ios-hairline);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
+      --_list-bg: var(--_ios-gray-1);
+    }
+
+    /* Progress bar: 4 tall, on a plain gray track that stays visible in dark (kit #e4e4e4 and #2b2b2e). */
+    [data-platform='ios'] [data-ds='progress-bar']:not([data-size]),
+    [data-platform='ios'] [data-ds='progress-bar'][data-size='md'] {
+      --_progress-bar-height: var(--ds-space-fixed-2xs);
+    }
+
+    [data-platform='ios'] [data-ds='progress-bar'] {
+      --_progress-bar-track: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 11%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='progress-bar'] {
+      --_progress-bar-track: var(--_ios-gray-2);
+    }
+
+    /* Segmented control: the kit's gray track (#eeeeef, dark #1c1c1f) and, in dark, a solid mid gray thumb (#59595b). */
+    [data-platform='ios'] [data-ds='segmented-control'] {
+      --_segmented-control-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 7%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] {
+      --_segmented-control-bg: var(--_ios-gray-1);
+      --_segmented-control-thumb-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    /* Popover: the kit's corner (about 34) and its large soft shadow; the elevated gray in dark. */
+    [data-platform='ios'] [data-ds='popover'] {
+      --_popover-radius: calc(var(--ds-shape-corner-extra-large-increased) + var(--ds-space-fixed-4xs));
+      --_popover-shadow: 0 var(--ds-space-fixed-m) calc(4 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='popover'] {
+      --_popover-bg: var(--_ios-gray-2);
+      --_popover-shadow: 0 var(--ds-space-fixed-m) calc(4 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 40%, transparent);
+    }
+
+    /* Dialogs, alerts and sheets in dark: the elevated gray of the kit. */
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+      --_dialog-bg: var(--_ios-gray-2);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] {
+      --_dialog-bg: var(--_ios-gray-1);
+    }
+
+    /* The actions of an alert in dark: a light glass gray on the panel, as in the kit, not a near black. */
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']):not([data-emphasis='solid'][data-tone='accent']) {
+      --_button-bg: var(--_ios-gray-3);
+      --_button-bg-hover: var(--_ios-gray-3);
+      --_button-bg-active: color-mix(in srgb, var(--_ios-gray-3), var(--ds-color-glass-backdrop-bright) 8%);
+    }
+
+    /* Bottom toolbar: a capsule, as the kit draws its groups. */
+    [data-platform='ios'] [data-ds='toolbar'] {
+      --_toolbar-radius: var(--ds-shape-corner-full);
+    }
+
+    /*
+     * Glyph blue (rank 15): the kit draws glyphs in a brighter blue than our
+     * text tint. Glyphs only (they need 3:1, not 4.5:1): in light the fill
+     * blue, in dark the fill mixed toward the light tint. Text in the tint
+     * and the white label on a filled button keep their colours, so they
+     * keep 4.5:1 (WCAG 2.2 1.4.3).
+     */
+    [data-platform='ios'] [data-ds='list'] > [data-part='item'] > [data-part='start'],
+    [data-platform='ios'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
+    [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
+      color: var(--ds-color-primary-fill);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='list'] > [data-part='item'] > [data-part='start'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
+      color: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
     }
   }
 
@@ -1395,9 +1704,10 @@
    */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']),
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
-    --_dialog-width: calc(var(--ds-dialog-width-sm) - 4 * var(--ds-space-fixed-l));
+    /* Order F1, the vendor's iOS 27 kit: 300 wide, corner about 34. */
+    --_dialog-width: calc(var(--ds-dialog-width-sm) - 6 * var(--ds-space-fixed-l));
     --_dialog-gutter: calc(3 * var(--ds-space-fixed-xl));
-    --_dialog-radius: var(--ds-shape-corner-extra-large-increased);
+    --_dialog-radius: calc(var(--ds-shape-corner-extra-large-increased) + var(--ds-space-fixed-4xs));
     --_dialog-padding: calc(2 * var(--ds-space-fixed-xl) + var(--ds-space-fixed-s));
     /* No travel: the alert grows in place. */
     --_dialog-enter-y: 0px;
@@ -1440,8 +1750,9 @@
     display: flex;
     flex-wrap: nowrap;
     gap: var(--ds-space-fixed-m);
-    padding-block: calc(2 * var(--ds-space-fixed-l)) calc(2 * var(--ds-space-fixed-m));
-    padding-inline: calc(2 * var(--ds-space-fixed-m));
+    /* Order F1: the capsules sit 14 in from the card's edges, as in the kit. */
+    padding-block: calc(2 * var(--ds-space-fixed-l)) calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs));
+    padding-inline: calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs));
     border-block-start: 0;
     background-color: transparent;
   }
@@ -1656,11 +1967,12 @@
 
   /* A banner: a rounded glass card like the menus, no timer line, the tone on a hairline start edge. */
   [data-platform='ios'] [data-ds='toast'] {
-    --_toast-radius: var(--ds-shape-corner-extra-large);
+    /* Order F1: the banner's corner is the kit's (about 24) and its padding tighter, toward the kit's 64 tall banner. */
+    --_toast-radius: calc(var(--ds-shape-corner-large-increased) + var(--ds-space-fixed-2xs));
     --_toast-progress-thickness: 0px;
 
     border-inline-start-width: var(--ds-border-width-default);
-    padding-block: var(--ds-space-fixed-xl);
+    padding-block: var(--ds-space-fixed-m);
     padding-inline: calc(2 * var(--ds-space-fixed-l)) var(--ds-space-fixed-xl);
     font-size: var(--ds-type-body-medium-font-size);
   }

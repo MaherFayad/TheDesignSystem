@@ -141,4 +141,19 @@ Gallery only overrides on the screen's Theme element:
 
 ## Checks
 
-See the order's report for the `npm run check` result.
+`npm run check`, full run: tokens build, gen, typecheck, eslint, manifests
+and every workspace check passed except two.
+
+- vitest: `token-vocabulary` fails on private properties
+  (`--_ios-refraction`, `--_ios-gray-1`) in
+  `packages/css/src/platform/ios.css` and `ios-refraction.css`, files other
+  agents are editing now; it still fails on a rerun. `ProgressCircle.test.tsx`
+  failed because `packages/tokens/dist/css/tokens.css` was missing for a
+  moment (a token rebuild by another agent); it passes on a rerun.
+- `check @the-system/angular`: exited non-zero with every test passing (112
+  files, 771 tests) and no error printed; it passes on a rerun (exit 0).
+
+None of these touches a file of this order. No dev server of mine is left
+running: port 5391 was already held by another agent's server serving the
+same working tree, so my own start failed and the screenshots came from
+that server.

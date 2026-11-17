@@ -180,4 +180,15 @@
     --_dialog-border-color: var(--ds-color-border-strong);
     --_dialog-divider-color: var(--ds-color-border-strong);
   }
+  /*
+   * ios (order F1, owner ruling: Neutral follows the kit for colour on ios):
+   * the header and the footer are the panel, with no band and no edge, and
+   * in dark the panel is the kit's gray (packages/css/src/platform/ios.css).
+   */
+  [data-style='neutral'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-border-color: transparent;
+    --_dialog-header-bg: transparent;
+    --_dialog-footer-bg: transparent;
+    --_dialog-divider-color: var(--_ios-hairline);
+  }
 }
