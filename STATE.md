@@ -7,29 +7,39 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
-**Stopped by the owner's order after the mobile fixes (2026-11-16).** The
-owner judged the phone platform layer wrong throughout and asked for the iOS
-and Android fixes only, then a stop. Done: orders M1 (iOS) and M2 (Android)
-and fix round 1 (M3 android recipe paint, M4 press from touch down in React,
-M5 the same in Angular) in `docs/plan/reset-mobile.md`. Nothing else starts:
-no desktop work, no gate review, no R1. `npm run check` passes on this tree
-(13 steps, 2779 tests, Angular 771).
+**iOS work reopened by the owner (2026-11-17).** After the mobile fixes the
+owner asked for: real glass on iOS (not outlines, not blur), a check of dark
+mode, an audit against the vendor's iOS 27 kit in Figma (read only), every
+kit family built, test screens against Mobbin, and support for the foldable
+iPhone. Android and desktop stay as they were. `npm run check` passes on this
+tree (13 steps, 2978 tests, Angular 771).
 
-- Every phone look is proposed until the owner signs it
-  (`docs/reports/reset/signoff/M1.md`, `M2.md`). Reports:
-  `docs/reports/lanes/reset-M1.md`, `reset-M2.md`, `reset-M4.md`,
-  `reset-M5.md`.
-- Open on phones, for the owner: the iOS off switch in Liquid keeps a dark
-  outline because of the 3:1 ruling; the Android navigation bar is the 80
-  tall form, and Google now prefers the 64 tall form.
-- Known gaps on phones: the iOS large title does not collapse on scroll; the
-  iOS sheet runs edge to edge; glass has no refraction; no tab bar or alert
-  clip in the recording list; Angular has no Chip, TabBar, List, Pagination
-  or Sheet yet, so those have no press from touch down there; Desk press
-  label rule still reads `:active` alone.
-- Fixed in passing: two Angular specs flaked because a stub on
-  `Element.prototype` was hidden by an own property left on
-  `HTMLElement.prototype` by another spec.
+- Plans: `docs/plan/reset-mobile.md` (orders M1 to M10, F1, F2),
+  `docs/plan/reset-duo.md` (foldable iPhone, orders DU1 to DU10),
+  `docs/plan/reset-ios-families.md` (M9.1 to M9.23, M10.0 to M10.11).
+- Done, all proposed until the owner signs: glass material and refraction in
+  two tiers (M6, F2, G2); audit and its CSS fixes (M7, F1); foldable iPhone
+  first slice (DU1 placement prop, DU2 side column and sheets in
+  `ios-shell.css`, DU3 gallery route `/platforms/duo`, DU4 harness with
+  `--device duo`); families M9.1 to M9.8 and their iOS and android looks
+  (M9.5 and the built parts of M9.13).
+- Next: M9.9 to M9.12 (search tab and page dots, action sheet, selection
+  menu, share panel), then dates, wheel and colour, Angular parity (M9.14),
+  the test screens (M10), DU5 to DU10.
+- Owner rulings taken from "make sure to replicate those all": on iOS the
+  switch is green with a plain off track (3:1 outline waived there); control
+  shapes separate by fill and soft shadow, not a stroke; Neutral follows the
+  kit for colour and corners on iOS. Kept by the lead: filled buttons in
+  dark keep the darker tint so white labels stay at 4.5:1.
+- Open for the owner: the decisions in section 10 of `reset-duo.md` and
+  section 7 of `reset-ios-families.md` (taken at the plans' recommendations
+  for now); the glass strength (`regular` ships); the menu label halo; a
+  real iPhone and a real foldable iPhone for the device gate.
+- Known gaps: a focused field in a grouped row draws a ring box where the
+  kit shows only the caret; on the foldable outer screen in Safari the bottom
+  bar sits over the list; the full device suite for the foldable was not run
+  to the end; the exact kit green needs a token; Angular has none of the new
+  parts yet.
 
 - R0 done: R0.1 to R0.15, plus the added orders R0.18 (SegmentedControl
   reflow), R0.19 (macos density), R0.20 (OTPField reflow), R0.21 (target
