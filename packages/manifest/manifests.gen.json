@@ -2931,6 +2931,14 @@
         "default": false,
         "description": "Fills the width of its container. Sets data-full-width."
       },
+      "fill": {
+        "type": [
+          "tone",
+          "neutral"
+        ],
+        "default": "tone",
+        "description": "Where a soft button takes its fill from. tone: the tone's tint, what soft draws by default. neutral: the gray fill of a neutral soft button (color.bg.overlay-10, 20 on hover, 30 pressed) with the label and icons in the tone's text color: tone accent emphasis soft fill neutral is a gray capsule with an accent label, as the Play and Shuffle buttons of a music library. Only soft reads it. Sets data-fill=neutral."
+      },
       "wrap": {
         "type": "boolean",
         "default": false,
@@ -2972,7 +2980,8 @@
       "data-disabled",
       "data-full-width",
       "data-wrap",
-      "data-pressed"
+      "data-pressed",
+      "data-fill=neutral"
     ],
     "a11y": {
       "role": "button (native button element), or the role of the asChild element",
@@ -3149,6 +3158,10 @@
       "liquid": "Planned: capsule buttons with a press scale."
     },
     "mistakes": [
+      {
+        "wrong": "A gray capsule with an accent label made by setting colors on a neutral soft button",
+        "right": "tone accent, emphasis soft, fill neutral"
+      },
       {
         "wrong": "Two solid accent buttons side by side",
         "right": "One solid accent button for the main action, soft or ghost for the rest"
@@ -12379,7 +12392,14 @@
           "shield",
           "spinner",
           "trend-up",
-          "trend-down"
+          "trend-down",
+          "shuffle",
+          "music",
+          "next-track",
+          "previous-track",
+          "radio",
+          "library",
+          "share"
         ],
         "required": true,
         "description": "A system icon name. Directional names say forward and back."
@@ -16086,6 +16106,8 @@
     },
     "anatomy": [
       "root",
+      "start",
+      "back",
       "brand",
       "list",
       "item",
@@ -16100,21 +16122,35 @@
       "end",
       "menu-button",
       "mobile",
-      "label-ink"
+      "label-ink",
+      "heading"
     ],
     "slots": {
       "brand": {
         "accepts": "any",
         "max": 1
       },
+      "start": {
+        "accepts": [
+          "IconButton",
+          "ButtonGroup",
+          "DropdownMenu"
+        ],
+        "max": 2
+      },
       "end": {
         "accepts": [
           "Button",
           "IconButton",
+          "ButtonGroup",
           "DropdownMenu",
           "LanguageSwitch"
         ],
         "max": 3
+      },
+      "heading": {
+        "accepts": "text",
+        "max": 1
       }
     },
     "props": {
@@ -16143,6 +16179,18 @@
       "end": {
         "type": "node",
         "description": "Actions at the inline end. On phones they move into the footer of the phone Drawer; with no items they stay in the bar and wrap. Keep them to one or two."
+      },
+      "start": {
+        "type": "node",
+        "description": "Actions at the inline start of the button row, after the back button: an IconButton, or an attached ButtonGroup of IconButtons as one capsule. They stay in the bar on phones. Default none. With back, both sit in the start part."
+      },
+      "back": {
+        "type": "{ label: string; href?: string; onClick?: (event) => void }",
+        "description": "The back control of a pushed screen: an IconButton (part back) with the chevron-back glyph, which mirrors in right to left, first in the start part. label is its name, after where it goes (Library; Arabic: المكتبة). With href it is a link rendered as linkAs; without, a button that calls onClick. Default none."
+      },
+      "heading": {
+        "type": "node",
+        "description": "The page's title as its h1 (part heading), on a row of its own under the buttons: the large title of a pushed screen. It is the last child, so it reads after the buttons, as drawn. Keep one h1 on the page; with a heading, the brand is not the title. Default none."
       },
       "sticky": {
         "type": "boolean",
@@ -16204,6 +16252,8 @@
         "No native title attribute.",
         "contract.skipAxeRules aria-hidden-focus: while a panel is open, Radix NavigationMenu renders a visually hidden, aria-hidden focus proxy span (tabindex 0) beside the trigger. It catches Tab and forwards focus into the panel in the viewport, so it is never a stop a user rests on. Axe flags it by shape. Only the open panel in the long-arabic case shows it.",
         "data-orientation horizontal comes from Radix on the root and the list.",
+        "Pushed screen form (order C2): back and start come first in the DOM, then the brand, the links and the end actions, then the heading, so focus and reading go back, start actions, end actions, then the title, as drawn: the button row, then the title row (WCAG 1.3.1, 2.4.3). The heading is an h1 that names the page (WCAG 2.4.6). The back button is named by back.label, never by its glyph alone (WCAG 4.1.2).",
+        "Bar group (order C2): an attached ButtonGroup in start or end is one capsule. The group is role group with its own name; each IconButton in it keeps its own name and its own target, 44 by 44 on ios (WCAG 2.5.8, 4.1.2). Tab moves from one button to the next; the group adds no key.",
         "Placement (order DU1): the DOM order never changes, so focus goes brand, links, end actions, then the menu button in every placement: the top row, then the column top to bottom (WCAG 2.4.3). The links keep the horizontal arrow keys, because they stay a row; the end actions are tab stops.",
         "In the column every action is 48 by 48 on ios (WCAG 2.5.8) and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): drawn by ios.css (order DU2)."
       ]
@@ -16248,6 +16298,9 @@
       "font.size.s",
       "font.size.m",
       "font.size.l",
+      "font.size.2xl",
+      "font.leading.tight",
+      "font.leading.arabic.tight",
       "font.weight.regular",
       "font.weight.medium",
       "font.weight.bold",
@@ -16322,6 +16375,14 @@
         "right": "Menubar"
       },
       {
+        "wrong": "A pushed screen with its h1 in brand, on the button row",
+        "right": "back for the way back and heading for the h1, on its own row"
+      },
+      {
+        "wrong": "Two IconButtons side by side in end where one capsule is drawn",
+        "right": "An attached ButtonGroup with a name, holding the IconButtons"
+      },
+      {
         "wrong": "placement side on a desktop site or a macos app",
         "right": "auto; side is for phone and foldable screens only"
       }
@@ -16339,7 +16400,10 @@
         "mobile",
         "trigger",
         "menu-button",
-        "label-ink"
+        "label-ink",
+        "start",
+        "back",
+        "heading"
       ],
       "keys": {
         "Enter": {
@@ -16761,7 +16825,7 @@
     ],
     "a11y": {
       "role": "textbox with aria-roledescription number field, from React Aria. The steppers are buttons with aria-controls on the input.",
-      "focus": "The input is the only tab stop. The steppers are out of the tab order and do not take focus on press. Clicking the box outside the steppers focuses the input. Focus shows the glow and a 2px ring around the box.",
+      "focus": "The input is the only tab stop. The steppers are out of the tab order and do not take focus on press. Clicking the box outside the steppers focuses the input. Focus shows the glow and a 2px ring around the box. Stepper variant (order C3, proposed): a press on minus or plus sends focus to the value; under the pointer modality (the root carries data-modality=\"pointer\", kept by the root Theme) the ring and the value's focus fill are not drawn and the value stays plain text. A key that moves or uses focus (Tab, the arrows) sets the keyboard modality and the ring shows at once (WCAG 2.2 2.4.7); with no attribute the ring shows.",
       "keys": {
         "Tab": "Moves focus to the input, and on to the next control",
         "Shift+Tab": "Moves focus back",
@@ -22038,7 +22102,7 @@
     ],
     "a11y": {
       "role": "combobox on the trigger (Radix Select: aria-expanded, aria-controls, aria-autocomplete none), named by the Field label. The open list is a listbox of option rows (aria-selected on the chosen one, aria-disabled on the disabled ones) in titled groups. While the list is open the rest of the page is hidden from assistive tech and Tab does not leave it.",
-      "focus": "The trigger is one tab stop. Opening moves focus to the chosen item, else the first enabled one. Escape, a choice or a press outside closes the list and returns focus to the trigger.",
+      "focus": "The trigger is one tab stop. Opening moves focus to the chosen item, else the first enabled one. Escape, a choice or a press outside closes the list and returns focus to the trigger. Emphasis ghost (order C3, proposed): under the pointer modality (the root carries data-modality=\"pointer\") the trigger draws no focus capsule, open or after it closes, and a row lit by the pointer draws its fill but no ring; the keyboard modality (Tab, the arrows) and no attribute keep both (WCAG 2.2 2.4.7).",
       "keys": {
         "Enter": "On the trigger, opens the list. On an item, chooses it and closes the list",
         "Space": "On the trigger, opens the list. On an item, chooses it and closes the list",
@@ -26027,7 +26091,7 @@
     ],
     "a11y": {
       "role": "No role on the root. Each action group is a group named by menuLabel and is inert while closed, so a reader and Tab meet only the menu button. The menu button opens a menu of every action (role menu, menuitem each).",
-      "focus": "The menu button is a Tab stop after the row's content. On touch it is visually hidden until focus is in the row, then drawn; with a mouse that hovers it is always drawn. While the row is open its actions are Tab stops too. Escape closes an open row; focus inside a closing group moves to the menu button first.",
+      "focus": "The menu button is a Tab stop after the row's content. It is visually hidden (still in the tree and the Tab order) and drawn only while focus is in the row, while a mouse hovers the row, or while its menu is open (order C3); the standalone content keeps room for it only then. While the row is open its actions are Tab stops too. Escape closes an open row; focus inside a closing group moves to the menu button first.",
       "keys": {
         "Tab": "Moves to the menu button after the row's content, and to the open actions while the row is open",
         "Shift+F10": "Opens the menu of every action from anywhere in the row (the path that needs no drag, WCAG 2.5.7)",
@@ -26054,7 +26118,7 @@
     },
     "content": {
       "en": {
-        "label": "One short verb: Delete, Archive, Mute, Pin, Mark unread. Sentence case.",
+        "label": "One short verb: Delete, Archive, Mute, Pin, Mark unread. Sentence case. A longer label wraps to two lines inside its action and ends in an ellipsis past that (order C3).",
         "menuLabel": "Actions for, then the row's title: Actions for Sara Alqahtani."
       },
       "ar": {
@@ -26281,7 +26345,7 @@
     ],
     "a11y": {
       "role": "switch, on the control (a Radix button). aria-checked is true or false.",
-      "focus": "The control is the one tab stop. Focus shows the glow and a 2px ring around the track.",
+      "focus": "The control is the one tab stop. Focus shows the glow and a 2px ring around the track. With no label, state text or description (aria-label only) the root is as wide as the control, with no gap column (order C3), so it lines up with the other trailing controls of a row.",
       "keys": {
         "Tab": "Moves focus to the control, and on to the next control",
         "Shift+Tab": "Moves focus back",
@@ -26451,7 +26515,8 @@
       "item-label",
       "item-badge",
       "item-status",
-      "search"
+      "search",
+      "accessory"
     ],
     "parts": {
       "TabBarItem": "item",
@@ -26465,6 +26530,13 @@
         ],
         "min": 3,
         "max": 5
+      },
+      "accessory": {
+        "accepts": [
+          "Toolbar",
+          "ProgressBar"
+        ],
+        "max": 1
       }
     },
     "props": {
@@ -26487,6 +26559,15 @@
           "side"
         ],
         "description": "TabBar: where the bar sits. auto (the default when no PageShell sets one): the CSS decides from the PageShell's size, with no JavaScript measuring, so the server render matches; on ios a shell at least 27.5rem wide and at most 43.75rem tall puts the bar in a column at the inline end, otherwise it is a row at the bottom. bottom: always a row at the bottom. side: always a vertical capsule at the inline end, icons only, the label kept as the link name. A TabBar with no placement takes the nearest PageShell's; its own value, auto included, wins. Stamps data-placement only when not auto. Use side by hand only for a phone or foldable screen whose bars must sit in the column whatever its size (a fixed device frame, a landscape only screen). Never in a desktop app, a desktop web page or under macos: there bars stay where they are and auto already keeps them there."
+      },
+      "accessory": {
+        "type": "node",
+        "description": "TabBar: content that belongs to the bar but is not a destination, such as a mini player (a Toolbar with its own aria-label). Drawn in the part accessory, first child of the bar: a row above the items on web and android; on ios a capsule over the bar. In the side column it leaves the capsule and sits at the block end of the content, beside the column (ios.css). First in the focus order, before the items, as drawn. The bar's arrow keys skip it. Default none."
+      },
+      "compact": {
+        "type": "boolean",
+        "default": false,
+        "description": "TabBar: the compact bar of a pushed or scrolled screen. Only the current item, the accessory and the search item show, in one row, in that order (the accessory moves in the DOM to just before the search item, so focus keeps the drawn order). The other items are not drawn and are not tab stops; the current item still leads to its destination, where the app shows the full bar. The arrow keys move among what is drawn. Sets data-compact. Default false."
       },
       "label": {
         "type": "string",
@@ -26533,7 +26614,8 @@
       "data-dot",
       "data-pressed",
       "data-placement=bottom|side",
-      "data-expanded"
+      "data-expanded",
+      "data-compact"
     ],
     "a11y": {
       "role": "navigation (the nav landmark) with a name; each item is a link, the current one with aria-current page.",
@@ -26562,6 +26644,8 @@
         "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2).",
         "Search item (order M9.9): the part search, last child of the bar, a link with aria-current page when current, so it behaves as any item (WCAG 4.1.2). Its label stays the link name on ios, where the round item draws only the glyph (WCAG 1.1.1, 2.5.3: the name contains Search).",
         "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
+        "Accessory (order C2): the part accessory is first in the bar, so focus and reading go the accessory, then the items, as drawn top to bottom (WCAG 2.4.3). It has no role of its own: its content names itself (a Toolbar with aria-label). In the compact bar it moves to just before the search item, as drawn: current item, accessory, search.",
+        "Compact (order C2): the items that are not drawn are display none, so they leave the tab order and the accessibility tree together; the current item keeps aria-current page and its link, the way back to the full bar. Use it on a pushed screen or while the content scrolls, never as the only bar of an app.",
         "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
       ]
     },
@@ -26643,6 +26727,10 @@
     },
     "mistakes": [
       {
+        "wrong": "A mini player made as a separate bar placed over the TabBar by hand",
+        "right": "accessory on the TabBar, so it sits with the bar in every placement and in the focus order"
+      },
+      {
         "wrong": "Icons with no labels",
         "right": "A short visible label on every item"
       },
@@ -26687,7 +26775,8 @@
       "optionalParts": [
         "item-badge",
         "item-status",
-        "search"
+        "search",
+        "accessory"
       ]
     },
     "since": "0.1.0"
@@ -28642,11 +28731,11 @@
       },
       "duration": {
         "type": "number",
-        "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action, which stay until closed. toast.configure({ durations, max }) lengthens them for the whole app."
+        "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger, which stays until closed. A toast with an action stays until closed unless you name a duration (order C3, proposed: an undo banner may time out); a named duration is raised to 10000 at least (TOAST_ACTION_MIN_DURATION). toast.configure({ durations, max }) lengthens them for the whole app."
       },
       "action": {
         "type": "object",
-        "description": "toast() option. One button: { label, onAction, altText }. A toast with an action never times out. altText is read in place of the button, for example where else the same action lives."
+        "description": "toast() option. One button: { label, onAction, altText }. A toast with an action stays until closed unless a duration is named, then it times out after 10 s at least. altText is read in place of the button, for example where else the same action lives; give it whenever the toast times out, so the action is never lost."
       },
       "dedupeKey": {
         "type": [
@@ -28673,7 +28762,7 @@
       },
       "closable": {
         "type": "boolean",
-        "description": "toast() option (proposed, order M9.8). false drops the close button of a toast that times out. Left out, the platform decides: on ios a timed toast has no close button (a notification banner), elsewhere it has one. A danger toast, a toast with an action and a toast with duration Infinity always keep it: the store ignores false for them and warns in development."
+        "description": "toast() option (proposed, order M9.8). false drops the close button of a toast that times out. Left out, the platform decides: on ios a timed toast has no close button (a notification banner), elsewhere it has one. A danger toast, a toast with an action and no duration, and a toast with duration Infinity always keep it: the store ignores false for them and warns in development. A timed toast with an action follows the timed rule (no close button by default on ios only)."
       },
       "count": {
         "type": "number",
@@ -28738,7 +28827,7 @@
         "accessibilityState": []
       },
       "notes": [
-        "danger toasts, toasts with an action and toasts with duration Infinity stay until closed and always keep their close button. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app. A timed toast with no close button (closable false, or the ios default) still closes by its timer, by Escape once focused (F8, then Tab) and by the swipe.",
+        "danger toasts, toasts with an action and no duration, and toasts with duration Infinity stay until closed and always keep their close button. A toast with an action and a named duration times out after 10 s at least (order C3). The timed ones pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app. A timed toast with no close button (closable false, or the ios default) still closes by its timer, by Escape once focused (F8, then Tab) and by the swipe.",
         "Swipe toward the edge closes a toast; the close button, Escape on the focused toast and the timer are the paths without a drag (WCAG 2.5.7).",
         "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
         "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
@@ -28750,7 +28839,7 @@
       "en": {
         "title": "Say what happened and name the thing: Draft saved, Could not upload photo.jpg. Sentence case, no exclamation marks.",
         "description": "Optional. What it means or what to do next, in one or two short sentences. Long text wraps in full, so keep it short.",
-        "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed.",
+        "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed, unless the caller names a duration (10 s at least).",
         "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
         "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count.",
         "meta": "A short time or a short state: now, 5m ago, Yesterday. Pass a Date for a time and the toast writes it. No more than a few words.",

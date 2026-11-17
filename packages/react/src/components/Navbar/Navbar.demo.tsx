@@ -1,6 +1,7 @@
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
 import { Button } from '../Button';
+import { ButtonGroup } from '../ButtonGroup';
 import { IconButton } from '../IconButton';
 import { Link } from '../Link';
 import { Navbar } from './index';
@@ -120,6 +121,67 @@ export default function NavbarDemo() {
               }
             />
           </DemoRow>
+        </Theme>
+      </DemoCase>
+
+      <DemoCase id="pushed" title="Pushed screen: a back button and a group of bar buttons on one row, the large title under it">
+        <DemoRow label="Back, a group of two in end, the heading">
+          <Navbar
+            label="Songs"
+            items={[]}
+            back={{ label: 'Library', href: '#library' }}
+            heading="Songs"
+            end={
+              <ButtonGroup attached aria-label="Song actions">
+                <IconButton icon="sort" label="Sort songs" />
+                <IconButton icon="more" label="More options" />
+              </ButtonGroup>
+            }
+          />
+        </DemoRow>
+        <DemoRow label="A group in start, one button in end, a long heading">
+          <Navbar
+            label="Playlist"
+            items={[]}
+            back={{ label: 'Playlists', href: '#playlists' }}
+            start={
+              <ButtonGroup attached aria-label="Playlist tools">
+                <IconButton icon="shuffle" label="Shuffle playlist" />
+                <IconButton icon="share" label="Share playlist" />
+              </ButtonGroup>
+            }
+            heading="Songs for a long drive from Riyadh to Abha with the family"
+            end={<IconButton icon="plus" label="Add songs" />}
+          />
+        </DemoRow>
+        <DemoRow label="A heading with no back: the title under a row of actions">
+          <Navbar
+            label="Library"
+            items={[]}
+            heading="Library"
+            end={
+              <ButtonGroup attached aria-label="Library actions">
+                <IconButton icon="search" label="Search the library" />
+                <IconButton icon="user" label="Open account" />
+                <IconButton icon="more" label="More options" />
+              </ButtonGroup>
+            }
+          />
+        </DemoRow>
+        <h3 data-demo="title">Pushed screen in Arabic: the back glyph points to the inline start</h3>
+        <Theme lang="ar" data-demo="content">
+          <Navbar
+            label="الأغاني"
+            items={[]}
+            back={{ label: 'المكتبة', href: '#library' }}
+            heading="الأغاني"
+            end={
+              <ButtonGroup attached aria-label="خيارات الأغاني">
+                <IconButton icon="sort" label="ترتيب الأغاني" />
+                <IconButton icon="more" label="خيارات إضافية" />
+              </ButtonGroup>
+            }
+          />
         </Theme>
       </DemoCase>
 

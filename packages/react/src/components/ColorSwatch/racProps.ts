@@ -7,13 +7,15 @@ type Props = Record<string, unknown>;
 /**
  * React Aria's DOM props without its own class names, slots and data
  * attributes. The system stamps its own state attributes, present and empty
- * when true (anatomy.md), so every data attribute React Aria adds is dropped.
+ * when true (anatomy.md), so the data attributes React Aria adds are dropped,
+ * except data-key: React Aria finds a collection item by it to measure where
+ * it is drawn, which is how ArrowUp and ArrowDown move by rows in a grid.
  */
 export function racOwnProps(props: Props): Props {
   const out: Props = {};
   for (const [key, value] of Object.entries(props)) {
     if (key === 'className' || key === 'slot') continue;
-    if (key.startsWith('data-')) continue;
+    if (key.startsWith('data-') && key !== 'data-key') continue;
     out[key] = value;
   }
   return out;

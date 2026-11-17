@@ -15,6 +15,7 @@
 //       <span data-part="item-icon">                       a system icon, decorative
 //         <span data-part="item-badge">                    a count or a dot, on the icon's corner
 //       <span data-part="item-label">                      always visible
+//     <div data-part="accessory">                          `accessory`, first child (order C2): a mini player
 //     <a data-part="search" href aria-current="page"?>     TabBarSearch, last child (order M9.9)
 //       <span data-part="item-icon">                       the search glyph, decorative
 //       <span data-part="item-label">                      the name; drawn on web and android
@@ -52,6 +53,20 @@
 // place, as the music app does with its search tab. When the item had focus
 // or was pressed, focus follows into the field, and back to the link when
 // the field goes, so focus is never dropped on the page (WCAG 2.4.3).
+//
+// Accessory and compact form (order C2, docs/plan/reset-mobile.md,
+// proposed): `accessory` is content that belongs to the bar but is not a
+// destination, such as a mini player (a Toolbar with its own name). It sits
+// in the part accessory, first in the bar, drawn as a row above the items,
+// so the reading and focus order is the accessory, then the items, as drawn
+// (WCAG 2.4.3). The bar's arrow keys skip it; it keeps its own. `compact`
+// (data-compact) is the bar of a pushed or scrolled screen: only the
+// current item, the accessory and the search item show, in one row, in
+// that order; the accessory moves in the DOM to just before the search item
+// so focus keeps the drawn order. The other items are not drawn and are not
+// tab stops; the current item still leads to its destination, where the
+// app shows the full bar again. In the side column (placement side) a
+// platform takes the accessory out of the capsule (ios.css).
 import { useLayoutEffect, useRef, cloneElement, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 import { pressOrigin } from './pressOrigin';
 import { pressHandlers } from '../../internal/pressed';
@@ -81,6 +96,18 @@ interface TabBarOwnProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
    * data-placement only when not auto.
    */
   placement?: TabBarPlacement;
+  /**
+   * Content that belongs to the bar but is not a destination: a mini player
+   * (a Toolbar with its own aria-label). Drawn in the part accessory, a row
+   * above the items, first in the focus order. Default none.
+   */
+  accessory?: ReactNode;
+  /**
+   * The compact bar of a pushed or scrolled screen: only the current item,
+   * the accessory and the search item, in one row. The other items are not
+   * drawn and are not tab stops. Default false. Sets data-compact.
+   */
+  compact?: boolean;
   ref?: Ref<HTMLElement>;
 }
 
@@ -91,8 +118,9 @@ export type TabBarProps = TabBarOwnProps &
 const TabBarSizeContext = createContext<TabBarSize>('md');
 
 /** The bottom navigation of a phone layout: a nav landmark with a name. */
-export function TabBar({ size = 'md', placement: placementProp, children, onKeyDown, ...rest }: TabBarProps) {
+export function TabBar({ size = 'md', placement: placementProp, accessory, compact = false, children, onKeyDown, ...rest }: TabBarProps) {
   const placement = usePlacement(placementProp);
+  const content = withAccessory(children, accessory, compact);
   return (
     <nav
       {...rest}
@@ -103,10 +131,30 @@ export function TabBar({ size = 'md', placement: placementProp, children, onKeyD
       data-ds="tab-bar"
       data-size={size}
       data-placement={placementAttr(placement)}
+      data-compact={compact ? '' : undefined}
     >
-      <TabBarSizeContext value={size}>{children}</TabBarSizeContext>
+      <TabBarSizeContext value={size}>{content}</TabBarSizeContext>
     </nav>
   );
+}
+
+/**
+ * Puts the accessory where it is drawn: first (a row above the items), or in
+ * the compact bar just before the search item (after the items when there is
+ * none). Keyed, so React moves the accessory rather than mounting it again
+ * when compact changes.
+ */
+function withAccessory(children: ReactNode, accessory: ReactNode, compact: boolean): ReactNode {
+  if (accessory === undefined || accessory === null || accessory === false) return children;
+  const box = (
+    <div key="ds-tab-bar-accessory" data-part="accessory">
+      {accessory}
+    </div>
+  );
+  const list = Children.toArray(children);
+  if (!compact) return [box, ...list];
+  const at = list.findIndex((child) => isValidElement(child) && (child as ReactElement).type === TabBarSearch);
+  return at < 0 ? [...list, box] : [...list.slice(0, at), box, ...list.slice(at)];
 }
 
 export interface TabBarItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'title' | 'children'> {
@@ -135,9 +183,14 @@ export interface TabBarItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorEle
  * and the search item while it is a link (not while it is a field).
  */
 function itemsOf(bar: HTMLElement): HTMLElement[] {
-  return Array.from(bar.querySelectorAll<HTMLElement>('[data-part="item"], [data-part="search"]:not([data-expanded])')).filter(
-    (item) => item.closest('[data-ds="tab-bar"]') === bar,
-  );
+  // The compact bar draws only the current item of the TabBarItems (order C2).
+  const item = bar.hasAttribute('data-compact') ? '[data-part="item"][data-active]' : '[data-part="item"]';
+  return Array.from(bar.querySelectorAll<HTMLElement>(`${item}, [data-part="search"]:not([data-expanded])`)).filter((el) => {
+    if (el.closest('[data-ds="tab-bar"]') !== bar) return false;
+    // The accessory's own content (a Toolbar's items) is not an item of the bar.
+    const accessory = el.closest('[data-part="accessory"]');
+    return accessory === null || !bar.contains(accessory);
+  });
 }
 
 /**

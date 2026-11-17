@@ -28,7 +28,8 @@
     "item-label",
     "item-badge",
     "item-status",
-    "search"
+    "search",
+    "accessory"
   ],
   "parts": {
     "TabBarItem": "item",
@@ -42,6 +43,13 @@
       ],
       "min": 3,
       "max": 5
+    },
+    "accessory": {
+      "accepts": [
+        "Toolbar",
+        "ProgressBar"
+      ],
+      "max": 1
     }
   },
   "props": {
@@ -64,6 +72,15 @@
         "side"
       ],
       "description": "TabBar: where the bar sits. auto (the default when no PageShell sets one): the CSS decides from the PageShell's size, with no JavaScript measuring, so the server render matches; on ios a shell at least 27.5rem wide and at most 43.75rem tall puts the bar in a column at the inline end, otherwise it is a row at the bottom. bottom: always a row at the bottom. side: always a vertical capsule at the inline end, icons only, the label kept as the link name. A TabBar with no placement takes the nearest PageShell's; its own value, auto included, wins. Stamps data-placement only when not auto. Use side by hand only for a phone or foldable screen whose bars must sit in the column whatever its size (a fixed device frame, a landscape only screen). Never in a desktop app, a desktop web page or under macos: there bars stay where they are and auto already keeps them there."
+    },
+    "accessory": {
+      "type": "node",
+      "description": "TabBar: content that belongs to the bar but is not a destination, such as a mini player (a Toolbar with its own aria-label). Drawn in the part accessory, first child of the bar: a row above the items on web and android; on ios a capsule over the bar. In the side column it leaves the capsule and sits at the block end of the content, beside the column (ios.css). First in the focus order, before the items, as drawn. The bar's arrow keys skip it. Default none."
+    },
+    "compact": {
+      "type": "boolean",
+      "default": false,
+      "description": "TabBar: the compact bar of a pushed or scrolled screen. Only the current item, the accessory and the search item show, in one row, in that order (the accessory moves in the DOM to just before the search item, so focus keeps the drawn order). The other items are not drawn and are not tab stops; the current item still leads to its destination, where the app shows the full bar. The arrow keys move among what is drawn. Sets data-compact. Default false."
     },
     "label": {
       "type": "string",
@@ -110,7 +127,8 @@
     "data-dot",
     "data-pressed",
     "data-placement=bottom|side",
-    "data-expanded"
+    "data-expanded",
+    "data-compact"
   ],
   "a11y": {
     "role": "navigation (the nav landmark) with a name; each item is a link, the current one with aria-current page.",
@@ -139,6 +157,8 @@
       "Column items are 48 by 48 on ios (WCAG 2.5.8), and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): both drawn by ios.css (order DU2).",
       "Search item (order M9.9): the part search, last child of the bar, a link with aria-current page when current, so it behaves as any item (WCAG 4.1.2). Its label stays the link name on ios, where the round item draws only the glyph (WCAG 1.1.1, 2.5.3: the name contains Search).",
       "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
+      "Accessory (order C2): the part accessory is first in the bar, so focus and reading go the accessory, then the items, as drawn top to bottom (WCAG 2.4.3). It has no role of its own: its content names itself (a Toolbar with aria-label). In the compact bar it moves to just before the search item, as drawn: current item, accessory, search.",
+      "Compact (order C2): the items that are not drawn are display none, so they leave the tab order and the accessibility tree together; the current item keeps aria-current page and its link, the way back to the full bar. Use it on a pushed screen or while the content scrolls, never as the only bar of an app.",
       "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
     ]
   },
@@ -220,6 +240,10 @@
   },
   "mistakes": [
     {
+      "wrong": "A mini player made as a separate bar placed over the TabBar by hand",
+      "right": "accessory on the TabBar, so it sits with the bar in every placement and in the focus order"
+    },
+    {
       "wrong": "Icons with no labels",
       "right": "A short visible label on every item"
     },
@@ -264,7 +288,8 @@
     "optionalParts": [
       "item-badge",
       "item-status",
-      "search"
+      "search",
+      "accessory"
     ]
   },
   "since": "0.1.0"

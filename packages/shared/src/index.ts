@@ -9,6 +9,7 @@ export * from './form';
 export * from './initials';
 export * from './listbox';
 export * from './meter';
+export * from './modality';
 export * from './number';
 export * from './otp';
 export * from './pagination';

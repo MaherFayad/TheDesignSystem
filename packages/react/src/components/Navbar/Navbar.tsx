@@ -43,7 +43,20 @@
 //   never changes, so focus goes brand, links, end actions, menu button in
 //   every placement, which is the column's top to bottom order after the
 //   top row. The links keep Radix's horizontal arrow keys: they stay a row.
-import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+// - Pushed screen form (order C2, docs/plan/reset-mobile.md, proposed):
+//   `back` draws a back IconButton (part back, the chevron-back glyph,
+//   which mirrors in right to left) at the inline start of the button row,
+//   in the part start with the `start` actions after it. `heading` draws the
+//   page's h1 (part heading) on a row of its own under the buttons, as the
+//   large title of a pushed screen. Both are optional and independent: a
+//   heading with no back is the large title under a row of actions. The
+//   heading is the last child, so the reading order is the buttons, then
+//   the title, as drawn (WCAG 1.3.1, 2.4.3).
+// - Bar groups (order C2): an attached ButtonGroup in start or end is one
+//   capsule holding several IconButtons. Each stays its own button, with
+//   its own name and target; the group has a name of its own (role group).
+//   The Navbar draws no seam between them; a platform paints the capsule.
+import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
@@ -90,6 +103,19 @@ function isMenu(item: NavbarItem): item is NavbarMenu {
   return 'links' in item;
 }
 
+/** The back control of a pushed screen: an IconButton with the chevron-back glyph. */
+export interface NavbarBack {
+  /**
+   * The accessible name of the back button. Name it after where it goes,
+   * the title of the page before: Library. Arabic: المكتبة. Required.
+   */
+  label: string;
+  /** The page it goes back to. With href the button is a link (rendered as `linkAs`); without, a button that calls onClick. */
+  href?: string;
+  /** Called on a press, before a link is followed. */
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
+}
+
 const menuLabels = {
   en: { button: 'Menu', panel: 'Site menu' },
   ar: { button: 'القائمة', panel: 'قائمة الموقع' },
@@ -105,8 +131,26 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
   brand?: ReactNode;
   /** The primary links and menus. */
   items: NavbarItem[];
-  /** Actions at the inline end: sign in, a theme switch, an account menu. */
+  /** Actions at the inline end: sign in, a theme switch, an account menu. An attached ButtonGroup of IconButtons is one capsule of bar buttons. */
   end?: ReactNode;
+  /**
+   * Actions at the inline start of the button row, after the back button:
+   * an IconButton, or an attached ButtonGroup of IconButtons as one
+   * capsule. They stay in the bar on phones. Default none.
+   */
+  start?: ReactNode;
+  /**
+   * The back control of a pushed screen: an IconButton (part back) at the
+   * inline start of the button row, before `start`. Its glyph mirrors in
+   * right to left. Default none.
+   */
+  back?: NavbarBack;
+  /**
+   * The page's title as its h1, on a row of its own under the buttons (part
+   * heading): the large title of a pushed screen. Keep one h1 on the page.
+   * Default none: the bar draws no heading, and a brand may be the title.
+   */
+  heading?: ReactNode;
   /** Keeps the bar at the top of the scrolling page and reserves scroll padding. Default false. Sets data-sticky. */
   sticky?: boolean;
   /** The component every link renders as, for a router. It gets href, children and the link attributes. Default "a". */
@@ -138,6 +182,9 @@ export function Navbar({
   brand,
   items,
   end,
+  start,
+  back,
+  heading,
   sticky = false,
   linkAs = 'a',
   defaultOpenMenu,
@@ -238,6 +285,12 @@ export function Navbar({
       data-sticky={sticky ? '' : undefined}
       data-placement={placementAttr(placement)}
     >
+      {(back !== undefined || start !== undefined) && (
+        <div data-part="start">
+          {back !== undefined && <BackButton back={back} linkAs={linkAs} size={size} />}
+          {start}
+        </div>
+      )}
       {brand !== undefined && <div data-part="brand">{brand}</div>}
       <NavigationMenu.List data-part="list">
         {items.map((item, index) => (
@@ -314,7 +367,19 @@ export function Navbar({
           </DrawerContent>
         </Drawer>
       )}
+      {heading !== undefined && <h1 data-part="heading">{heading}</h1>}
     </NavigationMenu.Root>
+  );
+}
+
+/** The back button: a link when it has href, else a button. chevron-back mirrors in right to left (icons/names.ts). */
+function BackButton({ back, linkAs, size }: { back: NavbarBack; linkAs: ElementType; size: NavbarSize }) {
+  const common = { 'data-part': 'back', icon: 'chevron-back', label: back.label, size: size === 'lg' ? 'lg' : 'md' } as const;
+  if (back.href === undefined) return <IconButton {...common} onClick={back.onClick} />;
+  return (
+    <IconButton {...common} asChild>
+      {createElement(linkAs, { href: back.href, onClick: back.onClick })}
+    </IconButton>
   );
 }
 

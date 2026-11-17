@@ -90,11 +90,11 @@
     },
     "duration": {
       "type": "number",
-      "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action, which stay until closed. toast.configure({ durations, max }) lengthens them for the whole app."
+      "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger, which stays until closed. A toast with an action stays until closed unless you name a duration (order C3, proposed: an undo banner may time out); a named duration is raised to 10000 at least (TOAST_ACTION_MIN_DURATION). toast.configure({ durations, max }) lengthens them for the whole app."
     },
     "action": {
       "type": "object",
-      "description": "toast() option. One button: { label, onAction, altText }. A toast with an action never times out. altText is read in place of the button, for example where else the same action lives."
+      "description": "toast() option. One button: { label, onAction, altText }. A toast with an action stays until closed unless a duration is named, then it times out after 10 s at least. altText is read in place of the button, for example where else the same action lives; give it whenever the toast times out, so the action is never lost."
     },
     "dedupeKey": {
       "type": [
@@ -121,7 +121,7 @@
     },
     "closable": {
       "type": "boolean",
-      "description": "toast() option (proposed, order M9.8). false drops the close button of a toast that times out. Left out, the platform decides: on ios a timed toast has no close button (a notification banner), elsewhere it has one. A danger toast, a toast with an action and a toast with duration Infinity always keep it: the store ignores false for them and warns in development."
+      "description": "toast() option (proposed, order M9.8). false drops the close button of a toast that times out. Left out, the platform decides: on ios a timed toast has no close button (a notification banner), elsewhere it has one. A danger toast, a toast with an action and no duration, and a toast with duration Infinity always keep it: the store ignores false for them and warns in development. A timed toast with an action follows the timed rule (no close button by default on ios only)."
     },
     "count": {
       "type": "number",
@@ -186,7 +186,7 @@
       "accessibilityState": []
     },
     "notes": [
-      "danger toasts, toasts with an action and toasts with duration Infinity stay until closed and always keep their close button. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app. A timed toast with no close button (closable false, or the ios default) still closes by its timer, by Escape once focused (F8, then Tab) and by the swipe.",
+      "danger toasts, toasts with an action and no duration, and toasts with duration Infinity stay until closed and always keep their close button. A toast with an action and a named duration times out after 10 s at least (order C3). The timed ones pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app. A timed toast with no close button (closable false, or the ios default) still closes by its timer, by Escape once focused (F8, then Tab) and by the swipe.",
       "Swipe toward the edge closes a toast; the close button, Escape on the focused toast and the timer are the paths without a drag (WCAG 2.5.7).",
       "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
       "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
@@ -198,7 +198,7 @@
     "en": {
       "title": "Say what happened and name the thing: Draft saved, Could not upload photo.jpg. Sentence case, no exclamation marks.",
       "description": "Optional. What it means or what to do next, in one or two short sentences. Long text wraps in full, so keep it short.",
-      "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed.",
+      "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed, unless the caller names a duration (10 s at least).",
       "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
       "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count.",
       "meta": "A short time or a short state: now, 5m ago, Yesterday. Pass a Date for a time and the toast writes it. No more than a few words.",

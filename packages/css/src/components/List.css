@@ -43,6 +43,41 @@
  * drawn (a mouse that hovers, or focus in the row). The row sets
  * --_swipe-actions-menu-inset on the swipe part so the button lines up with
  * the row padding.
+ *
+ * Order C1 (proposed), from the first three test screens. More private
+ * properties on the root:
+ *
+ *   --_list-padding-end        the row's inline end padding (a swipe row adds
+ *                              room for its menu button here)
+ *   --_list-leading            the line height of the rows' text, taller in Arabic
+ *   --_list-title-lines        how many lines a wrapped title may take, from
+ *                              data-title-lines on the row (layout plumbing)
+ *   --_list-band               the first line band of a row whose title wraps:
+ *                              the content height of a one line row, or the
+ *                              title's line when the row has a description.
+ *                              start, end and actions center on it and the
+ *                              title's first line sits in its middle, so the
+ *                              row grows downward and its first line looks
+ *                              like a one line row
+ *   --_list-title-line         the height of one title line (font size
+ *                              times leading)
+ *   --_list-separator-start    the grid line a flush hairline begins at:
+ *                              title-start, which comes after the start part
+ *                              at its real size and the gap, so the hairline
+ *                              starts at the text edge and clears a cover of
+ *                              any size; control-start in a control row
+ *   --_list-separator-inset    an offset from that line (a platform whose
+ *                              text moves past its column sets it)
+ *   --_list-separator-inset-end  the hairline's distance from the row's
+ *                              inline end; 0 is full bleed
+ *
+ * A flush hairline is a grid item in the row's first grid row, pulled up
+ * over the row's block padding, so it needs no measuring script and no
+ * fixed icon size. Rows that act in place (data-action) are buttons: their
+ * title is a span with role button whose ::before covers the row, as the
+ * link's does. A control row lays out start | control | end | actions; a
+ * footer is a last grid row under the text, positioned like actions so its
+ * buttons sit above the row's hit area.
  */
 @layer ds.base {
   [data-ds='list'] {
@@ -52,6 +87,7 @@
     --_list-height: calc(var(--ds-list-row-height) + 2 * var(--ds-space-2xs));
     --_list-padding-inline: var(--ds-space-s);
     --_list-padding-block: var(--ds-space-2xs);
+    --_list-padding-end: var(--_list-padding-inline);
     --_list-gap: var(--ds-space-s);
     --_list-font-size: var(--ds-font-size-m);
     --_list-description-font-size: var(--ds-font-size-s);
@@ -68,6 +104,11 @@
     --_list-duration: var(--ds-duration-spring-snappy);
     --_list-ease: var(--ds-ease-spring-snappy);
     --_list-swipe-menu: calc(var(--ds-size-control-md) + var(--ds-space-xs));
+    --_list-leading: var(--ds-font-leading-snug);
+    --_list-title-lines: 1;
+    --_list-separator-start: title-start;
+    --_list-separator-inset: 0px;
+    --_list-separator-inset-end: 0px;
 
     display: flex;
     flex-direction: column;
@@ -79,7 +120,7 @@
     color: var(--_list-fg);
     font-family: var(--ds-font-family-sans);
     font-size: var(--_list-font-size);
-    line-height: var(--ds-font-leading-snug);
+    line-height: var(--_list-leading);
     list-style: none;
   }
 
@@ -115,7 +156,7 @@
     min-block-size: var(--_list-height);
     margin: 0;
     padding-block: var(--_list-padding-block);
-    padding-inline: var(--_list-padding-inline);
+    padding-inline: var(--_list-padding-inline) var(--_list-padding-end);
     border-radius: var(--_list-radius);
     background-color: var(--_list-item-bg);
   }
@@ -153,8 +194,8 @@
     --_list-description-fg: var(--ds-color-text-default);
   }
 
-  /* Hover on rows that go somewhere swaps the row fill. */
-  [data-ds='list'] > [data-part='item'][data-linked]:not([data-disabled], [data-active]):hover {
+  /* Hover on rows that go somewhere or act in place swaps the row fill. */
+  [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):not([data-disabled], [data-active]):hover {
     --_list-item-bg: var(--_list-item-bg-hover);
   }
 
@@ -202,15 +243,15 @@
     white-space: nowrap;
   }
 
-  /* The link's hit area covers the row; it is also the focus layer. */
-  [data-ds='list'] > [data-part='item'] > a[data-part='title']::before {
+  /* The link's or the action's hit area covers the row; it is also the focus layer. */
+  [data-ds='list'] > [data-part='item'] > :is(a, [role='button'])[data-part='title']::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: var(--_list-radius);
   }
 
-  [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible {
+  [data-ds='list'] > [data-part='item'] > :is(a, [role='button'])[data-part='title']:focus-visible {
     outline: none;
   }
 
@@ -218,12 +259,12 @@
    * The ring is an outline inside the row, so the next row (positioned, and
    * painted later) never covers its bottom edge. Color from the focus tokens.
    */
-  [data-ds='list'] > [data-part='item']:has(> a[data-part='title']:focus-visible) {
+  [data-ds='list'] > [data-part='item']:has(> :is(a, [role='button'])[data-part='title']:focus-visible) {
     outline: var(--ds-border-width-strong) solid var(--_list-ring-color);
     outline-offset: calc(-1 * var(--ds-border-width-strong));
   }
 
-  [data-ds='list'] > [data-part='item'][data-disabled] > a[data-part='title'] {
+  [data-ds='list'] > [data-part='item'][data-disabled] > :is(a, [role='button'])[data-part='title'] {
     cursor: not-allowed;
   }
 
@@ -260,6 +301,134 @@
     gap: var(--ds-space-4xs);
   }
 
+  /* ------------------------------------------- flush: hairlines from the text edge (order C1) */
+
+  /*
+   * A grid item, not a positioned layer: it begins at the title's column
+   * line (after the start part at its real size and the gap), sits in the
+   * first grid row pulled up over the block padding, and reaches past the
+   * end padding to the row's edge.
+   */
+  [data-ds='list'][data-variant='flush'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
+    display: block;
+    grid-row: 1;
+    grid-column: var(--_list-separator-start) / -1;
+    align-self: start;
+    block-size: var(--ds-border-width-default);
+    margin-block-start: calc(-1 * var(--_list-padding-block));
+    margin-inline: var(--_list-separator-inset) calc(var(--_list-separator-inset-end) - var(--_list-padding-end));
+    background-color: var(--_list-separator-color);
+    pointer-events: none;
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='control']):not(:has(> [data-part='title'])) {
+    --_list-separator-start: control-start;
+  }
+
+  /* --------------------------------------------- wrapped titles (order C1) */
+
+  [data-ds='list'] > [data-part='item'][data-title-lines='2'] {
+    --_list-title-lines: 2;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines='3'] {
+    --_list-title-lines: 3;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines] {
+    --_list-title-line: calc(var(--_list-font-size) * var(--_list-leading));
+    --_list-band: calc(var(--_list-height) - 2 * var(--_list-padding-block));
+
+    align-items: start;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines]:has(> [data-part='description']) {
+    --_list-band: var(--_list-title-line);
+
+    /* The last row takes what a tall start part leaves, so the text stays together at the top. */
+    grid-template-rows: auto 1fr;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines] > [data-part='title'] {
+    display: -webkit-box;
+    margin-block-start: max(0px, calc((var(--_list-band) - var(--_list-title-line)) / 2));
+    overflow-wrap: anywhere;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--_list-title-lines);
+    line-clamp: var(--_list-title-lines);
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines] > :is([data-part='start'], [data-part='end'], [data-part='actions']) {
+    align-self: start;
+    min-block-size: var(--_list-band);
+  }
+
+  /* ------------------------------------------------- footer (order C1) */
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='footer']) {
+    grid-template-areas:
+      'start title end actions'
+      'start description end actions'
+      'start footer footer footer';
+    grid-template-rows: auto auto auto;
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='footer']):not(:has(> [data-part='description'])) {
+    grid-template-areas:
+      'start title end actions'
+      'start footer footer footer';
+    grid-template-rows: auto auto;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines]:has(> [data-part='footer']) {
+    grid-template-rows: auto auto 1fr;
+  }
+
+  [data-ds='list'] > [data-part='item'][data-title-lines]:has(> [data-part='footer']):not(:has(> [data-part='description'])) {
+    grid-template-rows: auto 1fr;
+  }
+
+  /* Positioned like actions, so its buttons sit above the row's hit area. */
+  [data-ds='list'] > [data-part='item'] > [data-part='footer'] {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    grid-area: footer;
+    align-items: center;
+    align-self: start;
+    gap: var(--ds-space-2xs);
+    min-inline-size: 0;
+    padding-block-start: var(--ds-space-2xs);
+  }
+
+  /* ------------------------------------------- control row (order C1) */
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='control']) {
+    grid-template-areas: 'start control end actions';
+    grid-template-rows: auto;
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='control']):has(> [data-part='title']) {
+    grid-template-areas:
+      'title title title title'
+      'start control end actions';
+    grid-template-rows: auto auto;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='control'] {
+    position: relative;
+    display: flex;
+    grid-area: control;
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='control'] > * {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
   /* ------------------------------------------------------- swipe rows */
 
   [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) {
@@ -289,12 +458,12 @@
 
   @media (hover: hover) and (pointer: fine) {
     [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) {
-      padding-inline-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
+      --_list-padding-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
     }
   }
 
   [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']):focus-within {
-    padding-inline-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
+    --_list-padding-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
   }
 
   /* --------------------------------------------------------- sections */
@@ -370,13 +539,13 @@
     text-align: center;
   }
 
-  /* Arabic: a taller line for wrapped descriptions. */
+  /* Arabic: a taller line for wrapped titles and descriptions. */
   [data-ds='list']:lang(ar) {
-    line-height: var(--ds-font-leading-arabic-snug);
+    --_list-leading: var(--ds-font-leading-arabic-snug);
   }
 
   @media (forced-colors: active) {
-    [data-ds='list'] > [data-part='item']:has(> a[data-part='title']:focus-visible) {
+    [data-ds='list'] > [data-part='item']:has(> :is(a, [role='button'])[data-part='title']:focus-visible) {
       outline-color: Highlight;
     }
 

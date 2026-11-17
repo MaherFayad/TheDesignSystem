@@ -97,6 +97,13 @@ export const iconNames = [
   'spinner',
   'trend-up',
   'trend-down',
+  'shuffle',
+  'music',
+  'next-track',
+  'previous-track',
+  'radio',
+  'library',
+  'share',
 ] as const;
 
 export type IconName = (typeof iconNames)[number];

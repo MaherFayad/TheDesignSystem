@@ -1,7 +1,7 @@
 'use client';
 import { createElement, use, useEffect, useMemo, useSyncExternalStore, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Direction } from 'radix-ui';
-import { acquireRefraction, refractionEnvOf, refractionSupported } from '@the-system/shared';
+import { acquireModality, acquireRefraction, refractionEnvOf, refractionSupported } from '@the-system/shared';
 import { IconSetContext } from '@the-system/icons/react';
 import { ThemeContext } from './context';
 import { useDevicePlatform } from './hooks';
@@ -49,6 +49,13 @@ export interface ThemeProps
  * render probe false, so the CSS only glass paints first and the filter
  * replaces it once its maps are decoded.
  *
+ * Input modality (order C3, proposed): a root Theme starts the modality flag
+ * after mount (`acquireModality` in `@the-system/shared`), which keeps
+ * `data-modality="keyboard"` or `"pointer"` on the document element. It
+ * writes an attribute only, so nothing renders again. The server render and
+ * the first paint carry no attribute, and the CSS hides a ring only under
+ * `data-modality="pointer"`.
+ *
  * It also wires the Radix direction provider and the icon set of the active
  * style, and gives `useTheme` and `useOptionalPart` their data. The token CSS
  * and `base.css` key on these attributes, so a Theme paints its own
@@ -78,6 +85,10 @@ export function Theme({
   );
   const refraction = useSyncExternalStore(noopSubscribe, clientRefraction, serverRefraction);
   const isRoot = parent === null;
+  useEffect(() => {
+    if (!isRoot) return undefined;
+    return acquireModality(document);
+  }, [isRoot]);
   useEffect(() => {
     if (!isRoot || !refraction || value.platform !== 'ios') return undefined;
     return acquireRefraction(document);

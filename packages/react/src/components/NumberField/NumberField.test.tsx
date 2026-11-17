@@ -1,4 +1,6 @@
-import { createRef } from 'react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { Profiler, createRef } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
@@ -308,5 +310,46 @@ describe('NumberField', () => {
       expect(part(container, 'increment')).toBeNull();
       expect((part(container, 'control') as HTMLInputElement).value).toBe('2');
     });
+  });
+});
+
+describe('NumberField input modality (order C3)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/NumberField.css'), 'utf8');
+
+  it('the root Theme keeps data-modality on the document element, with no render for it', () => {
+    let renders = 0;
+    const { container, unmount } = render(
+      <Theme>
+        <Profiler id="stepper" onRender={() => (renders += 1)}>
+          <NumberField variant="stepper" aria-label="Number of sessions" defaultValue={3} />
+        </Profiler>
+      </Theme>,
+    );
+    const html = document.documentElement;
+    expect(html.hasAttribute('data-modality')).toBe(false);
+    // The flag itself causes no render: events on the page outside the field change it and nothing renders.
+    const before = renders;
+    fireEvent.pointerDown(document.body);
+    expect(html.getAttribute('data-modality')).toBe('pointer');
+    fireEvent.keyDown(document.body, { key: 'Tab' });
+    expect(html.getAttribute('data-modality')).toBe('keyboard');
+    fireEvent.touchStart(document.body);
+    expect(html.getAttribute('data-modality')).toBe('pointer');
+    expect(renders).toBe(before);
+    // A press on plus, then a key that moves focus.
+    fireEvent.keyDown(part(container, 'control')!, { key: 'ArrowUp' });
+    expect(html.getAttribute('data-modality')).toBe('keyboard');
+    fireEvent.pointerDown(part(container, 'increment')!);
+    expect(html.getAttribute('data-modality')).toBe('pointer');
+    unmount();
+    expect(html.hasAttribute('data-modality')).toBe(false);
+  });
+
+  it('hides the stepper ring and fill under the pointer modality only, so the keyboard keeps them (WCAG 2.4.7)', () => {
+    expect(css).toContain(":root[data-modality='pointer'] [data-ds='number-field'][data-variant='stepper']:focus-within {");
+    expect(css).toContain(":root[data-modality='pointer'] [data-ds='number-field'][data-variant='stepper'] > [data-part='control']:focus {");
+    // The ring itself is not keyed on the flag: keyboard and no flag both draw it.
+    expect(css).toContain("[data-ds='number-field']:focus-within {\n    --_number-field-border-color: var(--_number-field-border-color-focus);\n\n    box-shadow: var(--_number-field-ring);");
+    expect(css).not.toContain("data-modality='keyboard'");
   });
 });

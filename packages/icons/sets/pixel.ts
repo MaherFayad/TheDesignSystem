@@ -8,7 +8,9 @@
 //   star-filled and star-half (star filled in), grip and grip-vertical
 //   (square dots), panel-start, panel-end and columns (the layout frame),
 //   command, maximize (four corners), filter-x (filter plus a small x),
-//   trend-down (trending-up upside down), drag (grip-vertical).
+//   trend-down (trending-up upside down), drag (grip-vertical), next-track
+//   and previous-track (the play outline beside a bar, the bar after it or
+//   before it).
 // - The nearest glyph by meaning: history uses clock, tag uses label,
 //   sidebar uses layout, success uses check, minimize uses minus.
 import type { IconSetSource } from './source';
@@ -114,6 +116,13 @@ const pixel: IconSetSource = {
     spinner: 'spinner',
     'trend-up': 'trending-up',
     'trend-down': 'local:trend-down',
+    shuffle: 'shuffle',
+    music: 'music',
+    'next-track': 'local:next-track',
+    'previous-track': 'local:previous-track',
+    radio: 'radio',
+    library: 'library',
+    share: 'share',
   },
 };
 

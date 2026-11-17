@@ -154,7 +154,7 @@
   ],
   "a11y": {
     "role": "textbox with aria-roledescription number field, from React Aria. The steppers are buttons with aria-controls on the input.",
-    "focus": "The input is the only tab stop. The steppers are out of the tab order and do not take focus on press. Clicking the box outside the steppers focuses the input. Focus shows the glow and a 2px ring around the box.",
+    "focus": "The input is the only tab stop. The steppers are out of the tab order and do not take focus on press. Clicking the box outside the steppers focuses the input. Focus shows the glow and a 2px ring around the box. Stepper variant (order C3, proposed): a press on minus or plus sends focus to the value; under the pointer modality (the root carries data-modality=\"pointer\", kept by the root Theme) the ring and the value's focus fill are not drawn and the value stays plain text. A key that moves or uses focus (Tab, the arrows) sets the keyboard modality and the ring shows at once (WCAG 2.2 2.4.7); with no attribute the ring shows.",
     "keys": {
       "Tab": "Moves focus to the input, and on to the next control",
       "Shift+Tab": "Moves focus back",

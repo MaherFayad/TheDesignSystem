@@ -123,6 +123,14 @@
       "default": false,
       "description": "Fills the width of its container. Sets data-full-width."
     },
+    "fill": {
+      "type": [
+        "tone",
+        "neutral"
+      ],
+      "default": "tone",
+      "description": "Where a soft button takes its fill from. tone: the tone's tint, what soft draws by default. neutral: the gray fill of a neutral soft button (color.bg.overlay-10, 20 on hover, 30 pressed) with the label and icons in the tone's text color: tone accent emphasis soft fill neutral is a gray capsule with an accent label, as the Play and Shuffle buttons of a music library. Only soft reads it. Sets data-fill=neutral."
+    },
     "wrap": {
       "type": "boolean",
       "default": false,
@@ -164,7 +172,8 @@
     "data-disabled",
     "data-full-width",
     "data-wrap",
-    "data-pressed"
+    "data-pressed",
+    "data-fill=neutral"
   ],
   "a11y": {
     "role": "button (native button element), or the role of the asChild element",
@@ -341,6 +350,10 @@
     "liquid": "Planned: capsule buttons with a press scale."
   },
   "mistakes": [
+    {
+      "wrong": "A gray capsule with an accent label made by setting colors on a neutral soft button",
+      "right": "tone accent, emphasis soft, fill neutral"
+    },
     {
       "wrong": "Two solid accent buttons side by side",
       "right": "One solid accent button for the main action, soft or ghost for the rest"

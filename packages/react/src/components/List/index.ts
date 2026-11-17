@@ -8,5 +8,6 @@ export {
   type ListSectionProps,
   type ListSize,
   type ListSlotContent,
+  type ListTitleLines,
   type ListVariant,
 } from './List';

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { List, ListItem } from '../List';
@@ -244,5 +246,38 @@ describe('SwipeActions around content', () => {
     fireEvent.pointerUp(content, { pointerId: 1, clientX: 240, clientY: 10, pointerType: 'pen' });
     expect(root.getAttribute('data-state')).toBe('open-end');
     expect(root.style.getPropertyValue('--_swipe-actions-x')).toBe('-60px');
+  });
+});
+
+describe('SwipeActions fixes from the test screens (order C3)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/SwipeActions.css'), 'utf8');
+
+  it('each action label sits in the Button label part, which the CSS wraps to two lines inside the action', () => {
+    render(<Row />);
+    const labels = [...document.querySelectorAll("[data-part='action'] > [data-part='label']")].map((el) => el.textContent);
+    expect(labels).toEqual(['Archive', 'Mute', 'Delete']);
+    expect(css).toContain('max-inline-size: var(--_swipe-actions-label-max);');
+    expect(css).toContain('-webkit-line-clamp: 2;');
+  });
+
+  it('armed, the edge action moves next to the content on both sides', () => {
+    expect(css).toContain("[data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:first-child {\n    order: 1;");
+    expect(css).toContain("[data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:last-child {\n    order: -1;");
+  });
+
+  it('the menu is drawn and given room only on hover, focus within or while open', () => {
+    expect(css).toContain("[data-ds='swipe-actions']:not([data-part]):hover > [data-part='content']");
+    expect(css).toContain(":not(:focus-within, :hover) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true']))");
+    // No rule gives the standalone content the room for every mouse.
+    expect(css).not.toContain("[data-ds='swipe-actions']:not([data-part]) > [data-part='content'] {\n      padding-inline-end");
+  });
+
+  it('the menu button reports its open state for the CSS', async () => {
+    render(<Row />);
+    const menu = screen.getByRole('button', { name: 'Actions for Sara Alqahtani' });
+    expect(menu.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.pointerDown(menu, { button: 0, ctrlKey: false, pointerType: 'mouse' });
+    await act(async () => {});
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
   });
 });

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Dialog } from 'radix-ui';
@@ -662,6 +664,34 @@ describe('the notification banner (order M9.8)', () => {
       expect(closeOf(quiet)).toBeNull();
       view.unmount();
     }
+  });
+
+  it('an undo banner with a duration times out (order C3): no close button on ios, one on web, a progress line, and the timer pauses', async () => {
+    for (const platform of ['ios', 'web'] as const) {
+      const { toast, fire, store, advance, view } = await mount(platform);
+      fire(() => toast({ title: 'Article archived', start: 'inbox', duration: 12_000, action: { label: 'Undo archive', altText: 'Restore it from the toolbar', onAction: () => undefined } }));
+      const [el] = toasts();
+      expect(el?.querySelector('[data-part="action"]')).not.toBeNull();
+      expect(el?.querySelector('[data-part="progress"]')).not.toBeNull();
+      expect(closeOf(el) === null).toBe(platform === 'ios');
+      advance(6000);
+      act(() => store.pause());
+      advance(60_000);
+      expect(openToasts()).toHaveLength(1);
+      act(() => store.resume());
+      advance(6000);
+      expect(store.getSnapshot().visible.filter((t) => t.state === 'open')).toHaveLength(0);
+      view.unmount();
+    }
+  });
+
+  it('the start part sits at the top, as tall as the first line block (order C3)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Toast.css'), 'utf8');
+    const at = css.indexOf("[data-ds='toast'] > [data-part='start'] {");
+    const rule = css.slice(at, css.indexOf('}', at));
+    expect(rule).toContain('align-self: start;');
+    expect(rule).toContain('min-block-size: var(--_toast-first-block);');
+    expect(rule).not.toContain('align-self: center;');
   });
 
   it('refuses closable false on a danger toast, which keeps its close button and warns', async () => {

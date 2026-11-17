@@ -269,6 +269,18 @@
     --_select-ghost-fg: var(--ds-color-text-default);
   }
 
+  /*
+   * Order C3 (proposed): the pop-up button opened with a pointer draws no
+   * focus capsule, open or after it closes and focus comes back. Under the
+   * pointer modality (the document element carries data-modality="pointer")
+   * the glow and ring layer stays hidden; a key press that moves or uses
+   * focus sets the keyboard modality and the capsule shows at once (WCAG 2.2
+   * 2.4.7). With no attribute it shows as before.
+   */
+  :root[data-modality='pointer'] [data-ds='select'][data-emphasis='ghost']:not([data-part])::before {
+    opacity: 0;
+  }
+
   /* ------------------------------------------------------------ the content: the menu surface */
 
   [data-ds='select'][data-part='content'] {
@@ -430,6 +442,16 @@
 
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  /*
+   * Order C3 (proposed): a row the pointer lights has the highlight fill and
+   * no ring box. Radix moves focus to the row under the pointer, which can
+   * match :focus-visible; under the pointer modality the ring stays off. The
+   * arrow keys set the keyboard modality and the ring shows (WCAG 2.2 2.4.7).
+   */
+  :root[data-modality='pointer'] [data-ds='select'] [data-part='item']:focus-visible {
+    --_select-item-ring: 0 0 transparent;
   }
 
   [data-ds='select'] [data-part='item'][data-disabled] {

@@ -112,6 +112,13 @@ const line: IconSetSource = {
     spinner: 'loader',
     'trend-up': 'trending-up',
     'trend-down': 'trending-down',
+    shuffle: 'shuffle',
+    music: 'music',
+    'next-track': 'skip-forward',
+    'previous-track': 'skip-back',
+    radio: 'radio',
+    library: 'library',
+    share: 'share',
   },
 };
 

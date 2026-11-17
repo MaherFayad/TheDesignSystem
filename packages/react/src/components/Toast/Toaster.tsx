@@ -46,8 +46,11 @@
 //   onPointerDownOutside and onInteractOutside and prevents the default, so
 //   working with a toast never closes the dialog. The limit: while a modal
 //   dialog is open, keyboard focus stays in the dialog, so F8 and Tab do not
-//   reach the toasts. That is why a toast with an action never times out:
-//   its action is still there when the dialog closes.
+//   reach the toasts. That is why a toast with an action stays until
+//   closed by default: its action is still there when the dialog closes.
+//   A caller may time one out (order C3, an undo banner) by naming a
+//   duration; the store raises it to 10 s at least, and the action's
+//   altText names where else the same action lives.
 //
 // Motion (order 1.23). The toasts share one grid cell and stack with depth:
 // the newest in front, the older ones behind it, peeking a few px further
@@ -76,8 +79,9 @@
 //
 // The close button and the banner parts (order M9.8, proposed). Each toast
 // asks the store's toastClosable(item, platform): on ios a timed toast has
-// no close button by default, as a notification banner; a toast that stays
-// until closed (danger, an action, no timeout) always keeps it, and
+// no close button by default, as a notification banner (a timed toast with
+// an action included); a toast that stays until closed (danger, an action
+// with no duration, no timeout) always keeps it, and
 // toast({ closable }) decides elsewhere. A toast without one still closes
 // by its timer (which pauses and which configure lengthens, WCAG 2.2.1),
 // by Escape when it has focus (F8, then Tab: each toast is a tab stop), and

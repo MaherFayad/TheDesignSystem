@@ -101,6 +101,13 @@ export const pixel: IconSetData = {
     spinner: { viewBox: '0 0 24 24', body: '<path d="M13 22H11V15H13V22ZM5 21H3V19H5V21ZM21 19V21H19V19H21ZM7 19H5V17H7V19ZM19 19H17V17H19V19ZM9 17H7V15H9V17ZM17 17H15V15H17V17ZM9 13H2V11H9V13ZM22 13H15V11H22V13ZM9 9H7V7H9V9ZM13 9H11V2H13V9ZM17 9H15V7H17V9ZM7 7H5V5H7V7ZM19 7H17V5H19V7ZM5 5H3V3H5V5ZM21 5H19V3H21V5Z"/>' },
     'trend-up': { viewBox: '0 0 24 24', body: '<path d="M4 18H2v-2h2v2Zm2-2H4v-2h2v2Zm8 0h-2v-2h2v2Zm-6-2H6v-2h2v2Zm4 0h-2v-2h2v2Zm4 0h-2v-2h2v2Zm6-8v8h-2v-4h-2V8h-4V6h8Zm-12 6H8v-2h2v2Zm8 0h-2v-2h2v2Z"/>' },
     'trend-down': { viewBox: '0 0 24 24', body: '<path d="M2 6h2v2h-2zM4 8h2v2h-2zM12 8h2v2h-2zM6 10h2v2h-2zM10 10h2v2h-2zM14 10h2v2h-2zM20 10h2v4h-2zM8 12h2v2h-2zM16 12h2v2h-2zM18 14h4v2h-4zM14 16h8v2h-8z"/>' },
+    shuffle: { viewBox: '0 0 24 24', body: '<path d="M10 19H2v-2h8v2Zm12 0h-8v-2h8v2Zm-10-2h-2v-6h2v6Zm6-10h2v2h2v2h-2v2h-2v2h-2v-4h-4V9h4V5h2v2ZM8 11H2V9h6v2Z"/>' },
+    music: { viewBox: '0 0 24 24', body: '<path d="M4 12h4v2H4zm-2 2h2v4H2zm2 4h4v2H4zM8 6h2v12H8zm10 0h2v12h-2zm-6 8h2v4h-2zm2-2h4v2h-4zm0 6h4v2h-4zM10 4h8v2h-8z"/>' },
+    'next-track': { viewBox: '0 0 24 24', body: '<path d="M5 3h2v18h-2zM7 5h2v2h-2zM7 17h2v2h-2zM9 7h2v2h-2zM9 15h2v2h-2zM11 9h2v2h-2zM11 13h2v2h-2zM13 11h2v2h-2zM17 3h2v18h-2z"/>' },
+    'previous-track': { viewBox: '0 0 24 24', body: '<path d="M17 3h2v18h-2zM15 5h2v2h-2zM15 17h2v2h-2zM13 7h2v2h-2zM13 15h2v2h-2zM11 9h2v2h-2zM11 13h2v2h-2zM9 11h2v2h-2zM5 3h2v18h-2z"/>' },
+    radio: { viewBox: '0 0 24 24', body: '<path d="M11 9h2v2h-2zm0 4h2v2h-2zm-2-2h2v2H9zm4 0h2v2h-2zm6-2h-2v6h2zM5 9h2v6H5zm18-2h-2v10h2zM1 7h2v10H1zm16 0h-2v2h2zM7 7h2v2H7zm14-2h-2v2h2zM3 5h2v2H3zm14 10h-2v2h2zM7 15h2v2H7zm14 2h-2v2h2zM3 17h2v2H3z"/>' },
+    library: { viewBox: '0 0 24 24', body: '<path d="M3 4h2v17H3zm4 4h2v13H7zm4-2h2v15h-2zm4 0h2v5h-2zm2 5h2v5h-2zm2 5h2v5h-2z"/>' },
+    share: { viewBox: '0 0 24 24', body: '<path d="M20 22H4V20H20V22ZM4 20H2V14H4V20ZM22 20H20V14H22V20ZM13 4H15V6H17V8H13V18H11V8H7V6H9V4H11V2H13V4ZM9 14H4V12H9V14ZM20 14H15V12H20V14Z"/>' },
   },
   glyphs: {
   },

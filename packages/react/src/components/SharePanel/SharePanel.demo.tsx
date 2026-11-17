@@ -76,7 +76,7 @@ export default function SharePanelDemo() {
       <DemoCase id="variants" title="System sheet first, and the app's own targets">
         <DemoRow>
           <SharePanel item={trip} people={peopleOf(namesEn, 4)} targets={targetsEn} actions={actionsEn}>
-            <Button data-demo-trigger="prefer" start="upload">
+            <Button data-demo-trigger="prefer" start="share">
               Share trip
             </Button>
           </SharePanel>
@@ -90,7 +90,7 @@ export default function SharePanelDemo() {
 
       <DemoCase id="empty" title="A title and a link only">
         <SharePanel item={{ title: 'Packing list', url: 'https://example.com/lists/packing' }} system="never">
-          <Button data-demo-trigger="empty" start="upload">
+          <Button data-demo-trigger="empty" start="share">
             Share list
           </Button>
         </SharePanel>
@@ -106,7 +106,7 @@ export default function SharePanelDemo() {
 
       <DemoCase id="many" title="People, targets and actions">
         <SharePanel item={{ ...trip, text: 'Two nights, three walks and one long dinner.' }} people={peopleOf(namesEn)} targets={targetsEn} actions={actionsEn} system="never">
-          <Button data-demo-trigger="many" start="upload">
+          <Button data-demo-trigger="many" start="share">
             Share trip
           </Button>
         </SharePanel>
@@ -135,7 +135,7 @@ export default function SharePanelDemo() {
           actions={[{ id: 'list', label: 'Add to the shared packing list', icon: 'list', onSelect: noop }]}
           system="never"
         >
-          <Button data-demo-trigger="long-text" start="upload">
+          <Button data-demo-trigger="long-text" start="share">
             Share trip
           </Button>
         </SharePanel>
@@ -143,7 +143,7 @@ export default function SharePanelDemo() {
 
       <DemoCase id="long-arabic" title="Arabic: rows start at the right" lang="ar">
         <SharePanel item={{ ...tripAr, text: 'ليلتين، ثلاث جولات مشي وعشاء طويل.' }} people={peopleOf(namesAr)} targets={targetsAr} actions={actionsAr} system="never">
-          <Button data-demo-trigger="long-arabic" start="upload">
+          <Button data-demo-trigger="long-arabic" start="share">
             مشاركة الرحلة
           </Button>
         </SharePanel>
@@ -159,7 +159,7 @@ export default function SharePanelDemo() {
           ]}
           system="never"
         >
-          <Button data-demo-trigger="disabled" start="upload">
+          <Button data-demo-trigger="disabled" start="share">
             Share trip
           </Button>
         </SharePanel>

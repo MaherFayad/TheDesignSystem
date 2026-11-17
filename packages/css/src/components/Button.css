@@ -607,6 +607,33 @@
     --_button-decoration: currentColor;
   }
 
+  /* ------------------------------------------------------------ soft with a neutral fill (order C2) */
+
+  /*
+   * data-fill='neutral' on a soft Button: the gray fill of a neutral soft
+   * button, with the label and icons in the tone's text color, the colors
+   * a tone uses on a plain surface. The Play and Shuffle capsules of a
+   * music library. soft without it is unchanged. Tone neutral keeps its
+   * own text color: neutral on neutral is the soft default.
+   */
+  [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
+    --_button-bg: var(--ds-color-bg-overlay-10);
+    --_button-bg-hover: var(--ds-color-bg-overlay-20);
+    --_button-bg-active: var(--ds-color-bg-overlay-30);
+  }
+
+  [data-ds='button'][data-fill='neutral'][data-emphasis='soft'][data-tone='accent'] {
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+  }
+
+  [data-ds='button'][data-fill='neutral'][data-emphasis='soft']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_button-fg: var(--_button-tone-text);
+    --_button-fg-hover: var(--_button-tone-text);
+    --_button-fg-active: var(--_button-tone-text);
+  }
+
   /* ------------------------------------------------------------ toggle-button (lane 1A) */
 
   /*

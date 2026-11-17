@@ -112,6 +112,9 @@
  * after the description in the DOM so it is read after it. Only a toast
  * that has them changes layout (:has), so every other toast is as before:
  *   --_toast-meta-fg         the color of the meta text (a muted text token, 4.5:1)
+ *   --_toast-line            one text line, font size times leading (order C3); the
+ *                            start part is as tall as the title line and the first
+ *                            description line, so it centres on them
  * With start, the first column fits its content (an Avatar is wider than an
  * icon). With meta, the card gets a fourth column for it in the title row,
  * and the description and the action span under it. A toast with meta and
@@ -284,6 +287,8 @@
     --_toast-edge-width: var(--ds-border-width-strong);
     /* Order M9.8: the meta text. */
     --_toast-meta-fg: var(--ds-color-text-muted);
+    /* Order C3: one text line, for the start part's first line block (a platform that changes the font size sets it). */
+    --_toast-line: calc(var(--ds-font-size-s) * var(--ds-font-leading-snug));
 
     position: relative;
     display: grid;
@@ -549,15 +554,31 @@
     margin-block-start: var(--ds-space-s);
   }
 
-  /* The start part: in the icon's area, centred on the text beside it, as a banner sets its app icon. */
+  /*
+   * The start part: in the icon's area, centred on the first line block
+   * beside it (the title and the first line of the description), as the
+   * vendor kit sets a banner's app icon (order C3). It sits at the top, so a
+   * longer description or the action row never pulls it down to the middle
+   * of the banner. --_toast-line is one text line (the toast's font size
+   * times its leading; a platform that changes the toast's font size sets
+   * it too) and --_toast-first-block is that block's height: two lines and
+   * the gap between title and description, or one line with no
+   * description. The part is at least that tall and centres its content.
+   */
   [data-ds='toast'] > [data-part='start'] {
+    --_toast-first-block: calc(2 * var(--_toast-line) + var(--ds-space-4xs));
+
     grid-area: icon;
-    align-self: center;
+    align-self: start;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: calc(var(--ds-font-size-s) * var(--ds-font-leading-snug));
+    min-block-size: var(--_toast-first-block);
     color: var(--_toast-icon);
+  }
+
+  [data-ds='toast']:not(:has(> [data-part='title'] + [data-part='description'])) > [data-part='start'] {
+    --_toast-first-block: var(--_toast-line);
   }
 
   [data-ds='toast']:has(> [data-part='start']) {

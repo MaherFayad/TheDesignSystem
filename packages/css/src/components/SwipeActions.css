@@ -30,6 +30,10 @@
  *                                   button; a List row sets its own padding
  *   --_swipe-actions-menu-room      the room the standalone content keeps at
  *                                   its inline end while the menu shows
+ *   --_swipe-actions-label-max      the widest an action label runs before it
+ *                                   wraps (order C3): a label takes two lines
+ *                                   at most and ends in an ellipsis, inside
+ *                                   its action
  *
  * The root clips. Each action group is as wide as the root and sits just
  * past one inline edge (end: past the inline end, start: before the inline
@@ -53,9 +57,10 @@
  * Button's. A recipe for SwipeActions sets the --_swipe-actions-tone-* pair.
  *
  * The menu button (part menu) sits in an unnamed span at the inline end. It
- * is drawn when the pointer is a mouse that hovers, or while focus is in the
- * row; otherwise it is visually hidden but stays in the accessibility tree
- * and the Tab order (convention 18 shape).
+ * is drawn while a mouse hovers the row, while focus is in the row, or while
+ * its menu is open; otherwise it is visually hidden but stays in the
+ * accessibility tree and the Tab order (convention 18 shape). The standalone
+ * content keeps room for it only while it is drawn (order C3).
  *
  * States: data-state (closed, open-start, open-end), data-dragging (no
  * transition), data-armed (a release runs the first action: the other
@@ -80,6 +85,7 @@
     --_swipe-actions-radius: 0;
     --_swipe-actions-menu-inset: var(--ds-space-s);
     --_swipe-actions-menu-room: calc(var(--ds-size-control-md) + var(--ds-space-xs));
+    --_swipe-actions-label-max: calc(var(--_swipe-actions-action-min) + var(--ds-space-m));
 
     position: relative;
     display: block;
@@ -197,10 +203,40 @@
     transition: opacity var(--ds-duration-quick) var(--ds-ease-out);
   }
 
+  /*
+   * A long label (the Arabic noun forms run long) wraps inside its action,
+   * two lines at most, and ends in an ellipsis; it never runs past the
+   * action or out of the row (order C3).
+   */
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] > [data-part='label'] {
+    display: -webkit-box;
+    max-inline-size: var(--_swipe-actions-label-max);
+    overflow: hidden;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
   /* Armed: a release runs the edge action, so the others fade and its tone fills the group. */
   [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:not(:first-child),
   [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:not(:last-child) {
     opacity: 0;
+  }
+
+  /*
+   * Armed, the edge action moves next to the content, so its icon and label
+   * follow the leading edge of the stretch (the edge under the finger), as
+   * the native full swipe does, instead of staying at its resting place.
+   */
+  [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:first-child {
+    order: 1;
+  }
+
+  [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:last-child {
+    order: -1;
   }
 
   /* ------------------------------------------------------------- menu */
@@ -216,20 +252,42 @@
     transition: transform var(--_swipe-actions-duration) var(--_swipe-actions-ease);
   }
 
-  /* The standalone content keeps room for the menu while it is drawn. */
+  /*
+   * The standalone content keeps room for the menu only while it is drawn
+   * (order C3): a hovering mouse, focus in the root, or the menu open.
+   */
   @media (hover: hover) and (pointer: fine) {
-    [data-ds='swipe-actions']:not([data-part]) > [data-part='content'] {
+    [data-ds='swipe-actions']:not([data-part]):hover > [data-part='content'] {
       padding-inline-end: var(--_swipe-actions-menu-room);
     }
   }
 
-  [data-ds='swipe-actions']:not([data-part]):focus-within > [data-part='content'] {
+  [data-ds='swipe-actions']:not([data-part]):is(:focus-within, :has(> span > [data-part='menu'][aria-expanded='true'])) > [data-part='content'] {
     padding-inline-end: var(--_swipe-actions-menu-room);
   }
 
-  /* Touch with no focus in the row: the menu stays in the tree and the Tab order, drawn only once focus arrives. */
+  /*
+   * Not drawn: the menu stays in the tree and the Tab order, visually hidden
+   * until focus arrives (any pointer) or a mouse hovers (a pointer that
+   * hovers). The row is the parent in the part form and the root itself in
+   * the standalone form. An open menu keeps its button drawn, so the menu
+   * stays anchored.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    :not(:focus-within, :hover) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true'])),
+    [data-ds='swipe-actions']:not([data-part]):not(:focus-within, :hover) > span:has(> [data-part='menu']:not([aria-expanded='true'])) {
+      inset-block: auto;
+      inline-size: var(--ds-border-width-default);
+      block-size: var(--ds-border-width-default);
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
   @media not all and (hover: hover) and (pointer: fine) {
-    :not(:focus-within) > [data-ds='swipe-actions'] > span:has(> [data-part='menu']) {
+    :not(:focus-within) > [data-ds='swipe-actions'][data-part] > span:has(> [data-part='menu']:not([aria-expanded='true'])),
+    [data-ds='swipe-actions']:not([data-part]):not(:focus-within) > span:has(> [data-part='menu']:not([aria-expanded='true'])) {
       inset-block: auto;
       inline-size: var(--ds-border-width-default);
       block-size: var(--ds-border-width-default);

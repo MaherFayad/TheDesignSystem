@@ -32,6 +32,35 @@ describe('Button', () => {
     expect(el.querySelector('[data-part="spinner"]')).toBeNull();
   });
 
+  it('fill neutral stamps data-fill on a soft button; the default tone stamps nothing (order C2)', () => {
+    const { container, rerender } = render(
+      <Button tone="accent" emphasis="soft" fill="neutral">
+        Play all
+      </Button>,
+    );
+    const el = root(container);
+    expect(el.getAttribute('data-fill')).toBe('neutral');
+    expect(el.getAttribute('data-tone')).toBe('accent');
+    expect(el.getAttribute('data-emphasis')).toBe('soft');
+    // The name is the label, whatever the fill (WCAG 4.1.2).
+    expect(screen.getByRole('button', { name: 'Play all' })).toBe(el);
+    rerender(
+      <Button tone="accent" emphasis="soft" fill="tone">
+        Play all
+      </Button>,
+    );
+    expect(root(container).hasAttribute('data-fill')).toBe(false);
+    rerender(<Button tone="accent" emphasis="soft">Play all</Button>);
+    expect(root(container).hasAttribute('data-fill')).toBe(false);
+  });
+
+  it('the neutral fill rule leaves soft as it was and reads only soft (order C2)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Button.css'), 'utf8');
+    const rules = css.match(/\[data-fill='neutral'\][^{]*\{/g) ?? [];
+    expect(rules.length).toBeGreaterThan(0);
+    for (const rule of rules) expect(rule).toContain("[data-emphasis='soft']");
+  });
+
   it('sets the axis attributes from props', () => {
     const { container } = render(
       <Button size="lg" tone="accent" emphasis="solid" shape="pill" type="submit" fullWidth>

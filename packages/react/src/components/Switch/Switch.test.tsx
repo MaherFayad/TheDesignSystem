@@ -176,3 +176,19 @@ describe('Switch motion (interaction switch-stretch, order 1.22, and the round 1
     expect(css).toContain('--_switch-ease: var(--ds-ease-spring-bouncy);');
   });
 });
+
+describe('Switch with no label (order C3)', () => {
+  it('has the control as its only part, and the CSS drops the second column and the gap for it', () => {
+    const { container } = render(<Switch aria-label="Bell at the end of a session" />);
+    const rootEl = container.querySelector('[data-ds="switch"]')!;
+    expect([...rootEl.querySelectorAll(':scope > [data-part]')].map((el) => el.getAttribute('data-part'))).toEqual(['control']);
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Switch.css'), 'utf8');
+    expect(css).toContain("[data-ds='switch']:not(:has(> [data-part]:not([data-part='control']))) {\n    grid-template-columns: auto;\n    column-gap: 0;");
+  });
+
+  it('keeps the label column when there is a label or state text', () => {
+    const { container } = render(<Switch label="Bell" stateText={{ on: 'On', off: 'Off' }} />);
+    const parts = [...container.querySelectorAll('[data-ds="switch"] > [data-part]')].map((el) => el.getAttribute('data-part'));
+    expect(parts).toContain('label');
+  });
+});

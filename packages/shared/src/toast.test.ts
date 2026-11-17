@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  TOAST_ACTION_MIN_DURATION,
   TOAST_DURATIONS,
   createToastFunction,
   createToastStore,
@@ -296,9 +297,9 @@ describe('toast store', () => {
     expect(pending()).toBe(0);
   });
 
-  it('a toast with an action never times out, and loses that when the action goes', () => {
+  it('a toast with an action and no duration never times out, and loses that when the action goes', () => {
     const { toast, advance, open } = setup();
-    const id = toast({ title: 'Card moved to Archive', duration: 2000, action: { label: 'Undo move', onAction: () => undefined } });
+    const id = toast({ title: 'Card moved to Archive', action: { label: 'Undo move', onAction: () => undefined } });
     expect(open()[0]?.duration).toBe(Infinity);
     advance(60 * 60 * 1000);
     expect(open()).toHaveLength(1);
@@ -306,6 +307,46 @@ describe('toast store', () => {
     expect(open()[0]?.duration).toBe(TOAST_DURATIONS.neutral);
     advance(TOAST_DURATIONS.neutral);
     expect(open()).toHaveLength(0);
+  });
+
+  it('a toast with an action times out when the caller names a duration, never sooner than the floor (order C3)', () => {
+    const { toast, store, advance, open } = setup({ max: 5 });
+    const undo = { label: 'Undo archive', onAction: () => undefined };
+    toast({ title: 'Article archived', duration: 2000, action: undo });
+    toast({ title: 'Article deleted', duration: 15_000, action: undo });
+    expect(open().map((t) => t.duration)).toEqual([TOAST_ACTION_MIN_DURATION, 15_000]);
+    advance(TOAST_ACTION_MIN_DURATION - 1);
+    expect(open()).toHaveLength(2);
+    // Hover or focus pauses it and keeps the time left (WCAG 2.2 2.2.1).
+    store.pause();
+    advance(60 * 60 * 1000);
+    expect(open()).toHaveLength(2);
+    store.resume();
+    advance(1);
+    expect(open().map((t) => t.title)).toEqual(['Article deleted']);
+    advance(15_000);
+    expect(open()).toHaveLength(0);
+  });
+
+  it('danger with an action stays even with a duration, and Infinity keeps an action toast', () => {
+    const { toast, open } = setup({ max: 5 });
+    const retry = { label: 'Send again', onAction: () => undefined };
+    toast.danger({ title: 'Could not send reply', duration: 20_000, action: retry });
+    toast({ title: 'Card moved', duration: Infinity, action: retry });
+    expect(open().map((t) => t.duration)).toEqual([Infinity, Infinity]);
+  });
+
+  it('an update keeps a timed action toast timed, and a duration in the patch takes the floor', () => {
+    const { toast, store, open } = setup();
+    const undo = { label: 'Undo archive', onAction: () => undefined };
+    const id = toast({ title: 'Article archived', duration: 12_000, action: undo });
+    store.update(id, { description: 'Why mud walls keep a house cool' });
+    expect(open()[0]?.duration).toBe(12_000);
+    store.update(id, { duration: 3000 });
+    expect(open()[0]?.duration).toBe(TOAST_ACTION_MIN_DURATION);
+    const plain = toast('Draft saved');
+    store.update(plain, { action: undo });
+    expect(open().find((t) => t.id === plain)?.duration).toBe(Infinity);
   });
 
   it('a repeat that brings an action makes the toast persistent', () => {
@@ -367,6 +408,19 @@ describe('the close button and the banner parts (order M9.8)', () => {
     toast({ title: 'Photo shared', action: { label: 'Open photo', onAction: () => undefined } });
     expect(open().find((t) => t.id === other)).toMatchObject({ count: 2, duration: Infinity, closable: true });
     warn.mockRestore();
+  });
+
+  it('a timed action toast follows the timed close rule: no close button by default on ios only (order C3)', () => {
+    const { toast, open } = setup({ max: 5 });
+    const undo = { label: 'Undo archive', onAction: () => undefined };
+    toast({ title: 'Article archived', duration: 12_000, action: undo });
+    toast({ title: 'Article deleted', duration: 12_000, action: undo, closable: false });
+    const [timed, bare] = open();
+    expect(timed?.closable).toBeUndefined();
+    expect(toastClosable(timed!, 'ios')).toBe(false);
+    expect(toastClosable(timed!, 'web')).toBe(true);
+    expect(bare?.closable).toBe(false);
+    expect(toastClosable(bare!, 'web')).toBe(false);
   });
 
   it('a timed toast without a close button still closes on its timer, and the timer pauses', () => {

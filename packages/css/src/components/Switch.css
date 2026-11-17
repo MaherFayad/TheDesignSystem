@@ -248,6 +248,17 @@
     vertical-align: middle;
   }
 
+  /*
+   * Order C3 (proposed): with no label, state text or description the root
+   * holds the control alone and is as wide as the control, with no empty
+   * second column and no gap, so a trailing switch lines up with the other
+   * trailing controls of a list row.
+   */
+  [data-ds='switch']:not(:has(> [data-part]:not([data-part='control']))) {
+    grid-template-columns: auto;
+    column-gap: 0;
+  }
+
   [data-ds='switch']:dir(rtl) {
     --_switch-dir: -1;
     --_switch-fill-origin: 100% 50%;

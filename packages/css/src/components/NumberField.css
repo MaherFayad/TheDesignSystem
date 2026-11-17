@@ -354,6 +354,27 @@
     transition-timing-function: var(--_number-field-ease-in);
   }
 
+  /*
+   * Order C3 (proposed): a pointer press on minus or plus sends focus to the
+   * value, which would draw the ring around the stepper and the quiet fill
+   * on the value. Under the pointer modality (the document element carries
+   * data-modality="pointer") neither shows and the value stays plain text.
+   * A key press that moves or uses focus sets the keyboard modality, and the
+   * ring and fill come back at once (WCAG 2.2 2.4.7). With no attribute
+   * (no script yet, or the server render) they show as before.
+   */
+  :root[data-modality='pointer'] [data-ds='number-field'][data-variant='stepper']:focus-within {
+    box-shadow: none;
+  }
+
+  :root[data-modality='pointer'] [data-ds='number-field'][data-variant='stepper']:focus-within::before {
+    opacity: 0;
+  }
+
+  :root[data-modality='pointer'] [data-ds='number-field'][data-variant='stepper'] > [data-part='control']:focus {
+    background-color: transparent;
+  }
+
   [data-ds='number-field'][data-invalid],
   [data-ds='number-field'][data-invalid]:focus-within {
     --_number-field-border-color: var(--_number-field-border-color-invalid);

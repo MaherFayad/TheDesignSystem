@@ -12,6 +12,7 @@ export {
 export { isInsideToaster, TOASTER_LAYER_ATTRIBUTE } from './isInsideToaster';
 export { Toaster, resolveToasterPosition, type ToasterPosition, type ToasterPositionProp, type ToasterProps } from './Toaster';
 export {
+  TOAST_ACTION_MIN_DURATION,
   createToastFunction,
   createToastStore,
   isToastAvatar,

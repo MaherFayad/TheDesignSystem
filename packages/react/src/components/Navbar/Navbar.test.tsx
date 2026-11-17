@@ -4,6 +4,8 @@ import type { AnchorHTMLAttributes } from 'react';
 import { renderToString } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { Theme } from '../../theme';
+import { ButtonGroup } from '../ButtonGroup';
+import { IconButton } from '../IconButton';
 import { PageShell } from '../PageShell';
 import NavbarDemo from './Navbar.demo';
 import { Navbar, type NavbarItem } from './index';
@@ -227,3 +229,127 @@ describe('Navbar placement', () => {
   });
 });
 
+
+// Order C2 (docs/plan/reset-mobile.md): the pushed screen form and the bar
+// group. WCAG 2.2 covered here: 1.3.1 Info and relationships and 2.4.6
+// Headings and labels (the heading is the page's h1, named by its text),
+// 4.1.2 Name, role, value (the back button and every button of a group has
+// its own name; the group is a named group), 2.4.3 Focus order (back, start
+// actions, end actions, then the heading row, as drawn). Target size (2.5.8)
+// in the group: each IconButton stays its own target, never under
+// size.target-min (a 44 floor on ios is drawn by the platform CSS).
+describe('Navbar pushed screen form (order C2)', () => {
+  it('draws the heading as the h1, last in the bar, and no heading without the prop', () => {
+    const { container, rerender } = render(<Navbar label="Songs" items={[]} heading="Songs" />);
+    const el = root(container);
+    const h1 = screen.getByRole('heading', { level: 1, name: 'Songs' });
+    expect(h1.getAttribute('data-part')).toBe('heading');
+    expect(h1.parentElement).toBe(el);
+    expect(el.lastElementChild).toBe(h1);
+    rerender(<Navbar label="Songs" items={[]} />);
+    expect(root(container).querySelector('[data-part="heading"]')).toBeNull();
+    expect(root(container).querySelector('[data-part="start"]')).toBeNull();
+  });
+
+  it('back is a named IconButton in start: a link with href, a button that calls onClick without', async () => {
+    const { container, rerender } = render(<Navbar label="Songs" items={[]} back={{ label: 'Library', href: '#library' }} heading="Songs" />);
+    const start = root(container).querySelector('[data-part="start"]');
+    const back = screen.getByRole('link', { name: 'Library' });
+    expect(back.getAttribute('data-part')).toBe('back');
+    expect(back.getAttribute('data-ds')).toBe('icon-button');
+    expect(back.getAttribute('href')).toBe('#library');
+    expect(back.parentElement).toBe(start);
+    expect(start?.firstElementChild).toBe(back);
+    // The glyph is decorative: the name comes from the label only.
+    expect(back.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+
+    let pressed = 0;
+    rerender(<Navbar label="Songs" items={[]} back={{ label: 'Library', onClick: () => (pressed += 1) }} />);
+    const button = screen.getByRole('button', { name: 'Library' });
+    expect(button.getAttribute('data-part')).toBe('back');
+    await userEvent.click(button);
+    expect(pressed).toBe(1);
+  });
+
+  it('the back glyph mirrors in right to left', () => {
+    const { container } = render(
+      <Theme lang="ar" dir="rtl">
+        <Navbar label="الأغاني" items={[]} back={{ label: 'المكتبة', href: '#library' }} heading="الأغاني" />
+      </Theme>,
+    );
+    const glyph = container.querySelector('[data-part="back"] [data-ds="icon"]');
+    expect(glyph?.hasAttribute('data-mirror')).toBe(true);
+  });
+
+  it('a bar group is a named group of buttons, each with its own name, in start and in end', () => {
+    render(
+      <Navbar
+        label="Songs"
+        items={[]}
+        back={{ label: 'Library', href: '#library' }}
+        start={
+          <ButtonGroup attached aria-label="Playlist tools">
+            <IconButton icon="shuffle" label="Shuffle playlist" />
+            <IconButton icon="share" label="Share playlist" />
+          </ButtonGroup>
+        }
+        end={
+          <ButtonGroup attached aria-label="Song actions">
+            <IconButton icon="sort" label="Sort songs" />
+            <IconButton icon="more" label="More options" />
+          </ButtonGroup>
+        }
+        heading="Songs"
+      />,
+    );
+    for (const [group, names, part] of [
+      ['Playlist tools', ['Shuffle playlist', 'Share playlist'], 'start'],
+      ['Song actions', ['Sort songs', 'More options'], 'end'],
+    ] as const) {
+      const el = screen.getByRole('group', { name: group });
+      expect(el.parentElement?.getAttribute('data-part')).toBe(part);
+      expect(el.hasAttribute('data-attached')).toBe(true);
+      const buttons = Array.from(el.querySelectorAll('[data-ds="icon-button"]'));
+      expect(buttons.map((b) => b.getAttribute('aria-label'))).toEqual(names);
+      // Each one its own button and its own tab stop.
+      buttons.forEach((b) => {
+        expect(b.tagName).toBe('BUTTON');
+        expect(b.getAttribute('tabindex')).not.toBe('-1');
+      });
+    }
+  });
+
+  it('focus goes back, start actions, end actions; the heading is not a stop and reads last', async () => {
+    const { container } = render(
+      <Navbar
+        label="Songs"
+        items={[]}
+        back={{ label: 'Library', href: '#library' }}
+        start={<IconButton icon="shuffle" label="Shuffle songs" />}
+        end={
+          <ButtonGroup attached aria-label="Song actions">
+            <IconButton icon="sort" label="Sort songs" />
+            <IconButton icon="more" label="More options" />
+          </ButtonGroup>
+        }
+        heading="Songs"
+      />,
+    );
+    const user = userEvent.setup();
+    const order: string[] = [];
+    for (let i = 0; i < 4; i += 1) {
+      await user.tab();
+      order.push((document.activeElement as HTMLElement).getAttribute('aria-label') ?? '');
+    }
+    expect(order).toEqual(['Library', 'Shuffle songs', 'Sort songs', 'More options']);
+    const text = root(container).textContent ?? '';
+    expect(text.endsWith('Songs')).toBe(true);
+  });
+
+  it('the server render matches the parts', () => {
+    const html = renderToString(<Navbar label="Songs" items={[]} back={{ label: 'Library', href: '#library' }} heading="Songs" />);
+    expect(html).toContain('data-part="start"');
+    expect(html).toContain('data-part="back"');
+    expect(html).toContain('<h1 data-part="heading">Songs</h1>');
+  });
+});

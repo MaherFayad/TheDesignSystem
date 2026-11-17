@@ -6,6 +6,8 @@
  * docs/contracts/anatomy.md.
  *
  *   [data-ds='navbar']                          root: Radix NavigationMenu nav, data-sticky
+ *     [data-part='start']                       the back button and start actions (order C2)
+ *       [data-part='back']                      an IconButton root, chevron-back
  *     [data-part='brand']                       logo link
  *     [data-part='list']                        Radix List ul (inside Radix's unstyled track div)
  *       [data-part='item']                      li
@@ -19,6 +21,7 @@
  *     [data-part='viewport']                    the surface the open panel renders in
  *     [data-part='end']                         actions
  *     [data-part='menu-button']                 an IconButton root, phones only
+ *     [data-part='heading']                     h1, the large title on its own row (order C2)
  *   [data-ds='drawer'][data-part='mobile']      the phone list: a Drawer root in a portal, from the
  *                                               inline start, with a Sidebar and the end actions
  *
@@ -37,6 +40,15 @@
  * under the open trigger. Only transform and opacity animate. Under reduced
  * motion the animations are none, so Radix removes the closed viewport at
  * once and never waits for an animationend.
+ *
+ * Order C2 (proposed): the pushed screen form. start holds the back
+ * button and the start actions at the inline start of the button row;
+ * heading is the page's h1 on a row of its own under it (the root wraps).
+ * An attached ButtonGroup in start or end is one capsule of bar buttons:
+ * this file clears its seam and rounds it as a capsule; a platform paints
+ * it. Names outside the list in anatomy.md:
+ *
+ *   --_navbar-heading-font-size, -heading-line-height
  *
  * Round 3 (order 1.23): --_navbar-ink, 1 or 0, whether the text under the
  * sliding mark changes colour with it (Tabs/ink.ts); a style sets 0 to keep
@@ -69,6 +81,8 @@
     --_navbar-panel-shadow: var(--ds-elevation-menu);
     --_navbar-panel-padding: var(--ds-space-3xs);
     --_navbar-panel-width: calc(var(--ds-menu-width-min) * 2);
+    --_navbar-heading-font-size: var(--ds-font-size-5xl);
+    --_navbar-heading-line-height: var(--ds-font-leading-tight);
     /* No scale.menu-enter token yet: scale.press is the same 0.97 DropdownMenu uses. */
     --_navbar-enter-scale: var(--ds-scale-press);
 
@@ -123,7 +137,24 @@
     scroll-padding-block-start: calc(var(--ds-size-control-lg) + 2 * var(--ds-space-s) + var(--ds-border-width-default));
   }
 
-  /* ------------------------------------------------------------ brand, end */
+  /* A sticky bar with a heading row covers one line of the heading more. */
+  :root:has([data-ds='navbar'][data-sticky]:not([data-size='lg']) > [data-part='heading']) {
+    scroll-padding-block-start: calc(var(--ds-size-control-md) + 3 * var(--ds-space-s) + var(--ds-border-width-default) + var(--ds-font-size-5xl) * var(--ds-font-leading-tight));
+  }
+
+  :root:has([data-ds='navbar'][data-sticky][data-size='lg'] > [data-part='heading']) {
+    scroll-padding-block-start: calc(var(--ds-size-control-lg) + 3 * var(--ds-space-s) + var(--ds-border-width-default) + var(--ds-font-size-5xl) * var(--ds-font-leading-tight));
+  }
+
+  /* ------------------------------------------------------------ start, brand, end */
+
+  /* The back button and the start actions: they stay in the bar at every width. */
+  [data-ds='navbar'] > [data-part='start'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ds-space-xs);
+  }
 
   [data-ds='navbar'] > [data-part='brand'] {
     display: flex;
@@ -140,6 +171,43 @@
     gap: var(--ds-space-xs);
     min-inline-size: 0;
     margin-inline-start: auto;
+  }
+
+  /*
+   * A bar group (order C2): an attached ButtonGroup in start or end is one
+   * capsule. No seam between its buttons, and the capsule's corners, so a
+   * platform that paints the group draws one shape. Each button keeps its
+   * own target.
+   */
+  [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] {
+    --_button-group-divider: transparent;
+
+    flex: none;
+    border-radius: var(--ds-radius-pill);
+  }
+
+  /* A row group follows its part: when a platform stands the part in a column (placement side), the group stands with it. */
+  [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-orientation='horizontal'] {
+    flex-direction: inherit;
+  }
+
+  /* ------------------------------------------------------------ heading: the large title on its own row */
+
+  [data-ds='navbar'] > [data-part='heading'] {
+    flex: 1 0 100%;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding-block-end: var(--ds-space-s);
+    color: var(--ds-color-text-bright);
+    font-size: var(--_navbar-heading-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--_navbar-heading-line-height);
+    overflow-wrap: break-word;
+  }
+
+  [data-ds='navbar']:lang(ar) > [data-part='heading'] {
+    --_navbar-heading-line-height: var(--ds-font-leading-arabic-tight);
   }
 
   /* ------------------------------------------------------------ list, links, triggers */

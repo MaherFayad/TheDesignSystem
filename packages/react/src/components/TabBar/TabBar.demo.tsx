@@ -2,6 +2,7 @@ import type { IconName } from '@the-system/icons';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { SearchField } from '../SearchField';
+import { Toolbar, ToolbarButton } from '../Toolbar';
 import { TabBar, TabBarItem, TabBarSearch, type TabBarSize } from './index';
 import type { TabBarPlacement } from './TabBar';
 
@@ -30,6 +31,8 @@ function AppBar({
   activeIndex = 0,
   placement,
   search,
+  accessory = false,
+  compact = false,
 }: {
   lang?: 'en' | 'ar';
   size?: TabBarSize;
@@ -38,12 +41,22 @@ function AppBar({
   placement?: TabBarPlacement;
   /** A search item after the tabs: a link, the current page, or the current page turned into its field. */
   search?: 'link' | 'active' | 'field';
+  /** A mini player in the accessory part (order C2). */
+  accessory?: boolean;
+  /** The compact bar: the current item, the accessory, the search item. */
+  compact?: boolean;
 }) {
   // The search item takes the place of the Search tab.
   const tabs = search ? dests.filter((d) => d.icon !== 'search') : dests;
   return (
     <div style={{ inlineSize: '100%', maxInlineSize: 'calc(var(--ds-menu-width-min) * 2)' }}>
-      <TabBar aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'} size={size} placement={placement}>
+      <TabBar
+        aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'}
+        size={size}
+        placement={placement}
+        compact={compact}
+        accessory={accessory ? <MiniPlayer lang={lang} /> : undefined}
+      >
         {tabs.slice(0, count).map((d, i) => (
           <TabBarItem key={d.en} href={`#${d.en.toLowerCase()}`} icon={d.icon} label={d[lang]} badge={d.badge} active={(search === undefined || search === 'link') && i === activeIndex} />
         ))}
@@ -57,6 +70,21 @@ function AppBar({
         )}
       </TabBar>
     </div>
+  );
+}
+
+/** A mini player: the song opens the player; pause and next are its commands. */
+function MiniPlayer({ lang }: { lang: 'en' | 'ar' }) {
+  const w =
+    lang === 'ar'
+      ? { player: 'قيد التشغيل', song: 'مطر على الكثبان', pause: 'إيقاف مؤقت', next: 'الأغنية التالية' }
+      : { player: 'Now playing', song: 'Rain on the dunes', pause: 'Pause', next: 'Next song' };
+  return (
+    <Toolbar aria-label={w.player} overflow="wrap" emphasis="ghost">
+      <ToolbarButton start="music">{w.song}</ToolbarButton>
+      <ToolbarButton icon="pause" label={w.pause} />
+      <ToolbarButton icon="next-track" label={w.next} />
+    </Toolbar>
   );
 }
 
@@ -87,6 +115,15 @@ export default function TabBarDemo() {
         <DemoRow label="Search item in the column: under the capsule on ios">
           <AppBar size="lg" count={4} placement="side" search="link" />
         </DemoRow>
+        <DemoRow label="Accessory: a mini player above the items, first in the focus order">
+          <AppBar size="lg" count={4} search="link" accessory />
+        </DemoRow>
+        <DemoRow label="Compact: the current item, the accessory, the search item">
+          <AppBar size="lg" count={4} search="link" activeIndex={3} accessory compact />
+        </DemoRow>
+        <DemoRow label="Accessory in the column: at the block end of the content on ios">
+          <AppBar size="lg" count={4} placement="side" search="link" accessory />
+        </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           {sizes.map((size) => (
@@ -105,6 +142,12 @@ export default function TabBarDemo() {
           </DemoRow>
           <DemoRow label="البحث في العمود">
             <AppBar lang="ar" size="lg" count={4} placement="side" search="active" />
+          </DemoRow>
+          <DemoRow label="مشغل مصغر">
+            <AppBar lang="ar" size="lg" count={4} search="link" accessory />
+          </DemoRow>
+          <DemoRow label="شريط مختصر">
+            <AppBar lang="ar" size="lg" count={4} search="link" activeIndex={3} accessory compact />
           </DemoRow>
         </Theme>
       </DemoCase>

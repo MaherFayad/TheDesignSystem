@@ -38,6 +38,16 @@
  *
  *   --_tab-bar-search-grow        how many item widths the expanded field takes
  *
+ * Accessory and compact form (order C2, proposed): the part accessory
+ * (first child; a mini player) is a row above the items, across the bar,
+ * with a hairline under it. data-compact draws one row: the current item,
+ * the accessory taking the room left, then the search item; the other
+ * items are not drawn. A platform draws its own form (ios: the accessory
+ * as a capsule over the bar, out of the side column). Names outside the
+ * list in anatomy.md:
+ *
+ *   --_tab-bar-accessory-gap      the space between the accessory and the items
+ *
  * Round 3 (order 1.23): --_tab-bar-press-x and --_tab-bar-press-y, where the last
  * press landed on an item, in px from its inline start and block start
  * (written on the item on pointerdown, TabBar/pressOrigin.ts), 50% until
@@ -65,6 +75,7 @@
     --_tab-bar-stagger: var(--ds-delay-stagger);
     --_tab-bar-ease: var(--ds-ease-spring-bouncy);
     --_tab-bar-search-grow: 2;
+    --_tab-bar-accessory-gap: var(--ds-space-3xs);
 
     display: flex;
     align-items: stretch;
@@ -199,6 +210,51 @@
     flex: 1 1 auto;
     min-inline-size: 0;
     animation: ds-tab-bar-field-in var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  /* ------------------------------------------------------------ accessory and compact form (order C2) */
+
+  /* The accessory takes a row of its own above the items. */
+  [data-ds='tab-bar']:has(> [data-part='accessory']) {
+    flex-wrap: wrap;
+    row-gap: var(--_tab-bar-accessory-gap);
+  }
+
+  [data-ds='tab-bar'] > [data-part='accessory'] {
+    display: flex;
+    flex: 1 0 100%;
+    align-items: center;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding-block-end: var(--_tab-bar-accessory-gap);
+    border-block-end: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+  }
+
+  /* Its content (a Toolbar) takes the row. */
+  [data-ds='tab-bar'] > [data-part='accessory'] > * {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  /* Compact: one row, the current item, the accessory, the search item. */
+  [data-ds='tab-bar'][data-compact] {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--_tab-bar-accessory-gap);
+  }
+
+  [data-ds='tab-bar'][data-compact] > [data-part='item']:not([data-active]) {
+    display: none;
+  }
+
+  [data-ds='tab-bar'][data-compact] > :is([data-part='item'], [data-part='search']:not([data-expanded])) {
+    flex: none;
+  }
+
+  [data-ds='tab-bar'][data-compact] > [data-part='accessory'] {
+    flex: 1 1 0;
+    padding-block-end: 0;
+    border-block-end-width: 0;
   }
 
   /* ------------------------------------------------------------ states */

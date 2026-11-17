@@ -23,6 +23,8 @@ describe('ColorSwatchPicker', () => {
     expect(items(container)).toHaveLength(120);
     expect(el.querySelector('[class]')).toBeNull();
     expect(el.querySelector('[data-rac]')).toBeNull();
+    // React Aria measures each item by data-key to move by rows: it must stay.
+    expect(items(container).every((i) => i.hasAttribute('data-key'))).toBe(true);
     const flat = colorSwatchGrid().flat();
     const options = screen.getAllByRole('option');
     expect(options[0]!.textContent).toBe('');

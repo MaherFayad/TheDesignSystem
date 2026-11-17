@@ -2,8 +2,9 @@
  * M10.1 music-library: page layout only (gallery overrides layer). Every
  * control and surface is a system component with its own look; this file
  * places them: the play and shuffle row, the list with its index column
- * beside it, the cover sizes, and the dock of the mini player over the tab
- * bar. Tokens only, logical properties only.
+ * beside it, the cover sizes, and the dock of the tab bar, which holds the
+ * mini player as its accessory (order C2). Tokens only, logical properties
+ * only.
  *
  * Lengths follow the reference at 393 wide: content 20 in from the sides
  * (two fixed-l), covers 48 (the iOS target and fixed-2xs), the two capsule
@@ -15,11 +16,6 @@
     padding: 0;
   }
 
-  [data-gallery='ml-title'] {
-    margin: 0;
-    font: inherit;
-  }
-
   /* ------------------------------------------------------------ page grid: content, then the index column at the inline end */
 
   [data-gallery='ml-page'] {
@@ -27,8 +23,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'actions actions'
-      'songs index'
-      'player player';
+      'songs index';
     align-items: start;
   }
 
@@ -58,14 +53,15 @@
     grid-area: index;
     /*
      * Main's height: one screen as the iOS shell draws it (dialog.height.max
-     * times 1.25, ios-shell.css), less the Navbar's row (the top inset, a 44
-     * target, 8 over and under it), the play row (44, 8 over, 20 under) and
-     * the dock over the content (the 48 player, the 62 tab bar, 8 between
-     * them and the bar's margin over the bottom inset).
+     * times 1.25, ios-shell.css), less the Navbar's button row (the top
+     * inset, a 44 target, 8 over and under it) and its title row (the large
+     * title's line and space.s under it, order C2), the play row (44, 8
+     * over, 20 under) and the dock over the content (the compact tab bar
+     * with the player in it, 62, and its margin over the bottom inset).
      */
     block-size: calc(
-      var(--ds-dialog-height-max) * 1.25 - var(--ds-inset-safe-top) - 4 * var(--ds-size-touch-ios) - 6 * var(--ds-space-fixed-m) - 2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-2xs) - var(--ds-space-fixed-l) -
-        max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)))
+      var(--ds-dialog-height-max) * 1.25 - var(--ds-inset-safe-top) - 3 * var(--ds-size-touch-ios) - 5 * var(--ds-space-fixed-m) - 2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-l) -
+        var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) - var(--ds-space-s) - max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)))
     );
     padding-inline: var(--ds-space-fixed-4xs) var(--ds-space-fixed-2xs);
     box-sizing: border-box;
@@ -114,27 +110,7 @@
     pointer-events: auto;
   }
 
-  /*
-   * The mini player rests over the content, in main, just over the tab bar:
-   * as far from main's end as the room the iOS shell leaves for a bar over
-   * the content (ios-shell.css), less its last gap. In the side column the
-   * bar is not over the content, so it rests over the bottom inset.
-   */
-  [data-gallery='ml-player'] {
-    position: sticky;
-    inset-block-end: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default) + max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) + var(--ds-space-fixed-m));
-    z-index: var(--ds-z-raised);
-    grid-area: player;
-    margin-inline: calc(2 * var(--ds-space-fixed-l));
-  }
-
-  @container ds-shell (inline-size >= calc(30rem * 11 / 12)) and (block-size <= calc(600px * 7 / 6)) { /* breakpoint.phone breakpoint.medium: the side column of ios-shell.css */
-    [data-gallery='ml-player'] {
-      inset-block-end: max(var(--ds-space-fixed-xl), var(--ds-inset-safe-bottom));
-    }
-  }
-
-  /* The song takes the room the two buttons leave. */
+  /* The mini player is the tab bar's accessory (order C2): the TabBar places it. The song takes the room the two buttons leave. */
   [data-gallery='ml-player-song'] {
     flex: 1 1 0;
     justify-content: flex-start;

@@ -46,6 +46,16 @@ export interface ButtonProps extends ButtonBaseProps {
   /** Fills the width of its container. Default false. */
   fullWidth?: boolean;
   /**
+   * Where a soft button takes its fill from (order C2). tone: the tone's
+   * tint, what soft draws by default. neutral: the gray fill of a neutral
+   * soft button, with the label and icons in the tone's text color, so
+   * `tone="accent" emphasis="soft" fill="neutral"` is a gray capsule with
+   * an accent label (the Play and Shuffle buttons of a music library). Only
+   * soft reads it; the other emphases ignore it, and on tone neutral it
+   * draws the same as tone. Default tone. Stamps data-fill="neutral".
+   */
+  fill?: ButtonFill;
+  /**
    * Lets a long label wrap onto more lines; the button grows in height.
    * Default false: the label stays on one line and ends in an ellipsis when
    * the button is squeezed, and the button shrinks with its row.
@@ -69,6 +79,9 @@ export interface ButtonProps extends ButtonBaseProps {
   resultLabel?: string;
 }
 
+/** Where a soft button takes its fill from: its tone's tint, or the neutral gray with the label in the tone. */
+export type ButtonFill = 'tone' | 'neutral';
+
 /** The two endings an action can show. */
 export type ButtonResult = 'success' | 'error';
 
@@ -88,6 +101,7 @@ export function Button({
   start,
   end,
   fullWidth = false,
+  fill = 'tone',
   wrap = false,
   loading = false,
   loadingLabel = 'Loading',
@@ -108,6 +122,7 @@ export function Button({
       defaultEmphasis="soft"
       loading={loading}
       data-full-width={fullWidth ? '' : undefined}
+      data-fill={fill === 'neutral' ? 'neutral' : undefined}
       data-wrap={wrap ? '' : undefined}
       data-result={result}
       render={(content) => (

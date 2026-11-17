@@ -101,7 +101,7 @@
   ],
   "a11y": {
     "role": "No role on the root. Each action group is a group named by menuLabel and is inert while closed, so a reader and Tab meet only the menu button. The menu button opens a menu of every action (role menu, menuitem each).",
-    "focus": "The menu button is a Tab stop after the row's content. On touch it is visually hidden until focus is in the row, then drawn; with a mouse that hovers it is always drawn. While the row is open its actions are Tab stops too. Escape closes an open row; focus inside a closing group moves to the menu button first.",
+    "focus": "The menu button is a Tab stop after the row's content. It is visually hidden (still in the tree and the Tab order) and drawn only while focus is in the row, while a mouse hovers the row, or while its menu is open (order C3); the standalone content keeps room for it only then. While the row is open its actions are Tab stops too. Escape closes an open row; focus inside a closing group moves to the menu button first.",
     "keys": {
       "Tab": "Moves to the menu button after the row's content, and to the open actions while the row is open",
       "Shift+F10": "Opens the menu of every action from anywhere in the row (the path that needs no drag, WCAG 2.5.7)",
@@ -128,7 +128,7 @@
   },
   "content": {
     "en": {
-      "label": "One short verb: Delete, Archive, Mute, Pin, Mark unread. Sentence case.",
+      "label": "One short verb: Delete, Archive, Mute, Pin, Mark unread. Sentence case. A longer label wraps to two lines inside its action and ends in an ellipsis past that (order C3).",
       "menuLabel": "Actions for, then the row's title: Actions for Sara Alqahtani."
     },
     "ar": {

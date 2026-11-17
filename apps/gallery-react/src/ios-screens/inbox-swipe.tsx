@@ -45,6 +45,7 @@ import {
   Toaster,
   Toolbar,
   ToolbarButton,
+  TOAST_ACTION_MIN_DURATION,
   toast,
   type SwipeAction,
 } from '@the-system/react';
@@ -192,11 +193,13 @@ export function Screen({ lang }: ScreenProps) {
   const archive = (a: Article) => {
     setIds((all) => all.filter((id) => id !== a.id));
     setArchived((all) => [...all, a.id]);
-    // A banner with an action stays until closed and keeps its close button (the bus rule of order M9.8).
+    // The undo banner times out as the native one does (order C3): 10 s at least, paused on hover and focus,
+    // and the toolbar's Restore archived is the other way back (altText). Timed, it has no close button on ios.
     toast({
       title: w.archived,
       description: t(a.title, lang),
       start: 'inbox',
+      duration: TOAST_ACTION_MIN_DURATION,
       meta: new Date(),
       lang,
       action: {

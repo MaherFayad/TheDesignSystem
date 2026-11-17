@@ -173,7 +173,7 @@
   ],
   "a11y": {
     "role": "combobox on the trigger (Radix Select: aria-expanded, aria-controls, aria-autocomplete none), named by the Field label. The open list is a listbox of option rows (aria-selected on the chosen one, aria-disabled on the disabled ones) in titled groups. While the list is open the rest of the page is hidden from assistive tech and Tab does not leave it.",
-    "focus": "The trigger is one tab stop. Opening moves focus to the chosen item, else the first enabled one. Escape, a choice or a press outside closes the list and returns focus to the trigger.",
+    "focus": "The trigger is one tab stop. Opening moves focus to the chosen item, else the first enabled one. Escape, a choice or a press outside closes the list and returns focus to the trigger. Emphasis ghost (order C3, proposed): under the pointer modality (the root carries data-modality=\"pointer\") the trigger draws no focus capsule, open or after it closes, and a row lit by the pointer draws its fill but no ring; the keyboard modality (Tab, the arrows) and no attribute keep both (WCAG 2.2 2.4.7).",
     "keys": {
       "Enter": "On the trigger, opens the list. On an item, chooses it and closes the list",
       "Space": "On the trigger, opens the list. On an item, chooses it and closes the list",

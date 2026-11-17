@@ -132,6 +132,20 @@ export default function ButtonDemo() {
             Create account
           </Button>
         </DemoRow>
+        <DemoRow label="Soft with a neutral fill: a gray capsule with the label in the tone">
+          <Button tone="accent" emphasis="soft" fill="neutral" shape="pill" start="play">
+            Play all
+          </Button>
+          <Button tone="accent" emphasis="soft" fill="neutral" shape="pill" start="shuffle">
+            Shuffle all
+          </Button>
+          <Button tone="accent" emphasis="soft" shape="pill" start="play">
+            Play all
+          </Button>
+          <Button tone="danger" emphasis="soft" fill="neutral" start="trash">
+            Delete song
+          </Button>
+        </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           {tones.map((tone) => (
@@ -149,6 +163,14 @@ export default function ButtonDemo() {
                 إضافة ملف
               </Button>
             ))}
+          </DemoRow>
+          <DemoRow label="تعبئة محايدة">
+            <Button tone="accent" emphasis="soft" fill="neutral" shape="pill" start="play">
+              تشغيل الكل
+            </Button>
+            <Button tone="accent" emphasis="soft" fill="neutral" shape="pill" start="shuffle">
+              تشغيل عشوائي
+            </Button>
           </DemoRow>
         </Theme>
       </DemoCase>

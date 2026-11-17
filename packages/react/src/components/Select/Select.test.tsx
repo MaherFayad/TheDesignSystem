@@ -280,3 +280,28 @@ describe('Select', () => {
     });
   });
 });
+
+describe('Select input modality (order C3)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Select.css'), 'utf8');
+
+  it('a pointer open of the pop-up button sets the pointer modality, the arrow keys the keyboard one', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme>
+        <Select emphasis="ghost" aria-label="Session length" items={sortOptions('en')} />
+      </Theme>,
+    );
+    const trigger = screen.getByRole('combobox');
+    await user.click(trigger);
+    expect(document.documentElement.getAttribute('data-modality')).toBe('pointer');
+    await user.keyboard('{ArrowDown}');
+    expect(document.documentElement.getAttribute('data-modality')).toBe('keyboard');
+  });
+
+  it('hides the ghost capsule and the option ring under the pointer modality only (WCAG 2.4.7 for the keyboard)', () => {
+    expect(css).toContain(":root[data-modality='pointer'] [data-ds='select'][data-emphasis='ghost']:not([data-part])::before {\n    opacity: 0;");
+    expect(css).toContain(":root[data-modality='pointer'] [data-ds='select'] [data-part='item']:focus-visible {\n    --_select-item-ring: 0 0 transparent;");
+    expect(css).toContain("[data-ds='select'] [data-part='item']:focus-visible {\n    --_select-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menu-item-ring-color);");
+    expect(css).not.toContain("data-modality='keyboard'");
+  });
+});

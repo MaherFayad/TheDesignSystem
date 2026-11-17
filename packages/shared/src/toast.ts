@@ -18,10 +18,18 @@
  *   that toast's `count` and restarts its timer instead of stacking a copy.
  *   `dedupeKey: false` turns it off for one call.
  * - Durations by tone: neutral, info and success 4s, warning 6s. A danger
- *   toast is persistent (duration Infinity) and stays until it is closed,
- *   and so is a toast with an action (WCAG 2.2.1: nobody has to race a
- *   timer to reach a button). `configure()` lengthens the durations and
- *   changes the max for the whole app.
+ *   toast is persistent (duration Infinity) and stays until it is closed.
+ *   A toast with an action stays until closed too, unless the caller names
+ *   a duration (order C3, proposed: an undo banner may time out). Then it
+ *   times out after that duration but never sooner than
+ *   `TOAST_ACTION_MIN_DURATION` (10s), and its action's `altText` names
+ *   where else the same action lives, so nothing is lost when it goes.
+ *   WCAG 2.2 2.2.1: the timer pauses while the pointer is over the toasts,
+ *   while focus is in them (F8 reaches them from anywhere, so a keyboard
+ *   user stops the timer with one key) and while the window is blurred, and
+ *   the time left is kept, so a user extends it as long as they need.
+ *   `configure()` lengthens the durations and changes the max for the
+ *   whole app.
  * - The store owns time. Each open toast with a finite duration has one
  *   timer, run through an injectable clock, so tests use a fake clock. The
  *   view only reports when to pause (hover, focus inside, window blurred) by
@@ -33,8 +41,8 @@
  *   view decide by platform: on ios a timed toast drops it, as a
  *   notification banner does; elsewhere it shows. `closable: false` asks
  *   for no close button, and the store keeps that only while the toast
- *   times out: a toast that stays until closed (danger, an action, or a
- *   duration of Infinity) always keeps its close button, so it can always
+ *   times out: a toast that stays until closed (danger, an action with no
+ *   duration, or a duration of Infinity) always keeps its close button, so it can always
  *   be closed with a button (WCAG 2.2.1 and 2.5.7), and the store warns in
  *   development. A timed toast without a close button still closes with
  *   Escape when focused, with a swipe, and by its timer, which pauses on
@@ -102,7 +110,11 @@ export interface ToastOptions {
   title?: string;
   /** More detail, up to three lines. */
   description?: string;
-  /** Milliseconds before it closes itself. Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action. */
+  /**
+   * Milliseconds before it closes itself. Infinity keeps it. Default by
+   * tone. Ignored for danger. With an action the default is Infinity, and a
+   * duration you name is raised to `TOAST_ACTION_MIN_DURATION` at least.
+   */
   duration?: number;
   action?: ToastAction;
   /** Same key, same toast: the count goes up. false turns dedupe off. Default: tone, title and description. */
@@ -116,7 +128,7 @@ export interface ToastOptions {
   /**
    * false drops the close button of a toast that times out. Ignored, with a
    * warning in development, for a toast that stays until closed (danger, an
-   * action, a duration of Infinity). Left out, the view decides by platform:
+   * action with no duration, a duration of Infinity). Left out, the view decides by platform:
    * no close button on a timed toast on ios, a close button elsewhere.
    */
   closable?: boolean;
@@ -210,6 +222,14 @@ export const TOAST_DURATIONS: Readonly<Record<ToastTone, number>> = {
   danger: Infinity,
 };
 
+/**
+ * The shortest time a toast with an action stays open when the caller asks
+ * it to time out (order C3, proposed): 10 seconds, long enough to read a
+ * short banner and reach its button, and the timer pauses on hover, on
+ * focus and while the window is blurred (WCAG 2.2 2.2.1).
+ */
+export const TOAST_ACTION_MIN_DURATION = 10_000;
+
 /** Default most toasts open at once. */
 export const TOAST_MAX_VISIBLE = 3;
 
@@ -281,7 +301,7 @@ function warnClosable(title: string | undefined): void {
   const env = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV;
   if (env === 'production') return;
   console.warn(
-    `toast: closable false is ignored for "${title ?? 'a toast'}". A danger toast, a toast with an action and a toast with no timeout stay until closed, so they keep their close button.`,
+    `toast: closable false is ignored for "${title ?? 'a toast'}". A danger toast and a toast with no timeout (an action with no duration included) stay until closed, so they keep their close button.`,
   );
 }
 
@@ -335,8 +355,11 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
   const listeners = new Set<() => void>();
 
   const durationFor = (tone: ToastTone, asked: number | undefined, action: ToastAction | undefined): number => {
-    if (tone === 'danger' || action !== undefined) return Infinity;
-    if (asked === undefined || Number.isNaN(asked) || asked <= 0) return durations[tone];
+    if (tone === 'danger') return Infinity;
+    const named = asked !== undefined && !Number.isNaN(asked) && asked > 0;
+    // An action stays until closed unless the caller names a time, which is raised to the floor.
+    if (action !== undefined) return named ? Math.max(asked, TOAST_ACTION_MIN_DURATION) : Infinity;
+    if (!named) return durations[tone];
     return asked;
   };
 
@@ -427,9 +450,11 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     const description = has('description') ? patch.description : prev.description;
     const action = has('action') ? patch.action : prev.action;
     // A new tone, or an action taken away, brings the tone's own duration back, unless the patch names one.
+    // An action added stays until closed; an action toast that was timed keeps its time.
     let duration: number;
-    if (tone === 'danger' || action !== undefined) duration = Infinity;
-    else if (has('duration')) duration = durationFor(tone, patch.duration, undefined);
+    if (tone === 'danger') duration = Infinity;
+    else if (has('duration')) duration = durationFor(tone, patch.duration, action);
+    else if (action !== undefined) duration = prev.action !== undefined && prev.tone !== 'danger' ? prev.duration : Infinity;
     else if (tone !== prev.tone || prev.action !== undefined) duration = durations[tone];
     else duration = prev.duration;
     const key = e.keyMode === 'auto' ? toastDedupeKey({ tone, title, description }) : prev.key;
@@ -474,7 +499,8 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     const existing = key === null ? undefined : entries.find((e) => e.item.state === 'open' && e.item.key === key);
     if (existing) {
       const action = o.action ?? existing.item.action;
-      const bumped = action !== undefined ? Infinity : existing.item.duration;
+      // A repeat that brings the first action takes that action's rule; otherwise the time stays.
+      const bumped = action !== undefined && existing.item.action === undefined ? durationFor(tone, o.duration, action) : existing.item.duration;
       existing.item = {
         ...existing.item,
         count: existing.item.count + 1,

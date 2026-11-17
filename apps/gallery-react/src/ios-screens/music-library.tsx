@@ -2,6 +2,10 @@
 // shuffle buttons, sections by first letter with an index bar beside them,
 // a long press menu on each song with a quick action row, a mini player over
 // the tab bar and its search tab (docs/plan/reset-ios-families.md section 5).
+// Order C2: the top bar is the Navbar's pushed screen form (a back button and
+// a group of bar buttons, the large title under them), the mini player is
+// the TabBar's accessory in its compact form, and Play and Shuffle are soft
+// buttons with a neutral fill.
 // On the folding iPhone's inner screen in landscape the library also shows
 // its Sidebar.
 //
@@ -14,6 +18,7 @@ import { useMemo } from 'react';
 import { Icon } from '@the-system/icons/react';
 import {
   Button,
+  ButtonGroup,
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
@@ -100,6 +105,7 @@ const words = {
     bar: 'Library',
     sort: 'Sort songs',
     more: 'More options',
+    barActions: 'Song actions',
     play: 'Play all',
     shuffle: 'Shuffle all',
     list: 'Songs in your library',
@@ -142,6 +148,7 @@ const words = {
     bar: 'المكتبة',
     sort: 'ترتيب الأغاني',
     more: 'خيارات إضافية',
+    barActions: 'خيارات الأغاني',
     play: 'تشغيل الكل',
     shuffle: 'تشغيل عشوائي',
     list: 'الأغاني في مكتبتك',
@@ -210,7 +217,7 @@ function SongMenuItems({ w, kind, downloaded }: { w: Words; kind: 'context' | 'd
       <Quick label={w.quick}>
         <QuickAction icon="plus">{w.add}</QuickAction>
         <QuickAction icon="star">{w.favourite}</QuickAction>
-        <QuickAction icon="send">{w.share}</QuickAction>
+        <QuickAction icon="share">{w.share}</QuickAction>
       </Quick>
       <Item start="list">{w.addToPlaylist}</Item>
       <Separator />
@@ -320,25 +327,27 @@ export function Screen({ variant, lang }: ScreenProps) {
     <ScreenShell
       nav={wide ? <LibrarySidebar w={w} /> : undefined}
       header={
+        // Order C2: the pushed screen form. The back button (not beside the Sidebar, which shows where the page is) and the bar group on one row, the large title, the page's h1, under it.
         <Navbar
           label={w.bar}
-          brand={<h1 data-gallery="ml-title">{w.title}</h1>}
           items={[]}
+          back={wide ? undefined : { label: w.library, href: '#library' }}
+          heading={w.title}
           end={
-            <>
+            <ButtonGroup attached aria-label={w.barActions}>
               <IconButton icon="sort" label={w.sort} />
               <IconButton icon="more" label={w.more} />
-            </>
+            </ButtonGroup>
           }
         />
       }
     >
       <div data-gallery="ml-page">
         <div data-gallery="ml-actions">
-          <Button start="play" tone="accent" emphasis="soft" shape="pill" fullWidth wrap>
+          <Button start="play" tone="accent" emphasis="soft" fill="neutral" shape="pill" fullWidth wrap>
             {w.play}
           </Button>
-          <Button tone="accent" emphasis="soft" shape="pill" fullWidth wrap>
+          <Button start="shuffle" tone="accent" emphasis="soft" fill="neutral" shape="pill" fullWidth wrap>
             {w.shuffle}
           </Button>
         </div>
@@ -359,24 +368,33 @@ export function Screen({ variant, lang }: ScreenProps) {
             <Spinner label={w.loadingMore} size="md" />
           </div>
         </div>
-        {/* The mini player: in the page, so it keeps to main beside the Sidebar and the side column; it rests over the tab bar. */}
-        {playing && (
-          <Toolbar aria-label={w.player} overflow="wrap" emphasis="ghost" data-gallery="ml-player">
-            {/* The song itself is the first command: it opens the player. */}
-            <ToolbarButton start={<Cover art={playing.art} />} data-gallery="ml-player-song">
-              {t(playing.title, lang)}
-            </ToolbarButton>
-            <ToolbarButton icon="pause" label={w.pause} />
-            <ToolbarButton icon="chevrons-forward" label={w.next} />
-          </Toolbar>
-        )}
       </div>
       <div data-gallery="ml-dock">
-        <TabBar aria-label={w.tabs}>
+        {/*
+         * Order C2: the mini player is the tab bar's accessory, and this pushed
+         * screen draws the compact bar (the current tab, the player, the search
+         * disc). Beside the Sidebar the full bar stays.
+         */}
+        <TabBar
+          aria-label={w.tabs}
+          compact={!wide}
+          accessory={
+            playing && (
+              <Toolbar aria-label={w.player} overflow="wrap" emphasis="ghost" data-gallery="ml-player">
+                {/* The song itself is the first command: it opens the player. */}
+                <ToolbarButton start={<Cover art={playing.art} />} data-gallery="ml-player-song">
+                  {t(playing.title, lang)}
+                </ToolbarButton>
+                <ToolbarButton icon="pause" label={w.pause} />
+                <ToolbarButton icon="next-track" label={w.next} />
+              </Toolbar>
+            )
+          }
+        >
           <TabBarItem href="#home" icon="home" label={w.home} />
           <TabBarItem href="#new" icon="grid" label={w.newTab} />
-          <TabBarItem href="#radio" icon="globe" label={w.radio} />
-          <TabBarItem href="#library" icon="list" label={w.library} active />
+          <TabBarItem href="#radio" icon="radio" label={w.radio} />
+          <TabBarItem href="#library" icon="library" label={w.library} active />
           <TabBarSearch href="#search" label={w.search} />
         </TabBar>
       </div>
