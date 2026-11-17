@@ -149,6 +149,17 @@
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
       }
 
+      /*
+       * Order L2: in tier 2 a bar that holds a search disc has no low blur
+       * (see above), and its dark labels fell to 3.64 (Liquid) and 3.85
+       * (Neutral) over the lightest content; the bar and its disc take the
+       * tier 1 tint.
+       */
+      :root:not([data-refraction='true']) [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar']:has(> [data-part='search']:not([data-expanded])),
+      :root:not([data-refraction='true']) [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]) {
+        background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
+      }
+
       :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='action-sheet'] [data-part='panel'] {
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
