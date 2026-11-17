@@ -244,7 +244,8 @@ follows it.
     | AlertDialog action | `data-primary` |
     | TabBar search item | `data-expanded` |
     | SwipeActions | `data-side` on its `actions` parts |
-    | SectionIndex | `data-collapsed` |
+    | SectionIndex | `data-collapsed`, `data-active`, `data-dragging` |
+    | List | a sectioned List nests a List root inside its `section` part; the nested list belongs to its own root |
     | ActionSheet | `data-placement` |
     | Calendar | `data-today`, `data-unavailable`, `data-outside-month` |
     | Toast | `data-position`, `data-swipe` |
