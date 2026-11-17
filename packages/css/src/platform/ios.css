@@ -1802,6 +1802,12 @@
       --_button-fg-active: color-mix(in srgb, var(--ds-color-primary-fill) 60%, var(--ds-color-primary-on-surface));
     }
 
+    /* A bottom toolbar in dark (order F3): the gray glass of the bars, so Neutral's navy surface stays off ios. A style's own toolbar glass (Liquid) holds over it. */
+    [data-platform='ios'][data-scheme='dark'] [data-ds='toolbar']:not([data-part='accessory'] > *) {
+      --_toolbar-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
+      --_toolbar-border-color: transparent;
+    }
+
     /* The neutral fill of a soft capsule: the kit's plain gray, not a tinted gray. */
     [data-platform='ios'] [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);

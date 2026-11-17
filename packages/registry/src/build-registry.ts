@@ -23,9 +23,11 @@
 // Core holds the shared files. A shared file whose import closure reaches an
 // npm package (date.ts and @internationalized/date) gets its own lib item,
 // `<package>-<file>`, and only the items whose files import it depend on it.
-// So a Kbd never installs a calendar library. Each component `index.ts` also gets one side effect
-// import of its CSS file, and each CSS file starts with the layer order, so a
-// component looks right whatever order the files load in.
+// So a Kbd never installs a calendar library.
+//
+// Each component `index.ts` also gets one side effect import of its CSS file,
+// and each CSS file starts with the layer order, so a component looks right
+// whatever order the files load in.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, posix, relative, sep } from 'node:path';
 import ts from 'typescript';

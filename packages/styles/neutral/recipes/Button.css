@@ -77,6 +77,28 @@
     --_button-fg: var(--_button-fg-active);
   }
 
+  /*
+   * ios (order F3: Neutral follows the kit for colour on ios, and its dark
+   * stays gray on black): a soft neutral button standing on its own is the
+   * kit's plain gray capsule, no outline and no lift, not the web's white
+   * (dark: navy) outlined button. Parts of other components and the bars'
+   * glass buttons keep their own paint.
+   */
+  [data-style='neutral'][data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:not([data-part], [data-ds='navbar'] *, [data-ds='toolbar'] *, [data-ds='button-group'][data-attached] > *) {
+    --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
+    --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-shadow: none;
+  }
+
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:not([data-part], [data-ds='navbar'] *, [data-ds='toolbar'] *, [data-ds='button-group'][data-attached] > *) {
+    --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
+    --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 18%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, transparent);
+  }
+
   /* ------------------------------------------------------------ press and release (order 1.28) */
 
   [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {

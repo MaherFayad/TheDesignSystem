@@ -188,7 +188,7 @@
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action])::after,
   [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after {
     content: '';
     position: absolute;
@@ -208,7 +208,7 @@
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true'])::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:is(:active, [data-pressed])::after,
   [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):is(:active, [data-pressed])::after,
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled])::after,
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):is(:active, [data-pressed]):not([data-disabled])::after,
   [data-platform='android'] [data-ds='pagination'] > [data-part='page']:is(:active, [data-pressed])::after {
     /* The pressed state layer, 10% (opacity.state.pressed). */
     opacity: var(--ds-opacity-state-pressed);
@@ -252,19 +252,19 @@
     clip-path: circle(142% at calc(100% - var(--_chip-press-x)) var(--_chip-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action])::after {
     clip-path: circle(0% at var(--_list-press-x) var(--_list-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:is(:active, [data-pressed]):not([data-disabled])::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):is(:active, [data-pressed]):not([data-disabled])::after {
     clip-path: circle(142% at var(--_list-press-x) var(--_list-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl)::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):dir(rtl)::after {
     clip-path: circle(0% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
   }
 
-  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl):is(:active, [data-pressed]):not([data-disabled])::after {
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):dir(rtl):is(:active, [data-pressed]):not([data-disabled])::after {
     clip-path: circle(142% at calc(100% - var(--_list-press-x)) var(--_list-press-y));
   }
 
@@ -1150,8 +1150,8 @@
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):active::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
-  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action])::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action]):active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after,
   :root[data-motion='reduce'] [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after,
@@ -1173,7 +1173,7 @@
     [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
     [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
     [data-platform='android'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-    [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+    [data-platform='android'] [data-ds='list'] > [data-part='item']:is([data-linked], [data-action])::after,
     [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
     [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after,
     [data-platform='android'] [data-ds='radio-group'] [data-part='item'] > [data-part='control']::after,

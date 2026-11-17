@@ -58,11 +58,18 @@ three changes to the copies:
 
 | Item | Type | Holds |
 | --- | --- | --- |
-| `core` | `registry:lib` | shared logic, icons, motion, style data, reset and base CSS, `ds/ds.css` |
+| `core` | `registry:lib` | shared logic, icons, motion, style data, reset and base CSS, `ds/ds.css`; no npm dependency |
+| `<package>-<file>` | `registry:lib` | one core file whose imports reach an npm package, for example `shared-date` (`ds/shared/date.ts`, `@internationalized/date`); only items whose files import it depend on it |
 | `theme` | `registry:ui` | Theme, Bidi, hooks; needs `core` and the default style |
 | `style-<id>` | `registry:style` | tokens for one style, fonts, recipes, `ds/style-<id>.css` |
 | `<kebab>` | `registry:ui` | one component folder (no tests, no demos) and its CSS |
 | template `<kebab>` | `registry:block` | when templates arrive in `packages/react/src/templates/` |
+
+Installed code imports shared files one by one. A named import of a package
+barrel made only of `export * from` lines (`@the-system/shared`,
+`@the-system/motion`) is split into one import per source file before the
+usual rewrite to a relative path, so the barrels never ship and a Kbd never
+reaches `shared/date.ts`, even indirectly.
 
 `registry.json` is the catalog (no contents). `public/r/` holds the served
 items and is not committed.
