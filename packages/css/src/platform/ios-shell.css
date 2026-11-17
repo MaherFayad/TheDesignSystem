@@ -364,6 +364,29 @@
     white-space: nowrap;
   }
 
+  /*
+   * The accessory of a bar placed side by hand (order F3): out of the
+   * column, so the capsule keeps its width; its own capsule beside the
+   * column's foot, toward the content, 12 from it. A docked shell fixes it at
+   * the foot of the content instead (below).
+   */
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:has(> [data-part='accessory']) {
+    position: relative;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:not([data-compact]) > [data-part='accessory'] {
+    position: absolute;
+    inset-block: auto 0;
+    inset-inline: auto calc(100% + var(--ds-space-fixed-xl));
+    box-sizing: border-box;
+    inline-size: max-content;
+    max-inline-size: calc(var(--ds-dialog-width-sm) - 2 * var(--_ios-rail-item));
+    block-size: var(--_ios-rail-item);
+    padding-block: 0;
+    padding-inline: var(--ds-space-fixed-m);
+    border-radius: var(--ds-shape-corner-full);
+  }
+
   /* A style's band above a bottom bar has no edge to reach in a column. */
   [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']::before {
     content: none;

@@ -2643,11 +2643,26 @@
     white-space: nowrap;
   }
 
+  /*
+   * What the accessory holds fits its capsule at every width (320 included):
+   * a Toolbar in it lets an item with a label (the song) take the room the
+   * glyph buttons leave and shorten, never push the capsule past the screen.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='accessory'] > [data-ds='toolbar'] {
+    flex-wrap: nowrap;
+    min-inline-size: 0;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='accessory'] > [data-ds='toolbar'] > [data-part='item']:has(> [data-part='label']) {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
   [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='accessory'] {
     box-sizing: border-box;
     block-size: var(--_tab-bar-item-height);
     padding-block: 0;
-    padding-inline: var(--ds-space-fixed-m);
+    padding-inline: var(--ds-space-fixed-2xs);
     border-radius: var(--ds-shape-corner-full);
   }
 
