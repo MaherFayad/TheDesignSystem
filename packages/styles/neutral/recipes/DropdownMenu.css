@@ -22,7 +22,7 @@
  * weight and check color have no token.
  */
 @layer ds.recipes {
-  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
   [data-style='neutral'] [data-ds='select'][data-part='content'],
   [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
     --_menu-bg: var(--ds-color-bg-surface);
@@ -78,7 +78,7 @@
   /* ------------------------------------------------------------ contrast and forced colors */
 
   @media (prefers-contrast: more) {
-    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-style='neutral'] [data-ds='select'][data-part='content'],
     [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
       --_menu-border-color: var(--ds-color-border-strong);
@@ -86,7 +86,7 @@
     }
   }
 
-  [data-style='neutral'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+  [data-style='neutral'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
   [data-style='neutral'][data-contrast='more'] [data-ds='select'][data-part='content'],
   [data-style='neutral'][data-contrast='more'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
     --_menu-border-color: var(--ds-color-border-strong);
@@ -94,7 +94,7 @@
   }
 
   @media (forced-colors: active) {
-    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-style='neutral'] [data-ds='select'][data-part='content'],
     [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
       --_menu-bg: Canvas;
@@ -116,13 +116,29 @@
    * takes the kit's corner (about 26) and a thin hairline between groups
    * (the separator geometry is in packages/css/src/platform/ios.css). The touched row is the quiet gray of the platform, not the brand tint.
    */
-  [data-style='neutral'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='neutral'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
     --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
     --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
   }
 
-  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+  }
+
+  /*
+   * SelectionMenu (order M9.11, P1): it takes the menu's paint above, and
+   * stays a capsule: the menu's corner and padding never replace the pill.
+   */
+  [data-style='neutral'] [data-ds='selection-menu'],
+  [data-style='neutral'][data-platform]:not([data-platform='android']) [data-ds='selection-menu'] {
+    --_menu-radius: var(--ds-radius-pill);
+    --_menu-padding: 0px;
+  }
+
+  /* android: the Material text toolbar keeps its small corner (android.css), so this recipe's menu corner does not replace it. */
+  [data-style='neutral'][data-platform='android'] [data-ds='selection-menu'] {
+    --_menu-radius: var(--ds-shape-corner-extra-small);
+    --_menu-padding: 0px;
   }
 }

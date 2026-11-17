@@ -473,7 +473,7 @@ export function ActionSheetContent({
     <DialogBase
       state={ctx}
       // The dialog family's roots; action-sheet joins them (a line for the lead: add it to DialogKind).
-      kind={'action-sheet' as string as DialogKind}
+      kind={'action-sheet'}
       devName="ActionSheet"
       rootAttributes={{ 'data-placement': ctx.placement }}
       Backdrop={anchored ? AnchoredBackdrop : RadixDialog.Overlay}

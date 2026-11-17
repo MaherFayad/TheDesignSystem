@@ -57,7 +57,7 @@
     }
 
     /* Panels hold rows of text over the content: a little more blur than the bars, still a third of the M6 material. */
-    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='toast'] {
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
@@ -97,7 +97,7 @@
       backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.15);
     }
 
-    :root[data-refraction='true'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root[data-refraction='true'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='toast'] {
       -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
       backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.6);
@@ -129,7 +129,7 @@
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 10%) 84%, transparent);
       }
 
-      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      :root[data-refraction='true'] [data-platform='ios'][data-scheme='dark']:not([data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
         background-color: color-mix(in srgb, color-mix(in srgb, var(--ds-color-material-glass-solid), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
       }
     }
@@ -146,7 +146,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
         -webkit-backdrop-filter: none;
@@ -166,8 +166,8 @@
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='toast'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='toast'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'],
@@ -184,7 +184,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator'] {
         -webkit-backdrop-filter: none;
@@ -207,7 +207,7 @@
 @layer ds.chrome {
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='tab-bar']::before,
-    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='toast']::before {
       content: '';
       display: block;
@@ -327,7 +327,7 @@
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,
@@ -344,8 +344,8 @@
   @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
-    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='toast']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
@@ -369,7 +369,7 @@
   @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar']::before,
-      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active]::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::before,

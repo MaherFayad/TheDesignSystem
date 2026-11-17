@@ -1185,6 +1185,18 @@
     --_share-panel-target-radius: var(--ds-shape-corner-large);
     --_share-panel-border-color: transparent;
   }
+
+  /* SelectionMenu (order M9.11, P1): the Material text toolbar, a small cornered bar at level 2, square text actions at 48, no hairlines. */
+  [data-platform='android'] [data-ds='selection-menu'] {
+    --_menu-radius: var(--ds-shape-corner-extra-small);
+    --_menu-shadow: var(--ds-elevation-level2);
+    --_menu-item-height: var(--ds-size-touch-android);
+    --_menu-item-radius: 0;
+    --_menu-item-font-size: var(--ds-type-label-large-font-size);
+    --_menu-separator-color: transparent;
+    --_menu-enter-scale: var(--ds-scale-menu-enter);
+    --_menu-shift: 0px;
+  }
 }
 
 /*

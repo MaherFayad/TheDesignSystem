@@ -16,7 +16,7 @@
  * already (DropdownMenu.css).
  */
 @layer ds.recipes {
-  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-bg: var(--ds-color-material-glass);
     --_menu-border-color: var(--ds-color-material-glass-border);
     --_menu-radius: var(--ds-radius-panel);
@@ -32,12 +32,12 @@
   }
 
   /* The start side edge follows the text direction. */
-  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl) {
     --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
       inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
   }
 
-  [data-style='liquid'][data-glass='tinted'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='liquid'][data-glass='tinted'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-bg: var(--ds-color-material-glass-tinted);
   }
 
@@ -51,14 +51,14 @@
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
 
   @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
       --_menu-bg: var(--ds-color-material-glass-solid);
     }
   }
 
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl) {
       --_menu-shadow: var(--ds-elevation-menu);
       --_menu-backdrop: none;
       --_menu-item-shadow: none;
@@ -66,14 +66,14 @@
   }
 
   @media (prefers-contrast: more) {
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
       --_menu-border-color: var(--ds-color-border-strong);
       --_menu-separator-color: var(--ds-color-border-strong);
     }
   }
 
-  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
-  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl) {
     --_menu-shadow: var(--ds-elevation-menu);
     --_menu-backdrop: none;
     --_menu-item-shadow: none;
@@ -82,7 +82,7 @@
   }
 
   @media (forced-colors: active) {
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
       --_menu-bg: Canvas;
       --_menu-border-color: CanvasText;
       --_menu-separator-color: CanvasText;
@@ -105,12 +105,33 @@
    * takes the kit's corner (about 26) and a thin hairline between groups
    * (the separator geometry is in packages/css/src/platform/ios.css).
    */
-  [data-style='liquid'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='liquid'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-radius: calc(var(--ds-shape-corner-extra-large) - var(--ds-space-fixed-4xs));
     --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
   }
 
-  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']) {
     --_menu-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+  }
+
+  /*
+   * SelectionMenu (order M9.11, P1): it takes the menu's paint above, and
+   * stays a capsule: the menu's corner and padding never replace the pill.
+   */
+  [data-style='liquid'] [data-ds='selection-menu'],
+  [data-style='liquid'][data-platform]:not([data-platform='android']) [data-ds='selection-menu'] {
+    --_menu-radius: var(--ds-radius-pill);
+    --_menu-padding: 0px;
+  }
+
+  /* android: the Material text toolbar keeps its small corner (android.css), so this recipe's menu corner does not replace it. */
+  [data-style='liquid'][data-platform='android'] [data-ds='selection-menu'] {
+    --_menu-radius: var(--ds-shape-corner-extra-small);
+    --_menu-padding: 0px;
+  }
+
+  /* ios: the forward and back platter is the glass's lit fill. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='selection-menu'] {
+    --_selection-menu-more-bg: var(--ds-color-material-glass-hover);
   }
 }
