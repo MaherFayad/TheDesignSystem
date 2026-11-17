@@ -2,21 +2,22 @@
   "name": "AlertDialog",
   "kind": "component",
   "family": "overlays",
-  "summary": "A modal question about an action that cannot be undone. The person must answer it: Cancel or the action. It never closes on a click outside.",
+  "summary": "A modal question about an action that cannot be undone, or that needs one short value. The person must answer it: Cancel or the action. It never closes on a click outside. On web a centered card with a footer band; on ios the platform's alert card with capsule actions; on android a dialog with text button actions.",
   "useWhen": [
     "An action deletes or overwrites something for good and there is no undo",
     "An action affects other people at once: removing a member, revoking a link",
-    "Leaving a flow would throw away work that cannot be saved as a draft"
+    "Leaving a flow would throw away work that cannot be saved as a draft",
+    "An action needs one or two short values first: a name for a new folder, a new name for an item (order M9.6)"
   ],
   "avoidWhen": [
     "The action can be undone: run it and offer undo",
-    "The question needs fields or more than a short description",
+    "The question needs more than two fields or a longer task",
     "A message that needs no answer",
     "Asking about a routine action the person runs many times a day"
   ],
   "insteadUse": {
     "The action can be undone": "Toast with an undo action",
-    "Fields or a longer task": "Dialog",
+    "More than two fields or a longer task": "Dialog",
     "No answer needed": "Toast",
     "A warning that stays on the page": "Banner"
   },
@@ -29,6 +30,7 @@
     "icon",
     "title",
     "description",
+    "body",
     "footer",
     "cancel",
     "action"
@@ -37,6 +39,7 @@
     "AlertDialogContent": "panel",
     "AlertDialogTitle": "title",
     "AlertDialogDescription": "description",
+    "AlertDialogBody": "body",
     "AlertDialogFooter": "footer",
     "AlertDialogCancel": "cancel",
     "AlertDialogAction": "action",
@@ -52,6 +55,14 @@
     "description": {
       "accepts": "text",
       "max": 1
+    },
+    "body": {
+      "accepts": [
+        "Field",
+        "Input"
+      ],
+      "min": 1,
+      "max": 2
     },
     "footer": {
       "accepts": [
@@ -123,22 +134,37 @@
     "AlertDialogAction": {
       "type": "node",
       "description": "One child element, a system Button that names the consequence. It closes the alert dialog on click; call event.preventDefault() in onClick to keep it open while the action runs."
+    },
+    "legend": {
+      "type": "node",
+      "description": "AlertDialogBody (order M9.6, proposed): the name of the group of fields, required. Read with the first field and visually hidden: the title is the visible heading."
+    },
+    "primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "AlertDialogAction (order M9.6, proposed): the default action. Stamps data-primary on the action part, makes the Button solid, tone accent (danger in a danger alert) unless the Button sets its own, and Return in a body field runs it. One per alert."
+    },
+    "requiresValue": {
+      "type": "boolean",
+      "default": false,
+      "description": "AlertDialogAction (order M9.6, proposed): aria-disabled while the first field of the body is empty (spaces count as empty), so neither a press nor Return runs it. No effect without a body."
     }
   },
   "states": [
     "open",
-    "closed"
+    "closed",
+    "data-primary"
   ],
   "a11y": {
     "role": "alertdialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
-    "focus": "On open, focus goes to an element marked data-autofocus, else to the Cancel action, in every tone, so Enter never runs the action by accident. On close, focus returns to the trigger, or to the element that had focus before; when that is gone, to its nearest connected focusable ancestor, else the first tab stop of main, else the body.",
+    "focus": "On open, focus goes to an element marked data-autofocus, else to the first field of the body (order M9.6, proposed: an alert with fields opens on its first field), else to the Cancel action, in every tone, so Enter never runs the action by accident. On close, focus returns to the trigger, or to the element that had focus before; when that is gone, to its nearest connected focusable ancestor, else the first tab stop of main, else the body.",
     "keys": {
       "Escape": "Cancels and closes the alert dialog, unless dismissible is false",
-      "Tab": "Moves between Cancel and the action inside the alert dialog and wraps from the last to the first",
+      "Tab": "Moves through the body fields, then Cancel and the action, inside the alert dialog, and wraps from the last to the first",
       "Shift+Tab": "Moves back inside the alert dialog and wraps from the first to the last",
-      "Enter": "Runs the focused button: Cancel when the alert dialog opens"
+      "Enter": "Runs the focused button: Cancel when the alert dialog opens without a body. In a body field (Return): runs the primary action, unless it is aria-disabled; not while an input method composes, and not with a modifier key"
     },
-    "announce": "The role alertdialog, the title and the description are read when it opens. An error after a failed action goes in the description with role alert.",
+    "announce": "The role alertdialog, the title and the description are read when it opens. With a body, focus lands on the first field, read with its label and the group's legend. An error after a failed action goes in the description with role alert.",
     "notes": [
       "No close part and no close on a backdrop click: the question is answered with Cancel or the action. Escape is the same as Cancel.",
       "The page behind does not scroll while it is open (Radix scroll lock).",
@@ -147,7 +173,9 @@
       "No native title attribute.",
       "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms.",
       "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"alert-dialog\"] in its style.json. The title bar holds the title (a direct AlertDialogTitle child or the title prop, still the accessible name); with controls it starts with WindowControls, whose close light cancels (as Escape and Cancel do), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
-      "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body."
+      "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body.",
+      "Order M9.6, proposed: the body part is an inset Fieldset root (data-ds fieldset, data-part body) of one or two Fields, each with an Input variant plain and a visible label (WCAG 3.3.2: a placeholder is never the only label). Focus order is field, field, Cancel, action (WCAG 2.4.3). AlertDialogAction primary carries data-primary; with requiresValue it is aria-disabled, and stays in the tab order, until the first field has a value.",
+      "Order M9.6, proposed, the platforms: web, the same parts and the primary a solid Button. ios: the alert card with the fields as rows of a grouped well and the default action filled with our darker tint, so its white label keeps 4.5:1 (WCAG 1.4.3; the vendor kit's brighter tint does not). android: the actions are text buttons, the primary in the tint text, the fields outlined. The platform layers draw these looks (order M9.13). Right to left mirrors the order of the actions."
     ],
     "native": {
       "accessibilityRole": "alert",
@@ -161,13 +189,15 @@
       "title": "The question, naming the action and its object, in sentence case: Delete the board Spring launch?",
       "description": "What is lost, and that it cannot be undone: Its 12 frames and every comment are deleted for good. An error after a failed action is added inside the description, in a role alert element that is there from the start.",
       "buttons": "The action names the consequence: Delete board, Remove member. Cancel keeps the object: Keep board. Never OK, Yes, Continue or Confirm.",
-      "error": "Could not delete the team. Check your connection, then try again."
+      "error": "Could not delete the team. Check your connection, then try again.",
+      "body": "Fields for the one value the action needs: a visible label (Name), a placeholder that shows the form (For example, spring launch). The primary action names what it makes: Create folder, Add link."
     },
     "ar": {
       "title": "The question in white Saudi dialect, no diacritics: تبي تحذف لوحة إطلاق الربيع؟",
       "description": "بتنحذف 12 إطار وكل التعليقات، وما تقدر ترجعها بعدين.",
       "buttons": "Noun form labels: حذف اللوحة، إبقاء اللوحة. Never نعم or موافق.",
-      "error": "ما قدرنا نحذف الفريق. تأكد من الاتصال وجرب مرة ثانية."
+      "error": "ما قدرنا نحذف الفريق. تأكد من الاتصال وجرب مرة ثانية.",
+      "body": "Labels in noun form: الاسم، ملاحظة. The primary action: إنشاء المجلد."
     }
   },
   "tokens": [
@@ -268,6 +298,14 @@
     {
       "wrong": "Closing the alert while the action is still running",
       "right": "event.preventDefault() in the action's onClick, dismissible false and the Button loading until it ends"
+    },
+    {
+      "wrong": "Fields in an alert with only a placeholder to say what they are",
+      "right": "A Field with a visible label around each Input variant plain, inside AlertDialogBody"
+    },
+    {
+      "wrong": "Two actions marked primary",
+      "right": "One AlertDialogAction primary: the one Return runs"
     }
   ],
   "contract": {
@@ -277,7 +315,8 @@
       "description",
       "titlebar",
       "controls",
-      "title"
+      "title",
+      "body"
     ]
   },
   "since": "0.1.0"

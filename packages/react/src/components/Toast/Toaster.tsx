@@ -74,6 +74,17 @@
 // flick; let go short, it springs back. Layout never animates and the store
 // never waits.
 //
+// The close button and the banner parts (order M9.8, proposed). Each toast
+// asks the store's toastClosable(item, platform): on ios a timed toast has
+// no close button by default, as a notification banner; a toast that stays
+// until closed (danger, an action, no timeout) always keeps it, and
+// toast({ closable }) decides elsewhere. A toast without one still closes
+// by its timer (which pauses and which configure lengthens, WCAG 2.2.1),
+// by Escape when it has focus (F8, then Tab: each toast is a tab stop), and
+// by the swipe (WCAG 2.5.7: Escape and the timer are the paths without a
+// drag). start and meta come from the item; meta is read after the
+// description in the announcement, in the toast's language.
+//
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
 // danger toast included. The key is not prevented, so the component that
@@ -85,7 +96,7 @@
 import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
-import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
+import { toastClosable, toastMeta, toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { isInsideToaster } from './isInsideToaster';
@@ -155,9 +166,10 @@ interface Line {
   urgent: boolean;
 }
 
-/** The text a screen reader hears for a toast, after the label. */
-export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' | 'action'>): string {
-  const parts = [item.title, item.description, item.action ? (item.action.altText ?? item.action.label) : undefined];
+/** The text a screen reader hears for a toast, after the label: title, description, meta, then the action's alternative. */
+export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' | 'action' | 'meta'>, lang?: string, now?: number): string {
+  const meta = item.meta !== undefined ? toastMeta(item.meta, lang, now).text : undefined;
+  const parts = [item.title, item.description, meta, item.action ? (item.action.altText ?? item.action.label) : undefined];
   return parts
     .map((p) => p?.trim())
     .filter((p): p is string => !!p)
@@ -308,7 +320,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
       pending.current.push({
         key: `${t.id}:${t.version}`,
         label: t.lang !== undefined ? toastLabelsFor(t.lang).toast : announceLabel,
-        text: toastAnnouncement(t),
+        text: toastAnnouncement(t, t.lang ?? theme.lang),
         lang: t.lang,
         urgent: toastUrgency(t.tone) === 'assertive',
       });
@@ -323,7 +335,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
       if (clear.current !== null) clearTimeout(clear.current);
       clear.current = setTimeout(() => setLines([]), 5000);
     }, 100);
-  }, [snapshot, announceLabel]);
+  }, [snapshot, announceLabel, theme.lang]);
   useEffect(
     () => () => {
       if (flush.current !== null) clearTimeout(flush.current);
@@ -376,6 +388,8 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
             keepOnEscape={keepOnEscape}
             direction={swipeFor(position, theme.dir)}
             shownAt={shownAt}
+            closable={toastClosable(item, theme.platform)}
+            lang={item.lang ?? theme.lang}
           />
         ))}
         <RadixToast.Viewport
@@ -416,6 +430,8 @@ const ToasterItem = memo(function ToasterItem({
   keepOnEscape,
   direction,
   shownAt,
+  closable,
+  lang,
 }: {
   item: ToastItem;
   store: ToastStore;
@@ -423,6 +439,8 @@ const ToasterItem = memo(function ToasterItem({
   keepOnEscape: { current: boolean };
   direction: SwipeDirection;
   shownAt: { current: Map<string, number> };
+  closable: boolean;
+  lang: string | undefined;
 }) {
   const gesture = useRef<Gesture | null>(null);
 
@@ -521,6 +539,10 @@ const ToasterItem = memo(function ToasterItem({
           count={item.count}
           action={item.action}
           closeLabel={item.lang !== undefined ? toastLabelsFor(item.lang).close : closeLabel}
+          closable={closable}
+          start={item.start}
+          meta={item.meta}
+          lang={lang}
         />
         {Number.isFinite(item.duration) && (
           // Keyed by version: a repeat or an update restarts the store's timer, and the line with it.

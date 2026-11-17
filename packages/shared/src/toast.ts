@@ -29,11 +29,27 @@
  * - A closed toast stays in `visible` with state `closed` for its exit
  *   animation, then leaves on its own after `exitTimeout` (or when the view
  *   calls `remove(id)`), so nothing waits on an animation event.
+ * - The close button (order M9.8, proposed). `closable` left out lets the
+ *   view decide by platform: on ios a timed toast drops it, as a
+ *   notification banner does; elsewhere it shows. `closable: false` asks
+ *   for no close button, and the store keeps that only while the toast
+ *   times out: a toast that stays until closed (danger, an action, or a
+ *   duration of Infinity) always keeps its close button, so it can always
+ *   be closed with a button (WCAG 2.2.1 and 2.5.7), and the store warns in
+ *   development. A timed toast without a close button still closes with
+ *   Escape when focused, with a swipe, and by its timer, which pauses on
+ *   hover and focus and which `configure({ durations })` lengthens.
+ * - The banner parts (order M9.8). `start` is what leads the toast in
+ *   place of the tone icon: a system icon name, or `{ avatar: { name, src } }`
+ *   for a person. `meta` is a short text or a `Date`; a view renders a
+ *   `Date` with `toastMeta()` as a relative time ("now", "5m ago") in a
+ *   `<time>` element, with Western digits in Arabic.
  *
  * No DOM, no React. `getSnapshot` returns the same object until something
  * changes, and `getServerSnapshot` a constant, so the store is safe for
  * `useSyncExternalStore` and for Angular signals.
  */
+import { latinLocale } from './number';
 
 /** The tone of a toast. The shared tone words, without accent. */
 export type ToastTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info';
@@ -50,6 +66,30 @@ export interface ToastAction {
    * example "Save again from the File menu". Default: the label.
    */
   altText?: string;
+}
+
+/** A person at the start of a toast. The view draws an Avatar. */
+export interface ToastAvatar {
+  avatar: {
+    /** The person or workspace name: the initials and the fallback color. */
+    name: string;
+    /** The image URL. */
+    src?: string;
+  };
+}
+
+/**
+ * What leads a toast in place of its tone icon (convention 6): a system
+ * icon name, or a person. A framework view may also take a node of its own
+ * on its static Toast; the bus stays framework free.
+ */
+export type ToastStart = string | ToastAvatar;
+
+/** True when a start value is a person. */
+export function isToastAvatar(start: unknown): start is ToastAvatar {
+  if (typeof start !== 'object' || start === null || !('avatar' in start)) return false;
+  const avatar = (start as { avatar: unknown }).avatar;
+  return typeof avatar === 'object' && avatar !== null && typeof (avatar as { name?: unknown }).name === 'string';
 }
 
 /** What `toast()` takes. Every field is optional, but a toast needs a title or a description. */
@@ -69,6 +109,17 @@ export interface ToastOptions {
   dedupeKey?: string | false;
   /** The language of the copy, when it differs from the page (for example "ar"). */
   lang?: string;
+  /** Leads the toast in place of the tone icon: a system icon name or `{ avatar: { name, src } }`. */
+  start?: ToastStart;
+  /** A short text or a time, shown at the trailing top and read after the description. A `Date` reads as a relative time. */
+  meta?: string | Date;
+  /**
+   * false drops the close button of a toast that times out. Ignored, with a
+   * warning in development, for a toast that stays until closed (danger, an
+   * action, a duration of Infinity). Left out, the view decides by platform:
+   * no close button on a timed toast on ios, a close button elsewhere.
+   */
+  closable?: boolean;
 }
 
 /** What `update()` takes. */
@@ -84,6 +135,13 @@ export interface ToastItem {
   readonly duration: number;
   readonly action?: ToastAction;
   readonly lang?: string;
+  readonly start?: ToastStart;
+  readonly meta?: string | Date;
+  /**
+   * false: no close button (only ever on a toast that times out). true: a
+   * close button. undefined: the view decides by platform.
+   */
+  readonly closable?: boolean;
   /** The resolved dedupe key, or null when dedupe is off for this toast. */
   readonly key: string | null;
   /** How many times it was pushed while open. Shown as a count above 1. */
@@ -178,6 +236,63 @@ export function toastDedupeKey(input: Pick<ToastOptions, 'tone' | 'title' | 'des
   return `auto\u0000${input.tone ?? 'neutral'}\u0000${input.title ?? ''}\u0000${input.description ?? ''}`;
 }
 
+/**
+ * Whether a toast draws its close button. A toast that stays until closed
+ * always has one. Otherwise the item's own answer wins; left open, a timed
+ * toast on ios has none (a notification banner) and has one elsewhere.
+ */
+export function toastClosable(item: Pick<ToastItem, 'closable' | 'duration'>, platform: string | undefined): boolean {
+  if (!Number.isFinite(item.duration)) return true;
+  if (item.closable !== undefined) return item.closable;
+  return platform !== 'ios';
+}
+
+/** The text of a `meta` value and, for a time, its machine readable form. */
+export interface ToastMetaText {
+  text: string;
+  /** An ISO time for the `datetime` attribute, when meta is a `Date`. */
+  dateTime?: string;
+}
+
+/**
+ * The text of a toast's `meta`. A string stays as it is. A `Date` reads as
+ * a relative time in the toast's language, short as a banner writes it:
+ * "now" under a minute, then "5m ago", "2h ago", "3d ago"; in Arabic
+ * "الآن" and "قبل 5 دقائق", always with Western digits.
+ */
+export function toastMeta(meta: string | Date, lang: string | undefined, now: number = Date.now()): ToastMetaText {
+  if (typeof meta === 'string') return { text: meta };
+  const time = meta.getTime();
+  if (Number.isNaN(time)) return { text: '' };
+  const rtf = new Intl.RelativeTimeFormat(latinLocale(lang || 'en'), { style: 'narrow', numeric: 'auto' });
+  const seconds = Math.round((time - now) / 1000);
+  const abs = Math.abs(seconds);
+  let text: string;
+  if (abs < 60) text = rtf.format(0, 'second');
+  else if (abs < 3_600) text = rtf.format(Math.round(seconds / 60), 'minute');
+  else if (abs < 86_400) text = rtf.format(Math.round(seconds / 3_600), 'hour');
+  else if (abs < 7 * 86_400) text = rtf.format(Math.round(seconds / 86_400), 'day');
+  else text = rtf.format(Math.round(seconds / (7 * 86_400)), 'week');
+  return { text, dateTime: meta.toISOString() };
+}
+
+/** Development only: a toast that stays until closed asked to drop its close button. */
+function warnClosable(title: string | undefined): void {
+  const env = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV;
+  if (env === 'production') return;
+  console.warn(
+    `toast: closable false is ignored for "${title ?? 'a toast'}". A danger toast, a toast with an action and a toast with no timeout stay until closed, so they keep their close button.`,
+  );
+}
+
+/** The close answer the store keeps: false only on a toast that times out. */
+function resolveClosable(asked: boolean | undefined, duration: number, title: string | undefined): boolean | undefined {
+  if (asked !== false) return asked;
+  if (Number.isFinite(duration)) return false;
+  warnClosable(title);
+  return true;
+}
+
 const EMPTY: ToastSnapshot = Object.freeze({ visible: Object.freeze([]), queued: Object.freeze([]) });
 
 const realClock: ToastClock = {
@@ -196,6 +311,8 @@ interface Entry {
   handle: unknown;
   /** True once the toast has had a place on screen. */
   shown: boolean;
+  /** What the caller asked for the close button, kept so an update can resolve it again. */
+  askedClosable: boolean | undefined;
 }
 
 function normalize(input: string | ToastOptions, options?: ToastOptions): ToastOptions {
@@ -316,6 +433,7 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     else if (tone !== prev.tone || prev.action !== undefined) duration = durations[tone];
     else duration = prev.duration;
     const key = e.keyMode === 'auto' ? toastDedupeKey({ tone, title, description }) : prev.key;
+    if (has('closable')) e.askedClosable = patch.closable;
     e.item = {
       ...prev,
       tone,
@@ -324,6 +442,9 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
       duration,
       action,
       lang: has('lang') ? patch.lang : prev.lang,
+      start: has('start') ? patch.start : prev.start,
+      meta: has('meta') ? patch.meta : prev.meta,
+      closable: resolveClosable(e.askedClosable, duration, title),
       key,
       version: prev.version + 1,
     };
@@ -353,12 +474,14 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     const existing = key === null ? undefined : entries.find((e) => e.item.state === 'open' && e.item.key === key);
     if (existing) {
       const action = o.action ?? existing.item.action;
+      const bumped = action !== undefined ? Infinity : existing.item.duration;
       existing.item = {
         ...existing.item,
         count: existing.item.count + 1,
         version: existing.item.version + 1,
         action,
-        duration: action !== undefined ? Infinity : existing.item.duration,
+        duration: bumped,
+        closable: resolveClosable(existing.askedClosable, bumped, existing.item.title),
       };
       if (existing.shown) restartTimer(existing);
       commit();
@@ -375,6 +498,9 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
       duration,
       action: o.action,
       lang: o.lang,
+      start: o.start,
+      meta: o.meta,
+      closable: resolveClosable(o.closable, duration, o.title),
       key,
       count: 1,
       version: 1,
@@ -389,6 +515,7 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
         startedAt: 0,
         handle: null,
         shown: false,
+        askedClosable: o.closable,
       },
     ];
     commit();

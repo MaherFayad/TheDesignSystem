@@ -1,0 +1,262 @@
+/*
+ * SwipeActions: actions at either side of one row, revealed by a horizontal
+ * swipe, and a menu of the same actions (order M9.7, proposed). Follows "One
+ * convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_swipe-actions-x              the move in screen px, written inline by
+ *                                   the component while dragging, open or
+ *                                   settling; 0px at rest
+ *   --_swipe-actions-duration, -ease
+ *                                   the settle after a release: the snappy
+ *                                   spring. While dragging nothing transitions,
+ *                                   so the row sits under the finger
+ *   --_swipe-actions-content-bg     the fill of the standalone content part,
+ *                                   so the actions never show through it
+ *   --_swipe-actions-action-min     the least inline size of an action, the
+ *                                   iOS touch size (44) on every platform
+ *   --_swipe-actions-padding-inline, --_swipe-actions-gap, --_swipe-actions-font-size
+ *                                   an action: its side room, the gap from its
+ *                                   icon to its label, the label size
+ *   --_swipe-actions-radius         the corner of an action: square
+ *   --_swipe-actions-tone-solid, --_swipe-actions-tone-on-solid
+ *                                   the fill and the label of one tone, set on
+ *                                   each action and on each group (a group is
+ *                                   filled with the tone of its edge action,
+ *                                   so a full swipe that pulls the row past
+ *                                   the actions shows that tone, not the page)
+ *   --_swipe-actions-menu-inset     the room from the inline end to the menu
+ *                                   button; a List row sets its own padding
+ *   --_swipe-actions-menu-room      the room the standalone content keeps at
+ *                                   its inline end while the menu shows
+ *
+ * The root clips. Each action group is as wide as the root and sits just
+ * past one inline edge (end: past the inline end, start: before the inline
+ * start), its buttons against the content; it moves by the same offset as
+ * the content, so it slides in from the edge (translateX, a screen x). In
+ * right to left text the end group sits at the left and the start group at
+ * the right with no rule of its own: the inline insets mirror and the
+ * component flips the sign of the offset.
+ *
+ * As a part of a parent (the List row: data-part on the root) the root is an
+ * overlay over the row with no pointer events of its own; the row's parts
+ * are the content and move by the row's property, and the row clips.
+ *
+ * Buttons inside a group are system Buttons (part action) whose private
+ * properties this file sets: the tone fill, a square corner, the full block
+ * size of the row, the icon above the label. The fill, the label color and
+ * the border color are also declared on the action itself: a style's Button
+ * recipe sets --_button-bg for its own neutral or soft fills (Desk draws a
+ * translucent neutral), which would let the group's edge tone show through
+ * an action and fail 4.5:1; the row action's tone is the row's, not the
+ * Button's. A recipe for SwipeActions sets the --_swipe-actions-tone-* pair.
+ *
+ * The menu button (part menu) sits in an unnamed span at the inline end. It
+ * is drawn when the pointer is a mouse that hovers, or while focus is in the
+ * row; otherwise it is visually hidden but stays in the accessibility tree
+ * and the Tab order (convention 18 shape).
+ *
+ * States: data-state (closed, open-start, open-end), data-dragging (no
+ * transition), data-armed (a release runs the first action: the other
+ * actions fade so the edge tone fills the space), data-settling (springing
+ * back to closed; the transform stays until it ends, then the content has
+ * none, so a row link's hit area covers the row again).
+ *
+ * Reduced motion: every duration token is 0ms, so the settle is a jump; the
+ * drag still follows the finger. Forced colors: actions get a ButtonText
+ * outline, the group fill turns Canvas.
+ */
+@layer ds.base {
+  [data-ds='swipe-actions'] {
+    --_swipe-actions-x: 0px;
+    --_swipe-actions-duration: var(--ds-duration-spring-snappy);
+    --_swipe-actions-ease: var(--ds-ease-spring-snappy);
+    --_swipe-actions-content-bg: var(--ds-color-bg-surface);
+    --_swipe-actions-action-min: var(--ds-size-touch-ios);
+    --_swipe-actions-padding-inline: var(--ds-space-xs);
+    --_swipe-actions-gap: var(--ds-space-4xs);
+    --_swipe-actions-font-size: var(--ds-font-size-xs);
+    --_swipe-actions-radius: 0;
+    --_swipe-actions-menu-inset: var(--ds-space-s);
+    --_swipe-actions-menu-room: calc(var(--ds-size-control-md) + var(--ds-space-xs));
+
+    position: relative;
+    display: block;
+    min-inline-size: 0;
+    overflow: clip;
+    touch-action: pan-y;
+  }
+
+  /* The part form (inside a List row): an overlay; the row clips and takes the pointer. */
+  [data-ds='swipe-actions'][data-part] {
+    position: absolute;
+    inset: 0;
+    z-index: var(--ds-z-raised);
+    overflow: visible;
+    pointer-events: none;
+    touch-action: auto;
+  }
+
+  [data-ds='swipe-actions'][data-dragging] {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* ---------------------------------------------------------- content */
+
+  [data-ds='swipe-actions'] > [data-part='content'] {
+    position: relative;
+    min-inline-size: 0;
+    background-color: var(--_swipe-actions-content-bg);
+  }
+
+  [data-ds='swipe-actions']:is([data-dragging], [data-settling], [data-state='open-start'], [data-state='open-end']) > [data-part='content'] {
+    transform: translateX(var(--_swipe-actions-x));
+    transition: transform var(--_swipe-actions-duration) var(--_swipe-actions-ease);
+  }
+
+  /* ----------------------------------------------------------- groups */
+
+  [data-ds='swipe-actions'] > [data-part='actions'] {
+    --_swipe-actions-tone-solid: var(--ds-color-bg-surface-5);
+    --_swipe-actions-tone-on-solid: var(--ds-color-text-default);
+
+    position: absolute;
+    inset-block: 0;
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    inline-size: 100%;
+    background-color: var(--_swipe-actions-tone-solid);
+    pointer-events: auto;
+    transform: translateX(var(--_swipe-actions-x));
+    transition: transform var(--_swipe-actions-duration) var(--_swipe-actions-ease);
+  }
+
+  [data-ds='swipe-actions'] > [data-part='actions'][data-side='end'] {
+    inset-inline-start: 100%;
+    justify-content: flex-start;
+  }
+
+  [data-ds='swipe-actions'] > [data-part='actions'][data-side='start'] {
+    inset-inline-end: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Tones: one set of names for a group and for each action in it. */
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] {
+    --_swipe-actions-tone-solid: var(--ds-color-bg-surface-5);
+    --_swipe-actions-tone-on-solid: var(--ds-color-text-default);
+  }
+
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'][data-tone='accent'],
+  [data-ds='swipe-actions'] > [data-part='actions'][data-tone='accent'] {
+    --_swipe-actions-tone-solid: var(--ds-color-primary-fill);
+    --_swipe-actions-tone-on-solid: var(--ds-color-primary-text);
+  }
+
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'][data-tone='warning'],
+  [data-ds='swipe-actions'] > [data-part='actions'][data-tone='warning'] {
+    --_swipe-actions-tone-solid: var(--ds-color-state-warning-solid);
+    --_swipe-actions-tone-on-solid: var(--ds-color-state-warning-on-solid);
+  }
+
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'][data-tone='danger'],
+  [data-ds='swipe-actions'] > [data-part='actions'][data-tone='danger'] {
+    --_swipe-actions-tone-solid: var(--ds-color-state-danger-solid);
+    --_swipe-actions-tone-on-solid: var(--ds-color-state-danger-on-solid);
+  }
+
+  /* ---------------------------------------------------------- actions */
+
+  [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] {
+    --_button-bg: var(--_swipe-actions-tone-solid);
+    --_button-fg: var(--_swipe-actions-tone-on-solid);
+    --_button-bg-hover: var(--_swipe-actions-tone-solid);
+    --_button-fg-hover: var(--_swipe-actions-tone-on-solid);
+    --_button-bg-active: var(--_swipe-actions-tone-solid);
+    --_button-fg-active: var(--_swipe-actions-tone-on-solid);
+    --_button-border-color: var(--_swipe-actions-tone-solid);
+    --_button-border-color-hover: var(--_swipe-actions-tone-solid);
+    --_button-radius: var(--_swipe-actions-radius);
+    --_button-height: 100%;
+    --_button-padding-inline: var(--_swipe-actions-padding-inline);
+    --_button-gap: var(--_swipe-actions-gap);
+    --_button-font-size: var(--_swipe-actions-font-size);
+    --_button-glow: 0;
+    --_button-shadow: 0 0 transparent;
+
+    flex: none;
+    flex-direction: column;
+    border-color: var(--_swipe-actions-tone-solid);
+    background-color: var(--_swipe-actions-tone-solid);
+    color: var(--_swipe-actions-tone-on-solid);
+    justify-content: center;
+    min-inline-size: var(--_swipe-actions-action-min);
+    transition: opacity var(--ds-duration-quick) var(--ds-ease-out);
+  }
+
+  /* Armed: a release runs the edge action, so the others fade and its tone fills the group. */
+  [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='start'] > [data-part='action']:not(:first-child),
+  [data-ds='swipe-actions'][data-armed] > [data-part='actions'][data-side='end'] > [data-part='action']:not(:last-child) {
+    opacity: 0;
+  }
+
+  /* ------------------------------------------------------------- menu */
+
+  [data-ds='swipe-actions'] > span:has(> [data-part='menu']) {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: var(--_swipe-actions-menu-inset);
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+    transform: translateX(var(--_swipe-actions-x));
+    transition: transform var(--_swipe-actions-duration) var(--_swipe-actions-ease);
+  }
+
+  /* The standalone content keeps room for the menu while it is drawn. */
+  @media (hover: hover) and (pointer: fine) {
+    [data-ds='swipe-actions']:not([data-part]) > [data-part='content'] {
+      padding-inline-end: var(--_swipe-actions-menu-room);
+    }
+  }
+
+  [data-ds='swipe-actions']:not([data-part]):focus-within > [data-part='content'] {
+    padding-inline-end: var(--_swipe-actions-menu-room);
+  }
+
+  /* Touch with no focus in the row: the menu stays in the tree and the Tab order, drawn only once focus arrives. */
+  @media not all and (hover: hover) and (pointer: fine) {
+    :not(:focus-within) > [data-ds='swipe-actions'] > span:has(> [data-part='menu']) {
+      inset-block: auto;
+      inline-size: var(--ds-border-width-default);
+      block-size: var(--ds-border-width-default);
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  /* -------------------------------------------------- while dragging */
+
+  [data-ds='swipe-actions'][data-dragging] > :is([data-part='content'], [data-part='actions'], span) {
+    transition: none;
+  }
+
+  [data-ds='swipe-actions']:lang(ar) > [data-part='actions'] > [data-part='action'] {
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='swipe-actions'] > [data-part='actions'] {
+      background-color: Canvas;
+    }
+
+    [data-ds='swipe-actions'] > [data-part='actions'] > [data-part='action'] {
+      outline: var(--ds-border-width-default) solid ButtonText;
+      outline-offset: calc(-1 * var(--ds-border-width-default));
+    }
+  }
+}

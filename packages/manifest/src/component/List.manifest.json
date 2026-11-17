@@ -7,7 +7,8 @@
     "A short list of things people open: mail, files, boards, members",
     "Rows that each carry one or two actions, such as delete or more",
     "Ordered steps or a ranking, as an ol",
-    "Rows grouped under headings: settings groups, contacts by letter (ListSection, with SectionIndex for long lists)"
+    "Rows grouped under headings: settings groups, contacts by letter (ListSection, with SectionIndex for long lists)",
+    "Rows with quick actions behind a swipe, such as delete and archive on mail (ListItem swipe with SwipeActions)"
   ],
   "avoidWhen": [
     "Picking one or more options from the rows",
@@ -34,7 +35,8 @@
     "empty",
     "section",
     "section-header",
-    "section-footer"
+    "section-footer",
+    "swipe"
   ],
   "parts": {
     "ListItem": "item",
@@ -88,6 +90,12 @@
     },
     "section-footer": {
       "accepts": "text",
+      "max": 1
+    },
+    "swipe": {
+      "accepts": [
+        "SwipeActions"
+      ],
       "max": 1
     }
   },
@@ -157,6 +165,10 @@
       "default": false,
       "description": "Dims the start icon and the title. A link loses its href, keeps focus with role link and aria-disabled (anatomy rule 5), and linkProps.onClick does not run. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
     },
+    "ListItem.swipe": {
+      "type": "node",
+      "description": "Swipe actions for the row (order M9.7, proposed): a SwipeActions element with start, end, fullSwipe and menuLabel and no children. The row's own parts are what moves; the SwipeActions root becomes the row's last child, part swipe, an overlay holding the action groups and the menu button. Ignored on a disabled row."
+    },
     "ListSection.header": {
       "type": "node",
       "description": "The section heading above its rows (part section-header, an h3 by default). It names the section's nested list and takes focus (tabindex -1) when a SectionIndex jumps to the section."
@@ -182,7 +194,13 @@
   "states": [
     "data-active",
     "data-disabled",
-    "data-pressed"
+    "data-pressed",
+    "closed",
+    "open-start",
+    "open-end",
+    "data-dragging",
+    "data-armed",
+    "data-settling"
   ],
   "a11y": {
     "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one. A list of sections is a ul with role group (named) or none (unnamed) holding li elements with role presentation; each holds a heading and a nested list named by it, so a reader says list, 4 items per section.",
@@ -191,7 +209,8 @@
       "Tab": "Moves to the next row link or row action",
       "Shift+Tab": "Moves to the previous row link or row action",
       "Enter": "Follows the focused row link, or activates the focused action",
-      "Space": "Activates the focused action button"
+      "Space": "Activates the focused action button",
+      "Shift+F10": "On a row with swipe actions, opens the menu of those actions (SwipeActions)"
     },
     "announce": "The link name is the title only; the description, end and actions are read as the row's other content. Name each action with the row it acts on: Delete mail from Sara.",
     "native": {
@@ -206,7 +225,8 @@
       "An active row without a link carries aria-current on the li.",
       "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it.",
       "Sections (order M9.2, proposed): the nested list of a section is its own List root with the outer size and variant, so an inset list draws one card per section and every row rule applies. The outer list of sections draws no fill and carries no data-variant. Rows and sections do not mix in one List.",
-      "Header and footer take the start edge and line up with the row text, so they align right in Arabic. The header is muted text at font.size.s (4.5:1); the footer the same at regular weight."
+      "Header and footer take the start edge and line up with the row text, so they align right in Arabic. The header is muted text at font.size.s (4.5:1); the footer the same at regular weight.",
+      "Swipe rows (order M9.7, proposed): the swipe part is a SwipeActions root and carries its states (data-state closed, open-start or open-end; data-dragging, data-armed, data-settling). The row clips, sets touch-action pan-y, and moves its parts by --_list-shift while the swipe is dragged, open or settling; once closed and settled no transform is left, so the row link covers the row again. The menu button of SwipeActions is the path that needs no drag; Shift+F10 in the row opens it."
     ]
   },
   "content": {
@@ -251,7 +271,10 @@
     "border.width.strong",
     "opacity.disabled",
     "color.focus.ring",
-    "font.weight.regular"
+    "font.weight.regular",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "size.control.md"
   ],
   "motion": "list-stagger",
   "frameworks": {
@@ -307,7 +330,20 @@
     {
       "wrong": "ListItem rows and ListSection parts in one List",
       "right": "Every row inside a ListSection once the list has sections"
+    },
+    {
+      "wrong": "A SwipeActions element wrapped around a ListItem",
+      "right": "ListItem swipe={<SwipeActions ... />}, so the row stays the list item and its parts stay the List's"
     }
   ],
-  "since": "0.1.0"
+  "since": "0.1.0",
+  "contract": {
+    "keys": {
+      "Shift+F10": {
+        "case": "variants",
+        "focus": "[data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) > a[data-part='title']",
+        "expect": "focus-moves"
+      }
+    }
+  }
 }

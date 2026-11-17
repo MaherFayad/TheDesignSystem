@@ -1,0 +1,231 @@
+{
+  "name": "SwipeActions",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "Actions hidden at either side of one list row, revealed by a horizontal swipe, with a menu button that holds the same actions for anyone who cannot or does not swipe. On ios the row slides to show square tone filled actions and a long swipe runs the first one; on android the same reveal with square ends; on web the menu button shows on hover and focus, and a mouse drags only when the app allows it.",
+  "useWhen": [
+    "Two or three quick actions on rows of a long list people triage: mail, messages, tasks, saved items",
+    "An action people repeat on many rows (archive, delete, mark read) that would crowd every row as a visible button"
+  ],
+  "avoidWhen": [
+    "The only way to reach an action: every swipe action must also be somewhere people can see",
+    "Rows of a selection list or a table",
+    "More than three actions on a side",
+    "A row that already has its own horizontal gesture, such as a carousel or a slider"
+  ],
+  "insteadUse": {
+    "Actions shown on every row": "ListItem actions with IconButton",
+    "Many actions for one row": "DropdownMenu from a row IconButton",
+    "Picking rows to act on together": "ListBox with selection"
+  },
+  "anatomy": [
+    "root",
+    "content",
+    "actions",
+    "action",
+    "menu"
+  ],
+  "slots": {
+    "content": {
+      "accepts": "any",
+      "max": 1
+    },
+    "actions": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 3
+    },
+    "menu": {
+      "accepts": [
+        "IconButton"
+      ],
+      "min": 1,
+      "max": 1
+    }
+  },
+  "props": {
+    "start": {
+      "type": "array",
+      "description": "Actions at the inline start (the left in English, the right in Arabic), revealed by a swipe toward the inline end. Each is { label, icon, tone, onSelect, undoable }. At most three; more are dropped. The first sits at the outer edge."
+    },
+    "end": {
+      "type": "array",
+      "description": "Actions at the inline end (the right in English, the left in Arabic), revealed by a swipe toward the inline start. The same shape and limit as start."
+    },
+    "start[].tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "warning",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "The fill of the action: gray, the tint, orange or red. The label meets 4.5:1 on each. Sets data-tone on the action, and on its group from the edge action."
+    },
+    "start[].undoable": {
+      "type": "boolean",
+      "default": false,
+      "description": "The app can undo the action (an Undo in a toast). A first end action that is danger runs by a full swipe only when this is true."
+    },
+    "fullSwipe": {
+      "type": [
+        "end",
+        "start",
+        "none"
+      ],
+      "description": "The side whose first action a long swipe runs on release. Default: end when the first end action is not danger or is undoable, else none. A danger action with no undo never runs from a full swipe unless the app asks."
+    },
+    "menuLabel": {
+      "type": "string",
+      "required": true,
+      "description": "The accessible name of the menu button and of each action group, naming the row: Actions for Sara Alqahtani, خيارات رسالة سارة القحطاني."
+    },
+    "pointer": {
+      "type": "boolean",
+      "default": false,
+      "description": "Lets a mouse drag the row too. Touch and pen always swipe. Off by default on the web, where the menu button is the mouse path."
+    },
+    "children": {
+      "type": "node",
+      "description": "The content that moves, in the content part. Leave it out when passing SwipeActions to ListItem as swipe: the row is the content and the root becomes the row's swipe part."
+    }
+  },
+  "states": [
+    "closed",
+    "open-start",
+    "open-end",
+    "data-dragging",
+    "data-armed",
+    "data-settling"
+  ],
+  "a11y": {
+    "role": "No role on the root. Each action group is a group named by menuLabel and is inert while closed, so a reader and Tab meet only the menu button. The menu button opens a menu of every action (role menu, menuitem each).",
+    "focus": "The menu button is a Tab stop after the row's content. On touch it is visually hidden until focus is in the row, then drawn; with a mouse that hovers it is always drawn. While the row is open its actions are Tab stops too. Escape closes an open row; focus inside a closing group moves to the menu button first.",
+    "keys": {
+      "Tab": "Moves to the menu button after the row's content, and to the open actions while the row is open",
+      "Shift+F10": "Opens the menu of every action from anywhere in the row (the path that needs no drag, WCAG 2.5.7)",
+      "ContextMenu": "Opens the same menu",
+      "Enter": "On the menu button, opens the menu; on a menu item or an open action, runs it",
+      "Escape": "Closes the open menu, and then an open row",
+      "Pointer": "A touch or pen press that moves 10px more across than down swipes: the row follows the finger; let go past half the actions it opens, past the full swipe threshold it runs the first action of that side, else it springs closed. A flick opens or closes by its direction. A tap on the open row's content or outside it closes it. The menu button does every action with one tap and no drag (WCAG 2.5.7)."
+    },
+    "announce": "Actions for Sara Alqahtani, menu button. The menu reads each action by its label. Action groups are inert while closed, so nothing is read twice.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "Every swipe action is in the menu; the full swipe is never the only way (WCAG 2.5.7). A danger full swipe with no undo is off by default.",
+      "Revealed actions are at least 44 CSS px wide and fill the row's height; the menu button is a 32px IconButton (WCAG 2.5.8).",
+      "Labels sit on the tone fill at 4.5:1: danger and warning on their solid with the on solid text, accent on the primary fill with the primary text, neutral on surface 5 with the default text.",
+      "The row sets touch-action pan-y: a vertical pan scrolls the page, a horizontal one swipes. The swipe takes pointer capture once it starts, and the click that ends it is swallowed so a row link does not follow.",
+      "One row is open at a time: opening or dragging another closes the open one.",
+      "Right to left: end actions sit at the left and are revealed by a swipe toward the right; start actions sit at the right. The full swipe follows the same side.",
+      "Under forced colors the groups are Canvas and each action has a ButtonText outline.",
+      "Reduced motion: the settle after a release is a jump (duration tokens are 0ms); the row still follows the finger while it is dragged.",
+      "React Native (phase R5): one accessibilityActions entry per swipe action, named by its label, is the path that needs no drag."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One short verb: Delete, Archive, Mute, Pin, Mark unread. Sentence case.",
+      "menuLabel": "Actions for, then the row's title: Actions for Sara Alqahtani."
+    },
+    "ar": {
+      "label": "اسم قصير بدون تشكيل: حذف، أرشفة، كتم، تثبيت، تعليم كغير مقروء.",
+      "menuLabel": "خيارات، ثم عنوان الصف: خيارات رسالة سارة القحطاني."
+    }
+  },
+  "tokens": [
+    "size.touch-ios",
+    "size.control.md",
+    "space.4xs",
+    "space.xs",
+    "space.s",
+    "font.size.xs",
+    "font.leading.arabic.tight",
+    "color.bg.surface",
+    "color.bg.surface-5",
+    "color.text.default",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.state.warning.solid",
+    "color.state.warning.on-solid",
+    "color.state.danger.solid",
+    "color.state.danger.on-solid",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.quick",
+    "ease.out",
+    "border.width.default",
+    "z.raised"
+  ],
+  "motion": "drag-drop",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built: pointer events with capture, swipe logic from @the-system/shared swipe.ts, Radix DropdownMenu for the menu path",
+      "example": "SwipeActions.demo.tsx",
+      "note": "Motion: the row follows the pointer with no transition, then settles on the snappy spring (duration.spring-snappy) by a CSS transition; the full swipe arms with a quick fade of the other actions. Named under drag-drop, the catalog's drag and settle pattern; a swipe row pattern of its own is a request to the motion owner. Reduced motion: the settle is a jump."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM, swipe.ts for the logic, CDK Menu for the menu path."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws the row with react-native-gesture-handler Swipeable and Reanimated (both on the allow list), with accessibilityActions for every swipe action as the path that needs no drag."
+    }
+  },
+  "styles": {
+    "web": "The menu button at the inline end of the row shows on hover and focus; touch swipes as on a phone; square tone filled actions.",
+    "ios": "The row slides to reveal square tone filled actions with the icon above the label, the first at the edge; a long swipe stretches the edge action over the row and runs it.",
+    "android": "The same reveal with square action ends (owner decision 7, proposed): the row slides, the actions sit under the edge.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe yet (look order M9.13)."
+  },
+  "mistakes": [
+    {
+      "wrong": "A row whose delete is only behind a swipe",
+      "right": "Every swipe action is also in the menu, which SwipeActions draws for you"
+    },
+    {
+      "wrong": "fullSwipe end on a danger action with no undo",
+      "right": "fullSwipe none, or undoable true with an Undo in a toast after the delete"
+    },
+    {
+      "wrong": "Placing the actions with left and right",
+      "right": "start and end: the component mirrors them in Arabic"
+    },
+    {
+      "wrong": "A menuLabel of Actions on every row",
+      "right": "Actions for Sara Alqahtani, so each menu button has its own name"
+    },
+    {
+      "wrong": "Wrapping a ListItem in SwipeActions",
+      "right": "<ListItem swipe={<SwipeActions end={...} menuLabel=... />} />, so the row stays a list item"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "Shift+F10": {
+        "case": "variants",
+        "focus": "[data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) > a[data-part='title']",
+        "expect": "focus-moves"
+      },
+      "ContextMenu": {
+        "case": "variants",
+        "focus": "[data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) > a[data-part='title']",
+        "expect": "focus-moves"
+      },
+      "Escape": {
+        "case": "variants",
+        "open": "[data-ds='swipe-actions'] [data-part='menu']",
+        "expect": "focus-returns"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

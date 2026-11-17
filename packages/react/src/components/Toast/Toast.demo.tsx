@@ -10,6 +10,11 @@
 // carries lang and dir, picks the Arabic type and the Arabic close label,
 // and still sits in the page's corner. One Toaster per page, never one per
 // language.
+//
+// The banner (order M9.8, proposed): start leads the toast with an Avatar
+// (initials only, no photo) or a system icon, meta carries the time, and on
+// ios a timed toast has no close button. The danger banner keeps its close
+// button on every platform.
 import { useState } from 'react';
 import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
 import { Button } from '../Button';
@@ -24,6 +29,53 @@ const copy: Record<ToastTone, { title: string; description: string; trigger: str
   warning: { title: 'Storage almost full', description: 'You have 200 MB left on this plan.', trigger: 'Show warning toast' },
   danger: { title: 'Could not publish page', description: 'The server did not answer. Your draft is safe.', trigger: 'Show danger toast' },
 };
+
+const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000);
+
+function showMessage() {
+  toast({
+    lang: 'en',
+    start: { avatar: { name: 'Sara Haddad' } },
+    title: 'Sara Haddad',
+    description: 'The new floor plan is in the shared folder. Can you check the kitchen wall before the call?',
+    meta: new Date(),
+    dedupeKey: false,
+  });
+}
+
+function showQuietBanner() {
+  toast({
+    lang: 'en',
+    start: 'mail',
+    title: 'Invoice sent to Omar',
+    description: 'He gets a copy by email.',
+    meta: minutesAgo(5),
+    closable: false,
+  });
+}
+
+function showDangerBanner() {
+  toast.danger({
+    lang: 'en',
+    start: { avatar: { name: 'Sara Haddad' } },
+    title: 'Could not send your reply to Sara',
+    description: 'You are offline. The reply is kept as a draft.',
+    meta: new Date(),
+    // Ignored: a danger toast stays until closed, so it keeps its close button.
+    closable: false,
+  });
+}
+
+function showArabicMessage() {
+  toast({
+    lang: 'ar',
+    start: { avatar: { name: 'سارة الحداد' } },
+    title: 'سارة الحداد',
+    description: 'مخطط الدور الجديد في المجلد المشترك. تقدر تراجع جدار المطبخ قبل المكالمة؟',
+    meta: new Date(),
+    dedupeKey: false,
+  });
+}
 
 const files = ['brief.pdf', 'hero.png', 'logo.svg', 'notes.md', 'palette.json', 'type.css', 'grid.fig', 'cover.jpg'];
 
@@ -90,6 +142,36 @@ export default function ToastDemo() {
           {tones.map((tone) => (
             <Specimen key={tone} tone={tone} count={tone === 'danger' ? 3 : undefined} />
           ))}
+        </DemoGrid>
+        <DemoRow>
+          <Button data-demo-trigger="banner" onClick={showMessage}>
+            Show message banner
+          </Button>
+          <Button data-demo-trigger="banner-quiet" onClick={showQuietBanner}>
+            Show banner without close button
+          </Button>
+          <Button data-demo-trigger="banner-danger" tone="danger" onClick={showDangerBanner}>
+            Show danger banner
+          </Button>
+        </DemoRow>
+        <DemoGrid min="18rem">
+          <Toast
+            lang="en"
+            start={{ avatar: { name: 'Sara Haddad' } }}
+            title="Sara Haddad"
+            description="The new floor plan is in the shared folder. Can you check the kitchen wall before the call?"
+            meta={minutesAgo(2)}
+          />
+          <Toast lang="en" start="mail" title="Invoice sent to Omar" description="He gets a copy by email." meta="Yesterday" />
+          <Toast
+            lang="en"
+            tone="danger"
+            start={{ avatar: { name: 'Sara Haddad' } }}
+            title="Could not send your reply to Sara"
+            description="You are offline. The reply is kept as a draft."
+            meta="now"
+            onClose={() => undefined}
+          />
         </DemoGrid>
       </DemoCase>
 
@@ -180,7 +262,17 @@ export default function ToastDemo() {
           >
             إظهار تنبيه الخطأ
           </Button>
+          <Button data-demo-trigger="banner-ar" onClick={showArabicMessage}>
+            إظهار تنبيه الرسالة
+          </Button>
         </DemoRow>
+        <Toast
+          lang="ar"
+          start={{ avatar: { name: 'سارة الحداد' } }}
+          title="سارة الحداد"
+          description="مخطط الدور الجديد في المجلد المشترك. تقدر تراجع جدار المطبخ قبل المكالمة؟"
+          meta={minutesAgo(5)}
+        />
         <Toast
           tone="danger"
           title="تعذر نشر الصفحة"

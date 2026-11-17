@@ -31,6 +31,18 @@
  * separator that draws the row fill under its content, and the hover fill
  * of a linked row travels from the row the pointer left. Without the span
  * the row draws its own fill. In forced colors the span is hidden.
+ *
+ * Swipe rows (order M9.7, proposed): a row whose last child is a
+ * SwipeActions root (part swipe) clips, leaves vertical pans to the page,
+ * and moves its other children by --_list-shift (motion plumbing, written
+ * inline on the row by the swipe while it is dragged, open or settling; the
+ * transform is gone again once the row is closed and settled, so the link's
+ * hit area covers the row). The settle uses --_list-duration and
+ * --_list-ease (the snappy spring). --_list-swipe-menu is the room a swipe
+ * row keeps at its inline end while the menu button of SwipeActions is
+ * drawn (a mouse that hovers, or focus in the row). The row sets
+ * --_swipe-actions-menu-inset on the swipe part so the button lines up with
+ * the row padding.
  */
 @layer ds.base {
   [data-ds='list'] {
@@ -52,6 +64,10 @@
     --_list-description-fg: var(--ds-color-text-muted);
     --_list-separator-color: var(--ds-color-border-hairline);
     --_list-ring-color: var(--ds-color-focus-ring);
+    --_list-shift: 0px;
+    --_list-duration: var(--ds-duration-spring-snappy);
+    --_list-ease: var(--ds-ease-spring-snappy);
+    --_list-swipe-menu: calc(var(--ds-size-control-md) + var(--ds-space-xs));
 
     display: flex;
     flex-direction: column;
@@ -242,6 +258,43 @@
     grid-area: actions;
     align-items: center;
     gap: var(--ds-space-4xs);
+  }
+
+  /* ------------------------------------------------------- swipe rows */
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) {
+    overflow: clip;
+    touch-action: pan-y;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='swipe'] {
+    --_swipe-actions-menu-inset: var(--_list-padding-inline);
+  }
+
+  [data-ds='list']
+    > [data-part='item']:has(> [data-part='swipe']:is([data-dragging], [data-settling], [data-state='open-start'], [data-state='open-end']))
+    > :not([data-part='swipe']) {
+    transform: translateX(var(--_list-shift));
+    transition: transform var(--_list-duration) var(--_list-ease);
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe'][data-dragging]) {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe'][data-dragging]) > :not([data-part='swipe']) {
+    transition: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']) {
+      padding-inline-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
+    }
+  }
+
+  [data-ds='list'] > [data-part='item']:has(> [data-part='swipe']):focus-within {
+    padding-inline-end: calc(var(--_list-padding-inline) + var(--_list-swipe-menu));
   }
 
   /* --------------------------------------------------------- sections */

@@ -284,7 +284,7 @@ describe('AlertDialog', () => {
   it('renders the demo with a trigger per case and no native title', () => {
     const { container } = render(<AlertDialogDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'one', 'long-text', 'long-arabic', 'loading', 'error']);
+    expect(cases).toEqual(['variants', 'fields', 'one', 'long-text', 'long-arabic', 'loading', 'error']);
     expect(container.querySelectorAll('[data-demo-case="variants"] [data-demo-trigger]').length).toBe(5);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();

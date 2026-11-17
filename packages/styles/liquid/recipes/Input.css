@@ -13,4 +13,9 @@
   [data-style='liquid'] [data-ds='input']:not([data-readonly]) {
     --_input-bg: var(--ds-color-bg-surface);
   }
+
+  /* ios (order F1): the Input inside a SearchField is its text only; the field draws the fill, so the surface above does not draw a box inside the capsule. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
+    --_input-bg: transparent;
+  }
 }

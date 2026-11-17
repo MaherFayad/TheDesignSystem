@@ -1,12 +1,14 @@
 // List demo. Cases: variants, empty, one, many, too-many, long-text,
 // long-arabic, disabled. Sections (order M9.2) show in variants (each
 // variant), many (settings groups with headers and footers) and
-// long-arabic. No loading, error or readonly: a list that loads
+// long-arabic. Variants also shows swipe rows (order M9.7); the
+// SwipeActions demo has the full set. No loading, error or readonly: a list that loads
 // shows Skeleton rows, and a failed load is the page's message.
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
 import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
+import { SwipeActions } from '../SwipeActions';
 import { List, ListItem, ListSection, type ListSize, type ListVariant } from './index';
 
 const variants: ListVariant[] = ['plain', 'divided', 'inset'];
@@ -71,6 +73,30 @@ export default function ListDemo() {
               </ListSection>
             </List>
           ))}
+        </DemoGrid>
+        <DemoGrid min="18rem">
+          <List variant="inset" aria-label="Inbox with swipe actions">
+            {mail.map((m, i) => (
+              <ListItem
+                key={m.from}
+                href={`#swipe-${i}`}
+                start={m.icon}
+                title={m.from}
+                description={m.subject}
+                end={m.time}
+                swipe={
+                  <SwipeActions
+                    menuLabel={`Actions for ${m.from}`}
+                    start={[{ label: 'Mark read', icon: 'mail', tone: 'accent', onSelect: () => undefined }]}
+                    end={[
+                      { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined },
+                      { label: 'Mute', icon: 'bell-off', onSelect: () => undefined },
+                    ]}
+                  />
+                }
+              />
+            ))}
+          </List>
         </DemoGrid>
         <Theme lang="ar">
           <DemoGrid min="18rem">

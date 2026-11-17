@@ -163,14 +163,13 @@
    */
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-disabled], [data-readonly]) > [data-part='control']:active,
   [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state][data-pressed]:not([data-disabled], [data-readonly]) > [data-part='control'] {
-    /* The ring that keeps the lens at 3:1 on the track is a hairline here, as the kit draws the lens edge; white on the fill it still measures over 3:1. */
-    --_switch-thumb-ring-width: var(--ds-border-width-default);
+    /* Order F1: no ring and no hard line. A soft light along the top, a soft shade inside the lower edge and one soft lift; the lens is told from the track by its brightness and its lift. */
+    --_switch-thumb-ring-width: 0px;
+    --_switch-thumb-edge-width: 0px;
     --_switch-thumb-shadow:
-      inset 0 var(--ds-border-width-default) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 75%, transparent),
-      inset 0 calc(-1 * var(--ds-border-width-default)) 0 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 35%, transparent),
-      inset 0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent),
-      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent),
-      var(--ds-elevation-card-hover);
+      inset 0 var(--ds-border-width-default) var(--ds-border-width-strong) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 70%, transparent),
+      inset 0 calc(-1 * var(--ds-space-fixed-2xs)) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent),
+      0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-xl) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
   }
 
   /* Where the lens cannot be drawn, the held thumb stays solid: it still lifts and stretches. */
@@ -190,6 +189,48 @@
   [data-style='liquid'][data-contrast='more'][data-platform='ios'] [data-ds='switch'] {
     --_switch-thumb-solid-pressed: 1;
     --_switch-thumb-highlight-opacity-pressed: 0;
+  }
+
+  /*
+   * ios (order F1, owner ruling): the platform's switch. The on fill is the
+   * platform green, the off track a plain gray fill, and there is no track
+   * edge and no thumb ring in any state: the shapes separate by fill and a
+   * soft low shadow. The 3:1 outline ruling is waived for this one control
+   * on ios. The green is the closest token there is (the window zoom light,
+   * mixed toward the success fill in dark); a platform green token is asked
+   * of the lead. An invalid or read only switch keeps its edge.
+   */
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
+    --_switch-fill: var(--ds-color-window-light-zoom);
+    --_switch-fill-border: transparent;
+    --_switch-border-color: transparent;
+    --_switch-border-color-hover: transparent;
+    --_switch-thumb-ring-width: 0px;
+    --_switch-thumb-edge-width: 0px;
+    --_switch-thumb-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 16%, transparent);
+  }
+
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) {
+    --_switch-fill: color-mix(in srgb, var(--ds-color-window-light-zoom) 75%, var(--ds-color-state-success-fill));
+    --_switch-thumb-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 30%, transparent);
+  }
+
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]),
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]):hover {
+    --_switch-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 9%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]),
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state='unchecked']:not([data-invalid], [data-readonly]):hover {
+    --_switch-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, var(--ds-color-glass-backdrop-dark));
+  }
+
+  [data-style='liquid'][data-platform='ios'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 9%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  [data-style='liquid'][data-platform='ios'][data-scheme='dark'] [data-ds='switch'][data-state]:not([data-invalid], [data-readonly]) > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 28%, var(--ds-color-glass-backdrop-dark));
   }
 
   /*

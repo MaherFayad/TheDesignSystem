@@ -2,7 +2,7 @@
   "name": "Sheet",
   "kind": "component",
   "family": "overlays",
-  "summary": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path.",
+  "summary": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path. On web and ios a panel from the bottom with the close control in the header (round, at the top leading corner on ios) and an optional confirm at the inline end; on android a bottom sheet whose confirm is a text button in the top bar.",
   "useWhen": [
     "A quick task on a phone layout: share, pick an option, a short form",
     "More options for an item where a menu would be too cramped on touch",
@@ -33,7 +33,8 @@
     "description",
     "body",
     "footer",
-    "close"
+    "close",
+    "confirm"
   ],
   "parts": {
     "SheetContent": "panel",
@@ -42,7 +43,8 @@
     "SheetBody": "body",
     "SheetFooter": "footer",
     "TitleBar": "titlebar",
-    "WindowControls": "controls"
+    "WindowControls": "controls",
+    "SheetConfirm": "confirm"
   },
   "slots": {
     "title": {
@@ -137,6 +139,24 @@
     "data-autofocus": {
       "type": "boolean",
       "description": "Put on any focusable element inside the sheet to take focus on open."
+    },
+    "label": {
+      "type": "string",
+      "description": "SheetConfirm (order M9.6, proposed): what the confirm does, a verb plus a noun (Save list). Required: the visible label, and the accessible name where only the icon is drawn."
+    },
+    "icon": {
+      "type": "node",
+      "default": "check",
+      "description": "SheetConfirm: a system icon name or a node, hidden from assistive tech."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "SheetConfirm: aria-disabled. It stays in the tab order and a press does nothing."
+    },
+    "SheetConfirm": {
+      "type": "node",
+      "description": "Order M9.6, proposed: the confirm part, a solid Button with the icon and the label. Put it as a direct child of SheetContent; it moves into the header after the close control (or into the title bar's actions). A press runs onClick, then closes the sheet unless onClick calls event.preventDefault()."
     }
   },
   "states": [
@@ -169,19 +189,22 @@
       "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back.",
       "Order 1.29, detents: the handle is a native button (part handle) with the keys above and a press that takes the next detent, the button path for the drag (WCAG 2.5.7). A drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast, by position and speed; a flick or a drag well below the smallest closes it when dismissible. The math is shared with Angular (packages/motion helpers/sheet-detents.ts). Motion is transform only.",
       "Order 1.29, review 3 N28: the drag speed is read over the last 100ms with the release as the last sample, so a drag that pauses before the release never counts as a flick.",
-      "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet."
+      "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
+      "Order M9.6, proposed: the confirm part (SheetConfirm) sits in the header after the close control, so the tab order is close, then confirm. Its label is its accessible name (WCAG 4.1.2); where the platform draws the icon only (ios) a Tooltip shows the label on hover and focus. On ios it is a round tint button of 44 at the top inline end (WCAG 2.5.8), the mirror of the close control; on android a text button in the top bar; on web a solid Button with the icon and the label. In right to left layouts it sits at the left. While disabled it is aria-disabled and stays focusable."
     ]
   },
   "content": {
     "en": {
       "title": "The task as a noun phrase or a question: Share Spring launch.",
       "buttons": "Verb plus noun: Send invite, Cancel invite. Never OK or Continue.",
-      "close": "Close sheet"
+      "close": "Close sheet",
+      "confirm": "Verb plus noun: Save list, Add event. Never Done, OK or Confirm."
     },
     "ar": {
       "title": "Noun form, no diacritics: مشاركة اللوحة",
       "buttons": "Noun form labels: إرسال الدعوة، إلغاء الدعوة.",
-      "close": "إغلاق النافذة السفلية"
+      "close": "إغلاق النافذة السفلية",
+      "confirm": "Noun form: حفظ القائمة."
     }
   },
   "tokens": [
@@ -275,6 +298,10 @@
     {
       "wrong": "Waiting for transitionend after a drag",
       "right": "The close runs from state; under reduced motion every duration is 0"
+    },
+    {
+      "wrong": "A confirm Button in the footer of a phone sheet that also has a header",
+      "right": "SheetConfirm, in the header at the inline end, the mirror of the close control"
     }
   ],
   "contract": {
@@ -288,7 +315,8 @@
       "controls",
       "header",
       "title",
-      "close"
+      "close",
+      "confirm"
     ]
   },
   "since": "0.1.0"

@@ -1,0 +1,2487 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/home/user/TheDesignSystem/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "/home/user/TheDesignSystem/packages/contract-tests/playwright.config.ts"
+    ],
+    "configFile": "/home/user/TheDesignSystem/packages/contract-tests/playwright.config.ts",
+    "rootDir": "/home/user/TheDesignSystem/packages/contract-tests/src",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/user/TheDesignSystem/packages/contract-tests/src",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.ts$/"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/contract-react-m9-8-ios.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 4,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "contract.spec.ts",
+      "file": "contract.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Toast: anatomy, desk",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 90230,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 16,
+                        "line": 167
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=desk&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:382:15"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:23.426Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-desk/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-97ed62840143803b154c",
+          "file": "contract.spec.ts",
+          "line": 376,
+          "column": 5
+        },
+        {
+          "title": "Toast: anatomy, liquid",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "optional parts in liquid: action, close, count, description, meta, progress, start, title"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 11501,
+                  "error": {
+                    "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 60,
+                      "line": 394
+                    },
+                    "snippet": "  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 60,
+                        "line": 394
+                      },
+                      "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=liquid&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:24.385Z",
+                  "annotations": [
+                    {
+                      "type": "note",
+                      "description": "optional parts in liquid: action, close, count, description, meta, progress, start, title"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-liquid/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 60,
+                    "line": 394
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-0957420126487e9ab006",
+          "file": "contract.spec.ts",
+          "line": 376,
+          "column": 5
+        },
+        {
+          "title": "Toast: anatomy, neutral",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "optional parts in neutral: action, close, count, description, meta, progress, start, title"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 12860,
+                  "error": {
+                    "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60",
+                    "location": {
+                      "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                      "column": 60,
+                      "line": 394
+                    },
+                    "snippet": "  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 60,
+                        "line": 394
+                      },
+                      "message": "Error: Toast anatomy on http://localhost:36935/c/toast?style=neutral&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"no root element found\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  392 |       if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);\n  393 |       failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));\n> 394 |       expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);\n      |                                                            ^\n  395 |     });\n  396 |   }\n  397 |\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:394:60"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:22.578Z",
+                  "annotations": [
+                    {
+                      "type": "note",
+                      "description": "optional parts in neutral: action, close, count, description, meta, progress, start, title"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-neutral/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                    "column": 60,
+                    "line": 394
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-81118f3d519d2c177ac4",
+          "file": "contract.spec.ts",
+          "line": 376,
+          "column": 5
+        },
+        {
+          "title": "Toast: anatomy, studio",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "timedOut",
+                  "duration": 90272,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 16,
+                        "line": 167
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:382:15"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:23.276Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-anatomy-studio/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-43289a27eb2ca6549b45",
+          "file": "contract.spec.ts",
+          "line": 376,
+          "column": 5
+        },
+        {
+          "title": "Toast: variant attributes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 91028,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 16,
+                        "line": 167
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:36935/c/toast?style=studio&scheme=dark&platform=ios&dir=ltr&lang=en&chrome=0\", waiting until \"load\"\u001b[22m\n\n\n  165 |     .catch(() => false);\n  166 |   if (!closed) {\n> 167 |     await page.goto(page.url());\n      |                ^\n  168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n  169 |   }\n  170 | }\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:167:16)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:404:13"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:42.240Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-variant-attributes/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-c7ca679c701ac1fe2c5e",
+          "file": "contract.spec.ts",
+          "line": 398,
+          "column": 3
+        },
+        {
+          "title": "Toast: state attributes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 87544,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:23:43.043Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-a1cdd8901a51874aaebc",
+          "file": "contract.spec.ts",
+          "line": 415,
+          "column": 3
+        },
+        {
+          "title": "Toast: keyboard map",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "overlay: keys are pressed with the first trigger's root open; focus stays inside only when the open root has aria-modal"
+                },
+                {
+                  "type": "note",
+                  "description": "F8: not checked, no generic check fits and no contract.keys hint"
+                },
+                {
+                  "type": "note",
+                  "description": "Enter: not checked, no enabled root is a button (the generic check needs a button element or role button; add contract.keys for others)"
+                },
+                {
+                  "type": "note",
+                  "description": "Escape: focus was moved into the opened root before the key press"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 41359,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:00.286Z",
+                  "annotations": [
+                    {
+                      "type": "note",
+                      "description": "overlay: keys are pressed with the first trigger's root open; focus stays inside only when the open root has aria-modal"
+                    },
+                    {
+                      "type": "note",
+                      "description": "F8: not checked, no generic check fits and no contract.keys hint"
+                    },
+                    {
+                      "type": "note",
+                      "description": "Enter: not checked, no enabled root is a button (the generic check needs a button element or role button; add contract.keys for others)"
+                    },
+                    {
+                      "type": "note",
+                      "description": "Escape: focus was moved into the opened root before the key press"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-ab5276d89487ea3de498",
+          "file": "contract.spec.ts",
+          "line": 434,
+          "column": 3
+        },
+        {
+          "title": "Toast: target size, desk compact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10052,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:01.420Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-ad0685c1c46a09adfa1b",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, desk default",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 8943,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:11.803Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-1d14ddbbfb8457a6d23c",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, desk comfortable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7971,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:12.779Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-3d48b0749f62ba1a8f19",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size open, desk",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 90525,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 52,
+                        "line": 168
+                      },
+                      "message": "Error: locator.waitFor: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-demo-case]').first()\u001b[22m\n\n\n  166 |   if (!closed) {\n  167 |     await page.goto(page.url());\n> 168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n      |                                                    ^\n  169 |   }\n  170 | }\n  171 |\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:168:52)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:582:15"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:19.518Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-desk/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-b80f58d681699d16e049",
+          "file": "contract.spec.ts",
+          "line": 575,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, liquid compact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10403,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:20.776Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-3b4e0fe68aac29d621c2",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, liquid default",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10439,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:21.265Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-fc2e458ec2169d097f3e",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, liquid comfortable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10442,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:31.262Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-35a024bcdfa13d134607",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size open, liquid",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 90666,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts",
+                        "column": 52,
+                        "line": 168
+                      },
+                      "message": "Error: locator.waitFor: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-demo-case]').first()\u001b[22m\n\n\n  166 |   if (!closed) {\n  167 |     await page.goto(page.url());\n> 168 |     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });\n      |                                                    ^\n  169 |   }\n  170 | }\n  171 |\n    at closeFresh (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:168:52)\n    at eachOpened (/home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:189:5)\n    at /home/user/TheDesignSystem/packages/contract-tests/src/contract.spec.ts:582:15"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:31.800Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-liquid/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-be80baa7e69cd310f5e5",
+          "file": "contract.spec.ts",
+          "line": 575,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, neutral compact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6590,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:41.815Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-36e18df4c3059b394708",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, neutral default",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 8661,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:43.124Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-6a9a20bcd6907e5c77fd",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, neutral comfortable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6932,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:48.423Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-01eedcc11f038f74af59",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size open, neutral",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "10 roots opened and measured"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 3,
+                  "status": "timedOut",
+                  "duration": 90417,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:51.956Z",
+                  "annotations": [
+                    {
+                      "type": "note",
+                      "description": "10 roots opened and measured"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/user/TheDesignSystem/packages/contract-tests/.out/6432/test-results/contract-Toast-target-size-open-neutral/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-5b1d4a9f815a528ac4ad",
+          "file": "contract.spec.ts",
+          "line": 575,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, studio compact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6821,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:25:55.465Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-725f16496440324316b1",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, studio default",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:26:02.385Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-66d757c40b924ca00e98",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size, studio comfortable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6443,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:26:09.401Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-bc914f9cad26590f101e",
+          "file": "contract.spec.ts",
+          "line": 565,
+          "column": 7
+        },
+        {
+          "title": "Toast: target size open, studio",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "note",
+                  "description": "10 roots opened and measured"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 79382,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:26:16.012Z",
+                  "annotations": [
+                    {
+                      "type": "note",
+                      "description": "10 roots opened and measured"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-58233dea6ac9bc8fe968",
+          "file": "contract.spec.ts",
+          "line": 575,
+          "column": 7
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, desk ios en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4243,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:26:54.752Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-5f614e87492deaae9671",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, desk ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:26:59.383Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-3bfba78e72cedfb4cef2",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, liquid ios en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6988,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:06.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-3becbc4e65f51f0af400",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, liquid ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 8158,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:06.312Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-667e3dc164e01a0d08a8",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, neutral ios en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7253,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:14.476Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-d30114f9917d243049d1",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, neutral ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7195,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:14.542Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-6ed54336f74b0a4e6847",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, studio ios en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5930,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:21.937Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-adf115e2b215056be751",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: no sideways scroll at 320px and no title attribute, studio ios ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 5725,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:21.963Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-aa942a96bb31e506f368",
+          "file": "contract.spec.ts",
+          "line": 599,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe, desk dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 10283,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:26.692Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-0c09837c39ea3a156c3c",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, desk dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 9881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:27.702Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e25076eb1b0c343b0558",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, desk dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:28.078Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-5f297aab32a75591ba55",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, desk dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 9293,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:35.464Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-d610f7ede84c774f7ac3",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, desk light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10467,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:36.094Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-2da1b1249abb0c048149",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, desk light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 10604,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:37.673Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-72c31c4d58111c7afd4b",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, desk light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 10229,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:37.765Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-9dd1153bc600716f884f",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, desk light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 8379,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:44.880Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e3758ea884ca6113fbc8",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, liquid light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9059,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:46.653Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-385950d9186e25e4f09c",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, liquid light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 11012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:48.066Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-aec086fb7d4f2400be74",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, liquid light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 10673,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:48.313Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-83f441f860b715ffa2c6",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, liquid light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 9290,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:53.354Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-46ddb9467bc69f4b9752",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, liquid dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9310,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:56.040Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-acb3a6bed70be99125a5",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, liquid dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 11871,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:59.003Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-45e0b88d63916a3d40b9",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, liquid dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 12202,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:27:59.246Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-9b2945bba3541ee88146",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, liquid dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 11045,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:02.655Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-322b3557b531828dd1ac",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, neutral light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10186,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:05.588Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-13ee2ecf02b36ce4387d",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, neutral light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 11601,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:10.898Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-836939159d4db1e21943",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, neutral light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 11065,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:11.551Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-e89f16a1c68c3e649253",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, neutral light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 12574,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:13.814Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-0dc1f4164088fd8b334b",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, neutral dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11868,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:15.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-3e8e3431956b267fc21f",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, neutral dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 11087,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:22.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-98efd3861607e9d41374",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, neutral dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 9502,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:22.722Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-7dadbe6a8afae4ff6494",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, neutral dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10162,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:26.436Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-22e78cbac72edafb7ed3",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, studio dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8947,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:27.864Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-42a7d12ea28317fc470e",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, studio dark en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 9101,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:32.342Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-6438d0589b47b78cf7e1",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, studio dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 9545,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:33.648Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-dbda7f7788540458d90d",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, studio dark ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 12848,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:36.728Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-f302efece26553db611d",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, studio light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10234,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:36.863Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-ee43d467fe59ff2e92cd",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, studio light en ltr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 10401,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:41.477Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-a05977199ad56b884a09",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        },
+        {
+          "title": "Toast: axe, studio light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 8542,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:43.536Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-1afabb2a148cd46ca7a3",
+          "file": "contract.spec.ts",
+          "line": 614,
+          "column": 5
+        },
+        {
+          "title": "Toast: axe open, studio light ar rtl",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7041,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T11:28:47.292Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "90a218284ea7aefb289c-2fb327acabc4f925f725",
+          "file": "contract.spec.ts",
+          "line": 620,
+          "column": 7
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T11:23:18.615Z",
+    "duration": 335959.787,
+    "expected": 55,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  }
+}

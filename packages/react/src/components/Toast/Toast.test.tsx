@@ -462,7 +462,8 @@ describe('Toast', () => {
     }
     expect(container.querySelector('[data-demo-trigger]')?.getAttribute('data-ds')).toBe('button');
     const tones = Array.from(container.querySelectorAll('[data-demo-case="variants"] [data-ds="toast"]')).map((t) => t.getAttribute('data-tone'));
-    expect(tones).toEqual(['neutral', 'info', 'success', 'warning', 'danger']);
+    // The five tones, then the three banner specimens of order M9.8.
+    expect(tones).toEqual(['neutral', 'info', 'success', 'warning', 'danger', 'neutral', 'neutral', 'danger']);
     const arabic = container.querySelector('[data-demo-case="long-arabic"] [data-ds="theme"]');
     expect(arabic?.getAttribute('lang')).toBe('ar');
     await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
@@ -621,6 +622,122 @@ describe('the line and the timer start together (review 3, N29)', () => {
     } finally {
       unsubscribe();
       now.mockRestore();
+    }
+  });
+});
+
+describe('the notification banner (order M9.8)', () => {
+  async function mount(platform: 'ios' | 'web' | 'android', options: ToastStoreOptions = {}) {
+    const time = setup(options);
+    const view = render(
+      <Theme platform={platform}>
+        <Toaster store={time.store} />
+      </Theme>,
+    );
+    await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+    return { ...time, view };
+  }
+  const closeOf = (el: HTMLElement | undefined) => el?.querySelector('[data-part="close"]') ?? null;
+
+  it('on ios a timed toast has no close button; danger, an action and closable true keep it', async () => {
+    const { toast, fire } = await mount('ios', { max: 5 });
+    fire(() => toast('Board duplicated'));
+    fire(() => toast.danger('Could not publish page'));
+    fire(() => toast({ title: 'Card moved', action: { label: 'Undo move', onAction: () => undefined } }));
+    fire(() => toast({ title: 'Link copied', closable: true }));
+    const [timed, danger, action, asked] = toasts();
+    expect(closeOf(timed)).toBeNull();
+    expect(closeOf(danger)).not.toBeNull();
+    expect(closeOf(action)).not.toBeNull();
+    expect(closeOf(asked)).not.toBeNull();
+  });
+
+  it('on web and android the close button shows by default, and closable false drops it on a timed toast', async () => {
+    for (const platform of ['web', 'android'] as const) {
+      const { toast, fire, view } = await mount(platform);
+      fire(() => toast('Board duplicated'));
+      fire(() => toast({ title: 'Invoice sent', closable: false }));
+      const [plain, quiet] = toasts();
+      expect(closeOf(plain)).not.toBeNull();
+      expect(closeOf(quiet)).toBeNull();
+      view.unmount();
+    }
+  });
+
+  it('refuses closable false on a danger toast, which keeps its close button and warns', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { toast, fire } = await mount('ios');
+    fire(() => toast.danger({ title: 'Could not send reply', closable: false }));
+    expect(closeOf(toasts()[0])).not.toBeNull();
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it('a banner without a close button closes with Escape once focused', async () => {
+    const { toast, fire } = await mount('ios', { exitTimeout: 50 });
+    fire(() => toast('Board duplicated'));
+    const [el] = toasts();
+    expect(closeOf(el)).toBeNull();
+    expect(el?.tabIndex).toBe(0);
+    act(() => el?.focus());
+    fireEvent.keyDown(el as HTMLElement, { key: 'Escape' });
+    await waitFor(() => expect(openToasts()).toHaveLength(0));
+  });
+
+  it('renders start in place of the icon and meta after the description, in that DOM order', async () => {
+    const { toast, fire } = await mount('ios');
+    const at = new Date();
+    fire(() =>
+      toast({
+        title: 'Sara Haddad',
+        description: 'The new floor plan is in the shared folder.',
+        start: { avatar: { name: 'Sara Haddad' } },
+        meta: at,
+        action: { label: 'Open plan', onAction: () => undefined },
+      }),
+    );
+    const [el] = toasts();
+    const parts = Array.from(el?.querySelectorAll(':scope > [data-part]') ?? []).map((p) => p.getAttribute('data-part'));
+    expect(parts).toEqual(['start', 'title', 'description', 'meta', 'action', 'close']);
+    const avatar = el?.querySelector('[data-part="start"] > [data-ds="avatar"]');
+    expect(avatar).not.toBeNull();
+    expect(avatar?.getAttribute('aria-hidden')).toBe('true');
+    const meta = el?.querySelector('[data-part="meta"]');
+    expect(meta?.tagName).toBe('TIME');
+    expect(meta?.getAttribute('datetime')).toBe(at.toISOString());
+    expect(meta?.textContent).toBe('now');
+  });
+
+  it('an icon name in start draws the icon, hidden from assistive tech', () => {
+    render(<Toast start="mail" title="Invoice sent" meta="Yesterday" />);
+    const start = document.querySelector('[data-ds="toast"] > [data-part="start"]');
+    expect(start?.getAttribute('aria-hidden')).toBe('true');
+    expect(start?.querySelector('[data-ds="icon"]')?.getAttribute('data-icon')).toBe('mail');
+    expect(document.querySelector('[data-ds="toast"] > [data-part="icon"]')).toBeNull();
+    const meta = document.querySelector('[data-ds="toast"] > [data-part="meta"]');
+    expect(meta?.tagName).toBe('SPAN');
+    expect(meta?.textContent).toBe('Yesterday');
+  });
+
+  it('writes an Arabic meta in Arabic with Western digits', () => {
+    render(<Toast lang="ar" title="سارة الحداد" meta={new Date(Date.now() - 5 * 60_000)} />);
+    const text = document.querySelector('[data-part="meta"]')?.textContent ?? '';
+    expect(text).toContain('5');
+    expect(text).not.toMatch(/[٠-٩]/);
+  });
+
+  it('announces meta after the description, once', async () => {
+    const { toast, fire } = await mount('ios');
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      fire(() => toast({ title: 'Sara Haddad', description: 'Sent the floor plan', meta: 'now' }));
+      await act(async () => {
+        vi.advanceTimersByTime(150);
+      });
+      const polite = document.body.querySelector('[data-toaster-announce="polite"]');
+      expect(polite?.textContent).toBe('Notification. Sara Haddad. Sent the floor plan. now.');
+    } finally {
+      vi.useRealTimers();
     }
   });
 });

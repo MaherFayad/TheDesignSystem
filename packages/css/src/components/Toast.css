@@ -106,6 +106,20 @@
  *   --_toast-edge-width      the width of the inline start edge in the tone color
  *                            (border.width-strong; 0px for no edge)
  *
+ * Order M9.8 (proposed): the banner parts. `start` takes the icon's grid
+ * area and leads the toast in place of the tone icon (an icon name, an
+ * Avatar or a node); `meta` is a short text or a time at the trailing top,
+ * after the description in the DOM so it is read after it. Only a toast
+ * that has them changes layout (:has), so every other toast is as before:
+ *   --_toast-meta-fg         the color of the meta text (a muted text token, 4.5:1)
+ * With start, the first column fits its content (an Avatar is wider than an
+ * icon). With meta, the card gets a fourth column for it in the title row,
+ * and the description and the action span under it. A toast with meta and
+ * no close button drops the empty close column. A style or a platform that
+ * writes its own --_toast-areas names a `meta` area for the part; on
+ * android the snackbar hides both parts (platform rule, order M9.13).
+ * The start part pops in on the same beat as the icon (the toast pattern).
+ *
  * A style tunes the stack with --_toast-peek and --_toast-depth, turns the
  * travel off with --_toast-enter-y: 0px and --_toast-enter-scale: 1, and the
  * spring back with --_toast-duration: 0s. The close button is the button
@@ -268,6 +282,8 @@
       'icon description close'
       'icon action close';
     --_toast-edge-width: var(--ds-border-width-strong);
+    /* Order M9.8: the meta text. */
+    --_toast-meta-fg: var(--ds-color-text-muted);
 
     position: relative;
     display: grid;
@@ -317,8 +333,8 @@
     animation: ds-toast-out var(--_toast-duration-out) var(--_toast-ease-out);
   }
 
-  /* The icon beat: the icon pops one stagger step after the card. */
-  [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'] {
+  /* The icon beat: the icon (or the start part in its place) pops one stagger step after the card. */
+  [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > :is([data-part='icon'], [data-part='start']) {
     animation: ds-toast-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--_toast-icon-delay) backwards;
   }
 
@@ -533,6 +549,47 @@
     margin-block-start: var(--ds-space-s);
   }
 
+  /* The start part: in the icon's area, centred on the text beside it, as a banner sets its app icon. */
+  [data-ds='toast'] > [data-part='start'] {
+    grid-area: icon;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: calc(var(--ds-font-size-s) * var(--ds-font-leading-snug));
+    color: var(--_toast-icon);
+  }
+
+  [data-ds='toast']:has(> [data-part='start']) {
+    --_toast-columns: auto minmax(0, 1fr) auto;
+  }
+
+  /* The meta part: a short text or a time, at the trailing top. */
+  [data-ds='toast'] > [data-part='meta'] {
+    grid-area: meta;
+    justify-self: end;
+    color: var(--_toast-meta-fg);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  [data-ds='toast']:has(> [data-part='meta']) {
+    --_toast-columns: auto minmax(0, 1fr) auto auto;
+    --_toast-areas:
+      'icon title meta close'
+      'icon description description close'
+      'icon action action close';
+  }
+
+  /* No close button: no empty column (and no gap) after the meta. */
+  [data-ds='toast']:has(> [data-part='meta']):not(:has(> [data-part='close'])) {
+    --_toast-columns: auto minmax(0, 1fr) auto;
+    --_toast-areas:
+      'icon title meta'
+      'icon description description'
+      'icon action action';
+  }
+
   /* The close button is a CloseButton carrying data-part="close". */
   [data-ds='toast'] > [data-part='close'] {
     grid-area: close;
@@ -566,7 +623,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
-    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > :is([data-part='icon'], [data-part='start']),
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
       animation: none;
@@ -584,7 +641,7 @@
   }
 
   :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast']:is([data-state='open'], [data-state='closed'], [data-state='closed'][data-swipe='end']),
-  :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'] {
+  :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > :is([data-part='icon'], [data-part='start']) {
     animation: none;
   }
 
@@ -626,7 +683,7 @@
     }
 
     [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
-    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > :is([data-part='icon'], [data-part='start']),
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
       animation: none;

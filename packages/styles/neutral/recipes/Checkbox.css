@@ -88,4 +88,17 @@
       --_radio-card-bg-checked: Canvas;
     }
   }
+
+  /*
+   * ios (order F1, owner ruling: Neutral follows the kit for colour on ios):
+   * the circle is empty while off, with the platform's thin light ring
+   * (packages/css/src/platform/ios.css), and filled with the tint while on,
+   * as the kit draws a chosen row; not the ink fill of the web.
+   */
+  [data-style='neutral'][data-platform='ios'] [data-ds='checkbox']:not([data-readonly], [data-invalid]) {
+    --_checkbox-bg: transparent;
+    --_checkbox-fill: var(--ds-color-primary-fill);
+    --_checkbox-fill-border: var(--ds-color-primary-fill);
+    --_checkbox-on-fill: var(--ds-color-primary-text);
+  }
 }

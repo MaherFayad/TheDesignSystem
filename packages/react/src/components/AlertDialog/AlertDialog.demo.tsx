@@ -2,9 +2,12 @@ import { useState, type MouseEvent } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
+import { Field } from '../Field';
+import { Input } from '../Input';
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogBody,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -143,6 +146,115 @@ function LoadingAlert({ fail = false }: { fail?: boolean }) {
   );
 }
 
+const fieldsCopy = {
+  en: {
+    folder: {
+      open: 'New folder',
+      title: 'New folder',
+      description: 'Name the folder for the 4 boards you picked.',
+      legend: 'Folder details',
+      name: 'Name',
+      placeholder: 'For example, spring launch',
+      cancel: 'Cancel',
+      action: 'Create folder',
+    },
+  },
+  ar: {
+    folder: {
+      open: 'مجلد جديد',
+      title: 'مجلد جديد',
+      description: 'اكتب اسم المجلد للوحات الأربع اللي اخترتها.',
+      legend: 'بيانات المجلد',
+      name: 'الاسم',
+      placeholder: 'مثلا، إطلاق الربيع',
+      cancel: 'إلغاء',
+      action: 'إنشاء المجلد',
+    },
+  },
+} as const;
+
+/** Order M9.6: an alert with one field. Focus opens on the field; Return runs the default action once it has a value. */
+function FolderAlert({ lang, trigger, long = false }: { lang: 'en' | 'ar'; trigger: string; long?: boolean }) {
+  const t = fieldsCopy[lang].folder;
+  const [name, setName] = useState('');
+  return (
+    <AlertDialog onOpenChange={(next) => (next ? setName('') : undefined)}>
+      <AlertDialogTrigger>
+        <Button data-demo-trigger={trigger}>{t.open}</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent
+        icon={false}
+        title={long && lang === 'ar' ? 'مجلد جديد للوحات إطلاق الربيع وكل ملفات الحملة المرفقة فيها' : t.title}
+        description={long && lang === 'ar' ? sample.ar.long : t.description}
+      >
+        <AlertDialogBody legend={t.legend}>
+          <Field label={t.name}>
+            <Input variant="plain" clearable value={name} onChange={(event) => setName(event.target.value)} placeholder={t.placeholder} />
+          </Field>
+        </AlertDialogBody>
+        <AlertDialogFooter>
+          <AlertDialogCancel>
+            <Button wrap>{t.cancel}</Button>
+          </AlertDialogCancel>
+          <AlertDialogAction primary requiresValue>
+            <Button wrap>{long && lang === 'ar' ? 'إنشاء المجلد ونقل اللوحات له' : t.action}</Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+/** Order M9.6: an alert with two fields, the first required. */
+function LinkAlert() {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button data-demo-trigger="two-fields">Add a link</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent icon={false} title="Add a link" description="The link shows on the board as a card.">
+        <AlertDialogBody legend="Link details">
+          <Field label="Address">
+            <Input variant="plain" clearable type="url" inputMode="url" autoComplete="url" placeholder="https://example.com" />
+          </Field>
+          <Field label="Title">
+            <Input variant="plain" clearable placeholder="Shown on the card" />
+          </Field>
+        </AlertDialogBody>
+        <AlertDialogFooter>
+          <AlertDialogCancel>
+            <Button>Cancel</Button>
+          </AlertDialogCancel>
+          <AlertDialogAction primary requiresValue>
+            <Button>Add link</Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+/** Order M9.6: a default action with no fields. Focus still opens on Cancel. */
+function DefaultActionAlert() {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button data-demo-trigger="default-action">Share with the team</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent icon={false} title="Share Spring launch with the team?" description="All 8 members can see and comment on it.">
+        <AlertDialogFooter>
+          <AlertDialogCancel>
+            <Button>Cancel</Button>
+          </AlertDialogCancel>
+          <AlertDialogAction primary>
+            <Button>Share board</Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 export default function AlertDialogDemo() {
   return (
     <DemoPage>
@@ -153,6 +265,19 @@ export default function AlertDialogDemo() {
         <Theme lang="ar" data-demo="content">
           <DemoRow label="عربي">
             <ArabicAlert trigger="arabic" />
+          </DemoRow>
+        </Theme>
+      </DemoCase>
+
+      <DemoCase id="fields" title="Fields and the default action: focus opens on the first field, Return runs the default action" lang="en">
+        <DemoRow>
+          <FolderAlert lang="en" trigger="one-field" />
+          <LinkAlert />
+          <DefaultActionAlert />
+        </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="عربي">
+            <FolderAlert lang="ar" trigger="fields-arabic" />
           </DemoRow>
         </Theme>
       </DemoCase>
@@ -210,6 +335,7 @@ export default function AlertDialogDemo() {
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
         <DemoRow>
           <ArabicAlert trigger="long-arabic" long />
+          <FolderAlert lang="ar" trigger="long-arabic-fields" long />
         </DemoRow>
       </DemoCase>
 

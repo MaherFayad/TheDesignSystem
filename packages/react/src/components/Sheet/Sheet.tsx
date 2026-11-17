@@ -38,6 +38,7 @@
 //             <h2 data-part="title">
 //             <p data-part="description">
 //             <button data-ds="close-button" data-part="close">
+//             <button data-ds="button" data-part="confirm">   order M9.6, optional: SheetConfirm
 //           <div data-part="body">
 //           <div data-part="footer">
 //
@@ -54,8 +55,19 @@
 // third of the pointer travel (RUBBER_SHARE), so the sheet gives a little
 // and springs back instead of not moving; with dismissible false, a drag
 // down gives the same third, so a refused close is felt as well.
+//
+// Order M9.6 (proposed): SheetConfirm, the confirm part. A SheetConfirm
+// child of SheetContent moves into the header (or the optional title bar's
+// actions), after the close control, so the tab order is close, then
+// confirm. It is one Button on every platform: the check icon and the label.
+// The platform draws it (a round tint button at the top inline end with the
+// label hidden on ios, a text button in the top bar on android); where the
+// label is not drawn (ios) a Tooltip shows it on hover. A press runs onClick
+// and then closes the sheet, unless onClick calls event.preventDefault().
+// While disabled it is aria-disabled and stays in the tab order.
 import {
   createContext,
+  isValidElement,
   use,
   useCallback,
   useEffect,
@@ -72,7 +84,9 @@ import {
 import { Dialog as RadixDialog } from 'radix-ui';
 import type { OverlaySize } from '@the-system/shared';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
-import { ButtonRoot } from '../Button/ButtonBase';
+import { ButtonRoot, type ButtonSlotContent } from '../Button/ButtonBase';
+import { Button } from '../Button';
+import { Tooltip } from '../Tooltip';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
@@ -264,6 +278,37 @@ export type SheetFooterProps = DialogFooterProps;
 /** The actions at the inline end. Cancel first, the primary action last. */
 export function SheetFooter(props: SheetFooterProps) {
   return <DialogFooter {...props} />;
+}
+
+export interface SheetConfirmProps extends Omit<ComponentProps<typeof RadixDialog.Close>, 'asChild' | 'children' | 'disabled'> {
+  /** What the confirm does, a verb plus a noun (Save list). Required: the visible label, and its accessible name where only the icon shows. */
+  label: string;
+  /** The icon: a system icon name or a node, hidden from assistive tech. Default check. */
+  icon?: ButtonSlotContent;
+  /** aria-disabled: it stays in the tab order and a press does nothing. Default false. */
+  disabled?: boolean;
+  /** Shows the loading look and keeps the sheet open while the work runs. Default false. */
+  loading?: boolean;
+}
+
+/**
+ * The confirm button in the header, at the inline end (order M9.6,
+ * proposed). Put it as a direct child of SheetContent; it moves into the
+ * header. A press runs onClick, then closes the sheet unless onClick calls
+ * event.preventDefault().
+ */
+export function SheetConfirm({ label, icon = 'check', disabled = false, loading = false, ...rest }: SheetConfirmProps) {
+  useSheetContext('SheetConfirm');
+  const theme = useTheme();
+  return (
+    <Tooltip content={label} disabled={theme.platform !== 'ios'}>
+      <RadixDialog.Close {...rest} asChild>
+        <Button data-part="confirm" size="sm" emphasis="solid" tone="accent" start={icon} disabled={disabled} loading={loading}>
+          {label}
+        </Button>
+      </RadixDialog.Close>
+    </Tooltip>
+  );
 }
 
 // ------------------------------------------------------------------ handle
@@ -487,7 +532,7 @@ export interface SheetContentProps
   description?: ReactNode;
   /** Accessible name of the close control. Default "Close sheet" (Arabic under lang ar). */
   closeLabel?: string;
-  /** SheetTitle, SheetDescription, SheetBody, SheetFooter. */
+  /** SheetTitle, SheetDescription, SheetConfirm (order M9.6), SheetBody, SheetFooter. */
   children?: ReactNode;
   /** Class name of the root, the layer that holds the backdrop and the panel. */
   className?: string;
@@ -541,7 +586,13 @@ export function SheetContent({ title, description, closeLabel, children, classNa
     closeLabel: closeLabel ?? words.close,
     closeDisabled: !ctx.dismissible,
   });
-  const { others } = split;
+  // A SheetConfirm child moves into the header, after the close control (order M9.6).
+  let confirm: ReactNode = null;
+  const others: ReactNode[] = [];
+  for (const child of split.others) {
+    if (!confirm && isValidElement(child) && child.type === SheetConfirm) confirm = child;
+    else others.push(child);
+  }
   // With the style's title bar (order 1.29, Dialog's pattern): the bar with the title, then the description.
   const header = titlebarOn ? (
     <>
@@ -561,10 +612,26 @@ export function SheetContent({ title, description, closeLabel, children, classNa
             />
           ) : undefined
         }
-        actions={controlsOn && !phone ? undefined : split.closeButton}
+        actions={
+          confirm ? (
+            <>
+              {controlsOn && !phone ? null : split.closeButton}
+              {confirm}
+            </>
+          ) : controlsOn && !phone ? undefined : (
+            split.closeButton
+          )
+        }
       />
       {split.descriptionNode}
     </>
+  ) : confirm ? (
+    <div data-part="header">
+      {split.titleNode}
+      {split.descriptionNode}
+      {split.closeButton}
+      {confirm}
+    </div>
   ) : (
     split.header
   );

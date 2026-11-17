@@ -17,12 +17,26 @@
 //           <span data-part="icon"><svg data-ds="icon"></span>
 //           <h2 data-part="title">
 //           <p data-part="description">
+//           <fieldset data-ds="fieldset" data-part="body" data-variant="inset">   order M9.6, optional
+//             <legend data-part="legend"><span data-visually-hidden>
+//             <div data-part="body"><Field><Input variant="plain"></div>
 //           <div data-part="footer">
 //             <button data-ds="button" data-part="cancel" data-dialog-cancel>
-//             <button data-ds="button" data-part="action">
+//             <button data-ds="button" data-part="action" data-primary>
 //
 // Focus opens on Cancel in every tone (the focus rule read as danger), so
-// Enter never runs the action by accident.
+// Enter never runs the action by accident. With a body of fields (order
+// M9.6, proposed) focus opens on the first field instead: the focus rule
+// takes the first field of the body part before the tone is read.
+//
+// Order M9.6 (proposed): the body part (AlertDialogBody) holds one or two
+// fields as rows of an inset Fieldset. It is the Fieldset root, carrying
+// the alert's body part. Its legend names the group for a screen reader and
+// is visually hidden: the title above is the visible heading. The default
+// action (AlertDialogAction primary) carries data-primary and is a solid
+// Button, tone accent, or danger in a danger alert. Return in a body field
+// runs it. With requiresValue it is aria-disabled while the first field of
+// the body is empty, and Return does nothing then.
 //
 // Optional parts (order 1.29, Dialog's pattern): a style that lists
 // `titlebar` under `optionalParts["alert-dialog"]` in its style.json gets a
@@ -34,10 +48,28 @@
 //           <div data-part="titlebar" data-ds="title-bar">        optional part
 //             <div data-part="controls"><WindowControls/></div>   optional part
 //             <h2 data-part="title"><span data-dialog-title>...</span></h2>
-import { Children, createContext, isValidElement, use, useCallback, useMemo, useRef, type ComponentProps, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import {
+  Children,
+  cloneElement,
+  createContext,
+  isValidElement,
+  use,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import { AlertDialog as RadixAlertDialog } from 'radix-ui';
-import type { OverlaySize, Tone } from '@the-system/shared';
+import { DIALOG_FIELD_SELECTOR, type OverlaySize, type Tone } from '@the-system/shared';
 import { Icon, type IconName } from '../Icon';
+import { Fieldset, type FieldsetProps } from '../Fieldset';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
@@ -50,6 +82,9 @@ export type AlertDialogTone = Extract<Tone, 'neutral' | 'danger'>;
 interface AlertDialogContextValue extends DialogBaseState {
   size: AlertDialogSize;
   tone: AlertDialogTone;
+  /** Whether the first field of the body holds a value; null with no field in the body. */
+  filled: boolean | null;
+  setFilled: (filled: boolean | null) => void;
 }
 
 const AlertDialogContext = createContext<AlertDialogContextValue | null>(null);
@@ -93,9 +128,10 @@ export function AlertDialog({
 }: AlertDialogProps) {
   const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
   const triggerRef = useRef<HTMLElement | null>(null);
+  const [filled, setFilled] = useState<boolean | null>(null);
   const value = useMemo<AlertDialogContextValue>(
-    () => ({ open, setOpen, size, tone, dismissible, triggerRef }),
-    [open, setOpen, size, tone, dismissible],
+    () => ({ open, setOpen, size, tone, dismissible, triggerRef, filled, setFilled }),
+    [open, setOpen, size, tone, dismissible, filled],
   );
   return (
     <RadixAlertDialog.Root open={open} onOpenChange={setOpen}>
@@ -195,15 +231,114 @@ export interface AlertDialogActionProps extends Omit<ComponentProps<typeof Radix
    * onClick to keep it open while the action runs, then close it from code.
    */
   children: ReactElement;
+  /**
+   * The default action (order M9.6, proposed). Stamps data-primary, makes
+   * the Button solid, tone accent (danger in a danger alert) unless the
+   * Button sets its own, and Return in a body field runs it. One per alert.
+   * Default false.
+   */
+  primary?: boolean;
+  /**
+   * The action needs a value: it is aria-disabled while the first field of
+   * the body is empty, so neither a press nor Return runs it. No effect
+   * without a body. Default false.
+   */
+  requiresValue?: boolean;
 }
 
-/** The action that cannot be undone. */
-export function AlertDialogAction({ children, ...rest }: AlertDialogActionProps) {
-  useAlertDialogContext('AlertDialogAction');
+/** The action that cannot be undone, or with primary, the default answer. */
+export function AlertDialogAction({ children, primary = false, requiresValue = false, ...rest }: AlertDialogActionProps) {
+  const ctx = useAlertDialogContext('AlertDialogAction');
+  const own = children.props as { emphasis?: unknown; tone?: unknown; disabled?: boolean };
+  const blocked = requiresValue && ctx.filled === false;
+  // The Button's own emphasis and tone win; the default action only fills in what it leaves out.
+  const child =
+    primary || blocked
+      ? cloneElement(children as ReactElement<Record<string, unknown>>, {
+          ...(primary
+            ? { emphasis: own.emphasis ?? 'solid', tone: own.tone ?? (ctx.tone === 'danger' ? 'danger' : 'accent') }
+            : null),
+          ...(blocked ? { disabled: true } : null),
+        })
+      : children;
   return (
-    <RadixAlertDialog.Action {...rest} data-part="action" asChild>
-      {children}
+    <RadixAlertDialog.Action {...rest} data-part="action" data-primary={primary ? '' : undefined} asChild>
+      {child}
     </RadixAlertDialog.Action>
+  );
+}
+
+// ------------------------------------------------------------------ AlertDialogBody
+
+export interface AlertDialogBodyProps extends Omit<FieldsetProps, 'legend' | 'variant' | 'description' | 'error' | 'size'> {
+  /**
+   * The name of the group of fields (Folder details), read with the first
+   * field. Required. Visually hidden: the alert's title is the visible
+   * heading.
+   */
+  legend: ReactNode;
+  /** One or two Fields, each with an Input variant plain: the rows of the inset group. */
+  children?: ReactNode;
+}
+
+/** A body is a field only when it is an input that takes text (not a button or a check). */
+function isTextField(el: EventTarget | null): el is HTMLInputElement {
+  if (!(el instanceof HTMLInputElement)) return false;
+  return !['button', 'submit', 'reset', 'checkbox', 'radio', 'file', 'image', 'range', 'color', 'hidden'].includes(el.type);
+}
+
+/**
+ * The body of an alert with fields (order M9.6, proposed): an inset
+ * Fieldset whose root is the alert's body part. Focus opens on its first
+ * field. Return in a field runs the primary action, unless it is
+ * aria-disabled.
+ */
+export function AlertDialogBody({ legend, children, onKeyDown, onInput, ref, ...rest }: AlertDialogBodyProps) {
+  const ctx = useAlertDialogContext('AlertDialogBody');
+  const { setFilled } = ctx;
+  const node = useRef<HTMLFieldSetElement | null>(null);
+  const setRef = useCallback(
+    (el: HTMLFieldSetElement | null) => {
+      node.current = el;
+      assignRef(ref, el);
+    },
+    [ref],
+  );
+  const read = useCallback(() => {
+    const field = node.current?.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(DIALOG_FIELD_SELECTOR);
+    setFilled(field ? field.value.trim() !== '' : null);
+  }, [setFilled]);
+  // A controlled value, a reset or the clear button can change it with no input event: read it after every render.
+  useLayoutEffect(read);
+  useEffect(() => () => setFilled(null), [setFilled]);
+  return (
+    <Fieldset
+      {...rest}
+      ref={setRef}
+      data-part="body"
+      variant="inset"
+      legend={<span data-visually-hidden="">{legend}</span>}
+      onInput={(event) => {
+        onInput?.(event);
+        read();
+      }}
+      onKeyDown={(event: ReactKeyboardEvent<HTMLFieldSetElement>) => {
+        onKeyDown?.(event);
+        if (event.key !== 'Enter' || event.defaultPrevented) return;
+        // The key that ends an IME composition is not a command; a modifier asks for something else.
+        if (event.nativeEvent.isComposing || event.keyCode === 229) return;
+        if (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (!isTextField(event.target)) return;
+        const panel = event.currentTarget.closest('[data-part="panel"]');
+        const primary = panel?.querySelector<HTMLElement>('[data-part="action"][data-primary]');
+        if (!primary) return;
+        event.preventDefault();
+        if (primary.getAttribute('aria-disabled') === 'true') return;
+        primary.click();
+      }}
+    >
+      {children}
+    </Fieldset>
   );
 }
 
@@ -227,7 +362,7 @@ export interface AlertDialogContentProps
    * assistive tech.
    */
   icon?: IconName | ReactElement | false;
-  /** AlertDialogTitle, AlertDialogDescription, AlertDialogFooter. */
+  /** AlertDialogTitle, AlertDialogDescription, AlertDialogBody (order M9.6), AlertDialogFooter. */
   children?: ReactNode;
   /** Class name of the root, the layer that holds the backdrop and the panel. */
   className?: string;

@@ -34,6 +34,14 @@
 // nested List takes the outer size and variant, so the card look of an
 // inset list is drawn per section. Rows and sections do not mix in one
 // List.
+//
+// Swipe rows (order M9.7, proposed): a ListItem with `swipe` (a
+// SwipeActions element with no children) keeps its parts as direct children
+// and adds the SwipeActions root as its last child, part swipe. The row's
+// parts move by --_list-shift, which the swipe writes on the row while it is
+// dragged, open or settling; the SwipeActions root moves its action groups
+// and menu by its own property. The row's pointer, click and key handlers
+// carry the swipe (useSwipeController).
 import {
   Children,
   createContext,
@@ -56,6 +64,7 @@ import { useMotion } from '../../internal/motion';
 import { pressHandlers } from '../../internal/pressed';
 import { setPressPoint, staggerGroup } from '@the-system/motion';
 import { useFlipGroup, useRowGlide } from '../ListBox/selectionMotion';
+import { SwipeActions, useSwipeController, type SwipeActionsProps } from '../SwipeActions/SwipeActions';
 
 /** The rows of a list element. */
 const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [data-part='item']"));
@@ -248,7 +257,20 @@ export interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'titl
    * caller's to disable.
    */
   disabled?: boolean;
+  /**
+   * Swipe actions for the row: a SwipeActions element with start and end
+   * actions and a menuLabel, no children. The row's own parts are what
+   * moves. Not on a disabled row.
+   */
+  swipe?: ReactElement<SwipeActionsProps>;
   ref?: Ref<HTMLLIElement>;
+}
+
+/** The swipe options of a SwipeActions element passed as `swipe`, or null. */
+function swipeOptions(swipe: ReactElement<SwipeActionsProps> | undefined, disabled: boolean) {
+  if (disabled || !isValidElement<SwipeActionsProps>(swipe) || swipe.type !== SwipeActions) return null;
+  const { start, end, fullSwipe, menuLabel, pointer } = swipe.props;
+  return { start, end, fullSwipe, menuLabel, pointer };
 }
 
 /** One row of a List. */
@@ -262,27 +284,44 @@ export function ListItem({
   linkProps,
   active = false,
   disabled = false,
+  swipe,
+  ref,
   ...rest
 }: ListItemProps) {
   const linked = href !== undefined;
+  const swiper = useSwipeController<HTMLLIElement>(swipeOptions(swipe, disabled), '--_list-shift');
+  const { hostRef } = swiper;
+  const setRef = useCallback(
+    (el: HTMLLIElement | null) => {
+      hostRef(el);
+      if (typeof ref === 'function') ref(el);
+      else if (ref) (ref as { current: HTMLLIElement | null }).current = el;
+    },
+    [hostRef, ref],
+  );
+  // Platform hook: where the press landed in the row, for a ripple from the touch point.
+  // Order M4: a linked row carries data-pressed from pointerdown to the release (internal/pressed.ts).
+  const press = pressHandlers<HTMLLIElement>(
+    {
+      onPointerDown: (event) => {
+        setPressPoint(event.currentTarget, 'list', event.clientX, event.clientY);
+        rest.onPointerDown?.(event);
+      },
+      onPointerUp: rest.onPointerUp,
+      onPointerCancel: rest.onPointerCancel,
+      onLostPointerCapture: rest.onLostPointerCapture,
+      onPointerLeave: rest.onPointerLeave,
+    },
+    !linked || disabled,
+  );
+  const handlers = swiper.off
+    ? press
+    : swiper.handlers({ ...press, onPointerMove: rest.onPointerMove, onClickCapture: rest.onClickCapture, onKeyDown: rest.onKeyDown });
   return (
     <li
       {...rest}
-      // Platform hook: where the press landed in the row, for a ripple from the touch point.
-      // Order M4: a linked row carries data-pressed from pointerdown to the release (internal/pressed.ts).
-      {...pressHandlers<HTMLLIElement>(
-        {
-          onPointerDown: (event) => {
-            setPressPoint(event.currentTarget, 'list', event.clientX, event.clientY);
-            rest.onPointerDown?.(event);
-          },
-          onPointerUp: rest.onPointerUp,
-          onPointerCancel: rest.onPointerCancel,
-          onLostPointerCapture: rest.onLostPointerCapture,
-          onPointerLeave: rest.onPointerLeave,
-        },
-        !linked || disabled,
-      )}
+      ref={setRef}
+      {...handlers}
       data-part="item"
       data-active={active ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
@@ -322,6 +361,11 @@ export function ListItem({
       {description !== undefined && description !== null && <span data-part="description">{description}</span>}
       {end !== undefined && end !== null && <span data-part="end">{end}</span>}
       {actions !== undefined && actions !== null && <span data-part="actions">{actions}</span>}
+      {!swiper.off && (
+        <div ref={swiper.rootRef} data-ds="swipe-actions" data-part="swipe" {...swiper.attrs}>
+          {swiper.parts}
+        </div>
+      )}
     </li>
   );
 }

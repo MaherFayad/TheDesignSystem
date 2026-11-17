@@ -1,6 +1,7 @@
 export {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogBody,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -8,6 +9,7 @@ export {
   AlertDialogTitle,
   AlertDialogTrigger,
   type AlertDialogActionProps,
+  type AlertDialogBodyProps,
   type AlertDialogCancelProps,
   type AlertDialogContentProps,
   type AlertDialogDescriptionProps,

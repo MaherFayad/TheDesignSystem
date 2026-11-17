@@ -520,6 +520,11 @@
           "target": "@components/ds/shared/stepper.ts"
         },
         {
+          "path": "packages/shared/src/swipe.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/swipe.ts"
+        },
+        {
           "path": "packages/shared/src/tags.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/tags.ts"
@@ -1366,13 +1371,14 @@
       "name": "alert-dialog",
       "type": "registry:ui",
       "title": "AlertDialog",
-      "description": "A modal question about an action that cannot be undone. The person must answer it: Cancel or the action. It never closes on a click outside.",
+      "description": "A modal question about an action that cannot be undone, or that needs one short value. The person must answer it: Cancel or the action. It never closes on a click outside. On web a centered card with a footer band; on ios the platform's alert card with capsule actions; on android a dialog with text button actions.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
         "@ds/core",
         "@ds/dialog",
+        "@ds/fieldset",
         "@ds/icon",
         "@ds/theme",
         "@ds/title-bar",
@@ -3284,6 +3290,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/list-box",
+        "@ds/swipe-actions",
         "@ds/theme"
       ],
       "files": [
@@ -4469,7 +4476,7 @@
       "name": "sheet",
       "type": "registry:ui",
       "title": "Sheet",
-      "description": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path.",
+      "description": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path. On web and ios a panel from the bottom with the close control in the header (round, at the top leading corner on ios) and an optional confirm at the inline end; on android a bottom sheet whose confirm is a text button in the top bar.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],
@@ -4480,6 +4487,7 @@
         "@ds/drawer",
         "@ds/theme",
         "@ds/title-bar",
+        "@ds/tooltip",
         "@ds/window-controls"
       ],
       "files": [
@@ -4962,6 +4970,44 @@
       }
     },
     {
+      "name": "swipe-actions",
+      "type": "registry:ui",
+      "title": "SwipeActions",
+      "description": "Actions hidden at either side of one list row, revealed by a horizontal swipe, with a menu button that holds the same actions for anyone who cannot or does not swipe. On ios the row slides to show square tone filled actions and a long swipe runs the first one; on android the same reveal with square ends; on web the menu button shows on hover and focus, and a mouse drags only when the app allows it.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SwipeActions/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SwipeActions/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SwipeActions/SwipeActions.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SwipeActions/SwipeActions.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SwipeActions.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SwipeActions.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "SwipeActions",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
@@ -5282,11 +5328,12 @@
       "name": "toast",
       "type": "registry:ui",
       "title": "Toast",
-      "description": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
+      "description": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app. On web a toast is a card in a corner with a close button. On ios it is a notification banner at the top centre: start (an app icon, an Avatar or an icon) leads it, meta (a time such as now) sits at the trailing top, and a timed banner has no close button by default. On android it is a snackbar at the bottom: one row of text with an action, no leading icon and no meta.",
       "dependencies": [
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/avatar",
         "@ds/button",
         "@ds/close-button",
         "@ds/core",

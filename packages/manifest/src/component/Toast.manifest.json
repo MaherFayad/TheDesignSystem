@@ -2,12 +2,13 @@
   "name": "Toast",
   "kind": "component",
   "family": "feedback",
-  "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
+  "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app. On web a toast is a card in a corner with a close button. On ios it is a notification banner at the top centre: start (an app icon, an Avatar or an icon) leads it, meta (a time such as now) sits at the trailing top, and a timed banner has no close button by default. On android it is a snackbar at the bottom: one row of text with an action, no leading icon and no meta.",
   "useWhen": [
     "Confirming that an action the person took has finished: Draft saved, Link copied",
     "A failure the person can fix later or retry from the toast, as tone danger with one action",
     "A background event worth knowing now: a new version, a finished upload",
-    "Progress that ends in a result, updated in place with toast.update"
+    "Progress that ends in a result, updated in place with toast.update",
+    "A message or an event from a person in the app, as a banner with their avatar in start and the time in meta"
   ],
   "avoidWhen": [
     "The person needs to make a decision before going on",
@@ -26,9 +27,11 @@
   "anatomy": [
     "root",
     "icon",
+    "start",
     "title",
     "count",
     "description",
+    "meta",
     "action",
     "close",
     "progress"
@@ -51,6 +54,17 @@
       "accepts": [
         "Button"
       ],
+      "max": 1
+    },
+    "start": {
+      "accepts": [
+        "Icon",
+        "Avatar"
+      ],
+      "max": 1
+    },
+    "meta": {
+      "accepts": "text",
       "max": 1
     }
   },
@@ -96,6 +110,18 @@
     "lang": {
       "type": "string",
       "description": "toast() option. The language of the copy when it differs from the page. The root gets lang and dir."
+    },
+    "start": {
+      "type": "string",
+      "description": "Leads the toast in place of the tone icon (convention 6): a system icon name, { avatar: { name, src } } for a person, or, on the static Toast, a node. An Avatar here is hidden from assistive tech, so the title names the person. toast() option and Toast prop."
+    },
+    "meta": {
+      "type": "string",
+      "description": "A short text, or a Date, at the trailing top: the time of the event. A Date renders in a time element with a datetime attribute as a relative time (now, 5m ago; الآن، قبل 5 دقائق with Western digits) and refreshes while the toast shows. Read after the description. toast() option and Toast prop."
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "toast() option (proposed, order M9.8). false drops the close button of a toast that times out. Left out, the platform decides: on ios a timed toast has no close button (a notification banner), elsewhere it has one. A danger toast, a toast with an action and a toast with duration Infinity always keep it: the store ignores false for them and warns in development."
     },
     "count": {
       "type": "number",
@@ -149,22 +175,23 @@
     "focus": "Not modal: toasts never take focus on their own. F8 moves focus to the list, which shows the focus ring; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list. While a dialog with a focus trap is open, keyboard focus stays in the dialog: the toasts stay visible, readable and clickable, and a toast with an action waits until the dialog closes.",
     "keys": {
       "F8": "Moves focus to the notifications list",
-      "Tab": "Moves to the next toast, action or close button",
+      "Tab": "Moves to the next toast (each toast is a tab stop, with or without a close button), action or close button",
       "Shift+Tab": "Moves back",
       "Enter": "Runs the focused action or close button",
-      "Escape": "Closes a toast only when the key comes from inside the toaster: the focused toast, or the newest one from the list. Escape anywhere else, in a Window, a Dialog or a form, leaves every toast alone, a danger toast included, and is not prevented, so the system Dialog still closes itself. A raw Radix Dialog from a consumer does not get that Escape while a toast shows above it (Radix gives Escape to the top layer only), so use the system Dialog or close the toast first."
+      "Escape": "Closes a toast only when the key comes from inside the toaster: the focused toast, or the newest one from the list. This is the keyboard path for a banner with no close button. Escape anywhere else, in a Window, a Dialog or a form, leaves every toast alone, a danger toast included, and is not prevented, so the system Dialog still closes itself. A raw Radix Dialog from a consumer does not get that Escape while a toast shows above it (Radix gives Escape to the top layer only), so use the system Dialog or close the toast first."
     },
-    "announce": "Once per change (WCAG 4.1.3): when a toast shows, and again on each repeat or update, as \"Notification. Title. Description. Action alternative.\" with the toast's text in the toast's language. danger is assertive (role alert), the rest polite (role status). The toast itself has no live role and keeps its element across a repeat or update, so it is never read twice and focus stays. Radix's own announcer is muted. The close button is not read.",
+    "announce": "Once per change (WCAG 4.1.3): when a toast shows, and again on each repeat or update, as \"Notification. Title. Description. Meta. Action alternative.\" with the toast's text in the toast's language, so meta (the time) is read after the description. danger is assertive (role alert), the rest polite (role status). The toast itself has no live role and keeps its element across a repeat or update, so it is never read twice and focus stays. Radix's own announcer is muted. The close button and an Avatar in start are not read.",
     "native": {
       "accessibilityRole": "alert",
       "accessibilityState": []
     },
     "notes": [
-      "danger toasts and toasts with an action stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app.",
-      "Swipe toward the edge closes a toast; the close button is the button path for the same action (WCAG 2.5.7).",
+      "danger toasts, toasts with an action and toasts with duration Infinity stay until closed and always keep their close button. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app. A timed toast with no close button (closable false, or the ios default) still closes by its timer, by Escape once focused (F8, then Tab) and by the swipe.",
+      "Swipe toward the edge closes a toast; the close button, Escape on the focused toast and the timer are the paths without a drag (WCAG 2.5.7).",
       "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
       "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
-      "No native title attribute anywhere."
+      "No native title attribute anywhere.",
+      "meta and the title use text tokens that meet 4.5:1 on the toast surface (WCAG 1.4.3); a Date in meta is a time element with a machine readable datetime."
     ]
   },
   "content": {
@@ -173,13 +200,16 @@
       "description": "Optional. What it means or what to do next, in one or two short sentences. Long text wraps in full, so keep it short.",
       "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed.",
       "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
-      "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count."
+      "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count.",
+      "meta": "A short time or a short state: now, 5m ago, Yesterday. Pass a Date for a time and the toast writes it. No more than a few words.",
+      "start": "An Avatar for a person (name them in the title: Sara sent a photo), or a system icon name for the kind of event."
     },
     "ar": {
       "title": "Say what happened and name the thing, in noun forms where you can: المسودة محفوظة، تعذر رفع الصورة. No diacritics.",
       "action": "Noun form labels, no diacritics: إعادة الرفع، تراجع عن النقل. Never the imperative.",
       "digits": "Western digits. Latin names in the copy go through Bidi when the toast is rendered by hand.",
-      "lang": "Pass lang: \"ar\" when the page is not Arabic, so the toast gets the Arabic type and direction."
+      "lang": "Pass lang: \"ar\" when the page is not Arabic, so the toast gets the Arabic type and direction.",
+      "meta": "A Date reads as الآن or قبل 5 دقائق with Western digits; a text meta follows the same noun forms."
     }
   },
   "tokens": [
@@ -231,13 +261,13 @@
       "status": "ready",
       "behavior": "radix:Toast",
       "example": "Toast.demo.tsx",
-      "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts."
+      "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts. Order M9.8: start, meta and closable on toast() and on the Toaster; start and meta on the static Toast."
     },
     "angular": {
       "status": "ready",
       "behavior": "hand built on the shared toast store and the Radix Toast DOM; CDK ComponentPortal for the themed layer",
       "example": "toast.demo.ts",
-      "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is. Order 1.23 as React: the stack (data-stacked and the place values from internal/toast-stack.ts, a copy of React's stack.ts), data-expanded on hover or focus inside, data-paused from the same boolean that pauses the store, the progress part of a timed toast, the swipe of internal/toast-swipe.ts (a copy of React's swipe.ts), and position auto."
+      "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is. Order 1.23 as React: the stack (data-stacked and the place values from internal/toast-stack.ts, a copy of React's stack.ts), data-expanded on hover or focus inside, data-paused from the same boolean that pauses the store, the progress part of a timed toast, the swipe of internal/toast-swipe.ts (a copy of React's swipe.ts), and position auto. Order M9.8 parts (start, meta) and the closable option are not yet rendered by the Angular toaster: Angular parity is order M9.14. The store already resolves closable for it."
     },
     "native": {
       "status": "planned",
@@ -249,7 +279,7 @@
     "studio": "A flat surface card with a hairline border and a 2px edge in the tone color on the inline start side.",
     "desk": "Glass notifications as on the desk: strong glass fill, window blur, window radius and the soft window shadow (recipes/Toast.css). Solid under reduced transparency and more contrast.",
     "neutral": "Planned: a white card with a small shadow.",
-    "liquid": "Planned: a glass capsule at the top center."
+    "liquid": "A glass card. On ios the banner (rounded card at the top, start icon or avatar, time in meta, no close button on a timed toast); its look is order M9.13 in ios.css."
   },
   "mistakes": [
     {
@@ -291,15 +321,26 @@
     {
       "wrong": "Rebuilding the swipe with the Radix swipe props, or a timer bar with its own setTimeout",
       "right": "The Toaster runs the swipe (rubber band against the edge, distance or flick to close) and the progress line is a CSS animation that pauses with the store (data-paused on the toaster), so the line and the timer never drift apart"
+    },
+    {
+      "wrong": "toast.danger({ title: \"Could not send message\", closable: false })",
+      "right": "A danger toast stays until closed and keeps its close button; closable false is only for a toast that times out"
+    },
+    {
+      "wrong": "A time written into the description, or meta as a full sentence",
+      "right": "meta: new Date(sentAt), or a short text such as now; it sits at the trailing top and is read after the description"
     }
   ],
   "contract": {
     "trigger": "[data-demo-trigger]",
     "optionalParts": [
       "action",
+      "close",
       "count",
       "description",
+      "meta",
       "progress",
+      "start",
       "title"
     ]
   },

@@ -9,19 +9,68 @@
 //
 // Anatomy: root [data-ds=toast] with data-tone (and data-state inside a
 // Toaster), and the parts icon, title (holding count), description, action
-// and close. action is a Button and close a CloseButton, each carrying the
+// and close. Order M9.8 (proposed) adds the banner parts: start, which
+// leads the toast in place of the tone icon (a system icon name, an Avatar
+// for a person, or a node; convention 6), and meta, a short text or a time
+// at the trailing top, after the description in the DOM so it is read
+// after it. A Date in meta renders in <time datetime> as a relative time
+// ("now", "5m ago"), with Western digits in Arabic, and refreshes every
+// half minute while the toast shows. action is a Button and close a CloseButton, each carrying the
 // toast's data-part next to its own data-ds. The parts are Radix Toast
 // parts, so inside a Toaster the close and action buttons close the toast.
 // Outside a Toaster they are plain elements.
-import type { HTMLAttributes, ReactNode, Ref } from 'react';
+import { isValidElement, useEffect, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Toast as RadixToast } from 'radix-ui';
-import type { ToastAction, ToastTone } from '@the-system/shared';
-import type { IconName } from '@the-system/icons';
+import { isToastAvatar, toastMeta, type ToastAction, type ToastAvatar, type ToastTone } from '@the-system/shared';
+import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
+import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { CloseButton } from '../CloseButton';
+import { useTheme } from '../../theme/hooks';
 
-export type { ToastAction, ToastTone } from '@the-system/shared';
+export type { ToastAction, ToastAvatar, ToastStart, ToastTone } from '@the-system/shared';
+
+/** What leads a toast in place of its tone icon: a system icon name, a person, or a node. */
+export type ToastStartContent = IconName | ToastAvatar | ReactNode;
+
+/**
+ * The start part. An icon name draws the icon; a person draws an Avatar,
+ * hidden from assistive tech because the title names the person; anything
+ * else is drawn as given.
+ */
+function ToastStartPart({ start }: { start: ToastStartContent }) {
+  let content: ReactNode;
+  if (typeof start === 'string' && isIconName(start)) content = <Icon name={start} size="md" />;
+  else if (!isValidElement(start) && isToastAvatar(start)) content = <Avatar name={start.avatar.name} src={start.avatar.src} size="md" decorative />;
+  else content = start as ReactNode;
+  return (
+    <span data-part="start" aria-hidden={typeof start === 'string' && isIconName(start) ? 'true' : undefined}>
+      {content}
+    </span>
+  );
+}
+
+/** The meta part: a short text, or a time read as a relative time that refreshes while it shows. */
+function ToastMetaPart({ meta, lang }: { meta: string | Date; lang: string | undefined }) {
+  const [now, setNow] = useState(() => Date.now());
+  const timed = meta instanceof Date;
+  useEffect(() => {
+    if (!timed) return;
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), 30_000);
+    return () => window.clearInterval(id);
+  }, [timed, meta]);
+  const { text, dateTime } = toastMeta(meta, lang, now);
+  if (text === '') return null;
+  return dateTime !== undefined ? (
+    <time data-part="meta" dateTime={dateTime}>
+      {text}
+    </time>
+  ) : (
+    <span data-part="meta">{text}</span>
+  );
+}
 
 /** The icon of each tone. */
 export const toastIcons: Readonly<Record<ToastTone, IconName>> = {
@@ -62,15 +111,26 @@ export interface ToastPartsProps {
   onClose?: () => void;
   /** Renders the close button. Default true. */
   closable?: boolean;
+  /** Leads the toast in place of the tone icon. */
+  start?: ToastStartContent;
+  /** A short text or a time at the trailing top, read after the description. */
+  meta?: string | Date;
+  /** The language a Date in meta is written in. */
+  lang?: string;
 }
 
 /** The parts of a toast, shared by `Toast` and `Toaster`. Not exported from the package. */
-export function ToastParts({ tone, title, description, count = 1, action, closeLabel, onClose, closable = true }: ToastPartsProps) {
+export function ToastParts({ tone, title, description, count = 1, action, closeLabel, onClose, closable = true, start, meta, lang }: ToastPartsProps) {
+  const hasStart = start !== undefined && start !== null && start !== false && start !== '';
   return (
     <>
-      <span data-part="icon">
-        <Icon name={toastIcons[tone]} size="md" />
-      </span>
+      {hasStart ? (
+        <ToastStartPart start={start} />
+      ) : (
+        <span data-part="icon">
+          <Icon name={toastIcons[tone]} size="md" />
+        </span>
+      )}
       {title !== undefined && title !== '' && (
         <RadixToast.Title data-part="title">
           {title}
@@ -85,6 +145,7 @@ export function ToastParts({ tone, title, description, count = 1, action, closeL
       {description !== undefined && description !== '' && (
         <RadixToast.Description data-part="description">{description}</RadixToast.Description>
       )}
+      {meta !== undefined && meta !== '' && <ToastMetaPart meta={meta} lang={lang} />}
       {action && (
         <RadixToast.Action asChild altText={action.altText ?? action.label}>
           <Button data-part="action" size="sm" emphasis="soft" onClick={() => action.onAction()}>
@@ -117,6 +178,10 @@ export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
   onClose?: () => void;
   /** The accessible name of the close button. Default "Close notification", or Arabic under lang ar. */
   closeLabel?: string;
+  /** Leads the toast in place of the tone icon: a system icon name, `{ avatar: { name, src } }` or a node. */
+  start?: ToastStartContent;
+  /** A short text or a `Date` at the trailing top, read after the description. A Date reads as a relative time. */
+  meta?: string | Date;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -126,7 +191,8 @@ export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
  * mounted `Toaster` for real notifications; this is for a notice placed by
  * hand.
  */
-export function Toast({ tone = 'neutral', title, description, count, action, onClose, closeLabel, lang, ...rest }: ToastProps) {
+export function Toast({ tone = 'neutral', title, description, count, action, onClose, closeLabel, start, meta, lang, ...rest }: ToastProps) {
+  const theme = useTheme();
   return (
     <div {...rest} lang={lang} dir={rest.dir ?? toastDirFor(lang)} data-ds="toast" data-tone={tone}>
       <ToastParts
@@ -138,6 +204,9 @@ export function Toast({ tone = 'neutral', title, description, count, action, onC
         closeLabel={closeLabel ?? toastLabelsFor(lang).close}
         onClose={onClose}
         closable={onClose !== undefined}
+        start={start}
+        meta={meta}
+        lang={lang ?? theme.lang}
       />
     </div>
   );

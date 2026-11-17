@@ -102,6 +102,7 @@ export const routes: DemoRoute[] = [
   { name: 'StatusDot', slug: 'status-dot', load: () => import('../../../packages/react/src/components/StatusDot/StatusDot.demo') },
   { name: 'Stepper', slug: 'stepper', load: () => import('../../../packages/react/src/components/Stepper/Stepper.demo') },
   { name: 'Surface', slug: 'surface', load: () => import('../../../packages/react/src/components/Surface/Surface.demo') },
+  { name: 'SwipeActions', slug: 'swipe-actions', load: () => import('../../../packages/react/src/components/SwipeActions/SwipeActions.demo') },
   { name: 'Switch', slug: 'switch', load: () => import('../../../packages/react/src/components/Switch/Switch.demo') },
   { name: 'TabBar', slug: 'tab-bar', load: () => import('../../../packages/react/src/components/TabBar/TabBar.demo') },
   { name: 'TableOfContents', slug: 'table-of-contents', load: () => import('../../../packages/react/src/components/TableOfContents/TableOfContents.demo') },

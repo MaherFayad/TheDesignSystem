@@ -3,7 +3,10 @@ import {
   TOAST_DURATIONS,
   createToastFunction,
   createToastStore,
+  isToastAvatar,
+  toastClosable,
   toastDedupeKey,
+  toastMeta,
   toastUrgency,
   type ToastClock,
   type ToastStoreOptions,
@@ -326,5 +329,97 @@ describe('toast store', () => {
     toast.configure({ max: 5 });
     toast.danger('Could not publish page');
     expect(open()).toHaveLength(2);
+  });
+});
+
+describe('the close button and the banner parts (order M9.8)', () => {
+  it('keeps closable false on a toast that times out', () => {
+    const { toast, open } = setup();
+    toast({ title: 'Invoice sent', closable: false });
+    toast({ title: 'Draft saved', tone: 'success' });
+    toast({ title: 'Link copied', closable: true });
+    expect(open().map((t) => t.closable)).toEqual([false, undefined, true]);
+  });
+
+  it('refuses closable false for danger, an action and no timeout, and warns in development', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { toast, open } = setup({ max: 5 });
+    toast.danger({ title: 'Could not send reply', closable: false });
+    toast({ title: 'Card moved', closable: false, action: { label: 'Undo move', onAction: () => undefined } });
+    toast({ title: 'Saving draft', closable: false, duration: Infinity });
+    expect(open().map((t) => t.closable)).toEqual([true, true, true]);
+    expect(warn).toHaveBeenCalledTimes(3);
+    expect(String(warn.mock.calls[0]?.[0])).toContain('closable false is ignored');
+    warn.mockRestore();
+  });
+
+  it('resolves closable again on an update and on a repeat that brings an action', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { toast, store, open } = setup();
+    const id = toast({ title: 'Upload paused', closable: false });
+    store.update(id, { tone: 'danger' });
+    expect(open()[0]?.closable).toBe(true);
+    store.update(id, { tone: 'warning' });
+    expect(open()[0]?.closable).toBe(false);
+    store.update(id, { closable: true });
+    expect(open()[0]?.closable).toBe(true);
+    const other = toast({ title: 'Photo shared', closable: false });
+    toast({ title: 'Photo shared', action: { label: 'Open photo', onAction: () => undefined } });
+    expect(open().find((t) => t.id === other)).toMatchObject({ count: 2, duration: Infinity, closable: true });
+    warn.mockRestore();
+  });
+
+  it('a timed toast without a close button still closes on its timer, and the timer pauses', () => {
+    const { toast, store, open, advance } = setup();
+    toast({ title: 'Invoice sent', closable: false });
+    advance(3000);
+    store.pause();
+    advance(60_000);
+    expect(open()).toHaveLength(1);
+    store.resume();
+    advance(1000);
+    expect(open()).toHaveLength(0);
+  });
+
+  it('stores start and meta and changes them on an update', () => {
+    const { toast, store, open } = setup();
+    const at = new Date(1_000_000);
+    const id = toast({ title: 'Sara Haddad', start: { avatar: { name: 'Sara Haddad' } }, meta: at });
+    expect(open()[0]).toMatchObject({ start: { avatar: { name: 'Sara Haddad' } }, meta: at });
+    store.update(id, { start: 'mail', meta: 'Yesterday' });
+    expect(open()[0]).toMatchObject({ start: 'mail', meta: 'Yesterday' });
+    store.update(id, { description: 'Sent a photo' });
+    expect(open()[0]).toMatchObject({ start: 'mail', meta: 'Yesterday' });
+  });
+
+  it('toastClosable: the platform decides when the toast does not, and a toast that stays always has one', () => {
+    expect(toastClosable({ duration: 4000 }, 'ios')).toBe(false);
+    expect(toastClosable({ duration: 4000 }, 'web')).toBe(true);
+    expect(toastClosable({ duration: 4000 }, 'android')).toBe(true);
+    expect(toastClosable({ duration: 4000, closable: true }, 'ios')).toBe(true);
+    expect(toastClosable({ duration: 4000, closable: false }, 'web')).toBe(false);
+    expect(toastClosable({ duration: Infinity }, 'ios')).toBe(true);
+    expect(toastClosable({ duration: Infinity, closable: false }, 'ios')).toBe(true);
+  });
+
+  it('isToastAvatar tells a person from an icon name', () => {
+    expect(isToastAvatar({ avatar: { name: 'Sara' } })).toBe(true);
+    expect(isToastAvatar('mail')).toBe(false);
+    expect(isToastAvatar(undefined)).toBe(false);
+    expect(isToastAvatar({ avatar: null })).toBe(false);
+  });
+
+  it('toastMeta writes a time as a short relative time, with Western digits in Arabic', () => {
+    const now = Date.UTC(2026, 10, 17, 9, 41);
+    expect(toastMeta('Yesterday', 'en', now)).toEqual({ text: 'Yesterday' });
+    expect(toastMeta(new Date(now - 20_000), 'en', now)).toEqual({ text: 'now', dateTime: new Date(now - 20_000).toISOString() });
+    expect(toastMeta(new Date(now - 5 * 60_000), 'en', now).text).toBe('5m ago');
+    expect(toastMeta(new Date(now - 2 * 3_600_000), 'en', now).text).toBe('2h ago');
+    expect(toastMeta(new Date(now - 3 * 86_400_000), 'en', now).text).toMatch(/3d ago|3 days ago/);
+    expect(toastMeta(new Date(now), 'ar', now).text).toBe('الآن');
+    const ar = toastMeta(new Date(now - 5 * 60_000), 'ar', now).text;
+    expect(ar).toContain('5');
+    expect(ar).not.toMatch(/[\u0660-\u0669]/);
+    expect(toastMeta(new Date(Number.NaN), 'en', now)).toEqual({ text: '' });
   });
 });

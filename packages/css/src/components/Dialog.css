@@ -36,6 +36,11 @@
  *   --_dialog-enter-y, -enter-scale, -duration-in, -duration-out,
  *   --_dialog-ease-in, -ease-out       the motion (pattern "dialog")
  *   --_dialog-icon-bg, -icon-fg        AlertDialog: the icon disc
+ *
+ * Order M9.6 (proposed): an AlertDialog body is an inset Fieldset root
+ * (data-ds fieldset, data-part body); this file sets its --_fieldset-gap to
+ * 0px, as the Sheet handle sets --_button-*, because its legend is visually
+ * hidden. A Sheet header may hold the confirm part (a Button) after close.
  *   --_dialog-slide                    Drawer and Sheet: the slide offset, mirrored in rtl for a Drawer
  *   --_dialog-enter-opacity            Drawer and Sheet: the opacity a slide starts from and
  *                                      leaves to, 1; 0 when a style turns the slide into a fade
@@ -520,6 +525,26 @@
     padding-block-start: var(--ds-space-s);
   }
 
+  /*
+   * Order M9.6 (proposed): the body of an alert with fields. The body part
+   * is an inset Fieldset root (Fieldset.css draws the card of rows). Its
+   * legend is visually hidden, so the space before the card goes: the
+   * Fieldset's gap is 0 here. The body never scrolls on its own: one or two
+   * rows always fit, and a short viewport scrolls the whole panel.
+   */
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+    --_fieldset-gap: 0px;
+
+    flex: none;
+    margin: 0;
+    overflow: visible;
+  }
+
+  /* A body right under the title: the description's space before it. */
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] + [data-part='body'] {
+    padding-block-start: var(--ds-space-l);
+  }
+
   /* ------------------------------------------------------------ drawer */
 
   /*
@@ -686,6 +711,29 @@
     /* Centered on the first line of the title. */
     margin-block-start: calc((var(--ds-font-size-xl) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
     margin-inline-end: calc(var(--ds-space-2xs) * -1);
+  }
+
+  /*
+   * Order M9.6 (proposed): the Sheet's confirm part, a solid Button after the
+   * close control at the inline end of the title's first line. The DOM order
+   * is close, then confirm, so the reading order and the tab order agree.
+   * The platform layers draw it as the platform does (a round tint button on
+   * ios, a text button on android).
+   */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:has(> [data-part='confirm']) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] {
+    grid-row: 1;
+    grid-column: 3;
+    max-inline-size: 100%;
+    margin-block-start: calc((var(--ds-font-size-xl) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+  }
+
+  /* No close control (a style's title bar holds it): the confirm takes the second column. */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:not(:has(> [data-part='close'])) > [data-part='confirm'] {
+    grid-column: 2;
   }
 
   /* ------------------------------------------------------------ sheet */

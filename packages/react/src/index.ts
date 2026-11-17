@@ -94,6 +94,7 @@ export * from './components/Stat/index';
 export * from './components/StatusDot/index';
 export * from './components/Stepper/index';
 export * from './components/Surface/index';
+export * from './components/SwipeActions/index';
 export * from './components/Switch/index';
 export * from './components/TabBar/index';
 export * from './components/TableOfContents/index';

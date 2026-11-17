@@ -3,11 +3,13 @@ import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Field } from '../Field';
+import { Fieldset } from '../Fieldset';
 import { Input } from '../Input';
 import {
   Sheet,
   SheetBody,
   SheetClose,
+  SheetConfirm,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -106,6 +108,55 @@ function BusySheet() {
             Send invites
           </Button>
         </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+const confirmCopy = {
+  en: {
+    open: 'New list',
+    title: 'New list',
+    legend: 'List details',
+    name: 'Name',
+    namePlaceholder: 'For example, launch checklist',
+    note: 'Note',
+    notePlaceholder: 'Optional',
+    confirm: 'Save list',
+  },
+  ar: {
+    open: 'قائمة جديدة',
+    title: 'قائمة جديدة',
+    legend: 'بيانات القائمة',
+    name: 'الاسم',
+    namePlaceholder: 'مثلا، مهام الإطلاق',
+    note: 'ملاحظة',
+    notePlaceholder: 'اختياري',
+    confirm: 'حفظ القائمة',
+  },
+} as const;
+
+/** Order M9.6: the confirm in the header at the inline end, off until the list has a name. */
+function ConfirmSheet({ lang, trigger }: { lang: 'en' | 'ar'; trigger: string }) {
+  const t = confirmCopy[lang];
+  const [name, setName] = useState('');
+  return (
+    <Sheet size="lg" onOpenChange={(next) => (next ? setName('') : undefined)}>
+      <SheetTrigger>
+        <Button data-demo-trigger={trigger}>{t.open}</Button>
+      </SheetTrigger>
+      <SheetContent title={t.title}>
+        <SheetConfirm label={t.confirm} disabled={name.trim() === ''} />
+        <SheetBody>
+          <Fieldset variant="inset" legend={t.legend}>
+            <Field label={t.name}>
+              <Input variant="plain" clearable value={name} onChange={(event) => setName(event.target.value)} placeholder={t.namePlaceholder} />
+            </Field>
+            <Field label={t.note}>
+              <Input variant="plain" clearable placeholder={t.notePlaceholder} />
+            </Field>
+          </Fieldset>
+        </SheetBody>
       </SheetContent>
     </Sheet>
   );
@@ -295,6 +346,15 @@ export default function SheetDemo() {
                 <SheetBody>اسحب المقبض أو استخدم مفاتيح الأسهم لتغيير الارتفاع.</SheetBody>
               </SheetContent>
             </Sheet>
+          </Theme>
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="confirm" title="Confirm in the header: after the close control, off until the list has a name" lang="en">
+        <DemoRow>
+          <ConfirmSheet lang="en" trigger="confirm" />
+          <Theme lang="ar" dir="rtl" data-demo="content">
+            <ConfirmSheet lang="ar" trigger="confirm-arabic" />
           </Theme>
         </DemoRow>
       </DemoCase>

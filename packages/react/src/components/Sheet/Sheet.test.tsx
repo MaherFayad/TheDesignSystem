@@ -195,7 +195,7 @@ describe('Sheet', () => {
   it('renders the demo with a trigger per case', () => {
     const { container } = render(<SheetDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'detents', 'detents-arabic', 'disabled']);
+    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'detents', 'detents-arabic', 'confirm', 'disabled']);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }
