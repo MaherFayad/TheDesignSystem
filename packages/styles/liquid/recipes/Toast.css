@@ -57,6 +57,12 @@
     --_toast-bg: var(--ds-color-material-glass-tinted);
   }
 
+  /* ios (order M6): the platform draws the banner's clear glass and its blur (packages/css/src/platform/ios.css); the contrast rules below still win. */
+  [data-style='liquid'][data-platform='ios'] [data-ds='toast'] {
+    -webkit-backdrop-filter: revert-layer;
+    backdrop-filter: revert-layer;
+  }
+
   /* Clear glass is for bars over pictures. A toast holds reading text, so the clear level keeps the regular glass. */
 
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */

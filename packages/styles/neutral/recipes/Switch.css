@@ -110,4 +110,14 @@
   }
 
   /* Forced colors: Switch.css paints the thumb and the track in system colors and drops the shadow. */
+
+  /*
+   * ios (order M6): Neutral takes the platform's clear glass on its chrome,
+   * as it takes the glass switch (DECISIONS.md, the iOS glass switch). The
+   * material is in packages/css/src/platform/ios.css; this one property on
+   * the root picks its strength: clear, regular or frosted.
+   */
+  [data-style='neutral'][data-platform='ios'] {
+    --_ios-glass: regular;
+  }
 }

@@ -181,4 +181,14 @@
     --_switch-thumb-solid-pressed: 1;
     --_switch-thumb-highlight-opacity-pressed: 0;
   }
+
+  /*
+   * ios (order M6): Liquid takes the platform's clear glass on its chrome,
+   * as it takes the glass switch (DECISIONS.md, the iOS glass switch). The
+   * material is in packages/css/src/platform/ios.css; this one property on
+   * the root picks its strength: clear, regular or frosted.
+   */
+  [data-style='liquid'][data-platform='ios'] {
+    --_ios-glass: regular;
+  }
 }

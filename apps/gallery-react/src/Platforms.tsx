@@ -134,11 +134,74 @@ function Tabs() {
   );
 }
 
+/*
+ * Order M6: coloured content of our own for the iOS phone, so the glass bars
+ * have something to show as it scrolls under them. Gradients and simple
+ * shapes in the tokens' chart colours, drawn in platforms.css; no third
+ * party art. Shown on ios only (the other platforms hide it).
+ */
+const artCards = [
+  { id: 'dawn', title: 'Spring launch', note: '24 cards' },
+  { id: 'tide', title: 'Brand review', note: '12 cards' },
+] as const;
+
+const artTiles = ['ember', 'moss', 'dusk', 'lake'] as const;
+
+const artRows = [
+  { id: 'dawn', title: 'Launch plan', note: 'Edited today' },
+  { id: 'ember', title: 'Colour study', note: 'Edited yesterday' },
+  { id: 'lake', title: 'Store page', note: 'Edited on Monday' },
+  { id: 'moss', title: 'Field notes', note: 'Edited last week' },
+] as const;
+
+function PhoneArtTop() {
+  return (
+    <section data-gallery="phone-art" aria-label="Recent boards">
+      <div data-gallery="phone-art-cards">
+        {artCards.map((c) => (
+          <figure key={c.id} data-gallery="phone-art-card">
+            <div data-gallery="phone-art-cover" data-art={c.id} />
+            <figcaption>
+              <strong>{c.title}</strong>
+              <span>{c.note}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PhoneArtBottom() {
+  return (
+    <section data-gallery="phone-art" aria-label="More boards">
+      <div data-gallery="phone-art-tiles">
+        {artTiles.map((t) => (
+          <div key={t} data-gallery="phone-art-cover" data-art={t} />
+        ))}
+      </div>
+      <ul data-gallery="phone-art-list">
+        {artRows.map((r) => (
+          <li key={r.title}>
+            <div data-gallery="phone-art-cover" data-art={r.id} />
+            <span>
+              <strong>{r.title}</strong>
+              <span>{r.note}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <div data-gallery="phone-art-cover" data-art="wide" />
+    </section>
+  );
+}
+
 function Settings() {
   return (
     <>
       <Bar title="Settings" />
       <div data-gallery="phone-body">
+        <PhoneArtTop />
         <SegmentedControl aria-label="Sync range" defaultValue="week" fullWidth>
           <SegmentedControlItem value="day">Day</SegmentedControlItem>
           <SegmentedControlItem value="week">Week</SegmentedControlItem>
@@ -158,6 +221,7 @@ function Settings() {
         <Button tone="accent" emphasis="solid">
           Save changes
         </Button>
+        <PhoneArtBottom />
       </div>
       <Tabs />
     </>
@@ -237,6 +301,7 @@ function MenuScreen() {
     <>
       <Bar title="Boards" />
       <div data-gallery="phone-body">
+        <PhoneArtTop />
         <DropdownMenu defaultOpen>
           <DropdownMenuTrigger>
             <Button end="chevron-down">Board actions</Button>
@@ -251,6 +316,7 @@ function MenuScreen() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <PhoneArtBottom />
       </div>
       <Tabs />
     </>

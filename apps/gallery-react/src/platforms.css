@@ -70,6 +70,11 @@
     position: sticky;
     inset-block-end: 0;
   }
+
+  /* Order M6: the coloured content is for the ios phone only. */
+  [data-gallery='phone-art'] {
+    display: none;
+  }
 }
 
 /*
@@ -93,6 +98,146 @@
 
   [data-platform='ios'] [data-gallery='phone-body'] {
     padding-block-end: calc(var(--ds-size-touch-ios) + 4 * var(--ds-space-fixed-l) + 4 * var(--ds-space-fixed-2xs));
+  }
+}
+
+/*
+ * Order M6, ios only: coloured content of our own so the glass has
+ * something to show. The navigation bar stays at the top while the content
+ * scrolls under its round buttons, and the large title fades as it goes, as
+ * on the platform (a scroll linked fade where the browser has it). The art is
+ * gradients and simple shapes in the tokens' chart colours.
+ */
+@layer ds.overrides {
+  [data-platform='ios'] [data-gallery='phone'] > [data-ds='navbar'] {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--ds-z-topbar);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    [data-platform='ios'] [data-gallery='phone'] > [data-ds='navbar'] > [data-part='brand'] {
+      animation: gallery-phone-title-fade linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 var(--ds-size-touch-ios);
+    }
+  }
+
+  @keyframes gallery-phone-title-fade {
+    to {
+      opacity: 0;
+    }
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art'] {
+    display: grid;
+    gap: var(--ds-space-3xl);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cards'] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ds-space-xl);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-card'] {
+    display: grid;
+    gap: var(--ds-space-s);
+    margin: 0;
+  }
+
+  [data-platform='ios'] :is([data-gallery='phone-art-card'] > figcaption, [data-gallery='phone-art-list'] > li > span) {
+    display: grid;
+    color: var(--ds-color-text-default);
+    font-size: var(--ds-type-body-medium-font-size);
+  }
+
+  [data-platform='ios'] :is([data-gallery='phone-art-card'] > figcaption, [data-gallery='phone-art-list'] > li > span) > span {
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'] {
+    aspect-ratio: 1;
+    border-radius: var(--ds-radius-card);
+    background-color: var(--ds-color-chart-categorical-1);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-tiles'] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ds-space-xl);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-list'] {
+    display: grid;
+    gap: var(--ds-space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-list'] > li {
+    display: flex;
+    gap: var(--ds-space-xl);
+    align-items: center;
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-list'] > li > [data-gallery='phone-art-cover'] {
+    flex: none;
+    inline-size: var(--ds-size-touch-ios);
+    border-radius: var(--ds-radius-control);
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='wide'] {
+    aspect-ratio: 2;
+  }
+
+  /* The covers: a soft sun, a ring and a band over a two colour gradient. */
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='dawn'] {
+    background-image:
+      radial-gradient(circle at 70% 30%, var(--ds-color-chart-categorical-4) 0 18%, transparent 19%),
+      radial-gradient(circle at 25% 80%, transparent 0 22%, var(--ds-color-chart-categorical-5) 23% 30%, transparent 31%),
+      linear-gradient(160deg, var(--ds-color-chart-categorical-2), var(--ds-color-chart-categorical-5) 55%, var(--ds-color-chart-categorical-6));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='tide'] {
+    background-image:
+      linear-gradient(transparent 58%, var(--ds-color-chart-categorical-3) 58% 70%, transparent 70%),
+      radial-gradient(circle at 30% 30%, var(--ds-color-chart-categorical-6) 0 20%, transparent 21%),
+      linear-gradient(200deg, var(--ds-color-chart-categorical-1), var(--ds-color-chart-categorical-3));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='ember'] {
+    background-image:
+      radial-gradient(circle at 50% 110%, var(--ds-color-chart-categorical-4) 0 40%, transparent 41%),
+      linear-gradient(var(--ds-color-chart-categorical-5), var(--ds-color-chart-categorical-2));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='moss'] {
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 12%, var(--ds-color-chart-categorical-7) 12% 18%),
+      linear-gradient(var(--ds-color-chart-categorical-3), var(--ds-color-chart-categorical-7));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='dusk'] {
+    background-image:
+      radial-gradient(circle at 30% 40%, var(--ds-color-chart-categorical-5) 0 16%, transparent 17%),
+      radial-gradient(circle at 70% 60%, var(--ds-color-chart-categorical-4) 0 12%, transparent 13%),
+      linear-gradient(var(--ds-color-chart-categorical-6), var(--ds-color-chart-diverging-1));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='lake'] {
+    background-image:
+      linear-gradient(transparent 50%, var(--ds-color-chart-categorical-1) 50%),
+      radial-gradient(circle at 50% 50%, var(--ds-color-chart-categorical-4) 0 24%, transparent 25%),
+      linear-gradient(var(--ds-color-chart-categorical-3), var(--ds-color-chart-categorical-1));
+  }
+
+  [data-platform='ios'] [data-gallery='phone-art-cover'][data-art='wide'] {
+    background-image:
+      radial-gradient(ellipse at 20% 100%, var(--ds-color-chart-categorical-4) 0 30%, transparent 31%),
+      radial-gradient(ellipse at 85% 10%, var(--ds-color-chart-categorical-6) 0 25%, transparent 26%),
+      linear-gradient(90deg, var(--ds-color-chart-categorical-1), var(--ds-color-chart-categorical-5));
   }
 }
 

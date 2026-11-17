@@ -157,3 +157,25 @@ buttons, the menu and the held switch; the three strengths side by side;
 `platform=web` and `platform=android` unchanged by computed style;
 `npm run contract -- --framework react --platform ios` for TabBar, Navbar,
 DropdownMenu, Toast, Switch, SegmentedControl, Sheet; `npm run check`.
+
+## Owner additions (2026-11-17)
+
+The owner gave the vendor's own iOS and iPadOS 27 community kit in Figma
+(file key `Cltzs6FZW3N5yiC1x1cpQJ`) as the source for what the iOS components
+are, asked that dark mode be checked against the references as well as
+light, and asked for support and designs for the folding iPhone.
+
+- **M7, audit (ds-qa, report only).** Coverage map of the kit's component
+  families against ours, kit beside ours in Liquid and Neutral, light and
+  dark, a verdict per family and scheme, a ranked fix list. Report:
+  `docs/reports/lanes/reset-M7-audit.md`. Fix orders follow from it, after
+  M6 lands, since both touch `ios.css`.
+- **M8, folding iPhone plan (ds-architect).** Facts with sources, modelling
+  options, component behaviour per screen and posture, orders. Plan:
+  `docs/plan/reset-duo.md`. No code until the owner picks the model.
+
+Use of the kit: read only, as a reference to look at and measure, the same
+way as the Mobbin screens. Its licence allows no copying, extracting,
+redistributing or derivative assets, and covers mock ups for the vendor's own
+platforms only. So: no asset, glyph, text, variable or component name from it
+enters the repo, no kit image is committed, and nothing is written to Figma.
