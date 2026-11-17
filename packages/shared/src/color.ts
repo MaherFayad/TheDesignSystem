@@ -4,7 +4,7 @@
  *
  * - Names. A colour is never named by its hex alone (WCAG 2.2 1.1.1, 1.4.1):
  *   `colorName` gives a short name from the hue and the lightness, "Blue,
- *   dark" in English and "أزرق غامق" in Arabic. React Aria has names of its
+ *   dark" in English and "أزرق داكن" in Arabic. React Aria has names of its
  *   own, but in Arabic they keep the English word order ("ساطع أزرق سماوي",
  *   the adjective first) and a Latin comma, and the role words are wrong, so
  *   the system names colours here.
@@ -316,14 +316,14 @@ const FAMILY_WORDS: Record<ColorLanguage, Record<ColorFamily, string>> = {
 
 const SHADE_WORDS: Record<ColorLanguage, Record<ColorShade, string>> = {
   en: { 'very-dark': 'very dark', dark: 'dark', base: '', light: 'light', 'very-light': 'very light' },
-  ar: { 'very-dark': 'غامق جدا', dark: 'غامق', base: '', light: 'فاتح', 'very-light': 'فاتح جدا' },
+  ar: { 'very-dark': 'داكن جدا', dark: 'داكن', base: '', light: 'فاتح', 'very-light': 'فاتح جدا' },
 };
 
 /**
  * The name of a colour for people and screen readers, from its hue and
- * lightness: "Blue, dark" and "أزرق غامق". A see through colour adds how
+ * lightness: "Blue, dark" and "أزرق داكن". A see through colour adds how
  * see through it is, with Western digits: "Blue, dark, 40% transparent",
- * "أزرق غامق، شفافية 40%" (in Arabic the percent sign sits between left to
+ * "أزرق داكن، شفافية 40%" (in Arabic the percent sign sits between left to
  * right marks, from Intl). A fully see through colour is "Transparent",
  * "شفاف". Pass a locale or a language (en, ar, ar-SA).
  */

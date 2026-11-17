@@ -5,7 +5,7 @@
 //
 // Additions to React Aria:
 // - The name comes from packages/shared/src/color.ts ("Blue, dark",
-//   "أزرق غامق"), never the hex alone (WCAG 2.2 1.1.1, 1.4.1). React Aria's
+//   "أزرق داكن"), never the hex alone (WCAG 2.2 1.1.1, 1.4.1). React Aria's
 //   own Arabic names keep the English word order and a Latin comma, and its
 //   Arabic role word for a swatch reads "changing colours", so both the
 //   name and aria-roledescription are ours.

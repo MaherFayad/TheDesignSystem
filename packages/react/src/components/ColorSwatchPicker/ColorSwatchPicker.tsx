@@ -21,7 +21,7 @@
 //   target or more, with an add button after them when onAdd is passed.
 //
 // Selection is a ring and a check, never the colour alone (WCAG 2.2 1.4.1).
-// Each swatch is named by colorName ("Blue, dark", "أزرق غامق").
+// Each swatch is named by colorName ("Blue, dark", "أزرق داكن").
 //
 // DOM:
 //   div [data-ds=color-swatch-picker][data-layout]

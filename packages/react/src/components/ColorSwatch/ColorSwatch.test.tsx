@@ -29,7 +29,7 @@ describe('ColorSwatch', () => {
   it('names in Arabic with the colour first, the Arabic comma and Western digits', () => {
     const { container } = render(<ColorSwatch color="#0d428966" locale="ar-SA" aria-label="لون الخلفية" />);
     const el = root(container);
-    expect(el.getAttribute('aria-label')!.replace(/\u200e/g, '')).toBe('أزرق غامق، شفافية 60%، لون الخلفية');
+    expect(el.getAttribute('aria-label')!.replace(/\u200e/g, '')).toBe('أزرق داكن، شفافية 60%، لون الخلفية');
     expect(el.getAttribute('aria-roledescription')).toBe('عينة لون');
     expect(/[٠-٩]/.test(el.getAttribute('aria-label')!)).toBe(false);
   });

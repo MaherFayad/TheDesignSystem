@@ -74,18 +74,18 @@ describe('colorContrast and the swatch edge', () => {
 describe('colorName', () => {
   const cases: [string, string, string][] = [
     ['#1e6fd9', 'Blue', 'أزرق'],
-    ['#0d4289', 'Blue, dark', 'أزرق غامق'],
-    ['#0b2d5c', 'Blue, very dark', 'أزرق غامق جدا'],
+    ['#0d4289', 'Blue, dark', 'أزرق داكن'],
+    ['#0b2d5c', 'Blue, very dark', 'أزرق داكن جدا'],
     ['#a7c8f5', 'Blue, light', 'أزرق فاتح'],
     ['#e03a3a', 'Red', 'أحمر'],
-    ['#8b0000', 'Red, dark', 'أحمر غامق'],
+    ['#8b0000', 'Red, dark', 'أحمر داكن'],
     ['#ff8000', 'Orange', 'برتقالي'],
     ['#8b4513', 'Brown', 'بني'],
     ['#f5c518', 'Yellow', 'أصفر'],
     ['#2fa84f', 'Green', 'أخضر'],
     ['#20b2aa', 'Teal', 'فيروزي'],
     ['#00ffff', 'Cyan', 'سماوي'],
-    ['#800080', 'Purple, dark', 'بنفسجي غامق'],
+    ['#800080', 'Purple, dark', 'بنفسجي داكن'],
     ['#ec4899', 'Pink', 'وردي'],
     ['#ffffff', 'White', 'أبيض'],
     ['#000000', 'Black', 'أسود'],
@@ -101,7 +101,7 @@ describe('colorName', () => {
 
   it('names how see through a colour is, with Western digits and the Arabic comma', () => {
     expect(colorName('#0d428966', 'en')).toBe('Blue, dark, 60% transparent');
-    expect(colorName('#0d428966', 'ar')).toBe('أزرق غامق، شفافية 60\u200e%\u200e');
+    expect(colorName('#0d428966', 'ar')).toBe('أزرق داكن، شفافية 60\u200e%\u200e');
     expect(colorName('#00000000', 'en')).toBe('Transparent');
     expect(colorName('#00000000', 'ar')).toBe('شفاف');
   });

@@ -50,7 +50,7 @@ describe('ColorSlider', () => {
     render(<ColorSlider channel="lightness" defaultValue="hsl(214, 76%, 30%)" locale="ar" />);
     const input = screen.getByRole('slider', { name: 'الإضاءة' });
     // Intl wraps the percent sign in left to right marks in Arabic; the digits stay Western.
-    expect(input.getAttribute('aria-valuetext')!.replace(/\u200e/g, '')).toBe('30%، أزرق غامق');
+    expect(input.getAttribute('aria-valuetext')!.replace(/\u200e/g, '')).toBe('30%، أزرق داكن');
   });
 
   it('steps with the keys, the path that needs no drag, and keeps the value text current', async () => {
