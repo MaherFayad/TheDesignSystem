@@ -218,7 +218,16 @@ take the same geometry from `ds.chrome`; not captured here.
 - Web and android unchanged by computed style: 0 differences on the
   PageShell, TabBar, Navbar and Sheet demos at 1280 by 800, the PageShell
   demo at 594 by 368, and the `/platforms` screens at 393 by 852.
-- `npm run check`: see the result at the end.
+- `npm run check`, once at the end: tokens build, gen, typecheck, eslint,
+  manifests, native, docs, both galleries and both consumers pass. Two
+  failures, neither in a file of this order:
+  - vitest, `packages/lint/src/gates/logical-properties.test.ts`:
+    `packages/css/src/platform/android.css` lines 1043 and 1053,
+    `border-radius` with sides that differ. Another agent's file.
+  - `check @the-system/angular`: `tag-field.spec.ts`, "Enter adds the typed
+    text and drops duplicates" failed in the full run; the Angular check
+    rerun alone passes, 771 of 771. No Angular file was touched.
+- The dev server I started (port 5487) is stopped.
 
 ## Decisions I made
 
