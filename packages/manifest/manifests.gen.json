@@ -5594,7 +5594,7 @@
     "name": "ContextMenu",
     "kind": "component",
     "family": "overlays",
-    "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
+    "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
     "useWhen": [
       "Shortcuts to the actions of an object people already work with by pointer: a file, a canvas layer, a table row",
       "Dense work surfaces where a visible button per object would crowd the page, as long as each object also has a visible way to its actions",
@@ -5933,8 +5933,8 @@
     "styles": {
       "studio": "The DropdownMenu surface: surface-3, the card radius with concentric rows, the menu shadow, the overlay step on the lit row.",
       "desk": "The Desk menu: the strong glass material and blur, a hairline, the panel radius, the yellow primary fill on the lit row. Solid under reduced transparency and more contrast.",
-      "neutral": "Planned: the DropdownMenu surface of the Neutral pack.",
-      "liquid": "Planned: a glass menu, never on top of other glass."
+      "neutral": "Planned: the DropdownMenu surface of the Neutral pack. Quick actions (order M9.4): on ios the platform's quick action row at the top, actions at least 44 by 44; on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
+      "liquid": "Planned: a glass menu, never on top of other glass. Quick actions (order M9.4): on ios the platform's quick action row at the top, actions at least 44 by 44; on web and android the same row at the top of the menu with the platform's menu spacing, never icon only."
     },
     "mistakes": [
       {
@@ -7294,7 +7294,7 @@
     "name": "DropdownMenu",
     "kind": "component",
     "family": "overlays",
-    "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a short label: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
+    "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape. Order M9.4: an optional row of two to four quick actions at the top, each an icon above a label of one or two words: on ios the platform's quick action row, on web and android the same row at the top of the menu with the platform's menu spacing, never icon only.",
     "useWhen": [
       "More actions than fit next to the object they act on",
       "A set of related commands behind one button, such as the actions of a board",
