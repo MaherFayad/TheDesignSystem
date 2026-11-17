@@ -179,3 +179,17 @@ way as the Mobbin screens. Its licence allows no copying, extracting,
 redistributing or derivative assets, and covers mock ups for the vendor's own
 platforms only. So: no asset, glyph, text, variable or component name from it
 enters the repo, no kit image is committed, and nothing is written to Figma.
+
+- **M9, build every iOS family (owner: "make sure to replicate those all,
+  and have them developed").** After M7 reports: one order per family the
+  audit marks "not there" or "we do not have it", in the audit's rank order,
+  each built in our own code with our own icons and type, in light and dark,
+  Liquid and Neutral first. New components go through the contract (lead).
+- **M10, test screens against Mobbin (owner: "make then test screens against
+  mobbin references").** Whole screens composed only from our components,
+  each rebuilt from one Mobbin reference of a native app (music, wallet,
+  settings, fitness, and more as the families need), shown reference beside
+  ours in light and dark at the phone size, and on the folding iPhone's outer
+  and inner screens once M8 lands. Our own content, no third party artwork,
+  text or marks; references stay in scratch with their Mobbin links cited.
+  A screen is the acceptance test for the families on it.
