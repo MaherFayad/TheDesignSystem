@@ -1808,6 +1808,86 @@
       --_toolbar-border-color: transparent;
     }
 
+    /*
+     * Dates, wheels and colours (order F3, from the M9.15 to M9.20
+     * requests). The calendar's arrows in the tint; the selected day is a
+     * disc in the label colour, black in light and white in dark, its number
+     * in the opposite colour (far over 4.5:1). The date chips take the kit's
+     * gray fill with no border, the open chip its text in the tint. The
+     * wheel's band is the kit's tertiary gray. A colour field is the filled
+     * gray field of an Input. The thumbs of the colour tracks and the area
+     * carry a white ring in both schemes, as the kit; the selection ring of
+     * a swatch keeps its colour, so it keeps 3:1 on the surface (1.4.11).
+     */
+    [data-platform='ios'] [data-ds='calendar'] > [data-part='header'] > :is([data-part='previous'], [data-part='next']) {
+      --_button-fg: var(--ds-color-primary-on-surface);
+      --_button-fg-hover: var(--ds-color-primary-on-surface);
+      --_button-fg-active: var(--ds-color-primary-on-surface);
+    }
+
+    [data-platform='ios'] [data-ds='calendar'] {
+      --_calendar-bg-checked: var(--ds-color-text-bright);
+      --_calendar-fg-checked: var(--ds-color-glass-backdrop-bright);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='calendar'] {
+      --_calendar-fg-checked: var(--ds-color-glass-backdrop-dark);
+    }
+
+    [data-platform='ios'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
+      --_button-border-color: transparent;
+      --_button-border-color-hover: transparent;
+      --_button-shadow: none;
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 18%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, transparent);
+    }
+
+    [data-platform='ios'] [data-ds='date-picker'] {
+      --_date-picker-fg-checked: var(--ds-color-primary-on-surface);
+      --_date-picker-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='date-picker'] {
+      --_date-picker-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios'] [data-ds='wheel-picker'] {
+      --_wheel-picker-band-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 7%, transparent);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='wheel-picker'] {
+      --_wheel-picker-band-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
+    }
+
+    [data-platform='ios'] [data-ds='color-field'] {
+      --_color-field-bg: var(--ds-color-bg-overlay-5);
+      --_color-field-border-color: transparent;
+      --_color-field-border-color-hover: transparent;
+    }
+
+    [data-platform='ios'] [data-ds='color-slider'] {
+      --_color-slider-thumb-border: var(--ds-color-glass-backdrop-bright);
+    }
+
+    [data-platform='ios'] [data-ds='color-area'] {
+      --_color-area-thumb-border: var(--ds-color-glass-backdrop-bright);
+    }
+
+    [data-platform='ios'] [data-ds='color-picker'] > [data-part='footer'] {
+      --_color-picker-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 10%, var(--ds-color-glass-backdrop-bright));
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='color-picker'] > [data-part='footer'] {
+      --_color-picker-border-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 22%, var(--ds-color-glass-backdrop-dark));
+    }
+
     /* The neutral fill of a soft capsule: the kit's plain gray, not a tinted gray. */
     [data-platform='ios'] [data-ds='button'][data-fill='neutral'][data-emphasis='soft'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 6%, transparent);
@@ -3139,5 +3219,95 @@
 
   [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > [data-part='cancel'] {
     font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* ------------------------------------------------------------ dates, wheels and colours (order F3, from the M9.15 to M9.20 requests, proposed) */
+
+  /*
+   * The kit's sizes, in every style. Calendar: 44 days and the title at 17.
+   * DatePicker: the chips 34 tall with a small control corner, 11 of side
+   * room, 17 regular; the inline form's time row 11 above and under its
+   * hairline; a date or time field the 44 of a grouped row's field. Wheel:
+   * the large digits, a column wider than its row, a small band corner.
+   * Colour: the kit's thin track, a small label in capitals, smaller row
+   * discs, a small corner on the grid; the picker's views as a short
+   * segmented row and a tall area.
+   */
+  [data-platform='ios'] [data-ds='calendar'] {
+    --_calendar-size: var(--ds-size-touch-ios);
+    --_calendar-font-size: var(--ds-font-size-l);
+    --_calendar-title-font-size: var(--ds-font-size-l);
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+    --_button-height: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-l));
+    --_button-radius: var(--ds-shape-corner-small);
+    --_button-padding-inline: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
+    --_button-font-size: var(--ds-type-body-large-font-size);
+
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] {
+    --_date-picker-padding-block: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] > [data-part='time-label'] {
+    font-size: var(--ds-type-body-large-font-size);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* The date popover fits its calendar and has no arrow. */
+  [data-platform='ios'] [data-ds='popover']:has(> [data-part='body'] > [data-ds='calendar']:only-child) > [data-part='arrow'] {
+    display: none;
+  }
+
+  [data-platform='ios'] :is([data-ds='date-field'], [data-ds='time-field']) {
+    --_date-field-height: var(--ds-size-touch-ios);
+    --_date-field-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='wheel-picker'] {
+    --_wheel-picker-font-size: var(--ds-font-size-4xl);
+    --_wheel-picker-width: calc(var(--_wheel-picker-row) * 1.75);
+    --_wheel-picker-radius: var(--ds-radius-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-slider'] {
+    --_color-slider-thickness: var(--ds-size-control-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-slider'] > [data-part='label'],
+  [data-platform='ios'] [data-ds='color-picker'] > [data-part='opacity'] > [data-part='label'] {
+    font-size: var(--ds-type-label-small-font-size);
+    text-transform: uppercase;
+  }
+
+  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='row'] {
+    --_color-swatch-picker-size: var(--ds-size-control-xs);
+  }
+
+  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='grid'] {
+    --_color-swatch-picker-radius: var(--ds-shape-corner-small);
+  }
+
+  [data-platform='ios'] [data-ds='color-field'] {
+    --_color-field-height: var(--ds-size-touch-ios);
+    --_color-field-font-size: var(--ds-font-size-2xl);
+    --_color-field-radius: var(--ds-radius-panel);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] > [data-part='views'] {
+    --_tabs-height: var(--ds-size-control-sm);
+    --_tabs-radius: var(--ds-radius-pill);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] {
+    --_color-area-height: calc(var(--ds-size-control-lg) * 6);
+    --_color-area-radius: var(--ds-radius-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] > [data-part='thumb'] {
+    --_color-area-thumb: var(--ds-size-control-md);
   }
 }

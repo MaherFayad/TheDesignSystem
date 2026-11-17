@@ -1624,4 +1624,76 @@
   [data-platform='android'] [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
     --_button-padding-inline: var(--ds-space-fixed-xl);
   }
+
+  /* ------------------------------------------------------------ dates, wheels and colours (order F3, from the M9.15 to M9.20 requests, proposed) */
+
+  /*
+   * Material's date picker: 40dp day targets from the 48dp touch size and a
+   * 2dp gap, the weekday letters small and in their own case, today an
+   * outline ring and no fill. The wheel is a flat list (no tilt or travel)
+   * with a small band corner and no band fill; the selected row takes the
+   * tonal fill (the nearest role to secondary container is the stronger
+   * primary tint, as the segmented buttons). The date chips are 40dp tonal,
+   * the date and time fields the 56dp text field. The colour picker's views
+   * are a capsule row with more room between its rows; row swatches keep
+   * the 48dp target.
+   */
+  [data-platform='android'] [data-ds='calendar'] {
+    --_calendar-gap: var(--ds-space-3xs);
+    --_calendar-size: calc(var(--ds-size-touch-android) - 2 * var(--ds-space-3xs));
+    --_calendar-today-bg: transparent;
+  }
+
+  [data-platform='android'] [data-ds='calendar'] [data-part='weekday'] {
+    font-size: var(--ds-font-size-s);
+    text-transform: none;
+  }
+
+  [data-platform='android'] [data-ds='calendar'] [data-part='day'][data-today]:not([data-selected]) {
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_calendar-today-fg);
+  }
+
+  [data-platform='android'] [data-ds='wheel-picker'] {
+    --_wheel-picker-tilt: 0deg;
+    --_wheel-picker-shift: calc(var(--_wheel-picker-row) * 0);
+    --_wheel-picker-radius: var(--ds-radius-xs);
+    --_wheel-picker-band-bg: transparent;
+    --_wheel-picker-option-bg-selected: var(--ds-color-primary-tint-hover);
+  }
+
+  [data-platform='android'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+    --_button-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_button-bg: var(--ds-color-primary-tint-hover);
+    --_button-bg-hover: var(--ds-color-primary-tint-hover);
+    --_button-bg-active: var(--ds-color-primary-tint-hover);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+  }
+
+  [data-platform='android'] :is([data-ds='date-field'], [data-ds='time-field']) {
+    --_date-field-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_date-field-padding-inline: var(--ds-space-3xl);
+    --_date-field-font-size: var(--ds-font-size-2xl);
+    --_date-field-radius: var(--ds-radius-xs);
+  }
+
+  [data-platform='android'] [data-ds='color-swatch-picker'][data-layout='row'] {
+    --_color-swatch-picker-item-size: var(--ds-size-touch-android);
+  }
+
+  [data-platform='android'] [data-ds='color-field'] {
+    --_color-field-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_color-field-padding-inline: var(--ds-space-3xl);
+    --_color-field-font-size: var(--ds-font-size-2xl);
+    --_color-field-radius: 0px;
+    --_color-field-bg: var(--ds-color-bg-surface-3);
+  }
+
+  [data-platform='android'] [data-ds='color-picker'] {
+    --_color-picker-gap: var(--ds-space-l);
+  }
+
+  [data-platform='android'] [data-ds='color-picker'] > [data-part='views'] {
+    --_tabs-radius: var(--ds-radius-pill);
+  }
 }

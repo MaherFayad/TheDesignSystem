@@ -125,11 +125,17 @@
       backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.15);
     }
 
+    /*
+     * The panels (order F3): dense frosted glass, so no bend in front of the
+     * blur. Measured in Chromium: with the bend first, the blur of the
+     * chain left the content behind sharp (the menu over the inbox read
+     * through its rows), and under this much frost the bend does not show.
+     */
     :root[data-refraction='true'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='toast'] {
-      -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
-      backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
     }
 
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'][data-active] {
