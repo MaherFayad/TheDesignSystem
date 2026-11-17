@@ -187,9 +187,24 @@ button, checkbox, radio group, input, toolbar, tab bar, navbar), Liquid and
 Neutral, light and dark, with the files before this order and after: 144
 page runs, 111960 elements, 0 differences.
 
-CONTRACT_PLACEHOLDER
+Contract, `npm run contract -- --framework react --platform ios`:
+first run for AlertDialog, Button, Checkbox, ContextMenu, Dialog,
+DropdownMenu, Input, List, Navbar, Popover, ProgressBar, RadioGroup,
+SearchField, SegmentedControl, Sheet and the first 31 Slider cases: all
+passed, 0 failed (the run hit my own 28 minute time limit inside Slider).
+Second run for Slider, Switch, TabBar, Toast, Toolbar: Switch 43 passed,
+TabBar 43, Toast 63, Toolbar 43 (20 skipped), Slider 42 passed and 1 failed:
+"keyboard map", a 90 second timeout in `page.goto` waiting for the demo to
+attach while other agents loaded the machine. The same case passed in the
+first run (1.1 minutes); the failure is a load timeout, not a style.
 
-CHECK_PLACEHOLDER
+Check, `npm run check`: tokens build, gen, eslint, manifests, vitest (227
+files, 2977 tests, the lint gates among them), angular, native, docs,
+gallery and consumer checks all passed. Typecheck failed on
+`packages/react/src/components/SwipeActions/SwipeActions.test.tsx` line 25
+(TS2345), a file another agent was writing during the run (changed at 11:55,
+mid run). I reran `tsc --noEmit -p tsconfig.json` alone right after: no
+errors. No file of this order is TypeScript.
 
 ## Decisions I made
 
