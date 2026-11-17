@@ -65,10 +65,15 @@ export function App() {
   else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
+  // A bare screen (/screens/ios/<id>/screen, /platforms/duo/screen) is a whole
+  // page in a PageShell, which renders the page's one main and its skip
+  // target. There the stage is a div, so main is never inside main.
+  const Stage = isScreenRoute(path) ? 'div' : 'main';
+
   return (
     <Theme {...axes} id="gallery-root" data-gallery="root">
       {chrome && <Shell params={params} title={route?.name} platform={{ device, source: platform.source }} />}
-      <main data-gallery="stage" data-gallery-case={caseId}>
+      <Stage data-gallery="stage" data-gallery-case={caseId}>
         {unknownStyle && (
           <p data-gallery="note" role="status">
             No style called {unknownStyle}. Showing {GALLERY_STYLE}.
@@ -80,9 +85,14 @@ export function App() {
         <DemoBoundary key={path}>
           <Suspense fallback={<p data-gallery="loading">Loading the demo</p>}>{page}</Suspense>
         </DemoBoundary>
-      </main>
+      </Stage>
     </Theme>
   );
+}
+
+/** True for a route that renders a page in a PageShell, with its own main landmark. */
+function isScreenRoute(path: string): boolean {
+  return path === '/platforms/duo/screen' || /^\/screens\/ios\/[^/]+\/screen$/.test(path);
 }
 
 /** The bar with navigation and one select per axis. Always English, left to right. */

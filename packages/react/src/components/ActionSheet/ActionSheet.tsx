@@ -70,7 +70,7 @@ import type { Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
 import { Button, type ButtonProps } from '../Button';
-import { DialogBase, assignRef, type DialogBaseState, type DialogKind } from '../Dialog/DialogBase';
+import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 import { isArabic } from '../Popover/FloatingLayer';
 
 /** Where the sheet sits. */

@@ -1,0 +1,181 @@
+{
+  "name": "ColorArea",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Change two channels of a colour at once, by default saturation across and brightness up, on a square of colour with one thumb. Each channel is a hidden slider read with the system's words (Saturation 76%, Brightness 85%, Blue; التشبع 76%، السطوع 85%، أزرق) and digits stay Western. The drag has paths without it: the arrow keys, Page keys, Home and End, and a press anywhere on the area. On web a rounded square with a ringed thumb; on ios the spectrum view of the colour panel, the square over the hue slider; on android the same form, as Material has no colour area.",
+  "useWhen": [
+    "Setting saturation and brightness together for a hue",
+    "The spectrum view of a colour picker (ColorPicker)"
+  ],
+  "avoidWhen": [
+    "Picking from a few named colours",
+    "Changing one channel only"
+  ],
+  "insteadUse": {
+    "A few named colours": "ColorSwatchPicker",
+    "One channel": "ColorSlider",
+    "Typing an exact value": "ColorField, beside the area"
+  },
+  "anatomy": ["root", "thumb"],
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color. Pass the Color from onChange back to keep the hue of a grey."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first colour, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called as the colour changes, with the colour as a string in the area's colour space and as a Color."
+    },
+    "onChangeEnd": {
+      "type": "function",
+      "description": "Called when a drag or a key press ends."
+    },
+    "colorSpace": {
+      "type": ["rgb", "hsl", "hsb"],
+      "default": "hsb",
+      "description": "The colour space of the two channels."
+    },
+    "xChannel": {
+      "type": ["hue", "saturation", "brightness", "lightness", "red", "green", "blue"],
+      "default": "saturation",
+      "description": "The channel across. In right to left it runs from the right."
+    },
+    "yChannel": {
+      "type": ["hue", "saturation", "brightness", "lightness", "red", "green", "blue"],
+      "default": "brightness",
+      "description": "The channel up."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Stamps data-disabled."
+    },
+    "xName": {
+      "type": "string",
+      "description": "The name of the hidden input of the channel across, in a form."
+    },
+    "yName": {
+      "type": "string",
+      "description": "The name of the hidden input of the channel up, in a form."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+    }
+  },
+  "states": ["data-disabled", "data-dragging"],
+  "a11y": {
+    "role": "group named Saturation and brightness (التشبع والسطوع) or the aria-label given, holding two visually hidden inputs type range from React Aria, one per channel, each named by its channel and read as a 2D slider (منزلق ثنائي الاتجاه).",
+    "focus": "One Tab stop: the input of the channel moved last, the channel across at first. The focus ring (focus.shadow.ring) draws around the thumb; it is hidden only under data-modality pointer.",
+    "keys": {
+      "ArrowRight": "One step up the channel across; one step down in right to left, where it runs from the right. Shift for a large step.",
+      "ArrowLeft": "One step down the channel across; one step up in right to left. Shift for a large step.",
+      "ArrowUp": "One step up the channel up. Shift for a large step.",
+      "ArrowDown": "One step down the channel up. Shift for a large step.",
+      "PageUp": "A large step up the channel up",
+      "PageDown": "A large step down the channel up",
+      "Home": "A large step toward the start of the channel across (the left, the right in right to left)",
+      "End": "A large step toward the end of the channel across",
+      "Pointer": "Drag the thumb, or press anywhere on the area to move the thumb there; a touch drag never scrolls the page. The keys and a single press are the paths that need no drag (WCAG 2.2 2.5.7)."
+    },
+    "announce": "Saturation, 2D slider, Saturation 76%, Brightness 85%, Blue. Arabic: التشبع، منزلق ثنائي الاتجاه، التشبع 76%، السطوع 85%، أزرق.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "React Aria names both inputs Color picker, reads the role 2D slider with a diacritic and Latin 2D in Arabic, and joins its own channel and colour names with a Latin comma in English order; after each render the name, the role and the value text of each input are replaced with the system's (colorAreaValueText).",
+      "Digits stay Western: React Aria runs with an -u-nu-latn locale.",
+      "WCAG 2.2 1.4.11: the area and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
+      "WCAG 2.2 2.5.8: the thumb is at least 24 by 24 (size.control.sm, larger on touch platforms).",
+      "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "What the colour is for, as a noun, when the default name is not enough: Fill colour. Sentence case."
+    },
+    "ar": {
+      "aria-label": "اسم الغرض من اللون بدون تشكيل: لون التعبئة."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.lg",
+    "size.target-min",
+    "radius.control",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.bg.surface",
+    "color.border.control",
+    "focus.shadow.ring",
+    "opacity.disabled",
+    "duration.base",
+    "ease.default"
+  ],
+  "motion": "press",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from areaText.ts (to move to packages/shared/src/color.ts)",
+      "example": "ColorArea.demo.tsx",
+      "note": "Motion: while dragged the thumb's surface ring grows by border.width.strong (a box shadow; React Aria owns the thumb's transform) and settles on release, on duration.base. Reduced motion: the ring changes at once, as every duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorArea] with the same DOM, two hidden range inputs and the same gradient math."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws it: a gradient square and a thumb on Reanimated, exposed as two adjustable elements with the increment and decrement actions."
+    }
+  },
+  "styles": {
+    "web": "A rounded square of the gradient, filling its container, 220px tall at the default density, a round thumb with a surface ring.",
+    "ios": "The spectrum view of the colour panel: the square fills the sheet's width over the hue slider, the corner of the panel's content, the thumb as on the sliders. Content, so solid.",
+    "android": "The same form at the Android control sizes; the thumb grows to the Android target.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the thumb may take glass in a later look order, the area stays solid."
+  },
+  "mistakes": [
+    {
+      "wrong": "A colour area alone, with no other way to set the colour",
+      "right": "Put it in a ColorPicker, or put a ColorField beside it for typing"
+    },
+    {
+      "wrong": "Passing the hex string back on every change",
+      "right": "Pass the Color from onChange back, so the hue of a grey is kept"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowUp": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageDown": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

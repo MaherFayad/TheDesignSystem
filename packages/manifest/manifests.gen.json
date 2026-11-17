@@ -5065,6 +5065,213 @@
     "since": "0.2.0"
   },
   {
+    "name": "ColorArea",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Change two channels of a colour at once, by default saturation across and brightness up, on a square of colour with one thumb. Each channel is a hidden slider read with the system's words (Saturation 76%, Brightness 85%, Blue; التشبع 76%، السطوع 85%، أزرق) and digits stay Western. The drag has paths without it: the arrow keys, Page keys, Home and End, and a press anywhere on the area. On web a rounded square with a ringed thumb; on ios the spectrum view of the colour panel, the square over the hue slider; on android the same form, as Material has no colour area.",
+    "useWhen": [
+      "Setting saturation and brightness together for a hue",
+      "The spectrum view of a colour picker (ColorPicker)"
+    ],
+    "avoidWhen": [
+      "Picking from a few named colours",
+      "Changing one channel only"
+    ],
+    "insteadUse": {
+      "A few named colours": "ColorSwatchPicker",
+      "One channel": "ColorSlider",
+      "Typing an exact value": "ColorField, beside the area"
+    },
+    "anatomy": [
+      "root",
+      "thumb"
+    ],
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color. Pass the Color from onChange back to keep the hue of a grey."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first colour, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called as the colour changes, with the colour as a string in the area's colour space and as a Color."
+      },
+      "onChangeEnd": {
+        "type": "function",
+        "description": "Called when a drag or a key press ends."
+      },
+      "colorSpace": {
+        "type": [
+          "rgb",
+          "hsl",
+          "hsb"
+        ],
+        "default": "hsb",
+        "description": "The colour space of the two channels."
+      },
+      "xChannel": {
+        "type": [
+          "hue",
+          "saturation",
+          "brightness",
+          "lightness",
+          "red",
+          "green",
+          "blue"
+        ],
+        "default": "saturation",
+        "description": "The channel across. In right to left it runs from the right."
+      },
+      "yChannel": {
+        "type": [
+          "hue",
+          "saturation",
+          "brightness",
+          "lightness",
+          "red",
+          "green",
+          "blue"
+        ],
+        "default": "brightness",
+        "description": "The channel up."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Stamps data-disabled."
+      },
+      "xName": {
+        "type": "string",
+        "description": "The name of the hidden input of the channel across, in a form."
+      },
+      "yName": {
+        "type": "string",
+        "description": "The name of the hidden input of the channel up, in a form."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+      }
+    },
+    "states": [
+      "data-disabled",
+      "data-dragging"
+    ],
+    "a11y": {
+      "role": "group named Saturation and brightness (التشبع والسطوع) or the aria-label given, holding two visually hidden inputs type range from React Aria, one per channel, each named by its channel and read as a 2D slider (منزلق ثنائي الاتجاه).",
+      "focus": "One Tab stop: the input of the channel moved last, the channel across at first. The focus ring (focus.shadow.ring) draws around the thumb; it is hidden only under data-modality pointer.",
+      "keys": {
+        "ArrowRight": "One step up the channel across; one step down in right to left, where it runs from the right. Shift for a large step.",
+        "ArrowLeft": "One step down the channel across; one step up in right to left. Shift for a large step.",
+        "ArrowUp": "One step up the channel up. Shift for a large step.",
+        "ArrowDown": "One step down the channel up. Shift for a large step.",
+        "PageUp": "A large step up the channel up",
+        "PageDown": "A large step down the channel up",
+        "Home": "A large step toward the start of the channel across (the left, the right in right to left)",
+        "End": "A large step toward the end of the channel across",
+        "Pointer": "Drag the thumb, or press anywhere on the area to move the thumb there; a touch drag never scrolls the page. The keys and a single press are the paths that need no drag (WCAG 2.2 2.5.7)."
+      },
+      "announce": "Saturation, 2D slider, Saturation 76%, Brightness 85%, Blue. Arabic: التشبع، منزلق ثنائي الاتجاه، التشبع 76%، السطوع 85%، أزرق.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "React Aria names both inputs Color picker, reads the role 2D slider with a diacritic and Latin 2D in Arabic, and joins its own channel and colour names with a Latin comma in English order; after each render the name, the role and the value text of each input are replaced with the system's (colorAreaValueText).",
+        "Digits stay Western: React Aria runs with an -u-nu-latn locale.",
+        "WCAG 2.2 1.4.11: the area and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
+        "WCAG 2.2 2.5.8: the thumb is at least 24 by 24 (size.control.sm, larger on touch platforms).",
+        "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "What the colour is for, as a noun, when the default name is not enough: Fill colour. Sentence case."
+      },
+      "ar": {
+        "aria-label": "اسم الغرض من اللون بدون تشكيل: لون التعبئة."
+      }
+    },
+    "tokens": [
+      "size.control.sm",
+      "size.control.lg",
+      "size.target-min",
+      "radius.control",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.surface",
+      "color.border.control",
+      "focus.shadow.ring",
+      "opacity.disabled",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "press",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria ColorArea and ColorThumb (react-aria-components) through their render props; words and value text from areaText.ts (to move to packages/shared/src/color.ts)",
+        "example": "ColorArea.demo.tsx",
+        "note": "Motion: while dragged the thumb's surface ring grows by border.width.strong (a box shadow; React Aria owns the thumb's transform) and settles on release, on duration.base. Reduced motion: the ring changes at once, as every duration token is 0ms."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorArea] with the same DOM, two hidden range inputs and the same gradient math."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws it: a gradient square and a thumb on Reanimated, exposed as two adjustable elements with the increment and decrement actions."
+      }
+    },
+    "styles": {
+      "web": "A rounded square of the gradient, filling its container, 220px tall at the default density, a round thumb with a surface ring.",
+      "ios": "The spectrum view of the colour panel: the square fills the sheet's width over the hue slider, the corner of the panel's content, the thumb as on the sliders. Content, so solid.",
+      "android": "The same form at the Android control sizes; the thumb grows to the Android target.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the thumb may take glass in a later look order, the area stays solid."
+    },
+    "mistakes": [
+      {
+        "wrong": "A colour area alone, with no other way to set the colour",
+        "right": "Put it in a ColorPicker, or put a ColorField beside it for typing"
+      },
+      {
+        "wrong": "Passing the hex string back on every change",
+        "right": "Pass the Color from onChange back, so the hue of a grey is kept"
+      }
+    ],
+    "contract": {
+      "keys": {
+        "ArrowRight": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "ArrowUp": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "PageDown": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "End": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "ColorField",
     "kind": "component",
     "family": "forms",
@@ -5313,6 +5520,236 @@
           "focus": "[data-part='control']",
           "case": "one",
           "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "ColorPicker",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Pick a colour in one of three views (a grid of the system palette, a spectrum square over a hue slider, or red, green and blue sliders with a hex field), set its opacity, keep saved colours and pick one from the screen where the browser can. Compact, it is a round swatch button that opens the panel; inline, the panel sits in place. On web it opens in a Popover; on ios in a Sheet, the colour panel with its three views as a segmented control, the opacity row and the saved colours under them; on android in a Sheet with the same panel at Material spacing, as Material has no colour picker.",
+    "useWhen": [
+      "Choosing any colour, with a grid, a spectrum and exact values in one place",
+      "A colour setting that keeps a few saved colours"
+    ],
+    "avoidWhen": [
+      "Picking from a fixed set of named colours",
+      "Typing an exact colour only"
+    ],
+    "insteadUse": {
+      "A fixed set of colours": "ColorSwatchPicker",
+      "Typing an exact colour only": "ColorField",
+      "One channel": "ColorSlider"
+    },
+    "anatomy": [
+      "root",
+      "trigger",
+      "views",
+      "opacity",
+      "footer",
+      "preview",
+      "saved",
+      "eyedropper"
+    ],
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color."
+      },
+      "defaultValue": {
+        "type": "string",
+        "default": "#ffffff",
+        "description": "The first colour, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called as the colour changes, with #rrggbb (#rrggbbaa when see through), lowercase, and the Color."
+      },
+      "variant": {
+        "type": [
+          "compact",
+          "inline"
+        ],
+        "default": "compact",
+        "description": "compact: a round swatch button that opens the panel (a Popover on web and macos, a Sheet on ios and android). inline: the panel in place. Stamped as data-variant."
+      },
+      "view": {
+        "type": [
+          "grid",
+          "spectrum",
+          "sliders"
+        ],
+        "description": "The view shown, controlled."
+      },
+      "defaultView": {
+        "type": [
+          "grid",
+          "spectrum",
+          "sliders"
+        ],
+        "default": "grid",
+        "description": "The first view, uncontrolled."
+      },
+      "onViewChange": {
+        "type": "function",
+        "description": "Called with the view a tab shows."
+      },
+      "savedColors": {
+        "type": "array",
+        "description": "The saved colours, controlled, as hex strings."
+      },
+      "defaultSavedColors": {
+        "type": "array",
+        "description": "The first saved colours, uncontrolled. Default none."
+      },
+      "onSavedColorsChange": {
+        "type": "function",
+        "description": "Called with the saved colours after the save button adds the colour now."
+      },
+      "showOpacity": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows the opacity slider under the views."
+      },
+      "label": {
+        "type": "string",
+        "description": "The title of the popover or sheet, the first word of the trigger's name and the name of the panel. Default Colour, اللون."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "In compact, the trigger: size.control sm, md or lg. Stamped on the compact root."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "In compact: open, controlled."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "In compact: open at first."
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "In compact: called when the panel opens or closes."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Stamps data-disabled; every control in the panel is disabled."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+      }
+    },
+    "states": [
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "Compact: a button (the IconButton trigger, aria-haspopup dialog, aria-expanded) named by the label and the colour's name (Colour, Blue, dark; اللون، أزرق داكن) that opens a dialog, the Popover or the Sheet, titled by the label. Inline: a group named by the label holding a tab list of three views, the view's controls, an opacity slider, the preview swatch (role img), the saved colours (a listbox) with its save button, and the eyedropper button named Pick a colour from the screen (اختيار لون من الشاشة).",
+      "focus": "Compact: one Tab stop, the trigger; open, focus moves into the panel and Escape or a press outside closes it and returns focus to the trigger. Inline: Tab goes through the tab list, the view's controls, the opacity thumb, the saved colours, the save button and the eyedropper.",
+      "keys": {
+        "Enter": "On the trigger: opens the panel",
+        "Space": "On the trigger: opens the panel",
+        "Escape": "Closes the panel; focus goes back to the trigger",
+        "ArrowRight": "In the tab list: the next view (the previous in right to left); in the area, a slider or the grid: as in that control",
+        "ArrowLeft": "In the tab list: the previous view (the next in right to left)",
+        "Home": "In the tab list: the first view",
+        "End": "In the tab list: the last view",
+        "Pointer": "The spectrum square and the sliders can be dragged. The grid, the sliders' keys and a press on a track, the area's keys and a press on it, and the hex field are paths that need no drag (WCAG 2.2 2.5.7)."
+      },
+      "announce": "Colour, Blue, dark, button, collapsed. Arabic: اللون، أزرق داكن، زر.",
+      "native": {
+        "accessibilityRole": "button"
+      },
+      "notes": [
+        "Every name, role word and value text inside comes from packages/shared/src/color.ts and the picker's words (pickerWords.ts, to move there), never from React Aria's Arabic strings.",
+        "The eyedropper is feature tested after mount (colorEyeDropperAvailable) and is not rendered where the browser has none: WebKit, Firefox and a server render.",
+        "WCAG 2.2 1.4.1: the picked swatch in the grid and the saved row shows a ring and a check, not colour alone.",
+        "WCAG 2.2 1.4.10: the panel has no fixed width and fits a 320px screen."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "What the colour is for, as a noun: Note colour, Tag colour. Sentence case. The spelling is colour."
+      },
+      "ar": {
+        "label": "اسم الغرض من اللون بدون تشكيل: لون الملاحظة، لون الوسم."
+      }
+    },
+    "tokens": [
+      "space.s",
+      "space.m",
+      "size.control.lg",
+      "size.icon.lg",
+      "radius.control",
+      "border.width.default",
+      "color.text.default",
+      "color.border.default",
+      "font.family.sans"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "Composes Tabs (Radix), ColorSwatchPicker, ColorArea, ColorSlider, ColorField and ColorSwatch (React Aria), IconButton, and Popover or Sheet (Radix) by platform; the eyedropper through colorPickFromScreen in packages/shared",
+        "example": "ColorPicker.demo.tsx",
+        "note": "No motion of its own: the tabs bring tab-indicator, the popover menu-scale, the sheet its rise and the thumbs press, and all collapse under reduced motion."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorPicker] composing the Angular colour controls, Tabs and the CDK overlay for the popover and the sheet."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system view first: UIColorPickerViewController on iOS; on Android a drawn panel of the same parts in a bottom sheet."
+      }
+    },
+    "styles": {
+      "web": "A round swatch button; the panel in a Popover, the tabs as a soft pill row over the view, the opacity row and a footer with the preview, the saved discs and the eyedropper.",
+      "ios": "The colour panel in a Sheet titled Colour: the three views as a segmented control, the grid or spectrum filling the sheet's width, the opacity row with its value, the large preview square and saved discs at the bottom.",
+      "android": "The same panel in a bottom Sheet at Material spacing, the views as tabs.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the sheet or popover is the glass layer, the colours inside stay solid (content)."
+    },
+    "mistakes": [
+      {
+        "wrong": "Showing the eyedropper button where the browser has no eyedropper",
+        "right": "Leave it to ColorPicker: it shows the button only where colorEyeDropperAvailable is true"
+      },
+      {
+        "wrong": "Opening the panel in a Popover on a phone",
+        "right": "Keep the platform's choice: a Sheet on ios and android"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "eyedropper"
+      ],
+      "keys": {
+        "Escape": {
+          "open": "[data-part='trigger']",
+          "case": "variants",
+          "expect": "focus-returns"
+        },
+        "Enter": {
+          "focus": "[data-part='trigger']",
+          "case": "variants",
+          "expect": "state-changes"
+        },
+        "ArrowRight": {
+          "focus": "[role='tab'][data-state='active']",
+          "case": "one",
+          "expect": "focus-moves"
         }
       }
     },

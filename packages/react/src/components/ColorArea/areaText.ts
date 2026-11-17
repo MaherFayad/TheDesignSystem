@@ -2,7 +2,7 @@
 // packages/shared/src/color.ts beside colorWords; this order does not own
 // that file, so they live here until the lead moves them (requested in the
 // order report). Pure: no React, no window.
-import { colorLanguage, colorName, colorWords, type ColorChannelName, type ColorLanguage } from '@the-system/shared';
+import { colorLanguage, colorLocale, colorName, colorWords, type ColorChannelName, type ColorLanguage } from '@the-system/shared';
 
 /** The built in words of a colour area. Arabic in standard Arabic, nouns. */
 export interface ColorAreaWords {
@@ -32,8 +32,9 @@ export interface ColorAreaTextSource {
  * The value text of one hidden input: the channel it moves first, then the
  * other channel, then the colour's name, in the page's words and with
  * Western digits. "Saturation 76%, Brightness 85%, Blue" and
- * "التشبع 76%، السطوع 85%، أزرق". `locale` must carry -u-nu-latn
- * (colorLocale) so React Aria formats Western digits.
+ * "التشبع 76%، السطوع 85%، أزرق". The numbers are formatted for the
+ * language with Western digits (colorLocale of the language, as colorName
+ * does), so ar-SA reads 76% like ar, not 76٪.
  */
 export function colorAreaValueText(
   color: ColorAreaTextSource,
@@ -42,7 +43,9 @@ export function colorAreaValueText(
   locale: string,
 ): string {
   const words = colorWords(locale);
-  const ar = colorLanguage(locale) === 'ar';
-  const part = (channel: ColorChannelName) => `${words.channels[channel]} ${color.formatChannelValue(channel, locale)}`;
+  const lang = colorLanguage(locale);
+  const ar = lang === 'ar';
+  const tag = colorLocale(lang);
+  const part = (channel: ColorChannelName) => `${words.channels[channel]} ${color.formatChannelValue(channel, tag)}`;
   return [part(first), part(second), colorName(color.toString('hex'), locale)].join(ar ? '، ' : ', ');
 }

@@ -2157,6 +2157,50 @@
       }
     },
     {
+      "name": "color-area",
+      "type": "registry:ui",
+      "title": "ColorArea",
+      "description": "Change two channels of a colour at once, by default saturation across and brightness up, on a square of colour with one thumb. Each channel is a hidden slider read with the system's words (Saturation 76%, Brightness 85%, Blue; التشبع 76%، السطوع 85%، أزرق) and digits stay Western. The drag has paths without it: the arrow keys, Page keys, Home and End, and a press anywhere on the area. On web a rounded square with a ringed thumb; on ios the spectrum view of the colour panel, the square over the hue slider; on android the same form, as Material has no colour area.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/color-swatch",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorArea/areaText.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorArea/areaText.ts"
+        },
+        {
+          "path": "packages/react/src/components/ColorArea/ColorArea.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorArea/ColorArea.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorArea/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorArea/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorArea.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorArea.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorArea",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "color-field",
       "type": "registry:ui",
       "title": "ColorField",
@@ -2192,6 +2236,58 @@
       ],
       "meta": {
         "manifest": "ColorField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "ColorPicker",
+      "description": "Pick a colour in one of three views (a grid of the system palette, a spectrum square over a hue slider, or red, green and blue sliders with a hex field), set its opacity, keep saved colours and pick one from the screen where the browser can. Compact, it is a round swatch button that opens the panel; inline, the panel sits in place. On web it opens in a Popover; on ios in a Sheet, the colour panel with its three views as a segmented control, the opacity row and the saved colours under them; on android in a Sheet with the same panel at Material spacing, as Material has no colour picker.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/color-area",
+        "@ds/color-field",
+        "@ds/color-slider",
+        "@ds/color-swatch",
+        "@ds/color-swatch-picker",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/popover",
+        "@ds/sheet",
+        "@ds/tabs",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorPicker/ColorPicker.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorPicker/ColorPicker.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorPicker/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorPicker/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ColorPicker/pickerWords.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorPicker/pickerWords.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorPicker.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorPicker.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorPicker",
         "framework": "react",
         "since": "0.1.0"
       }

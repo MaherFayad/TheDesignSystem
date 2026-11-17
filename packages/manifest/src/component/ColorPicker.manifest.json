@@ -1,0 +1,230 @@
+{
+  "name": "ColorPicker",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Pick a colour in one of three views (a grid of the system palette, a spectrum square over a hue slider, or red, green and blue sliders with a hex field), set its opacity, keep saved colours and pick one from the screen where the browser can. Compact, it is a round swatch button that opens the panel; inline, the panel sits in place. On web it opens in a Popover; on ios in a Sheet, the colour panel with its three views as a segmented control, the opacity row and the saved colours under them; on android in a Sheet with the same panel at Material spacing, as Material has no colour picker.",
+  "useWhen": [
+    "Choosing any colour, with a grid, a spectrum and exact values in one place",
+    "A colour setting that keeps a few saved colours"
+  ],
+  "avoidWhen": [
+    "Picking from a fixed set of named colours",
+    "Typing an exact colour only"
+  ],
+  "insteadUse": {
+    "A fixed set of colours": "ColorSwatchPicker",
+    "Typing an exact colour only": "ColorField",
+    "One channel": "ColorSlider"
+  },
+  "anatomy": [
+    "root",
+    "trigger",
+    "views",
+    "opacity",
+    "footer",
+    "preview",
+    "saved",
+    "eyedropper"
+  ],
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color."
+    },
+    "defaultValue": {
+      "type": "string",
+      "default": "#ffffff",
+      "description": "The first colour, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called as the colour changes, with #rrggbb (#rrggbbaa when see through), lowercase, and the Color."
+    },
+    "variant": {
+      "type": [
+        "compact",
+        "inline"
+      ],
+      "default": "compact",
+      "description": "compact: a round swatch button that opens the panel (a Popover on web and macos, a Sheet on ios and android). inline: the panel in place. Stamped as data-variant."
+    },
+    "view": {
+      "type": [
+        "grid",
+        "spectrum",
+        "sliders"
+      ],
+      "description": "The view shown, controlled."
+    },
+    "defaultView": {
+      "type": [
+        "grid",
+        "spectrum",
+        "sliders"
+      ],
+      "default": "grid",
+      "description": "The first view, uncontrolled."
+    },
+    "onViewChange": {
+      "type": "function",
+      "description": "Called with the view a tab shows."
+    },
+    "savedColors": {
+      "type": "array",
+      "description": "The saved colours, controlled, as hex strings."
+    },
+    "defaultSavedColors": {
+      "type": "array",
+      "description": "The first saved colours, uncontrolled. Default none."
+    },
+    "onSavedColorsChange": {
+      "type": "function",
+      "description": "Called with the saved colours after the save button adds the colour now."
+    },
+    "showOpacity": {
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the opacity slider under the views."
+    },
+    "label": {
+      "type": "string",
+      "description": "The title of the popover or sheet, the first word of the trigger's name and the name of the panel. Default Colour, اللون."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "In compact, the trigger: size.control sm, md or lg. Stamped on the compact root."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "In compact: open, controlled."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false,
+      "description": "In compact: open at first."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "In compact: called when the panel opens or closes."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Stamps data-disabled; every control in the panel is disabled."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+    }
+  },
+  "states": [
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "Compact: a button (the IconButton trigger, aria-haspopup dialog, aria-expanded) named by the label and the colour's name (Colour, Blue, dark; اللون، أزرق داكن) that opens a dialog, the Popover or the Sheet, titled by the label. Inline: a group named by the label holding a tab list of three views, the view's controls, an opacity slider, the preview swatch (role img), the saved colours (a listbox) with its save button, and the eyedropper button named Pick a colour from the screen (اختيار لون من الشاشة).",
+    "focus": "Compact: one Tab stop, the trigger; open, focus moves into the panel and Escape or a press outside closes it and returns focus to the trigger. Inline: Tab goes through the tab list, the view's controls, the opacity thumb, the saved colours, the save button and the eyedropper.",
+    "keys": {
+      "Enter": "On the trigger: opens the panel",
+      "Space": "On the trigger: opens the panel",
+      "Escape": "Closes the panel; focus goes back to the trigger",
+      "ArrowRight": "In the tab list: the next view (the previous in right to left); in the area, a slider or the grid: as in that control",
+      "ArrowLeft": "In the tab list: the previous view (the next in right to left)",
+      "Home": "In the tab list: the first view",
+      "End": "In the tab list: the last view",
+      "Pointer": "The spectrum square and the sliders can be dragged. The grid, the sliders' keys and a press on a track, the area's keys and a press on it, and the hex field are paths that need no drag (WCAG 2.2 2.5.7)."
+    },
+    "announce": "Colour, Blue, dark, button, collapsed. Arabic: اللون، أزرق داكن، زر.",
+    "native": {
+      "accessibilityRole": "button"
+    },
+    "notes": [
+      "Every name, role word and value text inside comes from packages/shared/src/color.ts and the picker's words (pickerWords.ts, to move there), never from React Aria's Arabic strings.",
+      "The eyedropper is feature tested after mount (colorEyeDropperAvailable) and is not rendered where the browser has none: WebKit, Firefox and a server render.",
+      "WCAG 2.2 1.4.1: the picked swatch in the grid and the saved row shows a ring and a check, not colour alone.",
+      "WCAG 2.2 1.4.10: the panel has no fixed width and fits a 320px screen."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "What the colour is for, as a noun: Note colour, Tag colour. Sentence case. The spelling is colour."
+    },
+    "ar": {
+      "label": "اسم الغرض من اللون بدون تشكيل: لون الملاحظة، لون الوسم."
+    }
+  },
+  "tokens": [
+    "space.s",
+    "space.m",
+    "size.control.lg",
+    "size.icon.lg",
+    "radius.control",
+    "border.width.default",
+    "color.text.default",
+    "color.border.default",
+    "font.family.sans"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "Composes Tabs (Radix), ColorSwatchPicker, ColorArea, ColorSlider, ColorField and ColorSwatch (React Aria), IconButton, and Popover or Sheet (Radix) by platform; the eyedropper through colorPickFromScreen in packages/shared",
+      "example": "ColorPicker.demo.tsx",
+      "note": "No motion of its own: the tabs bring tab-indicator, the popover menu-scale, the sheet its rise and the thumbs press, and all collapse under reduced motion."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorPicker] composing the Angular colour controls, Tabs and the CDK overlay for the popover and the sheet."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system view first: UIColorPickerViewController on iOS; on Android a drawn panel of the same parts in a bottom sheet."
+    }
+  },
+  "styles": {
+    "web": "A round swatch button; the panel in a Popover, the tabs as a soft pill row over the view, the opacity row and a footer with the preview, the saved discs and the eyedropper.",
+    "ios": "The colour panel in a Sheet titled Colour: the three views as a segmented control, the grid or spectrum filling the sheet's width, the opacity row with its value, the large preview square and saved discs at the bottom.",
+    "android": "The same panel in a bottom Sheet at Material spacing, the views as tabs.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the sheet or popover is the glass layer, the colours inside stay solid (content)."
+  },
+  "mistakes": [
+    {
+      "wrong": "Showing the eyedropper button where the browser has no eyedropper",
+      "right": "Leave it to ColorPicker: it shows the button only where colorEyeDropperAvailable is true"
+    },
+    {
+      "wrong": "Opening the panel in a Popover on a phone",
+      "right": "Keep the platform's choice: a Sheet on ios and android"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "eyedropper"
+    ],
+    "keys": {
+      "Escape": {
+        "open": "[data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-returns"
+      },
+      "Enter": {
+        "focus": "[data-part='trigger']",
+        "case": "variants",
+        "expect": "state-changes"
+      },
+      "ArrowRight": {
+        "focus": "[role='tab'][data-state='active']",
+        "case": "one",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

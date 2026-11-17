@@ -146,7 +146,11 @@ export function ColorArea({
   const lang = locale ?? theme.lang;
   const tag = colorLocale(lang);
   const name = ariaLabelledBy ? ariaLabel : ariaLabel ?? colorAreaWords(lang).area;
-  const out = (color: Color) => color.toString();
+  // The string in the area's own colour space: hsb(214, 61%, 81%), hsba() when see through.
+  const out = (color: Color) => {
+    const space = color.getColorSpace();
+    return color.toString(color.getChannelValue('alpha') < 1 ? `${space}a` : space);
+  };
 
   return (
     <I18nProvider locale={tag}>
