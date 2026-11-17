@@ -1991,6 +1991,43 @@
       background-color: CanvasText;
     }
   }
+
+  /* ------------------------------------------------------------ share panel (order M9.12, P1, proposed) */
+
+  /*
+   * Kit (Activity Views): tiles 66 where ours are 44, a two line label under
+   * each, the preview picture the same size, targets in a rounded square,
+   * people as large round pictures. Every style takes the geometry.
+   */
+  [data-platform='ios'] [data-ds='share-panel'] {
+    --_share-panel-icon-size: calc(var(--ds-size-control-lg) * 1.5);
+    --_share-panel-item-width: calc(var(--ds-size-control-lg) * 1.5 + var(--ds-space-xs));
+    --_share-panel-preview-size: calc(var(--ds-size-control-lg) * 1.5);
+    --_share-panel-preview-radius: var(--ds-shape-corner-medium);
+    --_share-panel-target-radius: var(--ds-shape-corner-large);
+  }
+
+  [data-platform='ios'] [data-ds='share-panel'] [data-part='person'] [data-ds='avatar'] {
+    --_avatar-size: var(--_share-panel-icon-size);
+  }
+
+  /*
+   * Liquid and Neutral: rows part by space, not by a hairline (kit), and the
+   * action circles take the platform's quiet fill, a step off the sheet, as
+   * the alert's field well does: a glass fill over the light sheet vanished.
+   * Target tiles keep the style's own fill: never glass there.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='share-panel'] {
+      --_share-panel-border-color: transparent;
+      --_share-panel-action-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 8%, transparent);
+      --_share-panel-action-fg: var(--ds-color-text-bright);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='share-panel'] {
+      --_share-panel-action-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 14%, transparent);
+    }
+  }
 }
 
 /*
@@ -2486,5 +2523,20 @@
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'] [data-ds='icon'] {
     inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
     block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+  }
+
+  /*
+   * Share panel (order M9.12, P1): as the kit, the sheet's title sits at the
+   * leading top and the round close at the trailing top.
+   */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel']:has([data-ds='share-panel']) > [data-part='header'] {
+    align-items: flex-start;
+    justify-content: start;
+    padding-inline: calc(2 * var(--ds-space-fixed-m)) calc(2 * var(--ds-space-fixed-m) + var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    text-align: start;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel']:has([data-ds='share-panel']) > [data-part='header'] > [data-part='close'] {
+    inset-inline: auto calc(2 * var(--ds-space-fixed-m));
   }
 }

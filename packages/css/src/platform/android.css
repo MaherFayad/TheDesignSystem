@@ -1178,6 +1178,13 @@
       border-width: var(--ds-border-width-default);
     }
   }
+
+  /* Share panel (order M9.12, P1): tiles at the touch size, targets in a large rounded square, rows part by space. */
+  [data-platform='android'] [data-ds='share-panel'] {
+    --_share-panel-icon-size: var(--ds-size-touch-android);
+    --_share-panel-target-radius: var(--ds-shape-corner-large);
+    --_share-panel-border-color: transparent;
+  }
 }
 
 /*

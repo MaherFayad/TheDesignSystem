@@ -280,6 +280,11 @@
     pointer-events: none;
   }
 
+  /* A compact slot may be narrower than the wide dot: the current dot is taller instead, so it never differs by color alone. */
+  [data-ds='pagination'][data-variant='dots'][data-compact] > [data-part='track'] > [data-part='dot'][data-active] {
+    --_pagination-dot-size: var(--ds-space-fixed-m);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [data-ds='pagination'][data-variant='dots'] > [data-part='track'] > [data-part='dot'] > span[aria-hidden='true']:not([data-part]) {
       transition: none;
