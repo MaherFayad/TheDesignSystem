@@ -1197,6 +1197,12 @@
     --_menu-enter-scale: var(--ds-scale-menu-enter);
     --_menu-shift: 0px;
   }
+
+  /* ActionSheet (order M9.10, P1): the Sheet's surface and scrim (Dialog.css: bg.surface and bg.scrim; the scrim was the sheet's already). */
+  [data-platform='android'] [data-ds='action-sheet'] {
+    --_action-sheet-bg: var(--ds-color-bg-surface);
+    --_action-sheet-scrim: var(--ds-color-bg-scrim);
+  }
 }
 
 /*
@@ -1588,5 +1594,24 @@
   [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {
     align-self: center;
     margin-block: 0;
+  }
+
+  /* ActionSheet (order M9.10, P1): a bottom sheet with large top corners only, rows 48 tall with no corner and no gap, 12 in from the sides. */
+  [data-platform='android'] [data-ds='action-sheet'] {
+    --_action-sheet-radius: var(--ds-shape-corner-extra-large);
+    --_action-sheet-item-height: var(--ds-size-touch-android);
+    --_action-sheet-item-radius: 0;
+    --_action-sheet-gap: 0px;
+    --_action-sheet-item-padding: 0;
+    --_action-sheet-padding: var(--ds-space-fixed-xl);
+  }
+
+  [data-platform='android'] [data-ds='action-sheet'] [data-part='panel'] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-platform='android'] [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
+    --_button-padding-inline: var(--ds-space-fixed-xl);
   }
 }

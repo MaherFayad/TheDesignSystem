@@ -97,7 +97,7 @@ export default function TabBarDemo() {
           <DemoRow label="عمود جانبي">
             <AppBar lang="ar" size="lg" placement="side" />
           </DemoRow>
-          <DemoRow label="البحث">
+          <DemoRow label="عنصر البحث">
             <AppBar lang="ar" size="lg" count={4} search="link" />
           </DemoRow>
           <DemoRow label="خانة البحث">

@@ -938,6 +938,7 @@
      */
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
       border-color: transparent;
       box-shadow:
@@ -946,6 +947,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       box-shadow:
         0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
@@ -978,6 +980,7 @@
      */
     [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'] [data-ds='toast']::after,
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -1006,6 +1009,7 @@
     /* Right to left: the light comes from the upper start, which is now the right. */
     [data-platform='ios'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='toast']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
@@ -1023,6 +1027,7 @@
     /* Dark: a faint light edge, never a dark ring. */
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -1039,6 +1044,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']):dir(rtl)::after,
@@ -1098,6 +1104,7 @@
     }
 
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 56%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
@@ -1117,6 +1124,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 72%, transparent);
     }
@@ -1142,6 +1150,7 @@
     }
 
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
       /* Order G2: lowered from 74 to 64 percent, which washed the content behind more than the reference; the rows keep 4.5:1 with a faint shade behind their text (below). */
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 64%, transparent);
@@ -1177,6 +1186,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 3%) 89%, transparent);
     }
@@ -1201,6 +1211,7 @@
     }
 
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 86%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
@@ -1220,6 +1231,7 @@
     }
 
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+    [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 2%) 92%, transparent);
     }
@@ -1247,6 +1259,15 @@
         background-color: var(--_menu-bg);
         border-color: var(--_menu-border-color);
         box-shadow: var(--_menu-shadow);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+
+      [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'] {
+        background-color: var(--_action-sheet-bg);
+        border-color: var(--_action-sheet-border-color);
+        box-shadow: var(--_action-sheet-shadow);
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
       }
@@ -1298,6 +1319,7 @@
       /* The solid paint keeps its border: no rim. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+      [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -1327,6 +1349,17 @@
       background-color: var(--_menu-bg);
       border-color: var(--_menu-border-color);
       box-shadow: var(--_menu-shadow);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
+    [data-contrast='more'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'] {
+      background-color: var(--_action-sheet-bg);
+      border-color: var(--_action-sheet-border-color);
+      box-shadow: var(--_action-sheet-shadow);
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
@@ -1390,6 +1423,7 @@
     /* No rim with more contrast. */
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='toast']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -1397,6 +1431,7 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -1410,9 +1445,11 @@
     @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
       [data-platform='ios'] [data-ds='tab-bar'],
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+      [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       [data-platform='ios'] [data-ds='toast'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
+      [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
         background-color: var(--ds-color-material-glass-solid);
       }
@@ -1435,6 +1472,7 @@
       /* No rim where the glass cannot be drawn. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
+      [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'])::after,
@@ -2550,5 +2588,66 @@
 
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel']:has([data-ds='share-panel']) > [data-part='header'] > [data-part='close'] {
     inset-inline: auto calc(2 * var(--ds-space-fixed-m));
+  }
+
+  /* ------------------------------------------------------------ action sheet (order M9.10, P1, proposed) */
+
+  /*
+   * Kit: a card 300 wide with the alert's corner, the title and the words
+   * 20 in from its edges and 16 from its top, then capsules 48 tall, 12 in
+   * from the card and 8 apart, text at 17. The bottom placement keeps the
+   * component's rows.
+   */
+  [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) {
+    --_action-sheet-width: calc(var(--ds-dialog-width-sm) - 6 * var(--ds-space-fixed-l));
+    --_action-sheet-radius: calc(var(--ds-shape-corner-extra-large-increased) + var(--ds-space-fixed-4xs));
+    --_action-sheet-padding: calc(2 * var(--ds-space-fixed-l));
+    --_action-sheet-padding-block: calc(2 * var(--ds-space-fixed-m));
+    --_action-sheet-item-padding: var(--ds-space-fixed-xl);
+    --_action-sheet-gap: var(--ds-space-fixed-m);
+    --_action-sheet-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+    --_action-sheet-item-radius: var(--ds-shape-corner-full);
+    --_action-sheet-item-font-size: var(--ds-type-body-large-font-size);
+    --_action-sheet-title-font-size: var(--ds-type-title-large-font-size);
+    --_action-sheet-description-font-size: var(--ds-type-body-medium-font-size);
+    --_action-sheet-description-fg: var(--ds-color-text-default);
+  }
+
+  /*
+   * The items take the alert's capsules: a quiet gray fill and the text
+   * color; a destructive one keeps the gray capsule with the danger text
+   * color at rest, hover and press; cancel at regular weight. Here in
+   * ds.chrome, so a style's Button recipe does not paint a tint over them
+   * (ruling 16: the platform wins on sheets and alerts).
+   */
+  [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
+    --_button-bg: var(--ds-color-bg-overlay-10);
+    --_button-bg-hover: var(--ds-color-bg-overlay-10);
+    --_button-bg-active: var(--ds-color-bg-overlay-20);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: 0 0 transparent;
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel'])[data-tone='danger'] {
+    --_button-fg: var(--ds-color-state-danger-text);
+    --_button-fg-hover: var(--ds-color-state-danger-text);
+    --_button-fg-active: var(--ds-color-state-danger-text);
+  }
+
+  /* Dark: the danger red on the gray capsule over the dark glass measured 4.30 (Liquid); a fifth of the bright text color lifts it over 4.5. */
+  [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel'])[data-tone='danger'] {
+    --_button-fg: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
+    --_button-fg-hover: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
+    --_button-fg-active: color-mix(in srgb, var(--ds-color-state-danger-text) 80%, var(--ds-color-text-bright));
+  }
+
+  [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) [data-part='panel'] > [data-part='actions'] > [data-part='cancel'] {
+    font-weight: var(--ds-font-weight-regular);
   }
 }
