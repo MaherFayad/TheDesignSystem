@@ -7,39 +7,64 @@ Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the ca
 
 ## Reset (2026-11-16)
 
-**iOS work reopened by the owner (2026-11-17).** After the mobile fixes the
-owner asked for: real glass on iOS (not outlines, not blur), a check of dark
-mode, an audit against the vendor's iOS 27 kit in Figma (read only), every
-kit family built, test screens against Mobbin, and support for the foldable
-iPhone. Android and desktop stay as they were. `npm run check` passes on this
-tree (13 steps, 2978 tests, Angular 771).
+**Stopped by the owner's order after the last iOS fix round (2026-11-17).**
+The owner asked for real glass on iOS, a dark mode check, an audit against
+the vendor's iOS 27 kit in Figma (read only), every kit family built, test
+screens against Mobbin, and support for the foldable iPhone; then said the
+round built from the first three test screens was the last fix round, and
+asked for screenshots and a push to `main`. Nothing else starts. Android and
+desktop stay as they were. `npm run check` passes on this tree (13 steps,
+3365 tests, Angular 799).
 
-- Plans: `docs/plan/reset-mobile.md` (orders M1 to M10, F1, F2),
-  `docs/plan/reset-duo.md` (foldable iPhone, orders DU1 to DU10),
+- Plans: `docs/plan/reset-mobile.md` (orders M1 to M10, F1 to F3, C1 to C3,
+  T1), `docs/plan/reset-duo.md` (foldable iPhone, DU1 to DU10),
   `docs/plan/reset-ios-families.md` (M9.1 to M9.23, M10.0 to M10.11).
-- Done, all proposed until the owner signs: glass material and refraction in
-  two tiers (M6, F2, G2); audit and its CSS fixes (M7, F1); foldable iPhone
-  first slice (DU1 placement prop, DU2 side column and sheets in
-  `ios-shell.css`, DU3 gallery route `/platforms/duo`, DU4 harness with
-  `--device duo`); families M9.1 to M9.8 and their iOS and android looks
-  (M9.5 and the built parts of M9.13).
-- Next: M9.9 to M9.12 (search tab and page dots, action sheet, selection
-  menu, share panel), then dates, wheel and colour, Angular parity (M9.14),
-  the test screens (M10), DU5 to DU10.
+- Done, all proposed until the owner signs:
+  - Glass on iOS in Liquid and Neutral: clear material, soft rim, refraction
+    in two tiers (real bend where a probe confirms Chromium, a pure CSS form
+    elsewhere), dense frosted panels (M6, F2, G2, P1, L2, F3).
+  - Audit against the kit and its fixes (M7, F1); the platform green token
+    `color.state.success.platform`.
+  - Every kit family has a component: grouped field rows, list sections,
+    index bar, pop-up button, stepper, quick action row, alert with fields,
+    default action, sheet confirm, swipe actions, banner, search tab, page
+    dots, action sheet, selection menu, share panel, calendar (Gregorian and
+    Umm al-Qura), wheel, date and time fields and picker, colour swatch,
+    swatch picker, slider, field, area and picker (M9.1 to M9.20), with
+    their iOS and android looks. Angular has the parts of M9.1, M9.3, M9.4
+    and M9.8 (M9.14).
+  - Foldable iPhone first slice: `placement` on PageShell, TabBar and Navbar,
+    the side column and sheet forms in `ios-shell.css`, the gallery route
+    `/platforms/duo`, the harness with `--device duo` (DU1 to DU4).
+  - Test screens host and three screens built only from system components
+    beside Mobbin references: `/screens/ios/music-library`, `settings`,
+    `inbox-swipe` (M10.0, M10.1, M10.4, M10.5), and the fix round they
+    produced: List rows (C1), bar forms, neutral fill button and icons (C2),
+    the `data-modality` flag and small fixes (C3), the doctor and host
+    landmarks (T1), the registry import graph (R1), the colour cleanup (C4).
+- Not started, by the owner's stop: test screens M10.2, M10.3, M10.6 to
+  M10.10 and the review M10.11; M9.21 to M9.23 (docs and reviews); DU5 to
+  DU10; Angular and native forms of the new components.
+- Known gaps left open: the large title does not collapse on scroll; the
+  settings screen's tab bar holder is in the page flow and the screen adds 4
+  at its sides; the settings split view's title sits over the list column;
+  the screen host's drawn frame is navy in Neutral dark; the android time
+  dialog boxes are not styled; android contract runs were not done for the
+  last look order; the Navbar keyboard map fails on the foldable outer screen
+  in Safari size (older defect); the full foldable device suite was not run
+  to the end; no registry install gate in `npm run check`; Angular has no
+  `data-modality` wiring; no recordings for the new touch gestures.
 - Owner rulings taken from "make sure to replicate those all": on iOS the
   switch is green with a plain off track (3:1 outline waived there); control
   shapes separate by fill and soft shadow, not a stroke; Neutral follows the
-  kit for colour and corners on iOS. Kept by the lead: filled buttons in
-  dark keep the darker tint so white labels stay at 4.5:1.
+  kit for colour and corners on iOS. Kept by the lead: filled buttons in dark
+  keep the darker tint so white labels stay at 4.5:1; page dots keep a wider
+  current dot; index keys and dots keep 24 targets.
 - Open for the owner: the decisions in section 10 of `reset-duo.md` and
-  section 7 of `reset-ios-families.md` (taken at the plans' recommendations
-  for now); the glass strength (`regular` ships); the menu label halo; a
-  real iPhone and a real foldable iPhone for the device gate.
-- Known gaps: a focused field in a grouped row draws a ring box where the
-  kit shows only the caret; on the foldable outer screen in Safari the bottom
-  bar sits over the list; the full device suite for the foldable was not run
-  to the end; the exact kit green needs a token; Angular has none of the new
-  parts yet.
+  section 7 of `reset-ios-families.md` (taken at the plans' recommendations);
+  the glass strength (`regular` ships); the spectrum form of the colour
+  picker; a real iPhone and a real foldable iPhone for the device gate
+  (Safari gets the CSS tier, which was only seen forced in Chromium).
 
 - R0 done: R0.1 to R0.15, plus the added orders R0.18 (SegmentedControl
   reflow), R0.19 (macos density), R0.20 (OTPField reflow), R0.21 (target
