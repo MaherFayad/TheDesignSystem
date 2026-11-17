@@ -14,8 +14,10 @@
 // The segment order, the separators and the day period words all come from
 // Intl through React Aria, for the locale the caller passes in. The locale
 // always carries -u-nu-latn (dateLocale from @the-system/shared), so every
-// segment, placeholder and value text keeps Western digits. Digits typed on
-// an Arabic keyboard are read too: React Aria's number parser takes them.
+// segment, placeholder and value text keeps Western digits. React Aria
+// parses typed digits in the locale's numbering system (latn), so a digit
+// typed on an Arabic keyboard would be dropped: the row turns it into its
+// Western digit first (westernDigits below).
 import type { ComponentProps, ReactElement } from 'react';
 import { DateInput as AriaDateInput, DateSegment as AriaDateSegment } from 'react-aria-components';
 
@@ -37,6 +39,41 @@ export const isArabicLocale = (tag: string) => /^ar(?:-|$)/i.test(tag);
 
 /** A boolean state attribute: present and empty when true, absent when false. */
 export const flag = (on: boolean | undefined) => (on ? '' : undefined);
+
+/** Arabic Indic and Eastern Arabic Indic digits. */
+const EASTERN_DIGITS = /[\u0660-\u0669\u06f0-\u06f9]/g;
+
+const toWestern = (text: string) =>
+  text.replace(EASTERN_DIGITS, (ch) => {
+    const code = ch.charCodeAt(0);
+    return String(code - (code >= 0x06f0 ? 0x06f0 : 0x0660));
+  });
+
+const watched = new WeakSet<Element>();
+
+/**
+ * Listens on the row, before any segment, for typed text: text with Arabic
+ * Indic digits is stopped and typed again in Western digits, so React
+ * Aria's own handler on the segment reads it.
+ */
+function westernDigits(row: HTMLElement | null) {
+  if (!row || watched.has(row)) return;
+  watched.add(row);
+  row.addEventListener(
+    'beforeinput',
+    (event) => {
+      const input = event as InputEvent;
+      const data = input.data;
+      if (!data || !new RegExp(EASTERN_DIGITS.source).test(data)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const View = row.ownerDocument.defaultView;
+      const Ctor = View?.InputEvent ?? InputEvent;
+      input.target?.dispatchEvent(new Ctor('beforeinput', { data: toWestern(data), inputType: input.inputType || 'insertText', bubbles: true, cancelable: true }));
+    },
+    { capture: true },
+  );
+}
 
 /** A dash between spaces, as React Aria writes "11, November" in a month's value text. */
 const SPACED_DASH = /\s\p{Pd}\s/gu;
@@ -63,7 +100,20 @@ export function SegmentRow({ arabic }: { arabic: boolean }): ReactElement {
   // React Aria's DateInput types leave out `render`, but the Group it renders reads it.
   const inputProps = {
     className: '',
-    render: (domProps: ComponentProps<'div'>) => <div {...(ownProps(domProps as Props) as ComponentProps<'div'>)} data-part="input" />,
+    render: (domProps: ComponentProps<'div'>) => {
+      const { ref, ...own } = ownProps(domProps as Props) as ComponentProps<'div'>;
+      return (
+        <div
+          {...own}
+          ref={(node: HTMLDivElement | null) => {
+            westernDigits(node);
+            if (typeof ref === 'function') ref(node);
+            else if (ref) (ref as { current: HTMLDivElement | null }).current = node;
+          }}
+          data-part="input"
+        />
+      );
+    },
   } as unknown as { className: string };
   return (
     <AriaDateInput {...inputProps}>

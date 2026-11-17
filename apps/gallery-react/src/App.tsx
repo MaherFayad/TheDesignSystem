@@ -9,6 +9,7 @@ const PlatformsPage = lazy(() => import('./Platforms').then((m) => ({ default: m
 const PlatformScreen = lazy(() => import('./Platforms').then((m) => ({ default: m.PlatformScreen })));
 const DuoPage = lazy(() => import('./Duo').then((m) => ({ default: m.DuoPage })));
 const DuoScreen = lazy(() => import('./Duo').then((m) => ({ default: m.DuoScreen })));
+const IosScreensRoute = lazy(() => import('./ios-screens/Host').then((m) => ({ default: m.IosScreensRoute })));
 
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
@@ -49,7 +50,7 @@ export function App() {
   useDocumentTheme(axes, device);
 
   useEffect(() => {
-    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : path.startsWith('/platforms') ? 'Platforms, gallery' : 'Gallery';
+    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : path.startsWith('/platforms') ? 'Platforms, gallery' : path === '/screens/ios' || path.startsWith('/screens/ios/') ? 'iOS screens, gallery' : 'Gallery';
   }, [route, path]);
 
   let page;
@@ -60,6 +61,7 @@ export function App() {
   else if (path === '/platforms/screen') page = <PlatformScreen params={params} />;
   else if (path === '/platforms/duo') page = <DuoPage params={params} />;
   else if (path === '/platforms/duo/screen') page = <DuoScreen params={params} />;
+  else if (path === '/screens/ios' || path.startsWith('/screens/ios/')) page = <IosScreensRoute path={path} params={params} />;
   else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
@@ -108,6 +110,7 @@ function Shell({ params, title, platform }: { params: URLSearchParams; title: st
         <Link href={`/interactions${query}`}>Interactions</Link>
         <Link href={`/platforms${query}`}>Platforms</Link>
         <Link href={`/platforms/duo${query}`}>Foldable iPhone</Link>
+        <Link href={`/screens/ios${query}`}>iOS screens</Link>
         {title && <span data-gallery="current">{title}</span>}
       </nav>
       <form data-gallery="axes" aria-label="Theme axes" onSubmit={(e) => e.preventDefault()}>

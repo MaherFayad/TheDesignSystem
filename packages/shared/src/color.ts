@@ -263,7 +263,6 @@ export function colorDescribe(color: ColorRgba | string): { family: ColorFamily;
   }
   let family = hueFamily(h);
   const top = cusp(h);
-  const d = l - top.l;
   const vivid = c / top.c;
   let shade: ColorShade = 'base';
   if (l < 0.33) shade = 'very-dark';

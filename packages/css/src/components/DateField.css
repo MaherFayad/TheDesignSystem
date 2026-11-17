@@ -1,0 +1,189 @@
+/*
+ * DateField and TimeField: a box around a row of segments, one per part of
+ * a date (day, month, year, and the era of Umm al-Qura) or of a time (hour,
+ * minute, day period), with the separators Intl writes between them (order
+ * M9.17, proposed). TimeField is built on DateField's base, so both roots
+ * are styled here (one CSS file per data-ds, with the base exception in
+ * docs/contracts/anatomy.md); TimeField.css holds what differs. The box
+ * follows Input's look (the same tokens), so a form of Inputs and date
+ * fields reads as one.
+ *
+ * Private properties on the root, shared by both roots (recipes override
+ * these; states only swap them):
+ *   --_date-field-height, --_date-field-padding-inline, --_date-field-font-size
+ *   --_date-field-radius, --_date-field-bg, --_date-field-fg
+ *   --_date-field-border-color (at rest, -hover, -focus, -invalid), --_date-field-border-style
+ *   --_date-field-ring                       the focus ring of the box
+ *   --_date-field-segment-padding-inline     the room each side of a segment's text
+ *   --_date-field-segment-radius             the corner of a segment's fill
+ *   --_date-field-segment-bg-focus, --_date-field-segment-fg-focus
+ *                                            the focused segment: the tint fill and its text, 4.5:1
+ *   --_date-field-literal-fg                 a separator
+ *   --_date-field-placeholder-fg             an empty segment's placeholder (mm, يوم)
+ *   --_date-field-duration, --_date-field-ease   the border and segment color swaps
+ *
+ * Names outside the list in anatomy.md: the parts above with a base name.
+ *
+ * Digits are tabular, so a value does not shift as it is typed. Each
+ * segment keeps its own direction from React Aria (numbers left to right),
+ * and the row follows dir: in Arabic the day sits at the right.
+ *
+ * Motion: the border color and the focused segment fill swap on
+ * duration.base. Under reduced motion every duration token is 0ms, and the
+ * component's own timing goes to 0s below.
+ */
+@layer ds.base {
+  :is([data-ds='date-field'], [data-ds='time-field']) {
+    --_date-field-height: var(--ds-size-control-md);
+    --_date-field-padding-inline: var(--ds-space-m);
+    --_date-field-font-size: var(--ds-font-size-s);
+    --_date-field-radius: var(--ds-radius-control);
+    --_date-field-bg: transparent;
+    --_date-field-fg: var(--ds-color-text-default);
+    --_date-field-border-color: var(--ds-color-border-control);
+    --_date-field-border-color-hover: var(--ds-color-border-control-hover);
+    --_date-field-border-color-focus: var(--ds-color-border-control-hover);
+    --_date-field-border-color-invalid: var(--ds-color-state-danger-text);
+    --_date-field-border-style: solid;
+    --_date-field-ring: var(--ds-focus-shadow-ring);
+    --_date-field-segment-padding-inline: var(--ds-space-4xs);
+    --_date-field-segment-radius: var(--ds-radius-xs);
+    --_date-field-segment-bg-focus: var(--ds-color-primary-tint);
+    --_date-field-segment-fg-focus: var(--ds-color-primary-on-surface);
+    --_date-field-literal-fg: var(--ds-color-text-muted);
+    --_date-field-placeholder-fg: var(--ds-color-text-placeholder);
+    --_date-field-duration: var(--ds-duration-base);
+    --_date-field-ease: var(--ds-ease-out);
+
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_date-field-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--_date-field-padding-inline);
+    border: var(--ds-border-width-default) var(--_date-field-border-style) var(--_date-field-border-color);
+    border-radius: var(--_date-field-radius);
+    background-color: var(--_date-field-bg);
+    color: var(--_date-field-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_date-field-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+    cursor: text;
+    transition: border-color var(--_date-field-duration) var(--_date-field-ease);
+  }
+
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-size='sm'] {
+    --_date-field-height: var(--ds-size-control-sm);
+    --_date-field-padding-inline: var(--ds-space-s);
+  }
+
+  /* Site fields: 44px and a fixed 16px, so phones do not zoom on focus, as Input lg. */
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-size='lg'],
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-size='lg']:lang(ar) {
+    --_date-field-height: var(--ds-size-control-lg);
+    --_date-field-padding-inline: var(--ds-space-2xl);
+    --_date-field-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  /* The row of segments. It never wraps: a narrow container scrolls the row, never breaks a date. */
+  :is([data-ds='date-field'], [data-ds='time-field']) > [data-part='input'] {
+    display: flex;
+    align-items: center;
+    min-inline-size: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    outline: none;
+  }
+
+  :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment'] {
+    box-sizing: border-box;
+    padding-inline: var(--_date-field-segment-padding-inline);
+    border-radius: var(--_date-field-segment-radius);
+    text-align: end;
+    outline: none;
+    transition:
+      background-color var(--_date-field-duration) var(--_date-field-ease),
+      color var(--_date-field-duration) var(--_date-field-ease);
+  }
+
+  :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment'][data-placeholder] {
+    color: var(--_date-field-placeholder-fg);
+  }
+
+  :is([data-ds='date-field'], [data-ds='time-field']) [data-part='literal'] {
+    color: var(--_date-field-literal-fg);
+    white-space: pre;
+  }
+
+  /* The focused segment: the tint fill under the tint text. The box ring shows that focus is in the field (2.4.7). */
+  :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment']:focus {
+    background-color: var(--_date-field-segment-bg-focus);
+    color: var(--_date-field-segment-fg-focus);
+  }
+
+  /* Hover: a stronger border, only while the value can change. */
+  :is([data-ds='date-field'], [data-ds='time-field']):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_date-field-border-color: var(--_date-field-border-color-hover);
+  }
+
+  /* Focus in any segment: the ring of the box at once, and the transparent outline for forced colors. */
+  :is([data-ds='date-field'], [data-ds='time-field']):focus-within {
+    --_date-field-border-color: var(--_date-field-border-color-focus);
+
+    box-shadow: var(--_date-field-ring);
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  /* Invalid: the danger border, 3:1 or more. A Field error says what to do. */
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-invalid],
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-invalid]:focus-within {
+    --_date-field-border-color: var(--_date-field-border-color-invalid);
+  }
+
+  /* Read only: still readable and focusable; a dashed border and a quiet fill, as Input. */
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-readonly] {
+    --_date-field-bg: var(--ds-color-bg-overlay-5);
+    --_date-field-border-style: dashed;
+
+    cursor: default;
+  }
+
+  /* Disabled: one disabled look for every control. */
+  :is([data-ds='date-field'], [data-ds='time-field'])[data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='date-field'], [data-ds='time-field']) {
+      --_date-field-duration: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='date-field'], [data-ds='time-field']) {
+    --_date-field-duration: 0s;
+  }
+
+  /* Forced colors: the ring is dropped, the outline above shows focus; the focused segment is Highlight. */
+  @media (forced-colors: active) {
+    :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment']:focus {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    :is([data-ds='date-field'], [data-ds='time-field'])[data-disabled] {
+      --_date-field-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

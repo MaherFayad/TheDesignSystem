@@ -27,6 +27,11 @@
 // takes the other from today and from `placeholderTime`. The chip keeps the
 // chosen value (WCAG 2.2 3.3.7): nothing is asked twice.
 //
+// The Calendar gets no name of its own: React Aria would join a name and
+// the month with a Latin comma in Arabic ("التاريخ, نوفمبر 2026"). Without
+// one it is named by the month alone, and the name comes from around it:
+// the popover or dialog (Date, التاريخ) or, inline, the picker's group.
+//
 // Every word a chip shows comes from Intl through dateLocale (calendar and
 // -u-nu-latn on the locale), so digits stay Western in Arabic in both
 // calendars. Chip names read the word, then the value: "Date, 17 Nov 2026",
@@ -383,15 +388,13 @@ export function DatePicker({
     setDateOpen(false);
   };
   const popupCalendar = (
-    <Calendar ref={calendarBox} aria-label={words.date} {...calendarProps} value={date} onChange={pickDate} />
+    <Calendar ref={calendarBox} {...calendarProps} value={date} onChange={pickDate} />
   );
   let dateControl: ReactNode;
   if (variant === 'inline') {
     dateControl = (
       <Calendar
         data-part="calendar"
-        aria-label={groupLabelledBy ? undefined : (ariaLabel ?? words.date)}
-        aria-labelledby={groupLabelledBy}
         {...calendarProps}
         value={date}
         onChange={setDate}

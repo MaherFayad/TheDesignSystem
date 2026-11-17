@@ -2152,6 +2152,168 @@
       }
     },
     {
+      "name": "color-field",
+      "type": "registry:ui",
+      "title": "ColorField",
+      "description": "Type a colour as a hex code, or one channel as a number, in the field box with a small preview swatch at the start. It is the typed path beside a colour slider, a swatch grid or a colour area, so nothing needs a drag. The value runs left to right and digits stay Western in every language. On web the bordered field box; on ios the gray rounded field of the colour panel, the hex code in it; on android Material's filled field.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/color-swatch",
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorField/ColorField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorField/ColorField.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorField/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "color-slider",
+      "type": "registry:ui",
+      "title": "ColorSlider",
+      "description": "Change one channel of a colour, such as hue, opacity or red, on a track that shows the channel as a gradient. The value is read with a name (214°, Blue; 214 درجة، أزرق) and digits stay Western. The drag has a path without it: arrow keys, Page keys, Home and End, and a press on the track. On web a capsule track with a round thumb; on ios the colour panel's opacity and channel sliders, a tall capsule with a ringed thumb; on android the same form, as Material has no colour slider.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/color-swatch",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorSlider/ColorSlider.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSlider/ColorSlider.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorSlider/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSlider/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorSlider.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorSlider.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorSlider",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "color-swatch",
+      "type": "registry:ui",
+      "title": "ColorSwatch",
+      "description": "A preview of one colour, read by a name made from its hue and lightness (Blue, dark; أزرق غامق), never by its hex alone. It draws an inner edge at 3:1 against the surface and a checkerboard under a see through colour. On web, ios and android it is the same square or disc; the platform only sets its size through the control tokens. It is content, not chrome: solid in every style, never glass.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorSwatch/ColorSwatch.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSwatch/ColorSwatch.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorSwatch/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSwatch/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ColorSwatch/racProps.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSwatch/racProps.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorSwatch.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorSwatch.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorSwatch",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "color-swatch-picker",
+      "type": "registry:ui",
+      "title": "ColorSwatchPicker",
+      "description": "Pick one colour from a set of swatches: a 12 by 10 grid of the system's own palette (a row of greys, then nine rows from dark to light over twelve hues), or a row of saved swatches with an add button. Each swatch is named (Blue, dark; أزرق غامق), and the pick is shown by a ring and a check, never by colour alone. On web the grid sits in a popover or a page; on ios it is the grid of the colour panel with rounded outer corners and round saved swatches under it; on android Material has no colour picker, so it keeps this form with Material spacing and 48dp targets.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/color-swatch",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ColorSwatchPicker/ColorSwatchPicker.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSwatchPicker/ColorSwatchPicker.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ColorSwatchPicker/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ColorSwatchPicker/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ColorSwatchPicker.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ColorSwatchPicker.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ColorSwatchPicker",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
@@ -2396,6 +2558,97 @@
         "manifest": "CopyButton",
         "framework": "react",
         "since": "0.2.0"
+      }
+    },
+    {
+      "name": "date-field",
+      "type": "registry:ui",
+      "title": "DateField",
+      "description": "A date typed in parts: day, month and year, each a segment you type in or step with the arrow keys, in the order and with the separators Intl gives the locale. Values are ISO Gregorian dates in and out; the segments can be drawn in the Gregorian or the Umm al-Qura calendar, and digits stay Western in every language. On web a bordered box like Input; on ios the same segments in the platform field height; on android a Material outlined or filled text field holding the segments. Proposed.",
+      "dependencies": [
+        "@internationalized/date@3.12.4",
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/DateField/DateField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DateField/DateField.tsx"
+        },
+        {
+          "path": "packages/react/src/components/DateField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DateField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/DateField/segments.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DateField/segments.tsx"
+        },
+        {
+          "path": "packages/css/src/components/DateField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/DateField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "DateField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "title": "DatePicker",
+      "description": "One date, or a date and a time, picked by tapping. variant compact is a chip that shows the date and, with granularity minute, a second chip for the time; inline is the Calendar with a time row under it. Values are ISO: 2026-11-17, or 2026-11-17T09:41 with a 24 hour time; the calendar (Gregorian or Umm al-Qura) is display only and digits stay Western. On web the date chip opens the Calendar in a popover and the time is a TimeField typed in segments; on ios the date chip opens the Calendar in a popover and the time chip opens the WheelPicker in a popover; on android both chips open a Material dialog, the Calendar and a TimeField (no clock dial). Proposed.",
+      "dependencies": [
+        "@internationalized/date@3.12.4"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/calendar",
+        "@ds/core",
+        "@ds/date-field",
+        "@ds/dialog",
+        "@ds/field",
+        "@ds/popover",
+        "@ds/theme",
+        "@ds/time-field",
+        "@ds/wheel-picker"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/DatePicker/DatePicker.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DatePicker/DatePicker.tsx"
+        },
+        {
+          "path": "packages/react/src/components/DatePicker/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DatePicker/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/DatePicker.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/DatePicker.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "DatePicker",
+        "framework": "react",
+        "since": "0.1.0"
       }
     },
     {
@@ -5479,6 +5732,52 @@
       ],
       "meta": {
         "manifest": "Tile",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "time-field",
+      "type": "registry:ui",
+      "title": "TimeField",
+      "description": "A time of day typed in parts: hour, minute and, in a 12 hour locale, the day period, each a segment. Values are 24 hour HH:mm strings in and out, whatever cycle is drawn; the cycle, the order and the day period words come from Intl for the locale, and digits stay Western. On web a bordered box like Input; on ios the same segments in the platform field height; on android the Material time input (two fields, no clock dial) inside the DatePicker's dialog. Proposed.",
+      "dependencies": [
+        "@internationalized/date@3.12.4",
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/date-field",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/TimeField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TimeField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TimeField/time.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TimeField/time.ts"
+        },
+        {
+          "path": "packages/react/src/components/TimeField/TimeField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TimeField/TimeField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/TimeField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/TimeField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "TimeField",
         "framework": "react",
         "since": "0.1.0"
       }

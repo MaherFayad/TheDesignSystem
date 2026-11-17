@@ -1,0 +1,258 @@
+{
+  "name": "DateField",
+  "kind": "component",
+  "family": "forms",
+  "summary": "A date typed in parts: day, month and year, each a segment you type in or step with the arrow keys, in the order and with the separators Intl gives the locale. Values are ISO Gregorian dates in and out; the segments can be drawn in the Gregorian or the Umm al-Qura calendar, and digits stay Western in every language. On web a bordered box like Input; on ios the same segments in the platform field height; on android a Material outlined or filled text field holding the segments. Proposed.",
+  "useWhen": [
+    "A date a person knows and types faster than they pick: a birth date, an ID expiry date",
+    "A date inside a dense form where a calendar would take too much room",
+    "The time field's companion: DateField and TimeField side by side"
+  ],
+  "avoidWhen": [
+    "Picking a date where the days around it matter, such as a booking",
+    "A phone form where a tap is easier than typing"
+  ],
+  "insteadUse": {
+    "A date picked from a month": "DatePicker or Calendar",
+    "A time of day": "TimeField",
+    "A date and a time picked by tapping": "DatePicker with granularity minute"
+  },
+  "anatomy": [
+    "root",
+    "input",
+    "segment",
+    "literal"
+  ],
+  "slots": {
+    "segment": {
+      "accepts": "text"
+    },
+    "literal": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The date, controlled: an ISO Gregorian date such as 2026-11-17, or null for none."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first date, uncontrolled, ISO."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the ISO Gregorian date once every segment is filled, and with null when one is cleared."
+    },
+    "minValue": {
+      "type": "string",
+      "description": "The earliest date, ISO. An earlier date marks the field invalid."
+    },
+    "maxValue": {
+      "type": "string",
+      "description": "The latest date, ISO. A later date marks the field invalid."
+    },
+    "isDateUnavailable": {
+      "type": "function",
+      "description": "Gets the ISO date and the drawn date; true marks the date invalid."
+    },
+    "placeholderValue": {
+      "type": "string",
+      "description": "The date the segments step from while empty, ISO. Default today."
+    },
+    "calendar": {
+      "type": [
+        "gregory",
+        "islamic-umalqura"
+      ],
+      "default": "gregory",
+      "description": "The calendar the segments are drawn in. A display choice only: the value stays ISO Gregorian. Umm al-Qura adds the era segment (AH, هـ), read only."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the segment order and the separators, such as ar-SA. Default the language of the nearest Theme. dateLocale adds -u-ca and -u-nu-latn, so digits stay Western."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "The box height: size.control.sm, md or lg (44, with a fixed 16px text so phones do not zoom)."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the field invalid (data-invalid, aria-invalid on the group). Inside a Field the field decides when it is not passed. A value outside min and max is invalid too."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No segment takes focus or changes. Stamps data-disabled."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Segments take focus and are read; typing changes nothing. Stamps data-readonly."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-required on the group; the Field shows its mark."
+    },
+    "autoFocus": {
+      "type": "boolean",
+      "default": false,
+      "description": "Focuses the first segment on mount."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name of the field when no Field label names it."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the hidden form input; it carries the ISO date."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-placeholder",
+    "data-type"
+  ],
+  "a11y": {
+    "role": "group (the input part) named by aria-label or the Field label, holding one spinbutton per segment. Each segment is named by its part and the field name (day, Birth date; يوم، تاريخ الميلاد) and reads its value by aria-valuetext. Separators are aria-hidden. The era of Umm al-Qura is a read only spinbutton.",
+    "focus": "One Tab stop per editable segment, in reading order. A press on the box outside a segment focuses the first empty segment, else the last. The box takes the focus ring while any segment has focus; the focused segment takes the tint fill.",
+    "keys": {
+      "Tab": "Moves to the next segment, and out after the last",
+      "ArrowUp": "Steps the focused segment up; wraps within its range",
+      "ArrowDown": "Steps the focused segment down; wraps within its range",
+      "ArrowRight": "The next segment; the one before in right to left",
+      "ArrowLeft": "The segment before; the next one in right to left",
+      "PageUp": "Steps the focused segment up by a larger amount (React Aria: 2 months, 7 days, 5 years)",
+      "PageDown": "Steps the focused segment down by a larger amount",
+      "Home": "The least value of the segment",
+      "End": "The greatest value of the segment",
+      "Backspace": "Clears the last digit, then the segment, then moves to the segment before",
+      "Digits": "Type the value; focus moves on when the segment is full. Arabic Indic digits are read as Western digits.",
+      "Pointer": "A tap on a segment focuses it; a tap on the box focuses the first empty segment. No drag."
+    },
+    "announce": "Birth date, group. Day, Birth date, spin button, 17. Month, 11, November. Empty segments read Empty (فارغ). React Aria's hidden description reads the whole date after a change.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "The box is control md tall (32) on web, never under 24 (WCAG 2.2 2.5.8); each segment is as tall as the box. ios and android raise the box to 44 and 56 through their platform rules (requested).",
+      "Placeholders (mm, dd, yyyy; يوم، شهر، سنة) use color.text.placeholder at 4.5:1; separators color.text.muted (1.4.3).",
+      "The focused segment is the tint text on the tint fill, 4.5:1, inside the box ring (2.4.7, 1.4.11).",
+      "Digits stay Western in every segment, placeholder, name and announcement in ar-SA, in both calendars, proved by a unit test. The segment order and the separators come from Intl: day, month, year with a slash in ar-SA.",
+      "React Aria joins a segment name and the field name with a Latin comma; in Arabic the system writes the Arabic comma instead. React Aria reads a month as a number, a dash and the month name; the system writes a comma there.",
+      "Invalid shows the danger border (3:1) and aria-invalid; the Field error says what to do (3.3.1, 3.3.3).",
+      "Under forced colors the focused segment is Highlight with HighlightText and the focus outline shows."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "Names the date: Birth date, Expiry date. Sentence case.",
+      "segments": "Segment names and placeholders come from React Aria and Intl."
+    },
+    "ar": {
+      "aria-label": "اسم بصيغة اسمية بدون تشكيل: تاريخ الميلاد، تاريخ الانتهاء.",
+      "segments": "أسماء الأجزاء وعلامات الحقل الفارغ من React Aria وIntl، والأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.4xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.leading.snug",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.primary.tint",
+    "color.primary.on-surface",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.state.danger-text",
+    "color.bg.overlay-5",
+    "focus.shadow.ring",
+    "radius.control",
+    "radius.xs",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "duration.base",
+    "ease.out"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria DateField, DateInput and DateSegment (react-aria-components) through their render props; ISO values and locales from packages/shared/src/date.ts",
+      "example": "DateField.demo.tsx",
+      "note": "Motion: the focused segment fill and the border color fade on duration.base (fade). Reduced motion: instant, the duration goes to 0s."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses a system view: the compact date picker of iOS and the Material date input field on Android, through @expo/ui."
+    }
+  },
+  "styles": {
+    "web": "A bordered box like Input with the segments in tabular digits; the focused segment takes the tint fill.",
+    "ios": "The same segments in a 44 point field, as the plain field of a grouped row (requested from the platform file).",
+    "android": "A Material outlined text field, 56dp tall, holding the segments (requested from the platform file).",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Storing the Hijri date the person typed",
+      "right": "Store the ISO Gregorian value; calendar only changes how the segments are drawn"
+    },
+    {
+      "wrong": "A text input with a date mask",
+      "right": "DateField: each part is a spinbutton with its own name and range"
+    },
+    {
+      "wrong": "Formatting with ar-SA alone",
+      "right": "dateLocale from @the-system/shared adds the calendar and -u-nu-latn"
+    }
+  ],
+  "contract": {
+    "optionalParts": [],
+    "keys": {
+      "ArrowUp": {
+        "focus": "[data-part='segment'][data-type='day']",
+        "case": "variants",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-part='segment'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='segment'][data-type='month']",
+        "case": "variants",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

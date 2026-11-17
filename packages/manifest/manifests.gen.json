@@ -5052,6 +5052,901 @@
     "since": "0.2.0"
   },
   {
+    "name": "ColorField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Type a colour as a hex code, or one channel as a number, in the field box with a small preview swatch at the start. It is the typed path beside a colour slider, a swatch grid or a colour area, so nothing needs a drag. The value runs left to right and digits stay Western in every language. On web the bordered field box; on ios the gray rounded field of the colour panel, the hex code in it; on android Material's filled field.",
+    "useWhen": [
+      "An exact colour a person knows: a brand hex code",
+      "The value box beside a ColorSlider or in the sliders view of a colour picker",
+      "One channel typed as a number: red, hue, opacity"
+    ],
+    "avoidWhen": [
+      "A colour a person picks by eye",
+      "A number that is not a colour"
+    ],
+    "insteadUse": {
+      "Picking by eye from a palette": "ColorSwatchPicker",
+      "Changing a channel by dragging": "ColorSlider",
+      "A number that is not a colour": "NumberField"
+    },
+    "anatomy": [
+      "root",
+      "start",
+      "preview",
+      "control"
+    ],
+    "slots": {
+      "preview": {
+        "accepts": [
+          "ColorSwatch"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The colour, controlled: hex, rgb() or hsl(), a React Aria Color, or null for empty."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first colour, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the committed colour as hex (#rrggbb, or #rrggbbaa when see through) and as a Color, or null when emptied. A value commits on blur and on Enter."
+      },
+      "channel": {
+        "type": [
+          "hue",
+          "saturation",
+          "brightness",
+          "lightness",
+          "red",
+          "green",
+          "blue",
+          "alpha"
+        ],
+        "description": "Edit one channel as a number instead of the hex code. Stamped as data-channel."
+      },
+      "colorSpace": {
+        "type": [
+          "rgb",
+          "hsl",
+          "hsb"
+        ],
+        "description": "The colour space of the channel. Default the space of the value."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default: radius.control of the active style. pill: fully round."
+      },
+      "preview": {
+        "type": "boolean",
+        "description": "Shows the colour as a small swatch at the start. Default true for hex, false for a channel."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the value invalid. Inside a Field it follows the Field."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Native disabled on the input; stamps data-disabled."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "The value can be read and copied, not changed; stamps data-readonly."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "A hint, such as #RRGGBB. Never the only label."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the default name and the number format. Default the language of the nearest Theme. Digits stay Western."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name when no Field label names it. Default Hex (رمز اللون), or the channel's name."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-channel"
+    ],
+    "a11y": {
+      "role": "textbox for hex, from React Aria; a channel field is a textbox with aria-valuenow, aria-valuemin and aria-valuemax. Named by the Field label, else aria-label, else Hex or the channel's name.",
+      "focus": "One Tab stop, the input. The ring (focus.shadow.ring) shows on the box at once; the glow fades in.",
+      "keys": {
+        "Enter": "Commits the typed value and formats it",
+        "ArrowUp": "One step up: the next hex value, or one unit of the channel",
+        "ArrowDown": "One step down",
+        "PageUp": "A large step up",
+        "PageDown": "A large step down",
+        "Home": "The lowest value",
+        "End": "The highest value",
+        "Pointer": "A press on the box focuses the input. No drag anywhere."
+      },
+      "announce": "Brand colour, edit text, #1E6FD9. A committed change is announced by React Aria. The preview swatch is hidden from readers: the input already holds the value.",
+      "native": {
+        "accessibilityRole": "text"
+      },
+      "notes": [
+        "WCAG 2.2 2.5.7: this field is the typed path for every colour control that drags.",
+        "Digits stay Western: React Aria formats with an -u-nu-latn locale.",
+        "The value runs left to right in right to left pages, on the reading side of the box, as NumberField's does.",
+        "The preview swatch has its 3:1 edge (ColorSwatch), so a colour close to the field fill still shows."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Names what the colour is for: Brand colour, Text colour. Sentence case.",
+        "placeholder": "#RRGGBB, as a hint only."
+      },
+      "ar": {
+        "label": "اسم بصيغة اسمية بدون تشكيل: لون العلامة، لون النص.",
+        "placeholder": "#RRGGBB بالأحرف اللاتينية، تلميح فقط."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.md",
+      "size.icon.lg",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "font.family.sans",
+      "font.weight.regular",
+      "font.size.s",
+      "font.size.fixed-m",
+      "font.leading.snug",
+      "radius.control",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.state.danger.text",
+      "color.bg.overlay-5",
+      "color.text.default",
+      "color.text.placeholder",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "scale.enter",
+      "duration.base",
+      "duration.quick",
+      "duration.spring-soft",
+      "ease.out",
+      "ease.exit",
+      "ease.spring-soft",
+      "opacity.disabled"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria ColorField and Input (react-aria-components) through their render props; inside a Field it reads the label and the state as NumberField does",
+        "example": "ColorField.demo.tsx",
+        "note": "Motion: the focus glow fades in from scale.enter and out on blur, as on Input; the ring shows at once. Reduced motion: no growth, as every duration token is 0ms."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorField] with the same DOM and the same parsing from color.ts."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws it: a TextInput with the ASCII keyboard, autoCapitalize characters, and a swatch View at the start."
+      }
+    },
+    "styles": {
+      "web": "The bordered field box, a 24px preview swatch at the start, the hex code in tabular figures.",
+      "ios": "The colour panel's value box: a gray rounded field at the platform's control height; the preview may be hidden there when a swatch already shows the colour.",
+      "android": "Material's filled field at the Android control height.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "A placeholder as the only name",
+        "right": "Put the field in a Field with a label, or pass aria-label"
+      },
+      {
+        "wrong": "Mirroring the hex code in Arabic",
+        "right": "Keep it left to right; the box does this already"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "start",
+        "preview"
+      ],
+      "keys": {
+        "ArrowUp": {
+          "focus": "[data-part='control']",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "ArrowDown": {
+          "focus": "[data-part='control']",
+          "case": "one",
+          "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "ColorSlider",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Change one channel of a colour, such as hue, opacity or red, on a track that shows the channel as a gradient. The value is read with a name (214°, Blue; 214 درجة، أزرق) and digits stay Western. The drag has a path without it: arrow keys, Page keys, Home and End, and a press on the track. On web a capsule track with a round thumb; on ios the colour panel's opacity and channel sliders, a tall capsule with a ringed thumb; on android the same form, as Material has no colour slider.",
+    "useWhen": [
+      "Changing the hue, the opacity or one channel of a colour",
+      "The sliders view and the opacity row of a colour picker (ColorPicker, order M9.20)"
+    ],
+    "avoidWhen": [
+      "A number that is not part of a colour",
+      "Picking from a few named colours"
+    ],
+    "insteadUse": {
+      "A number that is not a colour channel": "Slider",
+      "A few named colours": "ColorSwatchPicker",
+      "Typing an exact value": "ColorField, beside the slider"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "value",
+      "track",
+      "thumb"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text"
+      },
+      "value": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "channel": {
+        "type": [
+          "hue",
+          "saturation",
+          "brightness",
+          "lightness",
+          "red",
+          "green",
+          "blue",
+          "alpha"
+        ],
+        "description": "The channel the slider changes. alpha is opacity. Required."
+      },
+      "value": {
+        "type": "string",
+        "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color. Pass the Color from onChange back to keep the hue of a grey."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first colour, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called as the value changes, with the colour as a string in its colour space and as a Color."
+      },
+      "onChangeEnd": {
+        "type": "function",
+        "description": "Called when a drag or a key press ends."
+      },
+      "colorSpace": {
+        "type": [
+          "rgb",
+          "hsl",
+          "hsb"
+        ],
+        "description": "The colour space of the channel. Default the space of the value."
+      },
+      "label": {
+        "type": "string",
+        "description": "The visible name. Default the channel's name: Hue, Opacity, درجة اللون, العتامة."
+      },
+      "hideLabel": {
+        "type": "boolean",
+        "default": false,
+        "description": "Hides the label row; the slider is then named by aria-label or the channel's name."
+      },
+      "showValue": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows the value at the inline end of the label row."
+      },
+      "orientation": {
+        "type": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal",
+        "description": "Stamped as data-orientation."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The track: size.icon.md, size.control.xs or size.control.sm tall. The thumb is as tall and never under 24px."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Stamps data-disabled."
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the hidden input in a form."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+      }
+    },
+    "states": [
+      "data-orientation",
+      "data-disabled",
+      "data-dragging",
+      "data-focus-visible"
+    ],
+    "a11y": {
+      "role": "group (the track) holding a visually hidden input type range, from React Aria, named by the label. aria-valuetext is the number and a name in the page's words.",
+      "focus": "One Tab stop: the thumb's hidden input. The focus ring (focus.shadow.ring) draws around the thumb.",
+      "keys": {
+        "ArrowRight": "One step up; one step down in right to left, where the gradient runs from the right",
+        "ArrowLeft": "One step down; one step up in right to left",
+        "ArrowUp": "One step up",
+        "ArrowDown": "One step down",
+        "PageUp": "A large step up",
+        "PageDown": "A large step down",
+        "Home": "The lowest value of the channel",
+        "End": "The highest value of the channel",
+        "Pointer": "Drag the thumb, or press anywhere on the track to move the thumb there. The keys and a press are the paths that need no drag (WCAG 2.2 2.5.7)."
+      },
+      "announce": "Hue, slider, 214°, Blue. Opacity, slider, 50%. Arabic: درجة اللون، 214 درجة، أزرق.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "React Aria adds its own colour name to the value text; in Arabic it keeps the English word order (ساطع أزرق سماوي) and a Latin comma, so the value text is replaced after each render with the number and colorName from @the-system/shared.",
+        "Digits stay Western: React Aria runs with an -u-nu-latn locale, so the value reads 214 درجة and 50٪ is 50%, never Arabic Indic digits.",
+        "WCAG 2.2 1.4.11: the track and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
+        "WCAG 2.2 2.5.8: the thumb is at least 24 by 24.",
+        "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "The channel as a noun: Hue, Opacity, Red. Sentence case."
+      },
+      "ar": {
+        "label": "اسم القناة بدون تشكيل: درجة اللون، العتامة، الأحمر."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "space.2xs",
+      "space.m",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.text.default",
+      "color.text.muted",
+      "color.bg.surface",
+      "color.border.control",
+      "color.border.strong",
+      "focus.shadow.ring",
+      "scale.stretch",
+      "opacity.disabled",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "press",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria ColorSlider, SliderTrack, SliderOutput, Label and ColorThumb (react-aria-components) through their render props; words and names from packages/shared/src/color.ts",
+        "example": "ColorSlider.demo.tsx",
+        "note": "Motion: while dragged the thumb grows to scale.stretch on the scale property and settles on release, on duration.base. Reduced motion: no growth in time, as every duration token is 0ms."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorSlider] with the same DOM, on the CDK or Angular Aria slider, with the gradient from the same channel math."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws it: a gradient track and a thumb on Reanimated with accessibilityRole adjustable and the increment and decrement actions."
+      }
+    },
+    "styles": {
+      "web": "The label and the value over a 24px capsule of the gradient, a round thumb with a surface ring.",
+      "ios": "The colour panel's slider: a tall capsule (the control sizes grow it), the thumb as tall with a white ring, the label in small capitals above. Content, so solid.",
+      "android": "The same form at the Android control sizes.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the thumb may take glass in a later look order, the track stays solid."
+    },
+    "mistakes": [
+      {
+        "wrong": "A colour slider alone for an exact colour",
+        "right": "Put a ColorField beside it for typing"
+      },
+      {
+        "wrong": "Passing the hex string back on every change of the hue of a grey",
+        "right": "Pass the Color from onChange back, so the hue is kept"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "label",
+        "value"
+      ],
+      "keys": {
+        "ArrowRight": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "PageUp": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "Home": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        },
+        "End": {
+          "focus": "[data-part='thumb'] input",
+          "case": "one",
+          "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "ColorSwatch",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A preview of one colour, read by a name made from its hue and lightness (Blue, dark; أزرق غامق), never by its hex alone. It draws an inner edge at 3:1 against the surface and a checkerboard under a see through colour. On web, ios and android it is the same square or disc; the platform only sets its size through the control tokens. It is content, not chrome: solid in every style, never glass.",
+    "useWhen": [
+      "Showing a colour a person picked or saved: a label colour, a theme colour",
+      "The colour preview beside a hex field or in a list row",
+      "A legend key where the colour also has a name in text"
+    ],
+    "avoidWhen": [
+      "Picking a colour from several",
+      "A status that must be told apart by colour alone",
+      "Decoration with no meaning"
+    ],
+    "insteadUse": {
+      "Picking one colour from a set": "ColorSwatchPicker",
+      "A status with a colour": "StatusDot or Badge, which carry a word",
+      "Typing a colour": "ColorField"
+    },
+    "anatomy": [
+      "root"
+    ],
+    "props": {
+      "color": {
+        "type": "string",
+        "description": "The colour: a hex, rgb() or hsl() string, or a React Aria Color. Set inline as --_color-swatch-fill; it is the one raw colour, and it is data."
+      },
+      "colorName": {
+        "type": "string",
+        "description": "The name read for the colour. Default from colorName in @the-system/shared: the hue family and the shade, in the locale's language."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "Extra words read after the name, such as what the colour is for: Fill, لون الخلفية."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the default name and the role word. Default the language of the nearest Theme."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The square: size.control xs, sm, md or lg."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default: radius.xs. pill: a disc. square: no corner."
+      }
+    },
+    "states": [],
+    "a11y": {
+      "role": "img with aria-roledescription colour swatch (عينة لون), named by the colour's name and then the aria-label.",
+      "focus": "Not focusable. It is a picture of a value.",
+      "keys": {
+        "Pointer": "None. A swatch shows a colour; it takes no press and no drag."
+      },
+      "announce": "Blue, dark, colour swatch. A see through colour adds how see through it is: Blue, dark, 60% transparent. In Arabic: أزرق غامق، شفافية 60%، عينة لون.",
+      "native": {
+        "accessibilityRole": "image"
+      },
+      "notes": [
+        "WCAG 2.2 1.1.1 and 1.4.1: the colour always has a text name. The default comes from the hue and the lightness in OKLCH, so similar colours get the same plain name.",
+        "WCAG 2.2 1.4.11: an inner edge in color.border.control, 3:1 or more against the surface in every style and scheme, so a swatch near the surface colour still shows where it ends. colorSwatchEdgeNeeded in @the-system/shared says when the colour alone would fail.",
+        "React Aria's own Arabic role word for a swatch reads تغيير الألوان (changing colours) and its Arabic names keep the English word order, so both are replaced.",
+        "Under forced colors the swatch keeps its colour (forced-color-adjust none) and the edge is CanvasText."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "Say what the colour is for, as a noun: Fill, Label colour. The colour's own name comes first and is automatic.",
+        "names": "Hue family then shade: Blue, dark. Grey and colour are spelt the British way."
+      },
+      "ar": {
+        "aria-label": "اسم بصيغة اسمية بدون تشكيل: لون الخلفية، لون التصنيف.",
+        "names": "اللون ثم الدرجة: أزرق غامق، أحمر فاتح. الأرقام لاتينية والفاصلة عربية."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.icon.sm",
+      "radius.xs",
+      "radius.pill",
+      "border.width.default",
+      "color.border.control",
+      "color.border.strong",
+      "color.bg.surface",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria ColorSwatch (react-aria-components) through its render prop; names and words from packages/shared/src/color.ts",
+        "example": "ColorSwatch.demo.tsx",
+        "note": "No motion of its own. A parent's ring (ColorSwatchPicker) changes on duration.base; under reduced motion it changes at once."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorSwatch] with the same DOM and the same color.ts names."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws it: a View with the colour as its fill, a hairline edge from the theme and accessibilityLabel from colorName."
+      }
+    },
+    "styles": {
+      "web": "A rounded square of size.control.md with a 1px inner edge.",
+      "ios": "The same square or disc; the platform's control sizes make it larger. Content, so solid, never glass.",
+      "android": "The same, at the Material control sizes.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; solid, as content stays solid."
+    },
+    "mistakes": [
+      {
+        "wrong": "Naming a swatch by its hex code: #1E6FD9",
+        "right": "Let the default name read Blue, or pass colorName when the colour has a known name"
+      },
+      {
+        "wrong": "Writing the colour into a stylesheet",
+        "right": "Pass it as the color prop; it is data set as a custom property"
+      }
+    ],
+    "contract": {
+      "optionalParts": []
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "ColorSwatchPicker",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Pick one colour from a set of swatches: a 12 by 10 grid of the system's own palette (a row of greys, then nine rows from dark to light over twelve hues), or a row of saved swatches with an add button. Each swatch is named (Blue, dark; أزرق غامق), and the pick is shown by a ring and a check, never by colour alone. On web the grid sits in a popover or a page; on ios it is the grid of the colour panel with rounded outer corners and round saved swatches under it; on android Material has no colour picker, so it keeps this form with Material spacing and 48dp targets.",
+    "useWhen": [
+      "Picking a colour from a palette: a label, a note, a highlight",
+      "Picking one of a few saved or brand colours",
+      "The grid view of a colour picker (ColorPicker, order M9.20)"
+    ],
+    "avoidWhen": [
+      "Any exact colour a person types or drags to",
+      "A choice where the options are not colours",
+      "Two or more colours at once"
+    ],
+    "insteadUse": {
+      "An exact colour typed as hex": "ColorField",
+      "One channel such as hue or opacity": "ColorSlider",
+      "Options that are words": "RadioGroup or SegmentedControl"
+    },
+    "anatomy": [
+      "root",
+      "list",
+      "item",
+      "swatch",
+      "check",
+      "add"
+    ],
+    "slots": {
+      "swatch": {
+        "accepts": [
+          "ColorSwatch"
+        ],
+        "max": 1
+      },
+      "add": {
+        "accepts": [
+          "IconButton"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "colors": {
+        "type": "array",
+        "description": "The swatches: colour strings, or objects with color, name and disabled. Default: colorSwatchGrid() of @the-system/shared in grid, none in row."
+      },
+      "layout": {
+        "type": [
+          "grid",
+          "row"
+        ],
+        "default": "grid",
+        "description": "grid: a mosaic, the colour map, kept in hue order in right to left. row: round swatches in reading order. Stamped as data-layout."
+      },
+      "value": {
+        "type": "string",
+        "description": "The picked colour, controlled. It must equal one swatch to show as picked."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first picked colour, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the picked colour as hex (#rrggbb, or #rrggbbaa when see through) and as a React Aria Color."
+      },
+      "columns": {
+        "type": "number",
+        "default": 12,
+        "description": "Columns of the grid, set inline as --_color-swatch-picker-columns."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "In row: the disc drawn inside each target (size.control xs, sm or md). The target is size.control.lg at every size. Not stamped in grid."
+      },
+      "onAdd": {
+        "type": "function",
+        "description": "In row: shows the add button after the swatches and is called when it is pressed."
+      },
+      "addLabel": {
+        "type": "string",
+        "description": "The name of the add button. Default Add colour, إضافة لون."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "No swatch can be picked and the add button is disabled. Stamps data-disabled."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the names. Default the language of the nearest Theme."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name of the list. Default Colours, الألوان."
+      }
+    },
+    "states": [
+      "data-layout",
+      "data-selected",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "listbox (single selection) of option items, from React Aria. Each option holds a ColorSwatch img named by the colour, so it reads Blue, dark. The add button is a separate button after the list.",
+      "focus": "One Tab stop for the list: the picked swatch, else the first. Arrows move inside it. Tab then goes to the add button. Focus is an inset ring in color.focus.ring inside a grid cell, and the focus ring around the target in row.",
+      "keys": {
+        "Tab": "Into the list on one swatch, then to the add button, then out",
+        "ArrowRight": "The swatch drawn to the right. In the grid this is the same in right to left, because the grid is a colour map; in row it is the next swatch in reading order, so the one before in right to left",
+        "ArrowLeft": "The swatch drawn to the left, the same rule",
+        "ArrowDown": "The swatch drawn below, in the grid",
+        "ArrowUp": "The swatch drawn above, in the grid",
+        "Home": "The first swatch",
+        "End": "The last swatch",
+        "Enter": "Picks the focused swatch",
+        "Space": "Picks the focused swatch",
+        "Pointer": "A tap on a swatch picks it. No drag."
+      },
+      "announce": "Colours, list box. Blue, dark, 15 of 120, selected. Arabic: الألوان. أزرق غامق، محدد.",
+      "native": {
+        "accessibilityRole": "radiogroup",
+        "accessibilityState": [
+          "selected",
+          "disabled"
+        ]
+      },
+      "notes": [
+        "WCAG 2.2 1.4.1: the pick is a ring (color.text.bright with a gap of the surface) and a check on a small surface disc, never a colour change alone.",
+        "WCAG 2.2 1.4.11: the grid has one edge at 3:1 (color.border.control) around the mosaic; row swatches each have their inner edge; the selection ring is color.text.bright, far above 3:1.",
+        "WCAG 2.2 2.5.8: grid cells are at least 24 by 24 (size.target-min); row targets are size.control.lg, 44 on web and more on phones.",
+        "Names come from colorName in @the-system/shared. Names can repeat in a grid (two cells both read Orange); the position React Aria reads tells them apart.",
+        "The grid keeps its hue order in right to left: its list is dir ltr and React Aria runs it with a left to right locale, so arrows move by what is seen. Names are still read in the page's language.",
+        "React Aria's ColorSwatchPicker takes no render prop for its listbox; the system passes one through ListBoxContext.",
+        "Under forced colors the ring is Highlight, the check sits on Canvas, and focus is a Highlight outline."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "Names what the colour is for, as a noun: Label colour, Note colour. Default Colours.",
+        "labels": "The add button is Add colour."
+      },
+      "ar": {
+        "aria-label": "اسم بصيغة اسمية بدون تشكيل: لون التصنيف، لون الملاحظة. الافتراضي: الألوان.",
+        "labels": "زر الإضافة: إضافة لون."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "space.2xs",
+      "radius.field",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.text.bright",
+      "color.bg.surface",
+      "color.focus.ring",
+      "color.focus.halo",
+      "focus.shadow.ring",
+      "opacity.disabled",
+      "scale.enter",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "pop",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria ColorSwatchPicker and ColorSwatchPickerItem (react-aria-components), the listbox drawn through ListBoxContext's render prop; palette and names from packages/shared/src/color.ts",
+        "example": "ColorSwatchPicker.demo.tsx",
+        "note": "Motion: the check comes in from scale.enter and opacity 0 on duration.base (CSS @starting-style), and the ring changes on duration.base. Reduced motion: both at once, as every duration token is 0ms."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: div[dsColorSwatchPicker] with the same DOM, on the CDK listbox, with the same color.ts palette and names."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 draws it (no system view takes a palette): a grid of Pressables with accessibilityRole radio, the same palette and names."
+      }
+    },
+    "styles": {
+      "web": "A rounded mosaic of square cells with one edge, at most size.control.md a cell; or a row of 28px discs in 44px targets with a round add button.",
+      "ios": "The colour panel's grid: a mosaic with rounded outer corners, a white square ring on the pick; saved swatches as discs under it with a ring and a gap, and a grey round add button. Content, so solid.",
+      "android": "The same form with Material spacing; targets are the Android control size (48dp or more). Material has no colour picker of its own.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the swatches stay solid as content."
+    },
+    "mistakes": [
+      {
+        "wrong": "Showing the pick by darkening the swatch",
+        "right": "The ring and the check draw it; keep them"
+      },
+      {
+        "wrong": "Mirroring the grid in Arabic",
+        "right": "The grid is a colour map and keeps its order; only the row of saved swatches follows reading order"
+      },
+      {
+        "wrong": "Copying a vendor palette into colors",
+        "right": "Use the default palette, or the product's own colours"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "check",
+        "add"
+      ],
+      "keys": {
+        "ArrowRight": {
+          "focus": "[data-part='item'][data-selected]",
+          "case": "variants",
+          "physical": true,
+          "expect": "focus-moves"
+        },
+        "ArrowDown": {
+          "focus": "[data-part='item'][data-selected]",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "End": {
+          "focus": "[data-part='item'][data-selected]",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "Enter": {
+          "focus": "[data-part='item']",
+          "case": "empty",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Combobox",
     "kind": "component",
     "family": "selection",
@@ -6917,6 +7812,547 @@
         "bubble"
       ]
     }
+  },
+  {
+    "name": "DateField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A date typed in parts: day, month and year, each a segment you type in or step with the arrow keys, in the order and with the separators Intl gives the locale. Values are ISO Gregorian dates in and out; the segments can be drawn in the Gregorian or the Umm al-Qura calendar, and digits stay Western in every language. On web a bordered box like Input; on ios the same segments in the platform field height; on android a Material outlined or filled text field holding the segments. Proposed.",
+    "useWhen": [
+      "A date a person knows and types faster than they pick: a birth date, an ID expiry date",
+      "A date inside a dense form where a calendar would take too much room",
+      "The time field's companion: DateField and TimeField side by side"
+    ],
+    "avoidWhen": [
+      "Picking a date where the days around it matter, such as a booking",
+      "A phone form where a tap is easier than typing"
+    ],
+    "insteadUse": {
+      "A date picked from a month": "DatePicker or Calendar",
+      "A time of day": "TimeField",
+      "A date and a time picked by tapping": "DatePicker with granularity minute"
+    },
+    "anatomy": [
+      "root",
+      "input",
+      "segment",
+      "literal"
+    ],
+    "slots": {
+      "segment": {
+        "accepts": "text"
+      },
+      "literal": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The date, controlled: an ISO Gregorian date such as 2026-11-17, or null for none."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first date, uncontrolled, ISO."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the ISO Gregorian date once every segment is filled, and with null when one is cleared."
+      },
+      "minValue": {
+        "type": "string",
+        "description": "The earliest date, ISO. An earlier date marks the field invalid."
+      },
+      "maxValue": {
+        "type": "string",
+        "description": "The latest date, ISO. A later date marks the field invalid."
+      },
+      "isDateUnavailable": {
+        "type": "function",
+        "description": "Gets the ISO date and the drawn date; true marks the date invalid."
+      },
+      "placeholderValue": {
+        "type": "string",
+        "description": "The date the segments step from while empty, ISO. Default today."
+      },
+      "calendar": {
+        "type": [
+          "gregory",
+          "islamic-umalqura"
+        ],
+        "default": "gregory",
+        "description": "The calendar the segments are drawn in. A display choice only: the value stays ISO Gregorian. Umm al-Qura adds the era segment (AH, هـ), read only."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the segment order and the separators, such as ar-SA. Default the language of the nearest Theme. dateLocale adds -u-ca and -u-nu-latn, so digits stay Western."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The box height: size.control.sm, md or lg (44, with a fixed 16px text so phones do not zoom)."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the field invalid (data-invalid, aria-invalid on the group). Inside a Field the field decides when it is not passed. A value outside min and max is invalid too."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "No segment takes focus or changes. Stamps data-disabled."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Segments take focus and are read; typing changes nothing. Stamps data-readonly."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-required on the group; the Field shows its mark."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Focuses the first segment on mount."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name of the field when no Field label names it."
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the hidden form input; it carries the ISO date."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-placeholder",
+      "data-type"
+    ],
+    "a11y": {
+      "role": "group (the input part) named by aria-label or the Field label, holding one spinbutton per segment. Each segment is named by its part and the field name (day, Birth date; يوم، تاريخ الميلاد) and reads its value by aria-valuetext. Separators are aria-hidden. The era of Umm al-Qura is a read only spinbutton.",
+      "focus": "One Tab stop per editable segment, in reading order. A press on the box outside a segment focuses the first empty segment, else the last. The box takes the focus ring while any segment has focus; the focused segment takes the tint fill.",
+      "keys": {
+        "Tab": "Moves to the next segment, and out after the last",
+        "ArrowUp": "Steps the focused segment up; wraps within its range",
+        "ArrowDown": "Steps the focused segment down; wraps within its range",
+        "ArrowRight": "The next segment; the one before in right to left",
+        "ArrowLeft": "The segment before; the next one in right to left",
+        "PageUp": "Steps the focused segment up by a larger amount (React Aria: 2 months, 7 days, 5 years)",
+        "PageDown": "Steps the focused segment down by a larger amount",
+        "Home": "The least value of the segment",
+        "End": "The greatest value of the segment",
+        "Backspace": "Clears the last digit, then the segment, then moves to the segment before",
+        "Digits": "Type the value; focus moves on when the segment is full. Arabic Indic digits are read as Western digits.",
+        "Pointer": "A tap on a segment focuses it; a tap on the box focuses the first empty segment. No drag."
+      },
+      "announce": "Birth date, group. Day, Birth date, spin button, 17. Month, 11, November. Empty segments read Empty (فارغ). React Aria's hidden description reads the whole date after a change.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "The box is control md tall (32) on web, never under 24 (WCAG 2.2 2.5.8); each segment is as tall as the box. ios and android raise the box to 44 and 56 through their platform rules (requested).",
+        "Placeholders (mm, dd, yyyy; يوم، شهر، سنة) use color.text.placeholder at 4.5:1; separators color.text.muted (1.4.3).",
+        "The focused segment is the tint text on the tint fill, 4.5:1, inside the box ring (2.4.7, 1.4.11).",
+        "Digits stay Western in every segment, placeholder, name and announcement in ar-SA, in both calendars, proved by a unit test. The segment order and the separators come from Intl: day, month, year with a slash in ar-SA.",
+        "React Aria joins a segment name and the field name with a Latin comma; in Arabic the system writes the Arabic comma instead. React Aria reads a month as a number, a dash and the month name; the system writes a comma there.",
+        "Invalid shows the danger border (3:1) and aria-invalid; the Field error says what to do (3.3.1, 3.3.3).",
+        "Under forced colors the focused segment is Highlight with HighlightText and the focus outline shows."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "Names the date: Birth date, Expiry date. Sentence case.",
+        "segments": "Segment names and placeholders come from React Aria and Intl."
+      },
+      "ar": {
+        "aria-label": "اسم بصيغة اسمية بدون تشكيل: تاريخ الميلاد، تاريخ الانتهاء.",
+        "segments": "أسماء الأجزاء وعلامات الحقل الفارغ من React Aria وIntl، والأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "space.4xs",
+      "space.s",
+      "space.m",
+      "space.2xl",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.fixed-m",
+      "font.weight.regular",
+      "font.leading.snug",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "color.primary.tint",
+      "color.primary.on-surface",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.state.danger-text",
+      "color.bg.overlay-5",
+      "focus.shadow.ring",
+      "radius.control",
+      "radius.xs",
+      "border.width.default",
+      "border.width.strong",
+      "opacity.disabled",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria DateField, DateInput and DateSegment (react-aria-components) through their render props; ISO values and locales from packages/shared/src/date.ts",
+        "example": "DateField.demo.tsx",
+        "note": "Motion: the focused segment fill and the border color fade on duration.base (fade). Reduced motion: instant, the duration goes to 0s."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses a system view: the compact date picker of iOS and the Material date input field on Android, through @expo/ui."
+      }
+    },
+    "styles": {
+      "web": "A bordered box like Input with the segments in tabular digits; the focused segment takes the tint fill.",
+      "ios": "The same segments in a 44 point field, as the plain field of a grouped row (requested from the platform file).",
+      "android": "A Material outlined text field, 56dp tall, holding the segments (requested from the platform file).",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Storing the Hijri date the person typed",
+        "right": "Store the ISO Gregorian value; calendar only changes how the segments are drawn"
+      },
+      {
+        "wrong": "A text input with a date mask",
+        "right": "DateField: each part is a spinbutton with its own name and range"
+      },
+      {
+        "wrong": "Formatting with ar-SA alone",
+        "right": "dateLocale from @the-system/shared adds the calendar and -u-nu-latn"
+      }
+    ],
+    "contract": {
+      "optionalParts": [],
+      "keys": {
+        "ArrowUp": {
+          "focus": "[data-part='segment'][data-type='day']",
+          "case": "variants",
+          "expect": "value-changes"
+        },
+        "ArrowRight": {
+          "focus": "[data-part='segment'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "Home": {
+          "focus": "[data-part='segment'][data-type='month']",
+          "case": "variants",
+          "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "DatePicker",
+    "kind": "component",
+    "family": "forms",
+    "summary": "One date, or a date and a time, picked by tapping. variant compact is a chip that shows the date and, with granularity minute, a second chip for the time; inline is the Calendar with a time row under it. Values are ISO: 2026-11-17, or 2026-11-17T09:41 with a 24 hour time; the calendar (Gregorian or Umm al-Qura) is display only and digits stay Western. On web the date chip opens the Calendar in a popover and the time is a TimeField typed in segments; on ios the date chip opens the Calendar in a popover and the time chip opens the WheelPicker in a popover; on android both chips open a Material dialog, the Calendar and a TimeField (no clock dial). Proposed.",
+    "useWhen": [
+      "A date or a date and a time in a settings row or a form on a phone: an event start, a delivery slot, a reminder",
+      "A booking where the days around the date matter (inline)",
+      "A date in the Hijri calendar a person reads in Umm al-Qura"
+    ],
+    "avoidWhen": [
+      "A date a person knows by heart and types faster, such as a birth date",
+      "A range from a start to an end",
+      "A time on its own"
+    ],
+    "insteadUse": {
+      "A date typed in parts": "DateField",
+      "A time on its own": "TimeField or WheelPicker",
+      "The month grid on its own": "Calendar"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "date",
+      "time",
+      "calendar",
+      "time-row",
+      "time-label"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text"
+      },
+      "time-label": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "variant": {
+        "type": [
+          "compact",
+          "inline"
+        ],
+        "default": "compact",
+        "description": "compact: the chips that open the calendar and the time control. inline: the Calendar with a time row under it. Stamped as data-variant."
+      },
+      "granularity": {
+        "type": [
+          "day",
+          "minute"
+        ],
+        "default": "day",
+        "description": "day: a date. minute: a date and a time of day, a second chip (or the time row) for the time."
+      },
+      "value": {
+        "type": "string",
+        "description": "The value, controlled: 2026-11-17 for day, 2026-11-17T09:41 for minute (ISO local, no seconds, no zone, 24 hour), or null."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first value, uncontrolled."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with the new value in the form of granularity. A pick of one half while the value is empty takes the other from today and from placeholderTime."
+      },
+      "label": {
+        "type": "node",
+        "description": "The visible label, drawn at the inline start (part label). It names the group. Without it, aria-label or a Field label (3.3.2)."
+      },
+      "minValue": {
+        "type": "string",
+        "description": "The earliest date, ISO. Days before it cannot be picked."
+      },
+      "maxValue": {
+        "type": "string",
+        "description": "The latest date, ISO. Days after it cannot be picked."
+      },
+      "isDateUnavailable": {
+        "type": "function",
+        "description": "Gets the ISO date and the drawn date; true keeps the day readable but not pickable."
+      },
+      "calendar": {
+        "type": [
+          "gregory",
+          "islamic-umalqura"
+        ],
+        "default": "gregory",
+        "description": "The calendar drawn in the chip and the Calendar. The value stays ISO Gregorian."
+      },
+      "firstDayOfWeek": {
+        "type": [
+          "sun",
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "description": "The first column of the week. Default from the locale's region."
+      },
+      "hourCycle": {
+        "type": [
+          "12",
+          "24"
+        ],
+        "description": "12 or 24. Default the locale's own cycle. The value is 24 hour either way."
+      },
+      "minuteStep": {
+        "type": "number",
+        "default": 1,
+        "description": "Minutes between rows of the time wheel on ios: 1, 5, 15."
+      },
+      "placeholderTime": {
+        "type": "string",
+        "default": "09:00",
+        "description": "The time a date takes when it is picked before any time, HH:mm."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of every word and of the week, such as ar-SA. Default the language of the nearest Theme. Digits stay Western."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The chip and the time field height: control sm, md or lg. ios raises chips to 34 to 44 (requested)."
+      },
+      "labels": {
+        "type": "object",
+        "description": "Words in place of the built in ones: date (Date, التاريخ), time (Time, الوقت), addDate (Add date, إضافة تاريخ), addTime (Add time, إضافة وقت)."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "The chips are aria-disabled and open nothing. Stamps data-disabled."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "The chips show the value, take focus and open nothing; the inline Calendar and the web TimeField are read only. Stamps data-readonly."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the picker invalid: the chip text takes the danger color. Inside a Field the field decides when it is not passed."
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of a hidden form input that carries the value."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name of the group when no label is drawn."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-placeholder",
+      "data-state"
+    ],
+    "a11y": {
+      "role": "group named by the label (or aria-label, or the Field label). Each chip is a system Button named by its word and its value (Date, 17 Nov 2026; التاريخ، 17 نوفمبر 2026) with aria-haspopup dialog and aria-expanded. The popover is a dialog named Date or Time; on android a modal dialog with the same title.",
+      "focus": "Tab stops: the date chip, then the time chip (or the time segments on web). On open, focus goes to the picked day of the Calendar (else today) or to the first wheel column or time segment. Escape, a press outside or a pick in the Calendar closes the popover and focus goes back to its chip.",
+      "keys": {
+        "Tab": "Moves from the date chip to the time chip or the time segments, then out",
+        "Enter": "On a chip, opens its calendar or time control",
+        "Space": "On a chip, opens its calendar or time control",
+        "Escape": "Closes the open popover or dialog; focus goes back to the chip",
+        "Arrows in the calendar": "As Calendar: days, PageUp and PageDown for months, Shift with them for years; Enter picks and closes",
+        "Arrows in the wheel": "As WheelPicker: Up and Down step, Left and Right move between columns",
+        "Pointer": "A tap on a chip opens it; a tap on a day picks it; a tap on a wheel row chooses it. No drag is needed (2.5.7)."
+      },
+      "announce": "Starts, group. Date, 17 Nov 2026, button, collapsed. After a pick the chip is focused again and reads its new value. The Calendar and the wheel announce as their own manifests say.",
+      "native": {
+        "accessibilityRole": "button"
+      },
+      "notes": [
+        "Chips are control md tall (32) on web and 34 to 44 on ios with a 44 point hit area (WCAG 2.2 2.5.8, requested from the platform file).",
+        "Every picker has a name: the label, aria-label or a Field label (3.3.2).",
+        "The chip keeps the chosen value; a picked date is never asked again when the time is picked (3.3.7). A value with one half missing takes the other half from today and placeholderTime.",
+        "Chip text is color.text default on the soft fill at 4.5:1; an open chip takes the tint text (1.4.3). The empty chip (Add date) uses color.text.muted at 4.5:1.",
+        "Digits stay Western in the chips, the chip names, the Calendar, the wheel and the time segments in ar-SA, in both calendars, proved by a unit test that gathers every visible text, name and announcement.",
+        "In Arabic the chips run in reading order: the date chip at the right, the time chip at its left.",
+        "No clock dial on android: the time dialog holds a TimeField (2.5.7)."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Names what is picked: Starts, Delivery date. Sentence case.",
+        "chips": "Date and Time before the value in the chip names; Add date and Add time while empty."
+      },
+      "ar": {
+        "label": "اسم بصيغة اسمية بدون تشكيل: موعد البدء، تاريخ التوصيل.",
+        "chips": "التاريخ والوقت قبل القيمة في أسماء الأزرار، وإضافة تاريخ وإضافة وقت قبل الاختيار. الأرقام لاتينية والتاريخ من Intl."
+      }
+    },
+    "tokens": [
+      "space.xs",
+      "space.s",
+      "font.family.sans",
+      "font.size.s",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "color.text.default",
+      "color.text.muted",
+      "color.primary.on-surface",
+      "color.state.danger-text",
+      "color.border.default",
+      "border.width.default"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "Composes Calendar (React Aria), WheelPicker, TimeField (React Aria) and the system Popover and Dialog (Radix); chips are system Buttons",
+        "example": "DatePicker.demo.tsx",
+        "note": "Motion: the popover enters with menu-scale and the android dialog with the dialog pattern; the Calendar fades its month and the chip presses. Reduced motion: each collapses as its own component says."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses the system view: the compact and the inline date pickers of iOS (UIDatePicker styles compact and inline) and the Material date and time picker dialogs on Android (time input mode), through @expo/ui."
+      }
+    },
+    "styles": {
+      "web": "A row of the label and a soft date chip that opens the Calendar in a popover, then the time as TimeField segments. inline: the Calendar with a time row under a hairline.",
+      "ios": "A grouped row: the label at the inline start and two gray chips at the inline end, the date and the time, 34 tall with a 44 point hit area; the date chip opens the Calendar and the time chip the wheel, each in a popover; an open chip shows the tint text. inline: the Calendar with a Time row and a time chip.",
+      "android": "Chips that open the Material date picker dialog (the Calendar) and the time input dialog (a TimeField, no dial), each with a headline.",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; the popover is the control layer (glass allowed), the calendar days are content (solid)."
+    },
+    "mistakes": [
+      {
+        "wrong": "Storing the date and the time in two values that can disagree",
+        "right": "One value: 2026-11-17T09:41"
+      },
+      {
+        "wrong": "A clock dial for the time on android",
+        "right": "The time input dialog: a dial needs a drag (2.5.7)"
+      },
+      {
+        "wrong": "A chip named only by its value",
+        "right": "The chip name starts with its word: Date, 17 Nov 2026"
+      },
+      {
+        "wrong": "Storing the Hijri date",
+        "right": "Store the ISO Gregorian value; calendar only changes how it is drawn"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "label",
+        "time",
+        "calendar",
+        "time-row",
+        "time-label"
+      ],
+      "keys": {
+        "Escape": {
+          "open": "[data-part='date']",
+          "case": "variants",
+          "expect": "focus-returns"
+        },
+        "Enter": {
+          "focus": "[data-part='date']",
+          "case": "variants",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
   },
   {
     "name": "DescriptionList",
@@ -26684,6 +28120,253 @@
         "right": "Keep them visible, so keyboard and touch reach them"
       }
     ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "TimeField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A time of day typed in parts: hour, minute and, in a 12 hour locale, the day period, each a segment. Values are 24 hour HH:mm strings in and out, whatever cycle is drawn; the cycle, the order and the day period words come from Intl for the locale, and digits stay Western. On web a bordered box like Input; on ios the same segments in the platform field height; on android the Material time input (two fields, no clock dial) inside the DatePicker's dialog. Proposed.",
+    "useWhen": [
+      "A time a person knows and types: an opening hour, a departure time",
+      "The time half of a date and time on web, next to the date chip",
+      "The android time dialog of DatePicker"
+    ],
+    "avoidWhen": [
+      "A time picked by flicking on a phone",
+      "A duration, which is a number of minutes, not a time of day"
+    ],
+    "insteadUse": {
+      "A time picked on a phone": "WheelPicker (or DatePicker, which opens it on ios)",
+      "A duration": "NumberField",
+      "A date": "DateField"
+    },
+    "anatomy": [
+      "root",
+      "input",
+      "segment",
+      "literal"
+    ],
+    "slots": {
+      "segment": {
+        "accepts": "text"
+      },
+      "literal": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The time, controlled: a 24 hour HH:mm such as 21:05, or null for none."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first time, uncontrolled, HH:mm."
+      },
+      "onChange": {
+        "type": "function",
+        "description": "Called with HH:mm once every segment is filled, and with null when one is cleared."
+      },
+      "minValue": {
+        "type": "string",
+        "description": "The earliest time, HH:mm. An earlier time marks the field invalid."
+      },
+      "maxValue": {
+        "type": "string",
+        "description": "The latest time, HH:mm. A later time marks the field invalid."
+      },
+      "placeholderValue": {
+        "type": "string",
+        "description": "The time the segments step from while empty, HH:mm. Default midnight."
+      },
+      "locale": {
+        "type": "string",
+        "description": "The locale of the segment order, the separator and the day period words, such as ar-SA. Default the language of the nearest Theme. Digits stay Western."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The box height: size.control.sm, md or lg (44, with a fixed 16px text so phones do not zoom)."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the field invalid (data-invalid, aria-invalid on the group). Inside a Field the field decides when it is not passed. A value outside min and max is invalid too."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "No segment takes focus or changes. Stamps data-disabled."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Segments take focus and are read; typing changes nothing. Stamps data-readonly."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-required on the group; the Field shows its mark."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Focuses the first segment on mount."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The name of the field when no Field label names it."
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the hidden form input. React Aria writes HH:mm:ss there."
+      },
+      "hourCycle": {
+        "type": [
+          "12",
+          "24"
+        ],
+        "description": "12 or 24. Default the locale's own cycle (wheelHourCycle, the one WheelPicker uses): 12 in ar-SA and en-US, 24 in en-GB. The value is 24 hour either way."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-placeholder",
+      "data-type"
+    ],
+    "a11y": {
+      "role": "group (the input part) named by aria-label or the Field label, holding a spinbutton for the hour, the minute and, in a 12 hour locale, the day period. Each is named by its part and the field name (hour, Start; الساعات، وقت البدء). Separators are aria-hidden.",
+      "focus": "One Tab stop per editable segment, in reading order. A press on the box outside a segment focuses the first empty segment, else the last. The box takes the focus ring while any segment has focus; the focused segment takes the tint fill.",
+      "keys": {
+        "Tab": "Moves to the next segment, and out after the last",
+        "ArrowUp": "Steps the focused segment up; wraps within its range",
+        "ArrowDown": "Steps the focused segment down; wraps within its range",
+        "ArrowRight": "The next segment; the one before in right to left",
+        "ArrowLeft": "The segment before; the next one in right to left",
+        "PageUp": "Steps the hour up by 2, the minute by 15 (React Aria)",
+        "PageDown": "Steps the hour down by 2, the minute by 15",
+        "Home": "The least value of the segment",
+        "End": "The greatest value of the segment",
+        "Backspace": "Clears the last digit, then the segment, then moves to the segment before",
+        "Digits": "Type the hour and minute; focus moves on when the segment is full. A or P (ص or م) sets the day period. Arabic Indic digits are read as Western digits.",
+        "Pointer": "A tap on a segment focuses it; a tap on the box focuses the first empty segment. No drag."
+      },
+      "announce": "Start, group. Hour, Start, spin button, 9 PM. Minute, 05. AM/PM, PM. React Aria's hidden description reads the whole time after a change.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "The box is control md tall (32) on web, never under 24 (WCAG 2.2 2.5.8). ios and android raise it through their platform rules (requested).",
+        "The day period words come from Intl for the locale with Arabic marks removed: AM and PM, ص and م. In Arabic the hour sits at the right and the day period at the left.",
+        "Digits stay Western in every segment, placeholder, name and announcement in ar-SA, proved by a unit test.",
+        "React Aria joins a segment name and the field name with a Latin comma; in Arabic the system writes the Arabic comma instead.",
+        "No clock dial anywhere: a dial is a drag (WCAG 2.2 2.5.7). On android the time is this field in a dialog.",
+        "Under forced colors the focused segment is Highlight with HighlightText and the focus outline shows."
+      ]
+    },
+    "content": {
+      "en": {
+        "aria-label": "Names the time: Start time, Pickup time. Sentence case.",
+        "segments": "Segment names, placeholders and day period words come from React Aria and Intl."
+      },
+      "ar": {
+        "aria-label": "اسم بصيغة اسمية بدون تشكيل: وقت البدء، وقت الاستلام.",
+        "segments": "أسماء الأجزاء وكلمتا الفترة من Intl: ص و م، والأرقام لاتينية."
+      }
+    },
+    "tokens": [
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "space.4xs",
+      "space.s",
+      "space.m",
+      "space.2xl",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.fixed-m",
+      "font.weight.regular",
+      "font.leading.snug",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "color.primary.tint",
+      "color.primary.on-surface",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.state.danger-text",
+      "color.bg.overlay-5",
+      "focus.shadow.ring",
+      "radius.control",
+      "radius.xs",
+      "border.width.default",
+      "border.width.strong",
+      "opacity.disabled",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "React Aria TimeField, DateInput and DateSegment (react-aria-components) through their render props, on DateField's segment row; HH:mm helpers in TimeField/time.ts, the hour cycle from wheelHourCycle in @the-system/shared",
+        "example": "TimeField.demo.tsx",
+        "note": "Motion: as DateField (fade on the focused segment and the border). Reduced motion: instant."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+      },
+      "native": {
+        "status": "planned",
+        "note": "Phase R5 uses a system view: the compact time picker of iOS and the Material time input on Android, through @expo/ui."
+      }
+    },
+    "styles": {
+      "web": "A bordered box like Input holding hour, minute and the day period in tabular digits.",
+      "ios": "The same segments in a 44 point field; on a phone DatePicker opens the wheel instead.",
+      "android": "The Material time input: the hour and the minute as two filled boxes and the day period beside them, in the DatePicker dialog (requested from the platform file).",
+      "studio": "The same on the Studio tokens; no recipe.",
+      "desk": "The same on the Desk tokens; no recipe.",
+      "neutral": "The same on the Neutral tokens; no recipe.",
+      "liquid": "The same on the Liquid tokens; no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Storing 9:05 PM as text",
+        "right": "Store 21:05; the hour cycle only changes how it is drawn"
+      },
+      {
+        "wrong": "A clock dial on android",
+        "right": "The time input field: a dial needs a drag (2.5.7)"
+      },
+      {
+        "wrong": "Writing AM and PM in Arabic by hand",
+        "right": "The day period words come from Intl for the locale"
+      }
+    ],
+    "contract": {
+      "optionalParts": [],
+      "keys": {
+        "ArrowUp": {
+          "focus": "[data-part='segment'][data-type='hour']",
+          "case": "variants",
+          "expect": "value-changes"
+        },
+        "ArrowRight": {
+          "focus": "[data-part='segment'][tabindex='0']",
+          "case": "variants",
+          "expect": "focus-moves"
+        }
+      }
+    },
     "since": "0.1.0"
   },
   {

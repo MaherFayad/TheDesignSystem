@@ -45,11 +45,12 @@ export function fromAriaTime(value: { hour: number; minute: number } | null | un
 
 /**
  * A time in the locale's words with Western digits and no Arabic marks:
- * "9:41 AM", "21:41", "9:41 م". The hour cycle is the one the field draws.
+ * "9:41 AM", "09:41", "9:41 م". The hour cycle is the one the field draws.
  */
 export function formatTime(time: WheelTime, locale: string | undefined, hourCycle: 12 | 24): string {
   const text = new Intl.DateTimeFormat(dateLocale(locale), {
-    hour: 'numeric',
+    // 24 hours read with two digits, as the wheel draws them: 09:41.
+    hour: hourCycle === 12 ? 'numeric' : '2-digit',
     minute: '2-digit',
     hourCycle: hourCycle === 12 ? 'h12' : 'h23',
     timeZone: 'UTC',

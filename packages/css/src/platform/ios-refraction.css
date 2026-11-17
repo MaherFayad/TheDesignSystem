@@ -150,6 +150,17 @@
       }
 
       /*
+       * Order L2: a scan of 31 scroll positions found a light menu row at
+       * 4.30 (Liquid, tier 1) with the shade behind its text: the bend and
+       * its glare lift the darkest content under the row. The light menu's
+       * tint goes from 64 to 72 percent in tier 1 (the selection menu keeps
+       * 6:1 and more without it).
+       */
+      :root[data-refraction='true'] [data-platform='ios']:not([data-scheme='dark'], [data-contrast='more'], [data-contrast='more'] *) :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+        background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
+      }
+
+      /*
        * Order L2: in tier 2 a bar that holds a search disc has no low blur
        * (see above), and its dark labels fell to 3.64 (Liquid) and 3.85
        * (Neutral) over the lightest content; the bar and its disc take the

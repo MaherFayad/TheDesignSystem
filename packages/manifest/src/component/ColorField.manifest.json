@@ -1,0 +1,219 @@
+{
+  "name": "ColorField",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Type a colour as a hex code, or one channel as a number, in the field box with a small preview swatch at the start. It is the typed path beside a colour slider, a swatch grid or a colour area, so nothing needs a drag. The value runs left to right and digits stay Western in every language. On web the bordered field box; on ios the gray rounded field of the colour panel, the hex code in it; on android Material's filled field.",
+  "useWhen": [
+    "An exact colour a person knows: a brand hex code",
+    "The value box beside a ColorSlider or in the sliders view of a colour picker",
+    "One channel typed as a number: red, hue, opacity"
+  ],
+  "avoidWhen": [
+    "A colour a person picks by eye",
+    "A number that is not a colour"
+  ],
+  "insteadUse": {
+    "Picking by eye from a palette": "ColorSwatchPicker",
+    "Changing a channel by dragging": "ColorSlider",
+    "A number that is not a colour": "NumberField"
+  },
+  "anatomy": ["root", "start", "preview", "control"],
+  "slots": {
+    "preview": {
+      "accepts": ["ColorSwatch"],
+      "max": 1
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The colour, controlled: hex, rgb() or hsl(), a React Aria Color, or null for empty."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first colour, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the committed colour as hex (#rrggbb, or #rrggbbaa when see through) and as a Color, or null when emptied. A value commits on blur and on Enter."
+    },
+    "channel": {
+      "type": ["hue", "saturation", "brightness", "lightness", "red", "green", "blue", "alpha"],
+      "description": "Edit one channel as a number instead of the hex code. Stamped as data-channel."
+    },
+    "colorSpace": {
+      "type": ["rgb", "hsl", "hsb"],
+      "description": "The colour space of the channel. Default the space of the value."
+    },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "Height from size.control."
+    },
+    "shape": {
+      "type": ["default", "pill"],
+      "default": "default",
+      "description": "default: radius.control of the active style. pill: fully round."
+    },
+    "preview": {
+      "type": "boolean",
+      "description": "Shows the colour as a small swatch at the start. Default true for hex, false for a channel."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the value invalid. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Native disabled on the input; stamps data-disabled."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The value can be read and copied, not changed; stamps data-readonly."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "A hint, such as #RRGGBB. Never the only label."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the default name and the number format. Default the language of the nearest Theme. Digits stay Western."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name when no Field label names it. Default Hex (رمز اللون), or the channel's name."
+    }
+  },
+  "states": ["data-invalid", "data-disabled", "data-readonly", "data-channel"],
+  "a11y": {
+    "role": "textbox for hex, from React Aria; a channel field is a textbox with aria-valuenow, aria-valuemin and aria-valuemax. Named by the Field label, else aria-label, else Hex or the channel's name.",
+    "focus": "One Tab stop, the input. The ring (focus.shadow.ring) shows on the box at once; the glow fades in.",
+    "keys": {
+      "Enter": "Commits the typed value and formats it",
+      "ArrowUp": "One step up: the next hex value, or one unit of the channel",
+      "ArrowDown": "One step down",
+      "PageUp": "A large step up",
+      "PageDown": "A large step down",
+      "Home": "The lowest value",
+      "End": "The highest value",
+      "Pointer": "A press on the box focuses the input. No drag anywhere."
+    },
+    "announce": "Brand colour, edit text, #1E6FD9. A committed change is announced by React Aria. The preview swatch is hidden from readers: the input already holds the value.",
+    "native": {
+      "accessibilityRole": "text"
+    },
+    "notes": [
+      "WCAG 2.2 2.5.7: this field is the typed path for every colour control that drags.",
+      "Digits stay Western: React Aria formats with an -u-nu-latn locale.",
+      "The value runs left to right in right to left pages, on the reading side of the box, as NumberField's does.",
+      "The preview swatch has its 3:1 edge (ColorSwatch), so a colour close to the field fill still shows."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Names what the colour is for: Brand colour, Text colour. Sentence case.",
+      "placeholder": "#RRGGBB, as a hint only."
+    },
+    "ar": {
+      "label": "اسم بصيغة اسمية بدون تشكيل: لون العلامة، لون النص.",
+      "placeholder": "#RRGGBB بالأحرف اللاتينية، تلميح فقط."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.md",
+    "size.icon.lg",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "font.family.sans",
+    "font.weight.regular",
+    "font.size.s",
+    "font.size.fixed-m",
+    "font.leading.snug",
+    "radius.control",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.state.danger.text",
+    "color.bg.overlay-5",
+    "color.text.default",
+    "color.text.placeholder",
+    "elevation.input-focus",
+    "focus.shadow.ring",
+    "scale.enter",
+    "duration.base",
+    "duration.quick",
+    "duration.spring-soft",
+    "ease.out",
+    "ease.exit",
+    "ease.spring-soft",
+    "opacity.disabled"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria ColorField and Input (react-aria-components) through their render props; inside a Field it reads the label and the state as NumberField does",
+      "example": "ColorField.demo.tsx",
+      "note": "Motion: the focus glow fades in from scale.enter and out on blur, as on Input; the ring shows at once. Reduced motion: no growth, as every duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorField] with the same DOM and the same parsing from color.ts."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws it: a TextInput with the ASCII keyboard, autoCapitalize characters, and a swatch View at the start."
+    }
+  },
+  "styles": {
+    "web": "The bordered field box, a 24px preview swatch at the start, the hex code in tabular figures.",
+    "ios": "The colour panel's value box: a gray rounded field at the platform's control height; the preview may be hidden there when a swatch already shows the colour.",
+    "android": "Material's filled field at the Android control height.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A placeholder as the only name",
+      "right": "Put the field in a Field with a label, or pass aria-label"
+    },
+    {
+      "wrong": "Mirroring the hex code in Arabic",
+      "right": "Keep it left to right; the box does this already"
+    }
+  ],
+  "contract": {
+    "optionalParts": ["start", "preview"],
+    "keys": {
+      "ArrowUp": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='control']",
+        "case": "one",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

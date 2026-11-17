@@ -1,0 +1,131 @@
+/*
+ * DatePicker: one date, or a date and a time (order M9.17, proposed). Two
+ * forms, by data-variant:
+ * - compact: a row of the label (when given) and chips. The chips are soft
+ *   system Buttons (parts date and time); on web and macos the time part is
+ *   a TimeField. With a label the label takes the free room, so the chips
+ *   sit at the inline end, as a row of a grouped list.
+ * - inline: a column of the Calendar (part calendar) and, with a time, the
+ *   time row: the time label at the inline start, the time control at the
+ *   inline end, a hairline above it.
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes and the platform files override these):
+ *   --_date-picker-gap            the room between the label and the chips, and between chips
+ *   --_date-picker-row-gap        the room between rows (wrapped chips, the calendar and the time row)
+ *   --_date-picker-font-size      the label and the time label
+ *   --_date-picker-fg             the label and the time label, 4.5:1
+ *   --_date-picker-fg-checked     a chip's text while its popover or dialog is open: the tint text, 4.5:1
+ *   --_date-picker-placeholder-fg a chip with no value yet (Add date), 4.5:1 on the chip fill
+ *   --_date-picker-border-color   the hairline above the time row
+ *   --_date-picker-padding-block  the room above and under the time row
+ *
+ * Names outside the list in anatomy.md: placeholder-fg (the chip with no
+ * value), with the base name fg.
+ *
+ * Chips keep Button's own size, press and focus ring. A chip reads its
+ * text in tabular digits, so a new time does not move the chips. Right to
+ * left needs no rule: the row and the chips follow dir, so in Arabic the
+ * date chip sits at the right and the time chip at its left.
+ *
+ * A popover that holds only a calendar fits it, instead of Popover's fixed
+ * width; one that holds only a time wheel keeps the sm width. Both take a
+ * smaller inside room.
+ *
+ * Motion: none of its own. The chip text swaps color on Button's own
+ * timing when its popover opens; the popover, the dialog, the calendar and
+ * the wheel bring their own motion.
+ */
+@layer ds.base {
+  [data-ds='date-picker'] {
+    --_date-picker-gap: var(--ds-space-xs);
+    --_date-picker-row-gap: var(--ds-space-s);
+    --_date-picker-font-size: var(--ds-font-size-s);
+    --_date-picker-fg: var(--ds-color-text-default);
+    --_date-picker-fg-checked: var(--ds-color-primary-on-surface);
+    --_date-picker-placeholder-fg: var(--ds-color-text-muted);
+    --_date-picker-border-color: var(--ds-color-border-default);
+    --_date-picker-padding-block: var(--ds-space-s);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_date-picker-row-gap) var(--_date-picker-gap);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    color: var(--_date-picker-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_date-picker-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='date-picker'] > [data-part='label'],
+  [data-ds='date-picker'] > [data-part='time-row'] > [data-part='time-label'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    color: var(--_date-picker-fg);
+  }
+
+  /* The chips and the time field never shrink below their text. */
+  [data-ds='date-picker'] [data-part='date'],
+  [data-ds='date-picker'] [data-part='time'] {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-placeholder] {
+    --_button-fg: var(--_date-picker-placeholder-fg);
+  }
+
+  /* An open chip: the tint text, as the phone platforms draw the chip whose picker shows. */
+  [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-state='open'] {
+    --_button-fg: var(--_date-picker-fg-checked);
+    --_button-fg-hover: var(--_date-picker-fg-checked);
+  }
+
+  /* Invalid: the chip text takes the danger text color; a Field error says what to do. */
+  [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-invalid] {
+    --_button-fg: var(--ds-color-state-danger-text);
+  }
+
+  /* ------------------------------------------------------------ inline */
+  [data-ds='date-picker'][data-variant='inline'] {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  [data-ds='date-picker'][data-variant='inline'] > [data-part='label'] {
+    flex: none;
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-ds='date-picker'] > [data-part='time-row'] {
+    display: flex;
+    align-items: center;
+    gap: var(--_date-picker-gap);
+    padding-block: var(--_date-picker-padding-block) 0;
+    border-block-start: var(--ds-border-width-default) solid var(--_date-picker-border-color);
+  }
+
+  /* ------------------------------------------------------------ the popup of a chip */
+  [data-ds='popover']:has(> [data-part='body'] > [data-ds='calendar']:only-child) {
+    --_popover-width: fit-content;
+    --_popover-padding: var(--ds-space-s);
+  }
+
+  /* The wheel fills its column, so its popover keeps the sm width and only takes the smaller inside room. */
+  [data-ds='popover']:has(> [data-part='body'] > [data-ds='wheel-picker']:only-child) {
+    --_popover-padding: var(--ds-space-s);
+  }
+
+  /* Forced colors: an open chip keeps a visible edge. */
+  @media (forced-colors: active) {
+    [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-state='open'] {
+      outline: var(--ds-border-width-default) solid Highlight;
+    }
+  }
+}

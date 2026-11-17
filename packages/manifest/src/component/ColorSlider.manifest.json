@@ -1,0 +1,216 @@
+{
+  "name": "ColorSlider",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Change one channel of a colour, such as hue, opacity or red, on a track that shows the channel as a gradient. The value is read with a name (214°, Blue; 214 درجة، أزرق) and digits stay Western. The drag has a path without it: arrow keys, Page keys, Home and End, and a press on the track. On web a capsule track with a round thumb; on ios the colour panel's opacity and channel sliders, a tall capsule with a ringed thumb; on android the same form, as Material has no colour slider.",
+  "useWhen": [
+    "Changing the hue, the opacity or one channel of a colour",
+    "The sliders view and the opacity row of a colour picker (ColorPicker, order M9.20)"
+  ],
+  "avoidWhen": [
+    "A number that is not part of a colour",
+    "Picking from a few named colours"
+  ],
+  "insteadUse": {
+    "A number that is not a colour channel": "Slider",
+    "A few named colours": "ColorSwatchPicker",
+    "Typing an exact value": "ColorField, beside the slider"
+  },
+  "anatomy": ["root", "label", "value", "track", "thumb"],
+  "slots": {
+    "label": {
+      "accepts": "text"
+    },
+    "value": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "channel": {
+      "type": ["hue", "saturation", "brightness", "lightness", "red", "green", "blue", "alpha"],
+      "description": "The channel the slider changes. alpha is opacity. Required."
+    },
+    "value": {
+      "type": "string",
+      "description": "The colour, controlled: hex, rgb(), hsl() or hsb(), or a React Aria Color. Pass the Color from onChange back to keep the hue of a grey."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first colour, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called as the value changes, with the colour as a string in its colour space and as a Color."
+    },
+    "onChangeEnd": {
+      "type": "function",
+      "description": "Called when a drag or a key press ends."
+    },
+    "colorSpace": {
+      "type": ["rgb", "hsl", "hsb"],
+      "description": "The colour space of the channel. Default the space of the value."
+    },
+    "label": {
+      "type": "string",
+      "description": "The visible name. Default the channel's name: Hue, Opacity, درجة اللون, العتامة."
+    },
+    "hideLabel": {
+      "type": "boolean",
+      "default": false,
+      "description": "Hides the label row; the slider is then named by aria-label or the channel's name."
+    },
+    "showValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the value at the inline end of the label row."
+    },
+    "orientation": {
+      "type": ["horizontal", "vertical"],
+      "default": "horizontal",
+      "description": "Stamped as data-orientation."
+    },
+    "size": {
+      "type": ["sm", "md", "lg"],
+      "default": "md",
+      "description": "The track: size.icon.md, size.control.xs or size.control.sm tall. The thumb is as tall and never under 24px."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Stamps data-disabled."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the hidden input in a form."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the words and the direction. Default the language of the nearest Theme. Digits stay Western through -u-nu-latn."
+    }
+  },
+  "states": ["data-orientation", "data-disabled", "data-dragging", "data-focus-visible"],
+  "a11y": {
+    "role": "group (the track) holding a visually hidden input type range, from React Aria, named by the label. aria-valuetext is the number and a name in the page's words.",
+    "focus": "One Tab stop: the thumb's hidden input. The focus ring (focus.shadow.ring) draws around the thumb.",
+    "keys": {
+      "ArrowRight": "One step up; one step down in right to left, where the gradient runs from the right",
+      "ArrowLeft": "One step down; one step up in right to left",
+      "ArrowUp": "One step up",
+      "ArrowDown": "One step down",
+      "PageUp": "A large step up",
+      "PageDown": "A large step down",
+      "Home": "The lowest value of the channel",
+      "End": "The highest value of the channel",
+      "Pointer": "Drag the thumb, or press anywhere on the track to move the thumb there. The keys and a press are the paths that need no drag (WCAG 2.2 2.5.7)."
+    },
+    "announce": "Hue, slider, 214°, Blue. Opacity, slider, 50%. Arabic: درجة اللون، 214 درجة، أزرق.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "React Aria adds its own colour name to the value text; in Arabic it keeps the English word order (ساطع أزرق سماوي) and a Latin comma, so the value text is replaced after each render with the number and colorName from @the-system/shared.",
+      "Digits stay Western: React Aria runs with an -u-nu-latn locale, so the value reads 214 درجة and 50٪ is 50%, never Arabic Indic digits.",
+      "WCAG 2.2 1.4.11: the track and the thumb have an edge in color.border.control, 3:1 or more; the thumb has a ring of the surface colour so it shows on any part of the gradient.",
+      "WCAG 2.2 2.5.8: the thumb is at least 24 by 24.",
+      "Under forced colors the gradient keeps its colours (forced-color-adjust none), edges are CanvasText and focus is a Highlight outline."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "The channel as a noun: Hue, Opacity, Red. Sentence case."
+    },
+    "ar": {
+      "label": "اسم القناة بدون تشكيل: درجة اللون، العتامة، الأحمر."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "size.icon.md",
+    "space.2xs",
+    "space.m",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.text.default",
+    "color.text.muted",
+    "color.bg.surface",
+    "color.border.control",
+    "color.border.strong",
+    "focus.shadow.ring",
+    "scale.stretch",
+    "opacity.disabled",
+    "duration.base",
+    "ease.default"
+  ],
+  "motion": "press",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria ColorSlider, SliderTrack, SliderOutput, Label and ColorThumb (react-aria-components) through their render props; words and names from packages/shared/src/color.ts",
+      "example": "ColorSlider.demo.tsx",
+      "note": "Motion: while dragged the thumb grows to scale.stretch on the scale property and settles on release, on duration.base. Reduced motion: no growth in time, as every duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorSlider] with the same DOM, on the CDK or Angular Aria slider, with the gradient from the same channel math."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws it: a gradient track and a thumb on Reanimated with accessibilityRole adjustable and the increment and decrement actions."
+    }
+  },
+  "styles": {
+    "web": "The label and the value over a 24px capsule of the gradient, a round thumb with a surface ring.",
+    "ios": "The colour panel's slider: a tall capsule (the control sizes grow it), the thumb as tall with a white ring, the label in small capitals above. Content, so solid.",
+    "android": "The same form at the Android control sizes.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the thumb may take glass in a later look order, the track stays solid."
+  },
+  "mistakes": [
+    {
+      "wrong": "A colour slider alone for an exact colour",
+      "right": "Put a ColorField beside it for typing"
+    },
+    {
+      "wrong": "Passing the hex string back on every change of the hue of a grey",
+      "right": "Pass the Color from onChange back, so the hue is kept"
+    }
+  ],
+  "contract": {
+    "optionalParts": ["label", "value"],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageUp": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-part='thumb'] input",
+        "case": "one",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

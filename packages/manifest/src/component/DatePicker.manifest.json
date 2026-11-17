@@ -1,0 +1,283 @@
+{
+  "name": "DatePicker",
+  "kind": "component",
+  "family": "forms",
+  "summary": "One date, or a date and a time, picked by tapping. variant compact is a chip that shows the date and, with granularity minute, a second chip for the time; inline is the Calendar with a time row under it. Values are ISO: 2026-11-17, or 2026-11-17T09:41 with a 24 hour time; the calendar (Gregorian or Umm al-Qura) is display only and digits stay Western. On web the date chip opens the Calendar in a popover and the time is a TimeField typed in segments; on ios the date chip opens the Calendar in a popover and the time chip opens the WheelPicker in a popover; on android both chips open a Material dialog, the Calendar and a TimeField (no clock dial). Proposed.",
+  "useWhen": [
+    "A date or a date and a time in a settings row or a form on a phone: an event start, a delivery slot, a reminder",
+    "A booking where the days around the date matter (inline)",
+    "A date in the Hijri calendar a person reads in Umm al-Qura"
+  ],
+  "avoidWhen": [
+    "A date a person knows by heart and types faster, such as a birth date",
+    "A range from a start to an end",
+    "A time on its own"
+  ],
+  "insteadUse": {
+    "A date typed in parts": "DateField",
+    "A time on its own": "TimeField or WheelPicker",
+    "The month grid on its own": "Calendar"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "date",
+    "time",
+    "calendar",
+    "time-row",
+    "time-label"
+  ],
+  "slots": {
+    "label": {
+      "accepts": "text"
+    },
+    "time-label": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "variant": {
+      "type": [
+        "compact",
+        "inline"
+      ],
+      "default": "compact",
+      "description": "compact: the chips that open the calendar and the time control. inline: the Calendar with a time row under it. Stamped as data-variant."
+    },
+    "granularity": {
+      "type": [
+        "day",
+        "minute"
+      ],
+      "default": "day",
+      "description": "day: a date. minute: a date and a time of day, a second chip (or the time row) for the time."
+    },
+    "value": {
+      "type": "string",
+      "description": "The value, controlled: 2026-11-17 for day, 2026-11-17T09:41 for minute (ISO local, no seconds, no zone, 24 hour), or null."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first value, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the new value in the form of granularity. A pick of one half while the value is empty takes the other from today and from placeholderTime."
+    },
+    "label": {
+      "type": "node",
+      "description": "The visible label, drawn at the inline start (part label). It names the group. Without it, aria-label or a Field label (3.3.2)."
+    },
+    "minValue": {
+      "type": "string",
+      "description": "The earliest date, ISO. Days before it cannot be picked."
+    },
+    "maxValue": {
+      "type": "string",
+      "description": "The latest date, ISO. Days after it cannot be picked."
+    },
+    "isDateUnavailable": {
+      "type": "function",
+      "description": "Gets the ISO date and the drawn date; true keeps the day readable but not pickable."
+    },
+    "calendar": {
+      "type": [
+        "gregory",
+        "islamic-umalqura"
+      ],
+      "default": "gregory",
+      "description": "The calendar drawn in the chip and the Calendar. The value stays ISO Gregorian."
+    },
+    "firstDayOfWeek": {
+      "type": [
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "description": "The first column of the week. Default from the locale's region."
+    },
+    "hourCycle": {
+      "type": [
+        "12",
+        "24"
+      ],
+      "description": "12 or 24. Default the locale's own cycle. The value is 24 hour either way."
+    },
+    "minuteStep": {
+      "type": "number",
+      "default": 1,
+      "description": "Minutes between rows of the time wheel on ios: 1, 5, 15."
+    },
+    "placeholderTime": {
+      "type": "string",
+      "default": "09:00",
+      "description": "The time a date takes when it is picked before any time, HH:mm."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of every word and of the week, such as ar-SA. Default the language of the nearest Theme. Digits stay Western."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "The chip and the time field height: control sm, md or lg. ios raises chips to 34 to 44 (requested)."
+    },
+    "labels": {
+      "type": "object",
+      "description": "Words in place of the built in ones: date (Date, التاريخ), time (Time, الوقت), addDate (Add date, إضافة تاريخ), addTime (Add time, إضافة وقت)."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "The chips are aria-disabled and open nothing. Stamps data-disabled."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The chips show the value, take focus and open nothing; the inline Calendar and the web TimeField are read only. Stamps data-readonly."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the picker invalid: the chip text takes the danger color. Inside a Field the field decides when it is not passed."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of a hidden form input that carries the value."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name of the group when no label is drawn."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-placeholder",
+    "data-state"
+  ],
+  "a11y": {
+    "role": "group named by the label (or aria-label, or the Field label). Each chip is a system Button named by its word and its value (Date, 17 Nov 2026; التاريخ، 17 نوفمبر 2026) with aria-haspopup dialog and aria-expanded. The popover is a dialog named Date or Time; on android a modal dialog with the same title.",
+    "focus": "Tab stops: the date chip, then the time chip (or the time segments on web). On open, focus goes to the picked day of the Calendar (else today) or to the first wheel column or time segment. Escape, a press outside or a pick in the Calendar closes the popover and focus goes back to its chip.",
+    "keys": {
+      "Tab": "Moves from the date chip to the time chip or the time segments, then out",
+      "Enter": "On a chip, opens its calendar or time control",
+      "Space": "On a chip, opens its calendar or time control",
+      "Escape": "Closes the open popover or dialog; focus goes back to the chip",
+      "Arrows in the calendar": "As Calendar: days, PageUp and PageDown for months, Shift with them for years; Enter picks and closes",
+      "Arrows in the wheel": "As WheelPicker: Up and Down step, Left and Right move between columns",
+      "Pointer": "A tap on a chip opens it; a tap on a day picks it; a tap on a wheel row chooses it. No drag is needed (2.5.7)."
+    },
+    "announce": "Starts, group. Date, 17 Nov 2026, button, collapsed. After a pick the chip is focused again and reads its new value. The Calendar and the wheel announce as their own manifests say.",
+    "native": {
+      "accessibilityRole": "button"
+    },
+    "notes": [
+      "Chips are control md tall (32) on web and 34 to 44 on ios with a 44 point hit area (WCAG 2.2 2.5.8, requested from the platform file).",
+      "Every picker has a name: the label, aria-label or a Field label (3.3.2).",
+      "The chip keeps the chosen value; a picked date is never asked again when the time is picked (3.3.7). A value with one half missing takes the other half from today and placeholderTime.",
+      "Chip text is color.text default on the soft fill at 4.5:1; an open chip takes the tint text (1.4.3). The empty chip (Add date) uses color.text.muted at 4.5:1.",
+      "Digits stay Western in the chips, the chip names, the Calendar, the wheel and the time segments in ar-SA, in both calendars, proved by a unit test that gathers every visible text, name and announcement.",
+      "In Arabic the chips run in reading order: the date chip at the right, the time chip at its left.",
+      "No clock dial on android: the time dialog holds a TimeField (2.5.7)."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Names what is picked: Starts, Delivery date. Sentence case.",
+      "chips": "Date and Time before the value in the chip names; Add date and Add time while empty."
+    },
+    "ar": {
+      "label": "اسم بصيغة اسمية بدون تشكيل: موعد البدء، تاريخ التوصيل.",
+      "chips": "التاريخ والوقت قبل القيمة في أسماء الأزرار، وإضافة تاريخ وإضافة وقت قبل الاختيار. الأرقام لاتينية والتاريخ من Intl."
+    }
+  },
+  "tokens": [
+    "space.xs",
+    "space.s",
+    "font.family.sans",
+    "font.size.s",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "color.text.default",
+    "color.text.muted",
+    "color.primary.on-surface",
+    "color.state.danger-text",
+    "color.border.default",
+    "border.width.default"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "Composes Calendar (React Aria), WheelPicker, TimeField (React Aria) and the system Popover and Dialog (Radix); chips are system Buttons",
+      "example": "DatePicker.demo.tsx",
+      "note": "Motion: the popover enters with menu-scale and the android dialog with the dialog pattern; the Calendar fades its month and the chip presses. Reduced motion: each collapses as its own component says."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses the system view: the compact and the inline date pickers of iOS (UIDatePicker styles compact and inline) and the Material date and time picker dialogs on Android (time input mode), through @expo/ui."
+    }
+  },
+  "styles": {
+    "web": "A row of the label and a soft date chip that opens the Calendar in a popover, then the time as TimeField segments. inline: the Calendar with a time row under a hairline.",
+    "ios": "A grouped row: the label at the inline start and two gray chips at the inline end, the date and the time, 34 tall with a 44 point hit area; the date chip opens the Calendar and the time chip the wheel, each in a popover; an open chip shows the tint text. inline: the Calendar with a Time row and a time chip.",
+    "android": "Chips that open the Material date picker dialog (the Calendar) and the time input dialog (a TimeField, no dial), each with a headline.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the popover is the control layer (glass allowed), the calendar days are content (solid)."
+  },
+  "mistakes": [
+    {
+      "wrong": "Storing the date and the time in two values that can disagree",
+      "right": "One value: 2026-11-17T09:41"
+    },
+    {
+      "wrong": "A clock dial for the time on android",
+      "right": "The time input dialog: a dial needs a drag (2.5.7)"
+    },
+    {
+      "wrong": "A chip named only by its value",
+      "right": "The chip name starts with its word: Date, 17 Nov 2026"
+    },
+    {
+      "wrong": "Storing the Hijri date",
+      "right": "Store the ISO Gregorian value; calendar only changes how it is drawn"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "label",
+      "time",
+      "calendar",
+      "time-row",
+      "time-label"
+    ],
+    "keys": {
+      "Escape": {
+        "open": "[data-part='date']",
+        "case": "variants",
+        "expect": "focus-returns"
+      },
+      "Enter": {
+        "focus": "[data-part='date']",
+        "case": "variants",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

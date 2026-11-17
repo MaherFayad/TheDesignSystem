@@ -1,0 +1,218 @@
+{
+  "name": "ColorSwatchPicker",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Pick one colour from a set of swatches: a 12 by 10 grid of the system's own palette (a row of greys, then nine rows from dark to light over twelve hues), or a row of saved swatches with an add button. Each swatch is named (Blue, dark; أزرق غامق), and the pick is shown by a ring and a check, never by colour alone. On web the grid sits in a popover or a page; on ios it is the grid of the colour panel with rounded outer corners and round saved swatches under it; on android Material has no colour picker, so it keeps this form with Material spacing and 48dp targets.",
+  "useWhen": [
+    "Picking a colour from a palette: a label, a note, a highlight",
+    "Picking one of a few saved or brand colours",
+    "The grid view of a colour picker (ColorPicker, order M9.20)"
+  ],
+  "avoidWhen": [
+    "Any exact colour a person types or drags to",
+    "A choice where the options are not colours",
+    "Two or more colours at once"
+  ],
+  "insteadUse": {
+    "An exact colour typed as hex": "ColorField",
+    "One channel such as hue or opacity": "ColorSlider",
+    "Options that are words": "RadioGroup or SegmentedControl"
+  },
+  "anatomy": ["root", "list", "item", "swatch", "check", "add"],
+  "slots": {
+    "swatch": {
+      "accepts": ["ColorSwatch"],
+      "max": 1
+    },
+    "add": {
+      "accepts": ["IconButton"],
+      "max": 1
+    }
+  },
+  "props": {
+    "colors": {
+      "type": "array",
+      "description": "The swatches: colour strings, or objects with color, name and disabled. Default: colorSwatchGrid() of @the-system/shared in grid, none in row."
+    },
+    "layout": {
+      "type": ["grid", "row"],
+      "default": "grid",
+      "description": "grid: a mosaic, the colour map, kept in hue order in right to left. row: round swatches in reading order. Stamped as data-layout."
+    },
+    "value": {
+      "type": "string",
+      "description": "The picked colour, controlled. It must equal one swatch to show as picked."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first picked colour, uncontrolled."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with the picked colour as hex (#rrggbb, or #rrggbbaa when see through) and as a React Aria Color."
+    },
+    "columns": {
+      "type": "number",
+      "default": 12,
+      "description": "Columns of the grid, set inline as --_color-swatch-picker-columns."
+    },
+    "size": {
+      "type": ["sm", "md", "lg"],
+      "default": "md",
+      "description": "In row: the disc drawn inside each target (size.control xs, sm or md). The target is size.control.lg at every size. Not stamped in grid."
+    },
+    "onAdd": {
+      "type": "function",
+      "description": "In row: shows the add button after the swatches and is called when it is pressed."
+    },
+    "addLabel": {
+      "type": "string",
+      "description": "The name of the add button. Default Add colour, إضافة لون."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No swatch can be picked and the add button is disabled. Stamps data-disabled."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the names. Default the language of the nearest Theme."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name of the list. Default Colours, الألوان."
+    }
+  },
+  "states": ["data-layout", "data-selected", "data-disabled"],
+  "a11y": {
+    "role": "listbox (single selection) of option items, from React Aria. Each option holds a ColorSwatch img named by the colour, so it reads Blue, dark. The add button is a separate button after the list.",
+    "focus": "One Tab stop for the list: the picked swatch, else the first. Arrows move inside it. Tab then goes to the add button. Focus is an inset ring in color.focus.ring inside a grid cell, and the focus ring around the target in row.",
+    "keys": {
+      "Tab": "Into the list on one swatch, then to the add button, then out",
+      "ArrowRight": "The swatch drawn to the right. In the grid this is the same in right to left, because the grid is a colour map; in row it is the next swatch in reading order, so the one before in right to left",
+      "ArrowLeft": "The swatch drawn to the left, the same rule",
+      "ArrowDown": "The swatch drawn below, in the grid",
+      "ArrowUp": "The swatch drawn above, in the grid",
+      "Home": "The first swatch",
+      "End": "The last swatch",
+      "Enter": "Picks the focused swatch",
+      "Space": "Picks the focused swatch",
+      "Pointer": "A tap on a swatch picks it. No drag."
+    },
+    "announce": "Colours, list box. Blue, dark, 15 of 120, selected. Arabic: الألوان. أزرق غامق، محدد.",
+    "native": {
+      "accessibilityRole": "radiogroup",
+      "accessibilityState": ["selected", "disabled"]
+    },
+    "notes": [
+      "WCAG 2.2 1.4.1: the pick is a ring (color.text.bright with a gap of the surface) and a check on a small surface disc, never a colour change alone.",
+      "WCAG 2.2 1.4.11: the grid has one edge at 3:1 (color.border.control) around the mosaic; row swatches each have their inner edge; the selection ring is color.text.bright, far above 3:1.",
+      "WCAG 2.2 2.5.8: grid cells are at least 24 by 24 (size.target-min); row targets are size.control.lg, 44 on web and more on phones.",
+      "Names come from colorName in @the-system/shared. Names can repeat in a grid (two cells both read Orange); the position React Aria reads tells them apart.",
+      "The grid keeps its hue order in right to left: its list is dir ltr and React Aria runs it with a left to right locale, so arrows move by what is seen. Names are still read in the page's language.",
+      "React Aria's ColorSwatchPicker takes no render prop for its listbox; the system passes one through ListBoxContext.",
+      "Under forced colors the ring is Highlight, the check sits on Canvas, and focus is a Highlight outline."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "Names what the colour is for, as a noun: Label colour, Note colour. Default Colours.",
+      "labels": "The add button is Add colour."
+    },
+    "ar": {
+      "aria-label": "اسم بصيغة اسمية بدون تشكيل: لون التصنيف، لون الملاحظة. الافتراضي: الألوان.",
+      "labels": "زر الإضافة: إضافة لون."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "size.icon.md",
+    "space.2xs",
+    "radius.field",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.text.bright",
+    "color.bg.surface",
+    "color.focus.ring",
+    "color.focus.halo",
+    "focus.shadow.ring",
+    "opacity.disabled",
+    "scale.enter",
+    "duration.base",
+    "ease.default"
+  ],
+  "motion": "pop",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria ColorSwatchPicker and ColorSwatchPickerItem (react-aria-components), the listbox drawn through ListBoxContext's render prop; palette and names from packages/shared/src/color.ts",
+      "example": "ColorSwatchPicker.demo.tsx",
+      "note": "Motion: the check comes in from scale.enter and opacity 0 on duration.base (CSS @starting-style), and the ring changes on duration.base. Reduced motion: both at once, as every duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorSwatchPicker] with the same DOM, on the CDK listbox, with the same color.ts palette and names."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws it (no system view takes a palette): a grid of Pressables with accessibilityRole radio, the same palette and names."
+    }
+  },
+  "styles": {
+    "web": "A rounded mosaic of square cells with one edge, at most size.control.md a cell; or a row of 28px discs in 44px targets with a round add button.",
+    "ios": "The colour panel's grid: a mosaic with rounded outer corners, a white square ring on the pick; saved swatches as discs under it with a ring and a gap, and a grey round add button. Content, so solid.",
+    "android": "The same form with Material spacing; targets are the Android control size (48dp or more). Material has no colour picker of its own.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; the swatches stay solid as content."
+  },
+  "mistakes": [
+    {
+      "wrong": "Showing the pick by darkening the swatch",
+      "right": "The ring and the check draw it; keep them"
+    },
+    {
+      "wrong": "Mirroring the grid in Arabic",
+      "right": "The grid is a colour map and keeps its order; only the row of saved swatches follows reading order"
+    },
+    {
+      "wrong": "Copying a vendor palette into colors",
+      "right": "Use the default palette, or the product's own colours"
+    }
+  ],
+  "contract": {
+    "optionalParts": ["check", "add"],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='item'][data-selected]",
+        "case": "variants",
+        "physical": true,
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='item'][data-selected]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='item'][data-selected]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Enter": {
+        "focus": "[data-part='item']",
+        "case": "empty",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

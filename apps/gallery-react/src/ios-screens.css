@@ -1,0 +1,427 @@
+/*
+ * The iOS test screens (order M10.0): the index at /screens/ios, a screen in
+ * its device frames at /screens/ios/<id>, the screen alone inside a frame at
+ * /screens/ios/<id>/screen, and the generated artwork of the content kit.
+ * Gallery chrome, not a component: tokens still, logical properties, in the
+ * overrides layer. Each screen keeps its own CSS in ios-screens/<id>.css.
+ *
+ * The device geometry comes from ios-screens/frames.ts as unitless point
+ * numbers in --ios-* custom properties; every length multiplies them by the
+ * 1px token, as duo.css does. The frames are our own drawings: a rounded
+ * body, the screen, a plain pill or dot for the camera, a thin home bar.
+ * Hardware is drawn left to right whatever the page direction (Host.tsx sets
+ * dir on it).
+ */
+@layer ds.overrides {
+  /* ---------------------------------------------------------- the pages */
+
+  :is([data-gallery='ios-screens'], [data-gallery='ios-screens-index']) {
+    display: grid;
+    gap: var(--ds-space-4xl);
+    padding: var(--ds-space-3xl);
+  }
+
+  :is([data-gallery='ios-screens'], [data-gallery='ios-screens-index']) h1 {
+    margin: 0;
+    font-size: var(--ds-font-size-3xl);
+  }
+
+  [data-gallery='ios-note'] {
+    max-inline-size: var(--ds-size-measure);
+    margin: 0;
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='ios-meta'] {
+    display: grid;
+    gap: var(--ds-space-s);
+    margin: 0;
+  }
+
+  [data-gallery='ios-meta'] > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs) var(--ds-space-l);
+  }
+
+  [data-gallery='ios-meta'] dt {
+    min-inline-size: calc(12 * var(--ds-space-fixed-m));
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='ios-meta'] dd {
+    margin: 0;
+  }
+
+  [data-gallery='ios-links'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs) var(--ds-space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-gallery='ios-links'] [aria-current='page'] {
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* The index table scrolls sideways inside its box on a narrow screen; the page itself never does (WCAG 1.4.10). */
+  [data-gallery='ios-table-box'] {
+    overflow-x: auto;
+  }
+
+  [data-gallery='ios-table'] {
+    border-collapse: collapse;
+    inline-size: 100%;
+  }
+
+  [data-gallery='ios-table'] :is(th, td) {
+    padding-block: var(--ds-space-s);
+    padding-inline: 0 var(--ds-space-xl);
+    border-block-end: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  [data-gallery='ios-table'] th {
+    color: var(--ds-color-text-muted);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-gallery='ios-table'] td > p {
+    margin: 0;
+  }
+
+  [data-gallery='ios-table'] td > p + p {
+    margin-block-start: var(--ds-space-2xs);
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='ios-art-sheet'] {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(24 * var(--ds-space-fixed-xs)), 1fr));
+    gap: var(--ds-space-xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-gallery='ios-art-sheet'] > li {
+    display: grid;
+    gap: var(--ds-space-xs);
+    color: var(--ds-color-text-muted);
+  }
+
+  /* ---------------------------------------------------------- the frames */
+
+  [data-gallery='ios-row'] {
+    display: flex;
+    gap: var(--ds-space-6xl);
+    align-items: start;
+    overflow-x: auto;
+    padding-block-end: var(--ds-space-xl);
+  }
+
+  [data-gallery='ios-figure'] {
+    flex: none;
+    margin: 0;
+    text-align: center;
+  }
+
+  [data-gallery='ios-figure'] > figcaption {
+    margin-block-start: var(--ds-space-s);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-l);
+  }
+
+  /* The body: a dark band around the screen with rounded corners. The outer screen's hinge side is square. */
+  [data-gallery='ios-device'] {
+    --_ios-bezel: var(--ds-space-fixed-xl);
+    --_ios-screen-radius: calc(3 * var(--ds-space-fixed-xl));
+
+    box-sizing: content-box;
+    inline-size: calc(var(--ios-w) * var(--ds-space-px));
+    block-size: calc(var(--ios-h) * var(--ds-space-px));
+    padding: var(--_ios-bezel);
+    border: var(--ds-border-width-default) solid var(--ds-color-border-strong);
+    border-radius: calc(var(--_ios-screen-radius) + var(--_ios-bezel));
+    background-color: var(--ds-color-bg-scrim-solid);
+  }
+
+  /* The phone's corners are rounder than the folding iPhone's. */
+  [data-gallery='ios-device'][data-frame='phone'] {
+    --_ios-screen-radius: calc(5 * var(--ds-space-fixed-xl));
+  }
+
+  /* On a dark page a black body would vanish: the body takes a raised surface there. */
+  [data-scheme='dark'] [data-gallery='ios-device'] {
+    background-color: var(--ds-color-bg-surface-3);
+  }
+
+  [data-gallery='ios-device'][data-hinge='left'] {
+    border-start-start-radius: var(--ds-space-fixed-xs);
+    border-end-start-radius: var(--ds-space-fixed-xs);
+  }
+
+  [data-gallery='ios-device'][data-hinge='top'] {
+    border-start-start-radius: var(--ds-space-fixed-xs);
+    border-start-end-radius: var(--ds-space-fixed-xs);
+  }
+
+  /* The display: what the capture script saves. */
+  [data-gallery='ios-display'] {
+    position: relative;
+    overflow: hidden;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: var(--_ios-screen-radius);
+    background-color: var(--ds-color-bg-body);
+  }
+
+  [data-gallery='ios-device'][data-hinge='left'] [data-gallery='ios-display'] {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  [data-gallery='ios-device'][data-hinge='top'] [data-gallery='ios-display'] {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  /* The screen's iframe and Safari's chrome sit at their point rectangles. */
+  :is([data-gallery='ios-display'] > iframe, [data-gallery='ios-chrome']) {
+    position: absolute;
+    inset-block-start: calc(var(--ios-y) * var(--ds-space-px));
+    inset-inline-start: calc(var(--ios-x) * var(--ds-space-px));
+    box-sizing: border-box;
+    inline-size: calc(var(--ios-w) * var(--ds-space-px));
+    block-size: calc(var(--ios-h) * var(--ds-space-px));
+  }
+
+  [data-gallery='ios-display'] > iframe {
+    display: block;
+    border: 0;
+    background-color: var(--ds-color-bg-body);
+  }
+
+  /* Safari's own chrome, inert: the page colour with plain shapes, not drawn after any vendor art. */
+  [data-gallery='ios-chrome'] {
+    display: flex;
+    gap: var(--ds-space-fixed-xl);
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--ds-space-fixed-xl);
+    background-color: var(--ds-color-bg-body);
+  }
+
+  [data-gallery='ios-chrome'][data-kind='column'] {
+    flex-direction: column;
+    justify-content: end;
+    padding-block-end: var(--ds-space-fixed-xl);
+    border-inline-start: var(--ds-border-width-default) dashed var(--ds-color-border-default);
+  }
+
+  [data-gallery='ios-device'][data-orient='landscape'] [data-gallery='ios-chrome'][data-kind='column'] {
+    justify-content: start;
+    padding-block: var(--ds-space-fixed-xl) 0;
+  }
+
+  [data-gallery='ios-chrome-shape'] {
+    display: block;
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-bg-overlay-10);
+  }
+
+  [data-gallery='ios-chrome'][data-kind='column'] > [data-gallery='ios-chrome-shape'] {
+    inline-size: calc(4 * var(--ds-space-fixed-xl));
+    block-size: calc(4 * var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='ios-chrome'][data-kind='bar'] > [data-gallery='ios-chrome-shape'] {
+    flex: 1;
+    max-inline-size: calc(30 * var(--ds-space-fixed-xl));
+    block-size: calc(3 * var(--ds-space-fixed-m));
+  }
+
+  /* The camera: a plain dot on the folding iPhone (faint on the inner screen, where it shows only in use), a plain pill on the phone. */
+  [data-gallery='ios-camera'] {
+    --_ios-camera-w: var(--ds-space-fixed-xl);
+    --_ios-camera-h: var(--ds-space-fixed-xl);
+
+    position: absolute;
+    inset-block-start: calc(var(--ios-cy) * var(--ds-space-px) - var(--_ios-camera-h) / 2);
+    inset-inline-start: calc(var(--ios-cx) * var(--ds-space-px) - var(--_ios-camera-w) / 2);
+    inline-size: var(--_ios-camera-w);
+    block-size: var(--_ios-camera-h);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-bg-scrim-solid);
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-strong);
+    pointer-events: none;
+  }
+
+  [data-gallery='ios-camera'][data-shape='pill'] {
+    --_ios-camera-w: calc(126 * var(--ds-space-px));
+    --_ios-camera-h: calc(37 * var(--ds-space-px));
+
+    box-shadow: none;
+  }
+
+  [data-gallery='ios-camera'][data-faint] {
+    opacity: 0.4;
+  }
+
+  /* The home bar: a thin rounded line 8 points above the bottom edge, over the app, taking no pointer. */
+  [data-gallery='ios-home-bar'] {
+    position: absolute;
+    inset-block-end: calc(8 * var(--ds-space-px));
+    inset-inline: 0;
+    inline-size: calc(134 * var(--ds-space-px));
+    block-size: calc(5 * var(--ds-space-px));
+    margin-inline: auto;
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-text-default);
+    pointer-events: none;
+  }
+
+  /* ---------------------------------------------------------- the screen alone */
+
+  /* The shell's main carries no padding of its own here, so the screen fills the frame. */
+  [data-gallery='stage']:has(> [data-gallery='ios-screen-theme']) {
+    padding: 0;
+  }
+
+  [data-gallery='ios-screen-theme'] {
+    min-block-size: 100dvh;
+  }
+
+  [data-gallery='ios-screen-shell'] {
+    min-block-size: 100dvh;
+  }
+
+  [data-gallery='ios-stub'] {
+    display: grid;
+    place-items: center;
+    min-block-size: 100dvh;
+    padding-block: var(--ds-inset-safe-top) var(--ds-inset-safe-bottom);
+    padding-inline: max(var(--ds-space-3xl), var(--ds-inset-safe-start)) max(var(--ds-space-3xl), var(--ds-inset-safe-end));
+    box-sizing: border-box;
+  }
+
+  /* ---------------------------------------------------------- generated artwork */
+
+  /*
+   * The content kit's art (kit.tsx, Art): gradients and plain shapes in the
+   * tokens' chart colours, after the M6 art of platforms.css. It fills the
+   * inline size of its parent and keeps its shape's ratio.
+   */
+  [data-gallery='ios-art'] {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    inline-size: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-chart-categorical-1);
+    color: var(--ds-color-chart-on-dark);
+  }
+
+  [data-gallery='ios-art'][data-shape='wide'] {
+    aspect-ratio: 2;
+  }
+
+  [data-gallery='ios-art'][data-shape='tall'] {
+    aspect-ratio: 0.75;
+  }
+
+  [data-gallery='ios-art'][data-shape='circle'] {
+    border-radius: var(--ds-radius-pill);
+  }
+
+  [data-gallery='ios-art-initials'] {
+    font-size: var(--ds-font-size-l);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-gallery='ios-art'][data-art='dawn'] {
+    background-image:
+      radial-gradient(circle at 70% 30%, var(--ds-color-chart-categorical-4) 0 18%, transparent 19%),
+      radial-gradient(circle at 25% 80%, transparent 0 22%, var(--ds-color-chart-categorical-5) 23% 30%, transparent 31%),
+      linear-gradient(160deg, var(--ds-color-chart-categorical-2), var(--ds-color-chart-categorical-5) 55%, var(--ds-color-chart-categorical-6));
+  }
+
+  [data-gallery='ios-art'][data-art='tide'] {
+    background-image:
+      linear-gradient(transparent 58%, var(--ds-color-chart-categorical-3) 58% 70%, transparent 70%),
+      radial-gradient(circle at 30% 30%, var(--ds-color-chart-categorical-6) 0 20%, transparent 21%),
+      linear-gradient(200deg, var(--ds-color-chart-categorical-1), var(--ds-color-chart-categorical-3));
+  }
+
+  [data-gallery='ios-art'][data-art='ember'] {
+    background-image:
+      radial-gradient(circle at 50% 110%, var(--ds-color-chart-categorical-4) 0 40%, transparent 41%),
+      linear-gradient(var(--ds-color-chart-categorical-5), var(--ds-color-chart-categorical-2));
+  }
+
+  [data-gallery='ios-art'][data-art='moss'] {
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 12%, var(--ds-color-chart-categorical-7) 12% 18%),
+      linear-gradient(var(--ds-color-chart-categorical-3), var(--ds-color-chart-categorical-7));
+  }
+
+  [data-gallery='ios-art'][data-art='dusk'] {
+    background-image:
+      radial-gradient(circle at 30% 40%, var(--ds-color-chart-categorical-5) 0 16%, transparent 17%),
+      radial-gradient(circle at 70% 60%, var(--ds-color-chart-categorical-4) 0 12%, transparent 13%),
+      linear-gradient(var(--ds-color-chart-categorical-6), var(--ds-color-chart-diverging-1));
+  }
+
+  [data-gallery='ios-art'][data-art='lake'] {
+    background-image:
+      linear-gradient(transparent 50%, var(--ds-color-chart-categorical-1) 50%),
+      radial-gradient(circle at 50% 50%, var(--ds-color-chart-categorical-4) 0 24%, transparent 25%),
+      linear-gradient(var(--ds-color-chart-categorical-3), var(--ds-color-chart-categorical-1));
+  }
+
+  [data-gallery='ios-art'][data-art='dune'] {
+    background-image:
+      radial-gradient(ellipse at 20% 100%, var(--ds-color-chart-categorical-4) 0 45%, transparent 46%),
+      radial-gradient(ellipse at 85% 110%, var(--ds-color-chart-categorical-2) 0 50%, transparent 51%),
+      linear-gradient(var(--ds-color-chart-categorical-8), var(--ds-color-chart-categorical-4));
+  }
+
+  [data-gallery='ios-art'][data-art='palm'] {
+    background-image:
+      repeating-conic-gradient(from 200deg at 50% 100%, var(--ds-color-chart-categorical-3) 0 6deg, transparent 6deg 18deg),
+      linear-gradient(var(--ds-color-chart-categorical-8), var(--ds-color-chart-categorical-7));
+  }
+
+  [data-gallery='ios-art'][data-art='night'] {
+    background-image:
+      radial-gradient(circle at 75% 25%, var(--ds-color-chart-categorical-4) 0 10%, transparent 11%),
+      radial-gradient(circle at 20% 30%, var(--ds-color-chart-on-dark) 0 2%, transparent 3%),
+      radial-gradient(circle at 40% 15%, var(--ds-color-chart-on-dark) 0 1.5%, transparent 2.5%),
+      linear-gradient(var(--ds-color-chart-categorical-6), var(--ds-color-chart-categorical-1));
+  }
+
+  [data-gallery='ios-art'][data-art='coral'] {
+    background-image:
+      radial-gradient(circle at 30% 70%, var(--ds-color-chart-categorical-6) 0 22%, transparent 23%),
+      radial-gradient(circle at 75% 35%, transparent 0 18%, var(--ds-color-chart-categorical-4) 19% 26%, transparent 27%),
+      linear-gradient(135deg, var(--ds-color-chart-categorical-5), var(--ds-color-chart-categorical-2));
+  }
+
+  [data-gallery='ios-art'][data-art='mint'] {
+    background-image:
+      linear-gradient(90deg, transparent 45%, var(--ds-color-chart-categorical-8) 45% 55%, transparent 55%),
+      radial-gradient(circle at 50% 50%, var(--ds-color-chart-categorical-3) 0 30%, transparent 31%),
+      linear-gradient(var(--ds-color-chart-categorical-7), var(--ds-color-chart-categorical-3));
+  }
+
+  [data-gallery='ios-art'][data-art='sand'] {
+    background-image:
+      repeating-linear-gradient(170deg, transparent 0 10%, var(--ds-color-chart-categorical-2) 10% 13%),
+      linear-gradient(var(--ds-color-chart-categorical-4), var(--ds-color-chart-categorical-8));
+  }
+}

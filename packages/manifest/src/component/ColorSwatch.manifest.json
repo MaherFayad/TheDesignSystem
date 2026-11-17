@@ -1,0 +1,133 @@
+{
+  "name": "ColorSwatch",
+  "kind": "component",
+  "family": "forms",
+  "summary": "A preview of one colour, read by a name made from its hue and lightness (Blue, dark; أزرق غامق), never by its hex alone. It draws an inner edge at 3:1 against the surface and a checkerboard under a see through colour. On web, ios and android it is the same square or disc; the platform only sets its size through the control tokens. It is content, not chrome: solid in every style, never glass.",
+  "useWhen": [
+    "Showing a colour a person picked or saved: a label colour, a theme colour",
+    "The colour preview beside a hex field or in a list row",
+    "A legend key where the colour also has a name in text"
+  ],
+  "avoidWhen": [
+    "Picking a colour from several",
+    "A status that must be told apart by colour alone",
+    "Decoration with no meaning"
+  ],
+  "insteadUse": {
+    "Picking one colour from a set": "ColorSwatchPicker",
+    "A status with a colour": "StatusDot or Badge, which carry a word",
+    "Typing a colour": "ColorField"
+  },
+  "anatomy": ["root"],
+  "props": {
+    "color": {
+      "type": "string",
+      "description": "The colour: a hex, rgb() or hsl() string, or a React Aria Color. Set inline as --_color-swatch-fill; it is the one raw colour, and it is data."
+    },
+    "colorName": {
+      "type": "string",
+      "description": "The name read for the colour. Default from colorName in @the-system/shared: the hue family and the shade, in the locale's language."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "Extra words read after the name, such as what the colour is for: Fill, لون الخلفية."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the default name and the role word. Default the language of the nearest Theme."
+    },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "The square: size.control xs, sm, md or lg."
+    },
+    "shape": {
+      "type": ["default", "pill", "square"],
+      "default": "default",
+      "description": "default: radius.xs. pill: a disc. square: no corner."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "img with aria-roledescription colour swatch (عينة لون), named by the colour's name and then the aria-label.",
+    "focus": "Not focusable. It is a picture of a value.",
+    "keys": {
+      "Pointer": "None. A swatch shows a colour; it takes no press and no drag."
+    },
+    "announce": "Blue, dark, colour swatch. A see through colour adds how see through it is: Blue, dark, 60% transparent. In Arabic: أزرق غامق، شفافية 60%، عينة لون.",
+    "native": {
+      "accessibilityRole": "image"
+    },
+    "notes": [
+      "WCAG 2.2 1.1.1 and 1.4.1: the colour always has a text name. The default comes from the hue and the lightness in OKLCH, so similar colours get the same plain name.",
+      "WCAG 2.2 1.4.11: an inner edge in color.border.control, 3:1 or more against the surface in every style and scheme, so a swatch near the surface colour still shows where it ends. colorSwatchEdgeNeeded in @the-system/shared says when the colour alone would fail.",
+      "React Aria's own Arabic role word for a swatch reads تغيير الألوان (changing colours) and its Arabic names keep the English word order, so both are replaced.",
+      "Under forced colors the swatch keeps its colour (forced-color-adjust none) and the edge is CanvasText."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "Say what the colour is for, as a noun: Fill, Label colour. The colour's own name comes first and is automatic.",
+      "names": "Hue family then shade: Blue, dark. Grey and colour are spelt the British way."
+    },
+    "ar": {
+      "aria-label": "اسم بصيغة اسمية بدون تشكيل: لون الخلفية، لون التصنيف.",
+      "names": "اللون ثم الدرجة: أزرق غامق، أحمر فاتح. الأرقام لاتينية والفاصلة عربية."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.icon.sm",
+    "radius.xs",
+    "radius.pill",
+    "border.width.default",
+    "color.border.control",
+    "color.border.strong",
+    "color.bg.surface",
+    "duration.base",
+    "ease.default"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria ColorSwatch (react-aria-components) through its render prop; names and words from packages/shared/src/color.ts",
+      "example": "ColorSwatch.demo.tsx",
+      "note": "No motion of its own. A parent's ring (ColorSwatchPicker) changes on duration.base; under reduced motion it changes at once."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: div[dsColorSwatch] with the same DOM and the same color.ts names."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 draws it: a View with the colour as its fill, a hairline edge from the theme and accessibilityLabel from colorName."
+    }
+  },
+  "styles": {
+    "web": "A rounded square of size.control.md with a 1px inner edge.",
+    "ios": "The same square or disc; the platform's control sizes make it larger. Content, so solid, never glass.",
+    "android": "The same, at the Material control sizes.",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; solid, as content stays solid."
+  },
+  "mistakes": [
+    {
+      "wrong": "Naming a swatch by its hex code: #1E6FD9",
+      "right": "Let the default name read Blue, or pass colorName when the colour has a known name"
+    },
+    {
+      "wrong": "Writing the colour into a stylesheet",
+      "right": "Pass it as the color prop; it is data set as a custom property"
+    }
+  ],
+  "contract": {
+    "optionalParts": []
+  },
+  "since": "0.1.0"
+}

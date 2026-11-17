@@ -32,6 +32,7 @@ export * from './components/Container/index';
 export * from './components/ContextMenu/index';
 export * from './components/CopyButton/index';
 export * from './components/DateField/index';
+export * from './components/DatePicker/index';
 export * from './components/DescriptionList/index';
 export * from './components/Dialog/index';
 export * from './components/Dock/index';

@@ -1,0 +1,12 @@
+/*
+ * TimeField: what differs from DateField (order M9.17, proposed). The box,
+ * the segments, the states and the motion come from DateField.css, which
+ * styles [data-ds='time-field'] with [data-ds='date-field'] (one CSS file
+ * per data-ds, with the base exception in docs/contracts/anatomy.md).
+ */
+@layer ds.base {
+  /* The day period (AM, PM, ص, م) is a word, not a number: it sits at the start of its box. */
+  [data-ds='time-field'] [data-part='segment'][data-type='dayPeriod'] {
+    text-align: start;
+  }
+}

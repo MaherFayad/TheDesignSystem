@@ -1,0 +1,247 @@
+{
+  "name": "TimeField",
+  "kind": "component",
+  "family": "forms",
+  "summary": "A time of day typed in parts: hour, minute and, in a 12 hour locale, the day period, each a segment. Values are 24 hour HH:mm strings in and out, whatever cycle is drawn; the cycle, the order and the day period words come from Intl for the locale, and digits stay Western. On web a bordered box like Input; on ios the same segments in the platform field height; on android the Material time input (two fields, no clock dial) inside the DatePicker's dialog. Proposed.",
+  "useWhen": [
+    "A time a person knows and types: an opening hour, a departure time",
+    "The time half of a date and time on web, next to the date chip",
+    "The android time dialog of DatePicker"
+  ],
+  "avoidWhen": [
+    "A time picked by flicking on a phone",
+    "A duration, which is a number of minutes, not a time of day"
+  ],
+  "insteadUse": {
+    "A time picked on a phone": "WheelPicker (or DatePicker, which opens it on ios)",
+    "A duration": "NumberField",
+    "A date": "DateField"
+  },
+  "anatomy": [
+    "root",
+    "input",
+    "segment",
+    "literal"
+  ],
+  "slots": {
+    "segment": {
+      "accepts": "text"
+    },
+    "literal": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The time, controlled: a 24 hour HH:mm such as 21:05, or null for none."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first time, uncontrolled, HH:mm."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with HH:mm once every segment is filled, and with null when one is cleared."
+    },
+    "minValue": {
+      "type": "string",
+      "description": "The earliest time, HH:mm. An earlier time marks the field invalid."
+    },
+    "maxValue": {
+      "type": "string",
+      "description": "The latest time, HH:mm. A later time marks the field invalid."
+    },
+    "placeholderValue": {
+      "type": "string",
+      "description": "The time the segments step from while empty, HH:mm. Default midnight."
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale of the segment order, the separator and the day period words, such as ar-SA. Default the language of the nearest Theme. Digits stay Western."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "The box height: size.control.sm, md or lg (44, with a fixed 16px text so phones do not zoom)."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the field invalid (data-invalid, aria-invalid on the group). Inside a Field the field decides when it is not passed. A value outside min and max is invalid too."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No segment takes focus or changes. Stamps data-disabled."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Segments take focus and are read; typing changes nothing. Stamps data-readonly."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-required on the group; the Field shows its mark."
+    },
+    "autoFocus": {
+      "type": "boolean",
+      "default": false,
+      "description": "Focuses the first segment on mount."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The name of the field when no Field label names it."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the hidden form input. React Aria writes HH:mm:ss there."
+    },
+    "hourCycle": {
+      "type": [
+        "12",
+        "24"
+      ],
+      "description": "12 or 24. Default the locale's own cycle (wheelHourCycle, the one WheelPicker uses): 12 in ar-SA and en-US, 24 in en-GB. The value is 24 hour either way."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-placeholder",
+    "data-type"
+  ],
+  "a11y": {
+    "role": "group (the input part) named by aria-label or the Field label, holding a spinbutton for the hour, the minute and, in a 12 hour locale, the day period. Each is named by its part and the field name (hour, Start; الساعات، وقت البدء). Separators are aria-hidden.",
+    "focus": "One Tab stop per editable segment, in reading order. A press on the box outside a segment focuses the first empty segment, else the last. The box takes the focus ring while any segment has focus; the focused segment takes the tint fill.",
+    "keys": {
+      "Tab": "Moves to the next segment, and out after the last",
+      "ArrowUp": "Steps the focused segment up; wraps within its range",
+      "ArrowDown": "Steps the focused segment down; wraps within its range",
+      "ArrowRight": "The next segment; the one before in right to left",
+      "ArrowLeft": "The segment before; the next one in right to left",
+      "PageUp": "Steps the hour up by 2, the minute by 15 (React Aria)",
+      "PageDown": "Steps the hour down by 2, the minute by 15",
+      "Home": "The least value of the segment",
+      "End": "The greatest value of the segment",
+      "Backspace": "Clears the last digit, then the segment, then moves to the segment before",
+      "Digits": "Type the hour and minute; focus moves on when the segment is full. A or P (ص or م) sets the day period. Arabic Indic digits are read as Western digits.",
+      "Pointer": "A tap on a segment focuses it; a tap on the box focuses the first empty segment. No drag."
+    },
+    "announce": "Start, group. Hour, Start, spin button, 9 PM. Minute, 05. AM/PM, PM. React Aria's hidden description reads the whole time after a change.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "The box is control md tall (32) on web, never under 24 (WCAG 2.2 2.5.8). ios and android raise it through their platform rules (requested).",
+      "The day period words come from Intl for the locale with Arabic marks removed: AM and PM, ص and م. In Arabic the hour sits at the right and the day period at the left.",
+      "Digits stay Western in every segment, placeholder, name and announcement in ar-SA, proved by a unit test.",
+      "React Aria joins a segment name and the field name with a Latin comma; in Arabic the system writes the Arabic comma instead.",
+      "No clock dial anywhere: a dial is a drag (WCAG 2.2 2.5.7). On android the time is this field in a dialog.",
+      "Under forced colors the focused segment is Highlight with HighlightText and the focus outline shows."
+    ]
+  },
+  "content": {
+    "en": {
+      "aria-label": "Names the time: Start time, Pickup time. Sentence case.",
+      "segments": "Segment names, placeholders and day period words come from React Aria and Intl."
+    },
+    "ar": {
+      "aria-label": "اسم بصيغة اسمية بدون تشكيل: وقت البدء، وقت الاستلام.",
+      "segments": "أسماء الأجزاء وكلمتا الفترة من Intl: ص و م، والأرقام لاتينية."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.4xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.leading.snug",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.primary.tint",
+    "color.primary.on-surface",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.state.danger-text",
+    "color.bg.overlay-5",
+    "focus.shadow.ring",
+    "radius.control",
+    "radius.xs",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "duration.base",
+    "ease.out"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "React Aria TimeField, DateInput and DateSegment (react-aria-components) through their render props, on DateField's segment row; HH:mm helpers in TimeField/time.ts, the hour cycle from wheelHourCycle in @the-system/shared",
+      "example": "TimeField.demo.tsx",
+      "note": "Motion: as DateField (fade on the focused segment and the border). Reduced motion: instant."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "New wave 2: the same DOM on the shared date and wheel helpers; Angular has no React Aria, so the segment keys are built on the CDK with the keyboard map of this manifest."
+    },
+    "native": {
+      "status": "planned",
+      "note": "Phase R5 uses a system view: the compact time picker of iOS and the Material time input on Android, through @expo/ui."
+    }
+  },
+  "styles": {
+    "web": "A bordered box like Input holding hour, minute and the day period in tabular digits.",
+    "ios": "The same segments in a 44 point field; on a phone DatePicker opens the wheel instead.",
+    "android": "The Material time input: the hour and the minute as two filled boxes and the day period beside them, in the DatePicker dialog (requested from the platform file).",
+    "studio": "The same on the Studio tokens; no recipe.",
+    "desk": "The same on the Desk tokens; no recipe.",
+    "neutral": "The same on the Neutral tokens; no recipe.",
+    "liquid": "The same on the Liquid tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Storing 9:05 PM as text",
+      "right": "Store 21:05; the hour cycle only changes how it is drawn"
+    },
+    {
+      "wrong": "A clock dial on android",
+      "right": "The time input field: a dial needs a drag (2.5.7)"
+    },
+    {
+      "wrong": "Writing AM and PM in Arabic by hand",
+      "right": "The day period words come from Intl for the locale"
+    }
+  ],
+  "contract": {
+    "optionalParts": [],
+    "keys": {
+      "ArrowUp": {
+        "focus": "[data-part='segment'][data-type='hour']",
+        "case": "variants",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-part='segment'][tabindex='0']",
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
