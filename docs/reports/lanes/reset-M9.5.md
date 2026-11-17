@@ -155,7 +155,27 @@ animates between the two snapshots. Scripts:
 
 ## Contract runs
 
-RESULT_CONTRACT
+Against this order's gallery server (`--url`), components Input,
+Fieldset, Field, List, SectionIndex, Select, NumberField, DropdownMenu,
+Popover, AlertDialog, Sheet, SwipeActions, Toast:
+
+- `--platform android`: 679 passed.
+- `--platform ios`: the first run of all thirteen reached its 30 minute
+  limit after 426 tests; the only failures were three keyboard maps that
+  timed out at 1.5 minutes while other agents loaded the machine (Input,
+  NumberField, SectionIndex). Run alone they pass (3 passed). Select,
+  Sheet, SwipeActions and Toast run again: 227 passed, 5 failed (Select
+  keyboard map, the same timeout; Select "axe open" in Studio, light and
+  dark: white text on a gray lit row, 1.35:1 and 1.44:1). The lit row was
+  an ios.css rule from before this order that set `--_select-highlight-bg`
+  to a gray directly, past Studio's own lit fill; it now takes the menu lit
+  fill. Select alone after the fix: 63 passed. A side effect: Liquid's lit
+  row in an open Select on ios is now Liquid's own lit fill (6% ink) rather
+  than the platform's 10%.
+- `npm run check`: every step passed except vitest, one gate: the android
+  bubble used a `border-radius` shorthand with unequal corners
+  (logical-properties). Fixed with logical corners; the gates (19 files)
+  and the whole vitest suite (227 files, 2978 tests) pass after it.
 
 ## Pictures
 

@@ -1040,17 +1040,16 @@
     justify-content: center;
     inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-xl));
     block-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-xl));
-    border-radius: var(--ds-shape-corner-full) var(--ds-shape-corner-full) 0 var(--ds-shape-corner-full);
+    border-start-start-radius: var(--ds-shape-corner-full);
+    border-start-end-radius: var(--ds-shape-corner-full);
+    border-end-start-radius: var(--ds-shape-corner-full);
+    border-end-end-radius: 0;
     background-color: var(--ds-color-primary-fill);
     color: var(--ds-color-primary-text);
     font-size: var(--ds-type-headline-medium-font-size);
     font-weight: var(--ds-font-weight-medium);
     transform: translateY(-50%);
     pointer-events: none;
-  }
-
-  [data-platform='android'] [data-ds='section-index'][data-dragging] > [data-part='item'][data-active][data-key]:dir(rtl)::before {
-    border-radius: var(--ds-shape-corner-full) var(--ds-shape-corner-full) var(--ds-shape-corner-full) 0;
   }
 
   /* The pop-up button (M9.3): a text button with its dropdown glyph, 40 tall, label large, a capsule state layer. */
