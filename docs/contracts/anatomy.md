@@ -260,7 +260,8 @@ follows it.
     | ActionSheet | `data-placement` |
     | Calendar | `data-today`, `data-unavailable`, `data-outside-month` |
     | Toast | `data-position`, `data-swipe` |
-    | Toaster | `data-stacked`, `data-expanded`, `data-paused` |
+    | Toaster | `data-stacked`, `data-expanded`, `data-paused`, `data-shell-placement` (`side`, on the viewport while the shell's bar sits in the side column) |
+    | Toast | `data-has-action` on a toast with an action |
     | Input | `data-variant` |
     | Field | `data-floating`, `data-filled` |
     | Switch | `data-dragging` |

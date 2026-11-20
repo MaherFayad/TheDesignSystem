@@ -654,8 +654,10 @@
    * docked): out of the column, as the accessory there, its own capsule
    * beside the column's foot toward the content, 12 from it.
    */
-  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:has(> [data-part='search'][data-expanded]) {
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:has(> [data-part='search'][data-expanded]):not([data-ds='page-shell'] *) {
     position: relative;
+    /* The bar keeps the field's room before it, so the field stays inside the bar's own box. */
+    margin-inline-start: calc(var(--ds-dialog-width-sm) - 2 * var(--_ios-rail-item) + var(--ds-space-fixed-xl));
   }
 
   [data-platform='ios'] [data-ds='tab-bar'][data-compact][data-placement='side']:has(> [data-part='search'][data-expanded][data-active]) {
@@ -665,6 +667,7 @@
   [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='search'][data-expanded] {
     position: absolute;
     inset-block: auto 0;
+    inset-inline: auto calc(100% + var(--ds-space-fixed-xl));
     box-sizing: border-box;
     inline-size: calc(var(--ds-dialog-width-sm) - 2 * var(--_ios-rail-item));
     min-inline-size: 0;
@@ -677,15 +680,6 @@
     background-color: var(--_tab-bar-bg);
     box-shadow: var(--ds-elevation-glass);
     visibility: visible;
-  }
-
-  /* The column is on the physical right in both reading directions, so the field opens toward the left of it. */
-  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='search'][data-expanded]:dir(ltr) {
-    inset-inline: auto calc(100% + var(--ds-space-fixed-xl));
-  }
-
-  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='search'][data-expanded]:dir(rtl) {
-    inset-inline: calc(100% + var(--ds-space-fixed-xl)) auto;
   }
 
   /* ------------------------------------------------------------ the Navbar's actions in the column */

@@ -243,3 +243,11 @@ Rule: component and platform CSS may only hide a focus ring under
 `[data-modality='pointer']`. It never keys a ring on `keyboard`, so with no
 attribute the ring shows (WCAG 2.2 2.4.7).
 
+## Portals carry the theme
+
+A portal takes every theme axis, `dir`, `lang` and the four
+`--ds-inset-safe-*` tokens from the nearest Theme, else `dir` and `lang` from
+the document element. React does this in `LayerTheme`, Angular in
+`DsLayerTheme`. A key hint whose focus selector names one part listed in
+`contract.optionalParts` is noted, not failed, where the layout does not
+render that part.
