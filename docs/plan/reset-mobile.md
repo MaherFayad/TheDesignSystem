@@ -362,3 +362,39 @@ the lead runs it on a quiet machine.
 - Acceptance: Angular specs for each, the Angular typecheck, `npm run
   contract -- --framework angular --platform ios` for each touched
   component, and `--device duo-outer` for PageShell.
+
+### C5 Component side of the next round (ds-component)
+
+Runs with Y5 at once. C5 owns component folders, manifests and
+`packages/shared`; Y5 owns platform and style CSS. Neither edits the
+other's files; each lists what it needs from the other in its report.
+
+1. DU5 of `reset-duo.md` (fold and column aware overlays in React).
+2. Theme portals carry the safe area tokens (Dialog, Sheet, ActionSheet,
+   Popover, menus), the way S1 did for the Toaster; one shared helper.
+3. Sheet header takes one more action besides close and confirm
+   (`SheetHeaderAction`).
+4. A List row can be the trigger of an ActionSheet, a menu or a dialog
+   (`asChild` on the row's action, with `tone="danger"`).
+5. Navbar: the large title wraps to two lines below 360 wide instead of an
+   ellipsis (WCAG 2.2 1.4.10); the collapse still works (the height is
+   measured, not assumed).
+6. TabBarSearch is drawn when the bar sits in the side column.
+7. `resolveActionSheetPlacement` and `focusFragment` move to
+   `packages/shared`; React and Angular import them.
+8. A Pager (swipe between pages, scroll snap, keys, dots from Pagination)
+   so onboarding pages change by swipe. Proposed as a new component.
+
+### Y5 Style side of the next round (ds-style)
+
+1. DU6 of `reset-duo.md` (fold, list, toast and drawer CSS on `ios`).
+2. Text behind the glass tab bar and the floating search field reads as a
+   ghost (settings in dark, music search in Arabic): raise the bar's tint
+   or add a content fade under floating bars, in both glass styles.
+3. Liquid dark: grouped list cards inside a sheet separate from the sheet
+   panel (3:1 is not required for a card edge, but the groups must read).
+4. The collapsed large title mid scroll: no clipped half title; the list
+   under the bar fades at the bar's edge.
+5. Arabic share panel: people's names at the caption size the token gives,
+   not smaller; a two line clamp.
+6. The music library's index bar height after K1 moved the page start.
