@@ -25,6 +25,7 @@ import {
   moveFinding,
   opensAndCloses,
   optionalParts,
+  optionalPartOfSelector,
   readyComponents,
   shiftMovesFurther,
   splitKeys,
@@ -236,6 +237,14 @@ async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hi
     const sel = scope ? `${scope} ${hint.focus}` : hint.focus;
     const all = page.locator(sel);
     if ((await all.count()) === 0) {
+      // Order C6: a part the manifest lists as optional that this layout does
+      // not render at all (the SplitView handle while the view stacks) cannot
+      // take the key here: noted, not failed. Any other selector still fails.
+      const part = optionalPartOfSelector(m, hint.focus);
+      if (part !== undefined) {
+        note(`${key}: not checked at this viewport, the layout renders no ${part} (contract.optionalParts)`);
+        return;
+      }
       failures.push(`${key}: contract.keys focus selector ${sel} matches nothing`);
       return;
     }

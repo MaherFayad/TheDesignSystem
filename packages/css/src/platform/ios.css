@@ -930,6 +930,7 @@
   }
 
   /* Order M1: the close control of a sheet is a round glass button, in the style's glass material and edge, with a soft lift. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
     --_button-bg: var(--ds-color-material-glass);
     --_button-bg-hover: var(--ds-color-material-glass);
@@ -1082,6 +1083,7 @@
 
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-border-color: transparent;
       --_button-border-color-hover: transparent;
@@ -1091,6 +1093,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-shadow:
         0 var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 24%, transparent);
@@ -1114,6 +1117,7 @@
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       content: '';
       position: absolute;
@@ -1145,6 +1149,7 @@
     [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *):dir(rtl)::after,
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']):dir(rtl)::after,
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
       background-image: linear-gradient(
         225deg,
@@ -1165,6 +1170,7 @@
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       background-image: linear-gradient(
         135deg,
@@ -1184,6 +1190,7 @@
     [data-platform='ios'][data-scheme='dark'] [data-ds='segmented-control'] > [data-part='indicator']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button']:dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']:dir(rtl)::after {
       background-image: linear-gradient(
         225deg,
@@ -1249,6 +1256,7 @@
 
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
       --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
@@ -1274,6 +1282,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
       --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
@@ -1298,6 +1307,7 @@
 
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       /* Order G2: the buttons are thick clear glass like the tab bar, not a tinted pill: a low tint (labels keep 10:1 or more, measured). */
       --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 38%, transparent);
@@ -1325,6 +1335,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
       --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 54%, transparent);
@@ -1362,6 +1373,7 @@
 
     [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
       --_button-bg-hover: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
@@ -1387,6 +1399,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
       --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
@@ -1450,9 +1463,11 @@
 
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
         --_button-bg-hover: var(--ds-color-material-glass-solid);
@@ -1495,6 +1510,7 @@
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
         content: none;
       }
@@ -1556,15 +1572,19 @@
 
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
       --_button-bg: var(--ds-color-material-glass-solid);
       --_button-bg-hover: var(--ds-color-material-glass-solid);
@@ -1611,6 +1631,7 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
@@ -1621,6 +1642,7 @@
     [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+    [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
       content: none;
     }
@@ -1645,9 +1667,11 @@
 
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       [data-platform='ios'][data-scheme='dark'] [data-ds='navbar'] > [data-part='menu-button'],
+      [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
         --_button-bg: var(--ds-color-material-glass-solid);
         --_button-bg-hover: var(--ds-color-material-glass-solid);
@@ -1665,6 +1689,7 @@
       [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::after,
       [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::after,
       [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::after,
+      [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::after,
       [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after {
         content: none;
       }
@@ -2660,7 +2685,7 @@
    * (pattern fade; reduced: it shows at once). Main never runs under the
    * button row, so a focused control is never under the bar (WCAG 2.4.11).
    * The heading stays one line, cut with an ellipsis, as on the platform:
-   * its height is known to CSS. The inline title is generated content with
+   * its height is known to CSS. Under 360 wide it wraps (order Y6, below). The inline title is generated content with
    * empty alternative text, so the h1 is the one heading assistive tech
    * reads, in both states (it stays in the tree while out of view).
    */
@@ -2718,6 +2743,30 @@
     text-overflow: ellipsis;
   }
 
+  /*
+   * Order Y6 (WCAG 2.2 1.4.10): on a shell under 360 wide a long large title
+   * wraps instead of losing its end to an ellipsis. Its height is then no
+   * longer one line: the Navbar measures the heading and writes it on the
+   * shell (--_navbar-heading-size, order C5), and the title band, the
+   * collapse's travel and the inline title's place read that, with the one
+   * line height until it is measured. The shell is the container, so the
+   * band is set on its parts.
+   */
+  @container ds-shell (inline-size < calc(30rem * 3 / 4)) { /* breakpoint.phone */
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'] > [data-part='heading'] {
+      white-space: normal;
+      text-overflow: clip;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) > :is([data-part='header'], [data-part='main']) {
+      --_ios-title-room: var(--_navbar-heading-size, calc(var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) + var(--ds-space-s)));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']):lang(ar) > :is([data-part='header'], [data-part='main']) {
+      --_ios-title-room: var(--_navbar-heading-size, calc(var(--ds-type-display-large-font-size) * var(--ds-font-leading-arabic-tight) + var(--ds-space-s)));
+    }
+  }
+
   [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-collapsed] > [data-part='heading'] {
     opacity: 0;
   }
@@ -2761,6 +2810,31 @@
         animation-timeline: --_ios-page-scroll;
         animation-range: 0 var(--_ios-title-room);
       }
+
+      /*
+       * Order Y6: the inline title fades in on the same scroll, from a little
+       * before the large title is gone (15 percent of its travel) to a third
+       * of the way, so at no point mid collapse is neither title shown.
+       * Data-collapsed still decides where there is no scroll timeline and
+       * under reduced motion.
+       */
+      :root:not([data-motion='reduce']) [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-inline-title]:has(> [data-part='heading'])::after {
+        animation: ds-ios-inline-title-in linear both;
+        animation-timeline: --_ios-page-scroll;
+        animation-range: 0 var(--_ios-title-room);
+      }
+    }
+  }
+
+  @keyframes ds-ios-inline-title-in {
+    0%,
+    15% {
+      opacity: 0;
+    }
+
+    35%,
+    100% {
+      opacity: 1;
     }
   }
 
@@ -3223,6 +3297,46 @@
   }
 
   [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+  }
+
+  /*
+   * Order Y6: the header action (SheetHeaderAction, order C5) on the close
+   * and confirm row, at the inline end before the confirm, 8 from it, drawn
+   * as the close disc (44, round, glass where the style ships it). With no
+   * confirm it takes the confirm's place. The title keeps the same room at
+   * both sides, so it stays centred between the discs.
+   */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:has(> [data-part='header-action']):has(> [data-part='confirm']) {
+    padding-inline: calc(2 * var(--ds-space-fixed-m) + 2 * var(--ds-size-touch-ios) + 2 * var(--ds-space-fixed-m));
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] {
+    position: absolute;
+    inset-block-start: calc(2 * var(--ds-space-fixed-m));
+    inset-inline-end: calc(2 * var(--ds-space-fixed-m) + var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    margin: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:not(:has(> [data-part='confirm'])) > [data-part='header-action'] {
+    inset-inline-end: calc(2 * var(--ds-space-fixed-m));
+  }
+
+  [data-platform='ios'] [data-ds='sheet'][data-detent] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] {
+    inset-block-start: calc(2 * var(--ds-space-fixed-m) + var(--ds-size-target-min));
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']) {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: var(--ds-shape-corner-full);
+    --_button-padding-inline: 0;
+
+    inline-size: var(--ds-size-touch-ios);
+    min-inline-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']) [data-ds='icon'] {
     inline-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
     block-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
   }

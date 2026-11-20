@@ -206,13 +206,14 @@
     /*
      * Order F3: in the column the accessory is fixed on the shell at the foot
      * of the content (below); main keeps its 48, 8 over it and the foot,
-     * as a spacer and as scroll padding.
+     * as a spacer and as scroll padding. Order Y6: the same for the search
+     * field, expanded, which leaves the column for the same place.
      */
-    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > :is([data-part='accessory'], [data-part='search'][data-expanded])) {
       scroll-padding-block-end: calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-m));
     }
 
-    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > [data-part='accessory'])::after {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > :is([data-part='accessory'], [data-part='search'][data-expanded]))::after {
       content: '';
       display: block;
       block-size: calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-m));
@@ -223,6 +224,13 @@
   @container ds-shell (inline-size >= calc(30rem * 11 / 12)) and (block-size <= calc(600px * 7 / 6)) { /* breakpoint.phone breakpoint.medium */
     [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])) {
       scroll-padding-block-end: var(--_ios-rail-foot);
+    }
+
+    /* Order Y6: the expanded search field at the foot of the content (below) keeps its 48, 8 over it and the foot. */
+    [data-platform='ios'] [data-ds='page-shell']:not([data-placement]) > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])):has([data-ds='tab-bar'] > [data-part='search'][data-expanded]) {
+      --_ios-bar-room: calc(var(--_ios-rail-foot) + var(--_ios-rail-item) + var(--ds-space-fixed-m));
+
+      scroll-padding-block-end: var(--_ios-bar-room);
     }
   }
 
@@ -582,6 +590,94 @@
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
+
+    /*
+     * Order Y6: the search field, expanded, in the column. A field cannot be
+     * read in a 48 wide column, so it leaves the capsule as the accessory
+     * does: fixed on the shell at the foot of the content, 48 tall, from the
+     * content's start padding to 12 before the column, its own capsule of
+     * the bar's material. Main keeps the room under it (above). The bar
+     * gives up its backdrop filter, so the shell holds the fixed field. A
+     * compact bar whose current item is the search has nothing left to
+     * show in the column: it is not drawn, the field still is.
+     */
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:has(> [data-part='search'][data-expanded]):not([data-placement='bottom']) {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar'][data-compact]:has(> [data-part='search'][data-expanded][data-active]):not([data-placement='bottom']) {
+      visibility: hidden;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search'][data-expanded] {
+      position: fixed;
+      inset-block: auto var(--_ios-rail-foot);
+      box-sizing: border-box;
+      inline-size: auto;
+      min-inline-size: 0;
+      block-size: var(--_ios-rail-item);
+      min-block-size: 0;
+      margin: 0;
+      padding-block: 0;
+      padding-inline: var(--ds-space-fixed-2xs);
+      border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+      border-radius: var(--ds-shape-corner-full);
+      background-color: var(--_tab-bar-bg);
+      box-shadow: var(--ds-elevation-glass);
+      visibility: visible;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search'][data-expanded]:dir(ltr) {
+      inset-inline: calc(var(--ds-inset-safe-start) + 2 * var(--ds-space-fixed-m)) calc(var(--_ios-rail-size) + var(--ds-space-fixed-xl));
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search'][data-expanded]:dir(rtl) {
+      inset-inline: calc(var(--_ios-rail-size) + var(--ds-space-fixed-xl)) calc(var(--ds-inset-safe-end) + 2 * var(--ds-space-fixed-m));
+    }
+
+    /* Glass where the style ships it (Liquid and Neutral: regular), as the bar's own; solid under reduced transparency and more contrast. */
+    @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+      @media not ((prefers-reduced-transparency: reduce) or (prefers-contrast: more) or (forced-colors: active)) {
+        [data-platform='ios']:not([data-contrast='more'], [data-contrast='more'] *) [data-ds='page-shell'] [data-ds='tab-bar']:not([data-placement='bottom']) > [data-part='search'][data-expanded] {
+          border-color: transparent;
+          background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
+          -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
+          backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
+        }
+      }
+    }
+  }
+
+  /*
+   * Order Y6: the expanded search field of a bar placed side by hand (not
+   * docked): out of the column, as the accessory there, its own capsule
+   * beside the column's foot toward the content, 12 from it.
+   */
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side']:has(> [data-part='search'][data-expanded]) {
+    position: relative;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-compact][data-placement='side']:has(> [data-part='search'][data-expanded][data-active]) {
+    visibility: hidden;
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'][data-placement='side'] > [data-part='search'][data-expanded] {
+    position: absolute;
+    inset-block: auto 0;
+    inset-inline: auto calc(100% + var(--ds-space-fixed-xl));
+    box-sizing: border-box;
+    inline-size: calc(var(--ds-dialog-width-sm) - 2 * var(--_ios-rail-item));
+    min-inline-size: 0;
+    block-size: var(--_ios-rail-item);
+    min-block-size: 0;
+    padding-block: 0;
+    padding-inline: var(--ds-space-fixed-2xs);
+    border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+    border-radius: var(--ds-shape-corner-full);
+    background-color: var(--_tab-bar-bg);
+    box-shadow: var(--ds-elevation-glass);
+    visibility: visible;
   }
 
   /* ------------------------------------------------------------ the Navbar's actions in the column */
@@ -723,6 +819,31 @@
     [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > :is([data-part='close'], [data-part='confirm']):dir(rtl) {
       grid-column: 1;
     }
+
+    /* Order Y6: the header action in the same small column, under the confirm (under the close when there is no confirm). */
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='header-action'] {
+      position: static;
+      grid-row: 3;
+      justify-self: center;
+      margin: 0;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header']:not(:has(> [data-part='confirm'])) > [data-part='header-action'] {
+      grid-row: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='header-action']:dir(ltr) {
+      grid-column: 2;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header'] > [data-part='header-action']:dir(rtl) {
+      grid-column: 1;
+    }
+
+    /* One more condition than the centred row's room in ios.css, which this file loads before. */
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'][data-state] > [data-part='header']:has(> [data-part='header-action']):has(> [data-part='title']) {
+      padding-inline: calc(2 * var(--ds-space-fixed-m));
+    }
   }
 
   /*
@@ -782,6 +903,28 @@
   :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'],
   :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'][data-size] {
     --_dialog-height-max: calc(50% - 2 * var(--ds-space-fixed-l) - max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom)) - var(--ds-space-fixed-m));
+  }
+
+  /*
+   * Order Y6: folded in portrait the bottom segment is where the hands are,
+   * and the home bar's inset is at its foot. The sheet keeps clear of the
+   * larger of the inset token and the screen's own inset: a page may set
+   * the token for a drawn frame while the device reports its real inset
+   * (the kit's 95 on the inner screen). The overlay root's data-segment
+   * (order DU5) says the same as the media query.
+   */
+  @media (vertical-viewport-segments: 2) {
+    :root [data-platform='ios'] [data-ds='sheet'],
+    :root [data-platform='ios'] [data-ds='sheet'][data-size] {
+      --_dialog-height-max: calc(env(viewport-segment-height 0 1, 50%) - max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom), env(safe-area-inset-bottom, 0px)) - var(--ds-space-fixed-m));
+
+      padding-block-end: max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom), env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  :root [data-platform='ios'] [data-ds='sheet'][data-segment='bottom'],
+  :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'] {
+    padding-block-end: max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom), env(safe-area-inset-bottom, 0px));
   }
 
   /* ------------------------------------------------------------ grouped content on the inner screen (order DU6, proposed) */
@@ -889,5 +1032,51 @@
 
   :root[data-ds-test-fold='horizontal'] [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) {
     padding-block-start: calc(var(--ds-dialog-height-max) * 1.25 / 2 + 2 * var(--ds-space-fixed-l) + var(--ds-space-fixed-m));
+  }
+
+  /* ------------------------------------------------------------ toasts: an action in reach, and beside the column (order Y6, proposed) */
+
+  /*
+   * Folded in portrait, a toast with an action (data-has-action, order C6)
+   * is something to press: the stack moves to the foot of the bottom
+   * segment, where the hands are, over the home bar's inset, and grows up
+   * from there. Plain banners stay at the top, in the top segment.
+   */
+  @media (vertical-viewport-segments: 2) {
+    :root [data-platform='ios'] [data-ds='toaster']:has([data-ds='toast'][data-has-action]) {
+      --_toaster-dir: -1;
+      --_toaster-align: end;
+
+      flex-direction: column;
+      inset-block: auto max(var(--ds-toast-inset), var(--ds-inset-safe-bottom), env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='toaster']:has([data-ds='toast'][data-has-action]) {
+    --_toaster-dir: -1;
+    --_toaster-align: end;
+
+    flex-direction: column;
+    inset-block: auto max(var(--ds-toast-inset), var(--ds-inset-safe-bottom), env(safe-area-inset-bottom, 0px));
+  }
+
+  /*
+   * A Toaster in a shell whose bars sit in the side column (data-shell-
+   * placement, order C6): the banner centres in the room beside the column,
+   * not over it. The column is on the hardware side, the physical right, in
+   * both reading directions; its width is the shell's (84: a 48 item and
+   * three 12s, or the inset there when wider). Folded side by side the
+   * toasts already sit in the start segment (above), clear of the column.
+   */
+  @media not (horizontal-viewport-segments: 2) {
+    :root:not([data-ds-test-fold='vertical']) [data-platform='ios'] [data-ds='toaster'][data-shell-placement='side']:dir(ltr) {
+      inline-size: min(var(--ds-toast-width-max), calc(100% - max(calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + 3 * var(--ds-space-fixed-xl)), var(--ds-inset-safe-end)) - 2 * var(--_toaster-inset-inline)));
+      inset-inline: 0 max(calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + 3 * var(--ds-space-fixed-xl)), var(--ds-inset-safe-end));
+    }
+
+    :root:not([data-ds-test-fold='vertical']) [data-platform='ios'] [data-ds='toaster'][data-shell-placement='side']:dir(rtl) {
+      inline-size: min(var(--ds-toast-width-max), calc(100% - max(calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + 3 * var(--ds-space-fixed-xl)), var(--ds-inset-safe-start)) - 2 * var(--_toaster-inset-inline)));
+      inset-inline: max(calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + 3 * var(--ds-space-fixed-xl)), var(--ds-inset-safe-start)) 0;
+    }
   }
 }

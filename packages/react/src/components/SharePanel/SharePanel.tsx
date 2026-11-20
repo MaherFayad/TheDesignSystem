@@ -44,6 +44,7 @@ import {
   isValidElement,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type FocusEvent,
@@ -189,6 +190,29 @@ export function shareDataOf(item: ShareItem): ShareData {
 
 // ------------------------------------------------------------------ rows
 
+/**
+ * Scrolls a row back so its first item sits at the row's inline start
+ * (order C6, item 4). It moves the row by the distance between the first
+ * item's start edge and the row's content edge, so it holds in every
+ * scrollLeft convention of right to left (negative, as the standard says,
+ * or positive from the left, as older WebKit has it). It acts only when the
+ * first item is cut off past the start edge, so a row at its start never
+ * moves. Exported for the tests.
+ */
+export function scrollRowToStart(row: HTMLElement, rtl: boolean): void {
+  const first = row.querySelector<HTMLElement>(':scope > [data-part]');
+  if (!first) return;
+  const box = row.getBoundingClientRect();
+  const item = first.getBoundingClientRect();
+  const style = row.ownerDocument.defaultView?.getComputedStyle(row);
+  const px = (value: string | undefined) => Number.parseFloat(value ?? '') || 0;
+  const delta = rtl
+    ? item.right - (box.right - px(style?.borderRightWidth) - px(style?.paddingRight))
+    : item.left - (box.left + px(style?.borderLeftWidth) + px(style?.paddingLeft));
+  // rtl: the first item sits past the right edge; ltr: past the left edge.
+  if (rtl ? delta > 0.5 : delta < -0.5) row.scrollLeft += delta;
+}
+
 interface RowProps {
   part: 'people' | 'targets' | 'actions';
   label: string;
@@ -203,6 +227,12 @@ interface RowProps {
  * One row: a named group with one Tab stop. Left and Right (mirrored in
  * right to left), Home and End move focus along it; the row scrolls inline
  * to the focused item (the browser does that on focus).
+ *
+ * The row opens at its start (order C6, item 4): in Arabic a row whose
+ * tiles do not fit opened scrolled toward its end, the first person out of
+ * view. It is set back to its start when it mounts, a frame later (after
+ * the container moved and the browser snapped it), and whenever its first
+ * item takes focus (the container's focus rule on open, or Home).
  */
 function Row({ part, label, count, first, rtl, children }: RowProps) {
   const [active, setActive] = useState(0);
@@ -228,7 +258,18 @@ function Row({ part, label, count, first, rtl, children }: RowProps) {
   const onFocus = (event: FocusEvent<HTMLDivElement>) => {
     const at = items().indexOf(event.target as HTMLElement);
     if (at >= 0 && at !== current) setActive(at);
+    if (at === 0 && own.current) scrollRowToStart(own.current, rtl);
   };
+  const shown = count > 0;
+  useLayoutEffect(() => {
+    const row = own.current;
+    if (!shown || !row) return undefined;
+    scrollRowToStart(row, rtl);
+    const view = row.ownerDocument.defaultView;
+    if (!view || typeof view.requestAnimationFrame !== 'function') return undefined;
+    const frame = view.requestAnimationFrame(() => scrollRowToStart(row, rtl));
+    return () => view.cancelAnimationFrame(frame);
+  }, [shown, rtl]);
   if (count === 0) return null;
   const out: ReactNode[] = [];
   for (let i = 0; i < count; i += 1) out.push(children(i, i === current ? 0 : -1, first && i === 0));

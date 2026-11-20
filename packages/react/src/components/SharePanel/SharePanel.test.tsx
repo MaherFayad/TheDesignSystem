@@ -7,6 +7,7 @@ import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import SharePanelDemo from './SharePanel.demo';
 import { SharePanel, type SharePanelProps } from './index';
+import { scrollRowToStart } from './SharePanel';
 
 const proto = Element.prototype as unknown as Record<string, unknown>;
 proto.setPointerCapture ??= () => undefined;
@@ -271,5 +272,83 @@ describe('SharePanel demo', () => {
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
     expect(container.querySelectorAll('[data-demo-trigger]')).toHaveLength(9);
+  });
+});
+
+describe('a row opens at its start (order C6, item 4)', () => {
+  // jsdom lays nothing out: a row 300 wide whose first item starts 50 past its start edge until it scrolls.
+  const scrolled = new WeakMap<Element, number>();
+  let restore: (() => void) | undefined;
+  function fakeLayout(rtl: boolean) {
+    const rect = Object.getOwnPropertyDescriptor(Element.prototype, 'getBoundingClientRect')!;
+    const left = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollLeft')!;
+    Object.defineProperty(Element.prototype, 'scrollLeft', {
+      configurable: true,
+      get(this: Element) {
+        return scrolled.get(this) ?? 0;
+      },
+      set(this: Element, value: number) {
+        scrolled.set(this, value);
+      },
+    });
+    Object.defineProperty(Element.prototype, 'getBoundingClientRect', {
+      configurable: true,
+      value(this: Element) {
+        const part = this.getAttribute('data-part');
+        if (part === 'people' || part === 'targets' || part === 'actions') return DOMRect.fromRect({ x: 0, y: 0, width: 300, height: 100 });
+        const row = this.parentElement;
+        if (row && row.firstElementChild === this && part !== null) {
+          // Content moves against the scroll: scrolling right by s moves every item left by s.
+          const s = scrolled.get(row) ?? 0;
+          return DOMRect.fromRect({ x: (rtl ? 260 : -50) - s, y: 0, width: 90, height: 100 });
+        }
+        return DOMRect.fromRect({ x: 0, y: 0, width: 0, height: 0 });
+      },
+    });
+    restore = () => {
+      Object.defineProperty(Element.prototype, 'getBoundingClientRect', rect);
+      Object.defineProperty(Element.prototype, 'scrollLeft', left);
+    };
+  }
+  afterEach(() => {
+    restore?.();
+    restore = undefined;
+  });
+
+  it('moves a cut off row back to its start in either direction, and leaves a row at its start alone', () => {
+    fakeLayout(true);
+    const row = document.createElement('div');
+    row.setAttribute('data-part', 'people');
+    const first = document.createElement('span');
+    first.setAttribute('data-part', 'person');
+    row.append(first);
+    document.body.append(row);
+    scrollRowToStart(row, true);
+    expect(row.scrollLeft).toBe(50);
+    scrollRowToStart(row, true);
+    expect(row.scrollLeft).toBe(50);
+    restore?.();
+
+    fakeLayout(false);
+    scrolled.set(row, 0);
+    scrollRowToStart(row, false);
+    expect(row.scrollLeft).toBe(-50);
+    scrollRowToStart(row, false);
+    expect(row.scrollLeft).toBe(-50);
+    row.remove();
+  });
+
+  it('opens the Arabic people row with the first person in view', async () => {
+    fakeLayout(true);
+    render(<Subject platform="ios" lang="ar" defaultOpen />);
+    const row = await waitFor(() => {
+      const el = panel()?.querySelector<HTMLElement>('[data-part="people"]');
+      expect(el).toBeTruthy();
+      return el!;
+    });
+    await waitFor(() => expect(row.scrollLeft).toBe(50));
+    const first = row.querySelector<HTMLElement>('[data-part="person"]')!;
+    const box = row.getBoundingClientRect();
+    expect(first.getBoundingClientRect().right).toBeLessThanOrEqual(box.right);
   });
 });

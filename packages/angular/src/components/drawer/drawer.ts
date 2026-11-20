@@ -90,9 +90,10 @@ import {
   type SwipeDirection,
 } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
-import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
+import { animationsDone, hideOthers, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
+import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { DsDialogBody, DsDialogFooter } from '../dialog/dialog';
@@ -156,26 +157,41 @@ function injectDrawer(name: string): DsDrawer {
 
 // ------------------------------------------------------------------ trigger, close, body, footer
 
-/** Opens the drawer. Put it on a dsButton. Focus returns to it on close. */
+/**
+ * Opens the drawer. Put it on a dsButton, or on a List row (`li[dsListItem]`),
+ * whose title then carries the trigger (internal/trigger-row.ts). Focus
+ * returns to it on close.
+ */
 @Directive({
   selector: '[dsDrawerTrigger]',
   host: {
-    'aria-haspopup': 'dialog',
-    '[attr.aria-expanded]': 'drawer.open() ? "true" : "false"',
-    '[attr.aria-controls]': 'drawer.open() ? drawer.panelId : null',
-    '[attr.data-state]': 'drawer.open() ? "open" : "closed"',
-    '(click)': 'drawer.setOpen(!drawer.open())',
+    '[attr.aria-haspopup]': 'row ? null : "dialog"',
+    '[attr.aria-expanded]': 'row ? null : drawer.open() ? "true" : "false"',
+    '[attr.aria-controls]': '!row && drawer.open() ? drawer.panelId : null',
+    '[attr.data-state]': 'row ? null : drawer.open() ? "open" : "closed"',
+    '(click)': 'row || drawer.setOpen(!drawer.open())',
   },
 })
 export class DsDrawerTrigger {
   protected readonly drawer = injectDrawer('dsDrawerTrigger');
+  protected readonly row = injectTriggerRow();
 
   constructor() {
     const el = consumeHostAttributes(['dsDrawerTrigger']);
-    this.drawer.trigger = el;
+    const drawer = this.drawer;
+    drawer.trigger = el;
+    let current: HTMLElement = el;
     inject(DestroyRef).onDestroy(() => {
-      if (this.drawer.trigger === el) this.drawer.trigger = null;
+      if (drawer.trigger === current) drawer.trigger = null;
     });
+    const row = this.row;
+    if (row) {
+      row.connect(
+        () => ({ id: null, haspopup: 'dialog', expanded: drawer.open(), controls: drawer.open() ? drawer.panelId : null, state: drawer.open() ? 'open' : 'closed' }),
+        { click: () => drawer.setOpen(!drawer.open()) },
+      );
+      followTriggerTitle(row, (title) => (drawer.trigger = current = title));
+    }
   }
 }
 
@@ -220,7 +236,6 @@ interface LayerData {
 const DRAWER_LAYER = new InjectionToken<LayerData>('DS_DRAWER_LAYER');
 
 /** The open drawers, the top one last. */
-const stack: DsDrawerLayer[] = [];
 
 interface Swipe {
   id: number;
@@ -235,17 +250,9 @@ interface Swipe {
   selector: 'div[data-dialog-layer]',
   imports: [NgTemplateOutlet, DsCloseButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: themeScopeProviders(() => new DsThemeScope(inject(DRAWER_LAYER).theme)),
+  providers: layerThemeProviders(() => inject(DRAWER_LAYER).theme),
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
   },
   template: `
     <div data-ds="drawer" [attr.data-size]="drawer.size()" [attr.data-side]="drawer.side()" [attr.data-state]="state()"
@@ -290,7 +297,6 @@ export class DsDrawerLayer {
   readonly closing = signal(false);
   readonly state = computed(() => (this.drawer.open() && !this.closing() ? 'open' : 'closed'));
   protected readonly dragging = signal(false);
-  protected readonly attrs = computed(() => attributesOf(this.theme.value()));
   protected readonly closeName = computed(
     () => this.content.closeLabel() ?? (isArabic(this.theme.value().lang) ? drawerLabels.ar : drawerLabels.en).close,
   );
@@ -307,16 +313,15 @@ export class DsDrawerLayer {
   }
 
   isTop(): boolean {
-    return stack[stack.length - 1] === this;
+    return isTopModalLayer(this);
   }
 
   push(): void {
-    stack.push(this);
+    pushModalLayer(this);
   }
 
   pop(): void {
-    const i = stack.indexOf(this);
-    if (i >= 0) stack.splice(i, 1);
+    popModalLayer(this);
   }
 
   /** The refused nudge (interaction dialog-refuse), as React's DialogBase. */

@@ -12,7 +12,7 @@
 //           <li data-ds="toast" data-state data-swipe-direction data-tone tabindex="0">...parts
 //         <span tabindex="0">                                            focus proxy, while toasts show
 //
-//   <ng-container dsToaster />
+//   <ng-container dsToaster />                                       renders <span data-toaster-anchor hidden> in place
 //   toast.success('Draft saved');
 //
 // Who owns time: the store (`@the-system/shared` toast.ts). The view only
@@ -80,6 +80,7 @@ import {
   signal,
   untracked,
   viewChild,
+  ViewContainerRef,
   type Signal,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
@@ -101,7 +102,7 @@ import {
   type ToasterPlacement,
 } from '@the-system/motion';
 import { animationsDone } from '../../behavior';
-import { DsThemeScope, DsThemeService, attributesOf, themeScopeProviders } from '../../theme';
+import { DS_LAYER_INSETS_FROM, DsLayerTheme, DsThemeService, layerThemeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import {
   TOAST_PARTS_IMPORTS,
@@ -194,6 +195,26 @@ interface ToasterData {
 
 const TOASTER = new InjectionToken<ToasterData>('DS_TOASTER');
 
+// The safe area in the portal (order S1). The portal theme stamps the
+// platform again, and the token CSS gives every platform element its own
+// --ds-inset-safe-* from env(), so an override on the dsTheme the toaster
+// is mounted in (a drawn device frame that says where its camera cutout is)
+// would not reach the toasts. dsToaster renders one hidden span in place,
+// after its ng-container (span[data-toaster-anchor]); the layer's
+// DsLayerTheme (theme/layer-theme.ts) reads the computed inset tokens there
+// and writes them on itself, as React's Toaster does.
+
+/** The hidden in place anchor where the portal reads the safe area tokens. Internal: dsToaster creates it. */
+@Component({
+  selector: 'span[data-toaster-anchor]',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { hidden: '' },
+  template: '',
+})
+export class DsToasterAnchor {
+  readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+}
+
 // ------------------------------------------------------------------ dsToaster
 
 /**
@@ -220,6 +241,8 @@ export class DsToaster {
   private readonly appRef = inject(ApplicationRef);
   private readonly doc = inject(DOCUMENT);
   private outlet: DomPortalOutlet | null = null;
+  /** The hidden anchor in place, right after the ng-container (rendered on the server too). */
+  private readonly anchor = inject(ViewContainerRef).createComponent(DsToasterAnchor).instance.element;
 
   constructor() {
     consumeHostAttributes(['dsToaster', 'position', 'label', 'hotkey', 'toastLabel', 'closeLabel', 'store']);
@@ -232,7 +255,10 @@ export class DsToaster {
     if (this.outlet) return;
     const injector = Injector.create({
       parent: this.injector,
-      providers: [{ provide: TOASTER, useValue: { toaster: this, theme: this.theme.value } satisfies ToasterData }],
+      providers: [
+        { provide: TOASTER, useValue: { toaster: this, theme: this.theme.value } satisfies ToasterData },
+        { provide: DS_LAYER_INSETS_FROM, useValue: () => this.anchor },
+      ],
     });
     this.outlet = new DomPortalOutlet(this.doc.body, this.appRef, injector);
     const ref = this.outlet.attach(new ComponentPortal(DsToasterLayer, null, injector));
@@ -447,18 +473,10 @@ interface Gesture {
   selector: 'div[data-toaster-layer]',
   imports: [DsToasterItem],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: themeScopeProviders(() => new DsThemeScope(inject(TOASTER).theme)),
+  providers: layerThemeProviders(() => inject(TOASTER).theme),
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
     'aria-live': 'off',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
     '(pointerover)': 'onPointerOver($event)',
     '(pointerout)': 'onPointerOut($event)',
     '(focusin)': 'focused.set(true)',
@@ -499,7 +517,6 @@ export class DsToasterLayer {
   private readonly snapshot = signal<ToastSnapshot>(toastStore.getServerSnapshot());
   protected readonly items = computed(() => this.snapshot().visible);
   protected readonly hasToasts = computed(() => this.items().length > 0);
-  protected readonly attrs = computed(() => attributesOf(this.theme.value()));
   private readonly words = computed(() => toastLabelsFor(this.theme.value().lang));
   /** The platform and language of the theme the toaster is declared in: the close rule and a meta time read them. */
   readonly platform = computed(() => this.theme.value().platform);

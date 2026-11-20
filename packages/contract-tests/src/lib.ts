@@ -187,6 +187,20 @@ export function optionalParts(m: Manifest, styles: StyleInfo[], styleId?: string
   return [...new Set([...(m.contract?.optionalParts ?? []), ...fromStyles])];
 }
 
+/**
+ * Order C6: the optional part a contract.keys focus selector names, when the
+ * selector is exactly one part (`[data-part='handle']`) and the manifest
+ * lists that part in contract.optionalParts. A layout may leave such a part
+ * out at some sizes (the SplitView handle while the view stacks), so a key
+ * hint that focuses it is noted, not failed, where it is not rendered.
+ * Undefined for any other selector.
+ */
+export function optionalPartOfSelector(m: Manifest, selector: string): string | undefined {
+  const match = /^\[data-part=(['"])([a-z0-9-]+)\1\]$/.exec(selector.trim());
+  const part = match?.[2];
+  return part !== undefined && (m.contract?.optionalParts ?? []).includes(part) ? part : undefined;
+}
+
 /** The selector that opens the component: contract.trigger, else [data-demo-trigger]. */
 /**
  * The `data-ds` of the root a trigger opens: `contract.opens` for a component

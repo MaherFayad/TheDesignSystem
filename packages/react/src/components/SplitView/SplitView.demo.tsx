@@ -47,8 +47,8 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
   const chosen = open === null ? undefined : mails[open];
   const t =
     lang === 'ar'
-      ? { list: 'الرسائل', detail: 'الرسالة', none: 'ما فيه رسالة مختارة. اختار رسالة من القائمة.', empty: 'ما فيه رسائل.' }
-      : { list: 'Messages', detail: 'Message', none: 'No message selected. Choose one from the list.', empty: 'No messages yet.' };
+      ? { list: 'الرسائل', detail: 'الرسالة', text: 'نص الرسالة', none: 'ما فيه رسالة مختارة. اختار رسالة من القائمة.', empty: 'ما فيه رسائل.' }
+      : { list: 'Messages', detail: 'Message', text: 'Message text', none: 'No message selected. Choose one from the list.', empty: 'No messages yet.' };
   return (
     <SplitView
       layout={layout}
@@ -81,7 +81,9 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
         )
       }
       secondary={
-        <div style={detailStyle}>
+        // The message scrolls on its own and holds nothing to focus: it is a tab stop with a name, so
+        // the keyboard scrolls it too (WCAG 2.1.1, axe scrollable-region-focusable).
+        <div style={detailStyle} {...(chosen ? { tabIndex: 0, role: 'region', 'aria-label': t.text } : {})}>
           {chosen ? (
             <>
               <strong style={{ display: 'block' }}>{chosen.subject}</strong>

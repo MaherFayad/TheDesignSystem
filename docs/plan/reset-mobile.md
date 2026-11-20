@@ -429,3 +429,11 @@ other's files; each lists what it needs from the other in its report.
    start.
 5. Angular forms of SheetHeaderAction, the trigger row, `data-segment` and
    the S1 items (toaster anchor, list `data-tone`, close button `solid`).
+
+### A5 Angular ports the overlays still missing (ds-angular)
+
+1. Sheet with SheetHeaderAction, detents and `data-segment`.
+2. AlertDialog with `data-segment` and the default action rules.
+3. Popover on the popup layer, with fold collision padding.
+4. Navbar (large title, `data-collapsed`, `data-inline-title`, placement).
+5. The list trigger row gains Sheet and Popover triggers.

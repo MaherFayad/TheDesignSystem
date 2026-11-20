@@ -99,6 +99,20 @@
 // writes them on itself. In a real browser the values are the same env()
 // values the portal would read itself.
 //
+// The side column (order C6, item 3). A Toaster inside a PageShell whose
+// bars sit in the column at the side stamps data-shell-placement="side" on
+// its viewport, so the platform CSS can centre the toasts beside the column
+// instead of over it (the viewport is portaled out of the shell, where the
+// shell's container query does not reach). The placement comes from the
+// nearest PageShell (PlacementContext): side stamps it, bottom never does.
+// Under auto the CSS decides, so the Toaster reads the column flag the
+// platform CSS sets where the anchor sits (--_ios-rail: side, ios-shell.css)
+// after mount, on every resize and when the shell changes size. A test DOM
+// computes no flag, so auto stamps nothing there.
+//
+// A toast with an action carries data-has-action, so the CSS can give its
+// button room (a toast in the bottom segment of a folded screen).
+//
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
 // danger toast included. The key is not prevented, so the component that
@@ -107,12 +121,13 @@
 // closes itself from its own keydown fallback, but a raw Radix Dialog from
 // a consumer does not see that Escape while a toast shows above it (the
 // manifest says so).
-import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
+import { memo, use, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastClosable, toastMeta, toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
 import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
+import { PlacementContext, type BarPlacement } from '../PageShell/placement';
 import { isInsideToaster } from './isInsideToaster';
 import {
   START_BUFFER,
@@ -191,6 +206,46 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
     .join(' ');
 }
 
+/** The column flag the platform CSS sets on a shell with its bars at the side (ios-shell.css). */
+const RAIL_FLAG = '--_ios-rail';
+
+/** True when the platform CSS draws the bars in the side column where `el` sits. */
+function inSideColumn(el: Element): boolean {
+  const computed = el.ownerDocument.defaultView?.getComputedStyle(el);
+  return computed?.getPropertyValue(RAIL_FLAG).trim() === 'side';
+}
+
+/**
+ * Where the bars of the shell around the Toaster sit, for the viewport's
+ * data-shell-placement: side or nothing. side and bottom come from the
+ * PageShell; auto (and no PageShell) reads the platform CSS at the anchor,
+ * after mount and as the shell changes size.
+ */
+function useShellSide(placement: BarPlacement | undefined, anchor: HTMLElement | null): boolean {
+  const [measured, setMeasured] = useState(false);
+  const decided = placement === 'side' || placement === 'bottom';
+  useEffect(() => {
+    if (decided || !anchor) {
+      setMeasured(false);
+      return undefined;
+    }
+    const read = () => setMeasured(inSideColumn(anchor));
+    read();
+    const view = anchor.ownerDocument.defaultView;
+    view?.addEventListener('resize', read);
+    const shell = anchor.closest('[data-ds="page-shell"]');
+    const watch = shell && view && typeof view.ResizeObserver === 'function' ? new view.ResizeObserver(read) : null;
+    if (shell) watch?.observe(shell);
+    return () => {
+      view?.removeEventListener('resize', read);
+      watch?.disconnect();
+    };
+  }, [decided, anchor]);
+  if (placement === 'side') return true;
+  if (placement === 'bottom') return false;
+  return measured;
+}
+
 /** The swipe that closes a toast: toward the edge it sits on (helpers/toast-swipe.ts). */
 const swipeFor = toasterSwipe;
 
@@ -217,6 +272,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
   const keepOnEscape = useRef(false);
   /** When the store showed each toast version (Date.now), so its line starts with its timer (N29). */
   const shownAt = useRef(new Map<string, number>());
+  const shellSide = useShellSide(use(PlacementContext), anchor);
 
   // The store calls its listeners in the same call that starts a toast's timer: note the time then.
   useEffect(() => {
@@ -407,6 +463,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
         <RadixToast.Viewport
           data-ds="toaster"
           data-position={position}
+          data-shell-placement={shellSide ? 'side' : undefined}
           data-stacked=""
           data-expanded={expanded ? '' : undefined}
           data-paused={paused ? '' : undefined}
@@ -549,7 +606,7 @@ const ToasterItem = memo(function ToasterItem({
       onPointerUp={(event) => end(event, false)}
       onPointerCancel={(event) => end(event, true)}
     >
-      <li data-ds="toast" data-tone={item.tone} lang={item.lang} dir={toastDirFor(item.lang)}>
+      <li data-ds="toast" data-tone={item.tone} data-has-action={item.action ? '' : undefined} lang={item.lang} dir={toastDirFor(item.lang)}>
         <ToastParts
           tone={item.tone}
           title={item.title}

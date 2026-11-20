@@ -16,7 +16,8 @@
 // after it. A Date in meta renders in <time datetime> as a relative time
 // ("now", "5m ago"), with Western digits in Arabic, and refreshes every
 // half minute while the toast shows. action is a Button and close a CloseButton, each carrying the
-// toast's data-part next to its own data-ds. The parts are Radix Toast
+// toast's data-part next to its own data-ds. A toast with an action
+// carries data-has-action on its root (order C6). The parts are Radix Toast
 // parts, so inside a Toaster the close and action buttons close the toast.
 // Outside a Toaster they are plain elements.
 import { isValidElement, useEffect, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
@@ -194,7 +195,7 @@ export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
 export function Toast({ tone = 'neutral', title, description, count, action, onClose, closeLabel, start, meta, lang, ...rest }: ToastProps) {
   const theme = useTheme();
   return (
-    <div {...rest} lang={lang} dir={rest.dir ?? toastDirFor(lang)} data-ds="toast" data-tone={tone}>
+    <div {...rest} lang={lang} dir={rest.dir ?? toastDirFor(lang)} data-ds="toast" data-tone={tone} data-has-action={action ? '' : undefined}>
       <ToastParts
         tone={tone}
         title={title}

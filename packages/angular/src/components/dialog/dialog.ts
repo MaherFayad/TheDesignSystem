@@ -4,7 +4,7 @@
 //
 //   <body>
 //     <div data-dialog-layer data-ds="theme" ...axes>     the portal theme, display: contents
-//       <div data-ds="dialog" data-size data-tone data-state>   root: the fixed layer
+//       <div data-ds="dialog" data-size data-tone data-state data-segment?>   root: the fixed layer
 //         <div data-part="backdrop" data-state>
 //         <div data-part="panel" role="dialog" aria-modal="true" data-state>
 //           <div data-part="titlebar" data-ds="title-bar">        Desk only (optional part)
@@ -49,6 +49,14 @@
 // (injectMotion) applies: none or reduced motion leaves it still. A second
 // refusal cancels the first and plays again. The Angular port has no
 // AlertDialog, so the alert form of the refusal has no host here.
+//
+// The fold (order DU5, C6 item 5), as React's DialogBase.tsx: on a window
+// with two viewport segments the root carries data-segment, start when the
+// segments sit side by side and bottom when they are stacked (overlaySegment
+// from @the-system/shared), kept current while open; absent without a fold.
+//
+// The portal theme (C5 item 2, C6 item 1): DsLayerTheme copies every axis,
+// dir, lang and the safe area tokens of the dsTheme the dialog opens in.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -82,6 +90,7 @@ import {
   captureFocusReturn,
   dialogInitialFocus,
   focusReturnTarget,
+  overlaySegment,
   type FocusReturn,
   type OverlaySize,
   type Tone,
@@ -89,8 +98,10 @@ import {
 import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
-import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
+import { animationsDone, hideOthers, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
+import { injectFold } from '../../internal/fold';
+import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
+import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { isInsideToaster } from '../toast/is-inside-toaster';
@@ -157,24 +168,38 @@ function injectDialog(name: string): DsDialog {
 
 // ------------------------------------------------------------------ trigger and close
 
-/** Opens the dialog. Put it on a dsButton. Focus returns to it on close. */
+/**
+ * Opens the dialog. Put it on a dsButton, or on a List row (`li[dsListItem]`),
+ * whose title then carries the trigger (internal/trigger-row.ts). Focus
+ * returns to it on close.
+ */
 @Directive({
   selector: '[dsDialogTrigger]',
   host: {
-    'aria-haspopup': 'dialog',
-    '[attr.aria-expanded]': 'dialog.open() ? "true" : "false"',
-    '[attr.aria-controls]': 'dialog.open() ? dialog.panelId : null',
-    '[attr.data-state]': 'dialog.open() ? "open" : "closed"',
-    '(click)': 'dialog.setOpen(true)',
+    '[attr.aria-haspopup]': 'row ? null : "dialog"',
+    '[attr.aria-expanded]': 'row ? null : dialog.open() ? "true" : "false"',
+    '[attr.aria-controls]': '!row && dialog.open() ? dialog.panelId : null',
+    '[attr.data-state]': 'row ? null : dialog.open() ? "open" : "closed"',
+    '(click)': 'row || dialog.setOpen(true)',
   },
 })
 export class DsDialogTrigger {
   protected readonly dialog = injectDialog('dsDialogTrigger');
+  protected readonly row = injectTriggerRow();
 
   constructor() {
     consumeHostAttributes(['dsDialogTrigger']);
     this.dialog.trigger = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     inject(DestroyRef).onDestroy(() => (this.dialog.trigger = null));
+    const row = this.row;
+    if (row) {
+      const dialog = this.dialog;
+      row.connect(
+        () => ({ id: null, haspopup: 'dialog', expanded: dialog.open(), controls: dialog.open() ? dialog.panelId : null, state: dialog.open() ? 'open' : 'closed' }),
+        { click: () => dialog.setOpen(true) },
+      );
+      followTriggerTitle(row, (el) => (dialog.trigger = el));
+    }
   }
 }
 
@@ -282,7 +307,6 @@ interface LayerData {
 const DIALOG_LAYER = new InjectionToken<LayerData>('DS_DIALOG_LAYER');
 
 /** The open dialogs, the top one last. Escape, Tab and focus belong to the top one. */
-const stack: DsDialogLayer[] = [];
 
 /**
  * The portal: the themed wrapper (its own host), the root, the backdrop and
@@ -292,20 +316,13 @@ const stack: DsDialogLayer[] = [];
   selector: 'div[data-dialog-layer]',
   imports: [NgTemplateOutlet, DsCloseButton, DsTitleBar, DsWindowControls],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: themeScopeProviders(() => new DsThemeScope(inject(DIALOG_LAYER).theme)),
+  providers: layerThemeProviders(() => inject(DIALOG_LAYER).theme),
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
   },
   template: `
-    <div data-ds="dialog" [attr.data-size]="dialog.size()" [attr.data-tone]="dialog.tone()" [attr.data-state]="state()">
+    <div data-ds="dialog" [attr.data-size]="dialog.size()" [attr.data-tone]="dialog.tone()" [attr.data-state]="state()"
+      [attr.data-segment]="segment()">
       <div #backdrop [attr.data-state]="state()" data-part="backdrop" aria-hidden="true"
         (pointerdown)="onBackdropPointerDown($event)" (mousedown)="onBackdropMouseDown($event)" (click)="onBackdropClick()"></div>
       <div #panel role="dialog" [id]="dialog.panelId" [attr.data-state]="state()" data-part="panel" tabindex="-1"
@@ -353,7 +370,9 @@ export class DsDialogLayer {
   /** open while the dialog is open, closed while the exit plays. */
   readonly state = computed(() => (this.dialog.open() && !this.closing() ? 'open' : 'closed'));
   readonly closing = signal(false);
-  protected readonly attrs = computed(() => attributesOf(this.theme.value()));
+  /** Order DU5: the segment of the dialog on a folded screen (start, bottom), absent without a fold. */
+  protected readonly segment = computed(() => overlaySegment(this.fold()));
+  private readonly fold = injectFold();
   protected readonly words = computed(() => labelsFor(this.theme.value().lang));
   protected readonly closeName = computed(() => this.content.closeLabel() ?? this.words().close);
   protected readonly titlebarOn = this.theme.optionalPart('dialog', 'titlebar');
@@ -421,7 +440,7 @@ export class DsDialogLayer {
   }
 
   isTop(): boolean {
-    return stack[stack.length - 1] === this;
+    return isTopModalLayer(this);
   }
 
   /** Escape and Tab for the top dialog. */
@@ -466,12 +485,11 @@ export class DsDialogLayer {
   }
 
   push(): void {
-    stack.push(this);
+    pushModalLayer(this);
   }
 
   pop(): void {
-    const i = stack.indexOf(this);
-    if (i >= 0) stack.splice(i, 1);
+    popModalLayer(this);
   }
 }
 

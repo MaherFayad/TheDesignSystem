@@ -11,6 +11,7 @@ import { DsCloseButton } from './close-button';
     <button id="named" dsCloseButton label="Close panel" size="sm" shape="pill"></button>
     <div dsTheme [lang]="'ar'"><button id="ar" dsCloseButton></button></div>
     <button id="disabled" dsCloseButton disabled></button>
+    <button id="solid" dsCloseButton emphasis="solid"></button>
   `,
 })
 class Host {}
@@ -56,5 +57,13 @@ describe('DsCloseButton', () => {
     expect(el.hasAttribute('disabled')).toBe(false);
     expect(el.getAttribute('aria-disabled')).toBe('true');
     expect(el.getAttribute('data-disabled')).toBe('');
+  });
+
+  it('takes emphasis solid, the raised close over media (order S1)', async () => {
+    const q = await setup();
+    const el = q('solid');
+    expect(el.getAttribute('data-emphasis')).toBe('solid');
+    expect(el.getAttribute('data-tone')).toBe('neutral');
+    expect(el.hasAttribute('emphasis')).toBe(false);
   });
 });

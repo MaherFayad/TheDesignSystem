@@ -1,7 +1,7 @@
 // The safe area in every portal (order C5, item 2): the LayerTheme at the top
 // of each portal copies the inset tokens of the Theme the overlay comes from.
-import { render, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, render, waitFor } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { CSSProperties } from 'react';
 import { Theme } from './Theme';
 import { LayerTheme, readSafeArea } from './LayerTheme';
@@ -151,5 +151,93 @@ describe('LayerTheme', () => {
     const inner = await layerWith('data-probe-layer');
     expect(dialog.contains(inner)).toBe(true);
     expect(inner.style.getPropertyValue('--ds-inset-safe-end')).toBe('62px');
+  });
+
+  describe('dir and lang (order C6, item 1)', () => {
+    afterEach(() => {
+      document.documentElement.removeAttribute('dir');
+      document.documentElement.removeAttribute('lang');
+    });
+
+    it('stamps the dir and lang of the nearest Theme on the Dialog portal, and follows a change', async () => {
+      const view = (lang: 'en' | 'ar') => (
+        <Theme lang="en">
+          <Theme lang={lang}>
+            <Dialog defaultOpen>
+              <DialogContent title="Rename board" />
+            </Dialog>
+          </Theme>
+        </Theme>
+      );
+      const { rerender } = render(view('ar'));
+      const layer = await waitFor(() => document.body.querySelector<HTMLElement>('[data-dialog-layer]')!);
+      expect(layer.getAttribute('dir')).toBe('rtl');
+      expect(layer.getAttribute('lang')).toBe('ar');
+      rerender(view('en'));
+      expect(layer.getAttribute('dir')).toBe('ltr');
+      expect(layer.getAttribute('lang')).toBe('en');
+    });
+
+    it('carries dir and lang into the Popover and menu portals', async () => {
+      const { unmount } = render(
+        <Theme dir="rtl" lang="ar">
+          <Popover defaultOpen>
+            <PopoverTrigger>
+              <Button>عن شاشة القفل</Button>
+            </PopoverTrigger>
+            <PopoverContent title="على شاشة القفل">نص</PopoverContent>
+          </Popover>
+        </Theme>,
+      );
+      const popover = await waitFor(() => document.body.querySelector<HTMLElement>('[data-popover-layer]')!);
+      expect(popover.getAttribute('dir')).toBe('rtl');
+      expect(popover.getAttribute('lang')).toBe('ar');
+      unmount();
+
+      render(
+        <Theme lang="ar">
+          <DropdownMenu defaultOpen>
+            <DropdownMenuTrigger>
+              <Button>خيارات اللوحة</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>إعادة تسمية اللوحة</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </Theme>,
+      );
+      const menu = await waitFor(() => document.body.querySelector<HTMLElement>('[data-menu-layer]')!);
+      expect(menu.getAttribute('dir')).toBe('rtl');
+      expect(menu.getAttribute('lang')).toBe('ar');
+    });
+
+    it('takes dir and lang from the document element when no Theme is above, and follows a change there', async () => {
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.documentElement.setAttribute('lang', 'ar');
+      render(<LayerTheme data-probe-layer="" />);
+      const layer = await waitFor(() => document.body.querySelector<HTMLElement>('[data-probe-layer]')!);
+      expect(layer.getAttribute('dir')).toBe('rtl');
+      expect(layer.getAttribute('lang')).toBe('ar');
+      await act(async () => {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+      });
+      await waitFor(() => expect(layer.getAttribute('dir')).toBe('ltr'));
+      expect(layer.getAttribute('lang')).toBe('en');
+    });
+
+    it('takes the direction from the document language when the document has no dir', async () => {
+      document.documentElement.setAttribute('lang', 'ar');
+      render(<LayerTheme data-probe-layer="" />);
+      const layer = await waitFor(() => document.body.querySelector<HTMLElement>('[data-probe-layer]')!);
+      expect(layer.getAttribute('dir')).toBe('rtl');
+    });
+
+    it('uses the defaults outside any Theme on a document with no dir or lang', async () => {
+      render(<LayerTheme data-probe-layer="" />);
+      const layer = await waitFor(() => document.body.querySelector<HTMLElement>('[data-probe-layer]')!);
+      expect(layer.getAttribute('dir')).toBe('ltr');
+      expect(layer.getAttribute('lang')).toBe('en');
+    });
   });
 });

@@ -29,6 +29,7 @@
 import {
   DestroyRef,
   Directive,
+  ElementRef,
   Injectable,
   afterNextRender,
   PLATFORM_ID,
@@ -81,6 +82,8 @@ export class DsThemeService {
   /** True for the root service, which no dsTheme provides. */
   readonly isRoot: boolean = true;
   readonly value: Signal<ThemeValue> = computed(() => rootDefaults);
+  /** The theme element, where a portal opened inside it reads the safe area tokens. None at the root. */
+  readonly element: Element | null = null;
 
   /**
    * True when the active style turns on an optional part: its style.json
@@ -95,7 +98,10 @@ export class DsThemeService {
 /** A theme scope that holds a value someone else resolved (the dialog portal copies one). */
 export class DsThemeScope extends DsThemeService {
   override readonly isRoot = false;
-  constructor(override readonly value: Signal<ThemeValue>) {
+  constructor(
+    override readonly value: Signal<ThemeValue>,
+    override readonly element: Element | null = null,
+  ) {
     super();
   }
 }
@@ -195,7 +201,7 @@ export class DsTheme implements OnInit {
   );
 
   /** This element's theme service, what children inject as DsThemeService. */
-  readonly scope: DsThemeService = new DsThemeScope(this.value);
+  readonly scope: DsThemeService = new DsThemeScope(this.value, inject<ElementRef<Element>>(ElementRef).nativeElement);
 
   constructor() {
     if (this.parent.isRoot && isPlatformBrowser(inject(PLATFORM_ID))) {

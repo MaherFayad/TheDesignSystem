@@ -90,10 +90,11 @@ import {
 } from '@the-system/shared';
 import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
+import { animationsDone, hideOthers, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
 import { autoPlace, computePopper, writePopper, type PopperAlign, type PopperSide } from '../../behavior/popper';
-import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
+import { attributesOf, DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent } from '../button/button-base';
 import { isInsideToaster } from '../toast/is-inside-toaster';
@@ -173,31 +174,48 @@ function injectSheet(name: string): DsActionSheet {
 
 // ------------------------------------------------------------------ trigger
 
-/** Opens the sheet. Put it on a dsButton or dsIconButton that names the object. Focus returns to it on close. */
+/**
+ * Opens the sheet. Put it on a dsButton or dsIconButton that names the
+ * object, or on a List row (`li[dsListItem]`), whose title then carries the
+ * trigger (internal/trigger-row.ts). Focus returns to it on close.
+ */
 @Directive({
   selector: '[dsActionSheetTrigger]',
   host: {
-    'aria-haspopup': 'dialog',
-    '[attr.aria-expanded]': 'sheet.open() ? "true" : "false"',
-    '[attr.aria-controls]': 'sheet.open() ? sheet.panelId : null',
-    '[attr.data-state]': 'sheet.open() ? "open" : "closed"',
+    '[attr.aria-haspopup]': 'row ? null : "dialog"',
+    '[attr.aria-expanded]': 'row ? null : sheet.open() ? "true" : "false"',
+    '[attr.aria-controls]': '!row && sheet.open() ? sheet.panelId : null',
+    '[attr.data-state]': 'row ? null : sheet.open() ? "open" : "closed"',
   },
 })
 export class DsActionSheetTrigger {
   protected readonly sheet = injectSheet('dsActionSheetTrigger');
+  protected readonly row = injectTriggerRow();
 
   constructor() {
     const el = consumeHostAttributes(['dsActionSheetTrigger']);
-    this.sheet.trigger = el;
+    const sheet = this.sheet;
+    sheet.trigger = el;
+    let current: HTMLElement = el;
     // The caller's own (click) runs first: this listens from after the first render, and it may keep the sheet shut.
     const click = (event: MouseEvent) => {
       if (event.defaultPrevented) return;
-      this.sheet.setOpen(!this.sheet.open());
+      sheet.setOpen(!sheet.open());
     };
-    afterNextRender(() => el.addEventListener('click', click));
+    const row = this.row;
+    if (row) {
+      // On a row the title runs the click, after the row's own handlers.
+      row.connect(
+        () => ({ id: null, haspopup: 'dialog', expanded: sheet.open(), controls: sheet.open() ? sheet.panelId : null, state: sheet.open() ? 'open' : 'closed' }),
+        { click },
+      );
+      followTriggerTitle(row, (title) => (sheet.trigger = current = title));
+    } else {
+      afterNextRender(() => el.addEventListener('click', click));
+    }
     inject(DestroyRef).onDestroy(() => {
       el.removeEventListener('click', click);
-      if (this.sheet.trigger === el) this.sheet.trigger = null;
+      if (sheet.trigger === current) sheet.trigger = null;
     });
   }
 }
@@ -359,7 +377,6 @@ function itemsOf(panel: HTMLElement): HTMLElement[] {
 }
 
 /** The open sheets, the top one last. Escape, Tab and focus belong to the top one. */
-const stack: DsActionSheetLayer[] = [];
 
 /** The portal: the themed wrapper (its own host), the root, the backdrop and the panel. Internal: dsActionSheetContent creates it. */
 @Component({
@@ -367,19 +384,11 @@ const stack: DsActionSheetLayer[] = [];
   imports: [NgTemplateOutlet, DsActionSheetCancel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    ...themeScopeProviders(() => new DsThemeScope(inject(SHEET_LAYER).theme)),
+    ...layerThemeProviders(() => inject(SHEET_LAYER).theme),
     { provide: BUILT_IN_CANCEL, useValue: true },
   ],
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
   },
   template: `
     <div data-ds="action-sheet" [attr.data-state]="state()" [attr.data-placement]="placement()"
@@ -451,16 +460,15 @@ export class DsActionSheetLayer {
   }
 
   isTop(): boolean {
-    return stack[stack.length - 1] === this;
+    return isTopModalLayer(this);
   }
 
   push(): void {
-    stack.push(this);
+    pushModalLayer(this);
   }
 
   pop(): void {
-    const i = stack.indexOf(this);
-    if (i >= 0) stack.splice(i, 1);
+    popModalLayer(this);
   }
 
   /** The refused nudge (interaction dialog-refuse), as React's DialogBase. */

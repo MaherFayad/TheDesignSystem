@@ -86,10 +86,11 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
 import { injectMotion } from '../../internal/motion';
 import { hideOthers } from '../../behavior';
 import { autoPlace, computePopper, writePopper, type PopperAlign, type PopperSide } from '../../behavior/popper';
-import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
+import { attributesOf, DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { isIconName, type ButtonSlotContent } from '../button/button-base';
 import { CHECK_DRAW_ID, drawCheck, exitGhost } from '@the-system/motion';
@@ -241,16 +242,16 @@ function injectMenu(name: string): DsDropdownMenu {
   selector: '[dsDropdownMenuTrigger]',
   exportAs: 'dsDropdownMenuTrigger',
   host: {
-    '[id]': 'menu.triggerId',
-    'aria-haspopup': 'menu',
-    '[attr.aria-expanded]': 'menu.isOpen() ? "true" : "false"',
-    '[attr.aria-controls]': 'menu.isOpen() ? menu.contentId : null',
-    '[attr.data-state]': 'menu.isOpen() ? "open" : "closed"',
+    '[attr.id]': 'row ? (el.id || null) : menu.triggerId',
+    '[attr.aria-haspopup]': 'row ? null : "menu"',
+    '[attr.aria-expanded]': 'row ? null : menu.isOpen() ? "true" : "false"',
+    '[attr.aria-controls]': '!row && menu.isOpen() ? menu.contentId : null',
+    '[attr.data-state]': 'row ? null : menu.isOpen() ? "open" : "closed"',
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-radix-popper-side]': 'menu.placed()?.side ?? null',
     '[attr.data-radix-popper-align]': 'menu.placed()?.align ?? null',
-    '(pointerdown)': 'onPointerDown($event)',
-    '(keydown)': 'onKeyDown($event)',
+    '(pointerdown)': 'row || onPointerDown($event)',
+    '(keydown)': 'row || onKeyDown($event)',
   },
 })
 export class DsDropdownMenuTrigger {
@@ -258,18 +259,34 @@ export class DsDropdownMenuTrigger {
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly menu = injectMenu('dsDropdownMenuTrigger');
-  private readonly el = consumeHostAttributes(['dsDropdownMenuTrigger']);
+  protected readonly el = consumeHostAttributes(['dsDropdownMenuTrigger']);
+  /**
+   * A List row this trigger sits on (order C5 item 4): its title takes the
+   * trigger's id, aria, data-state and keys, and is where focus returns.
+   */
+  protected readonly row = injectTriggerRow();
+  private current: HTMLElement = this.el;
 
   constructor() {
-    if (this.el.id) this.menu.triggerId = this.el.id;
-    this.menu.trigger = this.el;
+    const menu = this.menu;
+    // On a row the id goes to the title; an id written on the li stays on the li.
+    if (this.el.id && !this.row) menu.triggerId = this.el.id;
+    menu.trigger = this.el;
     inject(DestroyRef).onDestroy(() => {
-      if (this.menu.trigger === this.el) this.menu.trigger = null;
+      if (menu.trigger === this.current) menu.trigger = null;
     });
+    const row = this.row;
+    if (row) {
+      row.connect(
+        () => ({ id: menu.triggerId, haspopup: 'menu', expanded: menu.isOpen(), controls: menu.isOpen() ? menu.contentId : null, state: menu.isOpen() ? 'open' : 'closed' }),
+        { pointerdown: (event) => this.onPointerDown(event), keydown: (event) => this.onKeyDown(event) },
+      );
+      followTriggerTitle(row, (title) => (menu.trigger = this.current = title));
+    }
   }
 
   private inert(): boolean {
-    return this.disabled() || this.el.getAttribute('aria-disabled') === 'true';
+    return this.disabled() || this.current.getAttribute('aria-disabled') === 'true';
   }
 
   protected onPointerDown(event: PointerEvent): void {
@@ -416,17 +433,9 @@ const MENU_LAYER = new InjectionToken<LayerData>('DS_MENU_LAYER');
   selector: 'div[data-menu-layer]',
   imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: themeScopeProviders(() => new DsThemeScope(inject(MENU_LAYER).theme)),
+  providers: layerThemeProviders(() => inject(MENU_LAYER).theme),
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
     '(focusin)': 'slide.focusin($event)',
     '(focusout)': 'slide.focusout($event)',
   },

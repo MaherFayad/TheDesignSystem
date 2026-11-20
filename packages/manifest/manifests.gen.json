@@ -16795,8 +16795,7 @@
       "data-active",
       "data-sticky",
       "data-placement=bottom|side",
-      "data-collapsed",
-      "data-inline-title"
+      "data-collapsed"
     ],
     "a11y": {
       "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; on phones the menu button opens a modal Drawer titled Site menu that holds a Sidebar nav named Site menu",
@@ -17888,10 +17887,10 @@
       "keys": {
         "ArrowRight": "On the viewport: the next page; the previous one in right to left. Stays at the last page.",
         "ArrowLeft": "On the viewport: the previous page; the next one in right to left. Stays at the first page.",
-        "PageDown": "The next page.",
-        "PageUp": "The previous page.",
-        "Home": "The first page.",
-        "End": "The last page.",
+        "PageDown": "On the viewport: the next page.",
+        "PageUp": "On the viewport: the previous page.",
+        "Home": "On the viewport: the first page.",
+        "End": "On the viewport: the last page.",
         "Tab": "From the viewport into the current page, then to the dots."
       },
       "announce": "The current dot carries aria-current page. With live, the new page is read politely when it changes.",
@@ -17900,7 +17899,7 @@
       },
       "notes": [
         "The swipe has two paths with no drag: the keys on the viewport and the dots (WCAG 2.5.7).",
-        "Keys pressed in a field, a slider, a list box or a menu inside a page stay with that control.",
+        "Keys pressed on a control inside a page stay with that control. When the page changes while focus is in the page that leaves (a swipe), focus moves to the viewport, never to the body.",
         "Right to left: the row of pages follows the reading direction, so the first page is at the right and a swipe to the left goes forward.",
         "Under reduced motion (the media query, or data-motion=\"reduce\" on the page) a change from a key or a dot jumps at once; the swipe itself is the browser's scroll.",
         "The server render shows the page asked for and sets no scroll; the scroll is set after mount."
@@ -25509,10 +25508,10 @@
       "role": "none on the root. The panes are regions, named by primaryLabel and secondaryLabel (List and Detail by default). The handle is a separator (the window splitter of ResizablePanels).",
       "focus": "While stacked, focus moves to the detail pane when it opens, and back returns it to the last element focused in the list (the item that opened the detail), else to the list pane. When the view narrows into stacked with focus in the pane that hides, focus moves to the pane that stays. While split, focus stays where the person put it.",
       "keys": {
-        "Tab": "Moves through the list, the handle and the detail",
-        "ArrowLeft, ArrowRight": "On the handle, move it 5 percent left or right on screen. The list is on the right in Arabic.",
-        "Home, End": "On the handle, move it to the list's min and max",
-        "Enter, Space": "On the back Button, return to the list"
+        "Tab": "Moves through the list, the handle (while split) and the detail",
+        "ArrowLeft, ArrowRight": "While split, on the handle: move it 5 percent left or right on screen. The list is on the right in Arabic. Stacked, there is no handle and the keys do nothing.",
+        "Home, End": "While split, on the handle: move it to the list's min and max",
+        "Enter, Space": "While stacked, on the back Button: return to the list"
       },
       "announce": "The detail pane's name when it takes focus while stacked.",
       "native": {
@@ -25523,7 +25522,8 @@
         "Both panes stay mounted while stacked; the hidden one has the hidden attribute, so the list keeps its scroll position.",
         "The width is read from the root, so a SplitView inside a narrow window or panel stacks there too. No sideways scroll at 320px.",
         "Every drag has a key path (WCAG 2.5.7), from ResizablePanels.",
-        "handle-grip is the grip of the shared handle; the order's anatomy did not list it."
+        "handle-grip is the grip of the shared handle; the order's anatomy did not list it.",
+        "The handle keys apply only while split. The contract checks them where the variants case is split; where it stacks (a folded or narrow screen) the handle is not rendered and the check notes that, it does not fail."
       ]
     },
     "content": {
@@ -29571,7 +29571,9 @@
       "data-swipe=start|move|cancel|end",
       "data-stacked",
       "data-expanded",
-      "data-paused"
+      "data-paused",
+      "data-has-action",
+      "data-shell-placement=side"
     ],
     "a11y": {
       "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
@@ -29594,7 +29596,8 @@
         "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
         "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
         "No native title attribute anywhere.",
-        "meta and the title use text tokens that meet 4.5:1 on the toast surface (WCAG 1.4.3); a Date in meta is a time element with a machine readable datetime."
+        "meta and the title use text tokens that meet 4.5:1 on the toast surface (WCAG 1.4.3); a Date in meta is a time element with a machine readable datetime.",
+        "Hooks for the platform CSS (order C6): a toast with an action carries data-has-action on its root. The Toaster viewport carries data-shell-placement=\"side\" inside a PageShell whose bars sit in the side column: placement side always, placement auto when the platform CSS puts the bars there (read after mount and on resize), bottom never."
       ]
     },
     "content": {

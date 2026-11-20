@@ -34,7 +34,7 @@ import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { exitGhost } from '@the-system/motion';
-import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../theme';
+import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../theme';
 import type { ThemeValue } from '../theme';
 
 // ------------------------------------------------------------------ position
@@ -302,24 +302,15 @@ const POPUP_LAYER = new InjectionToken<LayerData>('DS_POPUP_LAYER');
   selector: 'div[data-menu-layer]',
   imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: themeScopeProviders(() => new DsThemeScope(inject(POPUP_LAYER).theme)),
+  providers: layerThemeProviders(() => inject(POPUP_LAYER).theme),
+  hostDirectives: [DsLayerTheme],
   host: {
-    'data-ds': 'theme',
-    '[attr.data-style]': 'attrs()["data-style"]',
-    '[attr.data-scheme]': 'attrs()["data-scheme"]',
-    '[attr.data-density]': 'attrs()["data-density"]',
-    '[attr.data-contrast]': 'attrs()["data-contrast"]',
-    '[attr.data-platform]': 'attrs()["data-platform"]',
-    '[attr.data-glass]': 'attrs()["data-glass"]',
-    '[attr.dir]': 'attrs().dir',
-    '[attr.lang]': 'attrs().lang',
   },
   template: `<div data-radix-popper-content-wrapper=""><ng-container [ngTemplateOutlet]="data.template()" /></div>`,
 })
 export class DsPopupLayer {
   protected readonly data = inject(POPUP_LAYER);
   private readonly theme = inject(DsThemeService);
-  protected readonly attrs = computed(() => attributesOf(this.theme.value()));
   readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   constructor() {

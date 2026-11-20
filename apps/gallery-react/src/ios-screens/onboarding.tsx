@@ -91,11 +91,6 @@ const words = {
   },
 } as const;
 
-/** Each page: the picture over the room the text leaves, then the text. Layout only, from tokens. */
-const pageGrid = { display: 'grid', gridTemplateRows: 'minmax(0, 1fr) auto', gap: 'var(--ds-space-l)', blockSize: '100%' } as const;
-/** The pager takes the rows of the picture, the text and the dots of the page grid (./onboarding.css). */
-const pagerRows = { gridRow: 'span 3', minBlockSize: 0 } as const;
-
 export function Screen({ lang }: ScreenProps) {
   const w = words[lang];
   const [page, setPage] = useState(1);
@@ -111,12 +106,12 @@ export function Screen({ lang }: ScreenProps) {
   return (
     <ScreenShell>
       <section data-gallery="ob-page" aria-label={w.region}>
-        <Pager label={w.region} dotsLabel={w.dots} page={page} onPageChange={go} live style={pagerRows}>
+        <Pager label={w.region} dotsLabel={w.dots} page={page} onPageChange={go} live data-gallery="ob-pager">
           {pages.map((p, i) => {
             const isLast = i === pages.length - 1;
             return (
               <PagerPage key={p.id}>
-                <div style={pageGrid}>
+                <div data-gallery="ob-page-grid">
                   <div data-gallery="ob-picture">
                     <Art art={p.art} shape="square" />
                     {!isLast && (

@@ -22,8 +22,15 @@
 // portal (a menu in a dialog) reads the outer LayerTheme, which carries the
 // copied values inline. Order S1 made this for the Toaster; this file is
 // the one helper every portal now uses.
-import { use, useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { ThemeElementContext } from './context';
+//
+// Direction and language (order C6, item 1): the portal Theme stamps `dir`
+// and `lang` of the nearest Theme, so an Arabic overlay reads right to left
+// and a screen reader speaks it in Arabic. With no Theme above the overlay
+// it takes them from the document element (`<html dir lang>`) and follows a
+// change there; on the server and before mount it stamps the defaults. A
+// change on the nearest Theme reaches the portal through the Theme context.
+import { use, useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
+import { ThemeContext, ThemeElementContext } from './context';
 import { useTheme } from './hooks';
 import { Theme, type ThemeProps } from './Theme';
 
@@ -94,6 +101,39 @@ export function useSafeAreaStyle(from?: Element | null): CSSProperties | undefin
   return insets as CSSProperties | undefined;
 }
 
+/** The `dir` and `lang` of the document element, as "dir|lang"; empty parts where an attribute is missing. */
+function documentLocaleSnapshot(): string {
+  if (typeof document === 'undefined') return '|';
+  const html = document.documentElement;
+  return `${html.getAttribute('dir') ?? ''}|${html.getAttribute('lang') ?? ''}`;
+}
+
+const serverLocaleSnapshot = (): string => '|';
+
+function subscribeDocumentLocale(onChange: () => void): () => void {
+  if (typeof document === 'undefined' || typeof MutationObserver !== 'function') return () => {};
+  const watch = new MutationObserver(onChange);
+  watch.observe(document.documentElement, { attributes: true, attributeFilter: ['dir', 'lang'] });
+  return () => watch.disconnect();
+}
+
+const noopSubscribe = () => () => {};
+
+/**
+ * The `dir` and `lang` a portal Theme stamps: those of the nearest Theme,
+ * else those of the document element, followed as they change. Undefined
+ * parts fall back to the Theme defaults.
+ */
+export function useLayerLocale(): { dir: 'ltr' | 'rtl' | undefined; lang: string | undefined } {
+  const parent = use(ThemeContext);
+  const inTheme = parent !== null;
+  const snapshot = useSyncExternalStore(inTheme ? noopSubscribe : subscribeDocumentLocale, inTheme ? serverLocaleSnapshot : documentLocaleSnapshot, serverLocaleSnapshot);
+  if (parent) return { dir: parent.dir, lang: parent.lang };
+  const [rawDir = '', rawLang = ''] = snapshot.split('|');
+  const dir = rawDir.toLowerCase() === 'rtl' ? 'rtl' : rawDir.toLowerCase() === 'ltr' ? 'ltr' : undefined;
+  return { dir, lang: rawLang || undefined };
+}
+
 export interface LayerThemeProps extends Omit<ThemeProps, 'style' | 'scheme' | 'density' | 'contrast' | 'platform' | 'glass' | 'dir' | 'lang' | 'as'> {
   /** Where the safe area is read. Default: the element of the nearest Theme. */
   insetsFrom?: Element | null;
@@ -101,13 +141,15 @@ export interface LayerThemeProps extends Omit<ThemeProps, 'style' | 'scheme' | '
 }
 
 /**
- * The Theme a portal starts with: every axis of the current Theme, and the
- * safe area tokens of where the overlay comes from. Pass the layer marker
+ * The Theme a portal starts with: every axis of the current Theme, its
+ * `dir` and `lang` (of the document element when there is no Theme), and
+ * the safe area tokens of where the overlay comes from. Pass the layer marker
  * (`data-dialog-layer`, `data-menu-layer` and so on) as a prop.
  */
 export function LayerTheme({ insetsFrom, css, children, ...rest }: LayerThemeProps) {
   const theme = useTheme();
   const insets = useSafeAreaStyle(insetsFrom);
+  const locale = useLayerLocale();
   return (
     <Theme
       {...rest}
@@ -117,8 +159,8 @@ export function LayerTheme({ insetsFrom, css, children, ...rest }: LayerThemePro
       contrast={theme.contrast}
       platform={theme.platform}
       glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
+      dir={locale.dir}
+      lang={locale.lang}
       css={insets || css ? { ...insets, ...css } : undefined}
     >
       {children}

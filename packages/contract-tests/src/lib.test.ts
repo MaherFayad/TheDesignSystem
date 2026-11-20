@@ -23,6 +23,7 @@ import {
   moveFinding,
   openedKebab,
   optionalParts,
+  optionalPartOfSelector,
   parseValuedState,
   propValues,
   readyComponents,
@@ -104,6 +105,15 @@ describe('manifest reading', () => {
     expect(optionalParts(button, styles, 'studio')).toEqual(['spinner', 'controls', 'titlebar']);
     // Desk shows them, so they are required there.
     expect(optionalParts(button, styles, 'desk')).toEqual(['spinner']);
+  });
+
+  it('names the optional part a key hint focuses, and nothing for any other selector (order C6)', () => {
+    const split: Manifest = { ...button, contract: { optionalParts: ['handle', 'back'] } };
+    expect(optionalPartOfSelector(split, "[data-part='handle']")).toBe('handle');
+    expect(optionalPartOfSelector(split, '[data-part="back"]')).toBe('back');
+    expect(optionalPartOfSelector(split, "[data-part='grip']")).toBeUndefined();
+    expect(optionalPartOfSelector(split, "[data-part='handle'] button")).toBeUndefined();
+    expect(optionalPartOfSelector(button, "[data-part='handle']")).toBeUndefined();
   });
 
   it('reads whether focus is trapped from the a11y text', () => {

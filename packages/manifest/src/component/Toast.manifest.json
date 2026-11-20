@@ -168,7 +168,9 @@
     "data-swipe=start|move|cancel|end",
     "data-stacked",
     "data-expanded",
-    "data-paused"
+    "data-paused",
+    "data-has-action",
+    "data-shell-placement=side"
   ],
   "a11y": {
     "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
@@ -191,7 +193,8 @@
       "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
       "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
       "No native title attribute anywhere.",
-      "meta and the title use text tokens that meet 4.5:1 on the toast surface (WCAG 1.4.3); a Date in meta is a time element with a machine readable datetime."
+      "meta and the title use text tokens that meet 4.5:1 on the toast surface (WCAG 1.4.3); a Date in meta is a time element with a machine readable datetime.",
+      "Hooks for the platform CSS (order C6): a toast with an action carries data-has-action on its root. The Toaster viewport carries data-shell-placement=\"side\" inside a PageShell whose bars sit in the side column: placement side always, placement auto when the platform CSS puts the bars there (read after mount and on resize), bottom never."
     ]
   },
   "content": {

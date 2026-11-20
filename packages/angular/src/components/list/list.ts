@@ -53,6 +53,13 @@
 //   fullSwipe, menuLabel, pointer), where React takes a SwipeActions
 //   element with no children. The row draws the swipe root as its last
 //   child, part swipe, and its parts move by --_list-shift.
+// - A row as the trigger of an overlay (order C5 item 4, C6 item 5): put
+//   the trigger directive on the row itself, `<li dsListItem
+//   dsActionSheetTrigger title="Remove pass" tone="danger">`, where React
+//   puts the row as the child of an asChild trigger. The trigger's id,
+//   aria-haspopup, aria-expanded, aria-controls, data-state, handlers and
+//   ref go to the title (internal/trigger-row.ts); the row is an action
+//   row. A linked or control row is never a trigger.
 //
 // Motion as React: list-stagger on the first paint of the rows (the stagger
 // primitive, never again), collection-flip when rows are added, removed or
@@ -73,6 +80,7 @@ import {
   inject,
   input,
   numberAttribute,
+  signal,
   untracked,
   viewChild,
 } from '@angular/core';
@@ -85,6 +93,7 @@ import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
 import { injectFlipGroup } from '../../internal/motion-selection';
 import { trackPressed } from '../../internal/pressed';
+import { TriggerRow, type TriggerRowAttrs, type TriggerRowHandlers } from '../../internal/trigger-row';
 import { DsSwipeActionsPart, SwipeController, type SwipeActionsOptions } from '../swipe-actions/swipe-actions';
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
@@ -333,7 +342,10 @@ export class DsListSection extends DsListSectionToken {
   exportAs: 'dsListItem',
   imports: [DsIcon, NgTemplateOutlet, DsSwipeActionsPart],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{ provide: DsListItemToken, useExisting: forwardRef(() => DsListItem) }],
+  providers: [
+    { provide: DsListItemToken, useExisting: forwardRef(() => DsListItem) },
+    { provide: TriggerRow, useExisting: forwardRef(() => DsListItem) },
+  ],
   host: {
     'data-part': 'item',
     '[attr.data-active]': 'active() ? "" : null',
@@ -372,12 +384,19 @@ export class DsListSection extends DsListSectionToken {
       ><ng-container *ngTemplateOutlet="text; context: { $implicit: title() }" /></a>
     } @else if (action()) {
       <span
+        #actionTitle
+        [attr.id]="triggerAttrs()?.id ?? null"
         data-part="title"
         role="button"
         tabindex="0"
         [attr.aria-disabled]="disabled() ? 'true' : null"
         [attr.aria-current]="active() ? 'true' : null"
-        (click)="select($event)"
+        [attr.aria-haspopup]="triggerAttrs()?.haspopup ?? null"
+        [attr.aria-expanded]="triggerAttrs() ? (triggerAttrs()!.expanded ? 'true' : 'false') : null"
+        [attr.aria-controls]="triggerAttrs()?.controls ?? null"
+        [attr.data-state]="triggerAttrs()?.state ?? null"
+        (pointerdown)="onActionPointerDown($event)"
+        (click)="onActionClick($event)"
         (keydown)="onActionKeyDown($event)"
         (keyup)="onActionKeyUp($event)"
       ><ng-container *ngTemplateOutlet="text; context: { $implicit: title() }" /></span>
@@ -404,7 +423,7 @@ export class DsListSection extends DsListSectionToken {
     }
   `,
 })
-export class DsListItem extends DsListItemToken {
+export class DsListItem extends DsListItemToken implements TriggerRow {
   /** The row's main text. With href it becomes the link, with onSelect the button. Optional in a control row. */
   readonly title = input<ListContent | undefined>(undefined);
   /** A second line under the title. */
@@ -455,7 +474,18 @@ export class DsListItem extends DsListItemToken {
 
   protected readonly controlRow = computed(() => this.control() !== undefined);
   protected readonly linked = computed(() => !this.controlRow() && this.href() !== undefined);
-  protected readonly action = computed(() => !this.controlRow() && !this.linked() && this.onSelect() !== undefined);
+  /** The trigger on this row (order C5 item 4), set by a trigger directive on the same li. */
+  private readonly trigger = signal<{ attrs: () => TriggerRowAttrs; handlers: TriggerRowHandlers } | null>(null);
+  protected readonly action = computed(
+    () => !this.controlRow() && !this.linked() && (this.onSelect() !== undefined || this.trigger() !== null),
+  );
+  /** What the trigger draws on the title, while the row is an action. */
+  protected readonly triggerAttrs = computed(() => {
+    const trigger = this.trigger();
+    return trigger && this.action() ? trigger.attrs() : null;
+  });
+  private readonly actionTitle = viewChild<ElementRef<HTMLElement>>('actionTitle');
+  readonly titleElement = computed(() => (this.trigger() ? (this.actionTitle()?.nativeElement ?? null) : null));
   protected readonly lines = computed<ListTitleLines>(() => this.titleLines() ?? this.section?.titleLines() ?? this.list?.titleLines() ?? 1);
   protected readonly hasTitle = computed(() => present(this.title()));
   protected readonly hasDescription = computed(() => present(this.description()));
@@ -478,16 +508,47 @@ export class DsListItem extends DsListItemToken {
     if (this.disabled()) event.preventDefault();
   }
 
+  connect(attrs: () => TriggerRowAttrs, handlers: TriggerRowHandlers): void {
+    this.trigger.set({ attrs, handlers });
+  }
+
   protected select(event: MouseEvent | KeyboardEvent): void {
     if (!this.disabled()) this.onSelect()?.(event);
+  }
+
+  /** The trigger's own handler, unless the row is disabled (it stays focusable and does nothing, anatomy rule 5). */
+  private triggerHandlers(): TriggerRowHandlers | null {
+    return this.disabled() ? null : (this.trigger()?.handlers ?? null);
+  }
+
+  protected onActionPointerDown(event: PointerEvent): void {
+    this.triggerHandlers()?.pointerdown?.(event);
+  }
+
+  protected onActionClick(event: MouseEvent): void {
+    this.triggerHandlers()?.click?.(event);
+    this.select(event);
+  }
+
+  /** A trigger row presses by a click, so the trigger's own click handler opens its overlay. */
+  private press(event: KeyboardEvent): void {
+    if (this.trigger()) {
+      if (!this.disabled()) (event.currentTarget as HTMLElement).click();
+    } else this.select(event);
   }
 
   /** The action title answers the keys of a native button: Enter on key down, Space on key up. */
   protected onActionKeyDown(event: KeyboardEvent): void {
     if (event.target !== event.currentTarget) return;
+    const handlers = this.triggerHandlers();
+    if (handlers?.keydown) {
+      // A menu trigger opens on its own keys (Enter, Space, ArrowDown) and prevents them.
+      handlers.keydown(event);
+      if (event.defaultPrevented) return;
+    }
     if (event.key === 'Enter') {
       event.preventDefault();
-      if (!event.repeat) this.select(event);
+      if (!event.repeat) this.press(event);
     } else if (event.key === ' ') {
       // Key down only stops the page scroll.
       event.preventDefault();
@@ -495,6 +556,6 @@ export class DsListItem extends DsListItemToken {
   }
 
   protected onActionKeyUp(event: KeyboardEvent): void {
-    if (event.target === event.currentTarget && event.key === ' ') this.select(event);
+    if (event.target === event.currentTarget && event.key === ' ') this.press(event);
   }
 }

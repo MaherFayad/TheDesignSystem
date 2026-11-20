@@ -121,3 +121,31 @@ export function animationsDone(elements: readonly (Element | null | undefined)[]
   if (running.length === 0) return Promise.resolve();
   return Promise.all(running.map((a) => a.finished.catch(() => undefined))).then(() => undefined);
 }
+
+// ------------------------------------------------------------------ one stack of modal layers
+
+/**
+ * Every open Dialog, Drawer and ActionSheet layer, oldest first, in one
+ * stack for all three families. Only the top layer traps Tab, guards focus
+ * and takes Escape. With a stack per family a sheet opened over a dialog
+ * left the dialog on top of its own stack, so the two focusin guards pulled
+ * focus back and forth without end (the known fault of order C6).
+ */
+const modalLayers: object[] = [];
+
+/** Puts a layer on top of the stack when it opens. */
+export function pushModalLayer(layer: object): void {
+  popModalLayer(layer);
+  modalLayers.push(layer);
+}
+
+/** Takes a layer off the stack when it closes. */
+export function popModalLayer(layer: object): void {
+  const i = modalLayers.indexOf(layer);
+  if (i >= 0) modalLayers.splice(i, 1);
+}
+
+/** True for the layer on top of every open Dialog, Drawer and ActionSheet. */
+export function isTopModalLayer(layer: object): boolean {
+  return modalLayers[modalLayers.length - 1] === layer;
+}

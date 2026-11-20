@@ -243,7 +243,7 @@ follows it.
     | Navbar (carrier, not a state) | `data-inline-title` holds text, so manifests do not list it under states; private `--_navbar-heading-size` is written on the PageShell root while a large title is mounted |
     | Sheet | part `header-action` (sub component `SheetHeaderAction`, one per sheet, tab order close, action, confirm) |
     | Dialog, AlertDialog, Sheet | `data-segment` (`start`, `end`, `top`, `bottom`) on a folded screen; absent when there is no fold |
-    | List row as a trigger | a row that is the child of an overlay trigger is an action row; the trigger's `aria-haspopup`, `aria-expanded`, `aria-controls`, `data-state`, `id` and ref go to the title, not to the `li` |
+    | List row as a trigger | a row that is the child of an overlay trigger is an action row; the trigger's `aria-haspopup`, `aria-expanded`, `aria-controls`, `data-state`, `id` and ref go to the title, not to the `li`. In Angular the trigger directive goes on `li[dsListItem]` itself (a form difference, like `asChild`) |
     | Pager (proposed) | `data-ds="pager"`, parts `viewport`, `page`, `dots`; `data-active` on the shown page; private `--_pager-gap`, `--_pager-ring-*` |
     | Fieldset, NumberField, Pagination, DatePicker | `data-variant` (proposed, plan `reset-ios-families.md`) |
     | Input | `data-variant` gains `plain`; `data-empty` |

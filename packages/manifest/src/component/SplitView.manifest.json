@@ -123,10 +123,10 @@
     "role": "none on the root. The panes are regions, named by primaryLabel and secondaryLabel (List and Detail by default). The handle is a separator (the window splitter of ResizablePanels).",
     "focus": "While stacked, focus moves to the detail pane when it opens, and back returns it to the last element focused in the list (the item that opened the detail), else to the list pane. When the view narrows into stacked with focus in the pane that hides, focus moves to the pane that stays. While split, focus stays where the person put it.",
     "keys": {
-      "Tab": "Moves through the list, the handle and the detail",
-      "ArrowLeft, ArrowRight": "On the handle, move it 5 percent left or right on screen. The list is on the right in Arabic.",
-      "Home, End": "On the handle, move it to the list's min and max",
-      "Enter, Space": "On the back Button, return to the list"
+      "Tab": "Moves through the list, the handle (while split) and the detail",
+      "ArrowLeft, ArrowRight": "While split, on the handle: move it 5 percent left or right on screen. The list is on the right in Arabic. Stacked, there is no handle and the keys do nothing.",
+      "Home, End": "While split, on the handle: move it to the list's min and max",
+      "Enter, Space": "While stacked, on the back Button: return to the list"
     },
     "announce": "The detail pane's name when it takes focus while stacked.",
     "native": {
@@ -137,7 +137,8 @@
       "Both panes stay mounted while stacked; the hidden one has the hidden attribute, so the list keeps its scroll position.",
       "The width is read from the root, so a SplitView inside a narrow window or panel stacks there too. No sideways scroll at 320px.",
       "Every drag has a key path (WCAG 2.5.7), from ResizablePanels.",
-      "handle-grip is the grip of the shared handle; the order's anatomy did not list it."
+      "handle-grip is the grip of the shared handle; the order's anatomy did not list it.",
+      "The handle keys apply only while split. The contract checks them where the variants case is split; where it stacks (a folded or narrow screen) the handle is not rendered and the check notes that, it does not fail."
     ]
   },
   "content": {

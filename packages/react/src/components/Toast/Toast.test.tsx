@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Dialog as SystemDialog, DialogContent } from '../Dialog';
+import { PageShell } from '../PageShell';
 import ToastDemo from './Toast.demo';
 import { Toast, Toaster, isInsideToaster, createToastFunction, createToastStore, type ToastStoreOptions } from './index';
 import { RUBBER_MAX } from '@the-system/motion';
@@ -803,5 +804,86 @@ describe('the safe area in the portal (order S1)', () => {
     const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Toast.css'), 'utf8');
     expect(css).toMatch(/--_toaster-inset-block-start: calc\(var\(--ds-toast-inset\) \+ var\(--ds-inset-safe-top\)\);/);
     expect(css).not.toMatch(/--_toaster-inset[^;]*env\(/);
+  });
+});
+
+describe('the hooks for the platform CSS (order C6, item 3)', () => {
+  const viewport = () => document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+
+  it('stamps data-has-action on a toast with an action, and not on one without', async () => {
+    const { store, toast, fire } = setup();
+    render(<Toaster store={store} />);
+    fire(() => toast.info({ title: 'Board archived', action: { label: 'Undo archive', onAction: () => undefined } }));
+    fire(() => toast.success({ title: 'Photo uploaded' }));
+    await waitFor(() => expect(toasts()).toHaveLength(2));
+    const withAction = toasts().find((t) => t.textContent?.includes('Board archived'))!;
+    const without = toasts().find((t) => t.textContent?.includes('Photo uploaded'))!;
+    expect(withAction.hasAttribute('data-has-action')).toBe(true);
+    expect(without.hasAttribute('data-has-action')).toBe(false);
+  });
+
+  it('stamps data-has-action on a toast placed by hand with an action', () => {
+    const { container } = render(
+      <>
+        <Toast title="Board archived" action={{ label: 'Undo archive', onAction: () => undefined }} />
+        <Toast title="Photo uploaded" />
+      </>,
+    );
+    const [a, b] = Array.from(container.querySelectorAll('[data-ds="toast"]'));
+    expect(a!.getAttribute('data-has-action')).toBe('');
+    expect(b!.hasAttribute('data-has-action')).toBe(false);
+  });
+
+  it('stamps data-shell-placement="side" on the viewport inside a PageShell with the bars in the side column', async () => {
+    const store = createToastStore();
+    const { unmount } = render(
+      <PageShell placement="side">
+        <Toaster store={store} />
+      </PageShell>,
+    );
+    await waitFor(() => expect(viewport()?.getAttribute('data-shell-placement')).toBe('side'));
+    unmount();
+
+    render(
+      <PageShell placement="bottom">
+        <Toaster store={store} />
+      </PageShell>,
+    );
+    await waitFor(() => expect(viewport()).not.toBeNull());
+    expect(viewport()!.hasAttribute('data-shell-placement')).toBe(false);
+  });
+
+  it('under auto, reads the side column flag the platform CSS sets where the Toaster sits, and follows a resize', async () => {
+    const store = createToastStore();
+    const { container } = render(
+      <PageShell placement="auto">
+        <div data-probe="">
+          <Toaster store={store} />
+        </div>
+      </PageShell>,
+    );
+    await waitFor(() => expect(viewport()).not.toBeNull());
+    expect(viewport()!.hasAttribute('data-shell-placement')).toBe(false);
+    const probe = container.querySelector<HTMLElement>('[data-probe]')!;
+    const anchor = container.querySelector<HTMLElement>('[data-toaster-anchor]')!;
+    // jsdom computes custom properties set inline on the element itself, so the flag is set on the anchor.
+    act(() => {
+      anchor.style.setProperty('--_ios-rail', 'side');
+      window.dispatchEvent(new Event('resize'));
+    });
+    await waitFor(() => expect(viewport()!.getAttribute('data-shell-placement')).toBe('side'));
+    act(() => {
+      anchor.style.setProperty('--_ios-rail', 'none');
+      window.dispatchEvent(new Event('resize'));
+    });
+    await waitFor(() => expect(viewport()!.hasAttribute('data-shell-placement')).toBe(false));
+    expect(probe.contains(anchor)).toBe(true);
+  });
+
+  it('outside a PageShell stamps no shell placement', async () => {
+    const store = createToastStore();
+    render(<Toaster store={store} />);
+    await waitFor(() => expect(viewport()).not.toBeNull());
+    expect(viewport()!.hasAttribute('data-shell-placement')).toBe(false);
   });
 });

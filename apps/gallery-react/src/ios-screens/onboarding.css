@@ -24,6 +24,20 @@
     padding-inline: max(var(--_ob-edge), var(--ds-inset-safe-start), calc((100% - var(--_ob-max)) / 2)) max(var(--_ob-edge), var(--ds-inset-safe-end), calc((100% - var(--_ob-max)) / 2));
   }
 
+  /* The pager takes the rows of the picture, the text and the dots of the page grid. */
+  [data-gallery='ob-pager'] {
+    grid-row: span 3;
+    min-block-size: 0;
+  }
+
+  /* Each page: the picture over the room the text leaves, then the text. */
+  [data-gallery='ob-page-grid'] {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--ds-space-l);
+    block-size: 100%;
+  }
+
   /* The picture fills the room the text leaves, keeps its corners, and never grows past a square. */
   [data-gallery='ob-picture'] {
     position: relative;
