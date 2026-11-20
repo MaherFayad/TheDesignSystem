@@ -100,8 +100,10 @@
       "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce. Round 2 (order 1.22, proposed), interaction skip-link-slide: drawn at once with its ring on focus, it slides down from distance.enter above on the bouncy spring. Reduced motion: it appears in place."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "a[dsSkipLink], host bindings, a click handler that moves focus"
+      "status": "ready",
+      "behavior": "a[dsSkipLink], host bindings, a click handler that moves focus",
+      "example": "skip-link.demo.ts",
+      "note": "Same DOM and behavior as React: href defaults to #main, the default text follows the theme's language (ng-content fallback, so projected text replaces it), focus moves to the target with tabindex -1 only when it needs one, the hash still changes, modifier and middle clicks are left to the browser. The click handler listens from after the first render, so the caller's (click) runs first and preventDefault in it stops the jump. focusFragment is the same code as React's (a request: move it to packages/shared). Motion is CSS only (skip-link-slide)."
     },
     "native": {
       "status": "not-applicable",

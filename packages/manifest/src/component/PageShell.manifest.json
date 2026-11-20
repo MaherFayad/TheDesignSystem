@@ -200,9 +200,10 @@
       "note": "Renders SkipLink, IconButton and Drawer. The hook usePageShell() shares the column state: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "cdk:layout BreakpointObserver",
-      "note": "Content projection into the same parts."
+      "example": "page-shell.demo.ts",
+      "note": "div[dsPageShell] is the root itself. Same DOM, parts, landmarks and words as React: the skip link first, header (only for content or the menu button while hidden), nav (hidden and empty while the column is hidden), main with tabindex -1, aside, footer; embedded swaps the landmarks for div, region and group. header, nav, aside and footer take a TemplateRef; declare them inside the shell element, so the bars in them take the shell's placement (DI follows declaration). sidebar is a model ([(sidebar)], sidebarChange is onSidebarChange); React's usePageShell() is the shell itself (shownSidebar, sidebar, setSidebar, narrow, setDrawerOpen). The menu button opens the Angular Drawer from the start, and a link in it closes it. placement (order DU7) stamps data-placement when not auto and provides DS_BAR_PLACEMENT, which the Angular TabBar reads; a nested shell provides its own. The Angular package has no Navbar, Sidebar or Rail yet, so the demo's column is a nav of links and the phone header is a title and an icon button."
     },
     "native": {
       "status": "not-applicable",

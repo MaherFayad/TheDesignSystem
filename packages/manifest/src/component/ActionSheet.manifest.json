@@ -217,8 +217,10 @@
       "note": "Built on DialogBase (Dialog folder): the themed portal, the focus return, toasts above. The placement is resolved when it opens and picks the primitive. Motion: menu-scale when anchored (it grows out of its trigger's corner on the bouncy spring), the dialog grow in the center, the sheet rise at the bottom; reduced motion has none."
     },
     "angular": {
-      "status": "planned",
-      "note": "New wave 2: the same DOM, CDK Overlay with a flexible connected position for anchored, the Angular Dialog layer for bottom and center."
+      "status": "ready",
+      "behavior": "cdk:portal, cdk:a11y InteractivityChecker; the anchored card placed by behavior/popper.ts (the Floating UI steps Radix Popper runs)",
+      "example": "action-sheet.demo.ts",
+      "note": "Same DOM as React: the themed portal layer, the root with data-state and data-placement, the backdrop, the popper wrapper when anchored (with the --radix-popover-* variables the CSS reads) and the panel. ng-container[dsActionSheet] with [(open)] (openChange is onOpenChange), [dsActionSheetTrigger] on a dsButton or dsIconButton, ng-template[dsActionSheetContent] with title, description and label. button[dsActionSheetAction] and button[dsActionSheetCancel] are the Buttons themselves, on the Button base. React lifts the Cancel out and puts it last; a template cannot be reordered, so a dsActionSheetCancel is written last, and with none the sheet adds one. Danger is read from the actions, which register their tone with the sheet. The placement rule is resolveActionSheetPlacement, the same code as React's (a request: move it to packages/shared). Focus rule, keys, refused nudge, exit wait and focus return as React. Escape and Tab listen in the capture phase so a Dialog under the sheet does not take them."
     },
     "native": {
       "status": "planned",

@@ -224,9 +224,10 @@
       "note": "Built on DialogBase (Dialog folder). Styled by the drawer block of Dialog.css."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
-      "note": "On the Angular Dialog layer, with data-side and the header part."
+      "example": "drawer.demo.ts",
+      "note": "On the Angular Dialog pattern: a ComponentPortal whose host is the themed portal layer, the same root (data-size, data-side, data-state, data-dragging), backdrop (modal only), panel, handle, header with the close control, body and footer as React. ng-container[dsDrawer] with [(open)] (openChange is onOpenChange), size, side, modal, dismissible; [dsDrawerTrigger], [dsDrawerClose], ng-template[dsDrawerContent], [dsDrawerBody] and [dsDrawerFooter] (the Dialog's body and footer under the Drawer's names). React lifts a DrawerTitle and DrawerDescription child into the header; a template cannot be reordered, so they are the title and description inputs, as the Angular Dialog's. aria-busy on the panel is an input of dsDrawerContent. Non modal: no backdrop, no trap, no scroll lock, the page stays heard, Escape only from inside the drawer, focus stays on the page on close. The swipe to dismiss runs the same helpers from @the-system/motion. Escape and Tab listen in the capture phase so a Dialog under the drawer does not take them."
     },
     "native": {
       "status": "planned",

@@ -15,6 +15,14 @@ describe('icon build', () => {
     for (const name of iconNames) expect(name).not.toMatch(/(^|-)(left|right)(-|$)/);
   });
 
+  it('has undo and redo in both sets, and they flip in right to left layouts (order S1)', () => {
+    for (const name of ['undo', 'redo'] as const) {
+      expect(iconNames).toContain(name);
+      expect(isMirrored(name)).toBe(true);
+      for (const source of sources) expect(source.glyphs[name], `${source.id} ${name}`).toBeTruthy();
+    }
+  });
+
   for (const source of sources) {
     it(`maps every system name to an existing ${source.id} glyph`, () => {
       for (const name of iconNames) {

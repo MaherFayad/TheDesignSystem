@@ -122,8 +122,10 @@
       "note": "No motion: the jump is instant, as on the platforms, and the current key swaps its fill at once. Reduced motion changes nothing."
     },
     "angular": {
-      "status": "planned",
-      "note": "New wave 2: nav[dsSectionIndex] with the same anchors and the same shared helpers."
+      "status": "ready",
+      "behavior": "nav[dsSectionIndex] of anchors with roving tabindex, pointer capture for scrubbing, collapseIndex and slotKey from @the-system/shared",
+      "example": "section-index.demo.ts",
+      "note": "Same DOM, attributes, names and keys as React. The select output is React's onSelect, with the key and its target in one object. The column height is measured after render (afterRenderEffect and a ResizeObserver), never during render. The nav's own keydown and pointerdown listen from after the first render, so a caller's (keydown) or (pointerdown) runs first and can handle the event, as React's onKeyDown and onPointerDown. No motion."
     },
     "native": {
       "status": "planned",

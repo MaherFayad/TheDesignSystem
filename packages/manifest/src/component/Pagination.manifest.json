@@ -222,8 +222,10 @@
       "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift). Order M9.9 (proposed): variant dots, one system Button per page in a track, roving tab index, compact half control; the current dot widens by clip-path on a CSS transition."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "nav[dsPagination] with button[dsButton] or a[dsButton] controls and the shared pageRange"
+      "status": "ready",
+      "behavior": "nav[dsPagination] with button[dsIconButton] or a[dsIconButton] ends, internal page and dot controls on the Button base, and the shared pageRange, itemRange and clampPage",
+      "example": "pagination.demo.ts",
+      "note": "Same DOM, attributes, names and keys as React, numbers and dots. page is a model: [(page)] is React's page with onPageChange, pageChange is onPageChange. getHref and formatSummary are function inputs; with getHref every control is an a element, as React's asChild links. The page number and the dot are internal components on DsButtonBase, so they carry the Button root and its parts as React's ButtonRoot render does. Motion as React (pagination-roll): afterRenderEffect rolls the numbers whose slot changed (each number in a fresh aria-hidden host), slides the pill with followIndicator, and winds up a pressed arrow. Dots: one tab stop, arrows select at once with no wrap, compact measured after layout with a ResizeObserver. The Arabic empty summary is لا توجد عناصر, by the order A3."
     },
     "native": {
       "status": "planned",

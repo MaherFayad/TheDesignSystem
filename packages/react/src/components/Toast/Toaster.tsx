@@ -394,7 +394,8 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
   // The hidden span that marks where the Toaster is mounted; it reads the safe area there.
   const anchorNode = <span data-toaster-anchor="" hidden ref={setAnchor} />;
 
-  if (!body || !mute) return anchorNode;
+  // A fragment in both returns, so the anchor keeps its element when the portal mounts.
+  if (!body || !mute) return <>{anchorNode}</>;
 
   const region = (urgent: boolean) =>
     lines

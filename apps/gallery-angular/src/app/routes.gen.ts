@@ -7,6 +7,7 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { slug: 'action-sheet', load: () => import('../../../../packages/angular/src/components/action-sheet/action-sheet.demo').then((m) => m.default) },
   { slug: 'alert', load: () => import('../../../../packages/angular/src/components/alert/alert.demo').then((m) => m.default) },
   { slug: 'autocomplete', load: () => import('../../../../packages/angular/src/components/autocomplete/autocomplete.demo').then((m) => m.default) },
   { slug: 'banner', load: () => import('../../../../packages/angular/src/components/banner/banner.demo').then((m) => m.default) },
@@ -20,6 +21,7 @@ export const routes: DemoRoute[] = [
   { slug: 'consent-field', load: () => import('../../../../packages/angular/src/components/consent-field/consent-field.demo').then((m) => m.default) },
   { slug: 'copy-button', load: () => import('../../../../packages/angular/src/components/copy-button/copy-button.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
+  { slug: 'drawer', load: () => import('../../../../packages/angular/src/components/drawer/drawer.demo').then((m) => m.default) },
   { slug: 'dropdown-menu', load: () => import('../../../../packages/angular/src/components/dropdown-menu/dropdown-menu.demo').then((m) => m.default) },
   { slug: 'error-state', load: () => import('../../../../packages/angular/src/components/error-state/error-state.demo').then((m) => m.default) },
   { slug: 'field', load: () => import('../../../../packages/angular/src/components/field/field.demo').then((m) => m.default) },
@@ -42,6 +44,8 @@ export const routes: DemoRoute[] = [
   { slug: 'notification-center', load: () => import('../../../../packages/angular/src/components/notification-center/notification-center.demo').then((m) => m.default) },
   { slug: 'number-field', load: () => import('../../../../packages/angular/src/components/number-field/number-field.demo').then((m) => m.default) },
   { slug: 'otp-field', load: () => import('../../../../packages/angular/src/components/otp-field/otp-field.demo').then((m) => m.default) },
+  { slug: 'page-shell', load: () => import('../../../../packages/angular/src/components/page-shell/page-shell.demo').then((m) => m.default) },
+  { slug: 'pagination', load: () => import('../../../../packages/angular/src/components/pagination/pagination.demo').then((m) => m.default) },
   { slug: 'password-field', load: () => import('../../../../packages/angular/src/components/password-field/password-field.demo').then((m) => m.default) },
   { slug: 'phone-field', load: () => import('../../../../packages/angular/src/components/phone-field/phone-field.demo').then((m) => m.default) },
   { slug: 'progress-bar', load: () => import('../../../../packages/angular/src/components/progress-bar/progress-bar.demo').then((m) => m.default) },
@@ -52,9 +56,11 @@ export const routes: DemoRoute[] = [
   { slug: 'rating', load: () => import('../../../../packages/angular/src/components/rating/rating.demo').then((m) => m.default) },
   { slug: 'scrub-input', load: () => import('../../../../packages/angular/src/components/scrub-input/scrub-input.demo').then((m) => m.default) },
   { slug: 'search-field', load: () => import('../../../../packages/angular/src/components/search-field/search-field.demo').then((m) => m.default) },
+  { slug: 'section-index', load: () => import('../../../../packages/angular/src/components/section-index/section-index.demo').then((m) => m.default) },
   { slug: 'segmented-control', load: () => import('../../../../packages/angular/src/components/segmented-control/segmented-control.demo').then((m) => m.default) },
   { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
   { slug: 'skeleton', load: () => import('../../../../packages/angular/src/components/skeleton/skeleton.demo').then((m) => m.default) },
+  { slug: 'skip-link', load: () => import('../../../../packages/angular/src/components/skip-link/skip-link.demo').then((m) => m.default) },
   { slug: 'slider', load: () => import('../../../../packages/angular/src/components/slider/slider.demo').then((m) => m.default) },
   { slug: 'spinner', load: () => import('../../../../packages/angular/src/components/spinner/spinner.demo').then((m) => m.default) },
   { slug: 'split-button', load: () => import('../../../../packages/angular/src/components/split-button/split-button.demo').then((m) => m.default) },

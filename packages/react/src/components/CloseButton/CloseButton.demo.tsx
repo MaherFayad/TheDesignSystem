@@ -40,7 +40,7 @@ function OverPicture({ background, children }: { background: string; children: R
 export default function CloseButtonDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: sizes and shapes, ghost">
+      <DemoCase id="variants" title="Variants: sizes, shapes and emphasis">
         {sizes.map((size) => (
           <DemoRow key={size} label={`Size ${size}`}>
             {shapes.map((shape) => (
@@ -48,6 +48,11 @@ export default function CloseButtonDemo() {
             ))}
           </DemoRow>
         ))}
+        <DemoRow label="Raised (emphasis solid)">
+          {shapes.map((shape) => (
+            <CloseButton key={shape} shape={shape} emphasis="solid" />
+          ))}
+        </DemoRow>
         <DemoRow label="Named">
           <CloseButton label="Close panel" />
           <CloseButton label="Remove filter" size="xs" />
