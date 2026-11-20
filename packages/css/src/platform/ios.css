@@ -591,7 +591,7 @@
    * capsule again and draws nothing of its own.
    */
   [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+  [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
     border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
     background-color: var(--_tab-bar-bg);
     box-shadow: var(--ds-elevation-glass);
@@ -612,7 +612,7 @@
     }
 
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
@@ -687,12 +687,12 @@
    * (below, in the tab bar's names), the buttons in it none: a clear fill
    * with a quiet veil on hover and press, no border, no lift and no blur.
    */
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] {
+  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] {
     --_tab-bar-bg: var(--ds-color-material-glass-strong);
     --_tab-bar-border-color: var(--ds-color-material-glass-border);
   }
 
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']) {
+  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']) {
     --_button-bg: transparent;
     --_button-bg-hover: var(--ds-color-bg-overlay-5);
     --_button-bg-active: var(--ds-color-bg-overlay-10);
@@ -1051,7 +1051,7 @@
      */
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'] [data-ds='toast'] {
@@ -1062,7 +1062,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast'] {
@@ -1097,7 +1097,7 @@
      */
     [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'] [data-ds='toast']::after,
@@ -1128,7 +1128,7 @@
     /* Right to left: the light comes from the upper start, which is now the right. */
     [data-platform='ios'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
     [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'] [data-ds='toast']:dir(rtl)::after,
@@ -1148,7 +1148,7 @@
     /* Dark: a faint light edge, never a dark ring. */
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']::after,
@@ -1167,7 +1167,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]):dir(rtl)::after,
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']):dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel']:dir(rtl)::after,
     [data-platform='ios'][data-scheme='dark'] [data-ds='toast']:dir(rtl)::after,
@@ -1231,7 +1231,7 @@
   @container style(--_ios-glass: clear) {
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 34%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 1)) saturate(1.6);
@@ -1258,7 +1258,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 12%) 48%, transparent);
     }
 
@@ -1280,7 +1280,7 @@
   @container style(--_ios-glass: regular) {
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 52%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
@@ -1309,7 +1309,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 10%) 62%, transparent);
     }
 
@@ -1344,7 +1344,7 @@
   @container style(--_ios-glass: frosted) {
     [data-platform='ios'] [data-ds='tab-bar'],
     [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, var(--ds-color-material-glass-solid) 72%, transparent);
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 4)) saturate(1.6);
@@ -1371,7 +1371,7 @@
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark)), var(--ds-color-glass-backdrop-bright) 6%) 80%, transparent);
     }
 
@@ -1401,9 +1401,9 @@
       [data-platform='ios'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+      [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-      [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+      [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
         background-color: var(--ds-color-material-glass-solid);
         border-color: var(--_tab-bar-border-color);
         box-shadow: var(--ds-elevation-glass);
@@ -1478,7 +1478,7 @@
       /* The solid paint keeps its border: no rim. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+      [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
@@ -1497,13 +1497,13 @@
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-contrast='more'][data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-contrast='more'][data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-contrast='more'] [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-contrast='more'] [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-contrast='more'][data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+    [data-contrast='more'][data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
     [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
+    [data-contrast='more'] [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']) {
       background-color: var(--ds-color-material-glass-solid);
       border-color: var(--_tab-bar-border-color);
       box-shadow: var(--ds-elevation-glass);
@@ -1594,7 +1594,7 @@
     /* No rim with more contrast. */
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-    [data-contrast='more'][data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+    [data-contrast='more'][data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'][data-platform='ios'] [data-ds='toast']::after,
@@ -1604,7 +1604,7 @@
     [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-    [data-contrast='more'] [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+    [data-contrast='more'] [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
     [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
     [data-contrast='more'] [data-platform='ios'] [data-ds='toast']::after,
@@ -1623,9 +1623,9 @@
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       [data-platform='ios'] [data-ds='toast'],
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+      [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded]),
-      [data-platform='ios'][data-scheme='dark'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
+      [data-platform='ios'][data-scheme='dark'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='tab-bar'],
       [data-platform='ios'][data-scheme='dark'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       [data-platform='ios'][data-scheme='dark'] [data-ds='action-sheet'] [data-part='panel'],
@@ -1648,7 +1648,7 @@
       /* No rim where the glass cannot be drawn. */
       [data-platform='ios'] [data-ds='tab-bar']::after,
       [data-platform='ios'] [data-ds='tab-bar'] > [data-part='search']:not([data-expanded])::after,
-      [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
+      [data-platform='ios'] :is(:is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached], [data-ds='tab-bar'] > [data-part='accessory'])::after,
       [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])::after,
       [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']::after,
       [data-platform='ios'] [data-ds='toast']::after,
@@ -2713,13 +2713,13 @@
    * glass, border or lift of their own; each keeps a round corner, so its
    * hover and press veil is a disc inside the capsule, not a square.
    */
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] {
+  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] {
     position: relative;
     border-width: 0;
     border-radius: var(--ds-shape-corner-full);
   }
 
-  [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end']) > [data-ds='button-group'][data-attached] > * {
+  [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] > * {
     border-width: 0;
     border-radius: var(--ds-shape-corner-full);
   }
