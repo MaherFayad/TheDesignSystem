@@ -398,3 +398,34 @@ other's files; each lists what it needs from the other in its report.
 5. Arabic share panel: people's names at the caption size the token gives,
    not smaller; a two line clamp.
 6. The music library's index bar height after K1 moved the page start.
+
+### Y6 Style fix round after C5 and Y5 (ds-style)
+
+1. Sheet `header-action` on `ios`: on the close and confirm row, before the
+   confirm, drawn like the close disc (44, glass where glass ships). In the
+   foldable sheet column it sits below the confirm.
+2. Navbar large title wraps below 360 wide (no ellipsis, WCAG 2.2 1.4.10);
+   the title room reads `--_navbar-heading-size`.
+3. TabBar search expanded in the side column: fixed at the foot of the
+   content, 48 tall, main keeps block end room.
+4. Folded sheet in portrait sits in the bottom segment clear of the bottom
+   inset (contract: Sheet, duo-inner-portrait-folded).
+5. `music-library.css` line 58 raw z-index (doctor error).
+6. Mid collapse on settings: no gap where neither title shows.
+7. Onboarding on Pager: move the two inline style objects into
+   `onboarding.css`.
+8. Toasts with an action in the bottom segment, and a toast centred beside
+   the side column, once C6 gives the hooks.
+
+### C6 Component fix round after C5 and Y5 (ds-component)
+
+1. Overlay portals keep `dir` and `lang` of the page (Arabic alert renders
+   `dir="ltr"` today); LayerTheme copies them.
+2. SplitView demo long text cases: the scroll box is focusable with a name
+   (axe, WCAG 2.1.1), and the keyboard map test skips when the view stacks.
+3. Toast: `data-has-action` on a toast with an action; the Toaster reads
+   the side column (`data-placement` of the shell) and stamps it.
+4. Pass detail in Arabic: the people row of the share panel opens at its
+   start.
+5. Angular forms of SheetHeaderAction, the trigger row, `data-segment` and
+   the S1 items (toaster anchor, list `data-tone`, close button `solid`).
