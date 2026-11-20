@@ -390,6 +390,11 @@
           "target": "@components/ds/motion/window.ts"
         },
         {
+          "path": "packages/shared/src/action-sheet.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/action-sheet.ts"
+        },
+        {
           "path": "packages/shared/src/axes.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/axes.ts"
@@ -415,9 +420,19 @@
           "target": "@components/ds/shared/filter.ts"
         },
         {
+          "path": "packages/shared/src/fold.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/fold.ts"
+        },
+        {
           "path": "packages/shared/src/form.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/form.ts"
+        },
+        {
+          "path": "packages/shared/src/fragment.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/fragment.ts"
         },
         {
           "path": "packages/shared/src/initials.ts",
@@ -702,6 +717,11 @@
           "path": "packages/react/src/theme/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/theme/index.ts"
+        },
+        {
+          "path": "packages/react/src/theme/LayerTheme.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/LayerTheme.tsx"
         },
         {
           "path": "packages/react/src/theme/resolve.ts",
@@ -2582,6 +2602,7 @@
         "@ds/button",
         "@ds/core",
         "@ds/dropdown-menu",
+        "@ds/popover",
         "@ds/theme"
       ],
       "files": [
@@ -2785,6 +2806,7 @@
       "registryDependencies": [
         "@ds/close-button",
         "@ds/core",
+        "@ds/popover",
         "@ds/theme",
         "@ds/title-bar",
         "@ds/toast",
@@ -2906,6 +2928,7 @@
         "@ds/button",
         "@ds/core",
         "@ds/list-box",
+        "@ds/popover",
         "@ds/theme"
       ],
       "files": [
@@ -4104,6 +4127,42 @@
       }
     },
     {
+      "name": "pager",
+      "type": "registry:ui",
+      "title": "Pager",
+      "description": "Proposed (order C5). Full width pages a person swipes between, one at a time, with the dots of Pagination under them: the screens of an onboarding, the steps of a short tour. Built on scroll snap, so the swipe is the browser's own; arrow keys, Page Up and Page Down and the dots are the paths with no drag.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/pagination",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Pager/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Pager/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Pager/Pager.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Pager/Pager.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Pager.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Pager.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Pager",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "page-shell",
       "type": "registry:ui",
       "title": "PageShell",
@@ -5127,6 +5186,7 @@
       "title": "SkipLink",
       "description": "The first link of a page. Hidden until it takes keyboard focus, then Enter moves focus past the header and navigation to the main content.",
       "registryDependencies": [
+        "@ds/core",
         "@ds/theme"
       ],
       "files": [
@@ -5918,6 +5978,7 @@
         "@ds/button",
         "@ds/close-button",
         "@ds/core",
+        "@ds/page-shell",
         "@ds/theme"
       ],
       "files": [
