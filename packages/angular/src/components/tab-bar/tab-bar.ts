@@ -202,7 +202,7 @@ export class DsTabBarItem {
     const w = tabBarBadgeWords[ar ? 'ar' : 'en'];
     const comma = ar ? '،' : ',';
     const count = this.count();
-    return count !== null ? `${comma} ${count} ${this.badgeLabel() ?? w.count}` : `${comma} ${this.badgeLabel() ?? w.dot}`;
+    return count !== null ? (comma === '،' && this.badgeLabel() === undefined ? `، الجديد ${count}` : `${comma} ${count} ${this.badgeLabel() ?? w.count}`) : `${comma} ${this.badgeLabel() ?? w.dot}`;
   });
 
   constructor() {

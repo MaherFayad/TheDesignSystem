@@ -79,7 +79,7 @@ describe('TabBar', () => {
         </TabBar>
       </Theme>,
     );
-    expect(screen.getByRole('link', { name: 'الوارد، 2 جديد' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'الوارد، الجديد 2' })).toBeTruthy();
   });
 
   it('renders a router link with asChild', () => {

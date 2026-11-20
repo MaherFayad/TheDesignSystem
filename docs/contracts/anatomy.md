@@ -262,6 +262,10 @@ follows it.
     | Accordion, List, Skeleton | `data-variant` |
     | Card, Tile | `data-interactive` |
     | List | `data-linked` |
+    | List row | `data-tone` (`danger`) for a destructive row, from the shared tone axis |
+    | CloseButton | `data-emphasis` (`ghost` default, `solid` for a filled disc over media) |
+    | Toaster | an in place hidden `span[data-toaster-anchor]`, where the portaled region reads the safe area tokens |
+    | Toolbar | takes an attached ButtonGroup; on `ios` it draws as a bar group and the toolbar draws no capsule of its own |
     | Link | `data-standalone` |
     | StatusDot | `data-pulse`, `data-hide-label` |
     | Stat | `data-trend` |

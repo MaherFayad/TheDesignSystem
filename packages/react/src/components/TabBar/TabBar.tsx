@@ -239,7 +239,7 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
   const w = words[lang === 'ar' ? 'ar' : 'en'];
   const showBadge = badge !== undefined && badge !== false && badge !== 0;
   const count = typeof badge === 'number' ? (badge > 99 ? '99+' : String(badge)) : null;
-  const hidden = count !== null ? `${lang === 'ar' ? '،' : ','} ${count} ${badgeLabel ?? w.count}` : `${lang === 'ar' ? '،' : ','} ${badgeLabel ?? w.dot}`;
+  const hidden = count !== null ? (lang === 'ar' && badgeLabel === undefined ? `، الجديد ${count}` : `${lang === 'ar' ? '،' : ','} ${count} ${badgeLabel ?? w.count}`) : `${lang === 'ar' ? '،' : ','} ${badgeLabel ?? w.dot}`;
 
   const parts = (
     <>

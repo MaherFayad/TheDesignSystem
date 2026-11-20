@@ -83,7 +83,7 @@ export const sharePanelLabels = {
     copied: 'تم نسخ الرابط',
     copyFailed: 'تعذر نسخ الرابط',
     moreOptions: 'خيارات إضافية',
-    close: 'إغلاق المشاركة',
+    close: 'إغلاق لوحة المشاركة',
   },
 } as const;
 

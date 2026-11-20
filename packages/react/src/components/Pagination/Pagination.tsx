@@ -82,7 +82,7 @@ const words = {
     last: 'الصفحة الأخيرة',
     page: (p: number) => `صفحة ${n(p)}`,
     summary: (s: number, e: number, t: number) => `${n(s)} إلى ${n(e)} من ${n(t)}`,
-    empty: 'ما فيه عناصر',
+    empty: 'لا توجد عناصر',
   },
 } as const;
 

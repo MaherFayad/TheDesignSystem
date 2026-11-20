@@ -173,7 +173,7 @@ describe('WheelPicker', () => {
         <WheelPicker columns={wheelTimeColumns({ locale: 'ar-SA', value: { hour: 21, minute: 5 } })} label="وقت المنبه" />
       </Theme>,
     );
-    expect(spins().map((s) => s.getAttribute('aria-label'))).toEqual(['الساعة', 'الدقائق', 'الفترة']);
+    expect(spins().map((s) => s.getAttribute('aria-label'))).toEqual(['الساعة', 'الدقيقة', 'ص أو م']);
     expect(spins().map((s) => s.getAttribute('aria-valuetext'))).toEqual(['9', '05', 'م']);
   });
 

@@ -16,7 +16,7 @@
 //   "2D"), and joins channel names and its own colour name with a Latin
 //   comma in English word order. After each render the inputs get ours: the
 //   channel's name ("Saturation", "التشبع"), the role "2D slider" ("منزلق
-//   ثنائي الاتجاه") and the value text "Saturation 76%, Brightness 85%, Blue"
+//   ثنائي الأبعاد") and the value text "Saturation 76%, Brightness 85%, Blue"
 //   ("التشبع 76%، السطوع 85%، أزرق"), from colorAreaValueText. The area
 //   itself is a group named "Saturation and brightness" ("التشبع والسطوع")
 //   or the aria-label given. Digits stay Western (`-u-nu-latn`).

@@ -407,13 +407,13 @@ export function colorWords(locale: string | undefined): ColorWords {
 export interface ColorAreaWords {
   /** The default name of the area: "Saturation and brightness", "التشبع والسطوع". */
   area: string;
-  /** The role a screen reader reads for each hidden input: "2D slider", "منزلق ثنائي الاتجاه". */
+  /** The role a screen reader reads for each hidden input: "2D slider", "منزلق ثنائي الأبعاد". */
   role: string;
 }
 
 const AREA_WORDS: Record<ColorLanguage, ColorAreaWords> = {
   en: { area: 'Saturation and brightness', role: '2D slider' },
-  ar: { area: 'التشبع والسطوع', role: 'منزلق ثنائي الاتجاه' },
+  ar: { area: 'التشبع والسطوع', role: 'منزلق ثنائي الأبعاد' },
 };
 
 /** The words of a colour area for a locale or a language. */
@@ -484,7 +484,7 @@ const PICKER_WORDS: Record<ColorLanguage, ColorPickerWords> = {
     views: 'طريقة عرض الألوان',
     grid: 'شبكة',
     spectrum: 'طيف',
-    sliders: 'أشرطة التمرير',
+    sliders: 'المنزلقات',
     saved: 'الألوان المحفوظة',
     save: 'حفظ اللون',
     eyedropper: 'اختيار لون من الشاشة',

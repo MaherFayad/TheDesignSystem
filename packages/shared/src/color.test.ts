@@ -190,7 +190,7 @@ describe('colour area and picker words', () => {
   it('names the area and its role in both languages', () => {
     expect(colorAreaWords('en').area).toBe('Saturation and brightness');
     expect(colorAreaWords('ar-SA').area).toBe('التشبع والسطوع');
-    expect(colorAreaWords('ar').role).toBe('منزلق ثنائي الاتجاه');
+    expect(colorAreaWords('ar').role).toBe('منزلق ثنائي الأبعاد');
     expect(colorAreaWords(undefined).role).toBe('2D slider');
   });
 
@@ -213,7 +213,7 @@ describe('colour area and picker words', () => {
     expect(colorPickerWords('en').title).toBe('Colour');
     expect(colorPickerWords('en').eyedropper).toBe('Pick a colour from the screen');
     expect(colorPickerWords('ar-SA').title).toBe('اللون');
-    expect(colorPickerWords('ar').sliders).toBe('أشرطة التمرير');
+    expect(colorPickerWords('ar').sliders).toBe('المنزلقات');
     expect(colorPickerWords('ar').saved).toBe('الألوان المحفوظة');
   });
 });

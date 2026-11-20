@@ -266,7 +266,7 @@ export function wheelTimeFromValues(values: Partial<Record<string, WheelValue>>,
 /** Built in column names for a time wheel (convention 14). */
 const TIME_LABELS: Record<'en' | 'ar', Record<WheelTimePart, string>> = {
   en: { hour: 'Hours', minute: 'Minutes', dayPeriod: 'AM or PM' },
-  ar: { hour: 'الساعة', minute: 'الدقائق', dayPeriod: 'الفترة' },
+  ar: { hour: 'الساعة', minute: 'الدقيقة', dayPeriod: 'ص أو م' },
 };
 
 export interface WheelTimeOptions {

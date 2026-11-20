@@ -51,7 +51,7 @@ describe('ColorArea', () => {
     expect(el.getAttribute('aria-label')).toBe('التشبع والسطوع');
     const [x] = screen.getAllByRole('slider');
     expect(x!.getAttribute('aria-label')).toBe('التشبع');
-    expect(x!.getAttribute('aria-roledescription')).toBe('منزلق ثنائي الاتجاه');
+    expect(x!.getAttribute('aria-roledescription')).toBe('منزلق ثنائي الأبعاد');
     expect(plain(x!.getAttribute('aria-valuetext'))).toBe('التشبع 60%، السطوع 80%، أزرق');
     expect(ARABIC_INDIC.test(x!.getAttribute('aria-valuetext') ?? '')).toBe(false);
     expect(el.style.getPropertyValue('--_color-area-fill')).toMatch(/to left/);

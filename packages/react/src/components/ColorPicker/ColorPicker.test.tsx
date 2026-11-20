@@ -143,7 +143,7 @@ describe('ColorPicker', () => {
     const { container } = render(<ColorPicker variant="inline" defaultValue="#d92d20" defaultView="spectrum" locale="ar-SA" />);
     const el = inline(container);
     expect(el.getAttribute('aria-label')).toBe('اللون');
-    expect(within(el).getAllByRole('tab').map((t) => t.textContent)).toEqual(['شبكة', 'طيف', 'أشرطة التمرير']);
+    expect(within(el).getAllByRole('tab').map((t) => t.textContent)).toEqual(['شبكة', 'طيف', 'المنزلقات']);
     expect(within(el).getByRole('button', { name: 'حفظ اللون' })).toBeTruthy();
     expect(ARABIC_INDIC.test(el.textContent ?? '')).toBe(false);
     for (const input of el.querySelectorAll('input')) expect(ARABIC_INDIC.test(input.getAttribute('aria-valuetext') ?? '')).toBe(false);

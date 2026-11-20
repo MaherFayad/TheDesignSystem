@@ -173,7 +173,7 @@ describe('TabBar', () => {
     })
     class Host {}
     const f = await mount(Host);
-    expect(link(f.nativeElement, 'الوارد، 2 جديد')).toBeTruthy();
+    expect(link(f.nativeElement, 'الوارد، الجديد 2')).toBeTruthy();
   });
 
   it('sets data-pressed from pointerdown to the release, with the press point, and never while aria-disabled', async () => {
