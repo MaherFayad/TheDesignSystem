@@ -72,6 +72,13 @@ const GOAL = 5;
 /** The two detents of the routine sheet: medium (half the screen), then large. */
 const DETENTS = [0.5, 0.92] as const;
 
+/** An Arabic count with its dual and plural: 1 and 2 as words, 3 to 10 with the plural, 11 and up with the singular. */
+function arCount(n: number, lang: Lang, one: string, two: string, few: string, many: string): string {
+  if (n === 1) return one;
+  if (n === 2) return two;
+  return `${countText(n, lang)} ${n >= 3 && n <= 10 ? few : many}`;
+}
+
 const words = {
   en: {
     nav: 'Workout',
@@ -118,42 +125,42 @@ const words = {
     nav: 'التمرين',
     back: 'الخطة',
     more: 'خيارات الروتين',
-    summary: (minutes: number, energy: number, count: number, lang: Lang) => `${countText(minutes, lang)} دقيقة، حوالي ${countText(energy, lang)} سعرة، ${countText(count, lang)} تمارين`,
+    summary: (minutes: number, energy: number, count: number, lang: Lang) => `${countText(minutes, lang)} دقيقة، حوالي ${countText(energy, lang)} سعرة، ${arCount(count, lang, 'حركة واحدة', 'حركتين', 'حركات', 'حركة')}`,
     week: 'هذا الأسبوع',
     done: 'التمارين المنجزة',
     weekValue: (done: number, goal: number) => `${done} من ${goal}`,
     goalInfo: 'عن هدف الأسبوع',
     goalTitle: 'هدف الأسبوع',
-    goalBody: 'خمس تمارين في الأسبوع حسب خطتك. التمرين ينحسب لما تسجل كل جولاته.',
+    goalBody: '5 تمارين في الأسبوع حسب خطتك. التمرين ينحسب بعد تسجيل كل مجموعاته.',
     start: 'بدء التمرين',
-    exercises: 'التمارين',
-    sets: (e: Exercise, lang: Lang) => `${countText(e.sets, lang)} جولات × ${countText(e.reps, lang)}، ${e.weight === 0 ? 'وزن الجسم' : `${countText(e.weight, lang)}\u00a0كجم`}`,
+    exercises: 'الحركات',
+    sets: (e: Exercise, lang: Lang) => `${arCount(e.sets, lang, 'مجموعة واحدة', 'مجموعتين', 'مجموعات', 'مجموعة')} × ${countText(e.reps, lang)}، ${e.weight === 0 ? 'وزن الجسم' : `${countText(e.weight, lang)}\u00a0كجم`}`,
     rowMore: (name: string) => `خيارات ${name}`,
-    replace: 'استبدال التمرين',
+    replace: 'استبدال الحركة',
     note: 'إضافة ملاحظة',
     up: 'نقل لفوق',
     down: 'نقل لتحت',
-    remove: 'حذف التمرين',
-    removed: 'انحذف التمرين',
-    undo: 'تراجع',
-    undoAlt: 'تقدر ترجعه من تعديل الروتين',
+    remove: 'إزالة الحركة',
+    removed: 'تمت إزالة الحركة',
+    undo: 'تراجع عن الإزالة',
+    undoAlt: 'ترجيعها ممكن من «تعديل الروتين»',
     sheetTitle: 'خيارات الروتين',
     sheetClose: 'إغلاق خيارات الروتين',
     actionList: 'خيارات الروتين',
     share: 'مشاركة الروتين',
-    duplicate: 'نسخ الروتين',
+    duplicate: 'تكرار الروتين',
     edit: 'تعديل الروتين',
     calendar: 'إضافة للتقويم',
     reminder: 'ضبط تذكير',
     del: 'حذف الروتين',
-    shared: 'انتسخ رابط الروتين',
-    duplicated: 'انتسخ الروتين',
-    added: 'انضاف للتقويم',
-    reminded: 'انضبط التذكير الساعة 6:00 م',
-    deleted: 'انحذف الروتين',
-    noted: 'انضافت الملاحظة',
-    replaced: 'اختر تمرين جديد من المكتبة',
-    moved: 'انتقل التمرين',
+    shared: 'تم نسخ رابط الروتين',
+    duplicated: 'تم تكرار الروتين',
+    added: 'تمت الإضافة للتقويم',
+    reminded: 'تم ضبط التذكير الساعة 6:00 م',
+    deleted: 'تم حذف الروتين',
+    noted: 'تمت إضافة الملاحظة',
+    replaced: 'اختيار حركة بديلة من المكتبة',
+    moved: 'تم نقل الحركة',
   },
 } as const;
 

@@ -56,9 +56,9 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
       android: 'The same column, with a large letter bubble beside it while scrubbing.',
     },
     ar: {
-      web: 'عمود مفاتيح صغيرة في نهاية السطر بجانب قائمة طويلة.',
+      web: 'عمود مفاتيح صغيرة على جهة النهاية من قائمة طويلة.',
       ios: 'العمود نفسه، بمفاتيح متقاربة بلون التمييز، دون تعبئة خلفه.',
-      android: 'العمود نفسه، مع فقاعة حرف كبيرة بجانبه أثناء التمرير.',
+      android: 'العمود نفسه، مع فقاعة حرف كبيرة بجانبه أثناء التحريك على العمود.',
     },
   },
   SelectionMenu: {
@@ -70,7 +70,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     ar: {
       web: 'كبسولة إجراءات نصية فوق التحديد، وتحته إذا ضاق المكان فوقه.',
       ios: 'الكبسولة نفسها بعناصر ارتفاعها 44، وهي قائمة التحرير في المنصة.',
-      android: 'الكبسولة نفسها بعناصر ارتفاعها 48، كشريط تحديد النص في Material.',
+      android: 'الكبسولة نفسها بعناصر ارتفاعها 48، كشريط أدوات تحديد النص في Material.',
     },
   },
   SwipeActions: {
@@ -80,7 +80,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
       android: 'The same reveal with square ends.',
     },
     ar: {
-      web: 'يظهر زر القائمة في نهاية الصف عند التمرير فوقه أو التركيز عليه، ويعمل السحب باللمس كما في الهاتف.',
+      web: 'يظهر زر القائمة في نهاية الصف عند مرور المؤشر فوقه أو التركيز عليه، ويعمل السحب باللمس كما في الهاتف.',
       ios: 'ينزلق الصف ليكشف إجراءات مربعة معبأة بلونها، والسحب الطويل ينفذ الإجراء الذي على الحافة.',
       android: 'الكشف نفسه بأطراف مربعة.',
     },
@@ -177,7 +177,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     },
     ar: {
       web: 'التسمية والقيمة فوق مسار كبسولي بالتدرج، مع مقبض دائري.',
-      ios: 'شريط لوحة الألوان: كبسولة أطول ومقبض بحلقة، وهو محتوى فيبقى مصمتا.',
+      ios: 'منزلق لوحة الألوان: كبسولة أطول ومقبض بحلقة، وهو محتوى فيبقى مصمتا.',
       android: 'الشكل نفسه بمقاسات عناصر التحكم في Android.',
     },
   },
@@ -201,7 +201,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     },
     ar: {
       web: 'مربع بزوايا مستديرة فيه التدرج، مع مقبض بحلقة.',
-      ios: 'عرض الطيف في لوحة الألوان فوق شريط درجة اللون، وهو محتوى فيبقى مصمتا.',
+      ios: 'عرض الطيف في لوحة الألوان فوق منزلق درجة اللون، وهو محتوى فيبقى مصمتا.',
       android: 'الشكل نفسه، ويكبر المقبض إلى مساحة اللمس في Android.',
     },
   },
@@ -213,7 +213,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     },
     ar: {
       web: 'زر عينة دائري يفتح اللوحة في Popover.',
-      ios: 'لوحة الألوان في Sheet: العروض الثلاثة عنصر تحكم مقسم، ثم صف الشفافية، ثم الألوان المحفوظة.',
+      ios: 'لوحة الألوان في Sheet: العروض الثلاثة عنصر تحكم مقسم، ثم صف العتامة، ثم الألوان المحفوظة.',
       android: 'اللوحة نفسها في Sheet سفلية بمسافات Material، والعروض تبويبات.',
     },
   },
@@ -251,7 +251,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     },
     ar: {
       web: 'مربع بإطار، ويلغي variant plain المربع ليكون صفا في بطاقة مجمعة.',
-      ios: 'حقل رمادي مستدير ارتفاعه 44. والشكل plain صف في مجموعة، ويضيف clearable زر مسح دائريا أثناء الكتابة.',
+      ios: 'حقل رمادي مستدير ارتفاعه 44. والشكل plain صف في مجموعة داخلية، ويضيف clearable زر مسح دائريا أثناء الكتابة.',
       android: 'الحقل المعبأ في Material، والشكل plain حقل معبأ ضمن مجموعة صفوف.',
     },
   },
@@ -275,7 +275,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
     },
     ar: {
       web: 'مربع بإطار مع زري الإنقاص والزيادة، أو مع variant stepper تظهر القيمة قبل كبسولة رمادية.',
-      ios: 'الشكل stepper هو كبسولة المنصة الرمادية بالناقص والزائد، بمساحة ضغط 44 نقطة.',
+      ios: 'الشكل stepper هو كبسولة المنصة الرمادية بعلامتي الطرح والجمع، بمساحة ضغط 44 نقطة.',
       android: 'الشكل stepper كبسولة محددة الإطار.',
     },
   },
@@ -325,8 +325,8 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
       foldable: 'On the outer screen the sheet spans the width, 8 in from the edges, with close and confirm in its own small column. On the inner screen in landscape it is a centred card. When the browser reports two segments it keeps out of the fold.',
     },
     ar: {
-      web: 'لوحة من الأسفل فيها زر الإغلاق في الرأس، وSheetConfirm اختياري في نهاية السطر.',
-      ios: 'الشكل نفسه، مع زر إغلاق دائري في الأعلى، وSheetConfirm زر دائري بعلامة صح.',
+      web: 'لوحة من الأسفل فيها زر الإغلاق في الرأس، وSheetConfirm اختياري في جهة النهاية من الرأس.',
+      ios: 'الشكل نفسه، مع زر إغلاق دائري في الأعلى، وSheetConfirm زر دائري بعلامة اختيار.',
       android: 'لوحة سفلية زر التأكيد فيها زر نصي في الشريط العلوي.',
       foldable: 'على الشاشة الخارجية تمتد اللوحة بالعرض على بعد 8 من الحواف، والإغلاق والتأكيد في عمود صغير خاص بها. وعلى الشاشة الداخلية بالوضع الأفقي تكون بطاقة في الوسط. وحين يعلن المتصفح جزأين تبتعد عن خط الطي.',
     },
@@ -417,7 +417,7 @@ export const platformNotes: Record<string, { en: PlatformNote; ar: PlatformNote 
       foldable: 'placement passes down to the TabBar and the Navbar. auto gives the side column when the shell is at least 440 wide and at most 700 tall; the content then keeps a margin and scroll padding equal to the column.',
     },
     ar: {
-      web: 'إطار الصفحة بمعالمه، وتحت مقاس الجهاز اللوحي ينتقل التنقل إلى Drawer.',
+      web: 'إطار الصفحة بمعالمه، وتحت مقاس الجهاز اللوحي تنتقل روابط التنقل إلى Drawer.',
       ios: 'الإطار نفسه، ويكون على ios حاوية مقاس باسم ds-shell تقرؤها الأشرطة.',
       android: 'الإطار نفسه.',
       foldable: 'تمرر الخاصية placement إلى TabBar وNavbar. وتعطي auto العمود الجانبي حين يكون عرض الإطار 440 على الأقل وارتفاعه 700 على الأكثر، ويبقى للمحتوى حينها هامش ومسافة تمرير بعرض العمود.',

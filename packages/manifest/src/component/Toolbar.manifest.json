@@ -44,7 +44,8 @@
         "ToolbarLink",
         "ToolbarGroup",
         "ToolbarToggleGroup",
-        "ToolbarSeparator"
+        "ToolbarSeparator",
+        "ButtonGroup"
       ],
       "min": 1
     },
@@ -206,7 +207,7 @@
       "status": "ready",
       "behavior": "radix:Toolbar",
       "example": "Toolbar.demo.tsx",
-      "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add)."
+      "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add). Order S1 (proposed), bar groups: an attached ButtonGroup of ToolbarButtons, a direct child of the toolbar, stays in the roving focus and moves into the overflow menu as a group; on ios it takes the Navbar's bar group look (one glass capsule, clear buttons inside) through one selector both bars match, and a toolbar that holds bar groups draws no capsule of its own."
     },
     "angular": {
       "status": "planned",

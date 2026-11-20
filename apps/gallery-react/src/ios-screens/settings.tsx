@@ -59,7 +59,7 @@ const words = {
   interval: { en: 'Interval timer', ar: 'مؤقت الفترات' },
   intervalNote: {
     en: 'Split your time into focus sessions and short breaks, with a countdown before the first session.',
-    ar: 'قسم وقتك لجلسات تركيز واستراحات قصيرة، مع عد تنازلي قبل أول جلسة.',
+    ar: 'تقسيم وقتك لجلسات تركيز واستراحات قصيرة، مع عد تنازلي قبل أول جلسة.',
   },
   countdown: { en: 'Countdown', ar: 'العد التنازلي' },
   countdownFirst: { en: 'Countdown at the start', ar: 'عد تنازلي قبل البدء' },
@@ -89,13 +89,18 @@ const words = {
   phone: { en: 'Phone', ar: 'الجوال' },
 } satisfies Record<string, Text>;
 
+/** The Arabic unit after a number: the plural for 3 to 10, the singular otherwise. */
+function arUnit(n: number, few: string, other: string): string {
+  return n >= 3 && n <= 10 ? few : other;
+}
+
 /** Seconds and minutes in the pop-up buttons, Western digits in both languages. */
 function seconds(n: number, lang: Lang): string {
-  return lang === 'ar' ? `${countText(n, lang)} ثوان` : `${countText(n, lang)} s`;
+  return lang === 'ar' ? `${countText(n, lang)} ${arUnit(n, 'ثوان', 'ثانية')}` : `${countText(n, lang)} s`;
 }
 
 function minutes(n: number, lang: Lang): string {
-  return lang === 'ar' ? `${countText(n, lang)} دقيقة` : `${countText(n, lang)} min`;
+  return lang === 'ar' ? `${countText(n, lang)} ${arUnit(n, 'دقائق', 'دقيقة')}` : `${countText(n, lang)} min`;
 }
 
 function options(values: readonly number[], lang: Lang, unit: (n: number, lang: Lang) => string) {

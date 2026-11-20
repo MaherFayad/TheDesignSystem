@@ -3225,7 +3225,8 @@
           "Button",
           "IconButton",
           "ToggleButton",
-          "SplitButton"
+          "SplitButton",
+          "ToolbarButton"
         ],
         "min": 2,
         "max": 5
@@ -15295,7 +15296,7 @@
     },
     "styles": {
       "web": "Rows on the page; sections stack with the header above and the footer below each group.",
-      "ios": "Inset grouped cards with 52pt rows and a chevron on rows that go somewhere; the section header and footer sit outside the card in small muted text. flush is a full width list with hairlines from the text edge; an action row and a linked row with chevron false draw no chevron (the platform rules for flush, data-action and data-no-chevron are proposed in order C1).",
+      "ios": "Inset grouped cards with 52pt rows and a chevron on rows that go somewhere; the section header and footer sit outside the card in small muted text. flush is a full width list with hairlines from the text edge; an action row and a linked row with chevron false draw no chevron (the platform rules for flush, data-action and data-no-chevron are proposed in order C1); a danger row (tone danger, order S1) draws its title and its glyph in the danger text color in place of the tint.",
       "android": "56dp rows with a ripple from the touch point; the section header is a small label above its rows.",
       "studio": "Flat rows, a 5 percent overlay on hover, a 10 percent overlay for the active row; inset groups on surface 2.",
       "desk": "The same on the Desk tokens; inset groups read as a panel inside a window.",
@@ -23025,7 +23026,7 @@
     },
     "styles": {
       "web": "A capsule as tall as one row above the selection: text actions split by short hairlines, the forward control a round platter at the end.",
-      "ios": "The same capsule, entries 44 tall, the label at the body large size; the platform's edit menu.",
+      "ios": "The same capsule, entries 44 tall, the label at the body large size; the platform's edit menu. In the glass styles it takes the menus' dense frosted tint, and in light a close contact shadow and a faint dark hairline (order S1), so the small capsule reads as a panel over a white page.",
       "android": "The same capsule, entries 48 tall (the Material text selection toolbar has the same form).",
       "studio": "The menu surface of Studio (surface 3, the menu shadow) in a capsule; no recipe yet.",
       "desk": "The menu surface of Desk in a capsule; no recipe yet.",
@@ -26708,8 +26709,10 @@
         "note": "Motion: the row follows the pointer with no transition, then settles on the snappy spring (duration.spring-snappy) by a CSS transition; the full swipe arms with a quick fade of the other actions. Named under drag-drop, the catalog's drag and settle pattern; a swipe row pattern of its own is a request to the motion owner. Reduced motion: the settle is a jump."
       },
       "angular": {
-        "status": "planned",
-        "note": "New wave 2: the same DOM, swipe.ts for the logic, CDK Menu for the menu path."
+        "status": "ready",
+        "behavior": "hand built gesture on swipe.ts in @the-system/shared; the menu path is the Angular DropdownMenu",
+        "example": "swipe-actions.demo.ts",
+        "note": "div[dsSwipeActions] wraps content in the content part. In a List the row takes the options object as swipe (start, end, fullSwipe, menuLabel, pointer), where React takes a SwipeActions element with no children; the row draws the swipe root as its last child, part swipe. The gesture listeners are native and the move is an inline property, so a drag runs no change detection. Same DOM, attributes, one open row, swallowed click, Escape, Shift+F10 and the context menu key, inert groups and the WAAPI finished settle as React. The DropdownMenu, not the CDK Menu: the CDK Menu adds an overlay pane React does not have."
       },
       "native": {
         "status": "planned",
@@ -29456,7 +29459,7 @@
         "status": "ready",
         "behavior": "radix:Toast",
         "example": "Toast.demo.tsx",
-        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts. Order M9.8: start, meta and closable on toast() and on the Toaster; start and meta on the static Toast."
+        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts. Order M9.8: start, meta and closable on toast() and on the Toaster; start and meta on the static Toast. Order S1 (proposed): the Toaster renders one hidden span in place, data-toaster-anchor, reads the computed --ds-inset-safe-* tokens there after mount and on resize, and writes them on its portal Theme, so a Theme that overrides the safe area (a drawn device frame) moves the toasts too; Toast.css reads the inset tokens, not env() alone, and on ios the banner's top edge sits on the safe area line."
       },
       "angular": {
         "status": "ready",
@@ -30195,7 +30198,8 @@
           "ToolbarLink",
           "ToolbarGroup",
           "ToolbarToggleGroup",
-          "ToolbarSeparator"
+          "ToolbarSeparator",
+          "ButtonGroup"
         ],
         "min": 1
       },
@@ -30357,7 +30361,7 @@
         "status": "ready",
         "behavior": "radix:Toolbar",
         "example": "Toolbar.demo.tsx",
-        "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add)."
+        "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add). Order S1 (proposed), bar groups: an attached ButtonGroup of ToolbarButtons, a direct child of the toolbar, stays in the roving focus and moves into the overflow menu as a group; on ios it takes the Navbar's bar group look (one glass capsule, clear buttons inside) through one selector both bars match, and a toolbar that holds bar groups draws no capsule of its own."
       },
       "angular": {
         "status": "planned",

@@ -80,6 +80,13 @@ function readingTime(minutes: number, lang: Lang): string {
   return `قراءة ${n}\u00a0${minutes >= 3 && minutes <= 10 ? 'دقائق' : 'دقيقة'}`;
 }
 
+/** Articles counted in Arabic: one and two as words, 3 to 10 with the plural, 11 and up with the singular. */
+function articleCount(n: number): string {
+  if (n === 1) return 'مقال واحد';
+  if (n === 2) return 'مقالين';
+  return `${n} ${n >= 3 && n <= 10 ? 'مقالات' : 'مقال'}`;
+}
+
 const words = {
   en: {
     title: 'Saved',
@@ -139,31 +146,31 @@ const words = {
     favourites: 'المفضلة',
     read: 'تعليم كمقروء',
     markUnread: 'تعليم كغير مقروء',
-    favourite: 'تفضيل',
+    favourite: 'إضافة للمفضلة',
     unfavourite: 'إزالة من المفضلة',
     archive: 'أرشفة',
     del: 'حذف',
     menu: (title: string) => `خيارات ${title}`,
     listen: 'استماع',
     pause: 'إيقاف مؤقت',
-    more: (title: string) => `المزيد عن ${title}`,
+    more: (title: string) => `خيارات إضافية لـ${title}`,
     unreadDot: 'غير مقروء',
     byline: (a: Article, lang: Lang) => `${t(a.source, lang)}، ${readingTime(a.minutes, lang)}`,
-    archived: 'انحفظ المقال في الأرشيف',
-    undo: 'تراجع',
-    undoAlt: 'تقدر ترجعه من استرجاع المؤرشف في الشريط السفلي',
-    deleted: 'انحذف المقال',
-    favoured: 'انضاف للمفضلة',
-    unfavoured: 'انشال من المفضلة',
-    readDone: 'صار مقروء',
-    unreadDone: 'صار غير مقروء',
-    allRead: 'كل المقالات صارت مقروءة',
-    restored: (n: number) => `رجعت ${n} مقالات`,
+    archived: 'تمت أرشفة المقال',
+    undo: 'تراجع عن الأرشفة',
+    undoAlt: 'ترجيعه ممكن من «استرجاع المؤرشف» في الشريط السفلي',
+    deleted: 'تم حذف المقال',
+    favoured: 'تمت الإضافة للمفضلة',
+    unfavoured: 'تمت الإزالة من المفضلة',
+    readDone: 'تم تعليمه كمقروء',
+    unreadDone: 'تم تعليمه كغير مقروء',
+    allRead: 'تم تعليم كل المقالات كمقروءة',
+    restored: (n: number) => `تم استرجاع ${articleCount(n)}`,
     tools: 'أدوات القائمة',
     markAll: 'تعليم الكل كمقروء',
     restore: 'استرجاع المؤرشف',
     emptyTitle: 'ما فيه شي محفوظ هنا',
-    emptyBody: 'المقالات اللي تحفظها تطلع هنا. والمؤرشفة ترجع من استرجاع المؤرشف.',
+    emptyBody: 'المقالات المحفوظة تطلع هنا، والمؤرشفة ترجع من «استرجاع المؤرشف».',
     emptyFiltered: 'ما فيه مقالات تطابق هذي التصفية.',
     showAll: 'عرض الكل',
   },

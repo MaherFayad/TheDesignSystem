@@ -54,6 +54,7 @@ export * from './components/spinner/index';
 export * from './components/split-button/index';
 export * from './components/status-dot/index';
 export * from './components/stepper/index';
+export * from './components/swipe-actions/index';
 export * from './components/switch/index';
 export * from './components/tab-bar/index';
 export * from './components/tag-field/index';

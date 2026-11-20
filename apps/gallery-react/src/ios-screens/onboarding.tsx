@@ -47,25 +47,25 @@ const pages: readonly Page[] = [
     title: { en: 'Plan your week of training', ar: 'خطة تمارينك للأسبوع' },
     body: {
       en: 'Pick the days you train, and the plan sets the workouts around them.',
-      ar: 'اختر الأيام اللي تتمرن فيها، والخطة ترتب التمارين على حسبها.',
+      ar: 'الخطة ترتب تمارين الأسبوع على حسب الأيام المختارة للتمرين.',
     },
   },
   {
     id: 'track',
     art: 'tide',
-    title: { en: 'Log every set as you go', ar: 'سجل كل جولة أول بأول' },
+    title: { en: 'Log every set as you go', ar: 'تسجيل كل مجموعة أول بأول' },
     body: {
       en: 'Add the weight and the reps after each set. Your progress for the week fills in by itself.',
-      ar: 'سجل الوزن والعدات بعد كل جولة، وتقدمك في الأسبوع يتحدث لحاله.',
+      ar: 'الوزن والعدات تتسجل بعد كل مجموعة، وتقدمك في الأسبوع يتجدد لحاله.',
     },
   },
   {
     id: 'friends',
     art: 'coral',
-    title: { en: 'Train with a friend', ar: 'تمرن مع صديقك' },
+    title: { en: 'Train with a friend', ar: 'التمرين مع الأصدقاء' },
     body: {
       en: 'Share a workout with Faisal or Noura and see how the week goes for both of you.',
-      ar: 'شارك تمرينك مع فيصل أو نورة وشوفوا كيف ماشي أسبوعكم.',
+      ar: 'مشاركة التمرين مع فيصل أو نورة، وتشوفون سوا كيف ماشي أسبوعكم.',
     },
   },
 ];

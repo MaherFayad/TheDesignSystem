@@ -119,7 +119,7 @@ const words = {
   ar: {
     nav: 'حجز طاولة',
     back: 'المطاعم',
-    barActions: 'إجراءات المطعم',
+    barActions: 'خيارات المطعم',
     share: 'مشاركة المطعم',
     save: 'حفظ المطعم',
     forTwo: (price: string) => `${price} لشخصين`,

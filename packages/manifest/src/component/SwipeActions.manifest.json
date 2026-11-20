@@ -169,8 +169,10 @@
       "note": "Motion: the row follows the pointer with no transition, then settles on the snappy spring (duration.spring-snappy) by a CSS transition; the full swipe arms with a quick fade of the other actions. Named under drag-drop, the catalog's drag and settle pattern; a swipe row pattern of its own is a request to the motion owner. Reduced motion: the settle is a jump."
     },
     "angular": {
-      "status": "planned",
-      "note": "New wave 2: the same DOM, swipe.ts for the logic, CDK Menu for the menu path."
+      "status": "ready",
+      "behavior": "hand built gesture on swipe.ts in @the-system/shared; the menu path is the Angular DropdownMenu",
+      "example": "swipe-actions.demo.ts",
+      "note": "div[dsSwipeActions] wraps content in the content part. In a List the row takes the options object as swipe (start, end, fullSwipe, menuLabel, pointer), where React takes a SwipeActions element with no children; the row draws the swipe root as its last child, part swipe. The gesture listeners are native and the move is an inline property, so a drag runs no change detection. Same DOM, attributes, one open row, swallowed click, Escape, Shift+F10 and the context menu key, inert groups and the WAAPI finished settle as React. The DropdownMenu, not the CDK Menu: the CDK Menu adds an overlay pane React does not have."
     },
     "native": {
       "status": "planned",

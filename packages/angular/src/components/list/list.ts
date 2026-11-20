@@ -49,7 +49,10 @@
 //   (it makes the title a button). `linkProps` takes the anchor's attributes
 //   (target, rel, aria-current, tabIndex, download, hreflang); a router link
 //   on the title is `href` plus the app's own click handling.
-// - `swipe` (order M9.7) waits for the Angular SwipeActions.
+// - `swipe` (order M9.7) takes the options of a swipe (start, end,
+//   fullSwipe, menuLabel, pointer), where React takes a SwipeActions
+//   element with no children. The row draws the swipe root as its last
+//   child, part swipe, and its parts move by --_list-shift.
 //
 // Motion as React: list-stagger on the first paint of the rows (the stagger
 // primitive, never again), collection-flip when rows are added, removed or
@@ -82,6 +85,7 @@ import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
 import { injectFlipGroup } from '../../internal/motion-selection';
 import { trackPressed } from '../../internal/pressed';
+import { DsSwipeActionsPart, SwipeController, type SwipeActionsOptions } from '../swipe-actions/swipe-actions';
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
 /** The tone of one row: danger for a destructive row. */
@@ -327,7 +331,7 @@ export class DsListSection extends DsListSectionToken {
 @Component({
   selector: 'li[dsListItem]',
   exportAs: 'dsListItem',
-  imports: [DsIcon, NgTemplateOutlet],
+  imports: [DsIcon, NgTemplateOutlet, DsSwipeActionsPart],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: DsListItemToken, useExisting: forwardRef(() => DsListItem) }],
   host: {
@@ -395,6 +399,9 @@ export class DsListSection extends DsListSectionToken {
     @if (!controlRow() && footer(); as f) {
       <div data-part="footer"><ng-container [ngTemplateOutlet]="f" /></div>
     }
+    @if (!swiper.off()) {
+      <div [dsSwipeActionsPart]="swiper"></div>
+    }
   `,
 })
 export class DsListItem extends DsListItemToken {
@@ -430,12 +437,20 @@ export class DsListItem extends DsListItemToken {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** A caller's own aria-current on the row. */
   readonly ariaCurrent = input<string | undefined>(undefined, { alias: 'aria-current' });
+  /**
+   * Swipe actions for the row: the options of a SwipeActions (start, end,
+   * fullSwipe, menuLabel, pointer). The row's own parts are what moves. Not
+   * on a disabled row.
+   */
+  readonly swipe = input<SwipeActionsOptions | undefined>(undefined);
 
   private readonly section = inject(DsListSection, { optional: true });
   private readonly list = inject(DsList, { optional: true });
   private readonly host = consumeHostAttributes([
-    'dsListItem', 'title', 'description', 'start', 'end', 'actions', 'href', 'linkProps', 'onSelect', 'chevron', 'titleLines', 'footer', 'control', 'active', 'tone', 'disabled',
+    'dsListItem', 'title', 'description', 'start', 'end', 'actions', 'href', 'linkProps', 'onSelect', 'chevron', 'titleLines', 'footer', 'control', 'active', 'tone', 'disabled', 'swipe',
   ]);
+  /** The swipe of the row, off while it has no swipe or is disabled. */
+  protected readonly swiper = new SwipeController(() => (this.disabled() ? null : (this.swipe() ?? null)), '--_list-shift');
   protected readonly asTemplate = asTemplate;
 
   protected readonly controlRow = computed(() => this.control() !== undefined);
@@ -456,6 +471,7 @@ export class DsListItem extends DsListItemToken {
     destroy.onDestroy(() => host.removeEventListener('pointerdown', down));
     // Order M4: a linked or action row carries data-pressed from pointerdown to the release.
     destroy.onDestroy(trackPressed(host, () => !(this.linked() || this.action()) || this.disabled()));
+    destroy.onDestroy(this.swiper.attach(host));
   }
 
   protected onLinkClick(event: MouseEvent): void {

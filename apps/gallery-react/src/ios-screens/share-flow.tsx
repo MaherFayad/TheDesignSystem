@@ -65,6 +65,13 @@ export const meta: ScreenMeta = {
 /** The day the workout was done. */
 const DONE_ON = '2026-11-19';
 
+/** Sets counted in Arabic: one and two as words, 3 to 10 with the plural, 11 and up with the singular. */
+function setCount(n: number, lang: Lang): string {
+  if (n === 1) return 'مجموعة واحدة';
+  if (n === 2) return 'مجموعتين';
+  return `${countText(n, lang)} ${n >= 3 && n <= 10 ? 'مجموعات' : 'مجموعة'}`;
+}
+
 const words = {
   en: {
     nav: 'Workout',
@@ -99,24 +106,24 @@ const words = {
     duration: 'المدة',
     energy: 'الطاقة',
     volume: 'الحجم',
-    exercises: 'التمارين',
+    exercises: 'الحركات',
     minutes: 'دقيقة',
     kcal: 'سعرة',
     kg: 'كجم',
-    sets: (sets: number, reps: number, lang: Lang) => `${countText(sets, lang)} مجموعات × ${countText(reps, lang)}`,
+    sets: (sets: number, reps: number, lang: Lang) => `${setCount(sets, lang)} × ${countText(reps, lang)}`,
     load: (kg: number, lang: Lang) => (kg === 0 ? 'وزن الجسم' : `${countText(kg, lang)} كجم`),
     caption: 'تمرين قوة، الصبح',
     text: (minutes: number, energy: number, lang: Lang) => `${countText(minutes, lang)} دقيقة، ${countText(energy, lang)} سعرة.`,
     message: 'رسالة',
     club: 'نادي التدريب',
-    email: 'إيميل',
+    email: 'البريد',
     feed: 'صفحة النشاط',
     saveImage: 'حفظ الصورة',
     addPlan: 'إضافة للخطة',
-    sentTo: (name: string) => `انرسل التمرين لـ${name}`,
-    sharedTo: (label: string) => `انشارك التمرين عبر ${label}`,
-    imageSaved: 'انحفظت الصورة',
-    planned: 'انضاف للأسبوع الجاي',
+    sentTo: (name: string) => `تم إرسال التمرين لـ${name}`,
+    sharedTo: (label: string) => `تمت مشاركة التمرين عبر ${label}`,
+    imageSaved: 'تم حفظ الصورة',
+    planned: 'تمت الإضافة للأسبوع الجاي',
   },
 } as const;
 

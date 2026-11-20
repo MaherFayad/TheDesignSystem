@@ -88,7 +88,7 @@ export function durationText(seconds: number): string {
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
 }
 
-/** A Saudi mobile number in the +966 form: "+966 50 123 4567". */
+/** A Saudi mobile number in the +966 form: "+966 50 000 0101". */
 export function phoneText(national: string): string {
   return `+966 ${formatNational(national, 'SA')}`;
 }
@@ -165,14 +165,14 @@ export interface Person {
 }
 
 export const people: readonly Person[] = [
-  { id: 'sara', name: { en: 'Sara Al Harbi', ar: 'سارة الحربي' }, initials: { en: 'SH', ar: 'سح' }, phone: '501234567', email: 'sara@example.com', city: 'riyadh', art: 'dawn' },
-  { id: 'faisal', name: { en: 'Faisal Al Qahtani', ar: 'فيصل القحطاني' }, initials: { en: 'FQ', ar: 'فق' }, phone: '551239876', email: 'faisal@example.com', city: 'jeddah', art: 'tide' },
-  { id: 'noura', name: { en: 'Noura Al Dosari', ar: 'نورة الدوسري' }, initials: { en: 'ND', ar: 'ند' }, phone: '532224410', email: 'noura@example.com', city: 'dammam', art: 'coral' },
-  { id: 'khalid', name: { en: 'Khalid Al Otaibi', ar: 'خالد العتيبي' }, initials: { en: 'KO', ar: 'خع' }, phone: '561870032', email: 'khalid@example.com', city: 'riyadh', art: 'moss' },
-  { id: 'reem', name: { en: 'Reem Al Shehri', ar: 'ريم الشهري' }, initials: { en: 'RS', ar: 'رش' }, phone: '544019283', email: 'reem@example.com', city: 'abha', art: 'dusk' },
-  { id: 'abdullah', name: { en: 'Abdullah Al Mutairi', ar: 'عبدالله المطيري' }, initials: { en: 'AM', ar: 'عم' }, phone: '509917345', email: 'abdullah@example.com', city: 'riyadh', art: 'lake' },
-  { id: 'lama', name: { en: 'Lama Al Zahrani', ar: 'لمى الزهراني' }, initials: { en: 'LZ', ar: 'لز' }, phone: '597301122', email: 'lama@example.com', city: 'jeddah', art: 'mint' },
-  { id: 'turki', name: { en: 'Turki Al Ghamdi', ar: 'تركي الغامدي' }, initials: { en: 'TG', ar: 'تغ' }, phone: '583364408', email: 'turki@example.com', city: 'alula', art: 'sand' },
+  { id: 'sara', name: { en: 'Sara Al Harbi', ar: 'سارة الحربي' }, initials: { en: 'SH', ar: 'سح' }, phone: '500000101', email: 'sara@example.com', city: 'riyadh', art: 'dawn' },
+  { id: 'faisal', name: { en: 'Faisal Al Qahtani', ar: 'فيصل القحطاني' }, initials: { en: 'FQ', ar: 'فق' }, phone: '500000102', email: 'faisal@example.com', city: 'jeddah', art: 'tide' },
+  { id: 'noura', name: { en: 'Noura Al Dosari', ar: 'نورة الدوسري' }, initials: { en: 'ND', ar: 'ند' }, phone: '500000103', email: 'noura@example.com', city: 'dammam', art: 'coral' },
+  { id: 'khalid', name: { en: 'Khalid Al Otaibi', ar: 'خالد العتيبي' }, initials: { en: 'KO', ar: 'خع' }, phone: '500000104', email: 'khalid@example.com', city: 'riyadh', art: 'moss' },
+  { id: 'reem', name: { en: 'Reem Al Shehri', ar: 'ريم الشهري' }, initials: { en: 'RS', ar: 'رش' }, phone: '500000105', email: 'reem@example.com', city: 'abha', art: 'dusk' },
+  { id: 'abdullah', name: { en: 'Abdullah Al Mutairi', ar: 'عبدالله المطيري' }, initials: { en: 'AM', ar: 'عم' }, phone: '500000106', email: 'abdullah@example.com', city: 'riyadh', art: 'lake' },
+  { id: 'lama', name: { en: 'Lama Al Zahrani', ar: 'لمى الزهراني' }, initials: { en: 'LZ', ar: 'لز' }, phone: '500000107', email: 'lama@example.com', city: 'jeddah', art: 'mint' },
+  { id: 'turki', name: { en: 'Turki Al Ghamdi', ar: 'تركي الغامدي' }, initials: { en: 'TG', ar: 'تغ' }, phone: '500000108', email: 'turki@example.com', city: 'alula', art: 'sand' },
 ];
 
 /* ------------------------------------------------------------ places */
@@ -317,11 +317,11 @@ export interface Article {
 
 /** Made up articles from a made up magazine. */
 export const articles: readonly Article[] = [
-  { id: 'mud-walls', title: { en: 'Why mud walls keep a house cool', ar: 'ليش الجدران الطينية تبرد البيت' }, source: { en: 'Rawdah Review', ar: 'مجلة الروضة' }, minutes: 8, saved: '2026-11-16', art: 'sand' },
+  { id: 'mud-walls', title: { en: 'Why mud walls keep a house cool', ar: 'كيف تحافظ الجدران الطينية على برودة البيت' }, source: { en: 'Rawdah Review', ar: 'مجلة الروضة' }, minutes: 8, saved: '2026-11-16', art: 'sand' },
   { id: 'night-sky', title: { en: 'A guide to the winter sky over AlUla', ar: 'دليل سماء الشتاء فوق العلا' }, source: { en: 'Rawdah Review', ar: 'مجلة الروضة' }, minutes: 12, saved: '2026-11-15', art: 'night' },
   { id: 'coffee-roast', title: { en: 'Light roast, dark roast and the cup in between', ar: 'التحميص الفاتح والغامق وما بينهما' }, source: { en: 'Cup Notes', ar: 'ملاحظات الفنجان' }, minutes: 6, saved: '2026-11-14', art: 'ember' },
   { id: 'red-sea-reefs', title: { en: 'The reefs of the Red Sea, mapped by divers', ar: 'شعاب البحر الأحمر بخرائط الغواصين' }, source: { en: 'Coast Weekly', ar: 'أسبوعية الساحل' }, minutes: 10, saved: '2026-11-12', art: 'tide' },
-  { id: 'sadu-loom', title: { en: 'Learning the Sadu loom in four weekends', ar: 'تعلم نول السدو في أربع عطل' }, source: { en: 'Rawdah Review', ar: 'مجلة الروضة' }, minutes: 9, saved: '2026-11-10', art: 'coral' },
+  { id: 'sadu-loom', title: { en: 'Learning the Sadu loom in four weekends', ar: 'تعلم نول السدو في 4 عطل نهاية أسبوع' }, source: { en: 'Rawdah Review', ar: 'مجلة الروضة' }, minutes: 9, saved: '2026-11-10', art: 'coral' },
   { id: 'cycle-lanes', title: { en: 'How the new cycle lanes changed a commute', ar: 'كيف غيرت مسارات الدراجات طريق الدوام' }, source: { en: 'City Pages', ar: 'صفحات المدينة' }, minutes: 5, saved: '2026-11-08', art: 'mint' },
 ];
 
@@ -378,7 +378,7 @@ export interface Workout {
 export const workouts: readonly Workout[] = [
   {
     id: 'upper',
-    title: { en: 'Upper body, day A', ar: 'الجزء العلوي، اليوم الأول' },
+    title: { en: 'Upper body, day A', ar: 'الجزء العلوي، اليوم A' },
     minutes: 52,
     energy: 410,
     exercises: [
@@ -390,7 +390,7 @@ export const workouts: readonly Workout[] = [
   },
   {
     id: 'lower',
-    title: { en: 'Lower body, day B', ar: 'الجزء السفلي، اليوم الثاني' },
+    title: { en: 'Lower body, day B', ar: 'الجزء السفلي، اليوم B' },
     minutes: 47,
     energy: 380,
     exercises: [

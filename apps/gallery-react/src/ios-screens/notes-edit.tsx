@@ -83,7 +83,7 @@ const NOTE = notes.find((n) => n.id === 'trip') ?? notes[0]!;
 /** A second paragraph of our own, so the note runs past one block. */
 const trail = {
   en: 'The juniper trail starts behind the cabin and climbs for about 4 km. Take water, and start back before 4 PM so we are down before dark.',
-  ar: 'درب العرعر يبدأ ورا الكوخ ويطلع تقريبا 4 كم. ناخذ موية ونرجع قبل الساعة 4 العصر عشان ننزل قبل الظلام.',
+  ar: 'درب العرعر يبدأ ورا الكوخ ويطلع تقريبا 4 كم. ناخذ موية ونرجع قبل الساعة 4:00 م عشان ننزل قبل الظلام.',
 };
 
 /** The pen's first colour: a blue of the system's own palette (row 4, the second hue), 3 to 1 or more on the light and the dark sketch. */
@@ -126,9 +126,9 @@ const words = {
   ar: {
     nav: 'الملاحظة',
     back: 'الملاحظات',
-    barActions: 'إجراءات الملاحظة',
+    barActions: 'خيارات الملاحظة',
     share: 'مشاركة الملاحظة',
-    more: 'إجراءات إضافية',
+    more: 'خيارات إضافية',
     rename: 'إعادة تسمية',
     pin: 'تثبيت الملاحظة',
     unpin: 'إلغاء التثبيت',
@@ -136,7 +136,7 @@ const words = {
     edited: (d: string) => `آخر تعديل ${d}`,
     text: 'نص الملاحظة',
     sketch: 'رسمة درب العرعر',
-    menu: 'إجراءات التحرير',
+    menu: 'خيارات التحرير',
     tools: 'أدوات الملاحظة',
     checklist: 'إضافة قائمة مهام',
     table: 'إضافة جدول',
@@ -153,8 +153,8 @@ const words = {
     cancel: 'إلغاء',
     pinned: 'تم تثبيت الملاحظة',
     unpinned: 'تم إلغاء التثبيت',
-    deleted: 'انتقلت الملاحظة للمحذوفة مؤخرا',
-    created: 'بدأت ملاحظة جديدة',
+    deleted: 'تم نقل الملاحظة إلى «المحذوفة مؤخرا»',
+    created: 'تم إنشاء ملاحظة جديدة',
   },
 } as const;
 

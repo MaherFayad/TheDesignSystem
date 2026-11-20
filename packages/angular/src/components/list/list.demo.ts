@@ -1,8 +1,7 @@
 // The List demo: the same cases, ids and copy as
-// packages/react/src/components/List/List.demo.tsx. Differences, until the
-// Angular ports exist: the song and article covers are a decorative icon
-// (no Avatar), and the swipe rows of the variants case are left out (no
-// SwipeActions).
+// packages/react/src/components/List/List.demo.tsx. One difference, until
+// the Angular Avatar exists: the song and article covers are a decorative
+// icon.
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DEMO } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
@@ -10,6 +9,7 @@ import { DsIcon } from '@the-system/icons/angular';
 import { DsButton } from '../button/button';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsSlider } from '../slider/slider';
+import type { SwipeActionsOptions } from '../swipe-actions/swipe-actions';
 import { DsList, DsListItem, DsListSection, type ListSize, type ListVariant } from './list';
 
 const variants: ListVariant[] = ['plain', 'divided', 'inset', 'flush'];
@@ -96,6 +96,13 @@ const folders = ['Inbox', 'Drafts', 'Sent', 'Archive', 'Trash', 'Spam', 'Starred
               <li dsListItem start="bell-off" [end]="bell" [control]="volumeTplEn"></li>
             </ng-container>
           </li>
+        </ul>
+      </div>
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
+        <ul dsList variant="inset" aria-label="Inbox with swipe actions">
+          @for (m of mail; track m.from; let i = $index) {
+            <li dsListItem [href]="'#swipe-' + i" [start]="m.icon" [title]="m.from" [description]="m.subject" [end]="m.time" [swipe]="swipes[i]"></li>
+          }
         </ul>
       </div>
       <div dsTheme [lang]="'ar'">
@@ -284,6 +291,14 @@ export default class ListDemo {
   protected readonly volumeAr = signal<number | undefined>(60);
   private readonly players = new Map<string, () => void>();
   protected readonly noop = () => undefined;
+  protected readonly swipes: SwipeActionsOptions[] = mail.map((m) => ({
+    menuLabel: `Actions for ${m.from}`,
+    start: [{ label: 'Mark read', icon: 'mail', tone: 'accent', onSelect: () => undefined }],
+    end: [
+      { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined },
+      { label: 'Mute', icon: 'bell-off', onSelect: () => undefined },
+    ],
+  }));
 
   /** One handler per song, kept, so the row's onSelect input does not change on every pass. */
   protected play(id: string): () => void {
