@@ -90,6 +90,7 @@ export function navGroups(): NavGroup[] {
       label: { en: 'Platforms', ar: 'المنصات' },
       links: [
         { label: { en: 'Platforms', ar: 'المنصات' }, path: '/platforms/' },
+        { label: { en: 'iOS', ar: 'iOS' }, path: '/platforms/ios/', latin: true },
         { label: { en: 'Interactions', ar: 'التفاعلات' }, path: '/interactions/' },
       ],
     },

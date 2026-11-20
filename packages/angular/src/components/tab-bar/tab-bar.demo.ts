@@ -1,12 +1,12 @@
 // The TabBar demo: the same cases, ids and copy as
 // packages/react/src/components/TabBar/TabBar.demo.tsx. The mini player is a
-// named group of buttons: the Angular package has no Toolbar yet.
+// named group of icon buttons (the song opens the player): the Angular
+// package has no Toolbar yet, so the accessory's content differs from React's.
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { IconName } from '@the-system/icons';
 import { DEMO } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
-import { DsButton } from '../button/button';
 import { DsButtonGroup } from '../button-group/button-group';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsSearchField } from '../search-field/search-field';
@@ -83,7 +83,7 @@ const sizes: TabBarSize[] = ['md', 'lg'];
 
 @Component({
   selector: 'div[data-demo=page]',
-  imports: [DEMO, DsTheme, DsTabBar, DsTabBarItem, DsTabBarSearch, DsSearchField, DsButtonGroup, DsButton, DsIconButton, NgTemplateOutlet],
+  imports: [DEMO, DsTheme, DsTabBar, DsTabBarItem, DsTabBarSearch, DsSearchField, DsButtonGroup, DsIconButton, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #appBar let-b>
@@ -115,14 +115,14 @@ const sizes: TabBarSize[] = ['md', 'lg'];
     <ng-template #fieldAr let-label><div dsSearchField shape="pill" placeholder="أغاني وفنانين وقوائم" [aria-label]="label"></div></ng-template>
     <ng-template #playerEn>
       <div dsButtonGroup role="group" aria-label="Now playing" emphasis="ghost">
-        <button dsButton start="music">Rain on the dunes</button>
+        <button dsIconButton icon="music" label="Rain on the dunes"></button>
         <button dsIconButton icon="pause" label="Pause"></button>
         <button dsIconButton icon="next-track" label="Next song"></button>
       </div>
     </ng-template>
     <ng-template #playerAr>
       <div dsButtonGroup role="group" aria-label="قيد التشغيل" emphasis="ghost">
-        <button dsButton start="music">مطر على الكثبان</button>
+        <button dsIconButton icon="music" label="مطر على الكثبان"></button>
         <button dsIconButton icon="pause" label="إيقاف مؤقت"></button>
         <button dsIconButton icon="next-track" label="الأغنية التالية"></button>
       </div>

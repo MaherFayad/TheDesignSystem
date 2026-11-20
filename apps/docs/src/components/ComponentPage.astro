@@ -13,6 +13,7 @@ import Menu from './Menu.astro';
 import { iconMarkup } from '../lib/chrome.ts';
 import { platformItems, platformValues } from '../lib/platform.ts';
 import { inlineHtml } from '../lib/text.ts';
+import { platformNoteKeys, platformNotes, platformNoteText } from '../data/platform-notes.ts';
 import { componentPath, href, manifests, styles } from '../lib/site.ts';
 import { criteriaFor, criterionUrl } from '../lib/wcag.ts';
 import CodeBlock from './CodeBlock.astro';
@@ -62,6 +63,8 @@ const contentLangs = Object.entries(m.content ?? {});
 const styleNotes = Object.entries(m.styles ?? {});
 const styleName = new Map(styles.map((s) => [s.id, s.name]));
 const acceptsText = (a: string | string[] | undefined) => (Array.isArray(a) ? a.join(', ') : (a ?? ''));
+const notes = platformNotes[m.name]?.[lang];
+const noteText = platformNoteText[lang];
 
 const toc: TocItem[] = [];
 if (live && hero) toc.push({ depth: 2, slug: 'preview', text: t.hero });
@@ -74,6 +77,7 @@ toc.push({ depth: 2, slug: 'use-instead', text: t.insteadUse });
 if (anatomy.length > 0) toc.push({ depth: 2, slug: 'anatomy', text: t.anatomy });
 if (props.length > 0) toc.push({ depth: 2, slug: 'props', text: t.props });
 if (m.states?.length) toc.push({ depth: 2, slug: 'states', text: t.states });
+if (notes) toc.push({ depth: 2, slug: 'platform-notes', text: noteText.heading });
 if (m.a11y) toc.push({ depth: 2, slug: 'accessibility', text: t.a11y });
 if (contentLangs.length > 0) toc.push({ depth: 2, slug: 'content', text: t.content });
 if (m.tokens?.length) toc.push({ depth: 2, slug: 'tokens', text: t.tokens });
@@ -277,6 +281,18 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
         <h2 id="states">{t.states}</h2>
         <p>{t.statesLead}</p>
         <ul class="chips">{m.states.map((s) => <li><code>{s}</code></li>)}</ul>
+      </section>
+    )}
+
+    {notes && (
+      <section class="doc-section" aria-labelledby="platform-notes">
+        <h2 id="platform-notes">{noteText.heading}</h2>
+        <dl class="facts">
+          {platformNoteKeys.filter((k) => notes[k]).map((k) => (
+            <><dt lang={ar && (k === 'ios' || k === 'android') ? 'en' : undefined}>{noteText[k]}</dt><dd set:html={inlineHtml(notes[k] ?? '')} /></>
+          ))}
+        </dl>
+        <p><a href={href(lang, '/platforms/ios/')}>{noteText.more}</a></p>
       </section>
     )}
 

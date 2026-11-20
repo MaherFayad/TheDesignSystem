@@ -145,9 +145,10 @@
   /* ------------------------------------------------------------ toaster */
 
   [data-ds='toaster'] {
-    --_toaster-inset-block-end: calc(var(--ds-toast-inset) + env(safe-area-inset-bottom, 0px));
-    --_toaster-inset-block-start: calc(var(--ds-toast-inset) + env(safe-area-inset-top, 0px));
-    --_toaster-inset-inline: calc(var(--ds-toast-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+    /* The safe area from the inset tokens (env() by default), so a Theme that overrides them (a drawn device frame) moves the toasts too (order S1). */
+    --_toaster-inset-block-end: calc(var(--ds-toast-inset) + var(--ds-inset-safe-bottom));
+    --_toaster-inset-block-start: calc(var(--ds-toast-inset) + var(--ds-inset-safe-top));
+    --_toaster-inset-inline: calc(var(--ds-toast-inset) + max(var(--ds-inset-safe-start), var(--ds-inset-safe-end)));
     --_toaster-gap: var(--ds-space-s);
     --_toaster-dir: -1;
     --_toaster-align: end;

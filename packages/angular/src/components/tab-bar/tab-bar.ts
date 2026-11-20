@@ -223,7 +223,6 @@ export class DsTabBarItem {
     '[attr.data-size]': 'size()',
     '[attr.data-placement]': 'placementValue()',
     '[attr.data-compact]': 'compact() ? "" : null',
-    '(keydown)': 'onKeyDown($event)',
   },
   template: `
     @if (accessory() && !compact()) {
@@ -302,6 +301,12 @@ export class DsTabBar {
 
   constructor() {
     const destroy = inject(DestroyRef);
+    // The bar's keys listen from after the first render, so a caller's own
+    // (keydown) on the nav, added when the element is made, runs first and
+    // can handle a key, as React's onKeyDown does before the bar's move.
+    const onKey = (event: KeyboardEvent) => this.onKeyDown(event);
+    afterNextRender(() => this.host.addEventListener('keydown', onKey));
+    destroy.onDestroy(() => this.host.removeEventListener('keydown', onKey));
     let releaseLink: (() => void) | null = null;
     // The search link's press point and press mark, as an item's.
     effect(() => {
@@ -322,12 +327,12 @@ export class DsTabBar {
     let was: boolean | undefined;
     effect(() => {
       const expanded = this.search()?.expanded() ?? false;
-      const label = this.search()?.label() ?? '';
       const previous = was;
       was = expanded;
       afterNextRender(
         () => {
-          if (expanded) this.nameField(label);
+          // Inputs of the search item are set by now; the effect may run before a binding of a projected item is.
+          if (expanded) this.nameField(untracked(() => this.search()?.label() ?? ''));
           if (previous === undefined || previous === expanded || !untracked(() => this.here)) return;
           const doc = this.host.ownerDocument;
           const now = doc.activeElement;
@@ -369,7 +374,7 @@ export class DsTabBar {
   }
 
   /** Arrow keys along the bar's axis, Home and End; every item stays a tab stop. */
-  protected onKeyDown(event: KeyboardEvent): void {
+  private onKeyDown(event: KeyboardEvent): void {
     if (event.defaultPrevented) return;
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     const bar = this.host;

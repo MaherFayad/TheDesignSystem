@@ -12848,7 +12848,9 @@
           "radio",
           "library",
           "share",
-          "eyedropper"
+          "eyedropper",
+          "undo",
+          "redo"
         ],
         "required": true,
         "description": "A system icon name. Directional names say forward and back."
@@ -15133,6 +15135,14 @@
         "default": false,
         "description": "The current row. Sets data-active, the active fill, and aria-current (true, or the value in linkProps) on the link. The description and end step up to the default text color on the active fill."
       },
+      "ListItem.tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "danger (order S1, proposed): a destructive row, such as Delete routine. Stamps data-tone on the row; the title and a start icon take the danger text color, which keeps 4.5:1 on the list surface. The title still names the action. Neutral stamps nothing."
+      },
       "ListItem.disabled": {
         "type": "boolean",
         "default": false,
@@ -15244,6 +15254,7 @@
       "color.bg.overlay-10",
       "color.text.default",
       "color.text.muted",
+      "color.state.danger.text",
       "color.border.hairline",
       "border.width.default",
       "border.width.strong",
@@ -16753,7 +16764,9 @@
       "horizontal",
       "data-active",
       "data-sticky",
-      "data-placement=bottom|side"
+      "data-placement=bottom|side",
+      "data-collapsed",
+      "data-inline-title"
     ],
     "a11y": {
       "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; on phones the menu button opens a modal Drawer titled Site menu that holds a Sidebar nav named Site menu",
@@ -27235,8 +27248,10 @@
         "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves. Order M9.9 (proposed): TabBarSearch, the search part; while it is its field the field fades in (pattern fade on duration.base, CSS keyframes), none under reduced motion."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built"
+        "status": "ready",
+        "behavior": "hand built nav of links",
+        "example": "tab-bar.demo.ts",
+        "note": "nav[dsTabBar] and a[dsTabBarItem] are the elements themselves; a router link is the same anchor with the router directive, so asChild has no form. accessory is a TemplateRef; when compact changes the accessory renders again in its new place (React moves the same element), so state inside it starts over. The search item changes element (a link, then a div with the field), so it is ng-container[dsTabBarSearch], drawn by the bar after the projected items: inputs label, icon, active, href, field (a TemplateRef whose $implicit is the label) and the select output (React onSelect); no router directive on it. placement (order DU7) is inherited through DS_BAR_PLACEMENT. The bar's arrow keys listen from after the first render, so a caller's own keydown runs first. Same DOM, press mark and press point, keys and focus follow as React."
       },
       "native": {
         "status": "planned",

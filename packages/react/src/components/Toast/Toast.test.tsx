@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Dialog } from 'radix-ui';
+import type { CSSProperties } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
@@ -769,5 +770,38 @@ describe('the notification banner (order M9.8)', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('the safe area in the portal (order S1)', () => {
+  it('renders one hidden anchor in place and copies the inset tokens it reads there onto the portal Theme', async () => {
+    const store = createToastStore();
+    const { container } = render(
+      <Theme platform="ios" css={{ '--ds-inset-safe-top': '47px', '--ds-inset-safe-bottom': '34px' } as CSSProperties}>
+        <Toaster store={store} position="auto" />
+      </Theme>,
+    );
+    const anchor = container.querySelector<HTMLElement>('[data-toaster-anchor]');
+    expect(anchor).not.toBeNull();
+    expect(anchor!.hidden).toBe(true);
+    const layer = await waitFor(() => {
+      const el = document.body.querySelector<HTMLElement>('[data-toaster-layer]');
+      expect(el?.style.getPropertyValue('--ds-inset-safe-top')).toBe('47px');
+      return el!;
+    });
+    expect(layer.style.getPropertyValue('--ds-inset-safe-bottom')).toBe('34px');
+  });
+
+  it('writes no inline style on the portal Theme where the mount point has no inset tokens', async () => {
+    const store = createToastStore();
+    render(<Toaster store={store} />);
+    const layer = await waitFor(() => document.body.querySelector<HTMLElement>('[data-toaster-layer]')!);
+    expect(layer.getAttribute('style')).toBeNull();
+  });
+
+  it('places the toaster from the inset tokens, not from env() alone', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Toast.css'), 'utf8');
+    expect(css).toMatch(/--_toaster-inset-block-start: calc\(var\(--ds-toast-inset\) \+ var\(--ds-inset-safe-top\)\);/);
+    expect(css).not.toMatch(/--_toaster-inset[^;]*env\(/);
   });
 });

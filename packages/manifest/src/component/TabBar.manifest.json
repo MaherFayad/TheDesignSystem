@@ -223,8 +223,10 @@
       "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves. Order M9.9 (proposed): TabBarSearch, the search part; while it is its field the field fades in (pattern fade on duration.base, CSS keyframes), none under reduced motion."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built"
+      "status": "ready",
+      "behavior": "hand built nav of links",
+      "example": "tab-bar.demo.ts",
+      "note": "nav[dsTabBar] and a[dsTabBarItem] are the elements themselves; a router link is the same anchor with the router directive, so asChild has no form. accessory is a TemplateRef; when compact changes the accessory renders again in its new place (React moves the same element), so state inside it starts over. The search item changes element (a link, then a div with the field), so it is ng-container[dsTabBarSearch], drawn by the bar after the projected items: inputs label, icon, active, href, field (a TemplateRef whose $implicit is the label) and the select output (React onSelect); no router directive on it. placement (order DU7) is inherited through DS_BAR_PLACEMENT. The bar's arrow keys listen from after the first render, so a caller's own keydown runs first. Same DOM, press mark and press point, keys and focus follow as React."
     },
     "native": {
       "status": "planned",

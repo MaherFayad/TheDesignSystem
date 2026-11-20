@@ -7,6 +7,7 @@
 // so on Arabic pages it stays English inside a left to right isolate.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { platformNoteKeys, platformNotes, platformNoteText } from '../src/data/platform-notes.ts';
 import { frameworkIds, repoRoot, sectionOf, slugOf, type FrameworkId, type Manifest, type Prop } from './manifests.ts';
 
 export type Lang = 'en' | 'ar';
@@ -502,6 +503,16 @@ export function renderManifest(m: Manifest, lang: Lang, mode: Mode, preview: Pre
   if (m.states && m.states.length > 0) {
     s.push(`### ${t.states}`);
     s.push(m.states.map((x) => code(x)).join(', '));
+  }
+
+  // The docs' own note per platform (src/data/platform-notes.ts), written in both languages.
+  const notes = platformNotes[m.name]?.[lang];
+  if (notes) {
+    const nt = platformNoteText[lang];
+    s.push(`## ${nt.heading}`);
+    s.push(platformNoteKeys.filter((k) => notes[k]).map((k) => `- ${nt[k]}: ${notes[k]}`).join('\n'));
+    const prefix = lang === 'ar' ? '/ar' : '';
+    s.push(`[${nt.more}](${prefix}/platforms/ios${mode === 'site' ? '/' : '.md'})`);
   }
 
   if (m.content && Object.keys(m.content).length > 0) {

@@ -25,6 +25,7 @@ const guides: { path: string; title: string; about: string }[] = [
   { path: 'foundations/axes.md', title: 'Runtime axes', about: 'Style, scheme, density, contrast, platform, glass, direction and language.' },
   { path: 'styles.md', title: 'Styles', about: 'The style packs and what a style may change.' },
   { path: 'platforms.md', title: 'Platforms', about: 'Web, iOS and Android, the platform axis and the package per framework.' },
+  { path: 'platforms/ios.md', title: 'iOS', about: 'What the platform calls a thing and what to use here, the glass material, sharing, and the foldable iPhone.' },
   { path: 'interactions.md', title: 'Interactions', about: 'The feedback each component plays, its trigger, pattern and reduced form.' },
   { path: 'frameworks/coverage.md', title: 'Coverage', about: 'The status of every component in React, Angular and React Native.' },
   { path: 'frameworks/setup.md', title: 'Framework setup', about: 'Install, the CSS import order, the TypeScript note and the root Theme for React, Angular and React Native.' },

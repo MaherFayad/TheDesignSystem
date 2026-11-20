@@ -18,6 +18,7 @@ import { join, relative } from 'node:path';
 import { galleryBundled, galleryUrl } from './gallery.ts';
 import { readManifests, repoRoot, sectionOf, slugOf } from './manifests.ts';
 import { readHostConfig, resolvePath } from './static-host.ts';
+import { platformNotes } from '../src/data/platform-notes.ts';
 
 const dist = join(import.meta.dirname, '..', 'dist');
 const ORIGIN = 'http://docs.local';
@@ -66,7 +67,9 @@ function fileOf(pathname: string): string | undefined {
 const galleryRoutes = new Set(
   [...readFileSync(join(repoRoot, 'apps', 'gallery-react', 'src', 'routes.gen.ts'), 'utf8').matchAll(/slug: '([^']+)'/g)].map((m) => m[1] ?? ''),
 );
-const galleryPages = new Set(['/', '/all', '/interactions']);
+// The gallery's own pages beside the component routes (apps/gallery-react/src/App.tsx):
+// the platform screens, the foldable iPhone frames and the iOS test screens host.
+const galleryPages = new Set(['/', '/all', '/interactions', '/platforms', '/platforms/duo', '/screens/ios']);
 
 /** A finding when a path under the bundled gallery names no gallery page. */
 function galleryRouteFinding(pathname: string): string | undefined {
@@ -145,6 +148,12 @@ for (const m of manifests) {
     if (!existsSync(join(dist, prefix, path, 'index.html'))) findings.push(`no page for ${m.name}: /${prefix}${path}/`);
     if (!existsSync(join(dist, prefix, `${path}.md`))) findings.push(`no Markdown twin for ${m.name}: /${prefix}${path}.md`);
   }
+}
+
+// 2b. Every platform note names a manifest, so a renamed component does not lose its note quietly.
+const manifestNames = new Set(manifests.map((m) => m.name));
+for (const name of Object.keys(platformNotes)) {
+  if (!manifestNames.has(name)) findings.push(`platform note for ${name}, which has no manifest (src/data/platform-notes.ts)`);
 }
 
 // 3. llms files.

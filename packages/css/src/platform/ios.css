@@ -3161,7 +3161,13 @@
    * front one peek out under it, not off the screen, and each one enters
    * from above its own height (the component's enter reads the direction).
    */
+  /*
+   * Order S1: the banner's top edge sits on the safe area line, just under
+   * the camera cutout, as the platform's banners do; with no safe area
+   * (a browser window) it keeps the toast inset.
+   */
   [data-platform='ios'] [data-ds='toaster'] {
+    --_toaster-inset-block-start: max(var(--ds-toast-inset), var(--ds-inset-safe-top));
     --_toaster-dir: 1;
     --_toaster-align: start;
 

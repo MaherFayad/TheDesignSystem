@@ -18,6 +18,9 @@ framework.
 | `macos` | Desktop conventions of macOS. Chosen only by an explicit value. |
 | `auto` | An input only. It resolves to `ios` on an iPhone or iPad, `android` on an Android device and `web` everywhere else. |
 
+The [iOS page](/platforms/ios/) maps what an iPhone screen is made of to
+the components here, and covers the glass and the foldable iPhone.
+
 The outermost Theme with no `platform` prop is `auto`. The server render says
 `web` and the detected value is stamped once on mount. An app that wants no
 detection passes `platform="web"`. The Theme writes `data-platform` on its

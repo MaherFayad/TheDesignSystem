@@ -89,6 +89,16 @@
 // drag). start and meta come from the item; meta is read after the
 // description in the announcement, in the toast's language.
 //
+// The safe area in the portal (order S1, proposed). The portal Theme stamps
+// the platform again, and the token CSS gives every platform element its
+// own --ds-inset-safe-* from env(), so an override on the Theme the Toaster
+// is mounted in (a drawn device frame that says where its camera cutout is)
+// would not reach the toasts. The Toaster renders one hidden span in place
+// (data-toaster-anchor), reads the computed inset tokens there after mount
+// and on every resize (a turn of the device), and writes them on the portal
+// Theme. In a real browser the values are the same env() values the portal
+// would read itself.
+//
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
 // danger toast included. The key is not prevented, so the component that
@@ -181,6 +191,24 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
     .join(' ');
 }
 
+/** The safe area tokens the portal Theme copies from where the Toaster is mounted. */
+const INSET_TOKENS = ['--ds-inset-safe-top', '--ds-inset-safe-bottom', '--ds-inset-safe-start', '--ds-inset-safe-end'] as const;
+
+/** The computed inset tokens at an element, or undefined when it has none (a test DOM). */
+export function readInsets(el: Element): Record<string, string> | undefined {
+  const computed = el.ownerDocument.defaultView?.getComputedStyle(el);
+  if (!computed) return undefined;
+  const out: Record<string, string> = {};
+  for (const name of INSET_TOKENS) {
+    const value = computed.getPropertyValue(name).trim();
+    if (value) out[name] = value;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+const sameInsets = (a: Record<string, string> | undefined, b: Record<string, string> | undefined) =>
+  a === b || (a !== undefined && b !== undefined && INSET_TOKENS.every((n) => a[n] === b[n]));
+
 /** The swipe that closes a toast: toward the edge it sits on (helpers/toast-swipe.ts). */
 const swipeFor = toasterSwipe;
 
@@ -193,6 +221,8 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
   const [body, setBody] = useState<HTMLElement | null>(null);
   const [mute, setMute] = useState<HTMLElement | null>(null);
   const [layer, setLayer] = useState<HTMLElement | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [insets, setInsets] = useState<Record<string, string> | undefined>(undefined);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [away, setAway] = useState(false);
@@ -231,6 +261,19 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
     setBody(document.body);
     setMute(document.createElement('div'));
   }, []);
+
+  // The safe area where the Toaster is mounted, for the portal Theme (see the header).
+  useLayoutEffect(() => {
+    if (!anchor) return;
+    const read = () => {
+      const next = readInsets(anchor);
+      setInsets((prev) => (sameInsets(prev, next) ? prev : next));
+    };
+    read();
+    const view = anchor.ownerDocument.defaultView;
+    view?.addEventListener('resize', read);
+    return () => view?.removeEventListener('resize', read);
+  }, [anchor]);
 
   // Window blurred and tab hidden pause the timers, as Radix does.
   useEffect(() => {
@@ -348,7 +391,10 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
     [],
   );
 
-  if (!body || !mute) return null;
+  // The hidden span that marks where the Toaster is mounted; it reads the safe area there.
+  const anchorNode = <span data-toaster-anchor="" hidden ref={setAnchor} />;
+
+  if (!body || !mute) return anchorNode;
 
   const region = (urgent: boolean) =>
     lines
@@ -362,7 +408,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
         </p>
       ));
 
-  return createPortal(
+  const portal = createPortal(
     <Theme
       style={theme.style}
       scheme={theme.scheme}
@@ -372,6 +418,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
       glass={theme.glass}
       dir={theme.dir}
       lang={theme.lang}
+      css={insets as CSSProperties | undefined}
       ref={setLayer}
       aria-live="off"
       data-toaster-layer=""
@@ -408,6 +455,12 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
       </RadixToast.Provider>
     </Theme>,
     body,
+  );
+  return (
+    <>
+      {anchorNode}
+      {portal}
+    </>
   );
 }
 

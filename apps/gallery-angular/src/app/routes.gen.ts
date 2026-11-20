@@ -60,6 +60,7 @@ export const routes: DemoRoute[] = [
   { slug: 'status-dot', load: () => import('../../../../packages/angular/src/components/status-dot/status-dot.demo').then((m) => m.default) },
   { slug: 'stepper', load: () => import('../../../../packages/angular/src/components/stepper/stepper.demo').then((m) => m.default) },
   { slug: 'switch', load: () => import('../../../../packages/angular/src/components/switch/switch.demo').then((m) => m.default) },
+  { slug: 'tab-bar', load: () => import('../../../../packages/angular/src/components/tab-bar/tab-bar.demo').then((m) => m.default) },
   { slug: 'tag-field', load: () => import('../../../../packages/angular/src/components/tag-field/tag-field.demo').then((m) => m.default) },
   { slug: 'textarea', load: () => import('../../../../packages/angular/src/components/textarea/textarea.demo').then((m) => m.default) },
   { slug: 'toast', load: () => import('../../../../packages/angular/src/components/toast/toast.demo').then((m) => m.default) },
