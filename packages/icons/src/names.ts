@@ -105,6 +105,8 @@ export const iconNames = [
   'library',
   'share',
   'eyedropper',
+  'undo',
+  'redo',
 ] as const;
 
 export type IconName = (typeof iconNames)[number];
@@ -127,6 +129,8 @@ export const mirrorIcons: readonly IconName[] = [
   'panel-end',
   'list',
   'log-out',
+  'undo',
+  'redo',
 ];
 
 const mirrorSet = new Set<string>(mirrorIcons);

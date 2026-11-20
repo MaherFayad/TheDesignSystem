@@ -185,3 +185,80 @@ describe('DsTheme platform', () => {
     expect(el.getAttribute('data-platform')).toBe('web');
   });
 });
+
+@Component({
+  imports: [DsTheme],
+  template: `
+    <div id="root" dsTheme>
+      <div id="nested" dsTheme scheme="light"><input id="field" /></div>
+      <a id="link" href="#x">Link</a>
+    </div>
+  `,
+})
+class ModalityHost {}
+
+describe('DsTheme input modality', () => {
+  const root = () => document.documentElement;
+  afterEach(() => TestBed.resetTestingModule());
+
+  it('carries no attribute before the first input', async () => {
+    const fixture = TestBed.createComponent(ModalityHost);
+    await fixture.whenStable();
+    expect(root().hasAttribute('data-modality')).toBe(false);
+  });
+
+  it('marks keyboard on Tab and pointer on pointerdown', async () => {
+    const fixture = TestBed.createComponent(ModalityHost);
+    await fixture.whenStable();
+    const link = fixture.nativeElement.querySelector('#link') as HTMLElement;
+    link.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('keyboard');
+    link.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('pointer');
+    link.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('keyboard');
+  });
+
+  it('typing in a text field does not mark keyboard', async () => {
+    const fixture = TestBed.createComponent(ModalityHost);
+    await fixture.whenStable();
+    const field = fixture.nativeElement.querySelector('#field') as HTMLElement;
+    field.dispatchEvent(new Event('mousedown', { bubbles: true }));
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }));
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('pointer');
+  });
+
+  it('removes the attribute and the listeners when the root theme goes', async () => {
+    const fixture = TestBed.createComponent(ModalityHost);
+    await fixture.whenStable();
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('keyboard');
+    fixture.destroy();
+    expect(root().hasAttribute('data-modality')).toBe(false);
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    expect(root().hasAttribute('data-modality')).toBe(false);
+  });
+
+  it('two root themes share one flag that stays until both are gone', async () => {
+    const a = TestBed.createComponent(ModalityHost);
+    const b = TestBed.createComponent(ModalityHost);
+    await a.whenStable();
+    await b.whenStable();
+    document.body.dispatchEvent(new Event('touchstart', { bubbles: true }));
+    expect(root().getAttribute('data-modality')).toBe('pointer');
+    a.destroy();
+    expect(root().getAttribute('data-modality')).toBe('pointer');
+    b.destroy();
+    expect(root().hasAttribute('data-modality')).toBe(false);
+  });
+
+  it('starts nothing under server rendering', async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] });
+    const fixture = TestBed.createComponent(ModalityHost);
+    await fixture.whenStable();
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    expect(root().hasAttribute('data-modality')).toBe(false);
+    fixture.destroy();
+  });
+});

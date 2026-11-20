@@ -19,9 +19,18 @@
 // input, so the theme silently falls back to its parent. Write
 // `[style]="'desk'"`, or put the style on the selector attribute:
 // `<div dsTheme="desk">`. Inline styles pass through `css`, as in React.
+//
+// Input modality (order C3, docs/contracts/frameworks.md): the root dsTheme,
+// the one with no dsTheme above it, starts the shared modality flag after its
+// first render in the browser (`acquireModality(document)`), which keeps
+// `data-modality="keyboard"` or `"pointer"` on the document element. It
+// releases its hold on destroy; the last hold removes the listeners and the
+// attribute. Nothing is written on the server or before the first input.
 import {
+  DestroyRef,
   Directive,
   Injectable,
+  afterNextRender,
   PLATFORM_ID,
   signal,
   computed,
@@ -34,7 +43,7 @@ import {
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { detectPlatform, deviceOf } from '@the-system/shared';
+import { acquireModality, detectPlatform, deviceOf } from '@the-system/shared';
 import { DS_ICON_STYLE } from '@the-system/icons/angular';
 import type { IconStyle } from '@the-system/icons';
 import { consumeHostAttributes } from '../internal/host';
@@ -189,6 +198,20 @@ export class DsTheme implements OnInit {
   readonly scope: DsThemeService = new DsThemeScope(this.value);
 
   constructor() {
+    if (this.parent.isRoot && isPlatformBrowser(inject(PLATFORM_ID))) {
+      const doc = inject(DOCUMENT);
+      let release: (() => void) | null = null;
+      let destroyed = false;
+      // After the first render, so the server render and the first paint carry no attribute.
+      afterNextRender(() => {
+        if (!destroyed) release = acquireModality(doc);
+      });
+      inject(DestroyRef).onDestroy(() => {
+        destroyed = true;
+        release?.();
+        release = null;
+      });
+    }
     effect(() => {
       const next = this.value().dir;
       if (this.directionality.valueSignal() !== next) {

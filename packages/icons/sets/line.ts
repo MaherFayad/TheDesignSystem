@@ -120,6 +120,8 @@ const line: IconSetSource = {
     library: 'library',
     share: 'share',
     eyedropper: 'pipette',
+    undo: 'undo-2',
+    redo: 'redo-2',
   },
 };
 

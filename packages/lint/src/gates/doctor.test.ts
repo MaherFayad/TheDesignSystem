@@ -106,6 +106,25 @@ describe('ds doctor: slot-limits on wrappers and named props (order T1)', () => 
   });
 });
 
+describe('ds doctor: slot-limits on own parts (order S1)', () => {
+  const lines = (r: DoctorReport) => r.data.findings.map((f) => `${f.file}:${f.line} ${f.ruleId} ${f.message.split('.')[0]}`);
+
+  it('takes AlertDialogCancel and AlertDialogAction in the footer, and CardLink and TileLink in their titles', async () => {
+    const r = await report('slots/right');
+    expect(r.data.summary.files).toBe(1);
+    expect(lines(r)).toEqual([]);
+  });
+
+  it('still fails a plain element in the footer, two links in a title and a foreign link part', async () => {
+    const r = await report('slots/wrong');
+    expect(lines(r)).toEqual([
+      'Parts.tsx:32 ds/slot-limits <div> in the AlertDialog footer slot, which takes Button, AlertDialogCancel, AlertDialogAction',
+      'Parts.tsx:38 ds/slot-limits CardTitle holds 2 items; the Card title slot takes at most 1',
+      'Parts.tsx:46 ds/slot-limits <CardLink> in the Tile title slot, which takes text, TileLink',
+    ]);
+  });
+});
+
 describe('ds doctor: the examples', () => {
   for (const example of ['consumer-next', 'consumer-vite']) {
     it(`runs clean on examples/${example}`, async () => {

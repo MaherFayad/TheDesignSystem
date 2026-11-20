@@ -124,6 +124,8 @@ const pixel: IconSetSource = {
     library: 'library',
     share: 'share',
     eyedropper: 'pipette',
+    undo: 'undo',
+    redo: 'redo',
   },
 };
 

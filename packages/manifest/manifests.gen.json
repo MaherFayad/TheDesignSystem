@@ -842,7 +842,9 @@
       },
       "footer": {
         "accepts": [
-          "Button"
+          "Button",
+          "AlertDialogCancel",
+          "AlertDialogAction"
         ],
         "min": 2,
         "max": 2
@@ -3926,7 +3928,10 @@
         "max": 1
       },
       "title": {
-        "accepts": "text",
+        "accepts": [
+          "text",
+          "CardLink"
+        ],
         "max": 1
       },
       "link": {
@@ -28570,7 +28575,10 @@
         "max": 1
       },
       "title": {
-        "accepts": "text",
+        "accepts": [
+          "text",
+          "TileLink"
+        ],
         "min": 1,
         "max": 1
       },
