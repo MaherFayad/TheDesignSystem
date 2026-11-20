@@ -239,6 +239,7 @@ follows it.
     | Banner | `data-sticky` |
     | FloatingActionButton | `data-position`, `data-extended` |
     | PageShell, TabBar, Navbar | `data-placement` (`bottom`, `side`; absent for `auto`) |
+    | Navbar | `data-collapsed` (on `ios`, while the large title is scrolled away and the bar shows the inline title), `data-inline-title` (the heading's text, for the inline title; decorative, the `h1` stays the one heading) |
     | Fieldset, NumberField, Pagination, DatePicker | `data-variant` (proposed, plan `reset-ios-families.md`) |
     | Input | `data-variant` gains `plain`; `data-empty` |
     | AlertDialog action | `data-primary` |

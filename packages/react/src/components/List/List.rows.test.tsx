@@ -229,3 +229,33 @@ describe('List order C1: footer', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Listen' }));
   });
 });
+
+describe('List order S1: a destructive row', () => {
+  it('stamps data-tone danger on the row and nothing for neutral or no tone', () => {
+    const onSelect = vi.fn();
+    const { container } = render(
+      <List variant="inset">
+        <ListItem title="Edit routine" href="#edit" />
+        <ListItem title="Share routine" tone="neutral" onSelect={onSelect} />
+        <ListItem title="Delete routine" tone="danger" start="trash" onSelect={onSelect} />
+      </List>,
+    );
+    const [plain, neutral, danger] = rowsOf(container);
+    expect(plain!.hasAttribute('data-tone')).toBe(false);
+    expect(neutral!.hasAttribute('data-tone')).toBe(false);
+    expect(danger!.getAttribute('data-tone')).toBe('danger');
+  });
+
+  it('keeps the danger row a button named by its title that runs on Enter', async () => {
+    const onSelect = vi.fn();
+    render(
+      <List>
+        <ListItem title="Delete routine" tone="danger" onSelect={onSelect} />
+      </List>,
+    );
+    const row = screen.getByRole('button', { name: 'Delete routine' });
+    row.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+});

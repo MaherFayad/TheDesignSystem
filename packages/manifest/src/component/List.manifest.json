@@ -219,6 +219,11 @@
       "default": false,
       "description": "The current row. Sets data-active, the active fill, and aria-current (true, or the value in linkProps) on the link. The description and end step up to the default text color on the active fill."
     },
+    "ListItem.tone": {
+      "type": ["neutral", "danger"],
+      "default": "neutral",
+      "description": "danger (order S1, proposed): a destructive row, such as Delete routine. Stamps data-tone on the row; the title and a start icon take the danger text color, which keeps 4.5:1 on the list surface. The title still names the action. Neutral stamps nothing."
+    },
     "ListItem.disabled": {
       "type": "boolean",
       "default": false,
@@ -330,6 +335,7 @@
     "color.bg.overlay-10",
     "color.text.default",
     "color.text.muted",
+    "color.state.danger.text",
     "color.border.hairline",
     "border.width.default",
     "border.width.strong",
