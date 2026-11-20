@@ -53,6 +53,7 @@ export * from './components/search-field/index';
 export * from './components/section-index/index';
 export * from './components/segmented-control/index';
 export * from './components/select/index';
+export * from './components/sheet/index';
 export * from './components/skeleton/index';
 export * from './components/skip-link/index';
 export * from './components/slider/index';

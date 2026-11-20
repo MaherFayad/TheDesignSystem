@@ -7,6 +7,7 @@
 import {
   DestroyRef,
   Directive,
+  InjectionToken,
   afterRenderEffect,
   booleanAttribute,
   computed,
@@ -39,6 +40,21 @@ export function isIconName(content: ButtonSlotContent | undefined): content is I
 
 const BLOCKED = ['click', 'auxclick'] as const;
 
+/**
+ * What another directive on the same element fills in for the control
+ * (order A5: the AlertDialog default action, as React's cloneElement of the
+ * Button). Each function gets the control's own value, so the control's own
+ * input can win. `disabled` adds to the control's own disabled.
+ */
+export interface ButtonPreset {
+  emphasis?: (own: ButtonEmphasis | undefined) => ButtonEmphasis | undefined;
+  tone?: (own: ButtonTone) => ButtonTone;
+  disabled?: () => boolean;
+}
+
+/** Provided by a directive on the control's own element; read with self only. */
+export const DS_BUTTON_PRESET = new InjectionToken<ButtonPreset>('DsButtonPreset');
+
 /** The components that play the press (interaction button-press). Button.css scales them on :active. */
 const PRESS_DS: ReadonlySet<string> = new Set(['button', 'icon-button', 'toggle-button', 'close-button', 'copy-button', 'floating-action-button']);
 
@@ -57,11 +73,11 @@ const BASE_INPUTS = ['dsButton', 'dsIconButton', 'size', 'tone', 'shape', 'loadi
   host: {
     '[attr.type]': 'isButton ? type() : null',
     '[attr.data-size]': 'resolvedSize()',
-    '[attr.data-tone]': 'tone()',
+    '[attr.data-tone]': 'resolvedTone()',
     '[attr.data-emphasis]': 'resolvedEmphasis()',
     '[attr.data-shape]': 'resolvedShape()',
     '[attr.data-loading]': 'loading() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
+    '[attr.data-disabled]': 'isDisabled() ? "" : null',
     '[attr.aria-disabled]': 'inert() ? "true" : null',
     '[attr.aria-busy]': 'loading() ? "true" : null',
     '[attr.href]': 'isButton ? null : inert() ? null : href()',
@@ -100,17 +116,22 @@ export abstract class DsButtonBase {
   // A ButtonGroup passes size, emphasis and shape through DI. The control's
   // own input always wins, as useButtonGroup() in React.
   private readonly group = inject(DS_BUTTON_GROUP, { optional: true });
+  private readonly preset = inject(DS_BUTTON_PRESET, { self: true, optional: true });
+  readonly resolvedTone = computed<ButtonTone>(() => (this.preset?.tone ? this.preset.tone(this.tone()) : this.tone()));
+  /** Disabled by its own input or by a preset on the same element. */
+  readonly isDisabled = computed(() => this.disabled() || (this.preset?.disabled?.() ?? false));
   readonly resolvedSize = computed<ButtonSize>(() => this.size() ?? this.group?.size() ?? 'md');
   readonly resolvedShape = computed<ButtonShape>(() => this.shape() ?? this.group?.shape() ?? 'default');
   readonly resolvedEmphasis = computed<ButtonEmphasis>(() => {
     const fromGroup = this.group?.emphasis();
     const groupEmphasis = fromGroup && !(this.isIconOnly() && (fromGroup as string) === 'link') ? fromGroup : undefined;
-    return this.emphasis() ?? groupEmphasis ?? this.defaultEmphasis;
+    const own = this.preset?.emphasis ? this.preset.emphasis(this.emphasis()) : this.emphasis();
+    return own ?? groupEmphasis ?? this.defaultEmphasis;
   });
 
   protected readonly host = consumeHostAttributes(BASE_INPUTS);
   protected readonly isButton = this.host.tagName === 'BUTTON';
-  readonly inert = computed(() => this.disabled() || this.loading());
+  readonly inert = computed(() => this.isDisabled() || this.loading());
   protected readonly linkRole = computed(() => {
     if (this.isButton) return this.role() ?? null;
     if (this.inert() && this.href() !== undefined) return this.role() ?? 'link';

@@ -286,19 +286,46 @@ describe('Sheet', () => {
   });
 
   it('keeps the panel below toasts on the top edge (WCAG 2.4.11)', async () => {
-    const f = await mount(Basic);
-    await openSheet(f);
-    expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('');
-    const toaster = document.createElement('div');
+    const g = globalThis as unknown as { ResizeObserver?: unknown };
+    const saved = g.ResizeObserver;
+    g.ResizeObserver = class {
+      constructor(private cb: () => void) {}
+      observe() {
+        this.cb();
+      }
+      disconnect() {}
+      unobserve() {}
+    };
+    let top = 16;
+    const toaster = document.createElement('ol');
     toaster.setAttribute('data-ds', 'toaster');
-    toaster.getBoundingClientRect = () => new DOMRect(0, 16, 400, 60);
-    const toast = document.createElement('div');
-    toast.setAttribute('data-ds', 'toast');
-    toaster.append(toast);
+    toaster.getBoundingClientRect = () => new DOMRect(0, top, 400, 60);
     document.body.append(toaster);
-    await new Promise((r) => setTimeout(r, 50));
-    await settle(f);
-    expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('76px');
+    const wait = () => new Promise((r) => setTimeout(r, 40));
+    try {
+      const f = await mount(Basic);
+      await openSheet(f);
+      expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('');
+      const toast = document.createElement('li');
+      toast.setAttribute('data-ds', 'toast');
+      toaster.append(toast);
+      await wait();
+      await settle(f);
+      expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('76px');
+      toast.remove();
+      await wait();
+      await settle(f);
+      expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('');
+      // A toaster on the bottom edge is not the Sheet's to clear.
+      toaster.append(toast);
+      top = 600;
+      window.dispatchEvent(new Event('resize'));
+      await wait();
+      await settle(f);
+      expect(rootEl()!.style.getPropertyValue('--_sheet-toast-end')).toBe('');
+    } finally {
+      g.ResizeObserver = saved;
+    }
   });
 
   it('Desk: a title bar replaces the header; the close light closes the sheet', async () => {
@@ -309,11 +336,17 @@ describe('Sheet', () => {
     const bar = part('titlebar')!;
     expect(bar.querySelector('[data-part="title"] [data-dialog-title]')?.textContent).toBe('Share Spring launch');
     expect(bar.querySelector('[data-ds="window-controls"]')?.getAttribute('aria-label')).toBe('Sheet controls');
-    // With the lights on the web, the lights carry the close.
-    expect(bar.querySelector('[data-part="close"]')).toBeNull();
+    // With the lights on the web, the lights carry the close; on a phone the bar carries the close control.
+    expect(bar.querySelector('[data-ds="close-button"]')).toBeNull();
+    expect(bar.querySelector('[data-part="actions"]')).toBeNull();
+    const light = bar.querySelector<HTMLElement>('[data-ds="window-controls"] [data-part="close"]')!;
+    expect(light.getAttribute('aria-label')).toBe('Close sheet');
     f.componentInstance.platform.set('ios');
     await settle(f);
-    expect(bar.querySelector('[data-part="actions"] [data-part="close"]')?.getAttribute('aria-label')).toBe('Close sheet');
+    expect(bar.querySelector('[data-part="actions"] [data-ds="close-button"]')?.getAttribute('aria-label')).toBe('Close sheet');
+    light.click();
+    await settle(f);
+    expect(rootEl()).toBeNull();
   });
 });
 
@@ -483,7 +516,7 @@ describe('Sheet header action and confirm (orders C5, M9.6)', () => {
 
   it('names the action in Arabic under an Arabic theme', async () => {
     const f = await mount(Header, (h) => h.lang.set('ar'));
-    await openSheet(f, 'تفاصيل البطاقة');
+    await openSheet(f, 'Pass details');
     expect(headerParts()).toEqual(['title', 'close', 'header-action', 'confirm']);
     expect(button('مشاركة البطاقة')).not.toBeNull();
     expect(part('close')!.getAttribute('aria-label')).toBe('إغلاق النافذة السفلية');

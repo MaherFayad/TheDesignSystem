@@ -342,6 +342,9 @@ function watchTopToastEnd(doc: Document, set: (end: number) => void): () => void
   const view = doc.defaultView;
   if (!view || typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') return () => undefined;
   let frame = 0;
+  // One measure per frame, however many changes the page makes in it. A timer where there are no frames (a test DOM).
+  const raf = typeof view.requestAnimationFrame === 'function' ? (cb: () => void) => view.requestAnimationFrame(cb) : (cb: () => void) => view.setTimeout(cb, 16);
+  const caf = typeof view.cancelAnimationFrame === 'function' ? (id: number) => view.cancelAnimationFrame(id) : (id: number) => view.clearTimeout(id);
   const measure = () => {
     frame = 0;
     let bottom = 0;
@@ -356,7 +359,7 @@ function watchTopToastEnd(doc: Document, set: (end: number) => void): () => void
     set(Math.ceil(Math.min(bottom, view.innerHeight / 2)));
   };
   const schedule = () => {
-    if (!frame) frame = view.requestAnimationFrame(measure);
+    if (!frame) frame = raf(measure);
   };
   const sizes = new ResizeObserver(schedule);
   const watch = () => {
@@ -375,7 +378,7 @@ function watchTopToastEnd(doc: Document, set: (end: number) => void): () => void
   view.addEventListener('resize', schedule);
   watch();
   return () => {
-    if (frame) view.cancelAnimationFrame(frame);
+    if (frame) caf(frame);
     tree.disconnect();
     sizes.disconnect();
     view.removeEventListener('resize', schedule);

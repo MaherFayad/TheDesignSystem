@@ -59,6 +59,7 @@ export const routes: DemoRoute[] = [
   { slug: 'section-index', load: () => import('../../../../packages/angular/src/components/section-index/section-index.demo').then((m) => m.default) },
   { slug: 'segmented-control', load: () => import('../../../../packages/angular/src/components/segmented-control/segmented-control.demo').then((m) => m.default) },
   { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
+  { slug: 'sheet', load: () => import('../../../../packages/angular/src/components/sheet/sheet.demo').then((m) => m.default) },
   { slug: 'skeleton', load: () => import('../../../../packages/angular/src/components/skeleton/skeleton.demo').then((m) => m.default) },
   { slug: 'skip-link', load: () => import('../../../../packages/angular/src/components/skip-link/skip-link.demo').then((m) => m.default) },
   { slug: 'slider', load: () => import('../../../../packages/angular/src/components/slider/slider.demo').then((m) => m.default) },
