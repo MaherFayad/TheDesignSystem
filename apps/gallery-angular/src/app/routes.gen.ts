@@ -35,6 +35,7 @@ export const routes: DemoRoute[] = [
   { slug: 'input-group', load: () => import('../../../../packages/angular/src/components/input-group/input-group.demo').then((m) => m.default) },
   { slug: 'label', load: () => import('../../../../packages/angular/src/components/label/label.demo').then((m) => m.default) },
   { slug: 'link', load: () => import('../../../../packages/angular/src/components/link/link.demo').then((m) => m.default) },
+  { slug: 'list', load: () => import('../../../../packages/angular/src/components/list/list.demo').then((m) => m.default) },
   { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
   { slug: 'meter', load: () => import('../../../../packages/angular/src/components/meter/meter.demo').then((m) => m.default) },
   { slug: 'multi-select', load: () => import('../../../../packages/angular/src/components/multi-select/multi-select.demo').then((m) => m.default) },

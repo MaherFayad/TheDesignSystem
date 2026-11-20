@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
 import type { ButtonShape, ButtonSize } from '../Button';
@@ -9,10 +10,37 @@ const shapes: ButtonShape[] = ['default', 'pill', 'square'];
 /** Things that close, to name the control when a screen has more than one. */
 const closables = ['Close panel', 'Close dialog', 'Close banner', 'Close drawer', 'Remove filter', 'Close preview'];
 
+/** Stand ins for a picture under the raised close: a light one, a dark one and a busy one, from tokens. */
+const pictures = [
+  'linear-gradient(135deg, var(--ds-color-bg-surface), var(--ds-color-state-warning-tint-10))',
+  'linear-gradient(135deg, var(--ds-color-glass-backdrop-dark), var(--ds-color-primary-fill))',
+  'linear-gradient(135deg, var(--ds-color-state-danger-solid), var(--ds-color-primary-fill) 50%, var(--ds-color-state-warning-solid))',
+];
+
+function OverPicture({ background, children }: { background: string; children: ReactNode }) {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        inlineSize: 'calc(var(--ds-size-touch-ios) * 4)',
+        blockSize: 'calc(var(--ds-size-touch-ios) * 2)',
+        padding: 'var(--ds-space-s)',
+        boxSizing: 'border-box',
+        borderRadius: 'var(--ds-radius-card)',
+        backgroundImage: background,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function CloseButtonDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: sizes and shapes; emphasis is always ghost">
+      <DemoCase id="variants" title="Variants: sizes and shapes, ghost">
         {sizes.map((size) => (
           <DemoRow key={size} label={`Size ${size}`}>
             {shapes.map((shape) => (
@@ -30,6 +58,28 @@ export default function CloseButtonDemo() {
             {sizes.map((size) => (
               <CloseButton key={size} size={size} />
             ))}
+          </DemoRow>
+        </Theme>
+      </DemoCase>
+
+      <DemoCase id="raised" title="Raised (emphasis solid): a filled disc over a picture">
+        <DemoRow label="Over a light, a dark and a busy picture">
+          {pictures.map((background) => (
+            <OverPicture key={background} background={background}>
+              <CloseButton emphasis="solid" label="Close preview" />
+            </OverPicture>
+          ))}
+        </DemoRow>
+        <DemoRow label="Sizes">
+          {sizes.map((size) => (
+            <CloseButton key={size} size={size} emphasis="solid" />
+          ))}
+        </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="فوق صورة">
+            <OverPicture background={pictures[2] ?? ''}>
+              <CloseButton emphasis="solid" label="إغلاق المعاينة" />
+            </OverPicture>
           </DemoRow>
         </Theme>
       </DemoCase>

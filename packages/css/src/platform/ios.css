@@ -2483,6 +2483,50 @@
         0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent);
     }
   }
+
+  /* ------------------------------------------------------------ close button, raised (order S1, proposed) */
+
+  /*
+   * A style that takes the platform's glass (Liquid, Neutral): the raised
+   * close (emphasis solid) is a frosted disc over the picture, white in
+   * light and the lifted gray in dark, dense enough that the glyph keeps
+   * 3:1 over any picture, the lightest and the darkest (WCAG 2.2 1.4.11),
+   * with a soft lift. Studio and Desk keep the component's own disc.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape] {
+      --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 82%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 82%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 82%, transparent);
+      --_button-fg: var(--ds-color-text-bright);
+      --_button-fg-hover: var(--ds-color-text-bright);
+      --_button-fg-active: var(--ds-color-text-bright);
+      --_button-shadow: 0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-l) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 18%, transparent);
+
+      -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
+      backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 2)) saturate(1.6);
+    }
+
+    [data-platform='ios'][data-scheme='dark'] [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape] {
+      --_button-bg: color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark)) 82%, transparent);
+      --_button-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark)) 82%, transparent);
+      --_button-bg-active: color-mix(in srgb, color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark)) 82%, transparent);
+      --_button-shadow: 0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-l) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 36%, transparent);
+    }
+  }
+
+  /* Less transparency or more contrast: the disc is solid, no blur. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-platform='ios'] [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape],
+    [data-platform='ios'][data-scheme='dark'] [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape] {
+      --_button-bg: var(--ds-color-bg-surface);
+      --_button-bg-hover: var(--ds-color-bg-surface);
+      --_button-bg-active: var(--ds-color-bg-surface);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
 }
 
 /*
@@ -2722,6 +2766,30 @@
   [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] > * {
     border-width: 0;
     border-radius: var(--ds-shape-corner-full);
+  }
+
+  /*
+   * Order S1: a bottom toolbar that holds bar groups (attached ButtonGroups)
+   * is a row of glass capsules, as the kit's bottom toolbar is. The groups
+   * take the bar group's look through the selector the navbar and the
+   * toolbar share (here and in ds.platform), and the toolbar draws no
+   * capsule of its own around them: no fill, edge, lift or blur, so glass
+   * never sits on glass. The groups keep the room of the bar's own gap.
+   */
+  [data-platform='ios'] [data-ds='toolbar']:not([data-part='accessory'] > *):has(> [data-ds='button-group'][data-attached]) {
+    --_toolbar-bg: transparent;
+    --_toolbar-border-color: transparent;
+    --_toolbar-padding: 0px;
+    --_toolbar-gap: var(--ds-space-fixed-m);
+
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  [data-platform='ios'] [data-ds='toolbar'] > [data-ds='button-group'][data-attached] > [data-part='item'] [data-ds='icon'] {
+    inline-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+    block-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
   }
 
   /*

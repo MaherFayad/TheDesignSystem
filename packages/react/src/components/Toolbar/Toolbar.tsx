@@ -15,6 +15,8 @@
 //     <div data-part="group" role="group" aria-label>                  ToolbarGroup or ToolbarToggleGroup
 //       <button data-ds="icon-button" data-part="item" data-state="on|off" aria-pressed>   ToolbarToggleItem
 //     <div data-part="separator" role="separator" aria-orientation>    ToolbarSeparator
+//     <div data-ds="button-group" data-attached role="group">          a bar group: ToolbarButtons in an attached ButtonGroup
+//       <button data-ds="icon-button" data-part="item">                (order S1: on ios a glass capsule, as in the Navbar)
 //     <button data-ds="icon-button" data-part="more" aria-haspopup="menu">  the overflow trigger, "More tools"
 //
 // Items are system components carrying the toolbar's data-part (anatomy.md:
@@ -125,8 +127,9 @@ function entryOf(el: HTMLElement): ToolbarMenuEntry {
 
 /**
  * The menu entries for the hidden top level children of a toolbar, in DOM
- * order. A group gives one entry per item with a separator around it; a
- * separator gives a separator. Separators never lead, trail or repeat.
+ * order. A group (a ToolbarGroup, or a ButtonGroup of ToolbarButtons, the
+ * bar group of order S1) gives one entry per item with a separator around
+ * it; a separator gives a separator. Separators never lead, trail or repeat.
  */
 export function overflowEntries(segments: readonly HTMLElement[]): ToolbarMenuEntry[] {
   const raw: ToolbarMenuEntry[] = [];
@@ -134,7 +137,7 @@ export function overflowEntries(segments: readonly HTMLElement[]): ToolbarMenuEn
   for (const seg of segments) {
     const part = seg.getAttribute('data-part');
     if (part === 'separator') raw.push(sep());
-    else if (part === 'group') {
+    else if (part === 'group' || seg.getAttribute('data-ds') === 'button-group') {
       raw.push(sep());
       for (const item of seg.querySelectorAll<HTMLElement>('[data-part="item"]')) raw.push(entryOf(item));
       raw.push(sep());

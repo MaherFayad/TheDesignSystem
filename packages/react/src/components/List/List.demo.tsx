@@ -304,6 +304,20 @@ export default function ListDemo() {
         </div>
       </DemoCase>
 
+      <DemoCase id="danger" title="A destructive row (tone danger)">
+        <List variant="inset" aria-label="Routine actions">
+          <ListItem start="share" title="Share routine" onSelect={() => undefined} />
+          <ListItem start="edit" title="Edit routine" href="#edit-routine" />
+          <ListItem start="trash" title="Delete routine" tone="danger" onSelect={() => undefined} />
+        </List>
+        <Theme lang="ar" data-demo="content">
+          <List variant="inset" aria-label="خيارات الروتين">
+            <ListItem start="share" title="مشاركة الروتين" onSelect={() => undefined} />
+            <ListItem start="trash" title="حذف الروتين" tone="danger" onSelect={() => undefined} />
+          </List>
+        </Theme>
+      </DemoCase>
+
       <DemoCase id="disabled" title="Disabled row">
         <List variant="divided" aria-label="Boards">
           <ListItem href="#open" start="grid" title="Brand board" description="Open" />

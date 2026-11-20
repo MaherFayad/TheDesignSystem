@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
+import { ButtonGroup } from '../ButtonGroup';
 import ToolbarDemo from './Toolbar.demo';
 import { fitCount, overflowEntries } from './Toolbar';
 import {
@@ -225,6 +226,50 @@ describe('Toolbar', () => {
   it('renders the demo with every case', () => {
     const { container } = render(<ToolbarDemo />);
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(ids).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+    expect(ids).toEqual(['variants', 'one', 'bar-groups', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+  });
+});
+
+describe('Toolbar order S1: bar groups', () => {
+  it('keeps an attached ButtonGroup of ToolbarButtons in the roving focus and stamps the group for the ios glass', async () => {
+    render(
+      <Toolbar aria-label="Note tools" size="lg">
+        <ButtonGroup attached aria-label="Edit history">
+          <ToolbarButton icon="undo" label="Undo" />
+          <ToolbarButton icon="redo" label="Redo" />
+        </ButtonGroup>
+        <ButtonGroup attached aria-label="Share and more">
+          <ToolbarButton icon="share" label="Share note" />
+        </ButtonGroup>
+      </Toolbar>,
+    );
+    const group = screen.getByRole('group', { name: 'Edit history' });
+    expect(group.getAttribute('data-ds')).toBe('button-group');
+    expect(group.hasAttribute('data-attached')).toBe(true);
+    expect(group.parentElement?.getAttribute('data-ds')).toBe('toolbar');
+    const undo = screen.getByRole('button', { name: 'Undo' });
+    expect(undo.getAttribute('data-part')).toBe('item');
+    expect(undo.getAttribute('data-size')).toBe('lg');
+    undo.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Redo' }));
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Share note' }));
+  });
+
+  it('builds overflow entries from a hidden ButtonGroup as from a group', () => {
+    const { container } = render(
+      <Toolbar aria-label="Note tools">
+        <ButtonGroup attached aria-label="Edit history">
+          <ToolbarButton icon="undo" label="Undo" />
+          <ToolbarButton icon="redo" label="Redo" />
+        </ButtonGroup>
+        <ToolbarButton icon="share" label="Share note" />
+      </Toolbar>,
+    );
+    const bar = container.querySelector<HTMLElement>('[data-ds="toolbar"]')!;
+    const segments = Array.from(bar.children).filter((c) => c.getAttribute('data-part') !== 'more') as HTMLElement[];
+    expect(overflowEntries(segments).map((e) => (e.kind === 'separator' ? '|' : e.label))).toEqual(['Undo', 'Redo', '|', 'Share note']);
+    expect(overflowEntries(segments)[0]?.icon).toBe('undo');
   });
 });

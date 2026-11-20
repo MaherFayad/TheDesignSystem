@@ -4936,10 +4936,11 @@
       },
       "emphasis": {
         "type": [
-          "ghost"
+          "ghost",
+          "solid"
         ],
         "default": "ghost",
-        "description": "Fixed: a close is always quiet. Not a prop; a ButtonGroup cannot change it."
+        "description": "ghost: the quiet glyph on a dialog, a toast or a chip. solid (order S1, proposed): the raised close, a filled disc on the surface color with the text color glyph and the tooltip lift, for a close over a picture or a video; the glyph keeps 3:1 against the disc, so it reads whatever is under it. On ios the glass styles draw it as a frosted disc, solid with less transparency or more contrast. A ButtonGroup cannot change it."
       },
       "shape": {
         "type": [
@@ -5031,7 +5032,11 @@
       "ease.spring-bouncy",
       "duration.spring-snappy",
       "ease.spring-snappy",
-      "scale.press"
+      "scale.press",
+      "color.bg.surface",
+      "color.text.bright",
+      "elevation.tooltip",
+      "radius.pill"
     ],
     "motion": "press",
     "frameworks": {
@@ -5058,6 +5063,10 @@
       "liquid": "Planned."
     },
     "mistakes": [
+      {
+        "wrong": "A ghost close, or an IconButton with a gray fill, over a picture",
+        "right": "CloseButton with emphasis solid, the raised disc that reads over any picture"
+      },
       {
         "wrong": "A close button labelled X",
         "right": "The default name, or Close plus the thing"
@@ -15274,8 +15283,10 @@
         "note": "Hover and active swap the row fill at once. list-stagger (rows entering) is named for the catalog; the component plays no motion yet and leaves entry to the page."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "ul[dsList] and li[dsListItem], hand built"
+        "status": "ready",
+        "behavior": "ul[dsList] and li[dsListItem], hand built",
+        "example": "list.demo.ts",
+        "note": "ul[dsList], ol[dsList] (React ordered) and div[dsList], the form for a list with no rows that draws empty: a host cannot change its element as React swaps to a div. li[dsListSection] draws its heading, its nested list (the div form while it has no rows) and its footer; its rows go in an ng-container or a @for block, because the template parser closes an open li at the next li. Node props take a short text (start an icon name) or a TemplateRef. onSelect is a function input; linkProps takes target, rel, download, hreflang, aria-current and tabIndex. Order C1 and S1 rows as React: titleLines, flush, action rows with Enter on key down and Space on key up, chevron, control, footer, tone danger. Motion as React: list-stagger once on the first paint, collection-flip and row-glide. Not yet: swipe (waits for the Angular SwipeActions); rows hydrated from server HTML are not told apart from a first paint."
       },
       "native": {
         "status": "planned",

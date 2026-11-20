@@ -1,1 +1,1 @@
-export { CloseButton, closeButtonLabels, type CloseButtonProps } from './CloseButton';
+export { CloseButton, closeButtonLabels, type CloseButtonEmphasis, type CloseButtonProps } from './CloseButton';

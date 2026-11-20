@@ -81,7 +81,7 @@ const FULL_DAYS = new Set(['2026-11-21', '2026-11-27', '2026-12-04']);
 const START_VALUE = '2026-11-26T19:30';
 const MAX_GUESTS = 8;
 /** The restaurant's own number, for larger groups. */
-const VENUE_PHONE = '112345678';
+const VENUE_PHONE = '110000000';
 
 /** The quick slots, 24 hour, by meal. */
 const meals: readonly { id: string; name: { en: string; ar: string }; slots: readonly string[] }[] = [
@@ -127,7 +127,7 @@ const words = {
     form: 'تفاصيل الحجز',
     guestsHeader: 'الضيوف',
     guests: 'عدد الضيوف',
-    guestsNote: (phone: ReactNode) => <>للمجموعات أكثر من {MAX_GUESTS} أشخاص، اتصل على المطعم على {phone}.</>,
+    guestsNote: (phone: ReactNode) => <>للمجموعات اللي فوق {MAX_GUESTS} أشخاص، الحجز بالاتصال على المطعم: {phone}.</>,
     dateHeader: 'التاريخ والوقت',
     date: 'التاريخ',
     time: 'الوقت',

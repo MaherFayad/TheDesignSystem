@@ -216,14 +216,14 @@ export function Screen({ lang }: ScreenProps) {
       </SheetTrigger>
       <SheetContent title={t(workout.title, lang)} description={w.sheetTitle} closeLabel={w.sheetClose}>
         <SheetBody>
-          {/* One grouped list of actions. ListItem has no danger tone, so delete is told apart by its place and its icon: a component request in the report. */}
+          {/* One grouped list of actions; delete is the danger row (ListItem tone danger, order S1). */}
           <List variant="inset" aria-label={w.actionList}>
             <ListItem start="share" title={w.share} onSelect={act(w.shared, 'link')} chevron={false} />
             <ListItem start="copy" title={w.duplicate} onSelect={act(w.duplicated, 'copy')} chevron={false} />
             <ListItem start="edit" title={w.edit} href="#edit-routine" />
             <ListItem start="calendar" title={w.calendar} onSelect={act(w.added, 'calendar')} chevron={false} />
             <ListItem start="bell" title={w.reminder} onSelect={act(w.reminded, 'bell')} chevron={false} />
-            <ListItem start="trash" title={w.del} onSelect={act(w.deleted, 'trash')} chevron={false} />
+            <ListItem start="trash" title={w.del} tone="danger" onSelect={act(w.deleted, 'trash')} chevron={false} />
           </List>
         </SheetBody>
       </SheetContent>

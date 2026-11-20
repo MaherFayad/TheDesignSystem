@@ -10,16 +10,15 @@
 // from tokens.
 //
 // Every control is a component of @the-system/react:
-// - the close button: IconButton with the close icon and solid emphasis,
-//   so it holds over the picture. CloseButton is always a ghost glyph,
-//   which does not hold over a picture: a component request in the report;
+// - the close button: CloseButton with solid emphasis, the raised disc
+//   that holds over the picture (order S1);
 // - the page dots: Pagination with variant dots (arrow keys, a press on a
 //   dot, the compact track when the dots do not fit);
 // - the actions: Button with shape pill (and a ghost Button for sign in on
 //   the last page).
 // This file's CSS (./onboarding.css) is page layout only.
 import { useRef, useState } from 'react';
-import { Button, IconButton, Pagination } from '@the-system/react';
+import { Button, CloseButton, Pagination } from '@the-system/react';
 import { Art, ScreenShell, t, type ArtName, type Text } from './kit';
 import type { ScreenMeta, ScreenProps } from './types';
 import './onboarding.css';
@@ -114,7 +113,7 @@ export function Screen({ lang }: ScreenProps) {
           <Art art={current.art} shape="square" />
           {!last && (
             <div data-gallery="ob-close">
-              <IconButton icon="close" label={w.skip} emphasis="solid" onClick={skip} />
+              <CloseButton label={w.skip} emphasis="solid" onClick={skip} />
             </div>
           )}
         </div>

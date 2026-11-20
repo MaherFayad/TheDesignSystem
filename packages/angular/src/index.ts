@@ -29,6 +29,7 @@ export * from './components/input/index';
 export * from './components/input-group/index';
 export * from './components/label/index';
 export * from './components/link/index';
+export * from './components/list/index';
 export * from './components/list-box/index';
 export * from './components/meter/index';
 export * from './components/multi-select/index';

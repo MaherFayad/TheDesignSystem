@@ -18,6 +18,13 @@
  *                          that covers the box on hover, focus and press
  *   --_close-button-pinch  the scale the glyph pinches to while pressed,
  *                          scale.anticipate; 1 turns it off
+ *
+ * Order S1 (proposed): emphasis solid, the raised close. A filled disc on
+ * the raised surface with the text color glyph and the tooltip lift, so it
+ * reads over a picture or a video whatever is under it: the glyph keeps
+ * 3:1 against the disc (WCAG 2.2 1.4.11), never against the media. It takes
+ * a full round corner; a style still sets its own control corner in its
+ * recipe. Hover and press keep the fill and bloom a veil from the glyph.
  */
 @layer ds.base {
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
@@ -134,5 +141,27 @@
     opacity: 1;
   }
 
-  /* Forced colors: Button.css hides the layers; the system draws the hover. */
+  /* ------------------------------------------------------------ raised (emphasis solid, order S1) */
+
+  /* [data-size][data-shape] lift these over the neutral solid fill of Button.css. */
+  [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape] {
+    --_button-radius: var(--ds-radius-pill);
+    --_button-bg: var(--ds-color-bg-surface);
+    --_button-bg-hover: var(--ds-color-bg-surface);
+    --_button-bg-active: var(--ds-color-bg-surface);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-shadow: var(--ds-elevation-tooltip);
+    --_close-button-bloom: var(--ds-color-bg-overlay-10);
+  }
+
+  /* Forced colors: Button.css hides the layers; the system draws the hover. The raised disc keeps a system edge. */
+  @media (forced-colors: active) {
+    [data-ds='close-button'][data-emphasis='solid'][data-size][data-shape] {
+      border-color: ButtonText;
+    }
+  }
 }

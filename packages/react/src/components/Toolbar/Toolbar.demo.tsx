@@ -1,5 +1,6 @@
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme/Theme';
+import { ButtonGroup } from '../ButtonGroup';
 import {
   Toolbar,
   ToolbarButton,
@@ -104,6 +105,28 @@ function TextToolbar({ narrow = false }: { narrow?: boolean }) {
   );
 }
 
+/** A bottom toolbar of bar groups (order S1): on ios each attached group is a glass capsule, as in the Navbar. */
+const barCopy = {
+  en: { toolbar: 'Note tools', edit: 'Edit history', undo: 'Undo', redo: 'Redo', share: 'Share and more', send: 'Share note', more: 'More actions' },
+  ar: { toolbar: 'أدوات الملاحظة', edit: 'سجل التعديل', undo: 'تراجع', redo: 'إعادة', share: 'المشاركة والمزيد', send: 'مشاركة الملاحظة', more: 'إجراءات إضافية' },
+} as const;
+
+function BarGroupsToolbar({ lang = 'en' }: { lang?: 'en' | 'ar' }) {
+  const t = barCopy[lang];
+  return (
+    <Toolbar aria-label={t.toolbar} size="lg">
+      <ButtonGroup attached aria-label={t.edit}>
+        <ToolbarButton icon="undo" label={t.undo} />
+        <ToolbarButton icon="redo" label={t.redo} />
+      </ButtonGroup>
+      <ButtonGroup attached aria-label={t.share}>
+        <ToolbarButton icon="share" label={t.send} />
+        <ToolbarButton icon="more" label={t.more} />
+      </ButtonGroup>
+    </Toolbar>
+  );
+}
+
 export default function ToolbarDemo() {
   return (
     <DemoPage>
@@ -140,6 +163,13 @@ export default function ToolbarDemo() {
           <ToolbarButton icon="zoom-out" label="Zoom out" />
           <ToolbarButton icon="zoom-in" label="Zoom in" />
         </Toolbar>
+      </DemoCase>
+
+      <DemoCase id="bar-groups" title="Bar groups: attached ButtonGroups in a bottom toolbar">
+        <BarGroupsToolbar />
+        <Theme lang="ar" data-demo="content">
+          <BarGroupsToolbar lang="ar" />
+        </Theme>
       </DemoCase>
 
       <DemoCase id="many" title="Many tools in groups">

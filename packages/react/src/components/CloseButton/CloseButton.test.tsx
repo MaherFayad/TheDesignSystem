@@ -58,6 +58,26 @@ describe('CloseButton', () => {
     expect(el.getAttribute('data-size')).toBe('lg');
   });
 
+  it('draws the raised close with emphasis solid, keeps its name and icon, and a group does not change it (order S1)', () => {
+    render(
+      <>
+        <CloseButton emphasis="solid" label="Close preview" />
+        <ButtonGroup emphasis="ghost" aria-label="Media">
+          <CloseButton emphasis="solid" label="Close video" />
+        </ButtonGroup>
+        <ButtonGroup emphasis="solid" aria-label="Panel">
+          <CloseButton label="Close panel" />
+        </ButtonGroup>
+      </>,
+    );
+    const raised = screen.getByRole('button', { name: 'Close preview' });
+    expect(raised.getAttribute('data-emphasis')).toBe('solid');
+    expect(raised.getAttribute('data-tone')).toBe('neutral');
+    expect(raised.querySelector('[data-part="icon"] [data-ds="icon"]')?.getAttribute('data-icon')).toBe('close');
+    expect(screen.getByRole('button', { name: 'Close video' }).getAttribute('data-emphasis')).toBe('solid');
+    expect(screen.getByRole('button', { name: 'Close panel' }).getAttribute('data-emphasis')).toBe('ghost');
+  });
+
   it('takes ref as a prop', () => {
     const ref = createRef<HTMLButtonElement>();
     render(<CloseButton ref={ref} />);
@@ -66,7 +86,7 @@ describe('CloseButton', () => {
 
   it('renders every demo case', () => {
     const { container } = render(<CloseButtonDemo />);
-    for (const id of ['variants', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {
+    for (const id of ['variants', 'raised', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
   });
