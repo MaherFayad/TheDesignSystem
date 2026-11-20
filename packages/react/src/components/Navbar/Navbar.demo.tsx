@@ -61,19 +61,19 @@ function Brand({ children }: { children: string }) {
 }
 
 /** A narrow phone shell, 320 wide, whose main scrolls: the large title wraps and collapses on ios. */
-const narrowShell = { inlineSize: '20rem', blockSize: '26rem', border: 'var(--ds-border-width-default) solid var(--ds-color-border-default)' } as const;
+const narrowShell = { boxSizing: 'border-box', inlineSize: 'min(100%, 20rem)', blockSize: '26rem', overflow: 'clip', border: 'var(--ds-border-width-default) solid var(--ds-color-border-default)' } as const;
 
 function NarrowShell({ lang }: { lang: 'en' | 'ar' }) {
   const t =
     lang === 'ar'
-      ? { label: 'الأغاني', back: 'المكتبة', heading: 'أغاني رحلة الليل من الرياض إلى أبها', more: 'خيارات إضافية', row: (n: number) => `أغنية ${n}` }
-      : { label: 'Songs', back: 'Library', heading: 'Songs for the night drive to Abha', more: 'More options', row: (n: number) => `Song ${n}` };
+      ? { label: 'رحلة الليل', back: 'المكتبة', heading: 'أغاني رحلة الليل من الرياض إلى أبها', row: (n: number) => `أغنية ${n}` }
+      : { label: 'Night drive', back: 'Library', heading: 'Songs for the night drive to Abha', row: (n: number) => `Song ${n}` };
   return (
     <div style={narrowShell}>
       <PageShell
         embedded
         mainId={`title-wrap-${lang}`}
-        header={<Navbar label={t.label} items={[]} back={{ label: t.back, href: '#library' }} heading={t.heading} end={<IconButton icon="more" label={t.more} />} />}
+        header={<Navbar label={t.label} items={[]} back={{ label: t.back, href: '#library' }} heading={t.heading} />}
       >
         {Array.from({ length: 14 }, (_, i) => (
           <p key={i}>{t.row(i + 1)}</p>
