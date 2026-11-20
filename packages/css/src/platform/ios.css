@@ -2465,6 +2465,24 @@
     --_menu-enter-scale: var(--ds-scale-morph);
     --_menu-shift: 0px;
   }
+
+  /*
+   * Order S1: in light the capsule takes the menus' dense frosted tint, but
+   * at 44 tall over a white page the menus' one wide, low shadow spread too
+   * thin and the white rim vanished, so it read as bare text. It keeps the
+   * tint and adds what a small panel needs to stand off the page: a close
+   * contact shadow under the wide one and a faint dark hairline round the
+   * edge (drawn as a shadow, so no layout moves). Dark keeps the menus'
+   * paint: its lifted gray already stands off the page.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'][data-scheme='light'] [data-ds='selection-menu'] {
+      box-shadow:
+        0 0 0 var(--ds-border-width-default) color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 8%, transparent),
+        0 var(--ds-space-fixed-2xs) var(--ds-space-fixed-l) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent),
+        0 var(--ds-space-fixed-m) calc(3 * var(--ds-space-fixed-xl)) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 12%, transparent);
+    }
+  }
 }
 
 /*
