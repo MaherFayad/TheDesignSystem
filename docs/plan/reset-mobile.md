@@ -349,3 +349,16 @@ the lead runs it on a quiet machine.
   `angular` status in the touched manifests.
 - Acceptance: Angular specs for each, `npm run contract -- --framework
   angular --platform ios` for the touched components.
+
+### A3 Angular forms, third part (ds-angular)
+
+- Goal, in this order: Pagination (numbered and dots), SectionIndex,
+  ActionSheet, SkipLink, Drawer, then PageShell with `placement` (it
+  provides `DS_BAR_PLACEMENT`, which the Angular TabBar already reads).
+  Navbar waits for an order of its own (it needs Sidebar and a navigation
+  menu behaviour).
+- Files owned: `packages/angular/**` minus barrels and generated files; the
+  `angular` status in the touched manifests.
+- Acceptance: Angular specs for each, the Angular typecheck, `npm run
+  contract -- --framework angular --platform ios` for each touched
+  component, and `--device duo-outer` for PageShell.
