@@ -314,3 +314,38 @@ the lead runs it on a quiet machine.
   and Neutral, light and dark, one RTL; `npm run contract -- --framework
   react --platform ios --component Navbar`, the same for `web` and with
   `--device duo-outer`; unit tests for the collapse state.
+
+### S1 System gaps the new screens found (ds-component)
+
+- Goal: the screens M10.2, M10.6 to M10.9 reported these; fix them in the
+  system, not in the screens.
+  1. `ds doctor` rule `ds/slot-limits`: the AlertDialog footer accepts
+     AlertDialogCancel and AlertDialogAction; the Card and Tile title slots
+     accept their own link part. Fix in the manifests or the rule, with a
+     test for each.
+  2. Toast on `ios`: the banner respects the top safe area although it is
+     portaled outside the Theme (it sat under the camera cutout).
+  3. Icons `undo` and `redo` in both icon sets, with the RTL mirror rule.
+  4. ListItem `tone="danger"` (`data-tone`), for a destructive row.
+  5. CloseButton `emphasis="raised"`: a filled disc that reads over media.
+  6. Toolbar: an attached ButtonGroup inside a bottom Toolbar draws as a
+     glass group on `ios`, as it does in the Navbar.
+  7. SelectionMenu on `ios` light: the capsule reads as a panel (dense
+     frosted, as menus do after F3), not as bare text.
+- Files owned: the folders and manifests of those components, the doctor
+  rule and its tests, the icon maps, their parts of `ios.css`.
+- Forbidden: Navbar and its CSS (K1 owns them), screen files, contracts.
+- Acceptance: unit tests, doctor 0 findings on `apps/gallery-react/src/ios-screens`
+  for the two rules, before and after sheets, contract runs for the touched
+  components on `ios` and `web`.
+
+### A2 Angular forms of the M9 components, second part (ds-angular)
+
+- Goal, in this order, as far as one order reaches: `data-modality` wiring
+  in the Angular theme; `placement` on TabBar, Navbar and PageShell (DU7);
+  ListSection and the List row additions; Pagination dots; Toast `start`,
+  `meta`, `closable`; SwipeActions; ActionSheet; SectionIndex; TabBarSearch.
+- Files owned: `packages/angular/**` minus barrels and generated files; the
+  `angular` status in the touched manifests.
+- Acceptance: Angular specs for each, `npm run contract -- --framework
+  angular --platform ios` for the touched components.
