@@ -175,11 +175,28 @@ class Run {
         </ng-container>
       </div>
       <div dsTheme [lang]="'ar'" data-demo="content">
-        <ng-template #folderArabic let-trigger let-long="long" let-name="name">
-          <ng-container [ngTemplateOutlet]="folderAlert" [ngTemplateOutletContext]="{ $implicit: fieldsCopy.ar, trigger, long, name }" />
+        <!-- Declared inside the Arabic theme, so the portal copies it. -->
+        <ng-template #folderArabic let-t let-trigger="trigger" let-long="long" let-name="name">
+      <ng-container dsAlertDialog (openChange)="$event && name.set('')">
+        <button dsButton dsAlertDialogTrigger [attr.data-demo-trigger]="trigger">{{ t.open }}</button>
+        <ng-template dsAlertDialogContent [icon]="false"
+          [title]="long ? 'مجلد جديد للوحات إطلاق الربيع وكل ملفات الحملة المرفقة فيها' : t.title"
+          [description]="long ? sample.ar.long : t.description">
+          <fieldset dsAlertDialogBody [legend]="t.legend">
+            <div dsField [label]="t.name">
+              <div dsInput variant="plain" clearable [value]="name()" (valueChange)="name.set($event ?? '')" [placeholder]="t.placeholder"></div>
+            </div>
+          </fieldset>
+          <div dsAlertDialogFooter>
+            <button dsButton dsAlertDialogCancel wrap>{{ t.cancel }}</button>
+            <button dsButton dsAlertDialogAction primary requiresValue wrap>{{ long ? 'إنشاء المجلد ونقل اللوحات له' : t.action }}</button>
+          </div>
         </ng-template>
+      </ng-container>
+    </ng-template>
+
         <div data-demo="row" label="عربي">
-          <ng-container [ngTemplateOutlet]="folderArabic" [ngTemplateOutletContext]="{ $implicit: 'fields-arabic', long: false, name: folderNameArabic }" />
+          <ng-container [ngTemplateOutlet]="folderArabic" [ngTemplateOutletContext]="{ $implicit: fieldsCopy.ar, trigger: 'fields-arabic', long: false, name: folderNameArabic }" />
         </div>
       </div>
     </section>
@@ -225,12 +242,28 @@ class Run {
             </ng-template>
           </ng-container>
         </ng-template>
-        <ng-template #folderLong let-trigger let-name="name">
-          <ng-container [ngTemplateOutlet]="folderAlert" [ngTemplateOutletContext]="{ $implicit: fieldsCopy.ar, trigger, long: true, name }" />
+    <ng-template #folderLong let-t let-trigger="trigger" let-long="long" let-name="name">
+      <ng-container dsAlertDialog (openChange)="$event && name.set('')">
+        <button dsButton dsAlertDialogTrigger [attr.data-demo-trigger]="trigger">{{ t.open }}</button>
+        <ng-template dsAlertDialogContent [icon]="false"
+          [title]="long ? 'مجلد جديد للوحات إطلاق الربيع وكل ملفات الحملة المرفقة فيها' : t.title"
+          [description]="long ? sample.ar.long : t.description">
+          <fieldset dsAlertDialogBody [legend]="t.legend">
+            <div dsField [label]="t.name">
+              <div dsInput variant="plain" clearable [value]="name()" (valueChange)="name.set($event ?? '')" [placeholder]="t.placeholder"></div>
+            </div>
+          </fieldset>
+          <div dsAlertDialogFooter>
+            <button dsButton dsAlertDialogCancel wrap>{{ t.cancel }}</button>
+            <button dsButton dsAlertDialogAction primary requiresValue wrap>{{ long ? 'إنشاء المجلد ونقل اللوحات له' : t.action }}</button>
+          </div>
         </ng-template>
+      </ng-container>
+    </ng-template>
+
         <div data-demo="row">
           <ng-container [ngTemplateOutlet]="arabicLong" [ngTemplateOutletContext]="{ $implicit: 'long-arabic' }" />
-          <ng-container [ngTemplateOutlet]="folderLong" [ngTemplateOutletContext]="{ $implicit: 'long-arabic-fields', name: folderNameLong }" />
+          <ng-container [ngTemplateOutlet]="folderLong" [ngTemplateOutletContext]="{ $implicit: fieldsCopy.ar, trigger: 'long-arabic-fields', long: true, name: folderNameLong }" />
         </div>
       </div>
     </section>
