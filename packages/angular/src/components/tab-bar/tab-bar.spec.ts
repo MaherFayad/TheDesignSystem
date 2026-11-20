@@ -5,7 +5,7 @@
 // order never changes with placement; focus follows the search item into
 // its field and back), 4.1.2 Name, role, value (the badge words in the link
 // name, aria-current on the current item).
-import { Component, signal, type TemplateRef } from '@angular/core';
+import { Component, signal, type Type } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DsTheme } from '../../theme/theme';
@@ -56,7 +56,7 @@ class Example {
 }
 
 @Component({
-  imports: [DsTabBar, DsTabBarItem, DsTheme],
+  imports: [DsTabBar, DsTabBarItem],
   template: `
     <div [attr.dir]="dir()">
       <nav dsTabBar aria-label="Main" size="lg" [placement]="placement()" (keydown)="own($event)">
@@ -74,7 +74,7 @@ class Placed {
   own = (_event: KeyboardEvent) => {};
 }
 
-async function mount<T>(type: new (...args: never[]) => T): Promise<ComponentFixture<T>> {
+async function mount<T>(type: Type<T>): Promise<ComponentFixture<T>> {
   const fixture = TestBed.createComponent(type);
   document.body.appendChild(fixture.nativeElement);
   await fixture.whenStable();
@@ -462,7 +462,6 @@ class Search {
   readonly placement = signal<TabBarPlacement | undefined>(undefined);
   readonly href = signal<string | undefined>('#search');
   selected = vi.fn((_event: MouseEvent) => {});
-  readonly unused: TemplateRef<unknown> | null = null;
 }
 
 describe('TabBarSearch', () => {
