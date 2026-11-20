@@ -1677,6 +1677,68 @@
     --_date-field-radius: var(--ds-radius-xs);
   }
 
+  /*
+   * The time dialog (order K1, proposed): the time chip of a DatePicker
+   * opens a TimeField in a Dialog (DatePicker.tsx). There it takes the time
+   * input of Material's time picker: no box around the row, the hour and
+   * the minute each a box of its own, 96 by 72 (two touch sizes by one and
+   * two 12s), the small corner and the highest surface, the digits at
+   * display medium (45), the colon as large between them. The focused box
+   * takes the tonal fill, its text and a 2dp ring in the primary edge
+   * (3:1), so the box being typed in is never shown by colour alone. The
+   * day period keeps its own box, as tall, at the end. Digits stay tabular.
+   */
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] {
+    --_date-field-height: auto;
+    --_date-field-padding-inline: 0px;
+    --_date-field-font-size: var(--ds-type-display-medium-font-size);
+    --_date-field-segment-padding-inline: var(--ds-space-fixed-m);
+    --_date-field-segment-radius: var(--ds-shape-corner-small);
+    --_date-field-segment-bg-focus: var(--ds-color-primary-tint-hover);
+    --_date-field-segment-fg-focus: var(--ds-color-primary-on-surface);
+    --_date-field-literal-fg: var(--ds-color-text-default);
+
+    border-color: transparent;
+    font-family: var(--ds-type-display-medium-font-family);
+    line-height: var(--ds-type-display-medium-line-height);
+  }
+
+  /* The box shows focus on the segment itself, not as a ring around the whole row. */
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field']:focus-within {
+    box-shadow: none;
+  }
+
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] > [data-part='input'] {
+    gap: var(--ds-space-fixed-2xs);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment'] {
+    min-inline-size: calc(2 * var(--ds-size-touch-android));
+    min-block-size: calc(var(--ds-size-touch-android) + 2 * var(--ds-space-fixed-xl));
+    background-color: var(--ds-color-bg-surface-3);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment']:focus {
+    box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-primary-border);
+  }
+
+  /* The day period, a word, sits in the middle of its box here. */
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment'][data-type='day-period'] {
+    justify-content: center;
+    min-inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    font-size: var(--ds-type-title-medium-font-size);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='literal'] {
+    font-size: var(--ds-type-display-large-font-size);
+  }
+
+  @media (forced-colors: active) {
+    [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+
   [data-platform='android'] [data-ds='color-swatch-picker'][data-layout='row'] {
     --_color-swatch-picker-item-size: var(--ds-size-touch-android);
   }

@@ -56,6 +56,21 @@
 //   capsule holding several IconButtons. Each stays its own button, with
 //   its own name and target; the group has a name of its own (role group).
 //   The Navbar draws no seam between them; a platform paints the capsule.
+// - Large title collapse (order K1, docs/plan/reset-mobile.md, proposed):
+//   on `ios`, a Navbar with a heading in a PageShell header collapses when
+//   the shell's main scrolls: the large title scrolls away and the bar's
+//   inline title fades in. ios.css draws it; where scroll timelines exist
+//   the title follows the scroll there (CSS only). This file stamps the
+//   state, `data-collapsed` on the root, for both paths, from a scroll
+//   listener on main: the heading sits in the header, outside the scroller,
+//   so an IntersectionObserver rooted on main cannot see it. Collapsed is
+//   main scrolled past the heading's height where the title follows the
+//   scroll, and past its first pixel where it does not (no scroll timeline,
+//   or reduced motion), so the title never sits over content that scrolled
+//   under it. The inline title is the heading's text in
+//   `data-inline-title`, drawn by CSS as generated content with empty
+//   alternative text: the h1 stays the one heading for assistive tech in
+//   both states, and stays in the tree while it is out of view.
 import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -65,7 +80,7 @@ import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
-import { inFrame, planFollow, planInk } from '@the-system/motion';
+import { inFrame, planFollow, planInk, prefersReducedMotion } from '@the-system/motion';
 import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { placementAttr, usePlacement, type BarPlacement } from '../PageShell/placement';
@@ -148,7 +163,9 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
   /**
    * The page's title as its h1, on a row of its own under the buttons (part
    * heading): the large title of a pushed screen. Keep one h1 on the page.
-   * Default none: the bar draws no heading, and a brand may be the title.
+   * On `ios` in a PageShell header it collapses into the bar's inline title
+   * when main scrolls (data-collapsed). Default none: the bar draws no
+   * heading, and a brand may be the title.
    */
   heading?: ReactNode;
   /** Keeps the bar at the top of the scrolling page and reserves scroll padding. Default false. Sets data-sticky. */
@@ -194,10 +211,14 @@ export function Navbar({
   ...rest
 }: NavbarProps) {
   const placement = usePlacement(placementProp);
-  const { lang } = useTheme();
+  const { lang, platform } = useTheme();
   const words = labels ?? menuLabels[lang === 'ar' ? 'ar' : 'en'];
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const hasHeading = heading !== undefined && heading !== null && heading !== false;
+  const collapsed = useLargeTitleCollapse(rootRef, headingRef, hasHeading && platform === 'ios');
+  const inlineTitle = useInlineTitle(headingRef, heading, hasHeading);
   const motion = useMotion();
   const track = useIndicatorTrack();
   useHoverFollow(rootRef, { item: BAR_LINK, pseudo: '::after', mode: () => motion.mode('nav-hover-follow') });
@@ -284,6 +305,8 @@ export function Navbar({
       data-size={size}
       data-sticky={sticky ? '' : undefined}
       data-placement={placementAttr(placement)}
+      data-collapsed={collapsed ? '' : undefined}
+      data-inline-title={inlineTitle || undefined}
     >
       {(back !== undefined || start !== undefined) && (
         <div data-part="start">
@@ -367,9 +390,72 @@ export function Navbar({
           </DrawerContent>
         </Drawer>
       )}
-      {heading !== undefined && <h1 data-part="heading">{heading}</h1>}
+      {hasHeading && (
+        <h1 ref={headingRef} data-part="heading">
+          {heading}
+        </h1>
+      )}
     </NavigationMenu.Root>
   );
+}
+
+/** True where the heading follows the scroll in CSS (ios.css): scroll timelines exist and motion is not reduced. */
+function titleFollowsScroll(): boolean {
+  return typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('animation-timeline: scroll()') && !prefersReducedMotion();
+}
+
+/**
+ * The large title collapse state (order K1). Active only on `ios`, with a
+ * heading, in the header of a PageShell whose main is the scroller. Reads
+ * main's scroll offset once per frame while it scrolls; never measures
+ * during render.
+ */
+function useLargeTitleCollapse(rootRef: { current: HTMLElement | null }, headingRef: { current: HTMLElement | null }, active: boolean): boolean {
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    const root = rootRef.current;
+    const shell = active ? root?.closest('[data-ds="page-shell"]') : null;
+    const header = root?.closest('[data-part="header"]');
+    const main = shell?.querySelector<HTMLElement>(':scope > [data-part="main"]');
+    if (!root || !shell || !main || !header || header.parentElement !== shell) {
+      setCollapsed(false);
+      return;
+    }
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      const title = headingRef.current;
+      // Where the title follows the scroll it is gone once main has scrolled its height; elsewhere at the first pixel.
+      const at = titleFollowsScroll() && title ? Math.max(1, title.offsetHeight) : 1;
+      setCollapsed(main.scrollTop >= at);
+    };
+    const onScroll = () => {
+      if (frame === 0) frame = requestAnimationFrame(read);
+    };
+    read();
+    main.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      main.removeEventListener('scroll', onScroll);
+      if (frame !== 0) cancelAnimationFrame(frame);
+    };
+  }, [rootRef, headingRef, active]);
+  return active && collapsed;
+}
+
+/**
+ * The text of the inline title: the heading itself when it is a string or
+ * a number, else the heading element's text, read after render.
+ */
+function useInlineTitle(headingRef: { current: HTMLElement | null }, heading: ReactNode, hasHeading: boolean): string {
+  const plain = typeof heading === 'string' || typeof heading === 'number' ? String(heading) : null;
+  const [read, setRead] = useState('');
+  useLayoutEffect(() => {
+    if (plain !== null || !hasHeading) return;
+    const text = headingRef.current?.textContent?.trim() ?? '';
+    setRead((prev) => (prev === text ? prev : text));
+  });
+  if (!hasHeading) return '';
+  return (plain ?? read).trim();
 }
 
 /** The back button: a link when it has href, else a button. chevron-back mirrors in right to left (icons/names.ts). */

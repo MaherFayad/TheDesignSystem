@@ -146,7 +146,8 @@
     padding: var(--_ios-bezel);
     border: var(--ds-border-width-default) solid var(--ds-color-border-strong);
     border-radius: calc(var(--_ios-screen-radius) + var(--_ios-bezel));
-    background-color: var(--ds-color-bg-scrim-solid);
+    /* Hardware is black in every style: not the scrim, which is navy in Neutral dark (order K1). */
+    background-color: var(--ds-color-glass-backdrop-dark);
   }
 
   /* The phone's corners are rounder than the folding iPhone's. */
@@ -154,9 +155,18 @@
     --_ios-screen-radius: calc(5 * var(--ds-space-fixed-xl));
   }
 
-  /* On a dark page a black body would vanish: the body takes a raised surface there. */
+  /*
+   * On a dark page a black body would vanish: the body takes a dark gray
+   * there, mixed from the style free black and white, so it stays neutral in
+   * every style (surface-3 is navy in Neutral dark).
+   */
   [data-scheme='dark'] [data-gallery='ios-device'] {
-    background-color: var(--ds-color-bg-surface-3);
+    background-color: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 82%, var(--ds-color-glass-backdrop-bright));
+  }
+
+  /* The screen's ground behind the page and Safari's bars: black in dark, as the platform's page ground (ios.css), in every style. */
+  [data-scheme='dark'] :is([data-gallery='ios-display'], [data-gallery='ios-display'] > iframe, [data-gallery='ios-chrome']) {
+    background-color: var(--ds-color-glass-backdrop-dark);
   }
 
   [data-gallery='ios-device'][data-hinge='left'] {
@@ -255,7 +265,7 @@
     inline-size: var(--_ios-camera-w);
     block-size: var(--_ios-camera-h);
     border-radius: var(--ds-radius-pill);
-    background-color: var(--ds-color-bg-scrim-solid);
+    background-color: var(--ds-color-glass-backdrop-dark);
     box-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-strong);
     pointer-events: none;
   }

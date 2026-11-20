@@ -1,0 +1,66 @@
+/*
+ * M10.9 fitness-plan: page layout only (gallery overrides layer). It places
+ * the summary line, the week's progress with its info button, the start
+ * capsule and the list of exercises, and sizes the covers. No component is
+ * restyled here. Tokens only, logical properties only.
+ */
+@layer ds.overrides {
+  [data-ios-screen='fitness-plan'] [data-gallery='ios-screen-shell'] > [data-part='main'] {
+    padding: 0;
+  }
+
+  [data-gallery='fp-page'] {
+    /* The side edge: 20 at 393 wide (two fixed-l), the large title's edge. */
+    --_fp-edge: calc(2 * var(--ds-space-fixed-l));
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-xl);
+    padding-block: 0 max(var(--ds-space-3xl), var(--ds-inset-safe-bottom));
+  }
+
+  [data-gallery='fp-summary'],
+  [data-gallery='fp-week'],
+  [data-gallery='fp-start'] {
+    margin: 0;
+    padding-inline: max(var(--_fp-edge), var(--ds-inset-safe-start)) max(var(--_fp-edge), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='fp-summary'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='fp-week'] {
+    display: grid;
+    gap: var(--ds-space-s);
+  }
+
+  [data-gallery='fp-week-head'] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-s);
+  }
+
+  [data-gallery='fp-heading'] {
+    margin: 0;
+    font-size: var(--ds-type-title-small-font-size);
+    line-height: var(--ds-type-title-small-line-height);
+    font-weight: var(--ds-type-title-small-font-weight);
+  }
+
+  [data-gallery='fp-pop-text'] {
+    margin: 0;
+  }
+
+  /* The inset list keeps the page's side edges, as its groups do in the reference. */
+  [data-gallery='fp-list'] {
+    margin-block: 0;
+    margin-inline: max(var(--_fp-edge), var(--ds-inset-safe-start)) max(var(--_fp-edge), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='fp-cover'] {
+    display: block;
+    flex: none;
+    inline-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+  }
+}

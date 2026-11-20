@@ -234,9 +234,18 @@ async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hi
   }
   if (hint.focus) {
     const sel = scope ? `${scope} ${hint.focus}` : hint.focus;
-    const el = page.locator(sel).first();
-    if ((await el.count()) === 0) {
+    const all = page.locator(sel);
+    if ((await all.count()) === 0) {
       failures.push(`${key}: contract.keys focus selector ${sel} matches nothing`);
+      return;
+    }
+    // Order K1: the first match the layout shows. A part the layout hides at
+    // this size (the Navbar's bar links under breakpoint.tablet, where the
+    // menu button and its Drawer take their place) cannot take focus, so no
+    // one can press the key on it there: noted, not failed.
+    const el = all.filter({ visible: true }).first();
+    if ((await el.count()) === 0) {
+      note(`${key}: not checked at this viewport, ${sel} is hidden by the layout`);
       return;
     }
     await el.evaluate((node) => node.setAttribute('data-contract-stop', ''));

@@ -331,7 +331,8 @@ export function Screen({ variant, lang }: ScreenProps) {
   const split = variant.frame === 'duo-inner' && variant.orient === 'landscape';
   const groups = { lang, s, set };
 
-  const header = <Navbar label={w('title')} brand={<h1 data-gallery="settings-title">{w('title')}</h1>} items={[]} />;
+  // The large title is the Navbar's heading, under an empty bar row: it collapses into the bar's inline title as the page scrolls (order K1).
+  const header = <Navbar label={w('title')} items={[]} heading={w('title')} />;
   const tabs = (
     <div data-gallery="settings-tabs">
       <TabBar aria-label={w('tabs')}>
@@ -348,8 +349,10 @@ export function Screen({ variant, lang }: ScreenProps) {
       setChosen(id);
     };
     const current = categories.find((c) => c.id === chosen) ?? categories[0]!;
+    // Order K1: the screen's title sits at the top of the detail column, not over the list. The panes resize, so the
+    // title is in the detail pane itself rather than in the shell's header, which spans both.
     return (
-      <ScreenShell header={header}>
+      <ScreenShell>
         <div data-gallery="settings-split">
           <SplitView
             layout="split"
@@ -374,7 +377,10 @@ export function Screen({ variant, lang }: ScreenProps) {
             }
             secondary={
               <div data-gallery="settings-pane" data-pane="detail">
-                <h2 data-gallery="settings-detail-title">{w(current.name)}</h2>
+                <div data-gallery="settings-detail-head">
+                  <h1 data-gallery="settings-split-title">{w('title')}</h1>
+                  <h2 data-gallery="settings-detail-title">{w(current.name)}</h2>
+                </div>
                 <Category id={chosen} {...groups} />
               </div>
             }

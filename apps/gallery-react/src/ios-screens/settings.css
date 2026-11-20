@@ -4,12 +4,6 @@
  * restyles a component.
  */
 @layer ds.overrides {
-  /* The large title is the Navbar's brand; the heading keeps the brand's size. */
-  [data-gallery='settings-title'] {
-    margin: 0;
-    font: inherit;
-  }
-
   /* The groups, one under the other. */
   [data-gallery='settings-page'],
   [data-gallery='settings-pane'] {
@@ -20,17 +14,26 @@
 
   /*
    * The cards sit 16 in from the screen's sides, as on the platform: main
-   * gives 12 (space.2xl at this width), the page adds 4.
+   * gives the 16 (ios-shell.css), the page adds nothing (order K1).
    */
-  [data-gallery='settings-page'] {
-    padding-inline: var(--ds-space-fixed-2xs);
+
+  /*
+   * The tab bar floats over the content at the bottom of the shell, out of
+   * the page flow, as the music library's dock (order K1): fixed on the
+   * shell (it contains layout), inside the side insets. The platform keeps
+   * the room after the last row and the scroll padding for a bar over the
+   * content (ios-shell.css). In the side column the bar places itself.
+   */
+  [data-gallery='settings-tabs'] {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
+    z-index: var(--ds-z-topbar);
+    pointer-events: none;
   }
 
-  /* The tab bar floats over the content at the bottom of the scrolling main. */
-  [data-gallery='settings-tabs'] {
-    position: sticky;
-    inset-block-end: 0;
-    z-index: var(--ds-z-topbar);
+  [data-gallery='settings-tabs'] > * {
+    pointer-events: auto;
   }
 
   /* The split fills the main region of the inner screen in landscape. */
@@ -38,23 +41,42 @@
     block-size: 100%;
   }
 
-  /* Each pane keeps 16 from the screen's edge (main's 12 and 4) and 16 from the divider. */
+  /* Each pane keeps main's 16 from the screen's edge and 16 from the divider. */
   [data-gallery='settings-split'] [data-gallery='settings-pane'] {
     padding-block: 0 calc(2 * var(--ds-space-fixed-xl));
   }
 
   [data-gallery='settings-pane'][data-pane='list'] {
-    padding-inline: var(--ds-space-fixed-2xs) calc(2 * var(--ds-space-fixed-m));
+    padding-inline: 0 calc(2 * var(--ds-space-fixed-m));
   }
 
   [data-gallery='settings-pane'][data-pane='detail'] {
-    padding-inline: calc(2 * var(--ds-space-fixed-m)) var(--ds-space-fixed-2xs);
+    padding-inline: calc(2 * var(--ds-space-fixed-m)) 0;
   }
 
-  /* The detail's own title, centred over it as a navigation title is on a wide screen. */
+  /*
+   * The detail's head (order K1): the screen's large title at the top of the
+   * detail column, 34 bold, 4 in from the cards' edge as the Navbar's large
+   * title is, then the chosen group's title under it.
+   */
+  [data-gallery='settings-detail-head'] {
+    display: grid;
+    gap: var(--ds-space-fixed-2xs);
+    padding-inline-start: var(--ds-space-fixed-2xs);
+  }
+
+  [data-gallery='settings-split-title'] {
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-family: var(--ds-type-display-large-font-family);
+    font-size: var(--ds-type-display-large-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-type-display-large-line-height);
+  }
+
   [data-gallery='settings-detail-title'] {
     margin: 0;
-    text-align: center;
+    color: var(--ds-color-text-bright);
     font-size: var(--ds-type-title-large-font-size);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-type-title-large-line-height);

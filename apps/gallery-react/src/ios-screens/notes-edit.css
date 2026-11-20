@@ -1,0 +1,103 @@
+/*
+ * M10.7 notes-edit: page layout only (gallery overrides layer, tokens only,
+ * logical properties). The components draw themselves; the rules here set
+ * the note's own text, the sketch and the row of tool capsules at the
+ * bottom. The sketch's ink is the pen's colour, a value the person picks,
+ * passed in as --notes-ink.
+ */
+@layer ds.overrides {
+  [data-gallery='notes-page'] {
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-fixed-l);
+    padding-inline: var(--ds-space-fixed-2xs);
+    padding-block-end: calc(2 * var(--ds-space-fixed-xl));
+    /* A readable measure on a wide screen. */
+    inline-size: 100%;
+    max-inline-size: calc(170 * var(--ds-space-fixed-2xs));
+    margin-inline: auto;
+  }
+
+  [data-gallery='notes-edited'] {
+    margin: 0;
+    text-align: center;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+
+  /* The note's text: body large, a line of space between paragraphs. */
+  [data-gallery='notes-text'] {
+    display: grid;
+    gap: var(--ds-space-fixed-m);
+    border-radius: var(--ds-radius-control);
+    font-size: var(--ds-type-body-large-font-size);
+    line-height: var(--ds-type-body-large-line-height);
+    overflow-wrap: break-word;
+  }
+
+  [data-gallery='notes-text']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    box-shadow: var(--ds-focus-shadow-ring);
+  }
+
+  [data-gallery='notes-text'] > p {
+    margin: 0;
+  }
+
+  /* The sketch: the hills in the surface colour, the path and its ends in the pen's ink. */
+  [data-gallery='notes-sketch'] {
+    display: grid;
+    gap: var(--ds-space-fixed-xs);
+    margin: 0;
+    max-inline-size: calc(80 * var(--ds-space-fixed-2xs));
+  }
+
+  [data-gallery='notes-sketch'] svg {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--ds-radius-card);
+    background-color: var(--ds-color-bg-surface-2);
+  }
+
+  [data-gallery='notes-hill'] {
+    fill: var(--ds-color-bg-surface-3);
+  }
+
+  [data-gallery='notes-ink'] {
+    fill: none;
+    stroke: var(--notes-ink);
+    stroke-width: calc(2 * var(--ds-border-width-strong));
+    stroke-linecap: round;
+  }
+
+  [data-gallery='notes-ink-dot'] {
+    fill: var(--notes-ink);
+  }
+
+  [data-gallery='notes-sketch'] figcaption {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+
+  /* The tool capsules over the home bar: the tools at the start, New note at the end. */
+  [data-gallery='notes-footer'] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-fixed-m);
+    padding-block: var(--ds-space-fixed-m) max(var(--ds-space-fixed-m), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)));
+    padding-inline: max(var(--ds-space-fixed-l), var(--ds-inset-safe-start)) max(var(--ds-space-fixed-l), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='notes-footer'] > [data-ds='toolbar']:first-child {
+    min-inline-size: 0;
+    flex: 0 1 auto;
+  }
+
+  [data-gallery='notes-footer'] > [data-ds='toolbar']:last-child {
+    flex: none;
+  }
+}

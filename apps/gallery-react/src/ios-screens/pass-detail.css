@@ -1,0 +1,81 @@
+/*
+ * M10.3 pass-detail: page layout and the drawn pass art only, in the
+ * overrides layer, tokens only, logical properties. No component is
+ * restyled here: the rules size and place the screen's own elements (the
+ * title heading, the main column, the thumbnail box, the entry code, the
+ * sheet's stack of groups).
+ */
+@layer ds.overrides {
+  /* The large title is the Navbar's brand: a heading that takes the brand's own type. */
+  [data-gallery='pass-title'] {
+    margin: 0;
+    font: inherit;
+  }
+
+  /* The pass sits 16 in from the screen's sides, as the settings cards do: main gives 12, this adds 4. */
+  [data-gallery='pass-main'] {
+    display: grid;
+    align-content: start;
+    min-block-size: 100%;
+    padding-inline: var(--ds-space-fixed-2xs);
+    padding-block-end: calc(2 * var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='pass-fields'] {
+    margin: 0;
+  }
+
+  /* The entry code: a square of cells drawn from two tokens, centred under the fields. */
+  [data-gallery='pass-code-box'] {
+    display: grid;
+    justify-items: center;
+    gap: var(--ds-space-s);
+    padding-block-start: var(--ds-space-xl);
+  }
+
+  [data-gallery='pass-code'] {
+    display: block;
+    inline-size: calc(36 * var(--ds-space-fixed-2xs));
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    border: var(--ds-space-fixed-xs) solid var(--ds-color-bg-surface);
+    border-radius: var(--ds-radius-xs);
+    outline: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    background-color: var(--ds-color-bg-surface);
+    background-image:
+      repeating-conic-gradient(var(--ds-color-bg-surface) 0 25%, transparent 0 50%),
+      repeating-conic-gradient(var(--ds-color-text-default) 0 25%, var(--ds-color-bg-surface) 0 50%);
+    background-size: 75% 75%, 12.5% 12.5%;
+    background-position: 0 0, 0 0;
+  }
+
+  [data-gallery='pass-number'] {
+    font-variant-numeric: tabular-nums;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* The sheet's groups, one under the other. */
+  [data-gallery='pass-sheet'] {
+    display: grid;
+    gap: calc(2 * var(--ds-space-fixed-xl));
+    padding-block-end: var(--ds-inset-safe-bottom);
+  }
+
+  /* The pass thumbnail in its own row: 44 wide, a card of 3 to 4. */
+  [data-gallery='pass-thumb'] {
+    display: block;
+    inline-size: calc(11 * var(--ds-space-fixed-2xs));
+    flex: none;
+  }
+
+  [data-gallery='pass-popover-text'] {
+    margin: 0;
+  }
+
+  [data-gallery='pass-empty'] {
+    display: grid;
+    place-items: center;
+    padding-block: calc(4 * var(--ds-space-3xl));
+  }
+}

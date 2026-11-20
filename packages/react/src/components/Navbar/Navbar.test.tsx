@@ -1,8 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import type { AnchorHTMLAttributes } from 'react';
+import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Theme } from '../../theme';
 import { ButtonGroup } from '../ButtonGroup';
 import { IconButton } from '../IconButton';
@@ -351,5 +351,134 @@ describe('Navbar pushed screen form (order C2)', () => {
     expect(html).toContain('data-part="start"');
     expect(html).toContain('data-part="back"');
     expect(html).toContain('<h1 data-part="heading">Songs</h1>');
+  });
+});
+
+// Order K1 (docs/plan/reset-mobile.md): the large title collapse on ios.
+// WCAG 2.2 covered here: 1.3.1 and 2.4.6 (the title stays one h1 in both
+// states; the inline title is CSS generated text with empty alternative
+// text, not a second heading), 4.1.2 (data-collapsed is a state, the h1
+// never leaves the tree). The look and the scroll timeline are ios.css.
+describe('Navbar large title collapse (order K1)', () => {
+  function shell(platform: 'ios' | 'web' = 'ios', heading: ReactNode = 'Songs') {
+    return (
+      <Theme platform={platform}>
+        <PageShell embedded header={<Navbar label="Songs" items={[]} back={{ label: 'Library', href: '#library' }} heading={heading} />}>
+          <a href="#one">One</a>
+        </PageShell>
+      </Theme>
+    );
+  }
+
+  const mainOf = (container: HTMLElement) => {
+    const main = container.querySelector<HTMLElement>('[data-ds="page-shell"] > [data-part="main"]');
+    if (!main) throw new Error('no main');
+    return main;
+  };
+
+  const scrollTo = (main: HTMLElement, top: number) => {
+    main.scrollTop = top;
+    fireEvent.scroll(main);
+  };
+
+  const restore: (() => void)[] = [];
+  afterEach(() => {
+    while (restore.length) restore.pop()?.();
+    document.documentElement.removeAttribute('data-motion');
+  });
+
+  /** Makes the browser report scroll timelines, and the heading a height, as a browser would. */
+  function withScrollTimelines(height: number) {
+    const supports = CSS.supports;
+    CSS.supports = ((q: string) => q === 'animation-timeline: scroll()' || supports.call(CSS, q)) as typeof CSS.supports;
+    const desc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, get: () => height });
+    restore.push(() => {
+      CSS.supports = supports;
+      if (desc) Object.defineProperty(HTMLElement.prototype, 'offsetHeight', desc);
+    });
+  }
+
+  it('rests expanded, collapses once main scrolls, and expands again at the top', async () => {
+    const { container } = render(shell());
+    const el = root(container);
+    expect(el.hasAttribute('data-collapsed')).toBe(false);
+    scrollTo(mainOf(container), 40);
+    await waitFor(() => expect(el.getAttribute('data-collapsed')).toBe(''));
+    scrollTo(mainOf(container), 0);
+    await waitFor(() => expect(el.hasAttribute('data-collapsed')).toBe(false));
+  });
+
+  it('where the title follows the scroll, collapses only once main has scrolled the heading away', async () => {
+    withScrollTimelines(49);
+    const { container } = render(shell());
+    const el = root(container);
+    scrollTo(mainOf(container), 30);
+    await new Promise((done) => requestAnimationFrame(() => done(null)));
+    await new Promise((done) => setTimeout(done, 20));
+    expect(el.hasAttribute('data-collapsed')).toBe(false);
+    scrollTo(mainOf(container), 49);
+    await waitFor(() => expect(el.getAttribute('data-collapsed')).toBe(''));
+  });
+
+  it('under reduced motion the state switches at the first pixel, as where scroll timelines are missing', async () => {
+    withScrollTimelines(49);
+    document.documentElement.setAttribute('data-motion', 'reduce');
+    const { container } = render(shell());
+    scrollTo(mainOf(container), 1);
+    await waitFor(() => expect(root(container).getAttribute('data-collapsed')).toBe(''));
+  });
+
+  it('keeps one h1 named by the title in both states; the inline title is an attribute, not an element', async () => {
+    const { container } = render(shell());
+    const el = root(container);
+    expect(el.getAttribute('data-inline-title')).toBe('Songs');
+    expect(screen.getAllByRole('heading', { name: 'Songs' })).toHaveLength(1);
+    scrollTo(mainOf(container), 40);
+    await waitFor(() => expect(el.getAttribute('data-collapsed')).toBe(''));
+    const headings = screen.getAllByRole('heading', { name: 'Songs' });
+    expect(headings).toHaveLength(1);
+    expect(headings[0]?.getAttribute('data-part')).toBe('heading');
+    expect(headings[0]?.closest('[aria-hidden="true"]')).toBeNull();
+  });
+
+  it('reads the inline title from a heading that is a node', () => {
+    const { container } = render(
+      shell(
+        'ios',
+        <>
+          Songs <span>for the road</span>
+        </>,
+      ),
+    );
+    expect(root(container).getAttribute('data-inline-title')).toBe('Songs for the road');
+  });
+
+  it('never collapses on web, outside a PageShell, or without a heading', async () => {
+    const web = render(shell('web'));
+    scrollTo(mainOf(web.container), 40);
+    await new Promise((done) => setTimeout(done, 40));
+    expect(root(web.container).hasAttribute('data-collapsed')).toBe(false);
+    web.unmount();
+
+    const alone = render(
+      <Theme platform="ios">
+        <Navbar label="Songs" items={[]} heading="Songs" />
+      </Theme>,
+    );
+    expect(root(alone.container).hasAttribute('data-collapsed')).toBe(false);
+    alone.unmount();
+
+    const none = render(
+      <Theme platform="ios">
+        <PageShell embedded header={<Navbar label="Main" items={[]} brand={<a href="#h">Brand</a>} />}>
+          <a href="#one">One</a>
+        </PageShell>
+      </Theme>,
+    );
+    scrollTo(mainOf(none.container), 40);
+    await new Promise((done) => setTimeout(done, 40));
+    expect(root(none.container).hasAttribute('data-collapsed')).toBe(false);
+    expect(root(none.container).hasAttribute('data-inline-title')).toBe(false);
   });
 });

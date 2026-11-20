@@ -2485,8 +2485,8 @@
    * Order M1, measured on the vendor's own music app at 393 wide: no bar,
    * the title 34 bold at the leading edge (20 in), the buttons 44 tall glass
    * capsules and circles at the trailing edge (16 in), 8 apart, on the same
-   * row as the title. The collapse of the large title on scroll needs a
-   * scroll part the Navbar does not have (see the order report).
+   * row as the title. The large title collapses on scroll (order K1, below
+   * the pushed form).
    */
   [data-platform='ios'] [data-ds='navbar'] {
     --_navbar-control-height: var(--ds-size-touch-ios);
@@ -2539,6 +2539,121 @@
   [data-platform='ios'] [data-ds='navbar'] > [data-part='heading'] {
     padding-inline-start: var(--ds-space-fixed-2xs);
     font-family: var(--ds-type-display-large-font-family);
+  }
+
+  /* A heading with no button beside it still has the bar's row over it, empty, as on the platform: the large title sits under the bar. */
+  [data-platform='ios'] [data-ds='navbar']:has(> [data-part='heading']):not(:has(> :is([data-part='start'], [data-part='brand'], [data-part='end'], [data-part='menu-button']))) {
+    padding-block-start: calc(max(var(--ds-space-fixed-m), var(--ds-inset-safe-top)) + var(--_navbar-control-height));
+  }
+
+  /*
+   * Large title collapse (order K1, proposed). A Navbar with a heading in a
+   * PageShell header: the title row lies over the top of main, which keeps
+   * a band of the same height (--_ios-title-room) at the start of its
+   * scroll, so at rest nothing moves. As main scrolls, the title scrolls
+   * away with the content (ds-ios-title-away, on main's scroll timeline,
+   * transform and clip-path only, cut at the bar's edge); where there is no
+   * scroll timeline, or motion is reduced, the title stays still and is
+   * hidden once main leaves its start. Either way the Navbar stamps
+   * data-collapsed (Navbar.tsx) and the bar's inline title, the heading's
+   * text in data-inline-title, fades in at the centre of the button row
+   * (pattern fade; reduced: it shows at once). Main never runs under the
+   * button row, so a focused control is never under the bar (WCAG 2.4.11).
+   * The heading stays one line, cut with an ellipsis, as on the platform:
+   * its height is known to CSS. The inline title is generated content with
+   * empty alternative text, so the h1 is the one heading assistive tech
+   * reads, in both states (it stays in the tree while out of view).
+   */
+  [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) {
+    --_ios-title-room: calc(var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) + var(--ds-space-s));
+  }
+
+  [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']):lang(ar) {
+    --_ios-title-room: calc(var(--ds-type-display-large-font-size) * var(--ds-font-leading-arabic-tight) + var(--ds-space-s));
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header']:has(> [data-ds='navbar'] > [data-part='heading']) {
+    margin-block-end: calc(-1 * var(--_ios-title-room));
+  }
+
+  [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) > [data-part='main']::before {
+    content: '';
+    display: block;
+    block-size: var(--_ios-title-room);
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'] > [data-part='heading'] {
+    overflow-x: clip;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-collapsed] > [data-part='heading'] {
+    opacity: 0;
+  }
+
+  /* The inline title: one line in the button row, clear of two round buttons at each side. */
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-inline-title]:has(> [data-part='heading'])::after {
+    content: attr(data-inline-title) / '';
+    position: absolute;
+    inset-block-end: var(--_ios-title-room);
+    inset-inline: calc(var(--_navbar-padding-inline) + 2 * var(--_navbar-control-height) + var(--ds-space-fixed-m));
+    block-size: var(--_navbar-control-height);
+    overflow: hidden;
+    color: var(--ds-color-text-bright);
+    font-size: var(--ds-type-body-large-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--_navbar-control-height);
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-inline-title][data-collapsed]:has(> [data-part='heading'])::after {
+    opacity: 1;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) {
+      timeline-scope: --_ios-page-scroll;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) > [data-part='main'] {
+      scroll-timeline: --_ios-page-scroll block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :root:not([data-motion='reduce']) [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'] > [data-part='heading'] {
+        animation: ds-ios-title-away linear both;
+        animation-timeline: --_ios-page-scroll;
+        animation-range: 0 var(--_ios-title-room);
+      }
+    }
+  }
+
+  @keyframes ds-ios-title-away {
+    from {
+      clip-path: inset(0 0 0 0);
+      transform: translateY(0);
+    }
+
+    to {
+      clip-path: inset(var(--_ios-title-room) 0 0 0);
+      transform: translateY(calc(-1 * var(--_ios-title-room)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-inline-title]:has(> [data-part='heading'])::after {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'][data-inline-title]:has(> [data-part='heading'])::after {
+    transition: none;
   }
 
   /* Bar buttons: 44 tall capsules, an icon alone is a circle; the label at 17. */

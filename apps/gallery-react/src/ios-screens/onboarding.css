@@ -1,0 +1,81 @@
+/*
+ * M10.8 onboarding: page layout only (gallery overrides layer). The
+ * picture over the top of the screen with the close button in its corner,
+ * then the title and the text, the page dots and the capsule actions over
+ * the home bar. No component is restyled here. Tokens only, logical
+ * properties only.
+ */
+@layer ds.overrides {
+  [data-ios-screen='onboarding'] [data-gallery='ios-screen-shell'] > [data-part='main'] {
+    padding: 0;
+  }
+
+  [data-gallery='ob-page'] {
+    /* The side edge: 20 at 393 wide (two fixed-l), as the other screens. */
+    --_ob-edge: calc(2 * var(--ds-space-fixed-l));
+    /* On the wide frames the page keeps a phone's measure, centred: 12 touch targets, 528 at default density. */
+    --_ob-max: calc(12 * var(--ds-size-touch-ios));
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    gap: var(--ds-space-l);
+    box-sizing: border-box;
+    min-block-size: 100dvh;
+    padding-block: var(--ds-inset-safe-top) max(var(--ds-space-l), var(--ds-inset-safe-bottom));
+    padding-inline: max(var(--_ob-edge), var(--ds-inset-safe-start), calc((100% - var(--_ob-max)) / 2)) max(var(--_ob-edge), var(--ds-inset-safe-end), calc((100% - var(--_ob-max)) / 2));
+  }
+
+  /* The picture fills the room the text leaves, keeps its corners, and never grows past a square. */
+  [data-gallery='ob-picture'] {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-block-size: calc(3 * var(--ds-size-touch-ios));
+    overflow: hidden;
+    border-radius: var(--ds-radius-card);
+  }
+
+  [data-gallery='ob-picture'] > [data-gallery='ios-art'] {
+    position: absolute;
+    inset: 0;
+    block-size: 100%;
+    aspect-ratio: auto;
+    border-radius: inherit;
+  }
+
+  [data-gallery='ob-close'] {
+    position: absolute;
+    inset-block-start: var(--ds-space-m);
+    inset-inline-end: var(--ds-space-m);
+  }
+
+  [data-gallery='ob-text'] {
+    display: grid;
+    gap: var(--ds-space-s);
+    text-align: center;
+  }
+
+  [data-gallery='ob-title'] {
+    margin: 0;
+    font-size: var(--ds-type-headline-medium-font-size);
+    line-height: var(--ds-type-headline-medium-line-height);
+    /* The reference's title is bold over the regular text under it. */
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-gallery='ob-body'] {
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-type-body-large-font-size);
+    line-height: var(--ds-type-body-large-line-height);
+  }
+
+  [data-gallery='ob-dots'] {
+    display: flex;
+    justify-content: center;
+  }
+
+  [data-gallery='ob-actions'] {
+    display: grid;
+    gap: var(--ds-space-s);
+  }
+}

@@ -1,0 +1,90 @@
+/*
+ * M10.2 music-search: page layout only (gallery overrides layer). Every
+ * control and surface is a system component with its own look; this file
+ * places them: the page's side edges, the cover sizes, the two column grid
+ * of categories, the scope row, the centred loading and empty states, and
+ * the dock of the compact tab bar with its search field at the bottom.
+ * Tokens only, logical properties only.
+ */
+@layer ds.overrides {
+  /* The shell's main carries no padding here: the page sets its own edges (as music-library). */
+  [data-ios-screen='music-search'] [data-gallery='ios-screen-shell'] > [data-part='main'] {
+    padding: 0;
+  }
+
+  [data-gallery='ms-page'] {
+    /* The page's side edge: 20 at 393 wide, the large title's edge (two fixed-l, as music-library). */
+    --_ms-edge: calc(2 * var(--ds-space-fixed-l));
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-l);
+    padding-block-start: var(--ds-space-s);
+    /* Room under the last row for the dock over the content. */
+    padding-block-end: calc(var(--ds-size-touch-ios) * 2 + var(--ds-inset-safe-bottom));
+  }
+
+  /* The rows start at the page's edge, as the title does (the same rule as music-library). */
+  [data-gallery='ms-list'] {
+    margin: 0;
+    padding-inline-start: calc(2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-xl));
+  }
+
+  [data-gallery='ms-cover'] {
+    display: block;
+    flex: none;
+    inline-size: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs));
+  }
+
+  [data-gallery='ms-clear-recent'] {
+    display: flex;
+    justify-content: flex-end;
+    padding-inline: max(var(--_ms-edge), var(--ds-inset-safe-start)) max(var(--_ms-edge), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='ms-browse'] {
+    display: grid;
+    gap: var(--ds-space-m);
+    padding-inline: max(var(--_ms-edge), var(--ds-inset-safe-start)) max(var(--_ms-edge), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='ms-heading'] {
+    margin: 0;
+    font-size: var(--ds-type-title-small-font-size);
+    line-height: var(--ds-type-title-small-line-height);
+    font-weight: var(--ds-type-title-small-font-weight);
+  }
+
+  [data-gallery='ms-grid'] {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(3 * var(--ds-size-touch-ios))), 1fr));
+    gap: var(--ds-space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-gallery='ms-scope'] {
+    padding-inline: max(var(--_ms-edge), var(--ds-inset-safe-start)) max(var(--_ms-edge), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='ms-loading'],
+  [data-gallery='ms-empty'] {
+    display: grid;
+    place-items: center;
+    padding-block: calc(2 * var(--ds-space-3xl));
+    padding-inline: max(var(--ds-space-xl), var(--ds-inset-safe-start)) max(var(--ds-space-xl), var(--ds-inset-safe-end));
+  }
+
+  /* The dock: the compact tab bar with the search field, over the content at the bottom, as music-library's dock. */
+  [data-gallery='ms-dock'] {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: var(--ds-inset-safe-start) var(--ds-inset-safe-end);
+    z-index: var(--ds-z-topbar);
+    pointer-events: none;
+  }
+
+  [data-gallery='ms-dock'] > * {
+    pointer-events: auto;
+  }
+}

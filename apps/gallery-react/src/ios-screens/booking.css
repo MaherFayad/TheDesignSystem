@@ -1,0 +1,89 @@
+/*
+ * M10.6 booking: page layout only (gallery overrides layer, tokens only,
+ * logical properties). The components draw themselves; the rules here size
+ * and place the screen's own boxes: the venue line, the two columns of the
+ * form on a wide screen, the calendar's box and the footer with the capsule.
+ */
+@layer ds.overrides {
+  [data-gallery='booking-page'] {
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-fixed-xl);
+    padding-inline: var(--ds-space-fixed-2xs);
+    padding-block-end: var(--ds-space-fixed-xl);
+  }
+
+  /* The venue under the large title: a small cover and two lines of text. */
+  [data-gallery='booking-venue'] {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-fixed-m);
+    padding-inline: var(--ds-space-fixed-l);
+  }
+
+  [data-gallery='booking-cover'] {
+    display: block;
+    flex: none;
+    inline-size: calc(12 * var(--ds-space-fixed-2xs));
+    border-radius: var(--ds-radius-control);
+    overflow: hidden;
+  }
+
+  [data-gallery='booking-venue-text'] {
+    display: grid;
+    gap: var(--ds-space-fixed-3xs);
+    margin: 0;
+    min-inline-size: 0;
+    font-size: var(--ds-type-body-large-font-size);
+    line-height: var(--ds-type-body-large-line-height);
+  }
+
+  [data-gallery='booking-venue-meta'] {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+
+  /* The form: one column on a phone, two side by side on a wide screen. */
+  [data-gallery='booking-form'],
+  [data-gallery='booking-side'] {
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-fixed-xl);
+    min-inline-size: 0;
+  }
+
+  @container ds-shell (inline-size > 37.5rem) { /* breakpoint.medium */
+    [data-gallery='booking-form'] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: calc(2 * var(--ds-space-fixed-m));
+    }
+  }
+
+  /* The restaurant's number stays on one line, so it never breaks inside Arabic. */
+  [data-gallery='booking-phone'] {
+    white-space: nowrap;
+  }
+
+  /* The inline picker fills its row. */
+  [data-gallery='booking-calendar'] {
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  /* The footer over the home bar: a one line summary, then the capsule. */
+  [data-gallery='booking-footer'] {
+    display: grid;
+    gap: var(--ds-space-fixed-s);
+    padding-block: var(--ds-space-fixed-m) max(var(--ds-space-fixed-m), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)));
+    padding-inline: max(var(--ds-space-fixed-l), var(--ds-inset-safe-start)) max(var(--ds-space-fixed-l), var(--ds-inset-safe-end));
+  }
+
+  [data-gallery='booking-summary'] {
+    margin: 0;
+    text-align: center;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-type-body-medium-font-size);
+    line-height: var(--ds-type-body-medium-line-height);
+  }
+}

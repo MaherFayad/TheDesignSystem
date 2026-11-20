@@ -1,0 +1,38 @@
+/*
+ * M10.10 share-flow: page layout only, in the overrides layer, tokens only,
+ * logical properties. No component is restyled here: the rules place the
+ * screen's own wrappers (the main column, the stat row, the share action
+ * box, the thumbnail box).
+ */
+@layer ds.overrides {
+  /* The card and the list sit 16 in from the screen's sides: main gives 12, this adds 4. */
+  [data-gallery='share-main'] {
+    display: grid;
+    align-content: start;
+    gap: calc(2 * var(--ds-space-fixed-xl));
+    min-block-size: 100%;
+    padding-inline: var(--ds-space-fixed-2xs);
+    padding-block-end: calc(2 * var(--ds-space-fixed-xl));
+  }
+
+  /* Three numbers in a row that wraps on a narrow screen. */
+  [data-gallery='share-stats'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xl) var(--ds-space-2xl);
+  }
+
+  [data-gallery='share-stats'] > * {
+    flex: 1 1 calc(20 * var(--ds-space-fixed-2xs));
+  }
+
+  [data-gallery='share-thumb'] {
+    display: block;
+    inline-size: calc(11 * var(--ds-space-fixed-2xs));
+    flex: none;
+  }
+
+  [data-gallery='share-load'] {
+    white-space: nowrap;
+  }
+}
