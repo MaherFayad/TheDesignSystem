@@ -63,7 +63,6 @@ import {
   afterNextRender,
   booleanAttribute,
   computed,
-  forwardRef,
   inject,
   input,
   isDevMode,
@@ -211,7 +210,7 @@ export class DsAlertDialogCancel {
  */
 @Directive({
   selector: '[dsAlertDialogAction]',
-  providers: [{ provide: DS_BUTTON_PRESET, useFactory: () => inject(forwardRef(() => DsAlertDialogAction)).preset }],
+  providers: [{ provide: DS_BUTTON_PRESET, useFactory: () => inject(DsAlertDialogAction).preset }],
   host: { 'data-part': 'action', '[attr.data-primary]': 'primary() ? "" : null', '(click)': 'onClick($event)' },
 })
 export class DsAlertDialogAction {
@@ -284,9 +283,7 @@ function isTextField(el: EventTarget | null): el is HTMLInputElement {
     '(keydown)': 'onKeydown($event)',
   },
   template: `
-    <legend data-part="legend"><span data-visually-hidden="">
-      @if (isText(legend())) {{{ legend() }}} @else {<ng-container [ngTemplateOutlet]="$any(legend())" />}
-    </span></legend>
+    <legend data-part="legend"><span data-visually-hidden="">@if (isText(legend())) {{{ legend() }}} @else {<ng-container [ngTemplateOutlet]="$any(legend())" />}</span></legend>
     <div data-part="body"><ng-content /></div>
   `,
 })
@@ -367,7 +364,7 @@ const ALERT_LAYER = new InjectionToken<LayerData>('DS_ALERT_DIALOG_LAYER');
           <h2 [id]="alert.titleId" data-part="title">{{ content.title() }}</h2>
         }
         @if (content.description() !== undefined) {
-          <p [id]="alert.descriptionId" data-part="description">{{ content.description() }}</p>
+          <p [id]="alert.descriptionId" data-part="description">@if (isTemplate(content.description())) {<ng-container [ngTemplateOutlet]="$any(content.description())" />} @else {{{ content.description() }}}</p>
         }
         <ng-container [ngTemplateOutlet]="content.template" />
       </div>
@@ -488,8 +485,8 @@ export class DsAlertDialogLayer {
 export class DsAlertDialogContent {
   /** The question, naming the action and its object: Delete the board Spring launch? It names the alert. */
   readonly title = input<string | undefined>(undefined);
-  /** What cannot be undone, in one or two sentences. It describes the alert. */
-  readonly description = input<string | undefined>(undefined);
+  /** What cannot be undone, in one or two sentences, as text or a template (a live region inside it). It describes the alert. */
+  readonly description = input<string | TemplateRef<unknown> | undefined>(undefined);
   /** The icon above the title. Default info, warning for tone danger. false shows none. Hidden from assistive tech. */
   readonly icon = input<AlertDialogIcon | undefined>(undefined);
 

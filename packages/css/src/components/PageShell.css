@@ -32,6 +32,8 @@
 @layer ds.base {
   [data-ds='page-shell'] {
     --_page-shell-bg: var(--ds-color-bg-body);
+    /* The Navbar writes the measured large title height here; this is the one line default. */
+    --_navbar-heading-size: calc(var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) + var(--ds-space-s));
     --_page-shell-fg: var(--ds-color-text-default);
     --_page-shell-border-color: var(--ds-color-border-default);
     --_page-shell-header-height: var(--ds-size-control-lg);
