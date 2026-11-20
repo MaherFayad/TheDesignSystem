@@ -9,6 +9,7 @@ export interface DemoRoute {
 export const routes: DemoRoute[] = [
   { slug: 'action-sheet', load: () => import('../../../../packages/angular/src/components/action-sheet/action-sheet.demo').then((m) => m.default) },
   { slug: 'alert', load: () => import('../../../../packages/angular/src/components/alert/alert.demo').then((m) => m.default) },
+  { slug: 'alert-dialog', load: () => import('../../../../packages/angular/src/components/alert-dialog/alert-dialog.demo').then((m) => m.default) },
   { slug: 'autocomplete', load: () => import('../../../../packages/angular/src/components/autocomplete/autocomplete.demo').then((m) => m.default) },
   { slug: 'banner', load: () => import('../../../../packages/angular/src/components/banner/banner.demo').then((m) => m.default) },
   { slug: 'button', load: () => import('../../../../packages/angular/src/components/button/button.demo').then((m) => m.default) },
@@ -41,6 +42,7 @@ export const routes: DemoRoute[] = [
   { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
   { slug: 'meter', load: () => import('../../../../packages/angular/src/components/meter/meter.demo').then((m) => m.default) },
   { slug: 'multi-select', load: () => import('../../../../packages/angular/src/components/multi-select/multi-select.demo').then((m) => m.default) },
+  { slug: 'navbar', load: () => import('../../../../packages/angular/src/components/navbar/navbar.demo').then((m) => m.default) },
   { slug: 'notification-center', load: () => import('../../../../packages/angular/src/components/notification-center/notification-center.demo').then((m) => m.default) },
   { slug: 'number-field', load: () => import('../../../../packages/angular/src/components/number-field/number-field.demo').then((m) => m.default) },
   { slug: 'otp-field', load: () => import('../../../../packages/angular/src/components/otp-field/otp-field.demo').then((m) => m.default) },
@@ -48,6 +50,7 @@ export const routes: DemoRoute[] = [
   { slug: 'pagination', load: () => import('../../../../packages/angular/src/components/pagination/pagination.demo').then((m) => m.default) },
   { slug: 'password-field', load: () => import('../../../../packages/angular/src/components/password-field/password-field.demo').then((m) => m.default) },
   { slug: 'phone-field', load: () => import('../../../../packages/angular/src/components/phone-field/phone-field.demo').then((m) => m.default) },
+  { slug: 'popover', load: () => import('../../../../packages/angular/src/components/popover/popover.demo').then((m) => m.default) },
   { slug: 'progress-bar', load: () => import('../../../../packages/angular/src/components/progress-bar/progress-bar.demo').then((m) => m.default) },
   { slug: 'progress-circle', load: () => import('../../../../packages/angular/src/components/progress-circle/progress-circle.demo').then((m) => m.default) },
   { slug: 'radio-card', load: () => import('../../../../packages/angular/src/components/radio-card/radio-card.demo').then((m) => m.default) },

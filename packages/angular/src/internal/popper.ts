@@ -16,6 +16,13 @@
 // (offset, shift with limitShift, flip, size, transformOrigin), so the
 // wrapper style, data-side and data-align equal the React ones. Angular Aria
 // has no positioning of its own, so this stays when @angular/aria arrives.
+//
+// Order A5 (Popover): the padding may differ per side (the fold and the side
+// column as collision padding, foldPadding in @the-system/shared), an arrow
+// step runs after size as Floating UI's arrow middleware, and the transform
+// origin then follows the arrow as Radix's transformOrigin middleware does.
+// The layer component can be another one with the same wrapper and content
+// (the Popover's `div[data-popover-layer]`).
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -28,12 +35,15 @@ import {
   inject,
   signal,
   type Signal,
+  type StaticProvider,
   type TemplateRef,
+  type Type,
 } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { exitGhost } from '@the-system/motion';
+import { paddingOf, type PhysicalPadding } from '@the-system/shared';
 import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../theme';
 import type { ThemeValue } from '../theme';
 
@@ -56,9 +66,18 @@ export interface PopperOptions {
   align: PopperAlign;
   /** Gap between the anchor and the popup, in CSS px. */
   sideOffset: number;
-  /** Space kept from the viewport edge, in CSS px. */
-  padding: number;
+  /** Space kept from the viewport edge, in CSS px: one number, or per physical side. */
+  padding: number | PhysicalPadding;
   rtl: boolean;
+  /** The arrow, measured: its box and the inner size of its offset parent along an axis. */
+  arrow?: PopperArrow | null;
+}
+
+export interface PopperArrow {
+  width: number;
+  height: number;
+  /** clientWidth (x) or clientHeight (y) of the arrow's offset parent; 0 when unknown. */
+  clientSize: (axis: 'x' | 'y') => number;
 }
 
 export interface PopperResult {
@@ -71,6 +90,10 @@ export interface PopperResult {
   anchorWidth: number;
   anchorHeight: number;
   origin: string;
+  /** With an arrow: its place along the side (x for top and bottom, y for left and right), and the offset Radix hides it at when not 0. */
+  arrowX?: number;
+  arrowY?: number;
+  arrowCenterOffset?: number;
 }
 
 interface Overflow {
@@ -139,30 +162,37 @@ export function computePopper(
   options: PopperOptions,
   apply: (r: { availableWidth: number; availableHeight: number; anchorWidth: number; anchorHeight: number }) => void,
 ): PopperResult {
-  const { rtl, padding } = options;
+  const { rtl } = options;
+  const pad = paddingOf(options.padding);
   const initial = options.side + (options.align !== 'center' ? `-${options.align}` : '');
   let placement = initial;
   let floating = measure();
   let { x, y } = coordsFromPlacement(reference, floating, placement, rtl);
-  const data: { offset?: { x: number; y: number }; flip?: { index: number; overflows: { placement: string; overflows: number[] }[] } } = {};
+  const data: {
+    offset?: { x: number; y: number; placement: string };
+    flip?: { index: number; overflows: { placement: string; overflows: number[] }[] };
+    arrow?: { x?: number; y?: number; centerOffset: number; alignmentOffset?: number };
+  } = {};
   let available = { availableWidth: 0, availableHeight: 0 };
   let origin = ' ';
   const overflowAt = (px: number, py: number): Overflow => ({
-    top: clip.y - py + padding,
-    bottom: py + floating.height - (clip.y + clip.height) + padding,
-    left: clip.x - px + padding,
-    right: px + floating.width - (clip.x + clip.width) + padding,
+    top: clip.y - py + pad.top,
+    bottom: py + floating.height - (clip.y + clip.height) + pad.bottom,
+    left: clip.x - px + pad.left,
+    right: px + floating.width - (clip.x + clip.width) + pad.right,
   });
 
   const steps: (() => { reset?: { placement?: string; rects?: boolean } } | void)[] = [
     // offset
     () => {
+      // After the arrow moved the popup to keep an aligned arrow on the anchor, the offset is in already.
+      if (data.offset?.placement === placement && data.arrow?.alignmentOffset) return;
       const side = sideOf(placement);
       const multi = side === 'top' || side === 'left' ? -1 : 1;
       const diff = sideAxis(placement) === 'y' ? { x: 0, y: options.sideOffset * multi } : { x: options.sideOffset * multi, y: 0 };
       x += diff.x;
       y += diff.y;
-      data.offset = diff;
+      data.offset = { ...diff, placement };
     },
     // shift, main axis only, with limitShift
     () => {
@@ -254,14 +284,50 @@ export function computePopper(
       if (next.width !== floating.width || next.height !== floating.height) return { reset: { rects: true } };
       return undefined;
     },
-    // transformOrigin, no arrow
+    // arrow (Floating UI's arrow middleware, padding 0)
+    () => {
+      const arrow = options.arrow;
+      if (!arrow) return undefined;
+      const axis = otherAxis(sideAxis(placement));
+      const len = lengthOf(axis);
+      const own = { width: arrow.width, height: arrow.height };
+      const coords = { x, y };
+      const endDiff = reference[len] + reference[axis] - coords[axis] - floating[len];
+      const startDiff = coords[axis] - reference[axis];
+      const clientSize = arrow.clientSize(axis) || floating[len];
+      const centerToReference = endDiff / 2 - startDiff / 2;
+      const largest = clientSize / 2 - own[len] / 2 - 1;
+      const minPadding = Math.min(0, largest);
+      const maxPadding = Math.min(0, largest);
+      const min = minPadding;
+      const max = clientSize - own[len] - maxPadding;
+      const center = clientSize / 2 - own[len] / 2 + centerToReference;
+      const offset = clamp(min, center, max);
+      const shouldAdd =
+        !data.arrow &&
+        alignOf(placement) !== undefined &&
+        center !== offset &&
+        reference[len] / 2 - (center < min ? minPadding : maxPadding) - own[len] / 2 < 0;
+      const alignmentOffset = shouldAdd ? (center < min ? center - min : center - max) : 0;
+      coords[axis] += alignmentOffset;
+      x = coords.x;
+      y = coords.y;
+      data.arrow = { ...(axis === 'x' ? { x: offset } : { y: offset }), centerOffset: center - offset - alignmentOffset, ...(shouldAdd ? { alignmentOffset } : {}) };
+      return shouldAdd ? { reset: {} } : undefined;
+    },
+    // transformOrigin, as Radix writes it, with the arrow when there is one
     () => {
       const side = sideOf(placement);
       const noArrow = { start: '0%', center: '50%', end: '100%' }[alignOf(placement) ?? 'center'];
-      if (side === 'bottom') origin = `${noArrow} 0px`;
-      else if (side === 'top') origin = `${noArrow} ${floating.height}px`;
-      else if (side === 'right') origin = `0px ${noArrow}`;
-      else origin = `${floating.width}px ${noArrow}`;
+      const hidden = !options.arrow || data.arrow?.centerOffset !== 0;
+      const aw = hidden ? 0 : (options.arrow?.width ?? 0);
+      const ah = hidden ? 0 : (options.arrow?.height ?? 0);
+      const xCenter = `${(data.arrow?.x ?? 0) + aw / 2}px`;
+      const yCenter = `${(data.arrow?.y ?? 0) + ah / 2}px`;
+      if (side === 'bottom') origin = `${hidden ? noArrow : xCenter} ${-ah}px`;
+      else if (side === 'top') origin = `${hidden ? noArrow : xCenter} ${floating.height + ah}px`;
+      else if (side === 'right') origin = `${-ah}px ${hidden ? noArrow : yCenter}`;
+      else origin = `${floating.width + ah}px ${hidden ? noArrow : yCenter}`;
     },
   ];
 
@@ -270,9 +336,12 @@ export function computePopper(
     const r = (steps[i] as () => { reset?: { placement?: string; rects?: boolean } } | void)();
     if (r?.reset && resets <= 50) {
       resets += 1;
-      if (r.reset.placement) placement = r.reset.placement;
-      if (r.reset.rects) floating = measure();
-      ({ x, y } = coordsFromPlacement(reference, floating, placement, rtl));
+      // An empty reset (the arrow's) runs the steps again from where the popup is, as Floating UI's `reset: true`.
+      if (r.reset.placement || r.reset.rects) {
+        if (r.reset.placement) placement = r.reset.placement;
+        if (r.reset.rects) floating = measure();
+        ({ x, y } = coordsFromPlacement(reference, floating, placement, rtl));
+      }
       i = -1;
     }
   }
@@ -285,6 +354,7 @@ export function computePopper(
     anchorWidth: reference.width,
     anchorHeight: reference.height,
     origin,
+    ...(data.arrow ? { arrowX: data.arrow.x, arrowY: data.arrow.y, arrowCenterOffset: data.arrow.centerOffset } : {}),
   };
 }
 
@@ -297,6 +367,13 @@ interface LayerData {
 
 const POPUP_LAYER = new InjectionToken<LayerData>('DS_POPUP_LAYER');
 
+/** What PopupLayer needs of its layer component: the themed host, the Radix wrapper and the popup root in it. */
+export interface PopupLayerHost {
+  readonly host: HTMLElement;
+  readonly wrapper: HTMLElement;
+  readonly content: HTMLElement | null;
+}
+
 /** The themed portal wrapper and the Radix popper wrapper around the owner's template. Internal. */
 @Component({
   selector: 'div[data-menu-layer]',
@@ -308,7 +385,7 @@ const POPUP_LAYER = new InjectionToken<LayerData>('DS_POPUP_LAYER');
   },
   template: `<div data-radix-popper-content-wrapper=""><ng-container [ngTemplateOutlet]="data.template()" /></div>`,
 })
-export class DsPopupLayer {
+export class DsPopupLayer implements PopupLayerHost {
   protected readonly data = inject(POPUP_LAYER);
   private readonly theme = inject(DsThemeService);
   readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -337,6 +414,13 @@ export interface PopupLayerOptions {
   padding: number;
   /** A dir attribute for the Radix wrapper (Radix Select passes one, Popover does not). */
   wrapperDir?: () => string | null;
+  /** Another layer component (order A5: the Popover's), with the providers it injects. Default DsPopupLayer. */
+  component?: Type<PopupLayerHost>;
+  providers?: () => StaticProvider[];
+  /** Read on every placement, over the fixed options: inputs that change while open, the fold padding, the arrow. */
+  resolve?: () => { side?: PopperSide; align?: PopperAlign; sideOffset?: number; padding?: number | PhysicalPadding; arrow?: PopperArrow | null };
+  /** After each placement, with the result (the arrow's place). */
+  placed?: (result: PopperResult) => void;
 }
 
 /**
@@ -354,7 +438,7 @@ export class PopupLayer {
   private readonly dir = inject(Directionality);
   private readonly doc = inject(DOCUMENT);
   private outlet: DomPortalOutlet | null = null;
-  private layer: DsPopupLayer | null = null;
+  private layer: PopupLayerHost | null = null;
   private undo: (() => void)[] = [];
   private generation = 0;
   private readonly template = signal<TemplateRef<unknown> | null>(null);
@@ -387,10 +471,13 @@ export class PopupLayer {
     this.template.set(this.options.template());
     const injector = Injector.create({
       parent: this.injector,
-      providers: [{ provide: POPUP_LAYER, useValue: { template: this.template, theme: this.theme.value } satisfies LayerData }],
+      providers: [
+        { provide: POPUP_LAYER, useValue: { template: this.template, theme: this.theme.value } satisfies LayerData },
+        ...(this.options.providers?.() ?? []),
+      ],
     });
     this.outlet = new DomPortalOutlet(this.doc.body, this.appRef, injector);
-    const ref = this.outlet.attach(new ComponentPortal(DsPopupLayer, null, injector));
+    const ref = this.outlet.attach(new ComponentPortal(this.options.component ?? DsPopupLayer, null, injector));
     ref.changeDetectorRef.detectChanges();
     this.layer = ref.instance;
     this.mounted.set(true);
@@ -443,16 +530,18 @@ export class PopupLayer {
       }
       return { width, height };
     };
+    const over = this.options.resolve?.() ?? {};
     const result = computePopper(
       { x: r.x, y: r.y, width: r.width, height: r.height },
       measure,
       viewportRect(this.doc),
       {
-        side: this.options.side ?? 'bottom',
-        align: this.options.align ?? 'start',
-        sideOffset: this.options.sideOffset,
-        padding: this.options.padding,
+        side: over.side ?? this.options.side ?? 'bottom',
+        align: over.align ?? this.options.align ?? 'start',
+        sideOffset: over.sideOffset ?? this.options.sideOffset,
+        padding: over.padding ?? this.options.padding,
         rtl: (win?.getComputedStyle(wrapper).direction ?? this.dir.valueSignal()) === 'rtl',
+        arrow: over.arrow ?? null,
       },
       (s) => {
         wrapper.style.setProperty('--radix-popper-available-width', `${s.availableWidth}px`);
@@ -472,6 +561,7 @@ export class PopupLayer {
     }
     this.side.set(result.side);
     this.align.set(result.align);
+    this.options.placed?.(result);
   }
 
   /** Removes the layer; an inert copy plays the exit (the owner's data-state="closed" and inert drive it). */

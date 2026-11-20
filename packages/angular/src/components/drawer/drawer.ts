@@ -92,7 +92,7 @@ import {
 import { consumeHostAttributes } from '../../internal/host';
 import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
+import { animationsDone, hideOthers, isInFloatingLayer, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
 import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsCloseButton } from '../close-button/close-button';
@@ -255,7 +255,7 @@ interface Swipe {
   host: {
   },
   template: `
-    <div data-ds="drawer" [attr.data-size]="drawer.size()" [attr.data-side]="drawer.side()" [attr.data-state]="state()"
+    <div data-ds="drawer" [attr.data-part]="content.rootPart() ?? null" [attr.data-size]="drawer.size()" [attr.data-side]="drawer.side()" [attr.data-state]="state()"
       [attr.data-dragging]="dragging() ? '' : null" (pointerdown)="onRootPointerDown($event)" (mousedown)="onRootMouseDown($event)">
       @if (drawer.modal()) {
         <div #backdrop data-part="backdrop" [attr.data-state]="state()" aria-hidden="true"
@@ -366,6 +366,8 @@ export class DsDrawerLayer {
   onDocumentKeydown(event: KeyboardEvent): void {
     if (!this.isTop() || this.closing()) return;
     if (isInsideToaster(event.target)) return;
+    // A menu or a popover above the modal keeps its own keys (Tab loop); Escape it has taken comes prevented.
+    if (isInFloatingLayer(event.target)) return;
     const modal = this.drawer.modal();
     if (event.key === 'Escape') {
       if (event.defaultPrevented) return;
@@ -389,7 +391,7 @@ export class DsDrawerLayer {
     const panel = this.panel().nativeElement;
     const target = event.target;
     if (target instanceof Node && panel.contains(target)) return;
-    if (target instanceof Element && target.closest('[data-menu-layer]')) return;
+    if (isInFloatingLayer(target)) return;
     if (isInsideToaster(target)) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();
   }
@@ -482,6 +484,12 @@ export class DsDrawerContent {
   readonly description = input<string | undefined>(undefined);
   /** Accessible name of the close control. Default "Close drawer" (Arabic under lang ar). */
   readonly closeLabel = input<string | undefined>(undefined);
+  /**
+   * data-part on the root, for a component that owns the drawer as one of
+   * its parts (order A5: the Navbar's phone list is the root with part
+   * mobile). React passes it in rootProps.
+   */
+  readonly rootPart = input<string | undefined>(undefined);
   /** aria-busy on the panel, while its content loads. React passes it as a prop of DrawerContent. */
   readonly ariaBusy = input<boolean | undefined>(undefined, { alias: 'aria-busy' });
 

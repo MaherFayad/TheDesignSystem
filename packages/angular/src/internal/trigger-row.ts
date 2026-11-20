@@ -4,6 +4,8 @@
 //
 //   <li dsListItem dsActionSheetTrigger title="Remove pass" tone="danger"></li>
 //   <li dsListItem dsDialogTrigger title="Rename board"></li>
+//   <li dsListItem dsSheetTrigger title="Pass details"></li>        order A5
+//   <li dsListItem dsPopoverTrigger title="Seat details"></li>      order A5: the title is the anchor
 //
 // A trigger directive put on the same `li[dsListItem]` finds the row here
 // (self only, so a trigger on a button inside the row's actions is an

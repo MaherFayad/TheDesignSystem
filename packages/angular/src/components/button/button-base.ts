@@ -77,7 +77,7 @@ const BASE_INPUTS = ['dsButton', 'dsIconButton', 'size', 'tone', 'shape', 'loadi
     '[attr.data-emphasis]': 'resolvedEmphasis()',
     '[attr.data-shape]': 'resolvedShape()',
     '[attr.data-loading]': 'loading() ? "" : null',
-    '[attr.data-disabled]': 'isDisabled() ? "" : null',
+    '[attr.data-disabled]': 'disabledState() ? "" : null',
     '[attr.aria-disabled]': 'inert() ? "true" : null',
     '[attr.aria-busy]': 'loading() ? "true" : null',
     '[attr.href]': 'isButton ? null : inert() ? null : href()',
@@ -119,7 +119,7 @@ export abstract class DsButtonBase {
   private readonly preset = inject(DS_BUTTON_PRESET, { self: true, optional: true });
   readonly resolvedTone = computed<ButtonTone>(() => (this.preset?.tone ? this.preset.tone(this.tone()) : this.tone()));
   /** Disabled by its own input or by a preset on the same element. */
-  readonly isDisabled = computed(() => this.disabled() || (this.preset?.disabled?.() ?? false));
+  readonly disabledState = computed(() => this.disabled() || (this.preset?.disabled?.() ?? false));
   readonly resolvedSize = computed<ButtonSize>(() => this.size() ?? this.group?.size() ?? 'md');
   readonly resolvedShape = computed<ButtonShape>(() => this.shape() ?? this.group?.shape() ?? 'default');
   readonly resolvedEmphasis = computed<ButtonEmphasis>(() => {
@@ -131,7 +131,7 @@ export abstract class DsButtonBase {
 
   protected readonly host = consumeHostAttributes(BASE_INPUTS);
   protected readonly isButton = this.host.tagName === 'BUTTON';
-  readonly inert = computed(() => this.isDisabled() || this.loading());
+  readonly inert = computed(() => this.disabledState() || this.loading());
   protected readonly linkRole = computed(() => {
     if (this.isButton) return this.role() ?? null;
     if (this.inert() && this.href() !== undefined) return this.role() ?? 'link';

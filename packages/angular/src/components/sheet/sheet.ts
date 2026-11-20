@@ -92,7 +92,7 @@ import { injectMotion } from '../../internal/motion';
 import { injectFold } from '../../internal/fold';
 import { connectModalPortal, playRefusal } from '../../internal/modal-portal';
 import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
-import { isTopModalLayer, tabbables, wrapTab } from '../../behavior';
+import { isInFloatingLayer, isTopModalLayer, tabbables, wrapTab } from '../../behavior';
 import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsButton } from '../button/button';
@@ -607,6 +607,8 @@ export class DsSheetLayer {
   onDocumentKeydown(event: KeyboardEvent): void {
     if (!this.isTop() || this.closing()) return;
     if (isInsideToaster(event.target)) return;
+    // A menu or a popover above the modal keeps its own keys (Tab loop); Escape it has taken comes prevented.
+    if (isInFloatingLayer(event.target)) return;
     if (event.key === 'Escape') {
       if (event.defaultPrevented) return;
       event.preventDefault();
@@ -622,7 +624,7 @@ export class DsSheetLayer {
     const panel = this.panel().nativeElement;
     const target = event.target;
     if (target instanceof Node && panel.contains(target)) return;
-    if (target instanceof Element && target.closest('[data-menu-layer]')) return;
+    if (isInFloatingLayer(target)) return;
     if (isInsideToaster(target)) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();
   }

@@ -98,7 +98,7 @@ import {
 import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { animationsDone, hideOthers, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
+import { animationsDone, hideOthers, isInFloatingLayer, isTopModalLayer, lockScroll, popModalLayer, pushModalLayer, tabbables, wrapTab } from '../../behavior';
 import { injectFold } from '../../internal/fold';
 import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
 import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
@@ -448,6 +448,8 @@ export class DsDialogLayer {
     if (!this.isTop() || this.closing()) return;
     // The toaster sits above dialogs: its keys (Tab through toasts, Escape) are its own, as in React.
     if (isInsideToaster(event.target)) return;
+    // A menu or a popover above the modal keeps its own keys (Tab loop); Escape it has taken comes prevented.
+    if (isInFloatingLayer(event.target)) return;
     if (event.key === 'Escape') {
       if (event.defaultPrevented) return;
       event.preventDefault();
@@ -465,7 +467,7 @@ export class DsDialogLayer {
     const target = event.target;
     if (target instanceof Node && panel.contains(target)) return;
     // A menu opened from inside the dialog lives in its own portal layer: focus there stays.
-    if (target instanceof Element && target.closest('[data-menu-layer]')) return;
+    if (isInFloatingLayer(target)) return;
     // The toaster sits above dialogs: focus may move into the toasts (F8), as in React.
     if (isInsideToaster(target)) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();

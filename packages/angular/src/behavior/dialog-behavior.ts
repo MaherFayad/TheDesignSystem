@@ -149,3 +149,15 @@ export function popModalLayer(layer: object): void {
 export function isTopModalLayer(layer: object): boolean {
   return modalLayers[modalLayers.length - 1] === layer;
 }
+
+// ------------------------------------------------------------------ floating layers above a modal
+
+/**
+ * True when the target is inside a menu or a popover layer (order A5). Such
+ * a layer opens from inside a modal but lives in its own portal, so the
+ * modal's Tab wrap and focus guard leave it alone, as Radix's focus scope
+ * stack does: a popover in a sheet's header keeps its own Tab loop.
+ */
+export function isInFloatingLayer(target: EventTarget | null): boolean {
+  return target instanceof Element && target.closest('[data-menu-layer], [data-popover-layer]') !== null;
+}

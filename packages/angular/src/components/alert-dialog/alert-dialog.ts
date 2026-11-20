@@ -82,7 +82,7 @@ import { injectMotion } from '../../internal/motion';
 import { injectFold } from '../../internal/fold';
 import { connectModalPortal, playRefusal } from '../../internal/modal-portal';
 import { followTriggerTitle, injectTriggerRow } from '../../internal/trigger-row';
-import { isTopModalLayer, tabbables, wrapTab } from '../../behavior';
+import { isInFloatingLayer, isTopModalLayer, tabbables, wrapTab } from '../../behavior';
 import { DsLayerTheme, DsThemeService, layerThemeProviders, syncDirectionality } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DS_BUTTON_PRESET, type ButtonPreset, type ButtonTone } from '../button/button-base';
@@ -297,7 +297,7 @@ export class DsAlertDialogBody {
 
   constructor() {
     // A bound value, a reset or the clear button can change it with no input event: read it after every render.
-    afterEveryRender(() => this.read());
+    afterEveryRender({ read: () => this.read() });
     inject(DestroyRef).onDestroy(() => this.alert.filled.set(null));
   }
 
@@ -439,6 +439,8 @@ export class DsAlertDialogLayer {
   onDocumentKeydown(event: KeyboardEvent): void {
     if (!this.isTop() || this.closing()) return;
     if (isInsideToaster(event.target)) return;
+    // A menu or a popover above the modal keeps its own keys (Tab loop); Escape it has taken comes prevented.
+    if (isInFloatingLayer(event.target)) return;
     if (event.key === 'Escape') {
       if (event.defaultPrevented) return;
       event.preventDefault();
@@ -454,7 +456,7 @@ export class DsAlertDialogLayer {
     const panel = this.panel().nativeElement;
     const target = event.target;
     if (target instanceof Node && panel.contains(target)) return;
-    if (target instanceof Element && target.closest('[data-menu-layer]')) return;
+    if (isInFloatingLayer(target)) return;
     if (isInsideToaster(target)) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();
   }
