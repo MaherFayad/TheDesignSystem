@@ -933,7 +933,8 @@
     "states": [
       "open",
       "closed",
-      "data-primary"
+      "data-primary",
+      "data-segment=start|end|top|bottom"
     ],
     "a11y": {
       "role": "alertdialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
@@ -955,7 +956,8 @@
         "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"alert-dialog\"] in its style.json. The title bar holds the title (a direct AlertDialogTitle child or the title prop, still the accessible name); with controls it starts with WindowControls, whose close light cancels (as Escape and Cancel do), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
         "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body.",
         "Order M9.6, proposed: the body part is an inset Fieldset root (data-ds fieldset, data-part body) of one or two Fields, each with an Input variant plain and a visible label (WCAG 3.3.2: a placeholder is never the only label). Focus order is field, field, Cancel, action (WCAG 2.4.3). AlertDialogAction primary carries data-primary; with requiresValue it is aria-disabled, and stays in the tab order, until the first field has a value.",
-        "Order M9.6, proposed, the platforms: web, the same parts and the primary a solid Button. ios: the alert card with the fields as rows of a grouped well and the default action filled with our darker tint, so its white label keeps 4.5:1 (WCAG 1.4.3; the vendor kit's brighter tint does not). android: the actions are text buttons, the primary in the tint text, the fields outlined. The platform layers draw these looks (order M9.13). Right to left mirrors the order of the actions."
+        "Order M9.6, proposed, the platforms: web, the same parts and the primary a solid Button. ios: the alert card with the fields as rows of a grouped well and the default action filled with our darker tint, so its white label keeps 4.5:1 (WCAG 1.4.3; the vendor kit's brighter tint does not). android: the actions are text buttons, the primary in the tint text, the fields outlined. The platform layers draw these looks (order M9.13). Right to left mirrors the order of the actions.",
+        "Order DU5, proposed: on a window with two viewport segments (window.viewport.segments, a foldable held open; behind a flag in Safari) the root carries data-segment, start when the segments sit side by side and bottom when they are stacked, for the platform CSS to place the overlay in that segment, clear of the band. Absent without the API: nothing changes on any other device. A model is never detected."
       ],
       "native": {
         "accessibilityRole": "alert",
@@ -7792,7 +7794,8 @@
         "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
         "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
         "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
-        "No native title attribute."
+        "No native title attribute.",
+        "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
       ]
     },
     "content": {
@@ -9120,7 +9123,8 @@
     },
     "states": [
       "open",
-      "closed"
+      "closed",
+      "data-segment=start|end|top|bottom"
     ],
     "a11y": {
       "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
@@ -9144,7 +9148,8 @@
         "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio CloseButton or the Desk close light) is aria-disabled and stays focusable.",
         "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
         "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button.",
-        "Order 1.23 motion: the backdrop blurs the page in (backdrop-filter, a solid scrim where it is missing, under reduced transparency and more contrast); the parts read within 200ms. With dismissible false a backdrop press or Escape is refused: the panel nudges once along the inline axis (interaction dialog-refuse), never under reduced motion."
+        "Order 1.23 motion: the backdrop blurs the page in (backdrop-filter, a solid scrim where it is missing, under reduced transparency and more contrast); the parts read within 200ms. With dismissible false a backdrop press or Escape is refused: the panel nudges once along the inline axis (interaction dialog-refuse), never under reduced motion.",
+        "Order DU5, proposed: on a window with two viewport segments (window.viewport.segments, a foldable held open; behind a flag in Safari) the root carries data-segment, start when the segments sit side by side and bottom when they are stacked, for the platform CSS to place the overlay in that segment, clear of the band. Absent without the API: nothing changes on any other device. A model is never detected."
       ]
     },
     "content": {
@@ -10072,7 +10077,8 @@
         "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
         "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
         "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
-        "No native title attribute."
+        "No native title attribute.",
+        "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
       ]
     },
     "content": {
@@ -15156,6 +15162,10 @@
         "default": "neutral",
         "description": "danger (order S1, proposed): a destructive row, such as Delete routine. Stamps data-tone on the row; the title and a start icon take the danger text color, which keeps 4.5:1 on the list surface. The title still names the action. Neutral stamps nothing."
       },
+      "ListItem as a trigger": {
+        "type": "node",
+        "description": "Order C5, proposed: a ListItem put as the one child of a trigger that renders its child (ActionSheetTrigger, DropdownMenuTrigger, DialogTrigger, SheetTrigger, AlertDialogTrigger, PopoverTrigger). The trigger's props (aria-haspopup, aria-expanded, aria-controls, data-state, its id and handlers) and the ref go to the row's action, the title, not to the li: the row is an action row (data-action) with the whole row as its hit area, and focus returns to the title when the overlay closes. With tone danger it is a destructive row (Remove pass) that opens an ActionSheet to confirm. Not with href or control."
+      },
       "ListItem.disabled": {
         "type": "boolean",
         "default": false,
@@ -15204,8 +15214,8 @@
       "keys": {
         "Tab": "Moves to the next row link, row button, row action or footer button",
         "Shift+Tab": "Moves to the previous row link, row button, row action or footer button",
-        "Enter": "Follows the focused row link, runs the focused action row (on key down), or activates the focused action",
-        "Space": "Runs the focused action row (on key up, as a native button), or activates the focused action button",
+        "Enter": "Follows the focused row link, runs the focused action row (on key down), or activates the focused action; on a trigger row, opens its overlay (a menu opens on its own Enter, Space and ArrowDown)",
+        "Space": "Runs the focused action row (on key up, as a native button), or activates the focused action button; on a trigger row, opens its overlay",
         "Shift+F10": "On a row with swipe actions, opens the menu of those actions (SwipeActions)"
       },
       "announce": "The link or button name is the title only; the description, end, actions and footer are read as the row's other content. Name each action and footer button with the row it acts on: Delete mail from Sara.",
@@ -15227,7 +15237,8 @@
         "The action row's title is a span with role button, tabindex 0 and the keys of a native button (Enter on key down, Space on key up, no repeat), because the button gate allows no bare button outside Button and a system Button would make the title a part of Button. WCAG 2.2 2.1.1 and 4.1.2.",
         "Wrapped titles (titleLines) keep the row's first line where a one line row puts it and grow the row downward, so at 320px wide a long title wraps instead of being cut (WCAG 2.2 1.4.10). With all the title is never cut, at 200 percent text or with text spacing (1.4.4, 1.4.12); with a count it ends with an ellipsis past that many lines, so a title cut there must be readable in full where the row leads.",
         "A flush hairline is a grid item that starts at the title's column line, so it clears a start part of any size (a 64px cover); --_list-separator-inset moves it from there and --_list-separator-inset-end sets its distance from the row end (0, full bleed).",
-        "A control row (part control) lays out start, the control and end; it is never a link or an action. A footer (part footer) is a last grid row under the text with its own buttons, drawn above the row link."
+        "A control row (part control) lays out start, the control and end; it is never a link or an action. A footer (part footer) is a last grid row under the text with its own buttons, drawn above the row link.",
+        "Order C5: a trigger row is one Tab stop on its title with role button, aria-haspopup (dialog or menu) and aria-expanded. Focus returns to the title when its ActionSheet, menu or dialog closes. A disabled trigger row keeps focus with aria-disabled and opens nothing."
       ]
     },
     "content": {
@@ -15350,6 +15361,10 @@
       {
         "wrong": "A long settings title cut to one line at 320px",
         "right": "titleLines 2 or 3 on the List, so the title wraps and the row grows"
+      },
+      {
+        "wrong": "A danger Button inside a row's title to open an ActionSheet (Remove pass)",
+        "right": "The ListItem with tone danger as the child of ActionSheetTrigger: the row is the trigger, one Tab stop, the whole row its hit area"
       }
     ],
     "since": "0.1.0",
@@ -16808,7 +16823,8 @@
         "Pushed screen form (order C2): back and start come first in the DOM, then the brand, the links and the end actions, then the heading, so focus and reading go back, start actions, end actions, then the title, as drawn: the button row, then the title row (WCAG 1.3.1, 2.4.3). The heading is an h1 that names the page (WCAG 2.4.6). The back button is named by back.label, never by its glyph alone (WCAG 4.1.2).",
         "Bar group (order C2): an attached ButtonGroup in start or end is one capsule. The group is role group with its own name; each IconButton in it keeps its own name and its own target, 44 by 44 on ios (WCAG 2.5.8, 4.1.2). Tab moves from one button to the next; the group adds no key.",
         "Placement (order DU1): the DOM order never changes, so focus goes brand, links, end actions, then the menu button in every placement: the top row, then the column top to bottom (WCAG 2.4.3). The links keep the horizontal arrow keys, because they stay a row; the end actions are tab stops.",
-        "In the column every action is 48 by 48 on ios (WCAG 2.5.8) and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): drawn by ios.css (order DU2)."
+        "In the column every action is 48 by 48 on ios (WCAG 2.5.8) and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): drawn by ios.css (order DU2).",
+        "Order C5, proposed: below 360 wide the large title wraps to two lines instead of an ellipsis (WCAG 1.4.10; the platform CSS draws the wrap). The collapse never assumes one line: on ios in a PageShell header the heading's height is measured with a ResizeObserver and written on the PageShell root as the private property --_navbar-heading-size, which the platform CSS reads for the room main keeps at its start and the range the title scrolls away in; the collapse point is that same height."
       ]
     },
     "content": {
@@ -17780,6 +17796,164 @@
           "expect": "value-changes"
         }
       }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "Pager",
+    "kind": "component",
+    "family": "navigation",
+    "summary": "Proposed (order C5). Full width pages a person swipes between, one at a time, with the dots of Pagination under them: the screens of an onboarding, the steps of a short tour. Built on scroll snap, so the swipe is the browser's own; arrow keys, Page Up and Page Down and the dots are the paths with no drag.",
+    "useWhen": [
+      "A short line of pages read one at a time, such as three onboarding screens",
+      "Content that a person swipes through on a phone and that also needs the keyboard and a screen reader path"
+    ],
+    "avoidWhen": [
+      "More than about eight pages, where nobody can count the dots",
+      "Steps of a task that must be done in order, with checks between them",
+      "Views of one object a person compares, where tabs show the names",
+      "A row of cards a person scans, where several should show at once"
+    ],
+    "insteadUse": {
+      "Steps of a task in order": "Stepper or FormWizard",
+      "Views of one object": "Tabs",
+      "A row of cards to scan": "a horizontal ScrollArea",
+      "Pages of a long list": "Pagination with numbers"
+    },
+    "anatomy": [
+      "root",
+      "viewport",
+      "page",
+      "dots"
+    ],
+    "parts": {
+      "PagerPage": "page",
+      "Pagination": "dots"
+    },
+    "slots": {
+      "viewport": {
+        "accepts": [
+          "PagerPage"
+        ],
+        "min": 1
+      },
+      "page": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "label": {
+        "type": "string",
+        "description": "Required. The name of the pages as a whole, the viewport's accessible name: Introduction (Arabic: المقدمة)."
+      },
+      "page": {
+        "type": "number",
+        "description": "The current page, from 1, controlled with onPageChange."
+      },
+      "defaultPage": {
+        "type": "number",
+        "default": 1,
+        "description": "The page it opens at, from 1."
+      },
+      "onPageChange": {
+        "type": "(page: number) => void",
+        "description": "Called with the page after a swipe settles (scrollend, or a short pause where it is missing), a key or a press on a dot. Never in the middle of a swipe."
+      },
+      "dots": {
+        "type": "boolean",
+        "default": true,
+        "description": "Draws Pagination with variant dots under the pages (part dots). Not drawn for one page."
+      },
+      "dotsLabel": {
+        "type": "string",
+        "default": "Pages",
+        "description": "The name of the dots: Introduction pages. Arabic default: الصفحات."
+      },
+      "live": {
+        "type": "boolean",
+        "default": false,
+        "description": "Makes the viewport a polite live region, for pages that change on their own (anatomy rule 13)."
+      },
+      "PagerPage": {
+        "type": "node",
+        "description": "One page, a direct child of Pager. A group whose role description is page (Arabic: صفحة) and whose name is its place, 2 of 3 (Arabic: 2 من 3). Pages that are not current are inert."
+      }
+    },
+    "states": [
+      "data-active"
+    ],
+    "a11y": {
+      "role": "The viewport is a region named by label and one Tab stop (a scroll container must take focus). Each page is a group with aria-roledescription page in the Pager's language and the name 2 of 3. The dots are Pagination dots, a nav of buttons named Page 2 of 3.",
+      "focus": "The viewport, then the controls of the current page, then the current dot. Pages out of view are inert, so Tab never lands in one. A key or a dot changes the page without moving focus.",
+      "keys": {
+        "ArrowRight": "On the viewport: the next page; the previous one in right to left. Stays at the last page.",
+        "ArrowLeft": "On the viewport: the previous page; the next one in right to left. Stays at the first page.",
+        "PageDown": "The next page.",
+        "PageUp": "The previous page.",
+        "Home": "The first page.",
+        "End": "The last page.",
+        "Tab": "From the viewport into the current page, then to the dots."
+      },
+      "announce": "The current dot carries aria-current page. With live, the new page is read politely when it changes.",
+      "native": {
+        "accessibilityRole": "adjustable"
+      },
+      "notes": [
+        "The swipe has two paths with no drag: the keys on the viewport and the dots (WCAG 2.5.7).",
+        "Keys pressed in a field, a slider, a list box or a menu inside a page stay with that control.",
+        "Right to left: the row of pages follows the reading direction, so the first page is at the right and a swipe to the left goes forward.",
+        "Under reduced motion (the media query, or data-motion=\"reduce\" on the page) a change from a key or a dot jumps at once; the swipe itself is the browser's scroll.",
+        "The server render shows the page asked for and sets no scroll; the scroll is set after mount."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Name the pages as a whole, a noun: Introduction. Built in words: page, 2 of 3, Pages."
+      },
+      "ar": {
+        "label": "اسم المجموعة كاسم: المقدمة. الكلمات المدمجة: صفحة، 2 من 3، الصفحات. أرقام غربية."
+      }
+    },
+    "tokens": [
+      "space.m",
+      "color.focus.ring",
+      "border.width.strong"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "scroll snap container with role region; PagerPage groups; Pagination variant dots; keys on the root",
+        "example": "Pager.demo.tsx",
+        "note": "Proposed, order C5. No animation library: the swipe is native scrolling with scroll snap; a change from a key, a dot or the page prop scrolls with scrollBy, smooth or instant under reduced motion. The page changes when the scroll settles."
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Base layout only: pages edge to edge, the dots centred under them.",
+      "desk": "Base layout only.",
+      "neutral": "Base layout only; on ios the dots sit on their small platter (Pagination).",
+      "liquid": "Base layout only; on ios the dots sit on their glass platter (Pagination)."
+    },
+    "mistakes": [
+      {
+        "wrong": "Pagination dots beside a hand made stack of pages swapped by state",
+        "right": "Pager, so a swipe moves the pages and the dots and keys follow it"
+      },
+      {
+        "wrong": "Every page in the tab order",
+        "right": "Only the current page: the others are inert, so focus never lands out of view"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "dots"
+      ]
     },
     "since": "0.1.0"
   },
@@ -18959,7 +19133,8 @@
         "The root also carries data-side and data-align from Radix. data-side is physical (top, right, bottom, left) after the logical side prop is mapped by direction: side start is data-side right in Arabic.",
         "Focus returns to the trigger on close. A popover with only a PopoverAnchor returns focus to the element that had it when it opened.",
         "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false).",
-        "Order 1.23 motion: the surface unfolds out of its trigger side, more along the axis away from the trigger (--_popover-enter-stretch) than across it. A part that holds focus runs its arrival in no time, so focus leaving it never replays the arrival."
+        "Order 1.23 motion: the surface unfolds out of its trigger side, more along the axis away from the trigger (--_popover-enter-stretch) than across it. A part that holds focus runs its arrival in no time, so focus leaving it never replays the arrival.",
+        "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
       ]
     },
     "content": {
@@ -23555,6 +23730,7 @@
       "body",
       "footer",
       "close",
+      "header-action",
       "confirm"
     ],
     "parts": {
@@ -23565,7 +23741,8 @@
       "SheetFooter": "footer",
       "TitleBar": "titlebar",
       "WindowControls": "controls",
-      "SheetConfirm": "confirm"
+      "SheetConfirm": "confirm",
+      "SheetHeaderAction": "header-action"
     },
     "slots": {
       "title": {
@@ -23585,6 +23762,15 @@
           "Button"
         ],
         "max": 3
+      },
+      "header-action": {
+        "accepts": [
+          "IconButton",
+          "SharePanel",
+          "DropdownMenu",
+          "Popover"
+        ],
+        "max": 1
       }
     },
     "props": {
@@ -23678,13 +23864,18 @@
       "SheetConfirm": {
         "type": "node",
         "description": "Order M9.6, proposed: the confirm part, a solid Button with the icon and the label. Put it as a direct child of SheetContent; it moves into the header after the close control (or into the title bar's actions). A press runs onClick, then closes the sheet unless onClick calls event.preventDefault()."
+      },
+      "SheetHeaderAction": {
+        "type": "node",
+        "description": "Order C5, proposed: one more action in the header besides close and confirm (share). Holds one element: an IconButton, or a component that renders one as its trigger (SharePanel, DropdownMenu, Popover). Put it as a direct child of SheetContent; it moves into the header in a div with the part header-action, between the close control and the confirm, so the tab order is close, the header action, confirm. One per sheet: a second is left out with a warning in development. The platform draws its button as it draws the close control (a round glass button on ios)."
       }
     },
     "states": [
       "open",
       "closed",
       "data-dragging",
-      "data-detent"
+      "data-detent",
+      "data-segment=start|end|top|bottom"
     ],
     "a11y": {
       "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title, described by the description.",
@@ -23711,7 +23902,9 @@
         "Order 1.29, detents: the handle is a native button (part handle) with the keys above and a press that takes the next detent, the button path for the drag (WCAG 2.5.7). A drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast, by position and speed; a flick or a drag well below the smallest closes it when dismissible. The math is shared with Angular (packages/motion helpers/sheet-detents.ts). Motion is transform only.",
         "Order 1.29, review 3 N28: the drag speed is read over the last 100ms with the release as the last sample, so a drag that pauses before the release never counts as a flick.",
         "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
-        "Order M9.6, proposed: the confirm part (SheetConfirm) sits in the header after the close control, so the tab order is close, then confirm. Its label is its accessible name (WCAG 4.1.2); where the platform draws the icon only (ios) a Tooltip shows the label on hover and focus. On ios it is a round tint button of 44 at the top inline end (WCAG 2.5.8), the mirror of the close control; on android a text button in the top bar; on web a solid Button with the icon and the label. In right to left layouts it sits at the left. While disabled it is aria-disabled and stays focusable."
+        "Order M9.6, proposed: the confirm part (SheetConfirm) sits in the header after the close control, so the tab order is close, then confirm. Its label is its accessible name (WCAG 4.1.2); where the platform draws the icon only (ios) a Tooltip shows the label on hover and focus. On ios it is a round tint button of 44 at the top inline end (WCAG 2.5.8), the mirror of the close control; on android a text button in the top bar; on web a solid Button with the icon and the label. In right to left layouts it sits at the left. While disabled it is aria-disabled and stays focusable.",
+        "Order C5: the header action is its own tab stop between the close control and the confirm. Its accessible name is the IconButton's label (Share pass, Arabic: مشاركة البطاقة). A menu or panel it opens returns focus to it.",
+        "Order DU5, proposed: on a window with two viewport segments (window.viewport.segments, a foldable held open; behind a flag in Safari) the root carries data-segment, start when the segments sit side by side and bottom when they are stacked, for the platform CSS to place the overlay in that segment, clear of the band. Absent without the API: nothing changes on any other device. A model is never detected."
       ]
     },
     "content": {
@@ -23837,7 +24030,8 @@
         "header",
         "title",
         "close",
-        "confirm"
+        "confirm",
+        "header-action"
       ]
     },
     "since": "0.1.0"
@@ -27208,7 +27402,8 @@
         "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
         "Accessory (order C2): the part accessory is first in the bar, so focus and reading go the accessory, then the items, as drawn top to bottom (WCAG 2.4.3). It has no role of its own: its content names itself (a Toolbar with aria-label). In the compact bar it moves to just before the search item, as drawn: current item, accessory, search.",
         "Compact (order C2): the items that are not drawn are display none, so they leave the tab order and the accessibility tree together; the current item keeps aria-current page and its link, the way back to the full bar. Use it on a pushed screen or while the content scrolls, never as the only bar of an app.",
-        "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
+        "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once.",
+        "Order C5, proposed: while the bar sits in the side column, a TabBarSearch with its field keeps the same DOM (last in the bar, data-expanded, named by its label); the platform CSS draws the field out of the column, at the foot of the content beside it, so it is never squeezed to the column's width. Tab reaches it after the items, as in the row."
       ]
     },
     "content": {
@@ -30574,7 +30769,8 @@
         "Pointer down on the trigger hides the tooltip, so a click never leaves it covering what the click opened. On a disabled Button the press is swallowed, so the tooltip stays and keeps saying why.",
         "The gallery shows some tooltips open with the open prop, so the contract suite and screenshots can read them; a tooltip is never open on load in a product.",
         "disabled true keeps the trigger mounted (focus stays) and closes the tooltip.",
-        "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch)."
+        "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch).",
+        "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
       ]
     },
     "content": {

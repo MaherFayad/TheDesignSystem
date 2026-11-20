@@ -221,7 +221,7 @@ describe('List', () => {
   it('renders the demo cases in order', () => {
     const { container } = render(<ListDemo />);
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));
-    expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'danger', 'disabled']);
+    expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'danger', 'trigger', 'disabled']);
   });
 
   describe('list-stagger', () => {

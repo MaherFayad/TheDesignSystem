@@ -736,6 +736,39 @@
     grid-column: 2;
   }
 
+  /*
+   * Order C5 (proposed): the Sheet's header-action part, one more action
+   * (share) between the close control and the confirm, on the title's first
+   * line. The DOM order is close, the header action, confirm, so the
+   * reading order and the tab order agree. The columns after the title are
+   * made as needed. The platform layers draw the button inside as they draw
+   * the close control.
+   */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:has(> [data-part='header-action']) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-columns: auto;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] {
+    display: flex;
+    grid-row: 1;
+    grid-column: 3;
+    align-items: center;
+    margin-block-start: calc((var(--ds-font-size-xl) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:has(> [data-part='header-action']) > [data-part='confirm'] {
+    grid-column: 4;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:not(:has(> [data-part='close'])) > [data-part='header-action'] {
+    grid-column: 2;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='header']:not(:has(> [data-part='close'])):has(> [data-part='header-action']) > [data-part='confirm'] {
+    grid-column: 3;
+  }
+
   /* ------------------------------------------------------------ sheet */
 
   /*

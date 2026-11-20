@@ -68,7 +68,7 @@ import {
 } from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { useTheme } from '../../theme/hooks';
-import { ArrowShape, ThemedPortal, physicalSide, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
+import { ArrowShape, ThemedPortal, physicalSide, useFoldCollision, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
 import { useControllable } from '../../internal/useControllable';
 import { flipPlay, readDuration, rectOf, type MotionRect, type PatternMode } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
@@ -265,14 +265,18 @@ export function Tooltip({
   const motionRef = useRef(motion);
   motionRef.current = motion;
   const nodeRef = useRef<HTMLDivElement | null>(null);
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(contentProps?.collisionPadding ?? 8);
+  const foldRef = fold.ref;
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       nodeRef.current = node;
       presenceRef(node);
+      foldRef(node);
       assignRef(userRef.current, node);
       if (node) followLast(node, motionRef.current.mode('tooltip-follow'), TOOLTIP_SKIP_DELAY);
     },
-    [presenceRef],
+    [presenceRef, foldRef],
   );
   // Where this tooltip was when it started to close, for the next one to slide from.
   useEffect(() => {
@@ -338,7 +342,7 @@ export function Tooltip({
             side={physicalSide(side, theme.dir)}
             align={align}
             sideOffset={sideOffset}
-            collisionPadding={contentProps?.collisionPadding ?? 8}
+            collisionPadding={fold.collisionPadding}
             hideWhenDetached={contentProps?.hideWhenDetached ?? true}
           >
             {content}

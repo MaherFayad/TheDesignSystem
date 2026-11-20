@@ -208,6 +208,23 @@ export default function TabBarDemo() {
           </TabBar>
         </div>
       </DemoCase>
+
+      <DemoCase id="search-side" title="The search field while the bar sits in the side column: on ios the field leaves the column for the foot of the content">
+        <DemoRow>
+          <TabBar aria-label="Music" placement="side" compact>
+            <TabBarItem href="#home" icon="home" label="Home" />
+            <TabBarItem href="#library" icon="library" label="Library" />
+            <TabBarSearch href="#search" label="Search" active field={<SearchField shape="pill" placeholder="Songs and artists" />} />
+          </TabBar>
+          <Theme lang="ar" dir="rtl" data-demo="content">
+            <TabBar aria-label="الموسيقى" placement="side" compact>
+              <TabBarItem href="#home" icon="home" label="الرئيسية" />
+              <TabBarItem href="#library" icon="library" label="المكتبة" />
+              <TabBarSearch href="#search" label="البحث" active field={<SearchField shape="pill" placeholder="أغاني وفنانين" />} />
+            </TabBar>
+          </Theme>
+        </DemoRow>
+      </DemoCase>
     </DemoPage>
   );
 }

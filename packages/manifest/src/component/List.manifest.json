@@ -220,9 +220,16 @@
       "description": "The current row. Sets data-active, the active fill, and aria-current (true, or the value in linkProps) on the link. The description and end step up to the default text color on the active fill."
     },
     "ListItem.tone": {
-      "type": ["neutral", "danger"],
+      "type": [
+        "neutral",
+        "danger"
+      ],
       "default": "neutral",
       "description": "danger (order S1, proposed): a destructive row, such as Delete routine. Stamps data-tone on the row; the title and a start icon take the danger text color, which keeps 4.5:1 on the list surface. The title still names the action. Neutral stamps nothing."
+    },
+    "ListItem as a trigger": {
+      "type": "node",
+      "description": "Order C5, proposed: a ListItem put as the one child of a trigger that renders its child (ActionSheetTrigger, DropdownMenuTrigger, DialogTrigger, SheetTrigger, AlertDialogTrigger, PopoverTrigger). The trigger's props (aria-haspopup, aria-expanded, aria-controls, data-state, its id and handlers) and the ref go to the row's action, the title, not to the li: the row is an action row (data-action) with the whole row as its hit area, and focus returns to the title when the overlay closes. With tone danger it is a destructive row (Remove pass) that opens an ActionSheet to confirm. Not with href or control."
     },
     "ListItem.disabled": {
       "type": "boolean",
@@ -272,8 +279,8 @@
     "keys": {
       "Tab": "Moves to the next row link, row button, row action or footer button",
       "Shift+Tab": "Moves to the previous row link, row button, row action or footer button",
-      "Enter": "Follows the focused row link, runs the focused action row (on key down), or activates the focused action",
-      "Space": "Runs the focused action row (on key up, as a native button), or activates the focused action button",
+      "Enter": "Follows the focused row link, runs the focused action row (on key down), or activates the focused action; on a trigger row, opens its overlay (a menu opens on its own Enter, Space and ArrowDown)",
+      "Space": "Runs the focused action row (on key up, as a native button), or activates the focused action button; on a trigger row, opens its overlay",
       "Shift+F10": "On a row with swipe actions, opens the menu of those actions (SwipeActions)"
     },
     "announce": "The link or button name is the title only; the description, end, actions and footer are read as the row's other content. Name each action and footer button with the row it acts on: Delete mail from Sara.",
@@ -295,7 +302,8 @@
       "The action row's title is a span with role button, tabindex 0 and the keys of a native button (Enter on key down, Space on key up, no repeat), because the button gate allows no bare button outside Button and a system Button would make the title a part of Button. WCAG 2.2 2.1.1 and 4.1.2.",
       "Wrapped titles (titleLines) keep the row's first line where a one line row puts it and grow the row downward, so at 320px wide a long title wraps instead of being cut (WCAG 2.2 1.4.10). With all the title is never cut, at 200 percent text or with text spacing (1.4.4, 1.4.12); with a count it ends with an ellipsis past that many lines, so a title cut there must be readable in full where the row leads.",
       "A flush hairline is a grid item that starts at the title's column line, so it clears a start part of any size (a 64px cover); --_list-separator-inset moves it from there and --_list-separator-inset-end sets its distance from the row end (0, full bleed).",
-      "A control row (part control) lays out start, the control and end; it is never a link or an action. A footer (part footer) is a last grid row under the text with its own buttons, drawn above the row link."
+      "A control row (part control) lays out start, the control and end; it is never a link or an action. A footer (part footer) is a last grid row under the text with its own buttons, drawn above the row link.",
+      "Order C5: a trigger row is one Tab stop on its title with role button, aria-haspopup (dialog or menu) and aria-expanded. Focus returns to the title when its ActionSheet, menu or dialog closes. A disabled trigger row keeps focus with aria-disabled and opens nothing."
     ]
   },
   "content": {
@@ -418,6 +426,10 @@
     {
       "wrong": "A long settings title cut to one line at 320px",
       "right": "titleLines 2 or 3 on the List, so the title wraps and the row grows"
+    },
+    {
+      "wrong": "A danger Button inside a row's title to open an ActionSheet (Remove pass)",
+      "right": "The ListItem with tone danger as the child of ActionSheetTrigger: the row is the trigger, one Tab stop, the whole row its hit area"
     }
   ],
   "since": "0.1.0",

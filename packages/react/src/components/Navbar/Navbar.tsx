@@ -71,6 +71,14 @@
 //   `data-inline-title`, drawn by CSS as generated content with empty
 //   alternative text: the h1 stays the one heading for assistive tech in
 //   both states, and stays in the tree while it is out of view.
+// - Two line title (order C5, docs/plan/reset-mobile.md, proposed): below
+//   360 wide the large title wraps to two lines instead of an ellipsis
+//   (WCAG 1.4.10; the platform CSS draws it). The collapse never assumes one
+//   line: the heading's height is measured (a ResizeObserver, so a wrap, a
+//   font that loads late or a turn of the device is seen) and written on
+//   the PageShell root as --_navbar-heading-size, which the platform CSS
+//   reads for the room main keeps at its start and for the range the title
+//   scrolls away in; the collapse point is that same height.
 import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -399,6 +407,9 @@ export function Navbar({
   );
 }
 
+/** The heading's measured height, written on the PageShell root for ios.css (order C5). */
+const HEADING_SIZE = '--_navbar-heading-size';
+
 /** True where the heading follows the scroll in CSS (ios.css): scroll timelines exist and motion is not reduced. */
 function titleFollowsScroll(): boolean {
   return typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('animation-timeline: scroll()') && !prefersReducedMotion();
@@ -432,10 +443,29 @@ function useLargeTitleCollapse(rootRef: { current: HTMLElement | null }, heading
     const onScroll = () => {
       if (frame === 0) frame = requestAnimationFrame(read);
     };
-    read();
+    // Order C5: the heading may wrap (two lines on a narrow shell, WCAG 1.4.10), so its height is
+    // measured, never assumed: the shell gets it as --_navbar-heading-size for the room main keeps
+    // at its start and the range the title scrolls away in (ios.css). Written on the shell, where
+    // that room is worked out; removed when the bar leaves or stops collapsing.
+    const shellEl = shell as HTMLElement;
+    const size = () => {
+      const title = headingRef.current;
+      if (!title) return;
+      const next = `${title.offsetHeight}px`;
+      if (shellEl.style.getPropertyValue(HEADING_SIZE) !== next) shellEl.style.setProperty(HEADING_SIZE, next);
+      read();
+    };
+    size();
+    const view = root.ownerDocument.defaultView;
+    const observer = view && typeof view.ResizeObserver === 'function' ? new view.ResizeObserver(size) : null;
+    if (observer && headingRef.current) observer.observe(headingRef.current);
+    else view?.addEventListener('resize', size);
     main.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       main.removeEventListener('scroll', onScroll);
+      observer?.disconnect();
+      view?.removeEventListener('resize', size);
+      shellEl.style.removeProperty(HEADING_SIZE);
       if (frame !== 0) cancelAnimationFrame(frame);
     };
   }, [rootRef, headingRef, active]);

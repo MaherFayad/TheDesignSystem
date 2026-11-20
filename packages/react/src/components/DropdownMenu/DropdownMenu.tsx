@@ -60,6 +60,7 @@
 // until the animation ends. Under reduced motion the animations are none and
 // every duration token is 0ms, so Radix unmounts at once and nothing waits
 // for an animationend.
+import { useFoldCollision } from '../Popover/FloatingLayer';
 import {
   createContext,
   use,
@@ -232,10 +233,14 @@ export function DropdownMenuContent({
   const ctx = useMenuContext('DropdownMenuContent');
   const layer = useMenuLayer(ctx.open);
   const { onContent } = layer;
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(collisionPadding);
+  const foldRef = fold.ref;
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       assignRef(ref, node);
       onContent(node);
+      foldRef(node);
       if (node && ctx.focusLast.current) {
         ctx.focusLast.current = false;
         // After Radix has moved focus into the menu (its mount effect), go to the last item.
@@ -247,7 +252,7 @@ export function DropdownMenuContent({
         });
       }
     },
-    [ref, onContent, ctx.focusLast],
+    [ref, onContent, foldRef, ctx.focusLast],
   );
 
   return layer.render(
@@ -257,7 +262,7 @@ export function DropdownMenuContent({
       side={physicalSide(side, layer.dir)}
       align={align}
       sideOffset={sideOffset}
-      collisionPadding={collisionPadding}
+      collisionPadding={fold.collisionPadding}
       data-ds="dropdown-menu"
       data-size={ctx.size}
     >
@@ -524,12 +529,16 @@ export function DropdownMenuSubContent({
   const sub = use(SubContext);
   const layer = useMenuLayer(sub?.open ?? false);
   const { onContent } = layer;
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(collisionPadding);
+  const foldRef = fold.ref;
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       assignRef(ref, node);
       onContent(node);
+      foldRef(node);
     },
-    [ref, onContent],
+    [ref, onContent, foldRef],
   );
   if (!sub) throw new Error('DropdownMenuSubContent must be used inside a DropdownMenuSub.');
   return layer.render(
@@ -539,7 +548,7 @@ export function DropdownMenuSubContent({
       sideOffset={sideOffset}
       // Lines the first item of the submenu up with its trigger: the menu padding plus the border.
       alignOffset={alignOffset ?? -(TRIGGER_GAP + 1)}
-      collisionPadding={collisionPadding}
+      collisionPadding={fold.collisionPadding}
       data-ds="dropdown-menu"
       data-part="sub-content"
       data-size={ctx.size}

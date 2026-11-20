@@ -66,6 +66,18 @@
 // Order S1 (proposed): tone danger on a ListItem stamps data-tone on the row
 // for a destructive row; the CSS draws its title and start icon in the
 // danger text color.
+//
+// Order C5 (proposed): a row as the trigger of an overlay. A ListItem put
+// as the one child of a trigger that renders its child (asChild):
+// ActionSheetTrigger, DropdownMenuTrigger, DialogTrigger, SheetTrigger,
+// AlertDialogTrigger or PopoverTrigger. The trigger's props land on the row's
+// action, not on the li: the title takes the button role, tabindex 0,
+// aria-haspopup, aria-expanded, aria-controls, data-state, the trigger's id
+// and handlers, and the ref (so focus returns to the title and an anchored
+// overlay lines up with it). The row is then an action row (data-action),
+// with the whole row as its hit area, and takes tone danger for a
+// destructive row such as Remove pass. Enter and Space press it as a
+// native button does. A row with href is a link and is never a trigger.
 import {
   Children,
   createContext,
@@ -80,6 +92,7 @@ import {
   type HTMLAttributes,
   type KeyboardEvent,
   type MouseEvent,
+  type PointerEvent,
   type ReactElement,
   type ReactNode,
   type Ref,
@@ -361,6 +374,43 @@ function swipeOptions(swipe: ReactElement<SwipeActionsProps> | undefined, disabl
 
 const present = (node: ReactNode) => node !== undefined && node !== null && node !== false;
 
+/** What a trigger rendering its child (Radix Slot) passes, that belongs on the row's action. */
+interface TriggerProps {
+  id?: string;
+  'aria-haspopup'?: HTMLAttributes<HTMLElement>['aria-haspopup'];
+  'aria-expanded'?: HTMLAttributes<HTMLElement>['aria-expanded'];
+  'aria-controls'?: string;
+  'data-state'?: string;
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  onPointerDown?: (event: PointerEvent<HTMLElement>) => void;
+}
+
+/**
+ * Splits the props a trigger passed (order C5): a trigger always sets
+ * aria-haspopup on its child. Returns null for a row that is not a trigger.
+ * The native button attributes (type, disabled, data-disabled) are dropped:
+ * the action is a span with the button role, and the row's own disabled
+ * prop sets aria-disabled.
+ */
+function splitTrigger(rest: Record<string, unknown>): { trigger: TriggerProps; others: Record<string, unknown> } | null {
+  if (rest['aria-haspopup'] === undefined || rest['aria-haspopup'] === false || rest['aria-haspopup'] === 'false') return null;
+  const { id, 'aria-haspopup': haspopup, 'aria-expanded': expanded, 'aria-controls': controls, 'data-state': state, onClick, onKeyDown, onPointerDown, type: _type, disabled: _disabled, 'data-disabled': _dataDisabled, ...others } = rest;
+  return {
+    trigger: {
+      id: id as string | undefined,
+      'aria-haspopup': haspopup as TriggerProps['aria-haspopup'],
+      'aria-expanded': expanded as TriggerProps['aria-expanded'],
+      'aria-controls': controls as string | undefined,
+      'data-state': state as string | undefined,
+      onClick: onClick as TriggerProps['onClick'],
+      onKeyDown: onKeyDown as TriggerProps['onKeyDown'],
+      onPointerDown: onPointerDown as TriggerProps['onPointerDown'],
+    },
+    others,
+  };
+}
+
 /** One row of a List. */
 export function ListItem({
   title,
@@ -379,14 +429,19 @@ export function ListItem({
   tone,
   disabled = false,
   swipe,
-  ref,
-  ...rest
+  ref: refProp,
+  ...props
 }: ListItemProps) {
   const listLines = useContext(RowContext);
   const lines = titleLines ?? listLines;
   const controlRow = present(control);
   const linked = !controlRow && href !== undefined;
-  const action = !controlRow && !linked && onSelect !== undefined;
+  // Order C5: the props of a trigger that renders this row go to the action, with the ref.
+  const split = controlRow || linked ? null : splitTrigger(props as Record<string, unknown>);
+  const trigger = split?.trigger ?? null;
+  const rest = (split ? split.others : props) as typeof props;
+  const ref = trigger ? undefined : refProp;
+  const action = !controlRow && !linked && (onSelect !== undefined || trigger !== null);
   const swiper = useSwipeController<HTMLLIElement>(swipeOptions(swipe, disabled), '--_list-shift');
   const { hostRef } = swiper;
   const setRef = useCallback(
@@ -419,6 +474,12 @@ export function ListItem({
   const select = (event: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => {
     if (!disabled) onSelect?.(event);
   };
+  // A trigger row presses by a click, so the trigger's own click handler opens its overlay.
+  const pressKey = (event: KeyboardEvent<HTMLElement>) => {
+    if (trigger) {
+      if (!disabled) event.currentTarget.click();
+    } else select(event);
+  };
   let titleNode: ReactNode = null;
   if (linked) {
     titleNode = (
@@ -444,24 +505,40 @@ export function ListItem({
   } else if (action) {
     titleNode = (
       <span
+        id={trigger?.id}
+        ref={trigger ? (refProp as Ref<HTMLSpanElement> | undefined) : undefined}
         data-part="title"
         role="button"
         tabIndex={0}
         aria-disabled={disabled ? 'true' : undefined}
         aria-current={active ? 'true' : undefined}
-        onClick={select}
+        aria-haspopup={trigger?.['aria-haspopup']}
+        aria-expanded={trigger?.['aria-expanded']}
+        aria-controls={trigger?.['aria-controls']}
+        data-state={trigger?.['data-state']}
+        onPointerDown={trigger && !disabled ? trigger.onPointerDown : undefined}
+        onClick={(event) => {
+          // A disabled trigger row stays focusable and does nothing (anatomy rule 5).
+          if (trigger && !disabled) trigger.onClick?.(event);
+          select(event);
+        }}
         onKeyDown={(event) => {
           if (event.target !== event.currentTarget) return;
+          if (trigger && !disabled) {
+            // A menu trigger opens on its own keys (Enter, Space, ArrowDown) and prevents them.
+            trigger.onKeyDown?.(event);
+            if (event.defaultPrevented) return;
+          }
           if (event.key === 'Enter') {
             event.preventDefault();
-            if (!event.repeat) select(event);
+            if (!event.repeat) pressKey(event);
           } else if (event.key === ' ') {
             // Space presses on key up, as a native button does; key down only stops the page scroll.
             event.preventDefault();
           }
         }}
         onKeyUp={(event) => {
-          if (event.target === event.currentTarget && event.key === ' ') select(event);
+          if (event.target === event.currentTarget && event.key === ' ') pressKey(event);
         }}
       >
         {title}

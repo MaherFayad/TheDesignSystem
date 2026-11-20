@@ -1,14 +1,16 @@
 export {
-  ACTION_SHEET_ROOM,
   DS_ACTION_SHEET,
   DsActionSheet,
   DsActionSheetAction,
   DsActionSheetCancel,
   DsActionSheetContent,
   DsActionSheetTrigger,
-  resolveActionSheetPlacement,
   type ActionSheetActionTone,
+} from './action-sheet';
+export {
+  ACTION_SHEET_ROOM,
+  resolveActionSheetPlacement,
   type ActionSheetPlacement,
   type ActionSheetPlacementChoice,
   type ActionSheetResolved,
-} from './action-sheet';
+} from '@the-system/shared';

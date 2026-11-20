@@ -1,0 +1,158 @@
+{
+  "name": "Pager",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "Proposed (order C5). Full width pages a person swipes between, one at a time, with the dots of Pagination under them: the screens of an onboarding, the steps of a short tour. Built on scroll snap, so the swipe is the browser's own; arrow keys, Page Up and Page Down and the dots are the paths with no drag.",
+  "useWhen": [
+    "A short line of pages read one at a time, such as three onboarding screens",
+    "Content that a person swipes through on a phone and that also needs the keyboard and a screen reader path"
+  ],
+  "avoidWhen": [
+    "More than about eight pages, where nobody can count the dots",
+    "Steps of a task that must be done in order, with checks between them",
+    "Views of one object a person compares, where tabs show the names",
+    "A row of cards a person scans, where several should show at once"
+  ],
+  "insteadUse": {
+    "Steps of a task in order": "Stepper or FormWizard",
+    "Views of one object": "Tabs",
+    "A row of cards to scan": "a horizontal ScrollArea",
+    "Pages of a long list": "Pagination with numbers"
+  },
+  "anatomy": [
+    "root",
+    "viewport",
+    "page",
+    "dots"
+  ],
+  "parts": {
+    "PagerPage": "page",
+    "Pagination": "dots"
+  },
+  "slots": {
+    "viewport": {
+      "accepts": [
+        "PagerPage"
+      ],
+      "min": 1
+    },
+    "page": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "label": {
+      "type": "string",
+      "description": "Required. The name of the pages as a whole, the viewport's accessible name: Introduction (Arabic: المقدمة)."
+    },
+    "page": {
+      "type": "number",
+      "description": "The current page, from 1, controlled with onPageChange."
+    },
+    "defaultPage": {
+      "type": "number",
+      "default": 1,
+      "description": "The page it opens at, from 1."
+    },
+    "onPageChange": {
+      "type": "(page: number) => void",
+      "description": "Called with the page after a swipe settles (scrollend, or a short pause where it is missing), a key or a press on a dot. Never in the middle of a swipe."
+    },
+    "dots": {
+      "type": "boolean",
+      "default": true,
+      "description": "Draws Pagination with variant dots under the pages (part dots). Not drawn for one page."
+    },
+    "dotsLabel": {
+      "type": "string",
+      "default": "Pages",
+      "description": "The name of the dots: Introduction pages. Arabic default: الصفحات."
+    },
+    "live": {
+      "type": "boolean",
+      "default": false,
+      "description": "Makes the viewport a polite live region, for pages that change on their own (anatomy rule 13)."
+    },
+    "PagerPage": {
+      "type": "node",
+      "description": "One page, a direct child of Pager. A group whose role description is page (Arabic: صفحة) and whose name is its place, 2 of 3 (Arabic: 2 من 3). Pages that are not current are inert."
+    }
+  },
+  "states": [
+    "data-active"
+  ],
+  "a11y": {
+    "role": "The viewport is a region named by label and one Tab stop (a scroll container must take focus). Each page is a group with aria-roledescription page in the Pager's language and the name 2 of 3. The dots are Pagination dots, a nav of buttons named Page 2 of 3.",
+    "focus": "The viewport, then the controls of the current page, then the current dot. Pages out of view are inert, so Tab never lands in one. A key or a dot changes the page without moving focus.",
+    "keys": {
+      "ArrowRight": "On the viewport: the next page; the previous one in right to left. Stays at the last page.",
+      "ArrowLeft": "On the viewport: the previous page; the next one in right to left. Stays at the first page.",
+      "PageDown": "On the viewport: the next page.",
+      "PageUp": "On the viewport: the previous page.",
+      "Home": "On the viewport: the first page.",
+      "End": "On the viewport: the last page.",
+      "Tab": "From the viewport into the current page, then to the dots."
+    },
+    "announce": "The current dot carries aria-current page. With live, the new page is read politely when it changes.",
+    "native": {
+      "accessibilityRole": "adjustable"
+    },
+    "notes": [
+      "The swipe has two paths with no drag: the keys on the viewport and the dots (WCAG 2.5.7).",
+      "Keys pressed on a control inside a page stay with that control. When the page changes while focus is in the page that leaves (a swipe), focus moves to the viewport, never to the body.",
+      "Right to left: the row of pages follows the reading direction, so the first page is at the right and a swipe to the left goes forward.",
+      "Under reduced motion (the media query, or data-motion=\"reduce\" on the page) a change from a key or a dot jumps at once; the swipe itself is the browser's scroll.",
+      "The server render shows the page asked for and sets no scroll; the scroll is set after mount."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name the pages as a whole, a noun: Introduction. Built in words: page, 2 of 3, Pages."
+    },
+    "ar": {
+      "label": "اسم المجموعة كاسم: المقدمة. الكلمات المدمجة: صفحة، 2 من 3، الصفحات. أرقام غربية."
+    }
+  },
+  "tokens": [
+    "space.m",
+    "color.focus.ring",
+    "border.width.strong"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "scroll snap container with role region; PagerPage groups; Pagination variant dots; keys on the root",
+      "example": "Pager.demo.tsx",
+      "note": "Proposed, order C5. No animation library: the swipe is native scrolling with scroll snap; a change from a key, a dot or the page prop scrolls with scrollBy, smooth or instant under reduced motion. The page changes when the scroll settles."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "Base layout only: pages edge to edge, the dots centred under them.",
+    "desk": "Base layout only.",
+    "neutral": "Base layout only; on ios the dots sit on their small platter (Pagination).",
+    "liquid": "Base layout only; on ios the dots sit on their glass platter (Pagination)."
+  },
+  "mistakes": [
+    {
+      "wrong": "Pagination dots beside a hand made stack of pages swapped by state",
+      "right": "Pager, so a swipe moves the pages and the dots and keys follow it"
+    },
+    {
+      "wrong": "Every page in the tab order",
+      "right": "Only the current page: the others are inert, so focus never lands out of view"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "dots"
+    ]
+  },
+  "since": "0.1.0"
+}

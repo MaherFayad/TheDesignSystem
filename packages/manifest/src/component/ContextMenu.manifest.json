@@ -246,7 +246,8 @@
       "Quick actions (order M9.4): each is a menuitem inside a group named by the label prop. Its visible label is its accessible name; the icon is aria-hidden. The row reads in reading order, so the first action is at the right in Arabic.",
       "Quick actions are at least the menu row height on both axes: 44 by 44 on ios (WCAG 2.5.8), size.target-min (24) elsewhere. Their labels use the item colors on the menu surface, glass included (1.4.3).",
       "Quick actions keep the arrow keys of the menu: ArrowDown and ArrowUp walk every item with the quick actions first; ArrowLeft and ArrowRight stay inside the row and never close a submenu from it (2.1.1).",
-      "No native title attribute."
+      "No native title attribute.",
+      "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
     ]
   },
   "content": {

@@ -1,0 +1,72 @@
+/*
+ * Pager (order C5, proposed): full width pages a person swipes between,
+ * with scroll snap, and the dots of Pagination under them.
+ *
+ *   [data-ds='pager']              root: the pages, then the dots
+ *     > [data-part='viewport']     the scroll snap container, one row of pages
+ *         > [data-part='page']     one page, the width of the viewport
+ *     > [data-part='dots']         Pagination with variant dots
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_pager-gap                   the space between the pages and the dots
+ *   --_pager-ring-color, -ring-width   the focus outline of the viewport
+ *
+ * Motion: none of its own. The swipe is the browser's scroll, snapped to a
+ * page; a change from the keys or the dots scrolls smoothly from script, at
+ * once under reduced motion (Pager.tsx). No layout property animates.
+ * Logical properties only: the row of pages follows the reading direction,
+ * so in Arabic the first page is at the right.
+ */
+@layer ds.base {
+  [data-ds='pager'] {
+    --_pager-gap: var(--ds-space-m);
+    --_pager-ring-color: var(--ds-color-focus-ring);
+    --_pager-ring-width: var(--ds-border-width-strong);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_pager-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+  }
+
+  [data-ds='pager'] > [data-part='viewport'] {
+    display: flex;
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+    border-radius: inherit;
+  }
+
+  [data-ds='pager'] > [data-part='viewport']::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-ds='pager'] > [data-part='viewport'] > [data-part='page'] {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* The ring sits inside the viewport's edge, so the scroll container never clips it. */
+  [data-ds='pager'] > [data-part='viewport']:focus-visible {
+    outline: var(--_pager-ring-width) solid var(--_pager-ring-color);
+    outline-offset: calc(-1 * var(--_pager-ring-width));
+  }
+
+  [data-ds='pager'] > [data-part='dots'] {
+    align-self: center;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='pager'] > [data-part='viewport']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

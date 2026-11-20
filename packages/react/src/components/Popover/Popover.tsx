@@ -64,6 +64,7 @@ import { useControllable } from '../../internal/useControllable';
 import {
   ArrowShape,
   ThemedPortal,
+  useFoldCollision,
   isArabic,
   physicalSide,
   useLayerPresence,
@@ -290,6 +291,9 @@ export function PopoverContent({
   const titlebarOn = useOptionalPart('popover', 'titlebar');
   const controlsOn = useOptionalPart('popover', 'controls');
   const [mounted, presenceRef] = useLayerPresence(ctx.open);
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(collisionPadding);
+  const foldRef = fold.ref;
   const rootRef = useRef<HTMLDivElement | null>(null);
   // The consumer ref sits in a ref, so setRef keeps one identity: a new
   // inline ref during the exit never unmounts the portal early.
@@ -305,9 +309,10 @@ export function PopoverContent({
       }
       rootRef.current = node;
       presenceRef(node);
+      foldRef(node);
       assignRef(userRef.current, node);
     },
-    [presenceRef],
+    [presenceRef, foldRef],
   );
 
   if (!mounted) return null;
@@ -365,7 +370,7 @@ export function PopoverContent({
         side={physicalSide(side, theme.dir)}
         align={align}
         sideOffset={sideOffset}
-        collisionPadding={collisionPadding}
+        collisionPadding={fold.collisionPadding}
         hideWhenDetached={hideWhenDetached}
         onCloseAutoFocus={(event) => {
           onCloseAutoFocus?.(event);

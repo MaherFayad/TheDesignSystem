@@ -49,7 +49,7 @@ import {
 import { createPortal } from 'react-dom';
 import { Popover } from 'radix-ui';
 import { edgeEnabledIndex, nextEnabledIndex, type Shape, type Size } from '@the-system/shared';
-import { Theme } from '../../theme/Theme';
+import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
 import { IconButton } from '../IconButton';
@@ -154,7 +154,6 @@ interface ModeProps {
 
 /** Portals its child into <body> inside a Theme that copies every axis of the Theme it is rendered in. */
 function usePopupLayer(open: boolean) {
-  const theme = useTheme();
   const [body, setBody] = useState<HTMLElement | null>(null);
   useEffect(() => setBody(document.body), []);
   const [mounted, setMounted] = useState(open);
@@ -168,19 +167,7 @@ function usePopupLayer(open: boolean) {
   const render = (children: ReactNode) =>
     body && mounted
       ? createPortal(
-          <Theme
-            style={theme.style}
-            scheme={theme.scheme}
-            density={theme.density}
-            contrast={theme.contrast}
-            platform={theme.platform}
-            glass={theme.glass}
-            dir={theme.dir}
-            lang={theme.lang}
-            data-menu-layer=""
-          >
-            {children}
-          </Theme>,
+          <LayerTheme data-menu-layer="">{children}</LayerTheme>,
           body,
         )
       : null;

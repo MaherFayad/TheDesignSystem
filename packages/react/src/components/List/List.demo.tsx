@@ -16,6 +16,8 @@ import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
+import { ActionSheet, ActionSheetAction, ActionSheetContent, ActionSheetTrigger } from '../ActionSheet';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../DropdownMenu';
 import { Slider } from '../Slider';
 import { SwipeActions } from '../SwipeActions';
 import { List, ListItem, ListSection, type ListSize, type ListVariant } from './index';
@@ -314,6 +316,53 @@ export default function ListDemo() {
           <List variant="inset" aria-label="خيارات الروتين">
             <ListItem start="share" title="مشاركة الروتين" onSelect={() => undefined} />
             <ListItem start="trash" title="حذف الروتين" tone="danger" onSelect={() => undefined} />
+          </List>
+        </Theme>
+      </DemoCase>
+
+      <DemoCase id="trigger" title="A row as a trigger: an action sheet from a destructive row, a menu from a row">
+        <List variant="inset" aria-label="Pass actions">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <ListItem start="sort" title="Sort passes" end="Date" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Date</DropdownMenuItem>
+              <DropdownMenuItem>Event name</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ActionSheet>
+            <ActionSheetTrigger>
+              <ListItem start="trash" title="Remove pass" tone="danger" />
+            </ActionSheetTrigger>
+            <ActionSheetContent title="Oud night" description="The pass leaves this phone. You can add it again from the email you got it in.">
+              <ActionSheetAction tone="danger" start="trash">
+                Remove pass
+              </ActionSheetAction>
+            </ActionSheetContent>
+          </ActionSheet>
+        </List>
+        <Theme lang="ar" dir="rtl" data-demo="content">
+          <List variant="inset" aria-label="خيارات البطاقة">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <ListItem start="sort" title="ترتيب البطاقات" end="التاريخ" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>التاريخ</DropdownMenuItem>
+                <DropdownMenuItem>اسم الفعالية</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ActionSheet>
+              <ActionSheetTrigger>
+                <ListItem start="trash" title="إزالة البطاقة" tone="danger" />
+              </ActionSheetTrigger>
+              <ActionSheetContent title="ليلة العود" description="البطاقة بتختفي من هذا الجوال، وإضافتها مرة ثانية ممكنة من البريد اللي وصلك.">
+                <ActionSheetAction tone="danger" start="trash">
+                  إزالة البطاقة
+                </ActionSheetAction>
+              </ActionSheetContent>
+            </ActionSheet>
           </List>
         </Theme>
       </DemoCase>

@@ -159,7 +159,8 @@
       "Search item target: 54 round in a 62 platter beside the capsule on ios (48 in the side column), at least 44 on web and android (WCAG 2.5.8).",
       "Accessory (order C2): the part accessory is first in the bar, so focus and reading go the accessory, then the items, as drawn top to bottom (WCAG 2.4.3). It has no role of its own: its content names itself (a Toolbar with aria-label). In the compact bar it moves to just before the search item, as drawn: current item, accessory, search.",
       "Compact (order C2): the items that are not drawn are display none, so they leave the tab order and the accessibility tree together; the current item keeps aria-current page and its link, the way back to the full bar. Use it on a pushed screen or while the content scrolls, never as the only bar of an app.",
-      "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once."
+      "When the search item turns into its field, focus follows from the item into the field and back, so focus is not dropped on the page (WCAG 2.4.3). The field fades in; under reduced motion it shows at once.",
+      "Order C5, proposed: while the bar sits in the side column, a TabBarSearch with its field keeps the same DOM (last in the bar, data-expanded, named by its label); the platform CSS draws the field out of the column, at the foot of the content beside it, so it is never squeezed to the column's width. Tab reaches it after the items, as in the row."
     ]
   },
   "content": {

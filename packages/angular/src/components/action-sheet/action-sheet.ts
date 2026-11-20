@@ -78,7 +78,16 @@ import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DsIcon } from '@the-system/icons/angular';
-import { captureFocusReturn, focusReturnTarget, type FocusReturn, type Tone } from '@the-system/shared';
+import {
+  captureFocusReturn,
+  focusReturnTarget,
+  resolveActionSheetPlacement,
+  type ActionSheetPlacement,
+  type ActionSheetPlacementChoice,
+  type ActionSheetResolved,
+  type FocusReturn,
+  type Tone,
+} from '@the-system/shared';
 import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
@@ -89,60 +98,17 @@ import type { ThemeValue } from '../../theme';
 import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent } from '../button/button-base';
 import { isInsideToaster } from '../toast/is-inside-toaster';
 
-/** Where the sheet sits. */
-export type ActionSheetPlacement = 'anchored' | 'bottom' | 'center';
-/** auto picks the placement from the platform and the room beside the trigger. */
-export type ActionSheetPlacementChoice = 'auto' | ActionSheetPlacement;
 /** The tone of one action: danger for one that deletes or removes. */
 export type ActionSheetActionTone = Extract<Tone, 'neutral' | 'danger'>;
 
-/**
- * The room an anchored sheet needs on web and macos, in CSS px: the viewport
- * at least this wide, and at least this much height above or below the
- * trigger. Less than that, it opens in the center. As React.
- */
-export const ACTION_SHEET_ROOM = { inline: 360, block: 280 } as const;
-/** The gap between the trigger and an anchored card on web and macos, and the space it keeps from the viewport edges. */
+// The placement rule lives in @the-system/shared (order C5): re-exported here for this folder's demo and spec.
+export { ACTION_SHEET_ROOM, resolveActionSheetPlacement, type ActionSheetPlacement, type ActionSheetPlacementChoice, type ActionSheetResolved } from '@the-system/shared';
+
+/** The gap between the trigger and an anchored card on web and macos, and the space it keeps from the viewport edges, as React. */
 const GAP = 8;
 const COLLISION_PADDING = 16;
 
-/** Where an anchored card goes, worked out when the sheet opens. */
-export interface ActionSheetResolved {
-  placement: ActionSheetPlacement;
-  /** The gap from the trigger. Negative on ios: the card covers the control it grew from. */
-  offset: number;
-  align: 'start' | 'end';
-}
-
 const centered: ActionSheetResolved = { placement: 'center', offset: GAP, align: 'end' };
-
-/**
- * The placement for a choice, a platform and a trigger: the same rule as
- * resolveActionSheetPlacement in React's ActionSheet.tsx. Pure apart from
- * the trigger's box and its window's size, read once when the sheet opens.
- */
-export function resolveActionSheetPlacement(
-  choice: ActionSheetPlacementChoice,
-  platform: string,
-  trigger: HTMLElement | null,
-  dir: string = 'ltr',
-): ActionSheetResolved {
-  const view = trigger?.isConnected ? trigger.ownerDocument.defaultView : null;
-  const anchorable = view !== null && trigger !== null;
-  if (choice === 'bottom' || (choice === 'auto' && platform === 'android')) return { ...centered, placement: 'bottom' };
-  if (choice === 'center' || !anchorable) return centered;
-  const rect = trigger.getBoundingClientRect();
-  const width = view.innerWidth;
-  const height = view.innerHeight;
-  if (choice === 'auto' && platform !== 'ios') {
-    const room = Math.max(rect.top, height - rect.bottom) - COLLISION_PADDING;
-    if (width < ACTION_SHEET_ROOM.inline || room < ACTION_SHEET_ROOM.block) return centered;
-  }
-  const rightHalf = rect.left + rect.width / 2 > width / 2;
-  const align = rightHalf !== (dir === 'rtl') ? 'end' : 'start';
-  const offset = platform === 'ios' ? -Math.round(rect.height) : GAP;
-  return { placement: 'anchored', offset, align };
-}
 
 const cancelWords = { en: 'Cancel', ar: 'إلغاء' } as const;
 const isArabic = (lang: string) => lang === 'ar' || lang.startsWith('ar-');

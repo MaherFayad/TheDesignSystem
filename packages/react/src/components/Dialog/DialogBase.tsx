@@ -3,8 +3,9 @@
 // ButtonBase is for the buttons. Dialog, AlertDialog, Drawer and Sheet (and
 // later CommandPalette and Lightbox) render through it:
 //
-// - the themed portal: a Theme that copies every axis of the Theme the
-//   overlay is rendered in (the Toaster pattern), straight into body;
+// - the themed portal: a LayerTheme that copies every axis of the Theme the
+//   overlay is rendered in and its safe area tokens (order C5), straight
+//   into body;
 // - the root layer (`data-ds` of the caller) that holds the backdrop and the
 //   panel, mounted while open and until both have played their exit;
 // - the focus rule and the focus return (packages/shared dialog-focus.ts);
@@ -17,6 +18,14 @@
 // Radix primitive the caller passes (Dialog or AlertDialog): DialogBase takes
 // their Overlay and Content, so the behavior of each primitive stays its own
 // (AlertDialog never closes on an outside click, whatever is passed here).
+//
+// The fold (order DU5, docs/plan/reset-duo.md 5.2, proposed): a Dialog, an
+// AlertDialog or a Sheet whose window has two viewport segments carries
+// data-segment on its root, start when the segments sit side by side (the
+// overlay goes to the inline start segment) and bottom when they are
+// stacked, for the platform CSS to place it clear of the band. Read after
+// mount and kept current while open (useFold); absent without the viewport
+// segments API, so nothing changes on any other device.
 //
 // Motion is CSS, but for one beat. Under reduced motion every animation is
 // none, so Radix unmounts at once and nothing here waits for an
@@ -56,13 +65,15 @@ import {
   captureFocusReturn,
   dialogInitialFocus,
   focusReturnTarget,
+  overlaySegment,
   type FocusReturn,
 } from '@the-system/shared';
-import { Theme } from '../../theme/Theme';
+import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
 import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from '../Toast/isInsideToaster';
+import { useFold } from '../Popover/FloatingLayer';
 
 /** Sets a ref of any kind. */
 export function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
@@ -72,6 +83,9 @@ export function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
 
 /** The roots built on DialogBase. CommandPalette and Lightbox join in lane 6D. */
 export type DialogKind = 'dialog' | 'alert-dialog' | 'drawer' | 'sheet' | 'action-sheet' | 'command-palette' | 'lightbox';
+
+/** The roots that take data-segment on a folded screen (order DU5). */
+const SEGMENTED: ReadonlySet<DialogKind> = new Set<DialogKind>(['dialog', 'alert-dialog', 'sheet']);
 
 /** What every family member keeps in its context: the open state and the trigger. */
 export interface DialogBaseState {
@@ -209,6 +223,9 @@ export function DialogBase({
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
+  // Order DU5: the segment of a modal overlay on a folded screen, while it is mounted.
+  const segment = overlaySegment(useFold(mounted && SEGMENTED.has(kind)));
+
   // The refused nudge: one at a time, the newest wins.
   const motion = useMotion();
   const refusal = useRef<Animation | null>(null);
@@ -264,19 +281,10 @@ export function DialogBase({
     if (value === undefined || value === false) continue;
     rootData[name] = value === true ? '' : value;
   }
+  if (segment) rootData['data-segment'] = segment;
 
   return createPortal(
-    <Theme
-      style={theme.style}
-      scheme={theme.scheme}
-      density={theme.density}
-      contrast={theme.contrast}
-      platform={theme.platform}
-      glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
-      data-dialog-layer=""
-    >
+    <LayerTheme data-dialog-layer="">
       <div
         {...rootProps}
         {...rootData}
@@ -377,7 +385,7 @@ export function DialogBase({
           <PanelElementContext value={panelRef}>{children}</PanelElementContext>
         </Panel>
       </div>
-    </Theme>,
+    </LayerTheme>,
     body,
   );
 }

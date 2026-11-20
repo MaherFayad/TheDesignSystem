@@ -16,13 +16,13 @@
     padding: 0;
   }
 
-  /* ------------------------------------------------------------ page grid: content, then the index column at the inline end */
+  /* ------------------------------------------------------------ page grid: content, then the index column at the inline end, beside the play row and the list */
 
   [data-gallery='ml-page'] {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      'actions actions'
+      'actions index'
       'songs index';
     align-items: start;
   }
@@ -42,29 +42,42 @@
   }
 
   /*
-   * The index column: it stays in view while the list scrolls under the
-   * page's header (sticky in main, the scroller), and its keys sit in the
-   * middle of the visible part of main. 100cqb is the shell (container
-   * ds-shell); the header row of the Navbar is taken off.
+   * The index column (order Y5, after K1 moved the page start): it spans
+   * the visible list area under the bar, from main's top edge (the bar's
+   * edge) to 8 over the dock, and stays there while the list scrolls
+   * (sticky in main, the scroller). Its grid area starts at the play row,
+   * under the large title's band, so a negative start margin as tall as
+   * the band brings its first place up to main's top; at rest it runs
+   * beside the title band and the play row, as the platform's index runs
+   * beside a table's header, and the play row keeps clear of it. It sits over the edge fades of main (ios.css,
+   * ios-shell.css), so the first and last keys are not dimmed.
    */
   [data-gallery='ml-index'] {
     position: sticky;
     inset-block-start: 0;
+    z-index: calc(var(--ds-z-raised) + var(--ds-z-raised));
     grid-area: index;
+    /* The large title's band (ios.css, --_ios-title-room). */
+    margin-block-start: calc(-1 * (var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) + var(--ds-space-s)));
     /*
-     * Main's height: one screen as the iOS shell draws it (dialog.height.max
-     * times 1.25, ios-shell.css), less the Navbar's button row (the top
-     * inset, a 44 target, 8 over and under it) and its title row (the large
-     * title's line and space.s under it, order C2), the play row (44, 8
-     * over, 20 under) and the dock over the content (the compact tab bar
-     * with the player in it, 62, and its margin over the bottom inset).
+     * One screen as the iOS shell draws it (dialog.height.max times 1.25,
+     * ios-shell.css), less the Navbar's button row (the top inset, or 8,
+     * and the 44 target), the dock (the tab bar, 54 items, 4 padding and an
+     * edge on each side, and its margin over the bottom inset) and 8 over
+     * the dock.
      */
     block-size: calc(
-      var(--ds-dialog-height-max) * 1.25 - var(--ds-inset-safe-top) - 3 * var(--ds-size-touch-ios) - 5 * var(--ds-space-fixed-m) - 2 * var(--ds-space-fixed-l) - var(--ds-space-fixed-l) -
-        var(--ds-type-display-large-font-size) * var(--ds-type-display-large-line-height) - var(--ds-space-s) - max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl)))
+      var(--ds-dialog-height-max) * 1.25 - max(var(--ds-space-fixed-m), var(--ds-inset-safe-top)) - var(--ds-size-touch-ios) -
+        (var(--ds-size-touch-ios) + var(--ds-space-fixed-l) + 2 * var(--ds-space-fixed-2xs) + 2 * var(--ds-border-width-default)) -
+        max(calc(2 * var(--ds-space-fixed-l)), calc(var(--ds-inset-safe-bottom) - var(--ds-space-fixed-xl))) - var(--ds-space-fixed-m)
     );
     padding-inline: var(--ds-space-fixed-4xs) var(--ds-space-fixed-2xs);
     box-sizing: border-box;
+  }
+
+  /* Arabic: the title band uses the Arabic leading (ios.css). */
+  [data-gallery='ml-index']:lang(ar) {
+    margin-block-start: calc(-1 * (var(--ds-type-display-large-font-size) * var(--ds-font-leading-arabic-tight) + var(--ds-space-s)));
   }
 
   /* The rows start at the page's edge, as the actions do. */

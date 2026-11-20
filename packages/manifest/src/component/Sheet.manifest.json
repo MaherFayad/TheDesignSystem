@@ -34,6 +34,7 @@
     "body",
     "footer",
     "close",
+    "header-action",
     "confirm"
   ],
   "parts": {
@@ -44,7 +45,8 @@
     "SheetFooter": "footer",
     "TitleBar": "titlebar",
     "WindowControls": "controls",
-    "SheetConfirm": "confirm"
+    "SheetConfirm": "confirm",
+    "SheetHeaderAction": "header-action"
   },
   "slots": {
     "title": {
@@ -64,6 +66,15 @@
         "Button"
       ],
       "max": 3
+    },
+    "header-action": {
+      "accepts": [
+        "IconButton",
+        "SharePanel",
+        "DropdownMenu",
+        "Popover"
+      ],
+      "max": 1
     }
   },
   "props": {
@@ -157,13 +168,18 @@
     "SheetConfirm": {
       "type": "node",
       "description": "Order M9.6, proposed: the confirm part, a solid Button with the icon and the label. Put it as a direct child of SheetContent; it moves into the header after the close control (or into the title bar's actions). A press runs onClick, then closes the sheet unless onClick calls event.preventDefault()."
+    },
+    "SheetHeaderAction": {
+      "type": "node",
+      "description": "Order C5, proposed: one more action in the header besides close and confirm (share). Holds one element: an IconButton, or a component that renders one as its trigger (SharePanel, DropdownMenu, Popover). Put it as a direct child of SheetContent; it moves into the header in a div with the part header-action, between the close control and the confirm, so the tab order is close, the header action, confirm. One per sheet: a second is left out with a warning in development. The platform draws its button as it draws the close control (a round glass button on ios)."
     }
   },
   "states": [
     "open",
     "closed",
     "data-dragging",
-    "data-detent"
+    "data-detent",
+    "data-segment=start|end|top|bottom"
   ],
   "a11y": {
     "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title, described by the description.",
@@ -190,7 +206,9 @@
       "Order 1.29, detents: the handle is a native button (part handle) with the keys above and a press that takes the next detent, the button path for the drag (WCAG 2.5.7). A drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast, by position and speed; a flick or a drag well below the smallest closes it when dismissible. The math is shared with Angular (packages/motion helpers/sheet-detents.ts). Motion is transform only.",
       "Order 1.29, review 3 N28: the drag speed is read over the last 100ms with the release as the last sample, so a drag that pauses before the release never counts as a flick.",
       "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
-      "Order M9.6, proposed: the confirm part (SheetConfirm) sits in the header after the close control, so the tab order is close, then confirm. Its label is its accessible name (WCAG 4.1.2); where the platform draws the icon only (ios) a Tooltip shows the label on hover and focus. On ios it is a round tint button of 44 at the top inline end (WCAG 2.5.8), the mirror of the close control; on android a text button in the top bar; on web a solid Button with the icon and the label. In right to left layouts it sits at the left. While disabled it is aria-disabled and stays focusable."
+      "Order M9.6, proposed: the confirm part (SheetConfirm) sits in the header after the close control, so the tab order is close, then confirm. Its label is its accessible name (WCAG 4.1.2); where the platform draws the icon only (ios) a Tooltip shows the label on hover and focus. On ios it is a round tint button of 44 at the top inline end (WCAG 2.5.8), the mirror of the close control; on android a text button in the top bar; on web a solid Button with the icon and the label. In right to left layouts it sits at the left. While disabled it is aria-disabled and stays focusable.",
+      "Order C5: the header action is its own tab stop between the close control and the confirm. Its accessible name is the IconButton's label (Share pass, Arabic: مشاركة البطاقة). A menu or panel it opens returns focus to it.",
+      "Order DU5, proposed: on a window with two viewport segments (window.viewport.segments, a foldable held open; behind a flag in Safari) the root carries data-segment, start when the segments sit side by side and bottom when they are stacked, for the platform CSS to place the overlay in that segment, clear of the band. Absent without the API: nothing changes on any other device. A model is never detected."
     ]
   },
   "content": {
@@ -316,7 +334,8 @@
       "header",
       "title",
       "close",
-      "confirm"
+      "confirm",
+      "header-action"
     ]
   },
   "since": "0.1.0"

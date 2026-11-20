@@ -1,9 +1,9 @@
 'use client';
-import { createElement, use, useEffect, useMemo, useSyncExternalStore, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { createElement, use, useCallback, useEffect, useMemo, useRef, useSyncExternalStore, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Direction } from 'radix-ui';
 import { acquireModality, acquireRefraction, refractionEnvOf, refractionSupported } from '@the-system/shared';
 import { IconSetContext } from '@the-system/icons/react';
-import { ThemeContext } from './context';
+import { ThemeContext, ThemeElementContext } from './context';
 import { useDevicePlatform } from './hooks';
 import { iconStyleFor } from './icons';
 import { attributesOf, resolveTheme } from './resolve';
@@ -75,6 +75,7 @@ export function Theme({
   as = 'div',
   css,
   children,
+  ref,
   ...rest
 }: ThemeProps) {
   const parent = use(ThemeContext);
@@ -85,6 +86,16 @@ export function Theme({
   );
   const refraction = useSyncExternalStore(noopSubscribe, clientRefraction, serverRefraction);
   const isRoot = parent === null;
+  // The element, for portals that copy its safe area tokens (LayerTheme.tsx). A ref: no render when it is set.
+  const element = useRef<HTMLElement | null>(null);
+  const setElement = useCallback(
+    (node: HTMLElement | null) => {
+      element.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) (ref as { current: HTMLElement | null }).current = node;
+    },
+    [ref],
+  );
   useEffect(() => {
     if (!isRoot) return undefined;
     return acquireModality(document);
@@ -95,11 +106,13 @@ export function Theme({
   }, [isRoot, refraction, value.platform, value.style]);
   return createElement(
     as,
-    { ...rest, ...attributesOf(value), style: css },
+    { ...rest, ...attributesOf(value), style: css, ref: setElement },
     <ThemeContext value={value}>
-      <Direction.Provider dir={value.dir}>
-        <IconSetContext value={iconStyleFor(value.styleData)}>{children}</IconSetContext>
-      </Direction.Provider>
+      <ThemeElementContext value={element}>
+        <Direction.Provider dir={value.dir}>
+          <IconSetContext value={iconStyleFor(value.styleData)}>{children}</IconSetContext>
+        </Direction.Provider>
+      </ThemeElementContext>
     </ThemeContext>,
   );
 }

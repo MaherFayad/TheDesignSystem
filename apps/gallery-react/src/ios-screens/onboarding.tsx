@@ -12,13 +12,15 @@
 // Every control is a component of @the-system/react:
 // - the close button: CloseButton with solid emphasis, the raised disc
 //   that holds over the picture (order S1);
-// - the page dots: Pagination with variant dots (arrow keys, a press on a
-//   dot, the compact track when the dots do not fit);
+// - the pages: Pager (order C5), so a swipe changes the page; the arrow
+//   keys and Page Up and Down on it, and its page dots (Pagination with
+//   variant dots: a press on a dot, the compact track when they do not
+//   fit), are the paths with no drag;
 // - the actions: Button with shape pill (and a ghost Button for sign in on
 //   the last page).
 // This file's CSS (./onboarding.css) is page layout only.
 import { useRef, useState } from 'react';
-import { Button, CloseButton, Pagination } from '@the-system/react';
+import { Button, CloseButton, Pager, PagerPage } from '@the-system/react';
 import { Art, ScreenShell, t, type ArtName, type Text } from './kit';
 import type { ScreenMeta, ScreenProps } from './types';
 import './onboarding.css';
@@ -89,43 +91,51 @@ const words = {
   },
 } as const;
 
+/** Each page: the picture over the room the text leaves, then the text. Layout only, from tokens. */
+const pageGrid = { display: 'grid', gridTemplateRows: 'minmax(0, 1fr) auto', gap: 'var(--ds-space-l)', blockSize: '100%' } as const;
+/** The pager takes the rows of the picture, the text and the dots of the page grid (./onboarding.css). */
+const pagerRows = { gridRow: 'span 3', minBlockSize: 0 } as const;
+
 export function Screen({ lang }: ScreenProps) {
   const w = words[lang];
   const [page, setPage] = useState(1);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const current = pages[page - 1] ?? pages[0];
-  if (!current) return null;
   const last = page === pages.length;
-
-  /** The pages are a line with two ends: the action goes forward, the dots go either way. */
+  /** The pages are a line with two ends: the action goes forward, a swipe, the keys and the dots go either way. */
   const go = (to: number) => setPage(Math.min(pages.length, Math.max(1, to)));
-
   const skip = () => {
     // The skip leads to the last page, the one with the account actions; focus goes to its title.
     go(pages.length);
-    requestAnimationFrame(() => titleRef.current?.focus());
+    requestAnimationFrame(() => requestAnimationFrame(() => titleRef.current?.focus()));
   };
-
   return (
     <ScreenShell>
       <section data-gallery="ob-page" aria-label={w.region}>
-        <div data-gallery="ob-picture">
-          <Art art={current.art} shape="square" />
-          {!last && (
-            <div data-gallery="ob-close">
-              <CloseButton label={w.skip} emphasis="solid" onClick={skip} />
-            </div>
-          )}
-        </div>
-        <div data-gallery="ob-text" aria-live="polite">
-          <h1 data-gallery="ob-title" ref={titleRef} tabIndex={-1}>
-            {t(current.title, lang)}
-          </h1>
-          <p data-gallery="ob-body">{t(current.body, lang)}</p>
-        </div>
-        <div data-gallery="ob-dots">
-          <Pagination variant="dots" pageCount={pages.length} page={page} onPageChange={go} label={w.dots} />
-        </div>
+        <Pager label={w.region} dotsLabel={w.dots} page={page} onPageChange={go} live style={pagerRows}>
+          {pages.map((p, i) => {
+            const isLast = i === pages.length - 1;
+            return (
+              <PagerPage key={p.id}>
+                <div style={pageGrid}>
+                  <div data-gallery="ob-picture">
+                    <Art art={p.art} shape="square" />
+                    {!isLast && (
+                      <div data-gallery="ob-close">
+                        <CloseButton label={w.skip} emphasis="solid" onClick={skip} />
+                      </div>
+                    )}
+                  </div>
+                  <div data-gallery="ob-text">
+                    <h1 data-gallery="ob-title" ref={isLast ? titleRef : undefined} tabIndex={-1}>
+                      {t(p.title, lang)}
+                    </h1>
+                    <p data-gallery="ob-body">{t(p.body, lang)}</p>
+                  </div>
+                </div>
+              </PagerPage>
+            );
+          })}
+        </Pager>
         <div data-gallery="ob-actions">
           {last ? (
             <>

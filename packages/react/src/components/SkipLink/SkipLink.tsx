@@ -21,6 +21,7 @@
 // - Position absolute: placed first in `body` it sits at the top of the page.
 //   A consumer that wants it fixed sets that from its own CSS.
 import { type AnchorHTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react';
+import { focusFragment } from '@the-system/shared';
 import { useTheme } from '../../theme';
 
 /** The default visible text, per language. */
@@ -33,27 +34,6 @@ export interface SkipLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorEleme
   /** The visible text. Default "Skip to main content", in Arabic "الانتقال للمحتوى الرئيسي". */
   children?: ReactNode;
   ref?: Ref<HTMLAnchorElement>;
-}
-
-
-/** Moves focus to the element a fragment names. Returns false when there is none. */
-export function focusFragment(href: string, doc: Document = document): boolean {
-  if (!href.startsWith('#') || href.length < 2) return false;
-  let id: string;
-  try {
-    id = decodeURIComponent(href.slice(1));
-  } catch {
-    id = href.slice(1);
-  }
-  const target = doc.getElementById(id);
-  if (!target) return false;
-  // Try the element as it is first: a link, a field or an element with its own tabindex keeps what it has.
-  target.focus();
-  if (doc.activeElement === target) return true;
-  // Not focusable (a region, an anchor with no href, a disabled control): make it a script focus target.
-  target.setAttribute('tabindex', '-1');
-  target.focus();
-  return doc.activeElement === target;
 }
 
 /** A link that is drawn only while it has focus, and moves focus to the main content. */

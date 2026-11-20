@@ -153,6 +153,47 @@
     block-size: var(--_ios-bar-room);
   }
 
+  /*
+   * Order Y5: the content fades under a floating bar. Text behind the clear
+   * glass read as ghost words that ran into the bar's own labels. The
+   * spacer above holds the bar's room; in a style that takes the platform's
+   * glass it also sticks to the foot of main and paints the page ground,
+   * clear at its top and solid from a little under the bar's upper edge,
+   * over the content and under the bar (the dock's z-index is higher). The
+   * bar keeps its clear tint and blur: its upper edge still carries the
+   * colour of what scrolls under it, so it reads as glass, and its labels
+   * and glyphs sit on the page ground. Sticky, not fixed, so the spacer
+   * keeps its place in the flow and the last row still clears the bar at
+   * the end of the scroll. The fallbacks for reduced transparency and more
+   * contrast keep the bar solid; the fade stays, it is content. It takes
+   * no pointer: rows under it stay reachable where the bar does not cover
+   * them.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:has([data-ds='tab-bar']:not([data-placement='side']))::after {
+      position: sticky;
+      inset-block-end: 0;
+      z-index: var(--ds-z-raised);
+      /* A sticky box keeps clear of the scroller's padding: a shadow as deep as that padding fills the strip under it, to the screen's edge. */
+      box-shadow: 0 var(--_page-shell-main-padding, 0px) 0 0 var(--_page-shell-bg);
+      background-image: linear-gradient(
+        to bottom,
+        transparent,
+        color-mix(in srgb, var(--_page-shell-bg) 70%, transparent) 26%,
+        color-mix(in srgb, var(--_page-shell-bg) 94%, transparent) 44%,
+        var(--_page-shell-bg) 56%
+      );
+      pointer-events: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']::after {
+      background-image: none;
+      box-shadow: none;
+    }
+  }
+
   @container style(--_ios-rail: side) {
     [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']:not(:has([data-ds='tab-bar'][data-placement='bottom'])) {
       scroll-padding-block-end: var(--_ios-rail-foot);
@@ -741,5 +782,112 @@
   :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'],
   :root[data-ds-test-fold='horizontal'] [data-platform='ios'] [data-ds='sheet'][data-size] {
     --_dialog-height-max: calc(50% - 2 * var(--ds-space-fixed-l) - max(var(--ds-space-fixed-m), var(--ds-inset-safe-bottom)) - var(--ds-space-fixed-m));
+  }
+
+  /* ------------------------------------------------------------ grouped content on the inner screen (order DU6, proposed) */
+
+  /*
+   * Plan 5.2, List: inset cards keep 16 from the edges on the phone and the
+   * outer screen, and 20 on the inner screen (the kit's layout margin). A
+   * shell at least breakpoint.medium wide is the inner screen here.
+   */
+  @container ds-shell (inline-size >= 600px) { /* breakpoint.medium */
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main'] {
+      padding-inline: calc(2 * var(--ds-space-fixed-l));
+    }
+  }
+
+  /* ------------------------------------------------------------ partly folded: alerts, dialogs, the drawer, toasts and the split view (order DU6, proposed) */
+
+  /*
+   * Plan 5.2, partly folded. Nothing here runs unless the screen has two
+   * segments: the segment media queries, data-segment on the overlay root
+   * (order DU5, read from window.viewport.segments) or the harness stand in
+   * (data-ds-test-fold on the html element, band 40 across the middle).
+   *
+   * - Landscape (side by side): an alert or a dialog centres in the inline
+   *   start segment; the drawer rises in that segment, as the sheet does
+   *   above; toasts drop at the top of that segment, never across the band.
+   * - Portrait (one above the other): an alert or a dialog centres in the
+   *   bottom segment, where the hands are (S6); the drawer stays in it.
+   *   Plain toasts already sit at the top, in the top segment.
+   * - SplitView: the list and the detail split at the band with even widths,
+   *   the band left between them, so no control sits in the fold.
+   *
+   * The band in env() terms is the start of the second segment less the end
+   * of the first. Percentages in padding read the root's width (a fixed root
+   * spans the viewport); the half height of the screen is written from the
+   * shell's height token (dialog.height.max times 1.25, then a half).
+   * Every rule starts at :root, one pseudo class over the ios.css rules it
+   * meets (this file loads first).
+   */
+  @media (horizontal-viewport-segments: 2) {
+    :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']):dir(ltr) {
+      padding-inline-end: calc(100% - env(viewport-segment-left 0 0, 0px) - env(viewport-segment-width 0 0, 50%) + var(--ds-space-fixed-m));
+    }
+
+    :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']):dir(rtl) {
+      padding-inline-end: calc(env(viewport-segment-left 1 0, 50%) + var(--ds-space-fixed-m));
+    }
+
+    :root [data-platform='ios'] [data-ds='toaster'] {
+      inline-size: min(var(--ds-toast-width-max), calc(env(viewport-segment-width 0 0, 50%) - 2 * var(--_toaster-inset-inline)));
+    }
+
+    :root [data-platform='ios'] [data-ds='toaster']:dir(ltr) {
+      inset-inline: env(viewport-segment-left 0 0, 0px) calc(100% - env(viewport-segment-right 0 0, 50%));
+    }
+
+    :root [data-platform='ios'] [data-ds='toaster']:dir(rtl) {
+      inset-inline: calc(100% - env(viewport-segment-right 1 0, 100%)) env(viewport-segment-left 1 0, 50%);
+    }
+
+    :root [data-platform='ios'] [data-ds='split-view'][data-state='split'] {
+      column-gap: calc((env(viewport-segment-left 1 0, 50%) - env(viewport-segment-right 0 0, 50%)) / 2);
+    }
+
+    :root [data-platform='ios'] [data-ds='split-view'][data-state='split'] > :is([data-part='primary'], [data-part='secondary']) {
+      flex: 1 1 0;
+    }
+  }
+
+  :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-segment='start']:dir(ltr) {
+    padding-inline-end: calc(100% - env(viewport-segment-left 0 0, 0px) - env(viewport-segment-width 0 0, 50%) + var(--ds-space-fixed-m));
+  }
+
+  :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-segment='start']:dir(rtl) {
+    padding-inline-end: calc(env(viewport-segment-left 1 0, 50%) + var(--ds-space-fixed-m));
+  }
+
+  @media (vertical-viewport-segments: 2) {
+    :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) {
+      padding-block-start: calc(env(viewport-segment-top 0 1, calc(var(--ds-dialog-height-max) * 1.25 / 2)) + var(--ds-space-fixed-m));
+    }
+  }
+
+  :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-segment='bottom'] {
+    padding-block-start: calc(env(viewport-segment-top 0 1, calc(var(--ds-dialog-height-max) * 1.25 / 2)) + var(--ds-space-fixed-m));
+  }
+
+  /* The harness stand in: no segments, the band 40 across the middle. */
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) {
+    padding-inline-end: calc(50% + 2 * var(--ds-space-fixed-l) + var(--ds-space-fixed-m));
+  }
+
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] [data-ds='toaster'] {
+    inline-size: min(var(--ds-toast-width-max), calc(50% - 2 * var(--ds-space-fixed-l) - 2 * var(--_toaster-inset-inline)));
+    inset-inline: 0 calc(50% + 2 * var(--ds-space-fixed-l));
+  }
+
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] [data-ds='split-view'][data-state='split'] {
+    column-gap: calc(2 * var(--ds-space-fixed-l));
+  }
+
+  :root[data-ds-test-fold='vertical'] [data-platform='ios'] [data-ds='split-view'][data-state='split'] > :is([data-part='primary'], [data-part='secondary']) {
+    flex: 1 1 0;
+  }
+
+  :root[data-ds-test-fold='horizontal'] [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) {
+    padding-block-start: calc(var(--ds-dialog-height-max) * 1.25 / 2 + 2 * var(--ds-space-fixed-l) + var(--ds-space-fixed-m));
   }
 }

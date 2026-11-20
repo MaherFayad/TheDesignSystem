@@ -32,6 +32,7 @@
 //
 // Motion is CSS only (pattern "menu-scale"), as in DropdownMenu: nothing
 // waits for an animationend.
+import { useFoldCollision } from '../Popover/FloatingLayer';
 import {
   createContext,
   use,
@@ -220,12 +221,16 @@ export function ContextMenuContent({ collisionPadding = VIEWPORT_GUTTER, ref, ch
   const ctx = useMenuContext('ContextMenuContent');
   const layer = useMenuLayer(ctx.open);
   const { onContent } = layer;
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(collisionPadding);
+  const foldRef = fold.ref;
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       assignRef(ref, node);
       onContent(node);
+      foldRef(node);
     },
-    [ref, onContent],
+    [ref, onContent, foldRef],
   );
   return layer.render(
     <RadixMenu.Content
@@ -234,7 +239,7 @@ export function ContextMenuContent({ collisionPadding = VIEWPORT_GUTTER, ref, ch
       side={physicalSide('inline-end', layer.dir)}
       align="start"
       sideOffset={POINTER_GAP}
-      collisionPadding={collisionPadding}
+      collisionPadding={fold.collisionPadding}
       data-ds="context-menu"
       data-size={ctx.size}
     >
@@ -463,12 +468,16 @@ export function ContextMenuSubContent({
   const sub = use(SubContext);
   const layer = useMenuLayer(sub?.open ?? false);
   const { onContent } = layer;
+  // Order DU5: the side column and the fold as collision padding.
+  const fold = useFoldCollision(collisionPadding);
+  const foldRef = fold.ref;
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
       assignRef(ref, node);
       onContent(node);
+      foldRef(node);
     },
-    [ref, onContent],
+    [ref, onContent, foldRef],
   );
   if (!sub) throw new Error('ContextMenuSubContent must be used inside a ContextMenuSub.');
   return layer.render(
@@ -478,7 +487,7 @@ export function ContextMenuSubContent({
       sideOffset={sideOffset}
       // Lines the first item of the submenu up with its trigger: the menu padding plus the border.
       alignOffset={alignOffset ?? -(TRIGGER_GAP + 1)}
-      collisionPadding={collisionPadding}
+      collisionPadding={fold.collisionPadding}
       data-ds="context-menu"
       data-part="sub-content"
       data-size={ctx.size}

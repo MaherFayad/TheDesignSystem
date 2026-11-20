@@ -422,6 +422,16 @@
       --_search-field-height: calc(var(--ds-size-control-xs) + var(--ds-space-fixed-m));
       --_search-field-font-size: var(--ds-type-body-large-font-size);
     }
+
+    /*
+     * Order Y5: the hint of the floating search field is the field's only
+     * visible label. On the gray well over the clear glass the placeholder
+     * gray measured 3.9 to 4.4 (Neutral, Liquid dark), so it takes the muted
+     * text color there, as the bar's own labels do (WCAG 2.2 1.4.3).
+     */
+    [data-platform='ios'] [data-ds='tab-bar'] [data-ds='search-field'] [data-ds='input'] > [data-part='control']::placeholder {
+      color: var(--ds-color-text-muted);
+    }
   }
 
   [data-platform='ios'] [data-ds='textarea'] {
@@ -1764,6 +1774,24 @@
       --_dialog-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 11%, var(--ds-color-glass-backdrop-dark));
     }
 
+    /*
+     * Order Y5: grouped cards inside a sheet, a drawer or a dialog. In dark
+     * the card took the sheet's own gray (11% white), so the groups did not
+     * read. As in the kit, a card on a raised panel takes the next step of
+     * the ladder (17% white). In light, a sheet that holds grouped cards
+     * takes the grouped page ground under its white cards, as the page shell
+     * does; a style that paints its sheet as glass (Liquid) keeps its glass,
+     * which already parts from the white card.
+     */
+    [data-platform='ios'][data-scheme='dark'] :is([data-ds='sheet'], [data-ds='drawer'], [data-ds='dialog']) [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
+      --_list-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 17%, var(--ds-color-glass-backdrop-dark));
+      --_list-separator-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 26%, var(--ds-color-glass-backdrop-dark));
+    }
+
+    [data-platform='ios']:not([data-scheme='dark']) :is([data-ds='sheet'], [data-ds='drawer']):has(> [data-part='panel'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided'])) {
+      --_dialog-bg: var(--ds-color-bg-body);
+    }
+
     /* The actions of an alert in dark: a light glass gray on the panel, as in the kit, not a near black. */
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']):not([data-emphasis='solid'][data-tone='accent']) {
       --_button-bg: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 23%, var(--ds-color-glass-backdrop-dark));
@@ -2437,6 +2465,16 @@
   }
 
   /*
+   * Order Y5: the labels under the tiles, people's names first, at the
+   * platform's caption size (label.medium, 12) in every script; the fluid
+   * xs of the base fell to 10 at 393 wide and read small in Arabic. Two
+   * lines at most, as the base clamps them; Arabic keeps its own leading.
+   */
+  [data-platform='ios'] [data-ds='share-panel'] {
+    --_share-panel-item-font-size: var(--ds-type-label-medium-font-size);
+  }
+
+  /*
    * Liquid and Neutral: rows part by space, not by a hairline (kit), and the
    * action circles take the platform's quiet fill, a step off the sheet, as
    * the alert's field well does: a glass fill over the light sheet vanished.
@@ -2644,6 +2682,36 @@
     block-size: var(--_ios-title-room);
   }
 
+  /*
+   * Order Y5: the list fades at the bar's edge instead of ending on a cut
+   * line. The title band above sticks to the top of main and paints a short
+   * ground there, solid at the bar's edge and clear 24 under it, over the
+   * content and under the large title (lifted below). Glass styles only;
+   * no pointer, and forced colors drop it.
+   */
+  @container style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted) {
+    [data-platform='ios'] [data-ds='page-shell']:has(> [data-part='header'] > [data-ds='navbar'] > [data-part='heading']) > [data-part='main']::before {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: var(--ds-z-raised);
+      background-image: linear-gradient(to bottom, var(--_page-shell-bg), color-mix(in srgb, var(--_page-shell-bg) 60%, transparent) 40%, transparent);
+      background-repeat: no-repeat;
+      background-size: 100% calc(2 * var(--ds-space-fixed-xl));
+      pointer-events: none;
+    }
+
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'] > [data-part='heading'] {
+      position: relative;
+      z-index: calc(var(--ds-z-raised) + var(--ds-z-raised));
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-platform='ios'] [data-ds='page-shell'] > [data-part='main']::before {
+      background-image: none;
+    }
+  }
+
   [data-platform='ios'] [data-ds='page-shell'] > [data-part='header'] > [data-ds='navbar'] > [data-part='heading'] {
     overflow-x: clip;
     white-space: nowrap;
@@ -2696,13 +2764,23 @@
     }
   }
 
+  /*
+   * Order Y5: the title fades out in the first quarter of its travel, so
+   * no half title stands cut at the bar's edge mid scroll.
+   */
   @keyframes ds-ios-title-away {
     from {
       clip-path: inset(0 0 0 0);
+      opacity: 1;
       transform: translateY(0);
     }
 
+    25% {
+      opacity: 0;
+    }
+
     to {
+      opacity: 0;
       clip-path: inset(var(--_ios-title-room) 0 0 0);
       transform: translateY(calc(-1 * var(--_ios-title-room)));
     }

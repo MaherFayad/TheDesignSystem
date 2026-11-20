@@ -28,8 +28,7 @@
 // direction. That Theme is `display: contents`, so it paints nothing. Any
 // overlay that portals out (Dialog, Popover, Menu) follows the same order:
 //
-//   const theme = useTheme();
-//   createPortal(<Theme style={theme.style} scheme={theme.scheme} ...every axis>{layer}</Theme>, document.body)
+//   createPortal(<LayerTheme data-<name>-layer="">{layer}</LayerTheme>, document.body)
 //
 // Above a modal dialog. The viewport sits on z.toast (10000), over z.dialog
 // (9500). A modal Radix Dialog then does three things to the rest of the
@@ -94,10 +93,11 @@
 // own --ds-inset-safe-* from env(), so an override on the Theme the Toaster
 // is mounted in (a drawn device frame that says where its camera cutout is)
 // would not reach the toasts. The Toaster renders one hidden span in place
-// (data-toaster-anchor), reads the computed inset tokens there after mount
-// and on every resize (a turn of the device), and writes them on the portal
-// Theme. In a real browser the values are the same env() values the portal
-// would read itself.
+// (data-toaster-anchor); the portal's LayerTheme (theme/LayerTheme.tsx, the
+// one helper every portal uses since order C5) reads the computed inset
+// tokens there after mount and on every resize (a turn of the device), and
+// writes them on itself. In a real browser the values are the same env()
+// values the portal would read itself.
 //
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
@@ -111,7 +111,7 @@ import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStor
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastClosable, toastMeta, toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
-import { Theme } from '../../theme/Theme';
+import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
 import { isInsideToaster } from './isInsideToaster';
 import {
@@ -191,24 +191,6 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
     .join(' ');
 }
 
-/** The safe area tokens the portal Theme copies from where the Toaster is mounted. */
-const INSET_TOKENS = ['--ds-inset-safe-top', '--ds-inset-safe-bottom', '--ds-inset-safe-start', '--ds-inset-safe-end'] as const;
-
-/** The computed inset tokens at an element, or undefined when it has none (a test DOM). */
-export function readInsets(el: Element): Record<string, string> | undefined {
-  const computed = el.ownerDocument.defaultView?.getComputedStyle(el);
-  if (!computed) return undefined;
-  const out: Record<string, string> = {};
-  for (const name of INSET_TOKENS) {
-    const value = computed.getPropertyValue(name).trim();
-    if (value) out[name] = value;
-  }
-  return Object.keys(out).length > 0 ? out : undefined;
-}
-
-const sameInsets = (a: Record<string, string> | undefined, b: Record<string, string> | undefined) =>
-  a === b || (a !== undefined && b !== undefined && INSET_TOKENS.every((n) => a[n] === b[n]));
-
 /** The swipe that closes a toast: toward the edge it sits on (helpers/toast-swipe.ts). */
 const swipeFor = toasterSwipe;
 
@@ -222,7 +204,6 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
   const [mute, setMute] = useState<HTMLElement | null>(null);
   const [layer, setLayer] = useState<HTMLElement | null>(null);
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  const [insets, setInsets] = useState<Record<string, string> | undefined>(undefined);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [away, setAway] = useState(false);
@@ -261,19 +242,6 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
     setBody(document.body);
     setMute(document.createElement('div'));
   }, []);
-
-  // The safe area where the Toaster is mounted, for the portal Theme (see the header).
-  useLayoutEffect(() => {
-    if (!anchor) return;
-    const read = () => {
-      const next = readInsets(anchor);
-      setInsets((prev) => (sameInsets(prev, next) ? prev : next));
-    };
-    read();
-    const view = anchor.ownerDocument.defaultView;
-    view?.addEventListener('resize', read);
-    return () => view?.removeEventListener('resize', read);
-  }, [anchor]);
 
   // Window blurred and tab hidden pause the timers, as Radix does.
   useEffect(() => {
@@ -410,16 +378,8 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
       ));
 
   const portal = createPortal(
-    <Theme
-      style={theme.style}
-      scheme={theme.scheme}
-      density={theme.density}
-      contrast={theme.contrast}
-      platform={theme.platform}
-      glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
-      css={insets as CSSProperties | undefined}
+    <LayerTheme
+      insetsFrom={anchor}
       ref={setLayer}
       aria-live="off"
       data-toaster-layer=""
@@ -454,7 +414,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
           hotkey={hotkey}
         />
       </RadixToast.Provider>
-    </Theme>,
+    </LayerTheme>,
     body,
   );
   return (

@@ -177,7 +177,8 @@
       "Pushed screen form (order C2): back and start come first in the DOM, then the brand, the links and the end actions, then the heading, so focus and reading go back, start actions, end actions, then the title, as drawn: the button row, then the title row (WCAG 1.3.1, 2.4.3). The heading is an h1 that names the page (WCAG 2.4.6). The back button is named by back.label, never by its glyph alone (WCAG 4.1.2).",
       "Bar group (order C2): an attached ButtonGroup in start or end is one capsule. The group is role group with its own name; each IconButton in it keeps its own name and its own target, 44 by 44 on ios (WCAG 2.5.8, 4.1.2). Tab moves from one button to the next; the group adds no key.",
       "Placement (order DU1): the DOM order never changes, so focus goes brand, links, end actions, then the menu button in every placement: the top row, then the column top to bottom (WCAG 2.4.3). The links keep the horizontal arrow keys, because they stay a row; the end actions are tab stops.",
-      "In the column every action is 48 by 48 on ios (WCAG 2.5.8) and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): drawn by ios.css (order DU2)."
+      "In the column every action is 48 by 48 on ios (WCAG 2.5.8) and the content keeps scroll padding at the inline end equal to the column (WCAG 2.4.11): drawn by ios.css (order DU2).",
+      "Order C5, proposed: below 360 wide the large title wraps to two lines instead of an ellipsis (WCAG 1.4.10; the platform CSS draws the wrap). The collapse never assumes one line: on ios in a PageShell header the heading's height is measured with a ResizeObserver and written on the PageShell root as the private property --_navbar-heading-size, which the platform CSS reads for the room main keeps at its start and the range the title scrolls away in; the collapse point is that same height."
     ]
   },
   "content": {

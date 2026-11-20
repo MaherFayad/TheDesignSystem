@@ -82,7 +82,7 @@ import {
   type SelectionSide,
 } from '@the-system/shared';
 import { Icon, type IconName } from '../Icon';
-import { Theme } from '../../theme/Theme';
+import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
 
@@ -186,25 +186,12 @@ function selectionIn(owner: HTMLElement): Range | null {
 }
 
 function SelectionMenuLayer({ children }: { children: ReactNode }) {
-  const theme = useTheme();
   const [body, setBody] = useState<HTMLElement | null>(null);
   // The portal needs the document, so it renders after the first commit (safe on the server).
   useEffect(() => setBody(document.body), []);
   if (!body) return null;
   return createPortal(
-    <Theme
-      style={theme.style}
-      scheme={theme.scheme}
-      density={theme.density}
-      contrast={theme.contrast}
-      platform={theme.platform}
-      glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
-      data-selection-menu-layer=""
-    >
-      {children}
-    </Theme>,
+    <LayerTheme data-selection-menu-layer="">{children}</LayerTheme>,
     body,
   );
 }

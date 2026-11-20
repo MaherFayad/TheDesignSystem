@@ -155,7 +155,8 @@
   "states": [
     "open",
     "closed",
-    "data-primary"
+    "data-primary",
+    "data-segment=start|end|top|bottom"
   ],
   "a11y": {
     "role": "alertdialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
@@ -177,7 +178,8 @@
       "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"alert-dialog\"] in its style.json. The title bar holds the title (a direct AlertDialogTitle child or the title prop, still the accessible name); with controls it starts with WindowControls, whose close light cancels (as Escape and Cancel do), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
       "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body.",
       "Order M9.6, proposed: the body part is an inset Fieldset root (data-ds fieldset, data-part body) of one or two Fields, each with an Input variant plain and a visible label (WCAG 3.3.2: a placeholder is never the only label). Focus order is field, field, Cancel, action (WCAG 2.4.3). AlertDialogAction primary carries data-primary; with requiresValue it is aria-disabled, and stays in the tab order, until the first field has a value.",
-      "Order M9.6, proposed, the platforms: web, the same parts and the primary a solid Button. ios: the alert card with the fields as rows of a grouped well and the default action filled with our darker tint, so its white label keeps 4.5:1 (WCAG 1.4.3; the vendor kit's brighter tint does not). android: the actions are text buttons, the primary in the tint text, the fields outlined. The platform layers draw these looks (order M9.13). Right to left mirrors the order of the actions."
+      "Order M9.6, proposed, the platforms: web, the same parts and the primary a solid Button. ios: the alert card with the fields as rows of a grouped well and the default action filled with our darker tint, so its white label keeps 4.5:1 (WCAG 1.4.3; the vendor kit's brighter tint does not). android: the actions are text buttons, the primary in the tint text, the fields outlined. The platform layers draw these looks (order M9.13). Right to left mirrors the order of the actions.",
+      "Order DU5, proposed: on a window with two viewport segments (window.viewport.segments, a foldable held open; behind a flag in Safari) the root carries data-segment, start when the segments sit side by side and bottom when they are stacked, for the platform CSS to place the overlay in that segment, clear of the band. Absent without the API: nothing changes on any other device. A model is never detected."
     ],
     "native": {
       "accessibilityRole": "alert",

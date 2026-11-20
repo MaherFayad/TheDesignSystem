@@ -4,6 +4,7 @@ import { Button } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
 import { IconButton } from '../IconButton';
 import { Link } from '../Link';
+import { PageShell } from '../PageShell';
 import { Navbar } from './index';
 import type { NavbarItem, NavbarSize } from './index';
 
@@ -56,6 +57,29 @@ function Brand({ children }: { children: string }) {
     <Link href="#home" standalone size="lg">
       {children}
     </Link>
+  );
+}
+
+/** A narrow phone shell, 320 wide, whose main scrolls: the large title wraps and collapses on ios. */
+const narrowShell = { inlineSize: '20rem', blockSize: '26rem', border: 'var(--ds-border-width-default) solid var(--ds-color-border-default)' } as const;
+
+function NarrowShell({ lang }: { lang: 'en' | 'ar' }) {
+  const t =
+    lang === 'ar'
+      ? { label: 'الأغاني', back: 'المكتبة', heading: 'أغاني رحلة الليل من الرياض إلى أبها', more: 'خيارات إضافية', row: (n: number) => `أغنية ${n}` }
+      : { label: 'Songs', back: 'Library', heading: 'Songs for the night drive to Abha', more: 'More options', row: (n: number) => `Song ${n}` };
+  return (
+    <div style={narrowShell}>
+      <PageShell
+        embedded
+        mainId={`title-wrap-${lang}`}
+        header={<Navbar label={t.label} items={[]} back={{ label: t.back, href: '#library' }} heading={t.heading} end={<IconButton icon="more" label={t.more} />} />}
+      >
+        {Array.from({ length: 14 }, (_, i) => (
+          <p key={i}>{t.row(i + 1)}</p>
+        ))}
+      </PageShell>
+    </div>
   );
 }
 
@@ -183,6 +207,15 @@ export default function NavbarDemo() {
             }
           />
         </Theme>
+      </DemoCase>
+
+      <DemoCase id="title-wrap" title="A long large title on a 320 wide shell: two lines, not an ellipsis; scroll to collapse it">
+        <DemoRow>
+          <NarrowShell lang="en" />
+          <Theme lang="ar" dir="rtl" data-demo="content">
+            <NarrowShell lang="ar" />
+          </Theme>
+        </DemoRow>
       </DemoCase>
 
       <DemoCase id="empty" title="No links yet: brand and actions only, no menu button">

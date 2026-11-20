@@ -8,27 +8,11 @@
 // The same logic as the layer inside ComboboxBase, which does not export it.
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Theme } from '../../theme/Theme';
-import { useTheme } from '../../theme/hooks';
+import { LayerTheme } from '../../theme/LayerTheme';
 
 /** Wraps children in a Theme with the axes of the current one, for content that is portaled out of it. */
 export function useThemedLayer() {
-  const theme = useTheme();
-  return (children: ReactNode) => (
-    <Theme
-      style={theme.style}
-      scheme={theme.scheme}
-      density={theme.density}
-      contrast={theme.contrast}
-      platform={theme.platform}
-      glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
-      data-menu-layer=""
-    >
-      {children}
-    </Theme>
-  );
+  return (children: ReactNode) => <LayerTheme data-menu-layer="">{children}</LayerTheme>;
 }
 
 /**

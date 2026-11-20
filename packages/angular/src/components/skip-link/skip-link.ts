@@ -16,31 +16,12 @@
 // preventDefault. The default text follows the theme's language, and the
 // projected text replaces it.
 import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, computed, inject, input } from '@angular/core';
+import { focusFragment } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsThemeService } from '../../theme/theme';
 
 /** The default visible text, per language. */
 export const skipLinkLabels = { en: 'Skip to main content', ar: 'الانتقال للمحتوى الرئيسي' } as const;
-
-/** Moves focus to the element a fragment names. Returns false when there is none. As React's focusFragment. */
-export function focusFragment(href: string, doc: Document = document): boolean {
-  if (!href.startsWith('#') || href.length < 2) return false;
-  let id: string;
-  try {
-    id = decodeURIComponent(href.slice(1));
-  } catch {
-    id = href.slice(1);
-  }
-  const target = doc.getElementById(id);
-  if (!target) return false;
-  // Try the element as it is first: a link, a field or an element with its own tabindex keeps what it has.
-  target.focus();
-  if (doc.activeElement === target) return true;
-  // Not focusable (a region, an anchor with no href, a disabled control): make it a script focus target.
-  target.setAttribute('tabindex', '-1');
-  target.focus();
-  return doc.activeElement === target;
-}
 
 /** A link that is drawn only while it has focus, and moves focus to the main content. */
 @Component({

@@ -1,17 +1,20 @@
 export {
-  ACTION_SHEET_ROOM,
   ActionSheet,
   ActionSheetAction,
   ActionSheetCancel,
   ActionSheetContent,
   ActionSheetTrigger,
-  resolveActionSheetPlacement,
   type ActionSheetActionProps,
   type ActionSheetActionTone,
   type ActionSheetCancelProps,
   type ActionSheetContentProps,
-  type ActionSheetPlacement,
-  type ActionSheetPlacementChoice,
   type ActionSheetProps,
   type ActionSheetTriggerProps,
 } from './ActionSheet';
+export {
+  ACTION_SHEET_ROOM,
+  resolveActionSheetPlacement,
+  type ActionSheetPlacement,
+  type ActionSheetPlacementChoice,
+  type ActionSheetResolved,
+} from '@the-system/shared';

@@ -21,7 +21,7 @@ import { createPortal } from 'react-dom';
 import { Icon } from '@the-system/icons/react';
 import { ANIMATION_ID_PREFIX, CHECK_DRAW_ID, drawCheck, exitGhost, readDuration, readEasing, type PatternMode } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
-import { Theme } from '../../theme/Theme';
+import { LayerTheme } from '../../theme/LayerTheme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
 import { HighlightMarker, useHighlightMarker } from '../ListBox/highlightMarker';
@@ -224,21 +224,9 @@ export function useMenuLayer(open: boolean, kind = '') {
   const render = (children: ReactNode) =>
     body && mounted
       ? createPortal(
-          <Theme
-            style={theme.style}
-            scheme={theme.scheme}
-            density={theme.density}
-            contrast={theme.contrast}
-            platform={theme.platform}
-            glass={theme.glass}
-            dir={theme.dir}
-            lang={theme.lang}
-            data-menu-layer={kind}
-            onFocus={slide.onFocus}
-            onBlur={slide.onBlur}
-          >
+          <LayerTheme data-menu-layer={kind} onFocus={slide.onFocus} onBlur={slide.onBlur}>
             {children}
-          </Theme>,
+          </LayerTheme>,
           body,
         )
       : null;

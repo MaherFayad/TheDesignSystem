@@ -118,7 +118,8 @@
       "Pointer down on the trigger hides the tooltip, so a click never leaves it covering what the click opened. On a disabled Button the press is swallowed, so the tooltip stays and keeps saying why.",
       "The gallery shows some tooltips open with the open prop, so the contract suite and screenshots can read them; a tooltip is never open on load in a product.",
       "disabled true keeps the trigger mounted (focus stays) and closes the tooltip.",
-      "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch)."
+      "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch).",
+      "Order DU5, proposed: the collision padding takes the safe area at the inline sides (where a drawn device frame or a future Safari puts the side column) and, when the viewport segments API reports a fold, the band and the other segment, so the overlay flips or shifts into the segment of its trigger and never straddles the band. With no fold and no inline inset the padding is the one asked for, unchanged."
     ]
   },
   "content": {

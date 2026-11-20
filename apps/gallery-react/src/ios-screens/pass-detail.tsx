@@ -5,7 +5,7 @@
 // (Mobbin links in `meta.references`): the pass fills the page under a bar
 // with one more button; the sheet rises over it with the close control at
 // the start of its header and the confirm at the end, the pass's own row
-// with a share button, a grouped card of switches with a footer under it, a
+// (share is in the sheet's header), a grouped card of switches with a footer under it, a
 // card with one remove row, then the fields of the back of the pass. Our own
 // event, names and numbers come from ./kit; the pass art and its entry code
 // are drawn from tokens.
@@ -16,15 +16,16 @@
 // - the pass: Card with the kit's Art as its media and a DescriptionList of
 //   its fields;
 // - the detail sheet: Sheet (size lg) with SheetConfirm, so close and
-//   confirm sit in its header;
-// - share: SharePanel around an IconButton, system prefer: the system share
-//   sheet first through share(), our panel of people, targets and actions
-//   where there is none;
+//   confirm sit in its header, and SheetHeaderAction (order C5) for share
+//   between them;
+// - share: SharePanel around an IconButton in the sheet header, system
+//   prefer: the system share sheet first through share(), our panel of
+//   people, targets and actions where there is none;
 // - grouped rows: List variant inset, ListSection with a footer, Switch;
 // - the info button: IconButton as a PopoverTrigger, Popover with its arrow;
-// - remove: a danger Button in its own row as an ActionSheetTrigger, the
-//   ActionSheet anchored to it (the ios default), one danger action and the
-//   built in cancel;
+// - remove: a ListItem with tone danger as the ActionSheetTrigger (order
+//   C5: the row is the trigger), the ActionSheet anchored to it (the ios
+//   default), one danger action and the built in cancel;
 // - after a remove: EmptyState with a restore Button, and a banner (Toaster
 //   with position auto, toast() without a close button).
 //
@@ -58,6 +59,7 @@ import {
   SheetBody,
   SheetConfirm,
   SheetContent,
+  SheetHeaderAction,
   SheetTrigger,
   Switch,
   Toaster,
@@ -268,6 +270,18 @@ export function Screen({ lang }: ScreenProps) {
         <IconButton icon="more" label={w.details} />
       </SheetTrigger>
       <SheetContent title={w.details}>
+        <SheetHeaderAction>
+          <SharePanel
+            item={{ title: passTitle, url: `https://example.com/passes/${pass.id}`, text: t(pass.place, lang) }}
+            people={sharePeople}
+            targets={shareTargets}
+            actions={shareActions}
+            onShare={onShare}
+            lang={lang}
+          >
+            <IconButton icon="share" label={w.share} />
+          </SharePanel>
+        </SheetHeaderAction>
         <SheetConfirm label={w.save} onClick={() => banner(w.saved, 'check')} />
         <SheetBody>
           <div data-gallery="pass-sheet">
@@ -280,18 +294,6 @@ export function Screen({ lang }: ScreenProps) {
                 }
                 title={passTitle}
                 description={`${dateText(pass.date, lang, 'day-month')}, ${timeText(pass.hours, pass.minutes, lang)}`}
-                actions={
-                  <SharePanel
-                    item={{ title: passTitle, url: `https://example.com/passes/${pass.id}`, text: t(pass.place, lang) }}
-                    people={sharePeople}
-                    targets={shareTargets}
-                    actions={shareActions}
-                    onShare={onShare}
-                    lang={lang}
-                  >
-                    <IconButton icon="share" label={w.share} />
-                  </SharePanel>
-                }
               />
             </List>
 
@@ -321,22 +323,16 @@ export function Screen({ lang }: ScreenProps) {
             </List>
 
             <List variant="inset" aria-label={w.remove}>
-              <ListItem
-                title={
-                  <ActionSheet>
-                    <ActionSheetTrigger>
-                      <Button tone="danger" emphasis="ghost" fullWidth data-gallery="pass-remove">
-                        {w.remove}
-                      </Button>
-                    </ActionSheetTrigger>
-                    <ActionSheetContent title={passTitle} description={w.removeNote}>
-                      <ActionSheetAction tone="danger" start="trash" onClick={remove}>
-                        {w.remove}
-                      </ActionSheetAction>
-                    </ActionSheetContent>
-                  </ActionSheet>
-                }
-              />
+              <ActionSheet>
+                <ActionSheetTrigger>
+                  <ListItem tone="danger" title={w.remove} data-gallery="pass-remove" />
+                </ActionSheetTrigger>
+                <ActionSheetContent title={passTitle} description={w.removeNote}>
+                  <ActionSheetAction tone="danger" start="trash" onClick={remove}>
+                    {w.remove}
+                  </ActionSheetAction>
+                </ActionSheetContent>
+              </ActionSheet>
             </List>
 
             <List variant="inset" titleLines="all" aria-label={w.back}>

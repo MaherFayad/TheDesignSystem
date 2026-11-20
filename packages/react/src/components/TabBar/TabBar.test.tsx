@@ -109,7 +109,7 @@ describe('TabBar', () => {
   it('renders the demo with every case', () => {
     const { container } = render(<TabBarDemo />);
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(ids).toEqual(['variants', 'many', 'too-many', 'long-text', 'long-arabic']);
+    expect(ids).toEqual(['variants', 'many', 'too-many', 'long-text', 'long-arabic', 'search-side']);
   });
 });
 

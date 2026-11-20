@@ -65,6 +65,22 @@
 // label is not drawn (ios) a Tooltip shows it on hover. A press runs onClick
 // and then closes the sheet, unless onClick calls event.preventDefault().
 // While disabled it is aria-disabled and stays in the tab order.
+//
+// Order C5 (proposed): SheetHeaderAction, the header-action part. One more
+// action in the header besides close and confirm, such as share. A
+// SheetHeaderAction child of SheetContent moves into the header between the
+// close control and the confirm, in a div with the part name, so the tab
+// order is close, the header action, confirm, as drawn. It holds one
+// element: an IconButton, or a component that renders one as its trigger
+// (SharePanel, a DropdownMenu, a Popover). A sheet takes one; a second is
+// left out with a warning in development. The platform draws it as it
+// draws the close control (a round glass button on ios).
+//
+//           <div data-part="header">
+//             ...close
+//             <div data-part="header-action">              order C5, optional: SheetHeaderAction
+//               <button data-ds="icon-button">
+//             ...confirm
 import {
   createContext,
   isValidElement,
@@ -311,6 +327,24 @@ export function SheetConfirm({ label, icon = 'check', disabled = false, loading 
   );
 }
 
+export interface SheetHeaderActionProps {
+  /**
+   * One element: an IconButton with its label (Share pass), or a component
+   * that renders one as its trigger, such as a SharePanel or a DropdownMenu.
+   */
+  children: ReactElement;
+}
+
+/**
+ * One more action in the header, between the close control and the
+ * confirm (order C5, proposed). Put it as a direct child of SheetContent;
+ * it moves into the header. One per sheet.
+ */
+export function SheetHeaderAction({ children }: SheetHeaderActionProps) {
+  useSheetContext('SheetHeaderAction');
+  return <div data-part="header-action">{children}</div>;
+}
+
 // ------------------------------------------------------------------ handle
 
 /** The share of the pointer travel the panel follows past where it may go (no detents). */
@@ -532,7 +566,7 @@ export interface SheetContentProps
   description?: ReactNode;
   /** Accessible name of the close control. Default "Close sheet" (Arabic under lang ar). */
   closeLabel?: string;
-  /** SheetTitle, SheetDescription, SheetConfirm (order M9.6), SheetBody, SheetFooter. */
+  /** SheetTitle, SheetDescription, SheetConfirm (order M9.6), SheetHeaderAction (order C5), SheetBody, SheetFooter. */
   children?: ReactNode;
   /** Class name of the root, the layer that holds the backdrop and the panel. */
   className?: string;
@@ -586,13 +620,19 @@ export function SheetContent({ title, description, closeLabel, children, classNa
     closeLabel: closeLabel ?? words.close,
     closeDisabled: !ctx.dismissible,
   });
-  // A SheetConfirm child moves into the header, after the close control (order M9.6).
+  // A SheetConfirm child moves into the header, after the close control (order M9.6);
+  // a SheetHeaderAction child moves in between the two (order C5).
   let confirm: ReactNode = null;
+  let headerAction: ReactNode = null;
   const others: ReactNode[] = [];
   for (const child of split.others) {
     if (!confirm && isValidElement(child) && child.type === SheetConfirm) confirm = child;
-    else others.push(child);
+    else if (isValidElement(child) && child.type === SheetHeaderAction) {
+      if (!headerAction) headerAction = child;
+      else if (process.env.NODE_ENV !== 'production') console.warn('Sheet: a sheet takes one SheetHeaderAction. Put other actions in the body or in a menu.');
+    } else others.push(child);
   }
+  const endActions = confirm || headerAction;
   // With the style's title bar (order 1.29, Dialog's pattern): the bar with the title, then the description.
   const header = titlebarOn ? (
     <>
@@ -613,9 +653,10 @@ export function SheetContent({ title, description, closeLabel, children, classNa
           ) : undefined
         }
         actions={
-          confirm ? (
+          endActions ? (
             <>
               {controlsOn && !phone ? null : split.closeButton}
+              {headerAction}
               {confirm}
             </>
           ) : controlsOn && !phone ? undefined : (
@@ -625,11 +666,12 @@ export function SheetContent({ title, description, closeLabel, children, classNa
       />
       {split.descriptionNode}
     </>
-  ) : confirm ? (
+  ) : endActions ? (
     <div data-part="header">
       {split.titleNode}
       {split.descriptionNode}
       {split.closeButton}
+      {headerAction}
       {confirm}
     </div>
   ) : (

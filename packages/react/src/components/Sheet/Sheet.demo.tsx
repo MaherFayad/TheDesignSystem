@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
+import { IconButton } from '../IconButton';
 import { Field } from '../Field';
 import { Fieldset } from '../Fieldset';
 import { Input } from '../Input';
@@ -13,6 +14,7 @@ import {
   SheetContent,
   SheetDescription,
   SheetFooter,
+  SheetHeaderAction,
   SheetTitle,
   SheetTrigger,
   type SheetProps,
@@ -156,6 +158,32 @@ function ConfirmSheet({ lang, trigger }: { lang: 'en' | 'ar'; trigger: string })
               <Input variant="plain" clearable placeholder={t.notePlaceholder} />
             </Field>
           </Fieldset>
+        </SheetBody>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+const headerActionCopy = {
+  en: { open: 'Pass details', title: 'Pass details', share: 'Share pass', confirm: 'Save changes', body: 'Seat 14, hall B. Doors open at 7:30 pm.' },
+  ar: { open: 'تفاصيل البطاقة', title: 'تفاصيل البطاقة', share: 'مشاركة البطاقة', confirm: 'حفظ التغييرات', body: 'المقعد 14، القاعة ب. فتح الأبواب الساعة 7:30 مساء.' },
+} as const;
+
+/** Order C5: one more action in the header, between the close control and the confirm. */
+function HeaderActionSheet({ lang, trigger }: { lang: 'en' | 'ar'; trigger: string }) {
+  const t = headerActionCopy[lang];
+  return (
+    <Sheet size="md">
+      <SheetTrigger>
+        <Button data-demo-trigger={trigger}>{t.open}</Button>
+      </SheetTrigger>
+      <SheetContent title={t.title}>
+        <SheetHeaderAction>
+          <IconButton icon="share" label={t.share} />
+        </SheetHeaderAction>
+        <SheetConfirm label={t.confirm} />
+        <SheetBody>
+          <p>{t.body}</p>
         </SheetBody>
       </SheetContent>
     </Sheet>
@@ -355,6 +383,15 @@ export default function SheetDemo() {
           <ConfirmSheet lang="en" trigger="confirm" />
           <Theme lang="ar" dir="rtl" data-demo="content">
             <ConfirmSheet lang="ar" trigger="confirm-arabic" />
+          </Theme>
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="header-action" title="One more action in the header: close, share, then confirm" lang="en">
+        <DemoRow>
+          <HeaderActionSheet lang="en" trigger="header-action" />
+          <Theme lang="ar" dir="rtl" data-demo="content">
+            <HeaderActionSheet lang="ar" trigger="header-action-arabic" />
           </Theme>
         </DemoRow>
       </DemoCase>
