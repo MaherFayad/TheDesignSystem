@@ -273,3 +273,44 @@ references. What they found, grouped into orders. Looks stay proposed.
   where the reference has them; Neutral dark stays neutral gray inside the
   screen host (it showed navy there); content never rests under the bottom
   bar on the phone frame.
+
+## Work resumed by the owner (2026-11-20)
+
+The owner lifted the stop of 2026-11-17 ("continue and take it forward").
+At most four agents run at once. Agents do not run the full `npm run check`;
+the lead runs it on a quiet machine.
+
+- Batch A, at once: the seven open screens of `reset-ios-families.md`
+  section 5 in three orders (M10.2 with M10.8 and M10.9; M10.3 with M10.10;
+  M10.6 with M10.7), and K1 below.
+- Batch B, after A: Angular forms of the M9 components (M9.14 second part),
+  DU5 to DU7, the screen review M10.11.
+- Batch C: M9.22 docs, DU9 docs, M9.23 and DU10 reviews, a docs deploy.
+
+### K1 Known gaps from the first three screens (ds-component)
+
+- Goal: close the gaps `STATE.md` lists after fix round F3.
+  1. The Navbar large title collapses into the bar title on scroll on `ios`
+     (a scroll driven state, `data-collapsed` on the root, with a fallback
+     where scroll timelines are missing; reduced motion gets no movement).
+  2. The settings screen: the tab bar holder leaves the page flow and floats
+     over the content as on `music-library`; the screen's side inset comes
+     from the system (16), not from an extra 4 in the screen's CSS.
+  3. The settings split view on the folding iPhone's inner screen in
+     landscape: the title sits in the detail column, not over the list.
+  4. The screen host's drawn device frame is neutral in Neutral dark.
+  5. The android time dialog boxes of TimeField get the android look.
+  6. The Navbar keyboard map passes on the foldable outer screen in Safari
+     size (382 by 580).
+- Files owned: `packages/react/src/components/Navbar/**`,
+  `packages/css/src/components/navbar.css`, the Navbar part of
+  `packages/css/src/platform/ios.css` and the time field part of
+  `android.css` (this order only, by the lead's leave), `PageShell` where
+  item 2 needs it, `apps/gallery-react/src/ios-screens/settings.tsx`,
+  `settings.css`, `Host.tsx`, `frames.ts` and the host's CSS.
+- Forbidden: every other screen file, contracts, barrels, generated files.
+  A new attribute is asked for in the report; the lead adds the contract row.
+- Acceptance: before and after sheets in scratch for each item, in Liquid
+  and Neutral, light and dark, one RTL; `npm run contract -- --framework
+  react --platform ios --component Navbar`, the same for `web` and with
+  `--device duo-outer`; unit tests for the collapse state.
