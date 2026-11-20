@@ -3,6 +3,7 @@ export {
   ListItem,
   ListSection,
   type ListItemProps,
+  type ListItemTone,
   type ListProps,
   type ListSectionLevel,
   type ListSectionProps,

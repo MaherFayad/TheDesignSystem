@@ -15,6 +15,7 @@
  *   --_list-item-bg, -item-bg-hover, -item-bg-active
  *   --_list-fg, --_list-description-fg, --_list-separator-color
  *   --_list-ring-color        the focus ring of a row link, drawn on the row
+ *   --_list-tone-text         the title and start icon of a danger row (order S1)
  *
  * A row is a grid: start | title over description | end | actions. A
  * linked row's title anchor stretches its ::before over the row: one hit
@@ -206,6 +207,21 @@
    */
   [data-ds='list'] > [data-part='item'][data-disabled] > :is([data-part='start'], [data-part='title']) {
     opacity: var(--ds-opacity-disabled);
+  }
+
+  /*
+   * A destructive row (order S1, proposed): data-tone danger. The title and
+   * a start icon take the danger text color (--_list-tone-text, 4.5:1 on
+   * the surface). The icon is colored itself, so a platform that tints the
+   * start part keeps its tint for other rows.
+   */
+  [data-ds='list'] > [data-part='item'][data-tone='danger'] {
+    --_list-tone-text: var(--ds-color-state-danger-text);
+  }
+
+  [data-ds='list'] > [data-part='item'][data-tone='danger'] > [data-part='title'],
+  [data-ds='list'] > [data-part='item'][data-tone='danger'] > [data-part='start'] > [data-ds='icon'] {
+    color: var(--_list-tone-text);
   }
 
   /* ------------------------------------------------------------ parts */

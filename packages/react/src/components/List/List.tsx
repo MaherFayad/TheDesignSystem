@@ -62,6 +62,10 @@
 //   and end glyphs (part control).
 // - footer: the row's own buttons under its text (part footer), above the
 //   row's hit area like actions.
+//
+// Order S1 (proposed): tone danger on a ListItem stamps data-tone on the row
+// for a destructive row; the CSS draws its title and start icon in the
+// danger text color.
 import {
   Children,
   createContext,
@@ -81,7 +85,7 @@ import {
   type Ref,
 } from 'react';
 import { Icon, type IconName } from '@the-system/icons/react';
-import type { Size } from '@the-system/shared';
+import type { Size, Tone } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { pressHandlers } from '../../internal/pressed';
 import { setPressPoint, staggerGroup } from '@the-system/motion';
@@ -92,6 +96,8 @@ import { SwipeActions, useSwipeController, type SwipeActionsProps } from '../Swi
 const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [data-part='item']"));
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
+/** The tone of one row: danger for a destructive row (delete a routine). */
+export type ListItemTone = Extract<Tone, 'neutral' | 'danger'>;
 export type ListVariant = 'plain' | 'divided' | 'inset' | 'flush';
 /** How many lines a row's title may take before it ends with an ellipsis; all never cuts it. */
 export type ListTitleLines = 1 | 2 | 3 | 'all';
@@ -309,6 +315,12 @@ interface ListItemOwnProps extends Omit<HTMLAttributes<HTMLLIElement>, 'title' |
   /** The current row, for example the open mail or the current page. Sets data-active and aria-current on the link. */
   active?: boolean;
   /**
+   * danger: a destructive row (delete a routine). The title and a start
+   * icon take the danger text color; the title still says what the row
+   * does. Default neutral (no attribute).
+   */
+  tone?: ListItemTone;
+  /**
    * Dims the row. A link loses its href and keeps focus with aria-disabled
    * (anatomy rule 5), and its click handler does not run. Actions are the
    * caller's to disable.
@@ -364,6 +376,7 @@ export function ListItem({
   footer,
   control,
   active = false,
+  tone,
   disabled = false,
   swipe,
   ref,
@@ -464,6 +477,7 @@ export function ListItem({
       {...handlers}
       data-part="item"
       data-active={active ? '' : undefined}
+      data-tone={tone === 'danger' ? tone : undefined}
       data-disabled={disabled ? '' : undefined}
       data-linked={linked ? '' : undefined}
       data-action={action ? '' : undefined}
