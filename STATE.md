@@ -1,9 +1,69 @@
 # State
-Updated: 2026-11-12 08:30 UTC
+Updated: 2026-11-21
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 1 (wave 0 passed its gate on 2026-11-12, report in docs/reports/wave-0.md)
 Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the carry over list in docs/reports/wave-0.md)
 
+
+## Closed stretch (2026-11-21)
+
+**Closed by the owner's order: "make this the last round for fixing and one
+round after you check then merge to main and update docs website".** Nothing
+new starts until the owner says so. Orders are in
+`docs/plan/reset-mobile.md` (K1, S1, A2 to A5, C5, C6, Y5, Y6).
+
+- Done, all proposed until the owner signs:
+  - React (C5, C6): portals carry the theme axes, direction, language and
+    safe area tokens (`LayerTheme`, with a fall back to the document); the
+    sheet header action; a List row as an overlay trigger; the Navbar large
+    title measured on the PageShell root; fold helpers in
+    `packages/shared/src/fold.ts`; `data-segment` on Dialog, AlertDialog and
+    Sheet; the action sheet placement; Toast `data-has-action`; the Toaster
+    side placement; the share panel row scroll in Arabic.
+  - Pager, a new component (scroll snap pages with labels). The onboarding
+    test screen is rebuilt on it.
+  - Style (Y5, Y6): content fades under glass bars; a darker card step inside
+    sheets; the inline title fades in over the scroll; the header action is
+    drawn like the close disc on iOS; the title wraps under 360; the tab bar
+    search sits at the content foot in the side column; folded sheets clear
+    the safe area; toast placements on the fold.
+  - Angular (A2 to A5): the layer theme, fold and trigger row helpers, one
+    shared modal stack, CloseButton `emphasis`, the toaster anchor, and four
+    new components: Sheet, AlertDialog, Popover, Navbar.
+- Checks on the final tree, run by the lead:
+  - `npm run check`: CHECK_LINE
+  - Contract suite, React on iOS, all components: 5783 passed, 8 failed,
+    165 skipped (`docs/reports/contract-react-ios.json`). The 8 were one
+    defect: the Sidebar count on the active row at 1.63:1 (WCAG 1.4.3). The
+    count now takes the active text colour; Sidebar passes on iOS and web.
+  - Contract suite, React on web: WEB_LINE
+  - Contract suite, Angular on web: NG_LINE
+  - Not run: the full web suite (it needs about ten hours here), Android,
+    the foldable profiles, the other Angular components.
+- Open, not fixed by the owner's stop:
+  - The sheet header action disc has no refraction bend
+    (`REFRACTION_PARTS` in `packages/shared/src/refraction.ts`).
+  - The Navbar `title-wrap` demo squeezes the Arabic shell to 2 px.
+  - The share panel row scroll in Arabic was seen only in Chromium.
+  - A faint wash under the Neutral light search field.
+  - SplitView keeps an even split while folded.
+  - Angular has no Sidebar, Rail, Tooltip or `linkAs`; its Navbar phone list
+    is a stand in. Angular has no Pager.
+  - The manifest notes and status for the Angular forms of Sheet,
+    AlertDialog, Popover, Navbar, CloseButton and List are not updated. An
+    agent's edit of them was refused by the permission system and the lead
+    did not make it in its place.
+  - DU5 to DU10 for the foldable iPhone; DU8 needs an Expo token entered
+    through the credential form.
+  - Nothing in this stretch was seen on a real device.
+- Waiting on the owner:
+  1. The manifest note edits above: allow them or leave them.
+  2. Pager sign off (proposed).
+  3. Which side the side column takes in Arabic on the foldable. The lead
+     recommends the inline end.
+  4. A real iPhone and a real foldable iPhone for the device gate.
+  5. The Expo token pasted in chat on 2026-11-20 is exposed. Revoke it and
+     make a new one. It is in no file of this repo.
 
 ## Reset (2026-11-16)
 

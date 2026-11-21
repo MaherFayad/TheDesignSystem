@@ -333,6 +333,8 @@
     --_sidebar-item-bg: var(--_sidebar-item-bg-active);
     --_sidebar-item-fg: var(--_sidebar-item-fg-active);
     --_sidebar-item-icon-fg: var(--_sidebar-item-fg-active);
+    /* The count sits on the active fill, so it takes the active text colour (WCAG 1.4.3). */
+    --_sidebar-meta-fg: var(--_sidebar-item-fg-active);
     --_sidebar-item-edge: var(--_sidebar-item-edge-active);
     --_sidebar-item-font-weight: var(--_sidebar-item-font-weight-active);
   }
