@@ -1,0 +1,11 @@
+/*
+ * Studio recipe for ColorArea (order Z3). The thumb is a square cell with
+ * the mark corner (radius.xs), as ColorSlider's, not a disc. ColorArea.css
+ * draws it as the pill with no private property, so the corner is set on
+ * the part. The area keeps its own corner hook (radius.sm, 2px here).
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='color-area'] > [data-part='thumb'] {
+    border-radius: var(--ds-radius-xs);
+  }
+}

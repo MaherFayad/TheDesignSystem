@@ -85,7 +85,21 @@ for Z3 to take or leave. Note for Z3: Studio's `recipes/SegmentedControl.css`
 
 ## Commands run
 
-CONTRACT_RESULTS
+- `npm run typecheck`: passed, no output.
+- `npx vitest run packages/styles packages/css`: 1 file, 4 tests passed.
+- Extra: `npx vitest run packages/lint packages/tokens` (the CSS gates: dash,
+  token vocabulary, logical properties, parse): first run 1 failed out of 170
+  (the `ds doctor: react fixtures` test, while two contract runs and the Z2
+  agent loaded the machine); the rerun passed 22 files, 170 tests.
+- `DS_CONTRACT_WORKERS=2 npm run contract -- --framework react --platform ios --component Banner,Calendar,DatePicker,Dialog,DropdownMenu,SelectionMenu,SegmentedControl,SharePanel,TabBar`:
+  exit 0. Banner 43, Calendar 43, DatePicker 63, Dialog 63, DropdownMenu 63,
+  SegmentedControl 43, SelectionMenu 63, SharePanel 63, TabBar 43 passed;
+  0 failed, 0 skipped.
+- The same with `--platform web`: exit 0, the same counts, 0 failed,
+  0 skipped.
+- `npx tsx scripts/gen-index.ts`: wrote `packages/styles/studio/index.css` only.
+- Captures: a Playwright script against the gallery on port 5301 (vite,
+  stopped at the end).
 
 ## Not checked
 

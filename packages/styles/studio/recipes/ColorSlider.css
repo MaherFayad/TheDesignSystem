@@ -1,0 +1,14 @@
+/*
+ * Studio recipe for ColorSlider (order Z3). A flat bar of colour and a
+ * square cell for the thumb, not a capsule and a disc: both take the mark
+ * corner (radius.xs). ColorSlider.css draws them as the pill with no
+ * private property, so the corner is set on the parts. The thumb keeps its
+ * surface ring and its 3:1 control edge; the ring grows as a square while
+ * it is dragged.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='color-slider'] > [data-part='track'],
+  [data-style='studio'] [data-ds='color-slider'] [data-part='thumb'] {
+    border-radius: var(--ds-radius-xs);
+  }
+}

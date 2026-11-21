@@ -1,0 +1,40 @@
+/*
+ * Studio recipe for ColorSwatchPicker (order Z3). Square marks, not discs:
+ * the row's swatches, their targets (where the focus ring is drawn), the
+ * chip the check sits on and the add button take the mark and control
+ * corners. The selection ring follows the square with the same gap.
+ *
+ * The grid mosaic takes the mark corner too. On ios a rule in the ds.chrome
+ * layer sets --_color-swatch-picker-radius on the root to the platform's
+ * small corner, which a recipe on the root cannot beat, though the picker is
+ * a control (anatomy.md, ruling 16). Studio sets it on the list, the part
+ * that reads it, as the DatePicker recipe does for its chips.
+ *
+ * The add button is an IconButton with the pill shape from the markup;
+ * Studio sets the corners Button reads after it.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='grid'] > [data-part='list'] {
+    --_color-swatch-picker-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] {
+    border-radius: var(--ds-radius-control);
+  }
+
+  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] > [data-part='swatch'] {
+    --_color-swatch-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='color-swatch-picker'] [data-part='check'] > svg {
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='color-swatch-picker'] > [data-part='add'] {
+    --_button-radius: var(--ds-radius-control);
+    --_button-radius-start-start: var(--ds-radius-control);
+    --_button-radius-start-end: var(--ds-radius-control);
+    --_button-radius-end-start: var(--ds-radius-control);
+    --_button-radius-end-end: var(--ds-radius-control);
+  }
+}

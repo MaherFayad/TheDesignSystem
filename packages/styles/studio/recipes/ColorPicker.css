@@ -1,0 +1,38 @@
+/*
+ * Studio recipe for ColorPicker (order Z3). The picker's own parts take
+ * Studio's square corners: the compact trigger and the swatch in it, the
+ * eyedropper, and the views row (a Tabs root in the soft emphasis).
+ *
+ * The views row: on ios a rule in the ds.chrome layer sets --_tabs-radius
+ * to the pill on the views part, which a recipe there cannot beat, though
+ * the picker is a control (anatomy.md, ruling 16), and the ios soft tabs
+ * lift the active segment with a card shadow. Studio sets the corner on the
+ * list, which the triggers and the indicator read from, and draws the
+ * active segment with its 1px edge only, no shadow. The 3:1 edge of the
+ * soft emphasis stays (Tabs.css).
+ *
+ * The trigger and the eyedropper are IconButtons with the pill shape from
+ * the markup; Studio sets the corners Button reads after it.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='color-picker'] > [data-part='views'] > [data-part='list'] {
+    --_tabs-radius: 0px;
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='color-picker'] > [data-part='views'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+    box-shadow: none;
+  }
+
+  [data-style='studio'] [data-ds='color-picker'] > :is([data-part='trigger'], [data-part='footer'] > [data-part='eyedropper']) {
+    --_button-radius: var(--ds-radius-control);
+    --_button-radius-start-start: var(--ds-radius-control);
+    --_button-radius-start-end: var(--ds-radius-control);
+    --_button-radius-end-start: var(--ds-radius-control);
+    --_button-radius-end-end: var(--ds-radius-control);
+  }
+
+  [data-style='studio'] [data-ds='color-picker'] > [data-part='trigger'] [data-ds='color-swatch'] {
+    --_color-swatch-radius: var(--ds-radius-xs);
+  }
+}

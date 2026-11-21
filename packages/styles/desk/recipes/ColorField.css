@@ -1,0 +1,20 @@
+/*
+ * Desk recipe for ColorField. Order Z4 (proposed). The hex field is a Desk
+ * field like Input: a filled field, the control fill inside the 3:1 control
+ * border (WCAG 1.4.11). Before this it stayed the clear bordered field of
+ * the base. A read only field keeps its own quiet fill and dashed border.
+ * Forced colors replace the fill by themselves.
+ *
+ * The placeholder takes the muted text: the placeholder color fell under
+ * 4.5:1 on the fill (WCAG 1.4.3). No private property covers it, so the
+ * placeholder rule is restated.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='color-field']:not([data-readonly]) {
+    --_color-field-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] [data-ds='color-field']:not([data-readonly]) > [data-part='control']::placeholder {
+    color: var(--ds-color-text-muted);
+  }
+}

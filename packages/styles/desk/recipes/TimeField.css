@@ -1,0 +1,16 @@
+/*
+ * Desk recipe for TimeField. Order Z4 (proposed). The time field shares the
+ * box of DateField.css, so it takes the same filled pill as the Desk date
+ * field and Input: the control fill inside the 3:1 control border. A read
+ * only field keeps its own quiet fill and dashed border.
+ *
+ * The placeholders (the dashes and the day period) take the muted text: the
+ * placeholder color fell to about 4.1:1 on the fill, under 4.5:1
+ * (WCAG 1.4.3). The muted text keeps them lighter than a typed value.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='time-field']:not([data-readonly]) {
+    --_date-field-bg: var(--ds-control-fill-default);
+    --_date-field-placeholder-fg: var(--ds-color-text-muted);
+  }
+}
