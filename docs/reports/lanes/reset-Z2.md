@@ -79,7 +79,22 @@ No file of the Z4 group was touched.
   the contrast gate lists its 4 known Desk dark failures.
 - Contract runs, `DS_CONTRACT_WORKERS=2 npm run contract -- --framework react --platform <p> --component <Name>`:
 
-CONTRACT_RESULTS
+| Component | ios | web |
+| --- | --- | --- |
+| AlertDialog | 63 passed | 63 passed |
+| Dialog | 63 passed | 63 passed |
+| Sheet | 63 passed | 63 passed |
+| Toast | 63 passed | 63 passed |
+| SegmentedControl | 43 passed | 43 passed |
+| TabBar | 43 passed | 43 passed |
+| SharePanel | 63 passed (rerun) | 63 passed |
+| Input | 43 passed | 43 passed |
+| SearchField | 43 passed | 43 passed |
+
+The first SharePanel ios run failed 2 of 63, both `axe ... studio light`
+(Studio cases, order Z1 editing that pack at the same time, and the lead
+reported a broad browser kill from another agent then). The rerun passed
+63 of 63. Not a Desk defect.
 
 ## Not checked
 
