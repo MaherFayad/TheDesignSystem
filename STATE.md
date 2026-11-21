@@ -36,8 +36,13 @@ new starts until the owner says so. Orders are in
     165 skipped (`docs/reports/contract-react-ios.json`). The 8 were one
     defect: the Sidebar count on the active row at 1.63:1 (WCAG 1.4.3). The
     count now takes the active text colour; Sidebar passes on iOS and web.
-  - Contract suite, React on web: WEB_LINE
-  - Contract suite, Angular on web: NG_LINE
+  - Contract suite, React on web: only the 14 components this stretch
+    touched (Navbar, Sheet, Dialog, AlertDialog, Toast, List, Pager,
+    PageShell, TabBar, SplitView, SharePanel, CloseButton, Popover,
+    Sidebar): all pass, 0 failed.
+  - Contract suite, Angular on web: not run for the four new components. The
+    harness skips them because their manifests do not mark Angular ready
+    (see the manifest item below). Their unit tests pass.
   - Not run: the full web suite (it needs about ten hours here), Android,
     the foldable profiles, the other Angular components.
 - Open, not fixed by the owner's stop:
