@@ -467,3 +467,13 @@ test screens under `/screens/ios/`.
 
 The same order as Z1 for Desk, in `packages/styles/desk/` only. Report in
 `docs/reports/lanes/reset-Z2.md`.
+
+### Z3 and Z4 The pickers in Studio and Desk (ds-style)
+
+Split from Z1 and Z2 on the owner's word to run more agents at once. Z3 is
+Studio, Z4 is Desk. Scope: Calendar, ColorArea, ColorField, ColorPicker,
+ColorSlider, ColorSwatch, ColorSwatchPicker, DateField, DatePicker,
+TimeField, WheelPicker, Stepper, Slider. Z1 and Z2 keep the rest and the
+test screens. One recipe file per component, so no two agents share a file.
+The steps and acceptance are those of Z1. Reports:
+`docs/reports/lanes/reset-Z3.md`, `reset-Z4.md`.
