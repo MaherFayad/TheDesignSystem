@@ -1,0 +1,15 @@
+/*
+ * Studio recipe for SharePanel (order Z1). The ios layer gives every style
+ * the kit's geometry (66 tiles, a rounded square for a target, a circle for
+ * an action); Studio keeps the sizes and draws the tiles as its own square
+ * cells with the control corner, the preview square too. People stay round
+ * pictures (Avatar), as they are in every Studio surface.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='share-panel'] {
+    --_share-panel-preview-radius: var(--ds-radius-xs);
+    --_share-panel-target-radius: var(--ds-radius-control);
+    --_share-panel-action-radius: var(--ds-radius-control);
+    --_share-panel-item-radius: var(--ds-radius-control);
+  }
+}

@@ -40,6 +40,18 @@
     --_dialog-part-ease: var(--ds-ease-spring-snappy);
   }
 
+  /*
+   * On ios the platform draws the dialog title with its own padding and a
+   * 34px corner, but the close control is still placed by the band padding.
+   * Studio's dense band put it 1.5px above the panel, inside the corner's
+   * curve (order Z1). There the band padding puts it 12 in from the top
+   * and the end edge, clear of the curve.
+   */
+  [data-style='studio'][data-platform='ios'] [data-ds='dialog'] {
+    --_dialog-band-padding-block: calc(2 * var(--ds-space-fixed-l));
+    --_dialog-band-padding-inline: calc(var(--ds-space-fixed-xl) + var(--ds-space-2xs));
+  }
+
   /* A Sheet and a Drawer run edge to edge: square, the sheet radius is 0 in Studio. */
   [data-style='studio'] :is([data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-radius: var(--ds-radius-sheet);

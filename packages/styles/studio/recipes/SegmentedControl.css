@@ -1,0 +1,36 @@
+/*
+ * Studio recipe for SegmentedControl (order Z1). A row of square cells in a
+ * 1px control border, whatever the shape axis asks: the component's default
+ * shape is the pill, which is not Studio's (radius 2 on controls). The
+ * selected segment is the inverted cell, the primary fill with the primary
+ * text, as a Studio press inverts; the base thumb (a pale fill and a gray
+ * hairline on a pale track, about 1.2:1 against the track on ios) did not
+ * tell the selected segment apart. No lens, no shadow, and the label colors
+ * change at once (no ink that follows the thumb).
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='segmented-control'] {
+    --_segmented-control-radius: var(--ds-radius-control);
+    --_segmented-control-indicator-filter: none;
+    --_segmented-control-ink: 0;
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='segmented-control'] {
+      --_segmented-control-bg: transparent;
+      --_segmented-control-border-color: var(--ds-color-border-control);
+      --_segmented-control-thumb-bg: var(--ds-color-primary-fill);
+      --_segmented-control-thumb-shadow: none;
+    }
+
+    [data-style='studio'] [data-ds='segmented-control'][data-disabled] {
+      --_segmented-control-border-color: var(--ds-color-border-subtle);
+    }
+
+    [data-style='studio'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'][data-state='on'] {
+      --_button-fg: var(--ds-color-primary-text);
+      --_button-fg-hover: var(--ds-color-primary-text);
+      --_button-fg-active: var(--ds-color-primary-text);
+    }
+  }
+}

@@ -2,7 +2,8 @@
  * Studio recipe for the menu family (order 1.24, proposed): DropdownMenu,
  * ContextMenu and Menubar menus, and the list popups of Select, Combobox,
  * Autocomplete, MultiSelect and TagField, which all read the shared
- * --_menu-* properties; and ListBox, whose rows they hold. One look for
+ * --_menu-* properties; the SelectionMenu row (order Z1); and ListBox,
+ * whose rows they hold. One look for
  * all: a tight tile list. A flat tile framed by a 1px bright rule, square
  * corners, no shadow, no blur, square rows edge to edge at the compact row
  * height. The lit row is inverted (the bright fill, body colored text), a
@@ -15,7 +16,7 @@
  * (Canvas, Highlight) still win there.
  */
 @layer ds.recipes {
-  [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
+  [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
     --_menu-radius: 0;
     --_menu-shadow: none;
     --_menu-backdrop: none;
@@ -32,13 +33,18 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* The SelectionMenu (order Z1): the same tile, a row of square cells, not the base capsule. */
+  [data-style='studio'] [data-ds='selection-menu'] {
+    --_menu-item-radius: 0;
+  }
+
   [data-style='studio'] [data-ds='list-box'] {
     --_list-box-radius: 0;
     --_list-box-option-font-weight: var(--ds-font-weight-regular);
   }
 
   @media (forced-colors: none) {
-    [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
+    [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
       --_menu-bg: var(--ds-color-bg-surface-2);
       --_menu-border-color: var(--ds-color-text-bright);
       --_menu-separator-color: var(--ds-color-border-default);

@@ -1,0 +1,15 @@
+/*
+ * Studio recipe for DatePicker (order Z1). On ios the date and time chips
+ * take an 8px corner from a rule in the ds.chrome layer, which a recipe
+ * cannot reach through --_button-radius, though DatePicker is a control
+ * (anatomy.md, ruling 16). Studio sets the four corners Button reads after
+ * it, so the chips keep the control corner of every Studio control.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+    --_button-radius-start-start: var(--ds-radius-control);
+    --_button-radius-start-end: var(--ds-radius-control);
+    --_button-radius-end-start: var(--ds-radius-control);
+    --_button-radius-end-end: var(--ds-radius-control);
+  }
+}

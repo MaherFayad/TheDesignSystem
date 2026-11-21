@@ -1,0 +1,25 @@
+/*
+ * Studio recipe for Banner (order Z1). Studio's neutral soft button is a
+ * clear cell in the page's text color (Button.css of this pack), and that
+ * rule sits in this layer, so on a solid banner it took back the banner's
+ * ink: dark text on the red and orange fills in light, light text on them in
+ * dark, under 4.5:1 (WCAG 1.4.3). Here the actions of a solid banner take
+ * the banner's ink again, outlined in it, and a press inverts the cell (the
+ * ink fill with the tone's color), as every Studio press does.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] :is([data-ds='button'], [data-ds='copy-button']) {
+      --_button-fg: var(--_banner-tone-on-solid);
+      --_button-fg-hover: var(--_banner-tone-on-solid);
+      --_button-fg-active: var(--_banner-tone-solid);
+      --_button-bg-hover: color-mix(in srgb, var(--_banner-tone-on-solid) 12%, transparent);
+      --_button-bg-active: var(--_banner-tone-on-solid);
+    }
+
+    [data-style='studio'] [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] :is([data-ds='button'], [data-ds='copy-button']):not([data-emphasis='link']) {
+      --_button-border-color: var(--_banner-tone-on-solid);
+      --_button-border-color-hover: var(--_banner-tone-on-solid);
+    }
+  }
+}

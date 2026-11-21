@@ -92,6 +92,23 @@
     --_title-bar-border-color: var(--ds-color-material-glass-border);
   }
 
+  /*
+   * Order Z2: on ios the panel's padding is the platform's, wider than the
+   * title bar's own inset, and the sheet's top corner is the large one. The
+   * title bar takes the panel padding, so the title lines up with the
+   * description and the body and clears the sheet's corner. The bar keeps a
+   * gap under it before the description: the platform gives the description
+   * no top padding (its title sits on the panel itself), and its chrome
+   * layer wins over a padding set here, so the gap is the bar's margin.
+   */
+  [data-style='desk'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-padding-inline: var(--_dialog-padding);
+  }
+
+  [data-style='desk'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar']:has(+ [data-part='description']) {
+    margin-block-end: var(--ds-space-fixed-l);
+  }
+
   /* Titles close up, as Desk labels do. Arabic resets the display tracking to none. */
   [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] [data-part='title'] {
     letter-spacing: var(--ds-font-tracking-display);

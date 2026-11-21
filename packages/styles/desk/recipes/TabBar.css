@@ -1,0 +1,14 @@
+/*
+ * Desk recipe for TabBar. Order Z2 (proposed): the current item takes the
+ * yellow primary ink (yellow on the dark desk, the gold on the light one),
+ * as Desk marks every selection in its primary (Tabs.css). iOS already
+ * draws its tint this way; this file gives web and the other platforms the
+ * same mark, so the bar reads as Desk's and not as the base gray. The
+ * current item keeps its bolder weight and the pill behind its icon, so
+ * color is never the only cue. Forced colors set the text by themselves.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='tab-bar'] {
+    --_tab-bar-fg-active: var(--ds-color-primary-on-surface);
+  }
+}

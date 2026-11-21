@@ -1,0 +1,29 @@
+/*
+ * Desk recipe for SegmentedControl. Order Z2 (proposed): the thumb under
+ * the selected item is the yellow pill of the soft Tabs (Tabs.css), with
+ * its gold edge and the light edge of a Desk control, and the selected
+ * label takes the dark ink of the yellow. Why not tokens alone: the base
+ * thumb is an overlay, and on the dark desk the iOS thumb (surface 3 on an
+ * overlay track) was close to the track's own fill, so the selection read
+ * by the label weight alone. The yellow keeps it plain in both schemes; the
+ * selected label stays bright and bolder as well (never color alone).
+ *
+ * The thumb takes no backdrop filter: it is a solid fill. Forced colors
+ * hide the thumb and mark the item in Highlight (SegmentedControl.css and
+ * Button.css), so nothing here is needed for them.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='segmented-control'] {
+    --_segmented-control-thumb-bg: var(--ds-color-primary-fill);
+    --_segmented-control-thumb-shadow:
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-primary-border),
+      inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+    --_segmented-control-indicator-filter: none;
+  }
+
+  [data-style='desk'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'][data-state='on'] {
+    --_button-fg: var(--ds-color-primary-text);
+    --_button-fg-hover: var(--ds-color-primary-text);
+    --_button-fg-active: var(--ds-color-primary-text);
+  }
+}

@@ -1,0 +1,23 @@
+/*
+ * Studio recipe for TabBar (order Z1). On ios the platform marks the
+ * current tab with a 10 percent veil: about 1.2:1 against the bar in light
+ * and dark, with the same pixel glyph and a label one weight up, so the
+ * current tab was hard to tell apart. Studio marks it as it marks every
+ * current or pressed cell: inverted, the bright text color as the fill and
+ * the body color for the glyph and the label. The platform keeps the shape
+ * of the mark (ruling 16); only its paint changes here. The web bar keeps
+ * its pill behind the icon and the bolder label.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='studio'][data-platform='ios'] [data-ds='tab-bar'] {
+      --_tab-bar-fg-active: var(--ds-color-bg-body);
+    }
+
+    [data-style='studio'][data-platform='ios'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']:not([data-expanded]))[data-active] {
+      background-color: var(--ds-color-text-bright);
+      background-image: none;
+      color: var(--ds-color-bg-body);
+    }
+  }
+}

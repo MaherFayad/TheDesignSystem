@@ -87,6 +87,16 @@
     align-self: start;
   }
 
+  /*
+   * Order Z2: a title with no description and no action spans the rows the
+   * icon tile spans, so it sits on the tile's middle in every layout (the
+   * ios banner keeps three rows, and the title alone sat at their top).
+   */
+  [data-style='desk'] [data-ds='toast']:not(:has(> [data-part='description'], > [data-part='action'])) > [data-part='title'] {
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+
   /* The action: a small yellow pill. */
   [data-style='desk'] [data-ds='toast'] > [data-ds='button'][data-part='action'] {
     --_button-height: var(--ds-size-control-xs);

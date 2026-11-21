@@ -1,0 +1,26 @@
+/*
+ * Studio recipe for Calendar (order Z1). A day is a square cell with the
+ * control corner, not a disc: the selected day is the inverted cell (the
+ * primary fill), today is a 1px rule in the bright text color around a clear
+ * cell (the base tint read about 1.2:1 on the surface, so today was told by
+ * its weight alone). The day swaps color in one step, as Studio's springs
+ * are steps. The DatePicker and the booking screen use this calendar.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='calendar'] {
+    --_calendar-radius: var(--ds-radius-xs);
+    --_calendar-ease: var(--ds-ease-spring-snappy);
+    --_calendar-title-font-weight: var(--ds-font-weight-medium);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='calendar'] {
+      --_calendar-today-bg: transparent;
+      --_calendar-today-fg: var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] [data-ds='calendar'] [data-part='day'][data-today]:not([data-selected]) {
+      box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-text-bright);
+    }
+  }
+}
