@@ -151,7 +151,7 @@ The owner lifted the pause and answered 22 decisions: see "Reset rulings" in
 - Gate 1 is not passed (`docs/reports/wave-1.md`). Order 1.31 is folded into
   the reset plan.
 - All look approvals are withdrawn and return as proposals after the reset.
-- Live site: https://the-system-docs.vercel.app (public). Redeployed on 2026-11-18 from commit `227c3136`, with the iOS work in it.
+- Live site: https://the-system-docs.vercel.app (public). Redeployed on 2026-11-21 from commit `181185f0`, with the closed stretch in it.
 - Owner permission (2026-11-16): the lead may delete finished agents' scratch
   copies under this session's temp folder when disk space runs short. Nothing
   else outside the repo.
