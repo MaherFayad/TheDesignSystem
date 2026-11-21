@@ -1,9 +1,59 @@
 # State
-Updated: 2026-11-21
+Updated: 2026-11-22
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 1 (wave 0 passed its gate on 2026-11-12, report in docs/reports/wave-0.md)
 Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the carry over list in docs/reports/wave-0.md)
 
+
+## Studio and Desk on mobile (2026-11-22)
+
+The owner lifted the stop: "continue, the rest of the components of other
+style", then "spawn more agents to carry out this in parallel". Read by the
+lead as: bring the mobile components and the iOS test screens, finished only
+in Liquid and Neutral, to the same level in Studio and Desk. Orders Z1 to Z4
+in `docs/plan/reset-mobile.md`; reports in `docs/reports/lanes/reset-Z1.md`
+to `reset-Z4.md`. All looks are proposed until the owner signs.
+
+- Done, in the two style packs only:
+  - Studio (Z1, Z3): Banner solid action ink (was 1.83:1 at worst, now
+    5.02:1 or more); square inverted SegmentedControl; the current tab and
+    search disc inverted in TabBar; square Calendar days with a rule on
+    today; DatePicker chips; the Dialog close place on iOS; SelectionMenu in
+    the menu family; SharePanel tiles; square Slider, RangeSlider,
+    ColorSlider, ColorArea, ColorSwatchPicker, ColorPicker and Stepper, with
+    the empty slider track at 3:1.
+  - Desk (Z2, Z4): title bar padding in Sheet, SharePanel, AlertDialog and
+    Dialog on iOS; the yellow selected pill in SegmentedControl; the current
+    TabBar item on web; the Toast title centre; Input placeholder (4.11:1
+    to 5.1:1) and the pill on iOS; filled DateField, TimeField, ColorField.
+- Checks: `npm run check` passes on the combined tree, run by the lead
+  (3469 tests, Angular 1088). Contract runs on iOS and web for each touched
+  component were run by the agents and pass; the lead did not rerun them.
+- Open, in shared code, not fixed (a style pack cannot reach them):
+  - `packages/css/src/platform/ios.css` lines 3639 to 3727 set picker
+    shapes in `ds.chrome`, which beats `ds.recipes`: date chips, the wheel
+    band, the colour field, the colour picker view switch. Line 258 gives
+    the slider thumb a disc and a shadow in Desk.
+  - Capsule chrome on iOS in Studio (sheet, alert and action sheet buttons,
+    bar buttons, toasts, the tab bar) under ruling 16.
+  - Hard coded pills with no radius property in `Slider.css`,
+    `ColorSlider.css`, `ColorArea.css`, `Stepper.css`,
+    `ColorSwatchPicker.css`, `NumberField.css` line 149.
+  - Dialog on iOS shows the window lights (`ios.css` line 3232); the title
+    bar keeps the desktop layout in Arabic on iOS (`TitleBar.css` line 103);
+    the Dialog title can run under the close control (`ios.css` 3170).
+  - A wrapped large Navbar brand overlaps its lines (`Link.css` line 275).
+  - English date and time values on an Arabic page show in bidi order; no
+    isolation in `DatePicker.css` and `DateField.css`.
+  - The TabBar demo's two side column search fields overlap.
+- Not checked: Android, macos, the foldable frames, Angular, React Native,
+  hover and press states, a real device. Not merged to `main`, no docs
+  deploy for this round.
+- Waiting on the owner:
+  1. Studio on iOS: keep the capsule chrome of ruling 16, or make it square.
+  2. Whether the picker shapes move out of `ds.chrome` so styles can set
+     them. The lead recommends yes, as radius properties the platform
+     defaults and a style overrides.
 
 ## Closed stretch (2026-11-21)
 
