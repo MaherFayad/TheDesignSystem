@@ -17,6 +17,35 @@
     --_input-bg: var(--ds-control-fill-default);
   }
 
+  /*
+   * Order Z2: a field keeps Desk's control corner on every platform. The
+   * ios platform file gives a field on its own the panel corner (12px);
+   * Input is on the controls side, so the style's shape wins. The platform
+   * rule covers every shape, so the pill and square corners of Input.css
+   * are stated again here as well.
+   */
+  [data-style='desk'] [data-ds='input']:not([data-part]) {
+    --_input-radius: var(--ds-radius-control);
+  }
+
+  [data-style='desk'] [data-ds='input'][data-shape='pill']:not([data-part]) {
+    --_input-radius: var(--ds-radius-pill);
+  }
+
+  [data-style='desk'] [data-ds='input'][data-shape='square']:not([data-part]) {
+    --_input-radius: var(--ds-radius-xs);
+  }
+
+  /*
+   * Order Z2: on the light desk the placeholder (text subtle) reached 4.11:1
+   * on the field fill; the muted text keeps 4.5:1 there (WCAG 1.4.3). The
+   * same rule covers the control of SearchField and the other fields built
+   * on Input. Dark keeps the subtle tone, which passes on its fill.
+   */
+  [data-style='desk'][data-scheme='light'] [data-ds='input'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-muted);
+  }
+
   [data-style='desk'] [data-ds='password-field']:not([data-part], [data-readonly]) {
     --_password-field-bg: var(--ds-control-fill-default);
   }
