@@ -31,7 +31,8 @@ new starts until the owner says so. Orders are in
     shared modal stack, CloseButton `emphasis`, the toaster anchor, and four
     new components: Sheet, AlertDialog, Popover, Navbar.
 - Checks on the final tree, run by the lead:
-  - `npm run check`: CHECK_LINE
+  - `npm run check`: passes, 13 steps (3469 tests, Angular 1088, React
+    Native 60).
   - Contract suite, React on iOS, all components: 5783 passed, 8 failed,
     165 skipped (`docs/reports/contract-react-ios.json`). The 8 were one
     defect: the Sidebar count on the active row at 1.63:1 (WCAG 1.4.3). The
