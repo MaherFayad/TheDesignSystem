@@ -76,7 +76,18 @@ the reference for which states and layout to cover.
 - Contract runs with `DS_CONTRACT_WORKERS=2 npm run contract -- --framework react --platform <p> --component <Name>`:
   - Slider ios: 43 passed. Slider web: 43 passed.
   - ColorSlider ios: 43 passed. ColorSlider web: 43 passed.
-  - ColorArea, ColorSwatchPicker, ColorPicker, Stepper: see the addendum below.
+  - ColorArea ios: 43 passed. ColorArea web: 43 passed.
+  - ColorSwatchPicker ios: 43 passed. ColorSwatchPicker web: 43 passed on
+    the second run. The first run had 2 failures, "Target page, context or
+    browser has been closed", in Liquid axe cases. Another agent's
+    `pkill -f chromium` killed the browser. These are not defects.
+  - ColorPicker ios: 63 passed. ColorPicker web: 63 passed.
+  - Stepper ios: 43 passed. Stepper web: 43 passed.
+  - My first batch of runs hit the 10 minute background limit while it was
+    on ColorArea ios. I ran ColorArea again in full; the results above are
+    from that run.
+- I did not touch Calendar.css, DatePicker.css or SegmentedControl.css
+  (from Z1). They already read as Studio, so I built on them.
 
 ## Not checked
 
