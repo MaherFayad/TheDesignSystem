@@ -437,3 +437,33 @@ other's files; each lists what it needs from the other in its report.
 3. Popover on the popup layer, with fold collision padding.
 4. Navbar (large title, `data-collapsed`, `data-inline-title`, placement).
 5. The list trigger row gains Sheet and Popover triggers.
+
+### Z1 The mobile components in Studio (ds-style)
+
+Owner, 2026-11-21: "continue, the rest of the components of other style".
+Read by the lead as: the mobile components and test screens were finished
+only in Liquid and Neutral; bring them to the same level in the other two
+styles. Studio and Desk do not take glass on iOS. That stays.
+
+Scope: ActionSheet, AlertDialog, Banner, Calendar, ColorArea, ColorField,
+ColorPicker, ColorSlider, ColorSwatch, ColorSwatchPicker, DateField,
+DatePicker, TimeField, WheelPicker, List, SectionIndex, SelectionMenu,
+SharePanel, Stepper, SwipeActions, TabBar, Navbar, PageShell, Pager, Sheet,
+Dialog, Toast, Slider, SegmentedControl, SearchField, SplitView, and the
+test screens under `/screens/ios/`.
+
+1. Capture each one in Studio, light and dark, English and Arabic, on
+   `platform=ios` at 390 wide and on `platform=web`, with overlays open.
+2. List every defect: unreadable or low contrast text (WCAG 1.4.3, 1.4.11),
+   targets under 24 (WCAG 2.5.8), parts that keep a Liquid or Neutral shape
+   that does not belong to Studio, broken spacing, clipped Arabic.
+3. Fix in `packages/styles/studio/` only. A defect whose cause is in shared
+   CSS or a component is reported, not fixed.
+4. Acceptance: contract runs pass for every component touched, on ios and
+   web; before and after sheets in scratch; report in
+   `docs/reports/lanes/reset-Z1.md`.
+
+### Z2 The mobile components in Desk (ds-style)
+
+The same order as Z1 for Desk, in `packages/styles/desk/` only. Report in
+`docs/reports/lanes/reset-Z2.md`.
