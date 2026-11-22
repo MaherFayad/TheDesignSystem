@@ -156,7 +156,7 @@ transient failure, or a best practice gap.
   The box ring says focus is in the field, not which segment.
 - Cause: `packages/css/src/components/DateField.css:60`
   (`--_date-field-segment-bg-focus: var(--ds-color-primary-tint)`) and the
-  rule at about line 165 to 168 (`[data-part='segment']:focus`).
+  rule at line 147 (`[data-part='segment']:focus`).
 - Severity: major.
 - Picture: `IMG/focus-time-field-studio-light-web-minute.png`.
 
@@ -235,8 +235,9 @@ transient failure, or a best practice gap.
 ### F13. Liquid on iOS, forced colors: the slider thumb has no edge
 
 - Components: Slider, RangeSlider, ColorSlider on ios with the platform disc.
-- Axes: liquid (and the other glass style, neutral, not pictured), ios,
-  `forced-colors: active`.
+- Axes: liquid, ios, `forced-colors: active` (screenshots were taken for
+  Studio and Liquid only; Neutral shares the glass slider and was not
+  pictured).
 - Criterion: 1.4.11 under forced colors (advisory; the user agent owns the
   colours).
 - What: the platform disc draws as a Canvas band across a Highlight disc with
@@ -284,9 +285,9 @@ transient failure, or a best practice gap.
 - What: from the action "إضافة طريقة دفع" Tab goes to the close control, which
   sits 39 to 46 px above it at the top end. Order is action then close in
   the DOM, close first visually.
-- Cause: the wrapped layout at 390 px in
-  `packages/css/src/components/Banner.css` (close in the top row, actions
-  wrap below).
+- Cause: the wrapped layout at 390 px places the close part in the top row
+  (`packages/css/src/components/Banner.css:186`) while the actions wrap
+  below it.
 - Severity: minor.
 
 ## Checks that passed
