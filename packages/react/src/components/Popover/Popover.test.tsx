@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -429,6 +429,25 @@ describe('Popover optional parts (order 1.29)', () => {
     expect(bar?.querySelector('[data-part="close"]')?.getAttribute('aria-label')).toBe('Close popover');
     // The title renders once in the popover: inside the bar, not again in place.
     expect(Array.from(root.querySelectorAll('[data-part="title"]'))).toHaveLength(1);
+  });
+
+  it('draws no title bar with no title and no close, and keeps it for a close alone', async () => {
+    render(
+      <WithParts parts={['titlebar']}>
+        <Basic defaultOpen content={{ title: undefined, close: false, 'aria-label': 'Pick a date' }} />
+      </WithParts>,
+    );
+    await screen.findByRole('dialog', { name: 'Pick a date' });
+    expect(part('titlebar')).toBeNull();
+    expect(part('close')).toBeNull();
+    cleanup();
+    render(
+      <WithParts parts={['titlebar']}>
+        <Basic defaultOpen content={{ title: undefined, 'aria-label': 'Pick a date' }} />
+      </WithParts>,
+    );
+    await screen.findByRole('dialog', { name: 'Pick a date' });
+    expect(part('titlebar')?.querySelector('[data-part="close"]')).not.toBeNull();
   });
 
   it('with controls, the close light closes it', async () => {

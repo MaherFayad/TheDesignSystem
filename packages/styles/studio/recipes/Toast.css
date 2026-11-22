@@ -48,6 +48,22 @@
     line-height: var(--ds-font-leading-tight);
   }
 
+  /*
+   * Order P2 F5 (Q1 F03): a toast with a start part (a picture, as on the
+   * ios banner with a 38 avatar) sizes the first column to that part, so the
+   * picture sits inside the padding and the title starts a gap after it.
+   * The meta text (a time) gets its own cell on the same row, before the
+   * action, instead of a row of its own.
+   */
+  [data-style='studio'] [data-ds='toast']:has(> [data-part='start']) {
+    --_toast-columns: auto minmax(0, max-content) minmax(0, 1fr) auto auto;
+  }
+
+  [data-style='studio'] [data-ds='toast']:has(> [data-part='meta']) {
+    --_toast-columns: auto minmax(0, max-content) minmax(0, 1fr) auto auto auto;
+    --_toast-areas: 'icon title description meta action close';
+  }
+
   @media (forced-colors: none) {
     [data-style='studio'] [data-ds='toast'] {
       --_toast-bg: var(--ds-color-bg-surface-2);

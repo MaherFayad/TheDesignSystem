@@ -9,12 +9,26 @@
 // hold no value.
 //
 // Copy runs on the Clipboard API where the page may use it; the other
-// actions say what ran in the status line. The text is made up.
+// actions say what ran in the status line. The text is made up. The copy
+// follows the page language: with lang=ar every case reads Arabic.
+//
+// "Select a phrase" and the chips open the menu as a menu button does: focus
+// moves to the first action. A pointer selection in the text keeps focus
+// where it is, and Shift+F10 on the text moves focus in.
 import { useRef, useState } from 'react';
 import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
 import { Chip } from '../Chip';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SelectionMenu, editActions, type SelectionMenuItem } from './index';
+
+type Lang = 'en' | 'ar';
+
+/** The page language, from the nearest Theme. */
+function useLang(): Lang {
+  return isArabic(useTheme().lang) ? 'ar' : 'en';
+}
 
 const words = {
   en: {
@@ -27,6 +41,20 @@ const words = {
     note: 'Add note',
     copied: (t: string) => `Copied: ${t}`,
     ran: (what: string) => `${what}: done`,
+    brand: 'Brand board',
+    invoice: 'Invoice 2041',
+    finance: 'Finance board',
+    rename: 'Rename',
+    duplicate: 'Duplicate',
+    delete: 'Delete',
+    copyNumber: 'Copy number',
+    many: ['Copy', 'Look up', 'Translate', 'Highlight', 'Add note', 'Share', 'Search', 'Read aloud', 'Define', 'Spell out'],
+    manyRegion: 'Site visit note, many actions',
+    longRegion: 'Site visit note, long labels',
+    meeting: 'Add to the meeting notes',
+    task: 'Turn into a task for the team',
+    taskShort: 'Turn into a task',
+    translateTo: 'Translate to Arabic',
   },
   ar: {
     text: 'زيارة الموقع يوم الخميس الساعة 9 الصبح. جيب مخطط الإضاءة ورسومات الأدوار، والفريق بيستناك عند البوابة الشمالية للمبنى الجديد.',
@@ -36,8 +64,22 @@ const words = {
     lookUp: 'بحث',
     highlight: 'تمييز',
     note: 'إضافة ملاحظة',
-    copied: (t: string) => `تم النسخ: ${t}`,
-    ran: (what: string) => `${what}: تم`,
+    copied: (t: string) => `انتسخ: ${t}`,
+    ran: (what: string) => `${what}: خلاص`,
+    brand: 'لوحة الهوية',
+    invoice: 'فاتورة 2041',
+    finance: 'لوحة المالية',
+    rename: 'إعادة التسمية',
+    duplicate: 'تكرار',
+    delete: 'حذف',
+    copyNumber: 'نسخ الرقم',
+    many: ['نسخ', 'بحث', 'ترجمة', 'تمييز', 'إضافة ملاحظة', 'مشاركة', 'بحث في الويب', 'قراءة بصوت عالي', 'تعريف', 'تهجئة'],
+    manyRegion: 'ملاحظة زيارة الموقع، إجراءات كثيرة',
+    longRegion: 'ملاحظة زيارة الموقع، تسميات طويلة',
+    meeting: 'إضافة لملاحظات الاجتماع',
+    task: 'تحويل لمهمة للفريق',
+    taskShort: 'تحويل لمهمة',
+    translateTo: 'ترجمة للإنجليزي',
   },
 } as const;
 
@@ -72,7 +114,13 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
   const w = words[lang];
   const ownerRef = useRef<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
+  // True while the menu is open from the button: focus moves into it.
+  const [fromButton, setFromButton] = useState(false);
   const [status, setStatus] = useState('');
+  const change = (next: boolean) => {
+    setOpen(next);
+    if (!next) setFromButton(false);
+  };
   const say = (what: string) => setStatus(w.ran(what));
   const items: SelectionMenuItem[] = only
     ? only(say)
@@ -89,6 +137,7 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
         ref={ownerRef}
         tabIndex={0}
         aria-label={region ?? w.region}
+        aria-keyshortcuts="Shift+F10"
         data-demo-target=""
         style={{ margin: 0, padding: 'var(--ds-space-m)', borderRadius: 'var(--ds-radius-card)', background: 'var(--ds-color-bg-surface-2)' }}
       >
@@ -99,7 +148,9 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
           size="sm"
           data-demo-trigger=""
           onClick={() => {
-            if (ownerRef.current && selectPhrase(ownerRef.current, w.phrase)) setOpen(true);
+            if (!ownerRef.current || !selectPhrase(ownerRef.current, w.phrase)) return;
+            setFromButton(true);
+            setOpen(true);
           }}
         >
           {w.select}
@@ -108,7 +159,7 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
       <p role="status" style={{ margin: 0, minBlockSize: '1.5em', color: 'var(--ds-color-text-muted)' }}>
         {status}
       </p>
-      <SelectionMenu owner={ownerRef} open={open} onOpenChange={setOpen} items={items} />
+      <SelectionMenu owner={ownerRef} open={open} onOpenChange={change} focusOnOpen={fromButton || undefined} items={items} />
     </div>
   );
 }
@@ -134,6 +185,7 @@ function ChipMenu({ label, items }: ChipMenuProps) {
       <SelectionMenu
         open={open}
         onOpenChange={setOpen}
+        focusOnOpen
         owner={chipRef}
         anchor={() => chipRef.current?.getBoundingClientRect() ?? null}
         items={items((what) => setStatus(`${what}: ${label}`))}
@@ -142,45 +194,51 @@ function ChipMenu({ label, items }: ChipMenuProps) {
   );
 }
 
-const many = (say: (what: string) => void): SelectionMenuItem[] =>
-  ['Copy', 'Look up', 'Translate', 'Highlight', 'Add note', 'Share', 'Search', 'Read aloud', 'Define', 'Spell out'].map((label) => ({
-    id: label.toLowerCase().replace(/\s+/g, '-'),
-    label,
-    onSelect: () => say(label),
-  }));
+/** Ten actions, ids from the English labels so they stay the same in both languages. */
+const many =
+  (lang: Lang) =>
+  (say: (what: string) => void): SelectionMenuItem[] =>
+    words[lang].many.map((label, i) => ({
+      id: words.en.many[i]!.toLowerCase().replace(/\s+/g, '-'),
+      label,
+      onSelect: () => say(label),
+    }));
 
 export default function SelectionMenuDemo() {
+  const lang = useLang();
+  const w = words[lang];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: a selection in read only text, and a selected chip">
         <DemoGrid min="20rem">
-          <TextMenu />
+          <TextMenu lang={lang} />
           <ChipMenu
-            label="Brand board"
+            label={w.brand}
             items={(say) => [
-              { id: 'rename', label: 'Rename', onSelect: () => say('Rename') },
-              { id: 'duplicate', label: 'Duplicate', onSelect: () => say('Duplicate') },
-              { id: 'delete', label: 'Delete', tone: 'danger', onSelect: () => say('Delete') },
+              { id: 'rename', label: w.rename, onSelect: () => say(w.rename) },
+              { id: 'duplicate', label: w.duplicate, onSelect: () => say(w.duplicate) },
+              { id: 'delete', label: w.delete, tone: 'danger', onSelect: () => say(w.delete) },
             ]}
           />
         </DemoGrid>
       </DemoCase>
 
       <DemoCase id="one" title="One action">
-        <ChipMenu label="Invoice 2041" items={(say) => [{ id: 'copy-number', label: 'Copy number', onSelect: () => say('Copy number') }]} />
+        <ChipMenu label={w.invoice} items={(say) => [{ id: 'copy-number', label: w.copyNumber, onSelect: () => say(w.copyNumber) }]} />
       </DemoCase>
 
       <DemoCase id="many" title="Many: ten actions page behind the forward control">
-        <TextMenu only={many} region="Site visit note, many actions" />
+        <TextMenu lang={lang} only={many(lang)} region={w.manyRegion} />
       </DemoCase>
 
       <DemoCase id="long-text" title="Long labels">
         <TextMenu
-          region="Site visit note, long labels"
+          lang={lang}
+          region={w.longRegion}
           only={(say) => [
-            { id: 'meeting', label: 'Add to the meeting notes', onSelect: () => say('Add to the meeting notes') },
-            { id: 'task', label: 'Turn into a task for the team', onSelect: () => say('Turn into a task') },
-            { id: 'translate', label: 'Translate to Arabic', onSelect: () => say('Translate to Arabic') },
+            { id: 'meeting', label: w.meeting, onSelect: () => say(w.meeting) },
+            { id: 'task', label: w.task, onSelect: () => say(w.taskShort) },
+            { id: 'translate', label: w.translateTo, onSelect: () => say(w.translateTo) },
           ]}
         />
       </DemoCase>
@@ -198,10 +256,10 @@ export default function SelectionMenuDemo() {
 
       <DemoCase id="disabled" title="Disabled: an action shown but not run">
         <ChipMenu
-          label="Finance board"
+          label={w.finance}
           items={(say) => [
-            { id: 'rename', label: 'Rename', onSelect: () => say('Rename') },
-            { id: 'delete', label: 'Delete', tone: 'danger', disabled: true, onSelect: () => say('Delete') },
+            { id: 'rename', label: w.rename, onSelect: () => say(w.rename) },
+            { id: 'delete', label: w.delete, tone: 'danger', disabled: true, onSelect: () => say(w.delete) },
           ]}
         />
       </DemoCase>

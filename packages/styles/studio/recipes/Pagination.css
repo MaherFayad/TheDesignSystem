@@ -1,0 +1,12 @@
+/*
+ * Studio recipe for Pagination, the dots variant (order P2 F5, Q1 F19,
+ * proposed). The platter behind the dots takes the mark corner, not the
+ * pill. The dots themselves are drawn as pills in Pagination.css with no
+ * radius property (lines 245, 247 and 265), so they stay round until the
+ * component reads one.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='pagination'][data-variant='dots'] {
+    --_pagination-track-radius: var(--ds-radius-xs);
+  }
+}

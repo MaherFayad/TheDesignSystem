@@ -152,7 +152,7 @@ describe('wheel time', () => {
   it('builds the columns with Latin digits in every locale', () => {
     const ar = wheelTimeColumns({ locale: 'ar-SA', value: { hour: 21, minute: 41 } });
     expect(ar.map((c) => c.id)).toEqual(['hour', 'minute', 'dayPeriod']);
-    expect(ar.map((c) => c.label)).toEqual(['الساعة', 'الدقيقة', 'ص أو م']);
+    expect(ar.map((c) => c.label)).toEqual(['الساعة', 'الدقيقة', 'الفترة']);
     expect(ar[0]!.options.map((o) => o.label).join(' ')).toBe('1 2 3 4 5 6 7 8 9 10 11 12');
     expect(ar[1]!.options[5]!.label).toBe('05');
     expect(ar.map((c) => c.value)).toEqual([9, 41, 'pm']);

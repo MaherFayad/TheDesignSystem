@@ -1,0 +1,7 @@
+[data-ds='thing'] {
+  --_thing-shadow: 0 0 transparent;
+  --_thing-ring: var(--_thing-edge);
+  box-shadow: var(--_thing-shadow), var(--_thing-ring);
+  filter: var(--_thing-blur) saturate(1);
+  text-shadow: var(--_thing-glow);
+}

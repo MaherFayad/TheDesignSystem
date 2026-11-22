@@ -378,7 +378,7 @@ export interface Workout {
 export const workouts: readonly Workout[] = [
   {
     id: 'upper',
-    title: { en: 'Upper body, day A', ar: 'الجزء العلوي، اليوم A' },
+    title: { en: 'Upper body, day A', ar: 'الجزء العلوي، اليوم الأول' },
     minutes: 52,
     energy: 410,
     exercises: [
@@ -390,7 +390,7 @@ export const workouts: readonly Workout[] = [
   },
   {
     id: 'lower',
-    title: { en: 'Lower body, day B', ar: 'الجزء السفلي، اليوم B' },
+    title: { en: 'Lower body, day B', ar: 'الجزء السفلي، اليوم الثاني' },
     minutes: 47,
     energy: 380,
     exercises: [

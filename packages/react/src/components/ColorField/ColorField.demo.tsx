@@ -3,11 +3,14 @@
 // on blur or Enter, the hex under it), long-text (a long label and hint),
 // long-arabic (the value stays left to right, digits stay Western), error,
 // disabled, readonly. The colours are demo data. No many, too-many or
-// loading: a field holds one colour and has nothing to load.
+// loading: a field holds one colour and has nothing to load. The copy and
+// the locale follow the page language: with lang=ar every case reads Arabic.
 import { useState } from 'react';
 import type { Size } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { Field } from '../Field';
+import { isArabic } from '../Popover/FloatingLayer';
 import { ColorField } from './index';
 
 const sizes: Size[] = ['xs', 'sm', 'md', 'lg'];
@@ -27,24 +30,56 @@ function Committed({ locale, label }: { locale: string; label: string }) {
   );
 }
 
+const words = {
+  en: {
+    locale: 'en',
+    size: (size: string) => `Hex, size ${size}`,
+    pill: 'Hex, pill',
+    red: 'Red',
+    green: 'Green',
+    blue: 'Blue',
+    brand: 'Brand colour',
+    hint: 'Six hex digits, such as #1E6FD9.',
+    text: 'Text colour',
+    longLabel: 'Colour of the background behind the weekly report card',
+    longHint: 'Type the hex code from the brand book. Arrow keys step through the values.',
+    error: 'This colour is too light for text on white. Pick a darker one.',
+  },
+  ar: {
+    locale: 'ar',
+    size: (size: string) => `رمز اللون، المقاس ${size}`,
+    pill: 'رمز اللون، شكل كبسولة',
+    red: 'الأحمر',
+    green: 'الأخضر',
+    blue: 'الأزرق',
+    brand: 'لون الهوية',
+    hint: 'رمز من 6 خانات، مثل #1E6FD9.',
+    text: 'لون النص',
+    longLabel: 'لون الخلفية ورا بطاقة التقرير الأسبوعي',
+    longHint: 'اكتب رمز اللون من دليل الهوية. الأسهم تنقلك بين القيم.',
+    error: 'هذا اللون فاتح مرة على نص فوق الأبيض. اختر لون أغمق.',
+  },
+} as const;
+
 export default function ColorFieldDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Sizes xs to lg, pill, and channels as numbers">
         <div style={column}>
           {sizes.map((size) => (
-            <ColorField key={size} size={size} defaultValue="#0e9384" aria-label={`Hex, size ${size}`} />
+            <ColorField key={size} size={size} defaultValue="#0e9384" aria-label={w.size(size)} locale={w.locale} />
           ))}
-          <ColorField shape="pill" defaultValue="#7a5af8" aria-label="Hex, pill" />
+          <ColorField shape="pill" defaultValue="#7a5af8" aria-label={w.pill} locale={w.locale} />
           <DemoRow>
-            <Field label="Red">
-              <ColorField channel="red" defaultValue="#1e6fd9" />
+            <Field label={w.red}>
+              <ColorField channel="red" defaultValue="#1e6fd9" locale={w.locale} />
             </Field>
-            <Field label="Green">
-              <ColorField channel="green" defaultValue="#1e6fd9" />
+            <Field label={w.green}>
+              <ColorField channel="green" defaultValue="#1e6fd9" locale={w.locale} />
             </Field>
-            <Field label="Blue">
-              <ColorField channel="blue" defaultValue="#1e6fd9" />
+            <Field label={w.blue}>
+              <ColorField channel="blue" defaultValue="#1e6fd9" locale={w.locale} />
             </Field>
           </DemoRow>
         </div>
@@ -52,20 +87,20 @@ export default function ColorFieldDemo() {
 
       <DemoCase id="empty" title="Empty, with a hint">
         <div style={column}>
-          <Field label="Brand colour" description="Six hex digits, such as #1E6FD9.">
-            <ColorField placeholder="#RRGGBB" />
+          <Field label={w.brand} description={w.hint}>
+            <ColorField placeholder="#RRGGBB" locale={w.locale} />
           </Field>
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="A value commits on blur and on Enter">
-        <Committed locale="en" label="Text colour" />
+        <Committed locale={w.locale} label={w.text} />
       </DemoCase>
 
       <DemoCase id="long-text" title="A long label and a long hint">
         <div style={column}>
-          <Field label="Colour of the background behind the weekly report card" description="Type the hex code from the brand book. Arrow keys step through the values.">
-            <ColorField defaultValue="#fdb022" />
+          <Field label={w.longLabel} description={w.longHint}>
+            <ColorField defaultValue="#fdb022" locale={w.locale} />
           </Field>
         </div>
       </DemoCase>
@@ -81,24 +116,24 @@ export default function ColorFieldDemo() {
 
       <DemoCase id="error" title="Invalid">
         <div style={column}>
-          <Field label="Text colour" error="This colour is too light for text on white. Pick a darker one.">
-            <ColorField defaultValue="#fdb022" />
+          <Field label={w.text} error={w.error}>
+            <ColorField defaultValue="#fdb022" locale={w.locale} />
           </Field>
         </div>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
         <div style={column}>
-          <Field label="Brand colour" disabled>
-            <ColorField defaultValue="#1e6fd9" />
+          <Field label={w.brand} disabled>
+            <ColorField defaultValue="#1e6fd9" locale={w.locale} />
           </Field>
         </div>
       </DemoCase>
 
       <DemoCase id="readonly" title="Read only">
         <div style={column}>
-          <Field label="Brand colour" readOnly>
-            <ColorField defaultValue="#1e6fd9" />
+          <Field label={w.brand} readOnly>
+            <ColorField defaultValue="#1e6fd9" locale={w.locale} />
           </Field>
         </div>
       </DemoCase>

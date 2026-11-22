@@ -154,6 +154,25 @@ function dropHiddenButton(children: ReactNode): ReactNode {
     });
 }
 
+/**
+ * React Aria names the calendar "<aria-label>, <month>" with a Latin comma,
+ * on the root and in its hidden heading, in every language. In Arabic the
+ * joiner is the Arabic comma: "تاريخ الحجز، نوفمبر 2026" (order P2 F4).
+ */
+function arabicJoin(text: unknown, label: string | undefined): unknown {
+  if (typeof text !== 'string' || !label || !text.startsWith(`${label}, `)) return text;
+  return `${label}\u060c ${text.slice(label.length + 2)}`;
+}
+
+/** The same fix in the hidden heading, the first child React Aria renders (a hidden div around an h2). */
+function arabicHeading(node: ReactNode, label: string | undefined, depth = 0): ReactNode {
+  if (typeof node === 'string') return arabicJoin(node, label) as string;
+  if (!isValidElement(node) || depth > 2) return node;
+  const inner = (node.props as { children?: ReactNode }).children;
+  if (inner === undefined) return node;
+  return cloneElement(node, undefined, ...Children.toArray(inner).map((c) => arabicHeading(c, label, depth + 1)));
+}
+
 /** Stamps the cell part on React Aria's td. */
 function stampCell(td: HTMLTableCellElement | null) {
   td?.setAttribute('data-part', 'cell');
@@ -275,6 +294,7 @@ export function Calendar({
   const base = locale ?? theme.lang;
   const tag = dateLocale(base, calendar);
   const words = calendarWords(base);
+  const arabic = /^ar(-|$)/i.test(base);
   const stepSize: IconButtonProps['size'] = size === 'lg' ? 'md' : 'sm';
 
   const unavailable = useCallback(
@@ -317,22 +337,28 @@ export function Calendar({
         isReadOnly={readOnly}
         aria-label={rest['aria-label']}
         aria-labelledby={rest['aria-labelledby']}
-        render={(domProps) => (
-          <div
-            {...(rest as ComponentProps<'div'>)}
-            {...(ownProps(domProps as Props) as ComponentProps<'div'>)}
-            // React Aria ends the root with a visually hidden native next
-            // button for a reader's virtual cursor. Our own next button is
-            // in the header, so it is dropped: no bare button, no 1px target.
-            children={dropHiddenButton(domProps.children)}
-            className={className}
-            style={style}
-            data-ds="calendar"
-            data-size={size}
-            data-disabled={flag(disabled)}
-            data-readonly={flag(readOnly)}
-          />
-        )}
+        render={(domProps) => {
+          const label = arabic ? rest['aria-label'] : undefined;
+          const kids = Children.toArray(dropHiddenButton(domProps.children));
+          if (label && kids.length > 0) kids[0] = arabicHeading(kids[0], label) as (typeof kids)[number];
+          return (
+            <div
+              {...(rest as ComponentProps<'div'>)}
+              {...(ownProps(domProps as Props) as ComponentProps<'div'>)}
+              aria-label={arabicJoin(domProps['aria-label'], label) as string | undefined}
+              // React Aria ends the root with a visually hidden native next
+              // button for a reader's virtual cursor. Our own next button is
+              // in the header, so it is dropped: no bare button, no 1px target.
+              children={kids}
+              className={className}
+              style={style}
+              data-ds="calendar"
+              data-size={size}
+              data-disabled={flag(disabled)}
+              data-readonly={flag(readOnly)}
+            />
+          );
+        }}
       >
         <div data-part="header">
           <Title locale={base} calendar={calendar} />

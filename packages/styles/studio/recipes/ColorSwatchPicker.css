@@ -11,22 +11,22 @@
  *
  * The add button is an IconButton with the pill shape from the markup;
  * Studio sets the corners Button reads after it.
+ *
+ * Order P2 F5: the row target and the check chip are the radius properties
+ * ColorSwatchPicker.css reads (order P1 E2), not rules on the parts.
  */
 @layer ds.recipes {
+  [data-style='studio'] [data-ds='color-swatch-picker'] {
+    --_color-swatch-picker-item-radius: var(--ds-radius-control);
+    --_color-swatch-picker-check-radius: var(--ds-radius-xs);
+  }
+
   [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='grid'] {
     --_color-swatch-picker-radius: var(--ds-radius-xs);
   }
 
-  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] {
-    border-radius: var(--ds-radius-control);
-  }
-
   [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] > [data-part='swatch'] {
     --_color-swatch-radius: var(--ds-radius-xs);
-  }
-
-  [data-style='studio'] [data-ds='color-swatch-picker'] [data-part='check'] > svg {
-    border-radius: var(--ds-radius-xs);
   }
 
   [data-style='studio'] [data-ds='color-swatch-picker'] > [data-part='add'] {

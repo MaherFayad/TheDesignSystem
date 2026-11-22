@@ -1,10 +1,14 @@
+// Navbar demo. The copy follows the page language: with lang=ar the
+// English cases read Arabic too, and the Arabic rows stay as they are.
 import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
+import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
 import { IconButton } from '../IconButton';
 import { Link } from '../Link';
 import { PageShell } from '../PageShell';
+import { isArabic } from '../Popover/FloatingLayer';
 import { Navbar } from './index';
 import type { NavbarItem, NavbarSize } from './index';
 
@@ -83,22 +87,103 @@ function NarrowShell({ lang }: { lang: 'en' | 'ar' }) {
   );
 }
 
+const words = {
+  en: {
+    items: en,
+    main: 'Main',
+    brand: 'Northwind',
+    search: 'Search the site',
+    trial: 'Start a trial',
+    board: 'Board',
+    boardBrand: 'Spring launch',
+    searchBoard: 'Search the board',
+    addCard: 'Add a card',
+    songs: 'Songs',
+    library: 'Library',
+    songActions: 'Song actions',
+    sortSongs: 'Sort songs',
+    more: 'More options',
+    playlist: 'Playlist',
+    playlists: 'Playlists',
+    playlistTools: 'Playlist tools',
+    shuffle: 'Shuffle playlist',
+    sharePlaylist: 'Share playlist',
+    longHeading: 'Songs for a long drive from Riyadh to Abha with the family',
+    addSongs: 'Add songs',
+    libraryActions: 'Library actions',
+    searchLibrary: 'Search the library',
+    account: 'Open account',
+    signIn: 'Sign in',
+    docs: 'Docs',
+    extra: [
+      { label: 'Customers', href: '#customers' },
+      { label: 'Careers', href: '#careers' },
+    ],
+    links: ['Overview', 'Boards', 'Docs', 'Handoff', 'Reviews', 'Guides', 'Changelog', 'Pricing', 'Customers', 'Careers', 'Security', 'Status'],
+    longBrand: 'Northwind design studio',
+    a11y: 'Accessibility statement',
+    resources: 'Resources for teams',
+    longLink: 'Supercalifragilisticexpialidocious',
+    longDescription: 'A guide to sharing boards with people outside your organization and keeping comments private',
+  },
+  ar: {
+    items: ar,
+    main: 'التنقل الرئيسي',
+    brand: 'الشمال',
+    search: 'البحث في الموقع',
+    trial: 'تجربة مجانية',
+    board: 'اللوحة',
+    boardBrand: 'إطلاق الربيع',
+    searchBoard: 'البحث في اللوحة',
+    addCard: 'إضافة بطاقة',
+    songs: 'الأغاني',
+    library: 'المكتبة',
+    songActions: 'خيارات الأغاني',
+    sortSongs: 'ترتيب الأغاني',
+    more: 'خيارات إضافية',
+    playlist: 'قائمة التشغيل',
+    playlists: 'قوائم التشغيل',
+    playlistTools: 'أدوات القائمة',
+    shuffle: 'تشغيل القائمة عشوائي',
+    sharePlaylist: 'مشاركة القائمة',
+    longHeading: 'أغاني لمشوار طويل من الرياض إلى أبها مع العيلة',
+    addSongs: 'إضافة أغاني',
+    libraryActions: 'خيارات المكتبة',
+    searchLibrary: 'البحث في المكتبة',
+    account: 'فتح الحساب',
+    signIn: 'تسجيل الدخول',
+    docs: 'المستندات',
+    extra: [
+      { label: 'العملاء', href: '#customers' },
+      { label: 'الوظائف', href: '#careers' },
+    ],
+    links: ['نظرة عامة', 'اللوحات', 'المستندات', 'التسليم', 'المراجعات', 'الأدلة', 'سجل التحديثات', 'الأسعار', 'العملاء', 'الوظائف', 'الأمان', 'الحالة'],
+    longBrand: 'استوديو الشمال للتصميم',
+    a11y: 'بيان سهولة الوصول',
+    resources: 'مصادر الفرق',
+    longLink: 'والمستخدمين',
+    longDescription: 'طريقة مشاركة اللوحات مع أشخاص من خارج المنظمة مع إبقاء التعليقات خاصة',
+  },
+};
+
 export default function NavbarDemo() {
+  const lang = isArabic(useTheme().lang) ? 'ar' : 'en';
+  const w = words[lang];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: size, a menu holding the current page, actions at the end">
         {sizes.map((size) => (
           <DemoRow key={size} label={`Size ${size}`}>
             <Navbar
-              label="Main"
+              label={w.main}
               size={size}
-              brand={<Brand>Northwind</Brand>}
-              items={en}
+              brand={<Brand>{w.brand}</Brand>}
+              items={w.items}
               end={
                 <>
-                  <IconButton icon="search" label="Search the site" size={size} />
+                  <IconButton icon="search" label={w.search} size={size} />
                   <Button size={size} tone="accent" emphasis="solid">
-                    Start a trial
+                    {w.trial}
                   </Button>
                 </>
               }
@@ -107,14 +192,14 @@ export default function NavbarDemo() {
         ))}
         <DemoRow label="Placement side: the end actions go to a column at the inline end on ios">
           <Navbar
-            label="Board"
+            label={w.board}
             placement="side"
-            brand={<Brand>Spring launch</Brand>}
+            brand={<Brand>{w.boardBrand}</Brand>}
             items={[]}
             end={
               <>
-                <IconButton icon="search" label="Search the board" size="lg" />
-                <IconButton icon="plus" label="Add a card" size="lg" />
+                <IconButton icon="search" label={w.searchBoard} size="lg" />
+                <IconButton icon="plus" label={w.addCard} size="lg" />
               </>
             }
           />
@@ -151,43 +236,43 @@ export default function NavbarDemo() {
       <DemoCase id="pushed" title="Pushed screen: a back button and a group of bar buttons on one row, the large title under it">
         <DemoRow label="Back, a group of two in end, the heading">
           <Navbar
-            label="Songs"
+            label={w.songs}
             items={[]}
-            back={{ label: 'Library', href: '#library' }}
-            heading="Songs"
+            back={{ label: w.library, href: '#library' }}
+            heading={w.songs}
             end={
-              <ButtonGroup attached aria-label="Song actions">
-                <IconButton icon="sort" label="Sort songs" />
-                <IconButton icon="more" label="More options" />
+              <ButtonGroup attached aria-label={w.songActions}>
+                <IconButton icon="sort" label={w.sortSongs} />
+                <IconButton icon="more" label={w.more} />
               </ButtonGroup>
             }
           />
         </DemoRow>
         <DemoRow label="A group in start, one button in end, a long heading">
           <Navbar
-            label="Playlist"
+            label={w.playlist}
             items={[]}
-            back={{ label: 'Playlists', href: '#playlists' }}
+            back={{ label: w.playlists, href: '#playlists' }}
             start={
-              <ButtonGroup attached aria-label="Playlist tools">
-                <IconButton icon="shuffle" label="Shuffle playlist" />
-                <IconButton icon="share" label="Share playlist" />
+              <ButtonGroup attached aria-label={w.playlistTools}>
+                <IconButton icon="shuffle" label={w.shuffle} />
+                <IconButton icon="share" label={w.sharePlaylist} />
               </ButtonGroup>
             }
-            heading="Songs for a long drive from Riyadh to Abha with the family"
-            end={<IconButton icon="plus" label="Add songs" />}
+            heading={w.longHeading}
+            end={<IconButton icon="plus" label={w.addSongs} />}
           />
         </DemoRow>
         <DemoRow label="A heading with no back: the title under a row of actions">
           <Navbar
-            label="Library"
+            label={w.library}
             items={[]}
-            heading="Library"
+            heading={w.library}
             end={
-              <ButtonGroup attached aria-label="Library actions">
-                <IconButton icon="search" label="Search the library" />
-                <IconButton icon="user" label="Open account" />
-                <IconButton icon="more" label="More options" />
+              <ButtonGroup attached aria-label={w.libraryActions}>
+                <IconButton icon="search" label={w.searchLibrary} />
+                <IconButton icon="user" label={w.account} />
+                <IconButton icon="more" label={w.more} />
               </ButtonGroup>
             }
           />
@@ -212,7 +297,7 @@ export default function NavbarDemo() {
       <DemoCase id="title-wrap" title="A long large title on a 320 wide shell: two lines, not an ellipsis; scroll to collapse it">
         {/* A grid cell, not a flex row: the Arabic Theme takes the cell's width, so its shell is 320 wide and not squeezed to its content. */}
         <DemoGrid min="20rem">
-          <NarrowShell lang="en" />
+          <NarrowShell lang={lang} />
           <Theme lang="ar" dir="rtl" data-demo="content">
             <NarrowShell lang="ar" />
           </Theme>
@@ -220,45 +305,43 @@ export default function NavbarDemo() {
       </DemoCase>
 
       <DemoCase id="empty" title="No links yet: brand and actions only, no menu button">
-        <Navbar label="Main" brand={<Brand>Northwind</Brand>} items={[]} end={<Button emphasis="outline">Sign in</Button>} />
+        <Navbar label={w.main} brand={<Brand>{w.brand}</Brand>} items={[]} end={<Button emphasis="outline">{w.signIn}</Button>} />
       </DemoCase>
 
       <DemoCase id="one" title="One link, sticky">
-        <Navbar label="Docs" sticky brand={<Brand>Northwind</Brand>} items={[{ label: 'Docs', href: '#docs', active: true }]} />
+        <Navbar label={w.docs} sticky brand={<Brand>{w.brand}</Brand>} items={[{ label: w.docs, href: '#docs', active: true }]} />
       </DemoCase>
 
       <DemoCase id="many" title="Many links and menus">
         <Navbar
-          label="Main"
-          brand={<Brand>Northwind</Brand>}
-          items={[...en, { label: 'Customers', href: '#customers' }, { label: 'Careers', href: '#careers' }]}
-          end={<Button emphasis="outline">Sign in</Button>}
+          label={w.main}
+          brand={<Brand>{w.brand}</Brand>}
+          items={[...w.items, ...w.extra]}
+          end={<Button emphasis="outline">{w.signIn}</Button>}
         />
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many links, the list wraps">
         <Navbar
-          label="Main"
-          brand={<Brand>Northwind</Brand>}
-          items={['Overview', 'Boards', 'Docs', 'Handoff', 'Reviews', 'Guides', 'Changelog', 'Pricing', 'Customers', 'Careers', 'Security', 'Status'].map(
-            (label, i) => ({ label, href: `#link-${i}`, active: i === 2 }),
-          )}
+          label={w.main}
+          brand={<Brand>{w.brand}</Brand>}
+          items={w.links.map((label, i) => ({ label, href: `#link-${i}`, active: i === 2 }))}
         />
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
         <Navbar
-          label="Main"
-          brand={<Brand>Northwind design studio</Brand>}
+          label={w.main}
+          brand={<Brand>{w.longBrand}</Brand>}
           items={[
-            { label: 'Accessibility statement', href: '#a11y' },
+            { label: w.a11y, href: '#a11y' },
             {
-              label: 'Resources for teams',
+              label: w.resources,
               links: [
                 {
-                  label: 'Supercalifragilisticexpialidocious',
+                  label: w.longLink,
                   href: '#long',
-                  description: 'A guide to sharing boards with people outside your organization and keeping comments private',
+                  description: w.longDescription,
                 },
               ],
             },

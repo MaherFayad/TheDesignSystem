@@ -138,7 +138,7 @@ const EDGE = 8;
 
 const WORDS = {
   en: { label: 'Selection actions', more: 'More actions', back: 'Previous actions', cut: 'Cut', copy: 'Copy', paste: 'Paste' },
-  ar: { label: 'إجراءات التحديد', more: 'إجراءات أكثر', back: 'الإجراءات السابقة', cut: 'قص', copy: 'نسخ', paste: 'لصق' },
+  ar: { label: 'إجراءات التحديد', more: 'إجراءات إضافية', back: 'الإجراءات السابقة', cut: 'قص', copy: 'نسخ', paste: 'لصق' },
 } as const;
 
 function wordsFor(lang: string) {

@@ -3,11 +3,15 @@
 // a short frame, keys collapse into gap dots), long-arabic (200 contacts in
 // Arabic, the column at the left). No empty, loading, error, disabled or
 // readonly: an index with no sections is not drawn, and it has no value.
-// The names are made up from common first and family names.
+// The names are made up from common first and family names. The copy and
+// the alphabet follow the page language: with lang=ar every case reads
+// Arabic. A name is user content, so it sits in a span with dir="auto".
 import { useMemo, type CSSProperties } from 'react';
 import { groupByInitial, indexAlphabet, indexEntries } from '@the-system/shared';
 import { DemoCase, DemoPage } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { List, ListItem, ListSection } from '../List';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SectionIndex, type SectionIndexSection } from './index';
 
 const firstEn = [
@@ -72,7 +76,7 @@ function Contacts({ id, people, locale, height, label, collapse, linked = false 
           {groups.map((g, i) => (
             <ListSection key={g.key} id={`${id}-${i}`} header={g.key}>
               {g.items.map((name, k) => (
-                <ListItem key={name} title={name} href={linked ? `#${id}-${i}-${k}` : undefined} />
+                <ListItem key={name} title={<span dir="auto">{name}</span>} href={linked ? `#${id}-${i}-${k}` : undefined} />
               ))}
             </ListSection>
           ))}
@@ -83,26 +87,50 @@ function Contacts({ id, people, locale, height, label, collapse, linked = false 
   );
 }
 
+const words = {
+  en: {
+    locale: 'en',
+    contacts: contactsEn,
+    one: ['Sara Alqahtani', 'Saad Alharbi', 'Sami Alotaibi'],
+    auto: 'Contacts, collapse auto',
+    never: 'Contacts, collapse never',
+    oneLabel: 'Contacts with one section',
+    label: 'Contacts',
+    short: 'Contacts in a short frame',
+  },
+  ar: {
+    locale: 'ar',
+    contacts: contactsAr,
+    one: ['سارة القحطاني', 'سعد الحربي', 'سامي العتيبي'],
+    auto: 'جهات الاتصال، طي تلقائي',
+    never: 'جهات الاتصال، بدون طي',
+    oneLabel: 'جهات الاتصال في قسم واحد',
+    label: 'جهات الاتصال',
+    short: 'جهات الاتصال في إطار قصير',
+  },
+} as const;
+
 export default function SectionIndexDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Collapse auto and never in a column 20rem tall">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-space-l)' }}>
-          <Contacts id="si-auto" people={contactsEn.slice(0, 24)} locale="en" height="20rem" label="Contacts, collapse auto" />
-          <Contacts id="si-never" people={contactsEn.slice(0, 24)} locale="en" height="20rem" label="Contacts, collapse never" collapse="never" />
+          <Contacts id="si-auto" people={w.contacts.slice(0, 24)} locale={w.locale} height="20rem" label={w.auto} />
+          <Contacts id="si-never" people={w.contacts.slice(0, 24)} locale={w.locale} height="20rem" label={w.never} collapse="never" />
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="One section: every key goes to it">
-        <Contacts id="si-one" people={['Sara Alqahtani', 'Saad Alharbi', 'Sami Alotaibi']} locale="en" height="40rem" label="Contacts with one section" linked />
+        <Contacts id="si-one" people={[...w.one]} locale={w.locale} height="40rem" label={w.oneLabel} linked />
       </DemoCase>
 
       <DemoCase id="many" title="Contacts: 200 rows with the index beside them">
-        <Contacts id="si-many" people={contactsEn} locale="en" height="calc(100svh - 8rem)" label="Contacts" />
+        <Contacts id="si-many" people={w.contacts} locale={w.locale} height="calc(100svh - 8rem)" label={w.label} />
       </DemoCase>
 
       <DemoCase id="too-many" title="80 contacts in a short frame: keys collapse into dots">
-        <Contacts id="si-short" people={contactsEn.slice(0, 80)} locale="en" height="22rem" label="Contacts in a short frame" />
+        <Contacts id="si-short" people={w.contacts.slice(0, 80)} locale={w.locale} height="22rem" label={w.short} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic contacts: 200 rows, the index at the left" lang="ar">

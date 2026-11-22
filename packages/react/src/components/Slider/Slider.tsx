@@ -241,6 +241,8 @@ export function SliderBase({
   const [own, setOwn] = useState<number[]>(defaultValue);
   const [dragging, setDragging] = useState(false);
   const values = valueProp ?? own;
+  const arabic = /^ar(-|$)/i.test(rest.lang ?? theme.lang);
+  const arabicRange = arabic && values.length === 2;
   const motion = useMotion();
   /** slider-rubber-band: how far a drag pulls past each end, 0 to 1. */
   const [pull, setPull] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
@@ -314,10 +316,12 @@ export function SliderBase({
       )}
       {valueShown && (
         <output data-part="value" aria-hidden="true">
+          {/* Arabic writes a range in words, "من 250,000 ريال إلى 1,500,000 ريال" (order P2 F4). */}
+          {arabicRange && 'من '}
           {values.map((v, i) => (
             // Each value keeps its own direction: 200 SAR stays in order on an Arabic page.
             <Fragment key={i}>
-              {i > 0 && ' - '}
+              {i > 0 && (arabicRange ? ' إلى ' : arabic ? '، ' : ' - ')}
               <bdi>{format(v)}</bdi>
             </Fragment>
           ))}

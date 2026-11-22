@@ -7,10 +7,19 @@
  * The placeholders (the dashes and the day period) take the muted text: the
  * placeholder color fell to about 4.1:1 on the fill, under 4.5:1
  * (WCAG 1.4.3). The muted text keeps them lighter than a typed value.
+ *
+ * Order P2 F6: in the android time dialog the row has no box of its own
+ * (the hour, the minute and the day period are each a box, android.css),
+ * so the Desk fill is not laid behind them there; it read as a box with
+ * boxes in it.
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='time-field']:not([data-readonly]) {
     --_date-field-bg: var(--ds-control-fill-default);
     --_date-field-placeholder-fg: var(--ds-color-text-muted);
+  }
+
+  [data-style='desk'][data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field']:not([data-readonly]) {
+    --_date-field-bg: transparent;
   }
 }

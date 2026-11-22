@@ -1,0 +1,15 @@
+/*
+ * Desk recipe for Calendar (order P2 F6, proposed). The selected day is
+ * Desk's yellow disc with the dark ink of the yellow. On the light desk the
+ * yellow alone is about 1.07:1 against the paper, so the disc also takes
+ * the gold edge of a Desk selection, which keeps 3:1 (WCAG 1.4.11), and the
+ * bolder weight of Calendar.css. The focus ring is an outline, so the edge
+ * sits in the box shadow. Forced colors draw the day by themselves.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='desk'] [data-ds='calendar'] [data-part='day'][data-selected] {
+      box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-primary-border);
+    }
+  }
+}

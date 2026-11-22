@@ -1,6 +1,10 @@
+// Stepper demo. The copy follows the page language: with lang=ar every case
+// reads Arabic.
 import { useState } from 'react';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { Stepper, type StepperMode, type StepperOrientation, type StepperSize, type StepperStep } from './index';
 
 /** A checkout in four steps. Titles are nouns. */
@@ -13,7 +17,7 @@ const checkout: StepperStep[] = [
 
 /** The same steps in Arabic: noun form, no diacritics. */
 const checkoutAr: StepperStep[] = [
-  { title: 'الحساب', description: 'الإيميل وكلمة المرور' },
+  { title: 'الحساب', description: 'البريد وكلمة المرور' },
   { title: 'العنوان', description: 'وين نوصل الطلب' },
   { title: 'الدفع', description: 'بطاقة أو تحويل بنكي' },
   { title: 'المراجعة', description: 'تأكد من الطلب قبل إرساله' },
@@ -42,11 +46,75 @@ const tooMany: StepperStep[] = [
   'Review',
 ].map((title) => ({ title }));
 
+const manyAr: StepperStep[] = [{ title: 'مساحة العمل' }, { title: 'الفريق' }, { title: 'الأدوار' }, { title: 'الفوترة' }, { title: 'المراجعة' }];
+
+const tooManyAr: StepperStep[] = [
+  'الحساب',
+  'الملف الشخصي',
+  'الشركة',
+  'الفريق',
+  'الأدوار',
+  'الفوترة',
+  'بيانات الضريبة',
+  'التكاملات',
+  'الإشعارات',
+  'الأمان',
+  'استيراد البيانات',
+  'المراجعة',
+].map((title) => ({ title }));
+
+const words = {
+  en: {
+    checkout,
+    many,
+    tooMany,
+    steps: (size: string, orientation: string) => `Checkout steps, ${size} ${orientation}`,
+    links: 'Checkout steps as links',
+    one: [{ title: 'Review', description: 'Check and place the order' }],
+    order: 'Order steps',
+    setup: 'Setup steps',
+    setupVertical: 'Setup steps, vertical',
+    company: 'Company setup steps, vertical',
+    long: [
+      { title: 'Account and sign in details for every member of the team', description: 'Email, password and the way each person signs in' },
+      { title: 'Delivery address and the times someone is there to receive it', description: 'We send the order to this address' },
+      { title: 'Payment' },
+    ],
+    longLabel: 'Order steps with long titles',
+    postal: 'Add a postal code',
+    errorLabel: 'Checkout steps with an error',
+    notNeeded: 'Not needed for free orders',
+    skipped: 'Checkout steps with a step skipped',
+  },
+  ar: {
+    checkout: checkoutAr,
+    many: manyAr,
+    tooMany: tooManyAr,
+    steps: (size: string, orientation: string) => `خطوات الطلب، ${size} ${orientation}`,
+    links: 'خطوات الطلب كروابط',
+    one: [{ title: 'المراجعة', description: 'تأكد من الطلب قبل إرساله' }],
+    order: 'خطوات الطلب',
+    setup: 'خطوات الإعداد',
+    setupVertical: 'خطوات الإعداد، عمودي',
+    company: 'خطوات إعداد الشركة، عمودي',
+    long: [
+      { title: 'بيانات الحساب وطريقة تسجيل الدخول لكل عضو في الفريق', description: 'البريد وكلمة المرور وطريقة الدخول لكل شخص' },
+      { title: 'عنوان التوصيل والأوقات اللي فيها أحد يستلم الطلب', description: 'نوصل الطلب لهذا العنوان' },
+      { title: 'الدفع' },
+    ],
+    longLabel: 'خطوات الطلب بعناوين طويلة',
+    postal: 'أضف الرمز البريدي',
+    errorLabel: 'خطوات الطلب مع خطأ',
+    notNeeded: 'ما تحتاجها الطلبات المجانية',
+    skipped: 'خطوات الطلب مع خطوة متخطاة',
+  },
+};
+
 const sizes: StepperSize[] = ['sm', 'md'];
 const orientations: StepperOrientation[] = ['horizontal', 'vertical'];
 
 /** A stepper the user can move through by picking a step. */
-function Navigable({ steps, mode, lang }: { steps: StepperStep[]; mode: StepperMode; lang?: 'ar' }) {
+function Navigable({ steps, mode, lang }: { steps: StepperStep[]; mode: StepperMode; lang?: 'en' | 'ar' }) {
   const [current, setCurrent] = useState(2);
   return (
     <Stepper
@@ -55,12 +123,14 @@ function Navigable({ steps, mode, lang }: { steps: StepperStep[]; mode: StepperM
       completed={mode === 'free' ? [0, 1] : undefined}
       mode={mode}
       onStepSelect={setCurrent}
-      aria-label={lang === 'ar' ? 'خطوات الطلب' : `Checkout steps, ${mode}`}
+      aria-label={lang === 'ar' ? `خطوات الطلب، ${mode}` : `Checkout steps, ${mode}`}
     />
   );
 }
 
 export default function StepperDemo() {
+  const lang = isArabic(useTheme().lang) ? 'ar' : 'en';
+  const w = words[lang];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: size, orientation and step states">
@@ -68,26 +138,26 @@ export default function StepperDemo() {
           orientations.map((orientation) => (
             <DemoRow key={`${size}-${orientation}`} label={`${size}, ${orientation}`}>
               <Stepper
-                steps={checkout}
+                steps={w.checkout}
                 current={2}
                 size={size}
                 orientation={orientation}
-                aria-label={`Checkout steps, ${size} ${orientation}`}
+                aria-label={w.steps(size, orientation)}
               />
             </DemoRow>
           )),
         )}
         <DemoRow label="Linear, steps can be picked">
-          <Navigable steps={checkout} mode="linear" />
+          <Navigable steps={w.checkout} mode="linear" lang={lang} />
         </DemoRow>
         <DemoRow label="Free, any step can be picked">
-          <Navigable steps={checkout} mode="free" />
+          <Navigable steps={w.checkout} mode="free" lang={lang} />
         </DemoRow>
         <DemoRow label="Steps as links">
           <Stepper
-            steps={checkout.map((s, i) => ({ ...s, href: `#checkout-${i + 1}` }))}
+            steps={w.checkout.map((s, i) => ({ ...s, href: `#checkout-${i + 1}` }))}
             current={2}
-            aria-label="Checkout steps as links"
+            aria-label={w.links}
           />
         </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
@@ -105,36 +175,28 @@ export default function StepperDemo() {
 
       <DemoCase id="one" title="One step">
         <DemoRow>
-          <Stepper steps={[{ title: 'Review', description: 'Check and place the order' }]} aria-label="Order steps" />
+          <Stepper steps={w.one} aria-label={w.order} />
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="many" title="Many steps">
         <DemoRow>
-          <Stepper steps={many} current={3} aria-label="Setup steps" />
+          <Stepper steps={w.many} current={3} aria-label={w.setup} />
         </DemoRow>
         <DemoRow>
-          <Stepper steps={many} current={3} orientation="vertical" size="sm" aria-label="Setup steps, vertical" />
+          <Stepper steps={w.many} current={3} orientation="vertical" size="sm" aria-label={w.setupVertical} />
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many steps: twelve do not fit in a row, so they take the vertical form">
         <DemoRow>
-          <Stepper steps={tooMany} current={6} size="sm" orientation="vertical" aria-label="Company setup steps, vertical" />
+          <Stepper steps={w.tooMany} current={6} size="sm" orientation="vertical" aria-label={w.company} />
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
         <DemoRow>
-          <Stepper
-            steps={[
-              { title: 'Account and sign in details for every member of the team', description: 'Email, password and the way each person signs in' },
-              { title: 'Delivery address and the times someone is there to receive it', description: 'We send the order to this address' },
-              { title: 'Payment' },
-            ]}
-            current={1}
-            aria-label="Order steps with long titles"
-          />
+          <Stepper steps={w.long} current={1} aria-label={w.longLabel} />
         </DemoRow>
       </DemoCase>
 
@@ -142,7 +204,7 @@ export default function StepperDemo() {
         <DemoRow>
           <Stepper
             steps={[
-              { title: 'بيانات الحساب وطريقة تسجيل الدخول لكل عضو في الفريق', description: 'الإيميل وكلمة المرور وطريقة الدخول لكل شخص' },
+              { title: 'بيانات الحساب وطريقة تسجيل الدخول لكل عضو في الفريق', description: 'البريد وكلمة المرور وطريقة الدخول لكل شخص' },
               { title: 'عنوان التوصيل والأوقات اللي فيها أحد يستلم الطلب', description: 'نوصل الطلب لهذا العنوان' },
               { title: 'الدفع' },
             ]}
@@ -158,9 +220,9 @@ export default function StepperDemo() {
       <DemoCase id="error" title="A step with errors">
         <DemoRow>
           <Stepper
-            steps={checkout.map((s, i) => (i === 1 ? { ...s, invalid: true, description: 'Add a postal code' } : s))}
+            steps={w.checkout.map((s, i) => (i === 1 ? { ...s, invalid: true, description: w.postal } : s))}
             current={2}
-            aria-label="Checkout steps with an error"
+            aria-label={w.errorLabel}
           />
         </DemoRow>
       </DemoCase>
@@ -168,12 +230,12 @@ export default function StepperDemo() {
       <DemoCase id="disabled" title="A step that cannot be reached">
         <DemoRow>
           <Stepper
-            steps={checkout.map((s, i) => (i === 2 ? { ...s, disabled: true, description: 'Not needed for free orders' } : s))}
+            steps={w.checkout.map((s, i) => (i === 2 ? { ...s, disabled: true, description: w.notNeeded } : s))}
             current={1}
             completed={[0]}
             mode="free"
             onStepSelect={() => undefined}
-            aria-label="Checkout steps with a step skipped"
+            aria-label={w.skipped}
           />
         </DemoRow>
       </DemoCase>

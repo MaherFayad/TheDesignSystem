@@ -1,0 +1,10 @@
+/*
+ * Studio recipe for ProgressBar (order P2 F5, Q1 F19, proposed). Studio's
+ * marks take the mark corner, not the pill: the track and its fill (whose
+ * clip rounds by the same property) are square at radius.xs.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='progress-bar'] {
+    --_progress-bar-radius: var(--ds-radius-xs);
+  }
+}

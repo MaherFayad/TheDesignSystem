@@ -8,9 +8,12 @@
 //
 // Every picture is drawn here as an inline svg, our own demo marks: no
 // network, no third party logo, icon or name. Targets are the app's own
-// places (a trip board, a message in the app), with system icons.
+// places (a trip board, a message in the app), with system icons. The copy
+// follows the page language: with lang=ar every case reads Arabic.
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
+import { isArabic } from '../Popover/FloatingLayer';
 import { Toaster } from '../Toast';
 import { SharePanel, type ShareAction, type SharePerson, type ShareTarget } from './index';
 
@@ -69,74 +72,114 @@ const actionsAr: ShareAction[] = [
 const trip = { title: 'Weekend in AlUla', url: 'https://example.com/trips/alula-weekend', image: picture };
 const tripAr = { title: 'عطلة في العلا', url: 'https://example.com/trips/alula-weekend', image: picture };
 
+const words = {
+  en: {
+    names: namesEn,
+    targets: targetsEn,
+    actions: actionsEn,
+    trip,
+    share: 'Share trip',
+    send: 'Send trip',
+    list: { title: 'Packing list', url: 'https://example.com/lists/packing' },
+    shareList: 'Share list',
+    text: 'Two nights, three walks and one long dinner.',
+    longTitle: 'A long weekend in AlUla with the whole family, three hikes and a night under the stars',
+    longPeople: ['Abdulrahman Alabdulkarim', 'Mariam Bint Abdulaziz Alsaud', 'Sara Alqahtani'],
+    longBoard: 'Family trips board for next spring',
+    message: 'Message',
+    longAction: 'Add to the shared packing list',
+    addToList: 'Add to list',
+    saveImage: 'Save image',
+  },
+  ar: {
+    names: namesAr,
+    targets: targetsAr,
+    actions: actionsAr,
+    trip: tripAr,
+    share: 'مشاركة الرحلة',
+    send: 'إرسال الرحلة',
+    list: { title: 'قائمة الأغراض', url: 'https://example.com/lists/packing' },
+    shareList: 'مشاركة القائمة',
+    text: 'ليلتين، ثلاث جولات مشي وعشاء طويل.',
+    longTitle: 'عطلة طويلة في العلا مع العيلة كلها، ثلاث جولات مشي وليلة تحت النجوم',
+    longPeople: ['عبدالرحمن العبدالكريم', 'مريم بنت عبدالعزيز آل سعود', 'سارة القحطاني'],
+    longBoard: 'لوحة رحلات العيلة للربيع الجاي',
+    message: 'رسالة',
+    longAction: 'إضافة لقائمة الأغراض المشتركة',
+    addToList: 'إضافة للقائمة',
+    saveImage: 'حفظ الصورة',
+  },
+};
+
 export default function SharePanelDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <Toaster />
       <DemoCase id="variants" title="System sheet first, and the app's own targets">
         <DemoRow>
-          <SharePanel item={trip} people={peopleOf(namesEn, 4)} targets={targetsEn} actions={actionsEn}>
+          <SharePanel item={w.trip} people={peopleOf(w.names, 4)} targets={w.targets} actions={w.actions}>
             <Button data-demo-trigger="prefer" start="share">
-              Share trip
+              {w.share}
             </Button>
           </SharePanel>
-          <SharePanel item={trip} people={peopleOf(namesEn, 4)} targets={targetsEn} actions={actionsEn} system="never">
+          <SharePanel item={w.trip} people={peopleOf(w.names, 4)} targets={w.targets} actions={w.actions} system="never">
             <Button data-demo-trigger="never" start="send">
-              Send trip
+              {w.send}
             </Button>
           </SharePanel>
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="empty" title="A title and a link only">
-        <SharePanel item={{ title: 'Packing list', url: 'https://example.com/lists/packing' }} system="never">
+        <SharePanel item={w.list} system="never">
           <Button data-demo-trigger="empty" start="share">
-            Share list
+            {w.shareList}
           </Button>
         </SharePanel>
       </DemoCase>
 
       <DemoCase id="one" title="One person">
-        <SharePanel item={trip} people={peopleOf(namesEn, 1)} system="never">
+        <SharePanel item={w.trip} people={peopleOf(w.names, 1)} system="never">
           <Button data-demo-trigger="one" start="send">
-            Send trip
+            {w.send}
           </Button>
         </SharePanel>
       </DemoCase>
 
       <DemoCase id="many" title="People, targets and actions">
-        <SharePanel item={{ ...trip, text: 'Two nights, three walks and one long dinner.' }} people={peopleOf(namesEn)} targets={targetsEn} actions={actionsEn} system="never">
+        <SharePanel item={{ ...w.trip, text: w.text }} people={peopleOf(w.names)} targets={w.targets} actions={w.actions} system="never">
           <Button data-demo-trigger="many" start="share">
-            Share trip
+            {w.share}
           </Button>
         </SharePanel>
       </DemoCase>
 
       <DemoCase id="too-many" title="40 people: the row scrolls inline">
-        <SharePanel item={trip} people={peopleOf(namesEn, 40)} targets={targetsEn} system="never">
+        <SharePanel item={w.trip} people={peopleOf(w.names, 40)} targets={w.targets} system="never">
           <Button data-demo-trigger="too-many" start="send">
-            Send trip
+            {w.send}
           </Button>
         </SharePanel>
       </DemoCase>
 
       <DemoCase id="long-text" title="Long title, names and labels">
         <SharePanel
-          item={{ title: 'A long weekend in AlUla with the whole family, three hikes and a night under the stars', url: 'https://example.com/trips/a-long-weekend-in-alula-with-the-whole-family?from=share', image: picture }}
+          item={{ title: w.longTitle, url: 'https://example.com/trips/a-long-weekend-in-alula-with-the-whole-family?from=share', image: picture }}
           people={[
-            { id: 'a', name: 'Abdulrahman Alabdulkarim' },
-            { id: 'b', name: 'Mariam Bint Abdulaziz Alsaud' },
-            { id: 'c', name: 'Sara Alqahtani', avatar: photos[0] },
+            { id: 'a', name: w.longPeople[0]! },
+            { id: 'b', name: w.longPeople[1]! },
+            { id: 'c', name: w.longPeople[2]!, avatar: photos[0] },
           ]}
           targets={[
-            { id: 'board', label: 'Family trips board for next spring', icon: 'grid' },
-            { id: 'message', label: 'Message', icon: 'send' },
+            { id: 'board', label: w.longBoard, icon: 'grid' },
+            { id: 'message', label: w.message, icon: 'send' },
           ]}
-          actions={[{ id: 'list', label: 'Add to the shared packing list', icon: 'list', onSelect: noop }]}
+          actions={[{ id: 'list', label: w.longAction, icon: 'list', onSelect: noop }]}
           system="never"
         >
           <Button data-demo-trigger="long-text" start="share">
-            Share trip
+            {w.share}
           </Button>
         </SharePanel>
       </DemoCase>
@@ -151,16 +194,16 @@ export default function SharePanelDemo() {
 
       <DemoCase id="disabled" title="An action that cannot run now">
         <SharePanel
-          item={trip}
-          targets={targetsEn}
+          item={w.trip}
+          targets={w.targets}
           actions={[
-            { id: 'list', label: 'Add to list', icon: 'list', onSelect: noop },
-            { id: 'image', label: 'Save image', icon: 'download', onSelect: noop, disabled: true },
+            { id: 'list', label: w.addToList, icon: 'list', onSelect: noop },
+            { id: 'image', label: w.saveImage, icon: 'download', onSelect: noop, disabled: true },
           ]}
           system="never"
         >
           <Button data-demo-trigger="disabled" start="share">
-            Share trip
+            {w.share}
           </Button>
         </SharePanel>
       </DemoCase>

@@ -8,15 +8,22 @@
 // (titleLines) and a row footer; disabled shows a disabled action row. No
 // loading, error or readonly: a list that loads shows Skeleton rows, and a
 // failed load is the page's message.
-import { useState } from 'react';
+//
+// The copy follows the page language: with lang=ar every case reads Arabic.
+// Names, subjects and song titles are user content, so their text sits in a
+// span with dir="auto": a Latin subject in an Arabic list keeps its full stop
+// at its own end.
+import { useState, type ReactNode } from 'react';
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
 import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
+import { useTheme } from '../../theme/hooks';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 import { ActionSheet, ActionSheetAction, ActionSheetContent, ActionSheetTrigger } from '../ActionSheet';
+import { isArabic } from '../Popover/FloatingLayer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../DropdownMenu';
 import { Slider } from '../Slider';
 import { SwipeActions } from '../SwipeActions';
@@ -36,6 +43,13 @@ const mailAr = [
   { from: 'عمر الحربي', subject: 'الفاتورة 2041 جاهزة للتنزيل', time: 'أمس', icon: 'file' as const },
 ];
 
+/** User text: its direction from its own first strong letter. */
+function User({ children }: { children: ReactNode }) {
+  return <span dir="auto">{children}</span>;
+}
+
+const mailArAll = [...mailAr, { from: 'فريق التصميم', subject: 'تعليقات جديدة على لوحة التعريف بالتطبيق', time: 'الاثنين', icon: 'bell' as const }];
+
 function MailRows({ items, actions = true, lang = 'en' }: { items: typeof mail; actions?: boolean; lang?: 'en' | 'ar' }) {
   return (
     <>
@@ -44,8 +58,8 @@ function MailRows({ items, actions = true, lang = 'en' }: { items: typeof mail; 
           key={m.from}
           href={`#mail-${i}`}
           start={m.icon}
-          title={m.from}
-          description={m.subject}
+          title={<User>{m.from}</User>}
+          description={<User>{m.subject}</User>}
           end={m.time}
           active={i === 0}
           actions={
@@ -79,8 +93,8 @@ function SongRows({ items, lang = 'en' }: { items: typeof songs; lang?: 'en' | '
         <ListItem
           key={song.id}
           start={<Avatar name={song.title} size="lg" decorative />}
-          title={song.title}
-          description={song.artist}
+          title={<User>{song.title}</User>}
+          description={<User>{song.artist}</User>}
           active={song.id === playing}
           onSelect={() => setPlaying(song.id)}
           actions={<IconButton size="sm" emphasis="ghost" icon="more" label={lang === 'ar' ? `خيارات ${song.title}` : `More for ${song.title}`} />}
@@ -101,61 +115,194 @@ function VolumeRow({ lang = 'en' }: { lang?: 'en' | 'ar' }) {
   );
 }
 
+const words = {
+  en: {
+    mail,
+    songs,
+    inbox: (variant: string, size: string) => `Inbox, ${variant}, ${size}`,
+    sections: (variant: string) => `Settings in sections, ${variant}`,
+    notifications: 'Notifications',
+    previewsFooter: 'Previews show the first line of each message.',
+    previews: 'Show previews',
+    always: 'Always',
+    mailTitle: 'Mail',
+    account: 'Account',
+    profile: 'Profile',
+    boardsNoChevrons: 'Boards, no chevrons',
+    brand: 'Brand board',
+    editedToday: 'Edited today',
+    launch: 'Launch plan',
+    editedMonday: 'Edited Monday',
+    sound: 'Sound',
+    bell: 'Bell volume',
+    bellFooter: 'The bell follows this level even on silent.',
+    swipeInbox: 'Inbox with swipe actions',
+    swipeMenu: (from: string) => `Actions for ${from}`,
+    markRead: 'Mark read',
+    delete: 'Delete',
+    mute: 'Mute',
+    empty: 'No mail yet. Mail you get from your team shows here.',
+    members: 'Members',
+    owner: 'Owner',
+    owners: 'Sara Alqahtani',
+    setup: 'Setup steps',
+    steps: ['Create the workspace', 'Invite your team', 'Connect a domain', 'Publish the first page'],
+    done: 'Done',
+    next: 'Next',
+    dns: 'Point your DNS to the address in Settings.',
+    settings: 'Settings',
+    network: 'Network',
+    networkFooter: 'Large files wait for Wi-Fi unless you turn on mobile data.',
+    syncData: 'Sync over mobile data',
+    off: 'Off',
+    wifi: 'Wi-Fi only for large files',
+    on: 'On',
+    privacy: 'Privacy',
+    privacyFooter: 'Boards you share keep the access you gave them.',
+    lock: 'Lock with passcode',
+    visibility: 'Who can see your boards',
+    team: 'Team',
+    blocked: 'Blocked people',
+    emptySection: 'Empty section',
+    noDevices: 'No devices yet. Devices you sign in on show here.',
+    folders: 'Folders',
+    folderNames: ['Inbox', 'Drafts', 'Sent', 'Archive', 'Trash', 'Spam', 'Starred', 'Important', 'Scheduled', 'All mail', 'Templates', 'Snoozed'],
+    longRows: 'Long rows',
+    longTitle: 'Quarterly brand guidelines review with the regional marketing teams and the agency',
+    longDescription: 'Your changes are saved to your account. Open the board on any other device to see the same version, with every comment and every reference in place.',
+    longActions: 'Open actions for the guidelines review',
+    saved: 'Saved articles',
+    wallsCover: 'Mud walls',
+    walls: 'Why mud walls keep old houses in Najd cool through the longest summer afternoons',
+    wallsMeta: 'Rawdah Review, 8 min read',
+    listen: 'Listen',
+    wallsMore: 'More for Why mud walls keep old houses cool',
+    sessions: 'Number of sessions in one focus block',
+    addSession: 'Add a session',
+  },
+  ar: {
+    mail: mailArAll,
+    songs: [...songsAr, { id: 'cardamom-ar', title: 'صباح الهيل', artist: 'ثلاثي العرعر' }],
+    inbox: (variant: string, size: string) => `الوارد، ${variant}، ${size}`,
+    sections: (variant: string) => `الإعدادات في أقسام، ${variant}`,
+    notifications: 'الإشعارات',
+    previewsFooter: 'المعاينة تعرض أول سطر من كل رسالة.',
+    previews: 'عرض المعاينة',
+    always: 'دايم',
+    mailTitle: 'البريد',
+    account: 'الحساب',
+    profile: 'الملف الشخصي',
+    boardsNoChevrons: 'اللوحات، بدون أسهم',
+    brand: 'لوحة الهوية',
+    editedToday: 'تعدلت اليوم',
+    launch: 'خطة الإطلاق',
+    editedMonday: 'تعدلت الاثنين',
+    sound: 'الصوت',
+    bell: 'مستوى صوت الجرس',
+    bellFooter: 'الجرس يمشي على هذا المستوى حتى لو الجوال صامت.',
+    swipeInbox: 'الوارد مع إجراءات السحب',
+    swipeMenu: (from: string) => `إجراءات رسالة ${from}`,
+    markRead: 'تعليم كمقروءة',
+    delete: 'حذف',
+    mute: 'كتم',
+    empty: 'ما فيه رسائل للحين. الرسائل اللي توصلك من فريقك تطلع هنا.',
+    members: 'الأعضاء',
+    owner: 'المالك',
+    owners: 'سارة القحطاني',
+    setup: 'خطوات الإعداد',
+    steps: ['إنشاء مساحة العمل', 'دعوة الفريق', 'ربط النطاق', 'نشر أول صفحة'],
+    done: 'مكتملة',
+    next: 'التالية',
+    dns: 'وجه إعدادات DNS للعنوان اللي في الإعدادات.',
+    settings: 'الإعدادات',
+    network: 'الشبكة',
+    networkFooter: 'الملفات الكبيرة تنتظر الواي فاي إلا إذا شغلت بيانات الجوال.',
+    syncData: 'المزامنة ببيانات الجوال',
+    off: 'مقفلة',
+    wifi: 'الواي فاي بس للملفات الكبيرة',
+    on: 'شغالة',
+    privacy: 'الخصوصية',
+    privacyFooter: 'اللوحات اللي تشاركها تبقى بنفس الصلاحيات اللي عطيتها.',
+    lock: 'القفل برمز',
+    visibility: 'مين يقدر يشوف لوحاتك',
+    team: 'الفريق',
+    blocked: 'الأشخاص المحظورين',
+    emptySection: 'قسم فاضي',
+    noDevices: 'ما فيه أجهزة للحين. الأجهزة اللي تسجل دخولك منها تطلع هنا.',
+    folders: 'المجلدات',
+    folderNames: ['الوارد', 'المسودات', 'المرسلة', 'الأرشيف', 'المحذوفات', 'الرسائل المزعجة', 'المميزة', 'المهمة', 'المجدولة', 'كل الرسائل', 'القوالب', 'المؤجلة'],
+    longRows: 'صفوف طويلة',
+    longTitle: 'مراجعة دليل الهوية للربع الرابع مع فرق التسويق في المناطق والوكالة',
+    longDescription: 'لو خلصت من تعديل الملف، احفظه وارجع للوحة عشان تشوف كل التغييرات في مكان واحد، مع كل تعليق وكل مرجع في مكانه.',
+    longActions: 'عرض خيارات مراجعة الدليل',
+    saved: 'المقالات المحفوظة',
+    wallsCover: 'بيوت الطين',
+    walls: 'ليش بيوت الطين في نجد تبقى باردة حتى في أطول عصريات الصيف',
+    wallsMeta: 'مجلة الروضة، قراءة 8 دقائق',
+    listen: 'استماع',
+    wallsMore: 'خيارات مقال بيوت الطين',
+    sessions: 'عدد الجلسات في فترة التركيز الواحدة',
+    addSession: 'إضافة جلسة',
+  },
+};
+
 export default function ListDemo() {
+  const lang = isArabic(useTheme().lang) ? 'ar' : 'en';
+  const w = words[lang];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: plain, divided and inset, two sizes, links with actions, and Arabic">
         {sizes.map((size) => (
           <DemoGrid key={size} min="18rem">
             {variants.map((variant) => (
-              <List key={variant} size={size} variant={variant} aria-label={`Inbox, ${variant}, ${size}`}>
-                <MailRows items={mail} />
+              <List key={variant} size={size} variant={variant} aria-label={w.inbox(variant, size)}>
+                <MailRows items={w.mail} lang={lang} />
               </List>
             ))}
           </DemoGrid>
         ))}
         <DemoGrid min="18rem">
           {variants.map((variant) => (
-            <List key={variant} variant={variant} aria-label={`Settings in sections, ${variant}`}>
-              <ListSection header="Notifications" footer="Previews show the first line of each message.">
-                <ListItem start="bell" title="Show previews" href={`#previews-${variant}`} end="Always" />
-                <ListItem start="mail" title="Mail" href={`#mail-alerts-${variant}`} />
+            <List key={variant} variant={variant} aria-label={w.sections(variant)}>
+              <ListSection header={w.notifications} footer={w.previewsFooter}>
+                <ListItem start="bell" title={w.previews} href={`#previews-${variant}`} end={w.always} />
+                <ListItem start="mail" title={w.mailTitle} href={`#mail-alerts-${variant}`} />
               </ListSection>
-              <ListSection header="Account">
-                <ListItem start="user" title="Profile" href={`#profile-${variant}`} />
+              <ListSection header={w.account}>
+                <ListItem start="user" title={w.profile} href={`#profile-${variant}`} />
               </ListSection>
             </List>
           ))}
         </DemoGrid>
         <DemoGrid min="18rem">
-          <SongRows items={songs} />
-          <List variant="flush" aria-label="Boards, no chevrons">
-            <ListItem href="#board-brand" start="grid" title="Brand board" description="Edited today" chevron={false} />
-            <ListItem href="#board-launch" start="grid" title="Launch plan" description="Edited Monday" chevron={false} />
+          <SongRows items={w.songs} lang={lang} />
+          <List variant="flush" aria-label={w.boardsNoChevrons}>
+            <ListItem href="#board-brand" start="grid" title={w.brand} description={w.editedToday} chevron={false} />
+            <ListItem href="#board-launch" start="grid" title={w.launch} description={w.editedMonday} chevron={false} />
           </List>
-          <List variant="inset" aria-label="Sound">
-            <ListSection header="Bell volume" footer="The bell follows this level even on silent.">
-              <VolumeRow />
+          <List variant="inset" aria-label={w.sound}>
+            <ListSection header={w.bell} footer={w.bellFooter}>
+              <VolumeRow lang={lang} />
             </ListSection>
           </List>
         </DemoGrid>
         <DemoGrid min="18rem">
-          <List variant="inset" aria-label="Inbox with swipe actions">
-            {mail.map((m, i) => (
+          <List variant="inset" aria-label={w.swipeInbox}>
+            {w.mail.map((m, i) => (
               <ListItem
                 key={m.from}
                 href={`#swipe-${i}`}
                 start={m.icon}
-                title={m.from}
-                description={m.subject}
+                title={<User>{m.from}</User>}
+                description={<User>{m.subject}</User>}
                 end={m.time}
                 swipe={
                   <SwipeActions
-                    menuLabel={`Actions for ${m.from}`}
-                    start={[{ label: 'Mark read', icon: 'mail', tone: 'accent', onSelect: () => undefined }]}
+                    menuLabel={w.swipeMenu(m.from)}
+                    start={[{ label: w.markRead, icon: 'mail', tone: 'accent', onSelect: () => undefined }]}
                     end={[
-                      { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined },
-                      { label: 'Mute', icon: 'bell-off', onSelect: () => undefined },
+                      { label: w.delete, icon: 'trash', tone: 'danger', onSelect: () => undefined },
+                      { label: w.mute, icon: 'bell-off', onSelect: () => undefined },
                     ]}
                   />
                 }
@@ -182,42 +329,42 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="empty" title="Empty">
-        <List variant="inset" empty="No mail yet. Mail you get from your team shows here." />
+        <List variant="inset" empty={w.empty} />
       </DemoCase>
 
       <DemoCase id="one" title="One row, no link">
-        <List variant="divided" aria-label="Members">
-          <ListItem start="user" title="Sara Alqahtani" description="Owner" />
+        <List variant="divided" aria-label={w.members}>
+          <ListItem start="user" title={<User>{w.owners}</User>} description={w.owner} />
         </List>
       </DemoCase>
 
       <DemoCase id="many" title="Many: ordered steps with no links">
-        <List ordered variant="divided" aria-label="Setup steps">
-          <ListItem start="check-circle" title="Create the workspace" end="Done" />
-          <ListItem start="check-circle" title="Invite your team" end="Done" />
-          <ListItem start="dot" title="Connect a domain" description="Point your DNS to the address in Settings." end="Next" />
-          <ListItem start="dot" title="Publish the first page" />
+        <List ordered variant="divided" aria-label={w.setup}>
+          <ListItem start="check-circle" title={w.steps[0]} end={w.done} />
+          <ListItem start="check-circle" title={w.steps[1]} end={w.done} />
+          <ListItem start="dot" title={w.steps[2]} description={w.dns} end={w.next} />
+          <ListItem start="dot" title={w.steps[3]} />
         </List>
         <div style={{ maxInlineSize: '24rem' }}>
-          <List variant="inset" aria-label="Settings">
-            <ListSection header="Network" footer="Large files wait for Wi-Fi unless you turn on mobile data.">
-              <ListItem start="download" title="Sync over mobile data" href="#sync" end="Off" />
-              <ListItem start="file" title="Wi-Fi only for large files" href="#wifi" end="On" />
+          <List variant="inset" aria-label={w.settings}>
+            <ListSection header={w.network} footer={w.networkFooter}>
+              <ListItem start="download" title={w.syncData} href="#sync" end={w.off} />
+              <ListItem start="file" title={w.wifi} href="#wifi" end={w.on} />
             </ListSection>
-            <ListSection header="Privacy" footer="Boards you share keep the access you gave them.">
-              <ListItem start="lock" title="Lock with passcode" href="#lock" />
-              <ListItem start="eye" title="Who can see your boards" href="#visibility" end="Team" />
-              <ListItem start="user" title="Blocked people" href="#blocked" end="2" />
+            <ListSection header={w.privacy} footer={w.privacyFooter}>
+              <ListItem start="lock" title={w.lock} href="#lock" />
+              <ListItem start="eye" title={w.visibility} href="#visibility" end={w.team} />
+              <ListItem start="user" title={w.blocked} href="#blocked" end="2" />
             </ListSection>
-            <ListSection header="Empty section" empty="No devices yet. Devices you sign in on show here." />
+            <ListSection header={w.emptySection} empty={w.noDevices} />
           </List>
         </div>
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: twelve folders">
         <div style={{ maxInlineSize: '20rem' }}>
-          <List size="sm" variant="plain" aria-label="Folders">
-            {['Inbox', 'Drafts', 'Sent', 'Archive', 'Trash', 'Spam', 'Starred', 'Important', 'Scheduled', 'All mail', 'Templates', 'Snoozed'].map((name, i) => (
+          <List size="sm" variant="plain" aria-label={w.folders}>
+            {w.folderNames.map((name, i) => (
               <ListItem key={name} href={`#folder-${i}`} start="folder" title={name} end={String((i * 7) % 23)} active={i === 0} />
             ))}
           </List>
@@ -225,35 +372,35 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
-        <List variant="divided" aria-label="Long rows">
+        <List variant="divided" aria-label={w.longRows}>
           <ListItem
             href="#long"
             start="file"
-            title="Quarterly brand guidelines review with the regional marketing teams and the agency"
-            description="Your changes are saved to your account. Open the board on any other device to see the same version, with every comment and every reference in place."
+            title={w.longTitle}
+            description={w.longDescription}
             end="12:40"
-            actions={<IconButton size="xs" icon="more" label="Open actions for the guidelines review" />}
+            actions={<IconButton size="xs" icon="more" label={w.longActions} />}
           />
-          <ListItem start="link" title="https://example.com/boards/brand/2026/q4/guidelines-final-reviewed-copy" />
+          <ListItem start="link" title={<span dir="ltr">https://example.com/boards/brand/2026/q4/guidelines-final-reviewed-copy</span>} />
         </List>
         <div style={{ maxInlineSize: '20rem' }}>
-          <List variant="flush" titleLines={3} aria-label="Saved articles">
+          <List variant="flush" titleLines={3} aria-label={w.saved}>
             <ListItem
               href="#article-walls"
               chevron={false}
-              start={<Avatar name="Mud walls" size="lg" decorative />}
-              title="Why mud walls keep old houses in Najd cool through the longest summer afternoons"
-              description="Rawdah Review, 8 min read"
+              start={<Avatar name={w.wallsCover} size="lg" decorative />}
+              title={w.walls}
+              description={w.wallsMeta}
               footer={
                 <>
                   <Button size="sm" shape="pill" emphasis="soft" start="play">
-                    Listen
+                    {w.listen}
                   </Button>
-                  <IconButton size="sm" emphasis="ghost" icon="more" label="More for Why mud walls keep old houses cool" />
+                  <IconButton size="sm" emphasis="ghost" icon="more" label={w.wallsMore} />
                 </>
               }
             />
-            <ListItem title="Number of sessions in one focus block" titleLines={2} actions={<IconButton size="sm" icon="plus" label="Add a session" />} />
+            <ListItem title={w.sessions} titleLines={2} actions={<IconButton size="sm" icon="plus" label={w.addSession} />} />
           </List>
         </div>
       </DemoCase>
@@ -307,10 +454,10 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="danger" title="A destructive row (tone danger)">
-        <List variant="inset" aria-label="Routine actions">
-          <ListItem start="share" title="Share routine" onSelect={() => undefined} />
-          <ListItem start="edit" title="Edit routine" href="#edit-routine" />
-          <ListItem start="trash" title="Delete routine" tone="danger" onSelect={() => undefined} />
+        <List variant="inset" aria-label={lang === 'ar' ? 'خيارات الروتين' : 'Routine actions'}>
+          <ListItem start="share" title={lang === 'ar' ? 'مشاركة الروتين' : 'Share routine'} onSelect={() => undefined} />
+          <ListItem start="edit" title={lang === 'ar' ? 'تعديل الروتين' : 'Edit routine'} href="#edit-routine" />
+          <ListItem start="trash" title={lang === 'ar' ? 'حذف الروتين' : 'Delete routine'} tone="danger" onSelect={() => undefined} />
         </List>
         <Theme lang="ar" data-demo="content">
           <List variant="inset" aria-label="خيارات الروتين">
@@ -321,27 +468,29 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="trigger" title="A row as a trigger: an action sheet from a destructive row, a menu from a row">
-        <List variant="inset" aria-label="Pass actions">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <ListItem start="sort" title="Sort passes" end="Date" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Date</DropdownMenuItem>
-              <DropdownMenuItem>Event name</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <ActionSheet>
-            <ActionSheetTrigger>
-              <ListItem start="trash" title="Remove pass" tone="danger" />
-            </ActionSheetTrigger>
-            <ActionSheetContent title="Oud night" description="The pass leaves this phone. You can add it again from the email you got it in.">
-              <ActionSheetAction tone="danger" start="trash">
-                Remove pass
-              </ActionSheetAction>
-            </ActionSheetContent>
-          </ActionSheet>
-        </List>
+        {lang === 'en' && (
+          <List variant="inset" aria-label="Pass actions">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <ListItem start="sort" title="Sort passes" end="Date" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>Date</DropdownMenuItem>
+                <DropdownMenuItem>Event name</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ActionSheet>
+              <ActionSheetTrigger>
+                <ListItem start="trash" title="Remove pass" tone="danger" />
+              </ActionSheetTrigger>
+              <ActionSheetContent title="Oud night" description="The pass leaves this phone. You can add it again from the email you got it in.">
+                <ActionSheetAction tone="danger" start="trash">
+                  Remove pass
+                </ActionSheetAction>
+              </ActionSheetContent>
+            </ActionSheet>
+          </List>
+        )}
         <Theme lang="ar" dir="rtl" data-demo="content">
           <List variant="inset" aria-label="خيارات البطاقة">
             <DropdownMenu>
@@ -368,10 +517,16 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled row">
-        <List variant="divided" aria-label="Boards">
-          <ListItem href="#open" start="grid" title="Brand board" description="Open" />
-          <ListItem href="#locked" start="lock" title="Finance board" description="You need access from an admin" disabled />
-          <ListItem start="music" title="Offline mix" description="Download it first to play it here" onSelect={() => undefined} disabled />
+        <List variant="divided" aria-label={lang === 'ar' ? 'اللوحات' : 'Boards'}>
+          <ListItem href="#open" start="grid" title={w.brand} description={lang === 'ar' ? 'مفتوحة' : 'Open'} />
+          <ListItem href="#locked" start="lock" title={lang === 'ar' ? 'لوحة المالية' : 'Finance board'} description={lang === 'ar' ? 'تحتاج صلاحية من المشرف' : 'You need access from an admin'} disabled />
+          <ListItem
+            start="music"
+            title={lang === 'ar' ? 'قائمة بدون إنترنت' : 'Offline mix'}
+            description={lang === 'ar' ? 'نزلها أول عشان تشغلها هنا' : 'Download it first to play it here'}
+            onSelect={() => undefined}
+            disabled
+          />
         </List>
       </DemoCase>
     </DemoPage>

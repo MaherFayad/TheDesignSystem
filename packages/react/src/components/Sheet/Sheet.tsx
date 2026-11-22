@@ -255,6 +255,14 @@ export type SheetTitleProps = Omit<ComponentProps<'h2'>, 'title'>;
 /** Where a title renders: in the header, or inside the optional title bar's heading. */
 const SheetTitleSlot = createContext<'header' | 'titlebar'>('header');
 
+/**
+ * The size of the close control and the confirm. sm, except in a style's
+ * title bar on ios, where they take md, 44 in every density, the iOS touch
+ * target (order P2 F4). The platform CSS sizes the header form by its own
+ * rules, so only the title bar path changes.
+ */
+const SheetBarControlSize = createContext<'sm' | 'md'>('sm');
+
 /** The title. It names the sheet. Put it as a direct child of SheetContent, or use the title prop. */
 export function SheetTitle({ children, ...props }: SheetTitleProps) {
   if (use(SheetTitleSlot) === 'titlebar') {
@@ -316,10 +324,11 @@ export interface SheetConfirmProps extends Omit<ComponentProps<typeof RadixDialo
 export function SheetConfirm({ label, icon = 'check', disabled = false, loading = false, ...rest }: SheetConfirmProps) {
   useSheetContext('SheetConfirm');
   const theme = useTheme();
+  const size = use(SheetBarControlSize);
   return (
     <Tooltip content={label} disabled={theme.platform !== 'ios'}>
       <RadixDialog.Close {...rest} asChild>
-        <Button data-part="confirm" size="sm" emphasis="solid" tone="accent" start={icon} disabled={disabled} loading={loading}>
+        <Button data-part="confirm" size={size} emphasis="solid" tone="accent" start={icon} disabled={disabled} loading={loading}>
           {label}
         </Button>
       </RadixDialog.Close>
@@ -611,6 +620,7 @@ export function SheetContent({ title, description, closeLabel, children, classNa
   const controlsOn = useOptionalPart('sheet', 'controls');
   // On a phone the window controls are hidden (the platform CSS), so the title bar carries the close control instead (order M1): a sheet always has a visible close.
   const phone = theme.platform === 'ios' || theme.platform === 'android';
+  const barSize = titlebarOn && theme.platform === 'ios' ? 'md' : 'sm';
   const split = splitHeader({
     children,
     title,
@@ -619,6 +629,7 @@ export function SheetContent({ title, description, closeLabel, children, classNa
     Description: SheetDescription,
     closeLabel: closeLabel ?? words.close,
     closeDisabled: !ctx.dismissible,
+    closeSize: barSize,
   });
   // A SheetConfirm child moves into the header, after the close control (order M9.6);
   // a SheetHeaderAction child moves in between the two (order C5).
@@ -654,11 +665,11 @@ export function SheetContent({ title, description, closeLabel, children, classNa
         }
         actions={
           endActions ? (
-            <>
+            <SheetBarControlSize value={barSize}>
               {controlsOn && !phone ? null : split.closeButton}
               {headerAction}
               {confirm}
-            </>
+            </SheetBarControlSize>
           ) : controlsOn && !phone ? undefined : (
             split.closeButton
           )

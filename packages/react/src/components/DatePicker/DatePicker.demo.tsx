@@ -5,10 +5,14 @@
 // (ar-SA in Gregorian and Umm al-Qura, compact and inline, the time chip at
 // the left of the date chip, Western digits), error, disabled, readonly.
 // No many, too-many or loading: a picker holds one value and never waits.
+// The copy and the locale follow the page language: with lang=ar every case
+// reads Arabic (ar-SA).
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { CalendarSystem } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { Field } from '../Field';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SegmentedControl, SegmentedControlItem } from '../SegmentedControl';
 import { DatePicker } from './index';
 
@@ -77,35 +81,67 @@ function CalendarChoice({ locale }: { locale: 'en-SA' | 'ar-SA' }) {
   );
 }
 
+const words = {
+  en: {
+    locale: 'en-SA',
+    date: 'Date',
+    starts: 'Starts',
+    sm: 'Size sm',
+    lg: 'Size lg',
+    delivery: 'Delivery date',
+    pickup: 'Pickup',
+    reminder: 'Reminder',
+    event: 'Event start',
+    long: 'Date the furniture should reach the new apartment',
+    back: 'Return date',
+    error: 'Pick a return date after the departure date.',
+  },
+  ar: {
+    locale: 'ar-SA',
+    date: 'التاريخ',
+    starts: 'البداية',
+    sm: 'المقاس sm',
+    lg: 'المقاس lg',
+    delivery: 'تاريخ التوصيل',
+    pickup: 'الاستلام',
+    reminder: 'التذكير',
+    event: 'بداية الفعالية',
+    long: 'التاريخ اللي لازم يوصل فيه الأثاث للشقة الجديدة',
+    back: 'تاريخ العودة',
+    error: 'اختر تاريخ عودة بعد تاريخ الرحلة.',
+  },
+} as const;
+
 export default function DatePickerDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Compact and inline; a date, and a date with a time">
         <DemoRow>
           <Row>
-            <DatePicker label="Date" locale="en-SA" defaultValue="2026-06-18" />
+            <DatePicker label={w.date} locale={w.locale} defaultValue="2026-06-18" />
           </Row>
           <Row>
-            <DatePicker label="Starts" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+            <DatePicker label={w.starts} locale={w.locale} granularity="minute" defaultValue="2026-06-18T09:41" />
           </Row>
         </DemoRow>
         <DemoRow>
           <Row>
-            <DatePicker label="Size sm" size="sm" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+            <DatePicker label={w.sm} size="sm" locale={w.locale} granularity="minute" defaultValue="2026-06-18T09:41" />
           </Row>
           <Row>
-            <DatePicker label="Size lg" size="lg" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+            <DatePicker label={w.lg} size="lg" locale={w.locale} granularity="minute" defaultValue="2026-06-18T09:41" />
           </Row>
         </DemoRow>
         <DemoRow>
-          <DatePicker variant="inline" aria-label="Delivery date" locale="en-SA" defaultValue="2026-06-18" />
-          <DatePicker variant="inline" aria-label="Pickup" locale="en-SA" granularity="minute" defaultValue="2026-06-18T09:41" />
+          <DatePicker variant="inline" aria-label={w.delivery} locale={w.locale} defaultValue="2026-06-18" />
+          <DatePicker variant="inline" aria-label={w.pickup} locale={w.locale} granularity="minute" defaultValue="2026-06-18T09:41" />
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="empty" title="No value yet: Add date and Add time">
         <Row>
-          <DatePicker label="Reminder" locale="en-SA" granularity="minute" />
+          <DatePicker label={w.reminder} locale={w.locale} granularity="minute" />
         </Row>
       </DemoCase>
 
@@ -114,8 +150,8 @@ export default function DatePickerDemo() {
           {(value, set) => (
             <Row>
               <DatePicker
-                label="Event start"
-                locale="en-SA"
+                label={w.event}
+                locale={w.locale}
                 granularity="minute"
                 minuteStep={5}
                 minValue="2026-11-05"
@@ -132,9 +168,9 @@ export default function DatePickerDemo() {
 
       <DemoCase id="long-text" title="A long label, and the calendar a person picks">
         <Row>
-          <DatePicker label="Date the furniture should reach the new apartment" locale="en-SA" defaultValue="2026-11-17" />
+          <DatePicker label={w.long} locale={w.locale} defaultValue="2026-11-17" />
         </Row>
-        <CalendarChoice locale="en-SA" />
+        <CalendarChoice locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic: Gregorian and Umm al-Qura, the time chip at the left" lang="ar">
@@ -153,20 +189,20 @@ export default function DatePickerDemo() {
       </DemoCase>
 
       <DemoCase id="error" title="Invalid, with the Field error">
-        <Field label="Return date" error="Pick a return date after the departure date.">
-          <DatePicker locale="en-SA" defaultValue="2026-11-10" />
+        <Field label={w.back} error={w.error}>
+          <DatePicker locale={w.locale} defaultValue="2026-11-10" />
         </Field>
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
         <Row>
-          <DatePicker label="Starts" locale="en-SA" granularity="minute" disabled defaultValue="2026-06-18T09:41" />
+          <DatePicker label={w.starts} locale={w.locale} granularity="minute" disabled defaultValue="2026-06-18T09:41" />
         </Row>
       </DemoCase>
 
       <DemoCase id="readonly" title="Read only: the chips show the value and open nothing">
         <Row>
-          <DatePicker label="Starts" locale="en-SA" granularity="minute" readOnly defaultValue="2026-06-18T09:41" />
+          <DatePicker label={w.starts} locale={w.locale} granularity="minute" readOnly defaultValue="2026-06-18T09:41" />
         </Row>
       </DemoCase>
     </DemoPage>

@@ -18,6 +18,10 @@
  *   --_date-field-segment-radius             the corner of a segment's fill
  *   --_date-field-segment-bg-focus, --_date-field-segment-fg-focus
  *                                            the focused segment: the tint fill and its text, 4.5:1
+ *   --_date-field-segment-ring               the focused segment's own ring, a box shadow
+ *                                            in color.focus.ring, 3:1 or more on the
+ *                                            field in every style (Q5 F7): the tint
+ *                                            alone is 1.11 to 1.36:1
  *   --_date-field-literal-fg                 a separator
  *   --_date-field-placeholder-fg             an empty segment's placeholder (mm, يوم)
  *   --_date-field-duration, --_date-field-ease   the border and segment color swaps
@@ -59,6 +63,7 @@
     --_date-field-segment-radius: var(--ds-radius-xs);
     --_date-field-segment-bg-focus: var(--ds-color-primary-tint);
     --_date-field-segment-fg-focus: var(--ds-color-primary-on-surface);
+    --_date-field-segment-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_date-field-literal-fg: var(--ds-color-text-muted);
     --_date-field-placeholder-fg: var(--ds-color-text-placeholder);
     --_date-field-duration: var(--ds-duration-base);
@@ -143,10 +148,15 @@
     white-space: pre;
   }
 
-  /* The focused segment: the tint fill under the tint text. The box ring shows that focus is in the field (2.4.7). */
+  /*
+   * The focused segment: the tint fill under the tint text, and a ring of its
+   * own in the focus ring color, so the segment that takes the keys is told
+   * at 3:1 or more (1.4.11). The box ring shows that focus is in the field.
+   */
   :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment']:focus {
     background-color: var(--_date-field-segment-bg-focus);
     color: var(--_date-field-segment-fg-focus);
+    box-shadow: var(--_date-field-segment-ring);
   }
 
   /* Hover: a stronger border, only while the value can change. */

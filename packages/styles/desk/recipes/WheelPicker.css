@@ -4,9 +4,20 @@
  * every platform. On ios the platform file sets a small band corner in
  * ds.platform; WheelPicker is a control (anatomy.md, ruling 16), so the
  * style restates its own corner here.
+ *
+ * Order P2 F6: the band is Desk's selection, so it takes the gold edge of
+ * the yellow marks. The band fill (a gray glass on ios, the yellow tint on
+ * android) is about 1.07:1 against the light desk; the edge keeps 3:1
+ * (WCAG 1.4.11). Forced colors draw their own edge (WheelPicker.css).
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='wheel-picker'] {
     --_wheel-picker-radius: var(--ds-radius-control);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='desk'] [data-ds='wheel-picker'] {
+      --_wheel-picker-band-border-color: var(--ds-color-primary-border);
+    }
   }
 }

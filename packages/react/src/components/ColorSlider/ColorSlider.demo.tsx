@@ -4,11 +4,14 @@
 // long-text (a long label), long-arabic (the gradient, the thumb and the
 // arrow keys mirror; digits stay Western), disabled. The colours are demo
 // data. No empty, many, loading, error or readonly: a slider always has a
-// value, holds one channel, and has no wrong value.
+// value, holds one channel, and has no wrong value. The copy and the
+// locale follow the page language: with lang=ar every case reads Arabic.
 import { useState } from 'react';
 import { parseColor, type Color } from 'react-aria-components';
 import { colorName } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { ColorField } from '../ColorField';
 import { ColorSwatch } from '../ColorSwatch';
 import { Field } from '../Field';
@@ -38,32 +41,38 @@ function Editor({ locale, words }: { locale: string; words: { field: string } })
   );
 }
 
+const words = {
+  en: { locale: 'en', tagHue: 'Hue of the tag', field: 'Hex', long: 'Opacity of the background behind the weekly report card' },
+  ar: { locale: 'ar', tagHue: 'درجة لون الوسم', field: 'رمز اللون', long: 'عتامة الخلفية ورا بطاقة التقرير الأسبوعي' },
+} as const;
+
 export default function ColorSliderDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Channels hue, saturation, lightness, opacity and red; sizes">
         <div style={column}>
-          <ColorSlider channel="hue" defaultValue="hsl(214, 76%, 48%)" locale="en" />
-          <ColorSlider channel="saturation" defaultValue="hsl(214, 76%, 48%)" locale="en" />
-          <ColorSlider channel="lightness" defaultValue="hsl(214, 76%, 48%)" locale="en" />
-          <ColorSlider channel="alpha" defaultValue="#1e6fd980" locale="en" />
-          <ColorSlider channel="red" defaultValue="#1e6fd9" locale="en" />
+          <ColorSlider channel="hue" defaultValue="hsl(214, 76%, 48%)" locale={w.locale} />
+          <ColorSlider channel="saturation" defaultValue="hsl(214, 76%, 48%)" locale={w.locale} />
+          <ColorSlider channel="lightness" defaultValue="hsl(214, 76%, 48%)" locale={w.locale} />
+          <ColorSlider channel="alpha" defaultValue="#1e6fd980" locale={w.locale} />
+          <ColorSlider channel="red" defaultValue="#1e6fd9" locale={w.locale} />
           {sizes.map((size) => (
             <DemoRow key={size} label={size}>
-              <ColorSlider channel="hue" defaultValue="hsl(30, 90%, 50%)" size={size} locale="en" style={{ flex: '1 1 auto' }} />
+              <ColorSlider channel="hue" defaultValue="hsl(30, 90%, 50%)" size={size} locale={w.locale} style={{ flex: '1 1 auto' }} />
             </DemoRow>
           ))}
-          <ColorSlider channel="hue" defaultValue="hsl(140, 70%, 45%)" hideLabel aria-label="Hue of the tag" locale="en" />
+          <ColorSlider channel="hue" defaultValue="hsl(140, 70%, 45%)" hideLabel aria-label={w.tagHue} locale={w.locale} />
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="One colour: hue, opacity and a hex field to type">
-        <Editor locale="en" words={{ field: 'Hex' }} />
+        <Editor locale={w.locale} words={w} />
       </DemoCase>
 
       <DemoCase id="long-text" title="A long label wraps; the value keeps its place">
         <div style={column}>
-          <ColorSlider channel="alpha" defaultValue="#0e9384b3" label="Opacity of the background behind the weekly report card" locale="en" />
+          <ColorSlider channel="alpha" defaultValue="#0e9384b3" label={w.long} locale={w.locale} />
         </div>
       </DemoCase>
 
@@ -76,7 +85,7 @@ export default function ColorSliderDemo() {
 
       <DemoCase id="disabled" title="Disabled">
         <div style={column}>
-          <ColorSlider channel="hue" defaultValue="hsl(214, 76%, 48%)" disabled locale="en" />
+          <ColorSlider channel="hue" defaultValue="hsl(214, 76%, 48%)" disabled locale={w.locale} />
         </div>
       </DemoCase>
     </DemoPage>

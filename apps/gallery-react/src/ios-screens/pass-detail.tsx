@@ -119,6 +119,7 @@ const words = {
     price: 'Price',
     number: 'Pass number',
     code: 'Entry code',
+    comma: ', ',
     sharedWith: (name: string) => `Pass sent to ${name}`,
     sharedTo: (label: string) => `Pass shared to ${label}`,
     added: 'Added to calendar',
@@ -135,7 +136,7 @@ const words = {
     nav: 'البطاقات',
     details: 'تفاصيل البطاقة',
     save: 'حفظ التغييرات',
-    saved: 'تم حفظ إعدادات البطاقة',
+    saved: 'إعدادات البطاقة محفوظة',
     share: 'مشاركة البطاقة',
     settings: 'إعدادات البطاقة',
     updates: 'التحديث التلقائي',
@@ -147,9 +148,9 @@ const words = {
     footer: 'التحديث يخلي الوقت والقاعة والمقعد محدثة دايم. والإشعارات تنبهك إذا تغير شي منها.',
     remove: 'إزالة البطاقة',
     removeNote: 'البطاقة بتختفي من هذا الجوال، وإضافتها مرة ثانية ممكنة من البريد اللي وصلك.',
-    removed: 'تمت إزالة البطاقة',
+    removed: 'انشالت البطاقة',
     restore: 'استرجاع البطاقة',
-    restored: 'تم استرجاع البطاقة',
+    restored: 'رجعت البطاقة',
     emptyTitle: 'ما فيه بطاقات',
     emptyBody: 'البطاقات المضافة تطلع هنا.',
     back: 'الوجه الخلفي للبطاقة',
@@ -161,10 +162,11 @@ const words = {
     price: 'السعر',
     number: 'رقم البطاقة',
     code: 'رمز الدخول',
-    sharedWith: (name: string) => `تم إرسال البطاقة لـ${name}`,
-    sharedTo: (label: string) => `تمت مشاركة البطاقة عبر ${label}`,
-    added: 'تمت الإضافة للتقويم',
-    copiedCode: 'تم نسخ رقم البطاقة',
+    comma: '، ',
+    sharedWith: (name: string) => `البطاقة وصلت ${name}`,
+    sharedTo: (label: string) => `البطاقة انرسلت عبر ${label}`,
+    added: 'انضافت للتقويم',
+    copiedCode: 'رقم البطاقة منسوخ',
     people: 'الأشخاص',
     message: 'رسالة',
     email: 'البريد',
@@ -209,7 +211,7 @@ function PassCard({ pass, w, lang }: { pass: Pass; w: Words; lang: Lang }) {
       <CardBody>
         <DescriptionList orientation="vertical" size="sm" data-gallery="pass-fields" items={[f.date, f.time, f.seat, f.holder]} />
         <div data-gallery="pass-code-box">
-          <span data-gallery="pass-code" role="img" aria-label={`${w.code}, ${PASS_NUMBER}`} />
+          <span data-gallery="pass-code" role="img" aria-label={`${w.code}${w.comma}${PASS_NUMBER}`} />
           <bdi dir="ltr" data-gallery="pass-number">
             {PASS_NUMBER}
           </bdi>
@@ -293,7 +295,7 @@ export function Screen({ lang }: ScreenProps) {
                   </span>
                 }
                 title={passTitle}
-                description={`${dateText(pass.date, lang, 'day-month')}, ${timeText(pass.hours, pass.minutes, lang)}`}
+                description={`${dateText(pass.date, lang, 'day-month')}${w.comma}${timeText(pass.hours, pass.minutes, lang)}`}
               />
             </List>
 

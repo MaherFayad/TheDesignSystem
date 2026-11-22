@@ -224,7 +224,7 @@ describe('Toaster', () => {
     expect(layer.getAttribute('aria-live')).toBe('off');
     expect(layer.querySelector('[data-ds="toaster"]')).not.toBeNull();
     // Arabic chrome words come from the mounted language.
-    expect(screen.getByRole('region', { name: 'التنبيهات' })).toBeDefined();
+    expect(screen.getByRole('region', { name: 'الإشعارات' })).toBeDefined();
   });
 
   it('a toast with its own lang carries lang, dir and the close label of that language', async () => {
@@ -239,7 +239,7 @@ describe('Toaster', () => {
     const [el] = toasts();
     expect(el?.getAttribute('lang')).toBe('ar');
     expect(el?.getAttribute('dir')).toBe('rtl');
-    expect(within(el as HTMLElement).getByRole('button', { name: 'إغلاق التنبيه' })).toBeDefined();
+    expect(within(el as HTMLElement).getByRole('button', { name: 'إغلاق الإشعار' })).toBeDefined();
   });
 
   it('announces once per change, in the toast language, and the toast has no live role', async () => {
@@ -268,7 +268,7 @@ describe('Toaster', () => {
     );
     fire(() => toast.success({ lang: 'ar', title: 'المسودة محفوظة' }));
     await waitFor(() => expect(assertive()?.textContent).toBe('Notification. Could not upload photo.jpg. The connection dropped. Upload it again from the Files panel.'));
-    expect(polite()?.textContent).toBe('تنبيه. المسودة محفوظة.');
+    expect(polite()?.textContent).toBe('إشعار. المسودة محفوظة.');
     expect(polite()?.querySelector('span')?.getAttribute('lang')).toBe('ar');
 
     // No other live region carries the text: Radix's announcer is muted.
@@ -285,7 +285,7 @@ describe('Toaster', () => {
     // An update is read once more.
     const id = store.getSnapshot().visible[1]?.id ?? '';
     fire(() => toast.update(id, { title: 'تم الحفظ' }));
-    await waitFor(() => expect(polite()?.textContent).toBe('تنبيه. تم الحفظ.'));
+    await waitFor(() => expect(polite()?.textContent).toBe('إشعار. تم الحفظ.'));
   });
 
   it('F8 moves focus to the viewport', async () => {

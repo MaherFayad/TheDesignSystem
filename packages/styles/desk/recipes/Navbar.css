@@ -1,0 +1,13 @@
+/*
+ * Desk recipe for Navbar (order P2 F6, proposed). The current link and a
+ * menu trigger that holds the current page take Desk's primary ink (the
+ * gold on the light desk, the yellow on the dark one) over the gold edge of
+ * Navbar.css and the bold weight, so the bar marks the current page the way
+ * every other Desk selection is marked, never by color alone. The phone
+ * menu is a Sidebar (Sidebar.css of this pack).
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='navbar'] {
+    --_navbar-link-fg-active: var(--ds-color-primary-on-surface);
+  }
+}

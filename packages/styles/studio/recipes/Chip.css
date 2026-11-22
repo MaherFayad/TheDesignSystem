@@ -1,0 +1,38 @@
+/*
+ * Studio recipe for Chip (order P2 F5, Q1 F15, proposed). The base chip is
+ * a gray capsule; Studio draws it as its other controls: the control
+ * corner (radius.xs here), and the neutral soft chip, the default, as no
+ * fill and a 1px control rule. Hover takes the bright rule, press the
+ * inverted cell. A selected chip keeps the base inverted fill, which is
+ * already Studio's selection mark. Tones and the outline emphasis keep
+ * their base colors.
+ *
+ * This layer wins over the base state rules, so the hover and press swaps
+ * are repeated here for the properties set at rest.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='chip'] {
+    --_chip-radius: var(--ds-radius-control);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='chip'][data-tone='neutral']:not([data-emphasis='outline'], [data-selected]) {
+      --_chip-bg: transparent;
+      --_chip-border-color: var(--ds-color-border-control);
+      --_chip-bg-hover: var(--ds-color-bg-overlay-5);
+      --_chip-border-color-hover: var(--ds-color-text-bright);
+      --_chip-bg-active: var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] button[data-ds='chip'][data-tone='neutral']:not([data-emphasis='outline'], [data-selected]):hover:not([data-disabled]) {
+      --_chip-bg: var(--_chip-bg-hover);
+      --_chip-border-color: var(--_chip-border-color-hover);
+    }
+
+    [data-style='studio'] button[data-ds='chip'][data-tone='neutral']:not([data-emphasis='outline'], [data-selected]):is(:active, [data-pressed]):not([data-disabled]) {
+      --_chip-bg: var(--_chip-bg-active);
+      --_chip-fg: var(--ds-color-bg-body);
+      --_chip-border-color: var(--_chip-bg-active);
+    }
+  }
+}

@@ -117,7 +117,7 @@
 
   /* An Input that is the control part of another component draws no glow: the outer box draws it. */
   [data-ds='input'][data-part='control'] {
-    --_input-shadow-focus: none;
+    --_input-shadow-focus: 0 0 transparent;
     --_input-bloom-spread: 0px;
   }
 
@@ -167,7 +167,7 @@
   /* plain: no box. The ring still shows on focus (2.4.7); its corners take radius.xs. */
   [data-ds='input'][data-variant='plain'] {
     --_input-radius: var(--ds-radius-xs);
-    --_input-shadow-focus: none;
+    --_input-shadow-focus: 0 0 transparent;
     --_input-bloom-spread: 0px;
 
     padding-inline: 0;
@@ -226,6 +226,14 @@
   [data-ds='input'] > [data-part='control']::placeholder {
     color: var(--ds-color-text-placeholder);
     opacity: 1;
+  }
+
+  /*
+   * A long placeholder ends in an ellipsis, not cut through a letter (Q4
+   * F13). Only while the placeholder shows: a typed value still scrolls.
+   */
+  [data-ds='input'] > [data-part='control']:placeholder-shown {
+    text-overflow: ellipsis;
   }
 
   /*

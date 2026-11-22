@@ -230,7 +230,10 @@ function moveFocus(event: KeyboardEvent<HTMLElement>, placement: BarPlacement): 
   items[to]!.focus();
 }
 
-const words = { en: { count: 'new', dot: 'New' }, ar: { count: 'جديد', dot: 'جديد' } } as const;
+// The hidden badge name after the label: "Inbox, 3 new"; in Arabic the count
+// comes first and the word agrees with a plural of things: "الوارد، 3 جديدة",
+// and over 99 "الوارد، أكثر من 99 جديدة" (order P2 F4).
+const words = { en: { count: 'new', dot: 'New', over: '99+' }, ar: { count: 'جديدة', dot: 'جديد', over: 'أكثر من 99' } } as const;
 
 /** One destination of the bar: an icon over a label, with an optional badge. */
 export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asChild = false, children, ref, ...rest }: TabBarItemProps) {
@@ -239,7 +242,9 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
   const w = words[lang === 'ar' ? 'ar' : 'en'];
   const showBadge = badge !== undefined && badge !== false && badge !== 0;
   const count = typeof badge === 'number' ? (badge > 99 ? '99+' : String(badge)) : null;
-  const hidden = count !== null ? (lang === 'ar' && badgeLabel === undefined ? `، الجديد ${count}` : `${lang === 'ar' ? '،' : ','} ${count} ${badgeLabel ?? w.count}`) : `${lang === 'ar' ? '،' : ','} ${badgeLabel ?? w.dot}`;
+  const comma = lang === 'ar' ? '،' : ',';
+  const spoken = count === '99+' ? w.over : count;
+  const hidden = count !== null ? `${comma} ${spoken} ${badgeLabel ?? w.count}` : `${comma} ${badgeLabel ?? w.dot}`;
 
   const parts = (
     <>

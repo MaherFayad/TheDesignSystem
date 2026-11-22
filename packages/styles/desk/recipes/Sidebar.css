@@ -1,0 +1,27 @@
+/*
+ * Desk recipe for Sidebar (order P2 F6, proposed). The current item takes
+ * Desk's one selected mark, the yellow, as the controls do, not the base
+ * gray overlay: the yellow fill, the ink of the yellow on the label, the
+ * icon and the count, the gold bar at the start, and a gold edge round the
+ * item so it keeps 3:1 against the light desk where the yellow alone is
+ * about 1.07:1 (WCAG 1.4.11). The edge uses the item ring property, so a
+ * focused item shows its focus ring in its place. The Navbar phone menu is
+ * a Sidebar, so its current page takes the same mark.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='sidebar'] {
+    --_sidebar-item-bg-active: var(--ds-color-primary-fill);
+    --_sidebar-item-fg-active: var(--ds-color-primary-text);
+    --_sidebar-item-edge-active: var(--ds-color-primary-border);
+  }
+
+  [data-style='desk'] [data-ds='sidebar'] [data-part='item'][data-active]:not(:focus-visible) {
+    --_sidebar-item-ring: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-primary-border);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='sidebar'] [data-part='item'][data-active]:not(:focus-visible) {
+      --_sidebar-item-ring: 0 0 transparent;
+    }
+  }
+}

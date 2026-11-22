@@ -1,0 +1,39 @@
+/*
+ * Desk recipe for DatePicker (order P2 F6, proposed). The date and time
+ * chips are Desk's neutral glass pills (Button.css of this pack), and that
+ * rule sits in this layer, so it took back the chip states DatePicker.css
+ * sets: the invalid chip kept the dark ink and the open chip looked the same
+ * as one at rest. Here the states are stated again: the placeholder takes
+ * the muted text, the invalid chip the danger text, and the open chip the
+ * primary ink with the gold edge of a Desk selection in place of the glass
+ * hairline, so open and closed differ by more than color (WCAG 1.4.1).
+ * On the light desk the danger text was 4.43:1 on the chip fill, so the
+ * invalid chip there takes the darker ink of a danger tint (WCAG 1.4.3).
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-placeholder] {
+    --_button-fg: var(--_date-picker-placeholder-fg);
+    --_button-fg-hover: var(--_date-picker-placeholder-fg);
+  }
+
+  [data-style='desk'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-state='open'] {
+    --_button-fg: var(--_date-picker-fg-checked);
+    --_button-fg-hover: var(--_date-picker-fg-checked);
+    --_button-fg-active: var(--_date-picker-fg-checked);
+    --_button-shadow:
+      inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge),
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-primary-border);
+  }
+
+  [data-style='desk'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-invalid] {
+    --_button-fg: var(--ds-color-state-danger-text);
+    --_button-fg-hover: var(--ds-color-state-danger-text);
+    --_button-fg-active: var(--ds-color-state-danger-text);
+  }
+
+  [data-style='desk'][data-scheme='light'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-invalid] {
+    --_button-fg: var(--ds-color-state-danger-on-tint);
+    --_button-fg-hover: var(--ds-color-state-danger-on-tint);
+    --_button-fg-active: var(--ds-color-state-danger-on-tint);
+  }
+}

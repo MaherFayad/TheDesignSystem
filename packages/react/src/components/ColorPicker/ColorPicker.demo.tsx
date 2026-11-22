@@ -7,10 +7,13 @@
 // Western), disabled. The colours are demo data. The cases stay light (one
 // grid on the page) so the contract suite's page reloads stay quick. No
 // empty, loading, error or readonly: a picker always has a colour and has no
-// wrong one.
+// wrong one. The copy and the locale follow the page language: with
+// lang=ar every case reads Arabic.
 import { useState } from 'react';
 import { colorName, colorSwatchGrid } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { ColorPicker, type ColorPickerSize } from './index';
 
 const sizes: ColorPickerSize[] = ['sm', 'md', 'lg'];
@@ -32,27 +35,33 @@ function Named({ locale, ...props }: Parameters<typeof ColorPicker>[0] & { local
   );
 }
 
+const words = {
+  en: { locale: 'en', note: 'Note colour', tag: 'Tag colour', card: 'Card colour', long: 'Background colour of the weekly report card' },
+  ar: { locale: 'ar', note: 'لون الملاحظة', tag: 'لون الوسم', card: 'لون البطاقة', long: 'لون خلفية بطاقة التقرير الأسبوعي' },
+} as const;
+
 export default function ColorPickerDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Compact trigger in sizes sm, md and lg">
         {sizes.map((size) => (
           <DemoRow key={size} label={size}>
-            <ColorPicker size={size} label="Note colour" defaultValue="#2e90fa" defaultView="spectrum" defaultSavedColors={saved.slice(0, 3)} locale="en" />
+            <ColorPicker size={size} label={w.note} defaultValue="#2e90fa" defaultView="spectrum" defaultSavedColors={saved.slice(0, 3)} locale={w.locale} />
           </DemoRow>
         ))}
       </DemoCase>
 
       <DemoCase id="one" title="Inline, spectrum view, one saved colour">
-        <Named variant="inline" label="Tag colour" defaultValue="#7a5af8" defaultView="spectrum" defaultSavedColors={['#7a5af8']} locale="en" />
+        <Named variant="inline" label={w.tag} defaultValue="#7a5af8" defaultView="spectrum" defaultSavedColors={['#7a5af8']} locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="many" title="Inline, sliders view, ten saved colours">
-        <Named variant="inline" label="Card colour" defaultValue="#0e9384cc" defaultView="sliders" defaultSavedColors={saved} locale="en" />
+        <Named variant="inline" label={w.card} defaultValue="#0e9384cc" defaultView="sliders" defaultSavedColors={saved} locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="long-text" title="A long label names the trigger and titles the panel">
-        <ColorPicker label="Background colour of the weekly report card" defaultValue="#fdb022" defaultView="spectrum" locale="en" />
+        <ColorPicker label={w.long} defaultValue="#fdb022" defaultView="spectrum" locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic: grid view, the footer follows reading order" lang="ar">
@@ -60,7 +69,7 @@ export default function ColorPickerDemo() {
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
-        <ColorPicker label="Note colour" defaultValue="#2e90fa" disabled locale="en" />
+        <ColorPicker label={w.note} defaultValue="#2e90fa" disabled locale={w.locale} />
       </DemoCase>
     </DemoPage>
   );

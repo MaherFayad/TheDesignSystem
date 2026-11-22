@@ -170,7 +170,7 @@ describe('PageShell', () => {
       </Theme>,
     );
     expect(screen.getByRole('link', { name: 'الانتقال للمحتوى الرئيسي' })).toBeTruthy();
-    await user.click(screen.getByRole('button', { name: 'فتح التنقل' }));
+    await user.click(screen.getByRole('button', { name: 'فتح القائمة' }));
     expect(await screen.findByRole('dialog', { name: 'التنقل' })).toBeTruthy();
   });
 

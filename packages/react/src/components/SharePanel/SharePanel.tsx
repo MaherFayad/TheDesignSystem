@@ -81,7 +81,7 @@ export const sharePanelLabels = {
     targets: 'المشاركة عبر',
     actions: 'الإجراءات',
     copyLink: 'نسخ الرابط',
-    copied: 'تم نسخ الرابط',
+    copied: 'الرابط منسوخ',
     copyFailed: 'تعذر نسخ الرابط',
     moreOptions: 'خيارات إضافية',
     close: 'إغلاق لوحة المشاركة',

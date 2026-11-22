@@ -1,0 +1,11 @@
+/*
+ * Studio recipe for NumberField (order P2 F5, proposed). The stepper
+ * variant's two halves were a capsule (order Z1 saw it on the settings and
+ * booking screens); Studio's controls take the control corner, through the
+ * radius property NumberField.css reads (order P1 E2).
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='number-field'][data-variant='stepper'] {
+    --_number-field-stepper-radius: var(--ds-radius-control);
+  }
+}

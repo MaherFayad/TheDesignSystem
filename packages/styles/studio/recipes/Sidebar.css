@@ -1,0 +1,18 @@
+/*
+ * Studio recipe for Sidebar (order P2 F5, Q1 F05, proposed). The current
+ * item takes Studio's one selection mark, the inverted cell: the bright
+ * text color as the fill and the body color for its label, icon and count,
+ * in place of the 10 percent veil and the start bar. The bar takes the fill
+ * color, so it does not show inside the cell, and the dot of a collapsed
+ * sidebar's count, drawn in the same color, still reads on the surface.
+ * Weight still marks the item too, never color alone.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='sidebar'] {
+      --_sidebar-item-bg-active: var(--ds-color-text-bright);
+      --_sidebar-item-fg-active: var(--ds-color-bg-body);
+      --_sidebar-item-edge-active: var(--ds-color-text-bright);
+    }
+  }
+}

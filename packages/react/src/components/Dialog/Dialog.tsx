@@ -51,7 +51,9 @@
 // `controls` (style.json `optionalParts.dialog`). The dialog then renders a
 // TitleBar at the top of the panel with the traffic lights, only the close
 // light working, and the title inside the bar, where a window has it. The
-// CloseButton is not rendered: the close light is part `close`.
+// CloseButton is not rendered: the close light is part `close`. On ios and
+// android the bar carries the CloseButton as well, and the platform CSS
+// hides the lights, as in Sheet.
 // DialogContent lifts a DialogTitle that is its direct child (or the `title`
 // prop) out of the children and renders it once, at the top: in place in
 // Studio, inside the title bar in Desk. Through a context it then renders as
@@ -373,6 +375,10 @@ export function DialogContent({
   const words = labelsFor(theme.lang);
   const titlebarOn = useOptionalPart('dialog', 'titlebar');
   const controlsOn = useOptionalPart('dialog', 'controls');
+  // On a phone the platform CSS hides the window controls once the title bar
+  // holds a CloseButton, so the bar carries the close control there, as
+  // Sheet does (order P2 F4): a phone dialog always has a visible close.
+  const phone = theme.platform === 'ios' || theme.platform === 'android';
 
   // Lift a DialogTitle that is a direct child, so it renders once at the top.
   let titleNode: ReactNode = title !== undefined && title !== null ? <DialogTitle>{title}</DialogTitle> : null;
@@ -410,7 +416,7 @@ export function DialogContent({
           />
         ) : undefined
       }
-      actions={controlsOn ? undefined : closeButton}
+      actions={controlsOn && !phone ? undefined : closeButton}
     />
   ) : (
     <>

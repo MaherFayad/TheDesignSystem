@@ -32,11 +32,19 @@ import {
 } from 'react';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
+import { wordsFor } from '../Alert/messageTones';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
 import { dropAfter, iconMorph, leavingCopy, playBeat, snapshot, token, type Snapshot } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
+
+/** The built in words, per language. A prop always wins. */
+export const searchFieldLabels = {
+  en: { clear: 'Clear search', loading: 'Searching' },
+  ar: { clear: 'مسح البحث', loading: 'البحث جار' },
+} as const;
 
 export type SearchFieldSize = Size;
 export type SearchFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -57,11 +65,11 @@ export interface SearchFieldProps
   onSubmit?: (value: string) => void;
   /** Called after the query is cleared, by the clear button or by Escape. */
   onClear?: () => void;
-  /** The accessible name of the clear button. Default "Clear search". Arabic: "مسح البحث". */
+  /** The accessible name of the clear button. Default "Clear search", or "مسح البحث" under lang ar. */
   clearLabel?: string;
   /** Results are on their way: a spinner at the start of the end slot and a polite status. */
   loading?: boolean;
-  /** What the status says while loading. Default "Searching". Arabic: "جاري البحث". */
+  /** What the status says while loading. Default "Searching", or "البحث جار" under lang ar. */
   loadingLabel?: string;
   /** Content at the end of the box, after the clear button: a filter IconButton, a keyboard hint. */
   end?: ReactNode;
@@ -85,9 +93,9 @@ export function SearchField({
   onValueChange,
   onSubmit,
   onClear,
-  clearLabel = 'Clear search',
+  clearLabel: clearLabelProp,
   loading = false,
-  loadingLabel = 'Searching',
+  loadingLabel: loadingLabelProp,
   end,
   invalid,
   disabled,
@@ -101,6 +109,11 @@ export function SearchField({
   ...rest
 }: SearchFieldProps) {
   const field = useField();
+  const theme = useTheme();
+  // Built in words follow lang ?? theme.lang (anatomy rule 14); lang still goes to the input.
+  const words = wordsFor(searchFieldLabels, rest.lang ?? theme.lang);
+  const clearLabel = clearLabelProp ?? words.clear;
+  const loadingLabel = loadingLabelProp ?? words.loading;
   const inner = useRef<HTMLInputElement | null>(null);
   const [own, setOwn] = useState(defaultValue);
   const query = value ?? own;

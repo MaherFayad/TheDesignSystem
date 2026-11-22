@@ -76,10 +76,14 @@ describe('TabBar', () => {
       <Theme lang="ar" dir="rtl">
         <TabBar aria-label="التنقل">
           <TabBarItem href="#in" icon="inbox" label="الوارد" badge={2} />
+          <TabBarItem href="#msg" icon="inbox" label="الرسائل" badge={140} />
+          <TabBarItem href="#up" icon="inbox" label="التحديثات" badge />
         </TabBar>
       </Theme>,
     );
-    expect(screen.getByRole('link', { name: 'الوارد، الجديد 2' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'الوارد، 2 جديدة' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'الرسائل، أكثر من 99 جديدة' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'التحديثات، جديد' })).toBeTruthy();
   });
 
   it('renders a router link with asChild', () => {

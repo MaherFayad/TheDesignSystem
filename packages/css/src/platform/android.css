@@ -107,9 +107,15 @@
     --_button-font-size: var(--ds-font-size-2xl);
   }
 
-  /* An icon button draws its icon at 24 in the 40 container (the component draws 16 at md), as the floating action button does. */
+  /*
+   * An icon button draws its icon at 24 in the 40 container (the component draws 16 at md), as the floating action button does.
+   * Sizes sm and lg keep the 24 too (40 and 56 containers, Q3 finding 8);
+   * xs, 32, keeps the component's glyph. A sized button that is a part of
+   * another component keeps the glyph its parent gives it.
+   */
   [data-platform='android'] :is([data-ds='icon-button'], [data-ds='close-button'])[data-size='md'] [data-ds='icon'],
   [data-platform='android'] :is([data-ds='icon-button'], [data-ds='close-button']):not([data-size]) [data-ds='icon'],
+  [data-platform='android'] :is([data-ds='icon-button'], [data-ds='close-button']):is([data-size='sm'], [data-size='lg']):not([data-part]) [data-ds='icon'],
   [data-platform='android'] [data-ds='floating-action-button'] [data-ds='icon'] {
     inline-size: var(--ds-size-icon-lg);
     block-size: var(--ds-size-icon-lg);
@@ -546,7 +552,6 @@
     --_segmented-control-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
     --_segmented-control-inset: 0px;
     --_segmented-control-gap: 0px;
-    --_segmented-control-radius: var(--ds-radius-pill);
     --_segmented-control-bg: transparent;
     --_segmented-control-border-color: var(--ds-color-border-control-hover);
     /* The selected segment's fill: the nearest role to secondary container is the stronger primary tint. */
@@ -555,6 +560,11 @@
     --_segmented-control-item-radius: 0px;
 
     overflow: clip;
+  }
+
+  /* The outlined capsule is the pill shape; shape default and square keep their own corners (SegmentedControl.css, Q3 finding 13). */
+  [data-platform='android'] [data-ds='segmented-control']:not([data-shape='default'], [data-shape='square']) {
+    --_segmented-control-radius: var(--ds-radius-pill);
   }
 
   /* The track clips the ends, so the focus ring sits inside each segment and is never cut off (WCAG 2.4.7). */
@@ -629,15 +639,20 @@
 
   /* ------------------------------------------------------------ fields: a filled field, 56dp, an active indicator under it */
 
-  /* Every Input is 56dp with 16dp sides. With no variant, or variant filled, it is a filled field; variant outlined keeps the box with a 4dp corner. */
-  [data-platform='android'] [data-ds='input'] {
+  /*
+   * Every Input is 56dp with 16dp sides. With no variant, or variant filled, it is a filled field; variant outlined keeps the box with a 4dp corner.
+   * An Input that is a part of another component (the control of a
+   * SearchField or a PasswordField, so the TabBar search field too) is left
+   * alone: the outer box draws the field (order P2 F2, Q3 findings 1 and 2).
+   */
+  [data-platform='android'] [data-ds='input']:not([data-part]) {
     --_input-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
     --_input-padding-inline: var(--ds-space-3xl);
     --_input-font-size: var(--ds-font-size-2xl);
     --_input-border-color-focus: var(--ds-color-primary-on-surface);
   }
 
-  [data-platform='android'] [data-ds='input']:not([data-variant='outlined']) {
+  [data-platform='android'] [data-ds='input']:not([data-part], [data-variant='outlined']) {
     --_input-radius: 0;
     --_input-bg: var(--ds-color-bg-surface-3);
 
@@ -652,17 +667,29 @@
    * (review N19): the border stays 1dp and the second dp is an inset shadow
    * under the ring, so the content box keeps its size.
    */
-  [data-platform='android'] [data-ds='input']:not([data-variant='outlined']):focus-within {
+  [data-platform='android'] [data-ds='input']:not([data-part], [data-variant='outlined']):focus-within {
     --_input-ring: var(--ds-focus-shadow-ring), inset 0 calc(var(--ds-border-width-default) - var(--ds-border-width-strong)) 0 0 var(--_input-border-color);
   }
 
-  [data-platform='android'] [data-ds='input'][data-variant='outlined'] {
+  [data-platform='android'] [data-ds='input'][data-variant='outlined']:not([data-part]) {
     --_input-radius: var(--ds-radius-xs);
     --_input-bg: transparent;
   }
 
-  [data-platform='android'] [data-ds='input'][data-variant='outlined']:focus-within {
+  [data-platform='android'] [data-ds='input'][data-variant='outlined']:not([data-part]):focus-within {
     --_input-ring: var(--ds-focus-shadow-ring), inset 0 0 0 calc(var(--ds-border-width-strong) - var(--ds-border-width-default)) var(--_input-border-color);
+  }
+
+  /*
+   * A search field is a 48dp target at every size, 56 at lg (the search
+   * bar); its nested Input fills it (Q3 finding 16).
+   */
+  [data-platform='android'] [data-ds='search-field'] {
+    --_search-field-height: var(--ds-size-touch-android);
+  }
+
+  [data-platform='android'] [data-ds='search-field'][data-size='lg'] {
+    --_search-field-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
   }
 
   /* A floating label rests in the 56dp box at its 16dp side, and rises on focus or with a value. */
@@ -1182,9 +1209,30 @@
     }
 
     /* A filled field has an edge only under it; forced colors gets the whole box back, so the field is still found. */
-    [data-platform='android'] :is([data-ds='input'], [data-ds='textarea'], [data-ds='select']:not([data-part])) {
+    [data-platform='android'] :is([data-ds='input'], [data-ds='textarea'], [data-ds='select']):not([data-part]) {
       border-width: var(--ds-border-width-default);
     }
+  }
+
+  /* ------------------------------------------------------------ 48 targets of the date and colour controls (order P2 F2) */
+
+  /* Each segment is a 48 target wide; the 56 field gives it the height (Q3 finding 16). */
+  [data-platform='android'] :is([data-ds='date-field'], [data-ds='time-field']) [data-part='segment'] {
+    min-inline-size: var(--ds-size-touch-android);
+  }
+
+  /* A grid cell grows to the 48 target where the columns fit; a grid too wide for that still shrinks its cells, never under 24 (Q3 finding 16). */
+  [data-platform='android'] [data-ds='color-swatch-picker'][data-layout='grid'] {
+    --_color-swatch-picker-max: var(--ds-size-touch-android);
+  }
+
+  /* The thumbs of the colour slider and the colour area are 48 targets (Q3 finding 16). */
+  [data-platform='android'] [data-ds='color-slider'] {
+    --_color-slider-thumb: var(--ds-size-touch-android);
+  }
+
+  [data-platform='android'] [data-ds='color-area'] {
+    --_color-area-thumb: var(--ds-size-touch-android);
   }
 
   /* Share panel (order M9.12, P1): tiles at the touch size, targets in a large rounded square, rows part by space. */
@@ -1293,6 +1341,11 @@
     font-size: var(--ds-type-label-medium-font-size);
     line-height: var(--ds-type-label-medium-line-height);
     letter-spacing: var(--ds-type-label-medium-letter-spacing);
+  }
+
+  /* Each item keeps the 48 target wide, beside an expanded search field too (Q3 findings 2 and 16). */
+  [data-platform='android'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']:not([data-expanded])) {
+    min-inline-size: var(--ds-size-touch-android);
   }
 
   /* The pill: 64 by 32 around the 24dp icon, round ended. */
@@ -1468,7 +1521,19 @@
   /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */
 
   /* A style that draws a window title bar on its alerts and sheets keeps the bar, without the lights. */
-  [data-platform='android'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+  [data-platform='android'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'],
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar']:has([data-ds='close-button']) > [data-part='controls'] {
+    display: none;
+  }
+
+  /*
+   * Order P2 F2, the twin of the ios rule (Q3 finding 4): a Dialog whose
+   * title bar has the lights and no close control of its own keeps the
+   * close light as its way out on a phone. Minimize and zoom do nothing on
+   * a phone, so they go. With a close control in the bar, the rule above
+   * hides the lights in full.
+   */
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] > [data-ds='window-controls'] > :is([data-part='minimize'], [data-part='zoom']) {
     display: none;
   }
 
@@ -1501,6 +1566,16 @@
 
   [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] {
     padding-block: var(--ds-space-fixed-m) var(--_dialog-padding);
+  }
+
+  /*
+   * A sheet at a smaller detent is as tall as the largest one and moved
+   * down (Dialog.css), so its footer would sit under the screen. The panel
+   * keeps the room it is moved by empty at its end: the footer stays on the
+   * screen and the body above it scrolls (Q3 finding 14).
+   */
+  [data-platform='android'] [data-ds='sheet'][data-detent] > [data-part='panel']:has(> [data-part='footer']) {
+    padding-block-end: max(0px, calc(var(--_dialog-detent-max) - var(--_dialog-detent-height)));
   }
 
   /* The close control: a 40 icon button with a 24 icon, its 48 target from the hit part. */
@@ -1606,17 +1681,36 @@
     margin-block: 0;
   }
 
-  /* ActionSheet (order M9.10, P1): a bottom sheet with large top corners only, rows 48 tall with no corner and no gap, 12 in from the sides. */
+  /*
+   * ActionSheet (order M9.10, P1): every row 48 tall, 12 in from the sides.
+   * At the bottom it is a bottom sheet with large top corners only, rows
+   * with no corner and no gap, and the room of the gesture bar under the
+   * last row (Q3 finding 11). Centred it is a basic dialog card, 28 at every
+   * corner; anchored it is a menu, the small corner. Those two keep the
+   * component's own rows, corners and gap (Q3 finding 10).
+   */
   [data-platform='android'] [data-ds='action-sheet'] {
-    --_action-sheet-radius: var(--ds-shape-corner-extra-large);
     --_action-sheet-item-height: var(--ds-size-touch-android);
-    --_action-sheet-item-radius: 0;
-    --_action-sheet-gap: 0px;
-    --_action-sheet-item-padding: 0;
     --_action-sheet-padding: var(--ds-space-fixed-xl);
   }
 
-  [data-platform='android'] [data-ds='action-sheet'] [data-part='panel'] {
+  [data-platform='android'] [data-ds='action-sheet'][data-placement='center'] {
+    --_action-sheet-radius: var(--ds-shape-corner-extra-large);
+  }
+
+  [data-platform='android'] [data-ds='action-sheet'][data-placement='anchored'] {
+    --_action-sheet-radius: var(--ds-shape-corner-extra-small);
+  }
+
+  [data-platform='android'] [data-ds='action-sheet'][data-placement='bottom'] {
+    --_action-sheet-radius: var(--ds-shape-corner-extra-large);
+    --_action-sheet-item-radius: 0;
+    --_action-sheet-gap: 0px;
+    --_action-sheet-item-padding: 0;
+  }
+
+  [data-platform='android'] [data-ds='action-sheet'][data-placement='bottom'] [data-part='panel'] {
+    padding-block-end: calc(var(--ds-space-fixed-m) * 2 + var(--ds-inset-safe-bottom));
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
@@ -1718,7 +1812,9 @@
     background-color: var(--ds-color-bg-surface-3);
   }
 
+  /* The fill above is set on the segment, so the focused box takes the tonal fill here again (Q3 finding 7). */
   [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment']:focus {
+    background-color: var(--_date-field-segment-bg-focus);
     box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-primary-border);
   }
 
@@ -1729,13 +1825,20 @@
     font-size: var(--ds-type-title-medium-font-size);
   }
 
+  /* The colon stands at the middle of the digits, not on their baseline: the case sensitive forms of the font where it has them (Q3 finding 7). */
   [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='literal'] {
     font-size: var(--ds-type-display-large-font-size);
+    font-feature-settings: 'case' 1;
   }
 
   @media (forced-colors: active) {
     [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment'] {
       border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-platform='android'] [data-ds='dialog'] [data-part='body'] > [data-ds='time-field'] [data-part='segment']:focus {
+      background-color: Highlight;
+      color: HighlightText;
     }
   }
 

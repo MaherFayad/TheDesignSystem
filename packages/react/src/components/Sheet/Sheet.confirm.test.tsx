@@ -27,14 +27,16 @@ function ListSheet({
   disabled = false,
   platform,
   icon,
+  style,
 }: {
   onConfirm?: (event: MouseEvent) => void;
   disabled?: boolean;
-  platform?: 'web' | 'ios';
+  platform?: 'web' | 'ios' | 'android';
   icon?: 'plus';
+  style?: 'desk' | 'liquid';
 }) {
   return (
-    <Theme platform={platform}>
+    <Theme platform={platform} style={style}>
       <Sheet>
         <SheetTrigger>
           <Button>New list</Button>
@@ -130,6 +132,32 @@ describe('SheetConfirm (order M9.6)', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Save list' }));
     await new Promise((resolve) => setTimeout(resolve, 100));
     expect(tooltip()).toBeNull();
+  });
+
+  it('Desk on ios: the close and the confirm in the title bar take md, 44 on ios (order P2 F4)', async () => {
+    const user = userEvent.setup();
+    render(<ListSheet platform="ios" style="desk" />);
+    const panel = await open(user);
+    const actions = panel.querySelector(':scope > [data-part="titlebar"] > [data-part="actions"]') as HTMLElement;
+    expect(Array.from(actions.children).map((c) => [c.getAttribute('data-part'), c.getAttribute('data-size')])).toEqual([
+      ['close', 'md'],
+      ['confirm', 'md'],
+    ]);
+  });
+
+  it('keeps sm in the title bar off ios, and in the header form on ios', async () => {
+    const user = userEvent.setup();
+    const sizes = () =>
+      Array.from(document.body.querySelectorAll<HTMLElement>('[data-ds="sheet"] :is([data-ds="close-button"][data-part="close"], [data-part="confirm"])')).map((c) =>
+        c.getAttribute('data-size'),
+      );
+    for (const [platform, style] of [['web', 'desk'], ['android', 'desk'], ['ios', 'liquid']] as const) {
+      const view = render(<ListSheet platform={platform} style={style} />);
+      await open(user);
+      expect(sizes().length).toBeGreaterThan(0);
+      expect(sizes().every((size) => size === 'sm')).toBe(true);
+      view.unmount();
+    }
   });
 
   it('demo: the confirm case opens in English and Arabic', () => {

@@ -161,6 +161,23 @@ describe('Calendar', () => {
     expect(screen.getAllByRole('button', { name: 'Next month' }).at(-1)!.getAttribute('aria-disabled')).toBe('true');
   });
 
+  it('joins the name and the month with the Arabic comma in Arabic, on the root and the hidden heading', async () => {
+    const user = userEvent.setup();
+    const ar = render(
+      <Theme lang="ar" dir="rtl">
+        <Calendar aria-label="تاريخ الحجز" defaultValue="2026-11-17" />
+      </Theme>,
+    ).container;
+    const root = ar.querySelector('[data-ds="calendar"]')!;
+    expect(root.getAttribute('aria-label')).toBe('تاريخ الحجز، نوفمبر 2026');
+    expect(root.querySelector(':scope > div > h2')?.textContent).toBe('تاريخ الحجز، نوفمبر 2026');
+    // It follows the month.
+    await user.click(screen.getByRole('button', { name: 'الشهر التالي' }));
+    expect(root.getAttribute('aria-label')).toBe('تاريخ الحجز، ديسمبر 2026');
+    const en = render(<Calendar aria-label="Booking date" locale="en-US" defaultValue="2026-11-17" />).container;
+    expect(en.querySelector('[data-ds="calendar"]')!.getAttribute('aria-label')).toBe('Booking date, November 2026');
+  });
+
   it('defaults the locale to the nearest Theme language', () => {
     const { container } = render(
       <Theme lang="ar">

@@ -107,6 +107,26 @@
   }
 
   /*
+   * android (order F7, WCAG 1.4.11): the platform draws the handle as a 4
+   * by 44 bar and hides ::after, which took the light scheme's edge and the
+   * held lens with it: a white bar at 1.1:1 on the page, and no bar at all
+   * while held. The edge layer comes back on the bar's own box (the same
+   * insets as the platform's focus ring), so the control edge and the lens
+   * show on android as on web.
+   */
+  [data-style='liquid'][data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    display: block;
+    inset-block: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+    inset-inline: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='liquid'][data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] [data-part='thumb']::after {
+    inset-block: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    inset-inline: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+  }
+
+  /*
    * ios (order F1): the thumb is the platform's white capsule, drawn by the
    * ::after in packages/css/src/platform/ios.css, with no edge; the circle of
    * the thumb steps aside. Held, the capsule turns into the lens with a soft

@@ -53,6 +53,17 @@ describe('Banner', () => {
     expect(screen.getByRole('img', { name: 'معلومة' })).toBeTruthy();
   });
 
+  it('names the warning tone "تحذير" in Arabic, apart from a notice and a toast', () => {
+    render(
+      <Theme lang="ar">
+        <Banner tone="warning">المساحة قربت تخلص</Banner>
+        <Banner tone="neutral">صيانة مجدولة</Banner>
+      </Theme>,
+    );
+    expect(screen.getByRole('img', { name: 'تحذير' })).toBeTruthy();
+    expect(screen.getByRole('img', { name: 'إشعار' })).toBeTruthy();
+  });
+
   it('moves focus to the main content, then calls onDismiss', async () => {
     const order: string[] = [];
     const onDismiss = vi.fn(() => order.push(document.activeElement?.tagName ?? ''));

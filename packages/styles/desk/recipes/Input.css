@@ -12,8 +12,14 @@
  * replace the fill with the system field color by themselves.
  */
 @layer ds.recipes {
-  /* A nested input (the control part of SearchField or PasswordField) stays clear: its field draws the fill. */
-  [data-style='desk'] [data-ds='input']:not([data-part], [data-readonly]) {
+  /*
+   * A nested input (the control part of SearchField or PasswordField) stays
+   * clear: its field draws the fill. A plain field in a grouped well has no
+   * box of its own. On android the platform draws every field as its filled
+   * field (a square top over the active indicator): Desk does not fight it,
+   * so the fill and the corners below are not set there (P1 Q3 finding 3).
+   */
+  [data-style='desk']:not([data-platform='android']) [data-ds='input']:not([data-part], [data-readonly], [data-variant='plain']) {
     --_input-bg: var(--ds-control-fill-default);
   }
 
@@ -23,17 +29,27 @@
    * Input is on the controls side, so the style's shape wins. The platform
    * rule covers every shape, so the pill and square corners of Input.css
    * are stated again here as well.
+   *
+   * Order P2 F6: only a field on its own. A plain field in a grouped well
+   * (an inset Fieldset, an AlertDialog with fields, a sheet form) takes the
+   * well's shape: no pill, the small ring corner of Input.css, and a real
+   * inline padding so the focus ring clears the first letter and the
+   * placeholder has room for its ellipsis.
    */
-  [data-style='desk'] [data-ds='input']:not([data-part]) {
+  [data-style='desk']:not([data-platform='android']) [data-ds='input']:not([data-part], [data-variant='plain']) {
     --_input-radius: var(--ds-radius-control);
   }
 
-  [data-style='desk'] [data-ds='input'][data-shape='pill']:not([data-part]) {
+  [data-style='desk']:not([data-platform='android']) [data-ds='input'][data-shape='pill']:not([data-part], [data-variant='plain']) {
     --_input-radius: var(--ds-radius-pill);
   }
 
-  [data-style='desk'] [data-ds='input'][data-shape='square']:not([data-part]) {
+  [data-style='desk']:not([data-platform='android']) [data-ds='input'][data-shape='square']:not([data-part], [data-variant='plain']) {
     --_input-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='desk']:not([data-platform='android']) [data-ds='input'][data-variant='plain']:not([data-part]) {
+    padding-inline: var(--ds-space-xs);
   }
 
   /*

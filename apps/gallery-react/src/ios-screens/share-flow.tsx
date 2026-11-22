@@ -120,10 +120,10 @@ const words = {
     feed: 'صفحة النشاط',
     saveImage: 'حفظ الصورة',
     addPlan: 'إضافة للخطة',
-    sentTo: (name: string) => `تم إرسال التمرين لـ${name}`,
-    sharedTo: (label: string) => `تمت مشاركة التمرين عبر ${label}`,
-    imageSaved: 'تم حفظ الصورة',
-    planned: 'تمت الإضافة للأسبوع الجاي',
+    sentTo: (name: string) => `التمرين وصل ${name}`,
+    sharedTo: (label: string) => `التمرين انرسل عبر ${label}`,
+    imageSaved: 'الصورة محفوظة',
+    planned: 'انضاف للأسبوع الجاي',
   },
 } as const;
 

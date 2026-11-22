@@ -5,7 +5,8 @@
 //                                 families, references and frames
 //   /screens/ios/<id>             one screen in its device frames
 //   /screens/ios/<id>/screen      the screen alone, as each frame's iframe
-//                                 loads it (chrome=0, platform=ios)
+//                                 loads it (chrome=0, platform=ios, or
+//                                 platform=android when the URL asks)
 //
 // URL keys, besides the axes every gallery page reads (style, scheme, dir,
 // lang, density, contrast, glass):
@@ -14,7 +15,8 @@
 //   orient=portrait|landscape         the folding iPhone only, default portrait
 //   mode=full|safari                  the folding iPhone only, default full
 //
-// The screen renders inside a Theme with platform ios, in a PageShell with
+// The screen renders inside a Theme with platform ios (android when the URL
+// has platform=android, so the screens can be audited there), in a PageShell with
 // placement auto (kit.tsx, ScreenShell), so on the folding iPhone the bars
 // move to the side column by themselves. In full screen mode the screen sets
 // the frame's safe area insets as token overrides on its Theme element, as
@@ -36,11 +38,22 @@ const BASE_PATH = '/screens/ios';
 
 /* ------------------------------------------------------------ URLs */
 
-/** The axes of the current URL, without platform: the screens always run on ios. */
+/**
+ * The platform the screens run on: ios, or android when the URL asks for it.
+ * Any other value (web, macos, auto) gives ios, the platform they are built for.
+ */
+function screenPlatform(params: URLSearchParams): 'ios' | 'android' {
+  return params.get('platform') === 'android' ? 'android' : 'ios';
+}
+
+/** The axes of the current URL. Platform is kept only when it is android: the screens run on ios otherwise. */
 function axesOf(params: URLSearchParams): URLSearchParams {
   const out = new URLSearchParams();
   for (const control of axisControls) {
-    if (control.key === 'platform') continue;
+    if (control.key === 'platform') {
+      if (screenPlatform(params) === 'android') out.set('platform', 'android');
+      continue;
+    }
     const value = params.get(control.key);
     if (value) out.set(control.key, value);
   }
@@ -63,7 +76,7 @@ export function screenHref(id: string, params: URLSearchParams, variant?: FrameV
 function bareHref(id: string, params: URLSearchParams, variant: FrameVariant): string {
   const q = axesOf(params);
   for (const [k, v] of Object.entries(variantQuery(variant))) q.set(k, v);
-  q.set('platform', 'ios');
+  q.set('platform', screenPlatform(params));
   q.set('chrome', '0');
   return withBase(withQuery(`${BASE_PATH}/${id}/screen`, q));
 }
@@ -306,7 +319,7 @@ function BareScreen({ screen, params }: { screen: ScreenModule; params: URLSearc
   const { Screen } = screen;
   return (
     <Theme
-      platform="ios"
+      platform={screenPlatform(params)}
       data-gallery="ios-screen-theme"
       data-ios-screen={screen.meta.id}
       data-variant={variant.key}

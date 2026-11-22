@@ -5,10 +5,13 @@
 // and Umm al-Qura in Arabic, the week from Sunday, the arrows mirrored),
 // disabled, readonly. No many, too-many, loading or error: a month grid
 // always holds one month, it has no loading state, and a day that cannot
-// be picked is unavailable, not an error.
+// be picked is unavailable, not an error. The copy and the locale follow
+// the page language: with lang=ar every case reads Arabic (ar-SA).
 import { useState } from 'react';
 import { formatFullDate, type CalendarSystem } from '@the-system/shared';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SegmentedControl, SegmentedControlItem } from '../SegmentedControl';
 import { Calendar, type CalendarSize } from './index';
 
@@ -61,30 +64,52 @@ function CalendarChoice({ locale }: { locale: 'en-SA' | 'ar-SA' }) {
   );
 }
 
+const words = {
+  en: {
+    locale: 'en-SA',
+    size: (size: string) => `Date, size ${size}`,
+    hijri: 'Date, Umm al-Qura',
+    delivery: 'Delivery date',
+    booking: 'Booking date',
+    disabled: 'Date, disabled',
+    readOnly: 'Date, read only',
+  },
+  ar: {
+    locale: 'ar-SA',
+    size: (size: string) => `التاريخ، المقاس ${size}`,
+    hijri: 'التاريخ بتقويم أم القرى',
+    delivery: 'تاريخ التوصيل',
+    booking: 'تاريخ الحجز',
+    disabled: 'التاريخ، غير متاح',
+    readOnly: 'التاريخ، للقراءة فقط',
+  },
+} as const;
+
 export default function CalendarDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Sizes sm, md and lg; Gregorian and Umm al-Qura">
         <DemoRow>
           {sizes.map((size) => (
-            <Calendar key={size} aria-label={`Date, size ${size}`} locale="en-SA" size={size} defaultValue="2026-11-17" />
+            <Calendar key={size} aria-label={w.size(size)} locale={w.locale} size={size} defaultValue="2026-11-17" />
           ))}
         </DemoRow>
         <DemoRow>
-          <Calendar aria-label="Date, Umm al-Qura" locale="en-SA" calendar="islamic-umalqura" defaultValue="2026-11-17" />
+          <Calendar aria-label={w.hijri} locale={w.locale} calendar="islamic-umalqura" defaultValue="2026-11-17" />
         </DemoRow>
       </DemoCase>
 
       <DemoCase id="empty" title="Nothing picked: the month of today, today marked">
-        <Calendar aria-label="Delivery date" locale="en-SA" />
+        <Calendar aria-label={w.delivery} locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="one" title="A booking: from 5 November, Fridays booked, the ISO value under it">
-        <Booking locale="en-SA" calendar="gregory" label="Booking date" />
+        <Booking locale={w.locale} calendar="gregory" label={w.booking} />
       </DemoCase>
 
       <DemoCase id="long-text" title="The calendar a person picks; the value stays the same ISO date">
-        <CalendarChoice locale="en-SA" />
+        <CalendarChoice locale={w.locale} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic: Gregorian and Umm al-Qura, the week from Sunday" lang="ar">
@@ -96,11 +121,11 @@ export default function CalendarDemo() {
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
-        <Calendar aria-label="Date, disabled" locale="en-SA" disabled defaultValue="2026-11-17" />
+        <Calendar aria-label={w.disabled} locale={w.locale} disabled defaultValue="2026-11-17" />
       </DemoCase>
 
       <DemoCase id="readonly" title="Read only: days take focus, a press picks nothing">
-        <Calendar aria-label="Date, read only" locale="en-SA" readOnly defaultValue="2026-11-17" />
+        <Calendar aria-label={w.readOnly} locale={w.locale} readOnly defaultValue="2026-11-17" />
       </DemoCase>
     </DemoPage>
   );

@@ -13,6 +13,14 @@
  *   --_list-radius            rows of a linked or inset list
  *   --_list-bg                the inset surface
  *   --_list-item-bg, -item-bg-hover, -item-bg-active
+ *   --_list-item-fg-active    the ink of the current row (data-active): its
+ *                             text, start icon and description. The list ink
+ *                             by default
+ *   --_list-item-edge-active  the edge round the current row, a color drawn
+ *                             as an inner hairline; transparent by default.
+ *                             With -item-bg-active these three are the one
+ *                             selected mark a style sets for the current row,
+ *                             as for its sibling controls (Q1 F05, Q2 10)
  *   --_list-fg, --_list-description-fg, --_list-separator-color
  *   --_list-ring-color        the focus ring of a row link, drawn on the row
  *   --_list-tone-text         the title and start icon of a danger row (order S1)
@@ -97,6 +105,8 @@
     --_list-item-bg: transparent;
     --_list-item-bg-hover: var(--ds-color-bg-overlay-5);
     --_list-item-bg-active: var(--ds-color-bg-overlay-10);
+    --_list-item-fg-active: var(--_list-fg);
+    --_list-item-edge-active: transparent;
     --_list-fg: var(--ds-color-text-default);
     --_list-description-fg: var(--ds-color-text-muted);
     --_list-separator-color: var(--ds-color-border-hairline);
@@ -192,7 +202,15 @@
   /* The active fill is darker: the secondary text steps up to keep 4.5:1. */
   [data-ds='list'] > [data-part='item'][data-active] {
     --_list-item-bg: var(--_list-item-bg-active);
-    --_list-description-fg: var(--ds-color-text-default);
+    --_list-description-fg: var(--_list-item-fg-active);
+
+    color: var(--_list-item-fg-active);
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_list-item-edge-active);
+  }
+
+  /* With the row-glide layer the layer draws the fill, so it draws the edge over it too. */
+  [data-ds='list'] > [data-part='item'][data-active] > span[aria-hidden='true']:not([data-part]) {
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_list-item-edge-active);
   }
 
   /* Hover on rows that go somewhere or act in place swaps the row fill. */

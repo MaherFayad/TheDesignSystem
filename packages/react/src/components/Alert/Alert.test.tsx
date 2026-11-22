@@ -49,7 +49,7 @@ describe('Alert', () => {
         <Alert tone="warning" title="المساحة قربت تخلص" onClose={() => undefined} />
       </Theme>,
     );
-    expect(screen.getByRole('img', { name: 'تنبيه' })).toBeTruthy();
+    expect(screen.getByRole('img', { name: 'تحذير' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'إغلاق الرسالة' })).toBeTruthy();
     rerender(<Alert tone="warning" toneLabel="Heads up" title="Storage almost full" />);
     expect(screen.getByRole('img', { name: 'Heads up' })).toBeTruthy();

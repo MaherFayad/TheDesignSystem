@@ -105,6 +105,19 @@ describe('TimeField', { timeout: 20_000 }, () => {
     expect(root(off).getAttribute('data-disabled')).toBe('');
   });
 
+  it('the segment row takes dir from the locale, so an English time reads 9:41 AM on an Arabic page', () => {
+    const en = render(
+      <Theme lang="ar" dir="rtl">
+        <TimeField aria-label="Start" locale="en-US" defaultValue="09:41" />
+      </Theme>,
+    ).container;
+    const row = en.querySelector('[data-part="input"]')!;
+    expect(row.getAttribute('dir')).toBe('ltr');
+    expect(row.textContent?.replace(/[\u200e\u200f\u2066-\u2069\s]/g, '')).toBe('9:41AM');
+    const ar = render(<TimeField aria-label="البداية" locale="ar-SA" defaultValue="09:41" />).container;
+    expect(ar.querySelector('[data-part="input"]')!.getAttribute('dir')).toBe('rtl');
+  });
+
   it('renders every demo case, with long-arabic', () => {
     const { container } = render(<TimeFieldDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));

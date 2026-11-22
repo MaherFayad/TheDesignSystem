@@ -232,6 +232,12 @@ describe('SharePanel actions', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
   });
 
+  it('Copy link in Arabic shows the toast "الرابط منسوخ"', async () => {
+    render(<Subject defaultOpen lang="ar" />);
+    await userEvent.click(await screen.findByRole('button', { name: 'نسخ الرابط' }));
+    await waitFor(() => expect(toastStore.getSnapshot().visible.some((t) => t.title === 'الرابط منسوخ')).toBe(true));
+  });
+
   it('More options shows only where the system sheet exists, and calls it', async () => {
     const { unmount } = render(<Subject open />);
     expect(screen.queryByRole('button', { name: 'More options' })).toBeNull();

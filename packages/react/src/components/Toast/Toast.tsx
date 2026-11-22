@@ -85,7 +85,7 @@ export const toastIcons: Readonly<Record<ToastTone, IconName>> = {
 /** Default words of the toast chrome, by language. */
 export const toastLabels = {
   en: { region: 'Notifications', toast: 'Notification', close: 'Close notification' },
-  ar: { region: 'التنبيهات', toast: 'تنبيه', close: 'إغلاق التنبيه' },
+  ar: { region: 'الإشعارات', toast: 'إشعار', close: 'إغلاق الإشعار' },
 } as const;
 
 /** The words for a language tag: Arabic for any `ar` tag, English otherwise. */

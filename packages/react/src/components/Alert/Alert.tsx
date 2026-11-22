@@ -41,7 +41,7 @@ export const alertLabels = {
   },
   ar: {
     close: 'إغلاق الرسالة',
-    tone: { neutral: 'إشعار', accent: 'إشعار', info: 'معلومة', success: 'نجاح', warning: 'تنبيه', danger: 'خطأ' },
+    tone: { neutral: 'إشعار', accent: 'إشعار', info: 'معلومة', success: 'نجاح', warning: 'تحذير', danger: 'خطأ' },
   },
 } as const;
 

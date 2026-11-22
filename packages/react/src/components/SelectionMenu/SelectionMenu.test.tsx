@@ -195,6 +195,27 @@ describe('SelectionMenu', () => {
     expect(onSelect).toHaveBeenCalledWith('copy');
   });
 
+  it('names the forward control "إجراءات إضافية" in Arabic by default', async () => {
+    const width = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(316);
+    const box = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      const part = this.getAttribute('data-part');
+      return new DOMRect(0, 0, part === 'item' ? 100 : 0, part === 'item' ? 44 : 0);
+    });
+    try {
+      const items = ['واحد', 'اثنين', 'ثلاثة', 'أربعة', 'خمسة'].map((label) => ({ id: label, label, onSelect: () => undefined }));
+      render(
+        <Theme dir="rtl" lang="ar">
+          <SelectionMenu defaultOpen focusOnOpen items={items} />
+        </Theme>,
+      );
+      await waitFor(() => expect(root()!.querySelectorAll('[data-part="item"]')).toHaveLength(2));
+      expect(byRole('إجراءات إضافية').getAttribute('data-part')).toBe('more');
+    } finally {
+      width.mockRestore();
+      box.mockRestore();
+    }
+  });
+
   it('pages actions that do not fit behind the forward control', async () => {
     const width = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(316);
     const box = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {

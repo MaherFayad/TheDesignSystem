@@ -135,6 +135,17 @@ describe('DateField', { timeout: 20_000 }, () => {
     expect(segment(container, 'month').getAttribute('aria-label')).toBe('الشهر، التاريخ');
   });
 
+  it('the segment row takes dir from the locale, not the page', () => {
+    const en = render(
+      <Theme lang="ar" dir="rtl">
+        <DateField aria-label="Date" locale="en-GB" defaultValue="2026-11-17" />
+      </Theme>,
+    ).container;
+    expect(en.querySelector('[data-part="input"]')!.getAttribute('dir')).toBe('ltr');
+    const ar = render(<DateField aria-label="التاريخ" locale="ar-SA" defaultValue="2026-11-17" />).container;
+    expect(ar.querySelector('[data-part="input"]')!.getAttribute('dir')).toBe('rtl');
+  });
+
   it('renders every demo case, with long-arabic', () => {
     const { container } = render(<DateFieldDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));

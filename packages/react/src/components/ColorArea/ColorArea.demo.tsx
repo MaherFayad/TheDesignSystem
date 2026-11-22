@@ -4,11 +4,14 @@
 // (a long name), long-arabic (the channel across runs from the right and the
 // arrow keys follow it; digits stay Western), disabled. The colours are demo
 // data. No empty, many, loading, error or readonly: an area always has a
-// value, holds two channels, and has no wrong value.
+// value, holds two channels, and has no wrong value. The copy and the
+// locale follow the page language: with lang=ar every case reads Arabic.
 import { useState } from 'react';
 import { parseColor, type Color } from 'react-aria-components';
 import { colorName } from '@the-system/shared';
 import { DemoCase, DemoPage } from '../../demo';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { ColorField } from '../ColorField';
 import { ColorSlider } from '../ColorSlider';
 import { Field } from '../Field';
@@ -34,24 +37,30 @@ function Editor({ locale, words }: { locale: string; words: { field: string } })
   );
 }
 
+const words = {
+  en: { locale: 'en', hueLightness: 'Hue and lightness', redGreen: 'Red and green', field: 'Hex', long: 'Saturation and brightness of the weekly report card background' },
+  ar: { locale: 'ar', hueLightness: 'درجة اللون والإضاءة', redGreen: 'الأحمر والأخضر', field: 'رمز اللون', long: 'التشبع والسطوع لخلفية بطاقة التقرير الأسبوعي' },
+} as const;
+
 export default function ColorAreaDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Saturation and brightness; hue and lightness; red and green">
         <div style={column}>
-          <ColorArea defaultValue="hsb(30, 80%, 90%)" locale="en" />
-          <ColorArea defaultValue="hsl(160, 70%, 45%)" colorSpace="hsl" xChannel="hue" yChannel="lightness" aria-label="Hue and lightness" locale="en" />
-          <ColorArea defaultValue="rgb(200, 60, 120)" colorSpace="rgb" xChannel="red" yChannel="green" aria-label="Red and green" locale="en" />
+          <ColorArea defaultValue="hsb(30, 80%, 90%)" locale={w.locale} />
+          <ColorArea defaultValue="hsl(160, 70%, 45%)" colorSpace="hsl" xChannel="hue" yChannel="lightness" aria-label={w.hueLightness} locale={w.locale} />
+          <ColorArea defaultValue="rgb(200, 60, 120)" colorSpace="rgb" xChannel="red" yChannel="green" aria-label={w.redGreen} locale={w.locale} />
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="One colour: the area, a hue slider and a hex field to type">
-        <Editor locale="en" words={{ field: 'Hex' }} />
+        <Editor locale={w.locale} words={w} />
       </DemoCase>
 
       <DemoCase id="long-text" title="A long name">
         <div style={column}>
-          <ColorArea defaultValue="hsb(280, 50%, 70%)" aria-label="Saturation and brightness of the weekly report card background" locale="en" />
+          <ColorArea defaultValue="hsb(280, 50%, 70%)" aria-label={w.long} locale={w.locale} />
         </div>
       </DemoCase>
 
@@ -61,7 +70,7 @@ export default function ColorAreaDemo() {
 
       <DemoCase id="disabled" title="Disabled">
         <div style={column}>
-          <ColorArea defaultValue="hsb(214, 60%, 80%)" disabled locale="en" />
+          <ColorArea defaultValue="hsb(214, 60%, 80%)" disabled locale={w.locale} />
         </div>
       </DemoCase>
     </DemoPage>

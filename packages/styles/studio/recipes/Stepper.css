@@ -1,15 +1,14 @@
 /*
  * Studio recipe for Stepper (order Z3). A step's indicator is a square mark
  * with the mark corner (radius.xs), not a disc, and the travel ring that
- * slides to the new current step is the same square. Stepper.css draws
- * both as the pill with no private property, so the corner is set on the
- * parts. The states keep their tokens: complete is the inverted cell,
- * current the bright 2px rule, upcoming the control rule, unreachable the
- * dashed rule.
+ * slides to the new current step is the same square (it follows the
+ * indicator's corner by default). Set through the radius property
+ * Stepper.css reads (order P1 E2; moved to it in order P2 F5). The states
+ * keep their tokens: complete is the inverted cell, current the bright 2px
+ * rule, upcoming the control rule, unreachable the dashed rule.
  */
 @layer ds.recipes {
-  [data-style='studio'] [data-ds='stepper'] > [data-part='step'] > [data-part='indicator'],
-  [data-style='studio'] [data-ds='stepper'] > [data-part='step'] > [data-part='indicator']::after {
-    border-radius: var(--ds-radius-xs);
+  [data-style='studio'] [data-ds='stepper'] {
+    --_stepper-indicator-radius: var(--ds-radius-xs);
   }
 }

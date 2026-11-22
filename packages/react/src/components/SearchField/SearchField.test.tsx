@@ -1,6 +1,7 @@
 import { createRef, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme/Theme';
 import { Dialog, DialogContent, DialogTitle } from '../Dialog/Dialog';
 import { Field } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
@@ -113,6 +114,24 @@ describe('SearchField', () => {
     expect(root(container).hasAttribute('data-loading')).toBe(true);
     expect(container.querySelector('[data-part="end"] [data-part="spinner"]')).not.toBeNull();
     expect(screen.getByRole('status').textContent).toBe('Searching boards');
+  });
+
+  it('defaults the clear and loading words to the language: English, then Arabic from the Theme or lang', () => {
+    const en = render(<SearchField aria-label="Search" defaultValue="a" loading />);
+    expect(en.container.querySelector('[data-part="clear"]')?.getAttribute('aria-label')).toBe('Clear search');
+    expect(screen.getByRole('status').textContent).toBe('Searching');
+    en.unmount();
+    const ar = render(
+      <Theme lang="ar">
+        <SearchField aria-label="البحث" defaultValue="a" loading />
+      </Theme>,
+    );
+    expect(ar.container.querySelector('[data-part="clear"]')?.getAttribute('aria-label')).toBe('مسح البحث');
+    expect(screen.getByRole('status').textContent).toBe('البحث جار');
+    ar.unmount();
+    const own = render(<SearchField aria-label="البحث" lang="ar" defaultValue="a" clearLabel="مسح الكلمة" />);
+    expect(own.container.querySelector('[data-part="clear"]')?.getAttribute('aria-label')).toBe('مسح الكلمة');
+    expect(own.container.querySelector('input')?.getAttribute('lang')).toBe('ar');
   });
 
   it('keeps the end content while loading, after the spinner', () => {

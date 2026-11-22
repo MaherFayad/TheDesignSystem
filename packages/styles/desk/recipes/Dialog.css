@@ -93,6 +93,35 @@
   }
 
   /*
+   * Order P2 F6: a sheet with a grabber had two heads, the grabber on its
+   * own light strip above the yellow title bar. The title bar now runs up
+   * under the grabber's strip (the strip's height is the handle's target:
+   * size.target-min, the touch size on android), so the sheet has one head
+   * with the grabber in it. The grabber is drawn above the bar and takes the
+   * gold of the yellow marks, since the yellow is lost on the yellow tint.
+   * On ios without detents the grabber already floats over the bar.
+   */
+  [data-style='desk'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:has(+ [data-part='titlebar']) {
+    --_dialog-handle-color: var(--ds-color-primary-border);
+  }
+
+  [data-style='desk']:not([data-platform='ios']) [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:has(+ [data-part='titlebar']),
+  [data-style='desk'][data-platform='ios'] [data-ds='sheet'][data-detent] > [data-part='panel'] > [data-part='handle']:has(+ [data-part='titlebar']) {
+    position: relative;
+  }
+
+  [data-style='desk']:not([data-platform='ios']) [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] + [data-part='titlebar'],
+  [data-style='desk'][data-platform='ios'] [data-ds='sheet'][data-detent] > [data-part='panel'] > [data-part='handle'] + [data-part='titlebar'] {
+    margin-block-start: calc(-1 * var(--ds-size-target-min));
+    padding-block-start: var(--ds-size-target-min);
+  }
+
+  [data-style='desk'][data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] + [data-part='titlebar'] {
+    margin-block-start: calc(-1 * var(--ds-size-touch-android));
+    padding-block-start: var(--ds-size-touch-android);
+  }
+
+  /*
    * Order Z2: on ios the panel's padding is the platform's, wider than the
    * title bar's own inset, and the sheet's top corner is the large one. The
    * title bar takes the panel padding, so the title lines up with the

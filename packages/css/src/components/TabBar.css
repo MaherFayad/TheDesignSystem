@@ -12,6 +12,10 @@
  *   --_tab-bar-pill-bg            the pill behind the current item's icon
  *   --_tab-bar-badge-bg, -badge-fg
  *   --_tab-bar-ring               the focus ring
+ *   --_tab-bar-ring-active        the focus ring on the current item: the ring and a
+ *                                 halo band inside it, so it shows on an inverted
+ *                                 current pill whose fill is the ring color (Q5 F4).
+ *                                 A style sets it to one shadow of its own
  *
  *   --_tab-bar-duration, -ease    motion plumbing: the pop of tab-bar-pop
  *   --_tab-bar-stagger            the beat between the icon and the label (0s: no second beat)
@@ -71,6 +75,9 @@
     --_tab-bar-weight: var(--ds-font-weight-medium);
     --_tab-bar-weight-active: var(--ds-font-weight-bold);
     --_tab-bar-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_tab-bar-ring-active:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring),
+      inset 0 0 0 calc(var(--ds-border-width-strong) * 2) var(--ds-color-focus-halo);
     --_tab-bar-duration: var(--ds-duration-spring-bouncy);
     --_tab-bar-stagger: var(--ds-delay-stagger);
     --_tab-bar-ease: var(--ds-ease-spring-bouncy);
@@ -293,6 +300,10 @@
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
     box-shadow: var(--_tab-bar-ring);
+  }
+
+  [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active]:focus-visible {
+    box-shadow: var(--_tab-bar-ring-active);
   }
 
   /* ------------------------------------------------------------ reduced motion */

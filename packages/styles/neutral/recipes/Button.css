@@ -90,7 +90,8 @@
     --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
     --_button-border-color: transparent;
     --_button-border-color-hover: transparent;
-    --_button-shadow: none;
+    /* An empty shadow, not none: the focus rule lists this with the ring. */
+    --_button-shadow: 0 0 transparent;
   }
 
   [data-style='neutral'][data-platform='ios'][data-scheme='dark'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:not([data-part], [data-ds='navbar'] *, [data-ds='toolbar'] *, [data-ds='button-group'][data-attached] > *) {

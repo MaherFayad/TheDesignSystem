@@ -7,11 +7,15 @@
 // disabled row draws no swipe). No empty, loading, error or readonly: an
 // empty list draws no rows to swipe, and the actions have no value.
 //
-// Names and subjects are made up.
+// Names and subjects are made up. The copy follows the page language: with
+// lang=ar every case reads Arabic. Names and subjects are user content, so
+// their text sits in a span with dir="auto".
 import { useState } from 'react';
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { List, ListItem, type ListVariant } from '../List';
 import { Button } from '../Button';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SwipeActions, type SwipeAction } from './index';
 
 interface Mail {
@@ -42,9 +46,31 @@ const words = {
     archive: 'Archive',
     read: 'Mark read',
     menu: (from: string) => `Actions for ${from}`,
+    itemMenu: (name: string) => `Actions for ${name}`,
     done: (verb: string, from: string) => `${verb}: ${from}`,
     reset: 'Reset inbox',
     inbox: 'Inbox',
+    send: 'Send',
+    share: 'Share',
+    muteAll: 'Mute notifications',
+    inset: 'Inbox, inset',
+    divided: 'Inbox, divided',
+    draftMenu: 'Actions for the draft of the launch note',
+    draft: 'Launch note',
+    draftMeta: 'Draft, edited 2 minutes ago',
+    extra: { id: 'm5', from: 'Yousef Alzahrani', subject: 'Contract for the March shoot', time: '12 Mar' },
+    saved: 'Saved items',
+    guide: 'Field guide to desert plants',
+    guideMeta: 'Saved from the reading list',
+    longRows: 'Long rows',
+    longTitle: 'Quarterly brand guidelines review with the regional marketing teams and the agency',
+    longDescription: 'Your changes are saved to your account. Open the board on any other device to see the same version.',
+    longMenu: 'Actions for the quarterly brand guidelines review',
+    boards: 'Boards',
+    brand: 'Brand board',
+    open: 'Open',
+    finance: 'Finance board',
+    noAccess: 'You need access from an admin',
   },
   ar: {
     del: 'حذف',
@@ -53,9 +79,31 @@ const words = {
     archive: 'أرشفة',
     read: 'تعليم كمقروءة',
     menu: (from: string) => `خيارات رسالة ${from}`,
+    itemMenu: (name: string) => `خيارات ${name}`,
     done: (verb: string, from: string) => `${verb}: ${from}`,
     reset: 'استرجاع الوارد',
     inbox: 'الوارد',
+    send: 'إرسال',
+    share: 'مشاركة',
+    muteAll: 'كتم الإشعارات',
+    inset: 'الوارد، داخل إطار',
+    divided: 'الوارد، بفواصل',
+    draftMenu: 'خيارات مسودة ملاحظة الإطلاق',
+    draft: 'ملاحظة الإطلاق',
+    draftMeta: 'مسودة، تعدلت قبل دقيقتين',
+    extra: { id: 'a5', from: 'يوسف الزهراني', subject: 'عقد تصوير شهر مارس', time: '12 مارس' },
+    saved: 'العناصر المحفوظة',
+    guide: 'دليل نباتات الصحراء',
+    guideMeta: 'محفوظ من قائمة القراءة',
+    longRows: 'صفوف طويلة',
+    longTitle: 'مراجعة دليل الهوية للربع الرابع مع فرق التسويق في المناطق والوكالة',
+    longDescription: 'تعديلاتك محفوظة في حسابك. افتح اللوحة من أي جهاز ثاني وبتلقى نفس النسخة.',
+    longMenu: 'خيارات مراجعة دليل الهوية',
+    boards: 'اللوحات',
+    brand: 'لوحة الهوية',
+    open: 'مفتوحة',
+    finance: 'لوحة المالية',
+    noAccess: 'تحتاج صلاحية من المشرف',
   },
 } as const;
 
@@ -99,8 +147,8 @@ function Inbox({ lang = 'en', variant = 'inset', mail = lang === 'ar' ? inboxAr 
             key={m.id}
             href={`#${m.id}`}
             start="mail"
-            title={m.from}
-            description={m.subject}
+            title={<span dir="auto">{m.from}</span>}
+            description={<span dir="auto">{m.subject}</span>}
             end={m.time}
             swipe={
               <SwipeActions
@@ -130,24 +178,28 @@ function Inbox({ lang = 'en', variant = 'inset', mail = lang === 'ar' ? inboxAr 
 
 export default function SwipeActionsDemo() {
   const [note, setNote] = useState('');
+  const lang = isArabic(useTheme().lang) ? 'ar' : 'en';
+  const w = words[lang];
+  const inbox = lang === 'ar' ? inboxAr : inboxEn;
+  const said = (verb: string) => setNote(`${verb}: ${w.draft}`);
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: actions on both sides in an inset list, end only in a divided list, and content outside a list">
         <DemoGrid min="20rem">
-          <Inbox label="Inbox, inset" />
-          <Inbox variant="divided" sides="end" label="Inbox, divided" pointer />
+          <Inbox lang={lang} label={w.inset} />
+          <Inbox lang={lang} variant="divided" sides="end" label={w.divided} pointer />
           <div style={{ display: 'grid', gap: 'var(--ds-space-xs)', alignContent: 'start' }}>
             <SwipeActions
-              menuLabel="Actions for the draft of the launch note"
+              menuLabel={w.draftMenu}
               end={[
-                { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => setNote('Delete: launch note') },
-                { label: 'Pin', icon: 'star', tone: 'warning', onSelect: () => setNote('Pin: launch note') },
+                { label: w.del, icon: 'trash', tone: 'danger', onSelect: () => said(w.del) },
+                { label: w.pin, icon: 'star', tone: 'warning', onSelect: () => said(w.pin) },
               ]}
-              start={[{ label: 'Send', icon: 'send', tone: 'accent', onSelect: () => setNote('Send: launch note') }]}
+              start={[{ label: w.send, icon: 'send', tone: 'accent', onSelect: () => said(w.send) }]}
             >
               <div style={{ padding: 'var(--ds-space-s)' }}>
-                <strong>Launch note</strong>
-                <div style={{ color: 'var(--ds-color-text-muted)' }}>Draft, edited 2 minutes ago</div>
+                <strong>{w.draft}</strong>
+                <div style={{ color: 'var(--ds-color-text-muted)' }}>{w.draftMeta}</div>
               </div>
             </SwipeActions>
             <p role="status" style={{ margin: 0, color: 'var(--ds-color-text-muted)' }}>
@@ -159,32 +211,32 @@ export default function SwipeActionsDemo() {
 
       <DemoCase id="one" title="One row">
         <div style={{ maxInlineSize: '24rem' }}>
-          <Inbox mail={inboxEn.slice(0, 1)} />
+          <Inbox lang={lang} mail={inbox.slice(0, 1)} />
         </div>
       </DemoCase>
 
       <DemoCase id="many" title="Many: delete removes the row, a full swipe toward the start archives it">
         <div style={{ maxInlineSize: '26rem' }}>
-          <Inbox fullStart mail={[...inboxEn, { id: 'm5', from: 'Yousef Alzahrani', subject: 'Contract for the March shoot', time: '12 Mar' }]} />
+          <Inbox lang={lang} fullStart mail={[...inbox, w.extra]} />
         </div>
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: four end actions given, three kept">
         <div style={{ maxInlineSize: '24rem' }}>
-          <List variant="inset" aria-label="Saved items">
+          <List variant="inset" aria-label={w.saved}>
             <ListItem
               href="#saved-1"
               start="file"
-              title="Field guide to desert plants"
-              description="Saved from the reading list"
+              title={w.guide}
+              description={w.guideMeta}
               swipe={
                 <SwipeActions
-                  menuLabel="Actions for Field guide to desert plants"
+                  menuLabel={w.itemMenu(w.guide)}
                   end={[
-                    { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined },
-                    { label: 'Pin', icon: 'star', tone: 'warning', onSelect: () => undefined },
-                    { label: 'Mute', icon: 'bell-off', onSelect: () => undefined },
-                    { label: 'Share', icon: 'send', onSelect: () => undefined },
+                    { label: w.del, icon: 'trash', tone: 'danger', onSelect: () => undefined },
+                    { label: w.pin, icon: 'star', tone: 'warning', onSelect: () => undefined },
+                    { label: w.mute, icon: 'bell-off', onSelect: () => undefined },
+                    { label: w.share, icon: 'send', onSelect: () => undefined },
                   ]}
                 />
               }
@@ -195,20 +247,20 @@ export default function SwipeActionsDemo() {
 
       <DemoCase id="long-text" title="Long text">
         <div style={{ maxInlineSize: '22rem' }}>
-          <List variant="inset" aria-label="Long rows">
+          <List variant="inset" aria-label={w.longRows}>
             <ListItem
               href="#long-1"
               start="mail"
-              title="Quarterly brand guidelines review with the regional marketing teams and the agency"
-              description="Your changes are saved to your account. Open the board on any other device to see the same version."
+              title={w.longTitle}
+              description={w.longDescription}
               end="12:40"
               swipe={
                 <SwipeActions
-                  menuLabel="Actions for the quarterly brand guidelines review"
-                  start={[{ label: 'Mark read', icon: 'mail', onSelect: () => undefined }]}
+                  menuLabel={w.longMenu}
+                  start={[{ label: w.read, icon: 'mail', onSelect: () => undefined }]}
                   end={[
-                    { label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined },
-                    { label: 'Mute notifications', icon: 'bell-off', onSelect: () => undefined },
+                    { label: w.del, icon: 'trash', tone: 'danger', onSelect: () => undefined },
+                    { label: w.muteAll, icon: 'bell-off', onSelect: () => undefined },
                   ]}
                 />
               }
@@ -236,25 +288,21 @@ export default function SwipeActionsDemo() {
 
       <DemoCase id="disabled" title="Disabled row: no swipe and no menu">
         <div style={{ maxInlineSize: '24rem' }}>
-          <List variant="inset" aria-label="Boards">
+          <List variant="inset" aria-label={w.boards}>
             <ListItem
               href="#board-open"
               start="grid"
-              title="Brand board"
-              description="Open"
-              swipe={
-                <SwipeActions menuLabel="Actions for Brand board" end={[{ label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined }]} />
-              }
+              title={w.brand}
+              description={w.open}
+              swipe={<SwipeActions menuLabel={w.itemMenu(w.brand)} end={[{ label: w.del, icon: 'trash', tone: 'danger', onSelect: () => undefined }]} />}
             />
             <ListItem
               href="#board-locked"
               start="lock"
-              title="Finance board"
-              description="You need access from an admin"
+              title={w.finance}
+              description={w.noAccess}
               disabled
-              swipe={
-                <SwipeActions menuLabel="Actions for Finance board" end={[{ label: 'Delete', icon: 'trash', tone: 'danger', onSelect: () => undefined }]} />
-              }
+              swipe={<SwipeActions menuLabel={w.itemMenu(w.finance)} end={[{ label: w.del, icon: 'trash', tone: 'danger', onSelect: () => undefined }]} />}
             />
           </List>
         </div>

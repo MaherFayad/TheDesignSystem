@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme/Theme';
 import RangeSliderDemo from './RangeSlider.demo';
 import { RangeSlider } from './index';
 
@@ -32,6 +33,15 @@ describe('RangeSlider', () => {
     expect(low.getAttribute('aria-valuetext')).toBe('200 SAR');
     expect(high.getAttribute('aria-valuetext')).toBe('700 SAR');
     expect(container.querySelector('[data-part="value"]')?.textContent).toBe('200 SAR - 700 SAR');
+  });
+
+  it('writes the Arabic range in words: من ... إلى ...', () => {
+    const { container } = render(
+      <Theme lang="ar" dir="rtl">
+        <RangeSlider label="السعر" unit="ريال" max={2000000} defaultValue={[250000, 1500000]} thumbLabels={['أقل سعر', 'أعلى سعر']} />
+      </Theme>,
+    );
+    expect(container.querySelector('[data-part="value"]')?.textContent).toBe('من 250,000 ريال إلى 1,500,000 ريال');
   });
 
   it('defaults to the full range', () => {

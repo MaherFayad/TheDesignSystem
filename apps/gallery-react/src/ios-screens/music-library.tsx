@@ -154,7 +154,7 @@ const words = {
     list: 'الأغاني في مكتبتك',
     index: 'فهرس الأغاني',
     downloading: (title: string) => `جاري تنزيل ${title}`,
-    downloaded: 'تم تنزيلها',
+    downloaded: 'محملة على الجوال',
     loadingMore: 'جاري تحميل أغاني إضافية',
     rowMore: (title: string) => `خيارات ${title}`,
     quick: 'إجراءات سريعة',

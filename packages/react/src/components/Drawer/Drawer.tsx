@@ -235,6 +235,8 @@ export function splitHeader(options: {
   Description: (props: { children?: ReactNode }) => ReactNode;
   closeLabel: string;
   closeDisabled: boolean;
+  /** The CloseButton size. Default sm. */
+  closeSize?: 'sm' | 'md';
 }): { header: ReactNode; others: ReactNode[]; titleNode: ReactNode; descriptionNode: ReactNode; closeButton: ReactNode } {
   const { Title, Description } = options;
   let titleNode: ReactNode = options.title !== undefined && options.title !== null ? <Title>{options.title}</Title> : null;
@@ -248,7 +250,7 @@ export function splitHeader(options: {
   }
   const closeButton = (
     <RadixDialog.Close asChild>
-      <CloseButton data-part="close" label={options.closeLabel} size="sm" disabled={options.closeDisabled} />
+      <CloseButton data-part="close" label={options.closeLabel} size={options.closeSize ?? 'sm'} disabled={options.closeDisabled} />
     </RadixDialog.Close>
   );
   const header = (

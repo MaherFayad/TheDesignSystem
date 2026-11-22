@@ -2,19 +2,26 @@
  * Studio recipe for Slider, and RangeSlider through the same rules (both
  * roots share Slider.css), order Z3. A flat bar and a square cell, not a
  * capsule and a disc: the track, the fill, the thumb, its focus ring, its
- * edge and the value bubble take the mark corner (radius.xs). Slider.css
- * draws these corners as the pill with no private property, so the corners
- * are set on the parts here.
+ * edge and the value bubble take the mark corner (radius.xs).
+ *
+ * Order P2 F5: the corners are the radius properties Slider.css reads
+ * (--_slider-track-radius, --_slider-thumb-radius, --_slider-bubble-radius,
+ * order P1 E2), not rules on the parts. The ios platform draws its disc
+ * edge and card shadow only where the thumb keeps the pill
+ * (platform/ios.css, the style query on --_slider-thumb-radius), so Studio's
+ * square thumb gets neither, with no override here.
  *
  * The empty track is the control border, 3:1 or more on the surface in both
  * schemes (WCAG 1.4.11); the base overlay read about 1.6:1. An invalid track
- * is the danger border, not a pale tint. The ios disc carried a soft card
- * shadow from the platform file; Studio has no shadow, so the drawn edge is
- * a rule only. Hover is a 1px bright rule a step out from the thumb, as a
- * Studio control takes the bright rule on hover, not a tinted glow.
+ * is the danger border, not a pale tint. Hover is a 1px bright rule a step
+ * out from the thumb, as a Studio control takes the bright rule on hover,
+ * not a tinted glow.
  */
 @layer ds.recipes {
   [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-track-radius: var(--ds-radius-xs);
+    --_slider-thumb-radius: var(--ds-radius-xs);
+    --_slider-bubble-radius: var(--ds-radius-xs);
     --_slider-halo-spread: calc(var(--ds-border-width-default) * 2);
   }
 
@@ -32,30 +39,7 @@
     }
   }
 
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'],
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track']::before,
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'],
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before,
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after,
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] > span[aria-hidden='true'] {
-    border-radius: var(--ds-radius-xs);
-  }
-
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track']::before {
-    clip-path: inset(0 var(--_slider-clip-right) 0 var(--_slider-clip-left) round var(--ds-radius-xs));
-  }
-
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track']::before {
-    clip-path: inset(calc((1 - var(--_slider-to)) * 100%) 0 calc(var(--_slider-from) * 100%) 0 round var(--ds-radius-xs));
-  }
-
-  /* The edge and the hover rule only: no card shadow under the thumb, no shadow under the bubble. */
-  [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
-    box-shadow:
-      0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
-      0 0 0 var(--_slider-halo-now) var(--_slider-halo);
-  }
-
+  /* No shadow under the value bubble. */
   [data-style='studio'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] > span[aria-hidden='true'] {
     box-shadow: none;
   }

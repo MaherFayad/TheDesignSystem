@@ -16,6 +16,10 @@
  *   --_tabs-indicator-bg, -indicator-thickness
  *   --_tabs-indicator-border-color, -indicator-border-width   the soft pill's 3:1 edge (WCAG 1.4.11)
  *   --_tabs-ring                                 the focus ring, inset so a scrolling list never clips it
+ *   --_tabs-ring-active                          the focus ring on the active tab: the ring, then a
+ *                                                halo band and a band in the bright text color
+ *                                                inside it. One of the three holds 3:1 on a pale,
+ *                                                a mid gray or an inverted indicator (Q5 F9)
  *   --_tabs-count-bg, -count-fg
  *
  * Each trigger copies the private colors into its own --_tabs-trigger-*
@@ -64,6 +68,10 @@
     --_tabs-indicator-border-color: transparent;
     --_tabs-indicator-border-width: 0;
     --_tabs-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_tabs-ring-active:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring),
+      inset 0 0 0 calc(var(--ds-border-width-strong) * 2) var(--ds-color-focus-halo),
+      inset 0 0 0 calc(var(--ds-border-width-strong) * 3) var(--ds-color-text-bright);
     --_tabs-count-bg: var(--ds-color-bg-overlay-10);
     --_tabs-count-fg: var(--ds-color-text-default);
 
@@ -294,6 +302,10 @@
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
     box-shadow: var(--_tabs-ring);
+  }
+
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-state='active']:focus-visible {
+    box-shadow: var(--_tabs-ring-active);
   }
 
   [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-disabled] {

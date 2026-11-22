@@ -57,6 +57,11 @@
     --_dialog-radius: var(--ds-radius-sheet);
   }
 
+  /* The sheet's drag handle is a square bar at the mark corner, not a pill on a square sheet (order P2 F5, Q1 F21). */
+  [data-style='studio'] [data-ds='sheet'] {
+    --_dialog-handle-radius: var(--ds-radius-xs);
+  }
+
   @media (forced-colors: none) {
     [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-bg: var(--ds-color-bg-surface);
@@ -80,6 +85,28 @@
     [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='description'] {
       background-color: var(--ds-color-bg-surface);
     }
+  }
+
+  /*
+   * Order P2 F5 (Q1 F01, F02): on ios the platform sets the title and
+   * description paddings in ds.chrome (20 above the title, 4 under it, 0
+   * above the description), made for one surface with no bands. Studio's
+   * title band then ended 6px under the glyphs, and the alert description
+   * sat on its own rule with no room above it. On ios the panel is one flat
+   * tile: no header band, no description band and no rule; the 1px bright
+   * frame stays.
+   */
+  [data-style='studio'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-header-bg: transparent;
+  }
+
+  [data-style='studio'][data-platform='ios'] [data-ds='alert-dialog'] {
+    --_dialog-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-style='studio'][data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] + [data-part='description'] {
+    border-block-start: 0;
+    background-color: transparent;
   }
 
   /* Dense type: the titles one step down. */

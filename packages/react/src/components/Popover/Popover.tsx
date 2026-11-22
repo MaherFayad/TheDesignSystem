@@ -335,7 +335,8 @@ export function PopoverContent({
     }
     body = kept;
   }
-  const head = titlebarOn ? (
+  // No title and no close: no title bar, so the style draws no empty band (order P2 F4).
+  const head = titlebarOn && (barTitle || closeNode) ? (
     <TitleBar
       data-part="titlebar"
       as={barTitle ? 'h2' : 'div'}

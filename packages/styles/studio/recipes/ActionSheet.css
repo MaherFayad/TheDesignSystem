@@ -1,0 +1,59 @@
+/*
+ * Studio recipe for ActionSheet (order P2 F5, Q1 F07, proposed). The panel
+ * is framed by the bright text color rule, as Dialog, the menus and the
+ * toasts are in Studio, so its edge reads on the dimmed page in dark.
+ *
+ * On web and macos every item is one cell look: no fill, a 1px control
+ * rule, the bright rule on hover and the inverted cell on press, as the
+ * neutral button. A destructive item keeps the same cell with the danger
+ * ink and rule, and turns into the red cell on press. Cancel is the same
+ * cell in regular weight (ActionSheet.css), not bare gray text. On ios and
+ * android the platform draws the items (ds.chrome), so this file sets no
+ * item look there.
+ *
+ * This layer wins over the base state rules, so the hover and press swaps
+ * are repeated here for the properties set at rest.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='action-sheet'] {
+      --_action-sheet-border-color: var(--ds-color-text-bright);
+      --_action-sheet-shadow: 0 0 transparent;
+    }
+
+    [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']) {
+      --_button-bg: transparent;
+      --_button-fg: var(--ds-color-text-default);
+      --_button-border-color: var(--ds-color-border-control);
+      --_button-bg-hover: var(--ds-color-bg-overlay-5);
+      --_button-fg-hover: var(--ds-color-text-bright);
+      --_button-border-color-hover: var(--ds-color-text-bright);
+      --_button-bg-active: var(--ds-color-text-bright);
+      --_button-fg-active: var(--ds-color-bg-body);
+    }
+
+    [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > [data-part='action'][data-tone='danger'] {
+      --_button-fg: var(--ds-color-state-danger-text);
+      --_button-border-color: var(--ds-color-state-danger-border);
+      --_button-bg-hover: var(--ds-color-state-danger-tint-10);
+      --_button-fg-hover: var(--ds-color-state-danger-text);
+      --_button-border-color-hover: var(--ds-color-state-danger-text);
+      --_button-bg-active: var(--ds-color-state-danger-solid);
+      --_button-fg-active: var(--ds-color-state-danger-on-solid);
+    }
+
+    @media (hover: hover) {
+      [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']):hover:not([data-disabled], [data-loading]) {
+        --_button-bg: var(--_button-bg-hover);
+        --_button-fg: var(--_button-fg-hover);
+        --_button-border-color: var(--_button-border-color-hover);
+      }
+    }
+
+    [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='action-sheet'] [data-part='panel'] > [data-part='actions'] > :is([data-part='action'], [data-part='cancel']):is(:active, [data-pressed]):not([data-disabled], [data-loading]) {
+      --_button-bg: var(--_button-bg-active);
+      --_button-fg: var(--_button-fg-active);
+      --_button-border-color: var(--_button-bg-active);
+    }
+  }
+}

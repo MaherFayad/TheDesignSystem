@@ -110,7 +110,8 @@
 
   /* A SearchField that is a part of another component (the CommandPalette band) draws no glow: the outer box draws it. */
   [data-ds='search-field'][data-part] {
-    --_search-field-shadow-focus: none;
+    --_search-field-shadow-focus: 0 0 transparent;
+    --_search-field-bloom-spread: 0px;
   }
 
   /* A button at the end sits close to the edge; the text keeps the full padding at the start. */

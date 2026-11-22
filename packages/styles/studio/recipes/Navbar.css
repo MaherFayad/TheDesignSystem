@@ -1,0 +1,39 @@
+/*
+ * Studio recipe for Navbar (order P2 F5, Q1 F13 and F05, proposed). The
+ * dropdown panel is the menu tile of DropdownMenu.css: the flat surface one
+ * step up, square, framed by a 1px rule in the bright text color, drawn as
+ * a spread with no blur (the viewport clips its content, so a border would
+ * cut a row's edge). No soft shadow.
+ *
+ * The current page in a panel is Studio's selection mark, the inverted
+ * cell (the bright fill, body colored text), not a 2px bar at the start
+ * edge. Its description takes the same body color. The links in the bar
+ * keep the base underline bar, as the ghost tabs do.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='navbar'] {
+    --_navbar-panel-radius: 0;
+  }
+
+  /* Square rows, as the menu tile's. */
+  [data-style='studio'] [data-ds='navbar'] [data-part='content-list'] [data-part='link'] {
+    --_navbar-link-radius: 0;
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='navbar'] {
+      --_navbar-panel-bg: var(--ds-color-bg-surface-2);
+      --_navbar-panel-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] [data-ds='navbar'] [data-part='content-list'] [data-part='link'][data-active] {
+      --_navbar-link-bg: var(--ds-color-text-bright);
+      --_navbar-link-fg-active: var(--ds-color-bg-body);
+      --_navbar-link-edge-active: transparent;
+    }
+
+    [data-style='studio'] [data-ds='navbar'] [data-part='content-list'] [data-part='link'][data-active] [data-part='link-description'] {
+      color: var(--ds-color-bg-body);
+    }
+  }
+}

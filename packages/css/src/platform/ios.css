@@ -40,7 +40,7 @@
  * grabber, the chevron) take system colors.
  *
  * Order 1.28 (proposed) wires the order 1.23 hooks: the glass lens thumb
- * of the Switch, the round drawn check, the press as a dim alone, the toast
+ * of the Switch, the round drawn check, the press without a sink, the toast
  * stack from the top edge, the alert's own enter, the Sheet's handle-bar,
  * the backdrop blur, menus that grow out of their trigger with a check for
  * the selection, and the segment filter. Durations are set only through
@@ -74,7 +74,7 @@
     --_button-part-press: 1;
 
     font-weight: var(--ds-font-weight-semibold);
-    /* Press feedback is a dim, not a dip: in at once, out on release. Token durations only, so the reduced form below holds. */
+    /* Press feedback is the pressed fill, not a dip: in at once, out on release. Token durations only, so the reduced form below holds. */
     transition:
       opacity var(--ds-duration-slow) var(--ds-ease-out),
       transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
@@ -82,7 +82,7 @@
 
   /*
    * Every member of the family, parts and attached ones included: the press
-   * is the dim alone. No sink of the content, no inner shade and no glow
+   * is the pressed fill alone. No sink of the content, no inner shade and no glow
    * (the glow layer is ::before; the 44pt hit area is the hit part, so the
    * glow keeps the control's box). A style that wants its glow back sets --_button-glow in its
    * recipe, which comes after this layer.
@@ -132,8 +132,13 @@
     content: '';
   }
 
+  /*
+   * Order P2 F1: the press is the component's pressed fill and ink, in at
+   * once, with no dim of the whole control. A dim fades the label with the
+   * fill: 0.55 took a 7:1 label to 2.6:1, and even a 0.9 dim took a 6:1
+   * soft label under 4.5:1 while the finger was down (WCAG 2.2 1.4.3).
+   */
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading], [aria-disabled='true']) {
-    opacity: 0.55;
     transition-duration: var(--ds-duration-instant);
   }
 
@@ -325,6 +330,18 @@
     --_segmented-control-indicator-filter: blur(var(--ds-blur-glass)) brightness(1.08) saturate(1.4);
   }
 
+  /*
+   * Order P2 F1: in a style with no glass the track is the quiet fill of the
+   * web (overlay 5). On Desk's darker light paper the overlay 10 track took
+   * the unselected labels to 4.06:1 (WCAG 2.2 1.4.3). A style with glass
+   * keeps the platform's gray track above.
+   */
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='segmented-control'] {
+      --_segmented-control-bg: var(--ds-color-bg-overlay-5);
+    }
+  }
+
   @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
     [data-platform='ios'] [data-ds='segmented-control'] {
       --_segmented-control-indicator-filter: none;
@@ -412,6 +429,23 @@
   }
 
   /*
+   * Order P2 F1: the search text is the platform's body size in every style
+   * (17 at the default size), not the style's small size: Studio's 11 was
+   * under the body size, and under 16 the phone's browser zooms the page on
+   * focus. The small sizes of a style with no glass take the medium body
+   * size (15); a style with glass keeps its own small sizes.
+   */
+  [data-platform='ios'] [data-ds='search-field']:not([data-part], [data-size='xs'], [data-size='sm'], [data-size='lg']) {
+    --_search-field-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='search-field']:not([data-part]):is([data-size='xs'], [data-size='sm']) {
+      --_search-field-font-size: var(--ds-type-body-medium-font-size);
+    }
+  }
+
+  /*
    * Order F1: the search field of a style that takes the platform's look in
    * full is the platform's: a gray capsule 36 tall at the default size, no
    * border, the text at 17. The focus ring stays.
@@ -427,18 +461,18 @@
 
     [data-platform='ios'] [data-ds='search-field']:not([data-part], [data-size='xs'], [data-size='sm'], [data-size='lg']) {
       --_search-field-height: calc(var(--ds-size-control-xs) + var(--ds-space-fixed-m));
-      --_search-field-font-size: var(--ds-type-body-large-font-size);
     }
+  }
 
-    /*
-     * Order Y5: the hint of the floating search field is the field's only
-     * visible label. On the gray well over the clear glass the placeholder
-     * gray measured 3.9 to 4.4 (Neutral, Liquid dark), so it takes the muted
-     * text color there, as the bar's own labels do (WCAG 2.2 1.4.3).
-     */
-    [data-platform='ios'] [data-ds='tab-bar'] [data-ds='search-field'] [data-ds='input'] > [data-part='control']::placeholder {
-      color: var(--ds-color-text-muted);
-    }
+  /*
+   * Order Y5: the hint of the floating search field is the field's only
+   * visible label. On the gray well over the clear glass the placeholder
+   * gray measured 3.9 to 4.4 (Neutral, Liquid dark), so it takes the muted
+   * text color there, as the bar's own labels do (WCAG 2.2 1.4.3). Order P2
+   * F1: in every style, not only those with glass (Desk dark measured 3.7).
+   */
+  [data-platform='ios'] [data-ds='tab-bar'] [data-ds='search-field'] [data-ds='input'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-muted);
   }
 
   [data-platform='ios'] [data-ds='textarea'] {
@@ -718,7 +752,8 @@
     --_button-fg-active: var(--ds-color-text-bright);
     --_button-border-color: transparent;
     --_button-border-color-hover: transparent;
-    --_button-shadow: none;
+    /* An empty shadow, never none: the focus rule lists it before the ring, and none in a list drops the ring too (order P2 F1). */
+    --_button-shadow: 0 0 transparent;
 
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -733,6 +768,34 @@
     box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+
+  /*
+   * Order P2 F1: a bottom toolbar of a style with no glass (Studio, Desk) is
+   * the platform's capsule too, with the paint of the tab bar beside it: the
+   * strong glass fill, its edge and the lift. Its own square panel fill on
+   * the page had no edge (1.1:1). A style with glass keeps the capsule and
+   * fill it has below; a toolbar that wraps stays a panel.
+   */
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='toolbar']:not([data-part='accessory'] > *, [data-wrap]) {
+      --_toolbar-radius: var(--ds-shape-corner-full);
+      --_toolbar-bg: var(--ds-color-material-glass-strong);
+      --_toolbar-border-color: var(--ds-color-material-glass-border);
+
+      box-shadow: var(--ds-elevation-glass);
+      -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+      backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    }
+
+    @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+      [data-platform='ios'] [data-ds='toolbar']:not([data-part='accessory'] > *, [data-wrap]) {
+        --_toolbar-bg: var(--ds-color-material-glass-solid);
+
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+    }
   }
 
   [data-platform='ios'] [data-ds='sidebar'] {
@@ -1900,7 +1963,8 @@
       --_button-bg-active: color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 14%, transparent);
       --_button-border-color: transparent;
       --_button-border-color-hover: transparent;
-      --_button-shadow: none;
+      /* An empty shadow, never none, so the focus ring still draws (order P2 F1). */
+      --_button-shadow: 0 0 transparent;
     }
 
     [data-platform='ios'][data-scheme='dark'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {

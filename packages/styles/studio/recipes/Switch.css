@@ -39,6 +39,24 @@
     }
   }
 
+  /*
+   * On ios the platform's track is 63 wide with a 38 wide capsule thumb and
+   * a 20 percent veil while off, so on and off both read as a dark mass at
+   * the start (order P2 F5, Q1 F08). Studio keeps its square bit there: the
+   * thumb is as wide as it is tall, so it travels most of the track, and the
+   * off track is empty with the 1px control rule. Off is an outline with a
+   * dark bit at the start, on the inverted fill with a light bit at the end.
+   */
+  [data-style='studio'][data-platform='ios'] [data-ds='switch'] {
+    --_switch-thumb-width: var(--_switch-thumb-size);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'][data-platform='ios'] [data-ds='switch']:not([data-state='checked']) {
+      --_switch-bg: transparent;
+    }
+  }
+
   /* The press is the platform's on ios and android (packages/css/src/platform), so the style sets its own only where the platform sets none. */
   [data-style='studio']:is([data-platform='web'], [data-platform='macos']) [data-ds='switch'] {
     --_switch-thumb-size-pressed: 1;

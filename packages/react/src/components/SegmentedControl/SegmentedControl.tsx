@@ -10,7 +10,10 @@
 // Behavior from Radix ToggleGroup type single: role radiogroup with radio
 // items (aria-checked), roving focus, arrows follow the reading direction.
 // Two changes: the value never goes empty (a press on the selected item is
-// ignored), and selection follows focus (an arrow key selects).
+// ignored), and selection follows focus (an arrow key selects). A pointer
+// selects on release, through the click (WCAG 2.5.2): the focus a press
+// gives on pointer down does not select, so moving off before the release
+// cancels (order P2 F4). The keyboard is unchanged.
 //
 // The items are drawn on the Button base as ToggleButton roots carrying
 // data-part="item"; SegmentedControl.css restyles them through Button's
@@ -31,6 +34,7 @@ import {
   useRef,
   useState,
   type FocusEvent,
+  type PointerEvent,
   type HTMLAttributes,
   type ReactNode,
   type Ref,
@@ -282,8 +286,11 @@ export interface SegmentedControlItemProps
  * One option of a SegmentedControl: a ToggleButton root with
  * `data-part="item"`, role radio and aria-checked. Focus selects it.
  */
-export function SegmentedControlItem({ value, disabled = false, start, icon, label, children, onFocus, ...rest }: SegmentedControlItemProps) {
+export function SegmentedControlItem({ value, disabled = false, start, icon, label, children, onFocus, onPointerDown, ...rest }: SegmentedControlItemProps) {
   const seg = use(SegmentedContext);
+  // True from a pointer down on this item until that pointer is released
+  // anywhere: the focus it gives meanwhile does not select.
+  const pressing = useRef(false);
   const groupDisabled = useGroupDisabled();
   const inert = disabled || groupDisabled;
   const iconOnly = icon !== undefined;
@@ -300,10 +307,22 @@ export function SegmentedControlItem({ value, disabled = false, start, icon, lab
         iconOnly={iconOnly}
         defaultEmphasis="ghost"
         aria-label={iconOnly ? label : rest['aria-label']}
+        onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+          onPointerDown?.(event);
+          pressing.current = true;
+          const release = () => {
+            pressing.current = false;
+            view?.removeEventListener('pointerup', release, true);
+            view?.removeEventListener('pointercancel', release, true);
+          };
+          const view = event.currentTarget.ownerDocument.defaultView;
+          view?.addEventListener('pointerup', release, true);
+          view?.addEventListener('pointercancel', release, true);
+        }}
         onFocus={(event: FocusEvent<HTMLButtonElement>) => {
           onFocus?.(event);
-          // Selection follows focus, so the arrow keys select.
-          if (!inert) seg?.select(value);
+          // Selection follows focus, so the arrow keys select. A press selects on its click.
+          if (!inert && !pressing.current) seg?.select(value);
         }}
         render={() =>
           iconOnly ? (

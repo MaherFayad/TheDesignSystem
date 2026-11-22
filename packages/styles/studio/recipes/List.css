@@ -1,0 +1,34 @@
+/*
+ * Studio recipe for List (order P2 F5, Q1 F05, proposed). The current row
+ * (data-active, the "now playing" row) takes Studio's one selection mark,
+ * the inverted cell, as SegmentedControl, TabBar, Calendar, the menus and
+ * the ColorPicker views do: the bright text color as the fill and the body
+ * color for its title, start icon and description. The base mark was a 10
+ * percent veil, about 1.2:1 to the row. It is set through the selected mark
+ * properties of List.css, so the row glide layer draws the same fill.
+ * The neutral buttons in that row follow its ink.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='list'] {
+      --_list-item-bg-active: var(--ds-color-text-bright);
+      --_list-item-fg-active: var(--ds-color-bg-body);
+      --_list-item-edge-active: transparent;
+    }
+
+    /*
+     * The neutral buttons in the current row (a delete or a more action)
+     * take the row's body colored ink, and their press inverts once more:
+     * the body colored cell with the bright glyph. Their hover is the body
+     * colored rule, since a veil does not show on the inverted fill.
+     */
+    [data-style='studio'] [data-ds='list'] > [data-part='item'][data-active] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral']:not([data-emphasis='solid']) {
+      --_button-fg: var(--ds-color-bg-body);
+      --_button-fg-hover: var(--ds-color-bg-body);
+      --_button-bg-hover: transparent;
+      --_button-border-color-hover: var(--ds-color-bg-body);
+      --_button-bg-active: var(--ds-color-bg-body);
+      --_button-fg-active: var(--ds-color-text-bright);
+    }
+  }
+}

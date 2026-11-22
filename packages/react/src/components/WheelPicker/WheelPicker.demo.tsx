@@ -5,10 +5,14 @@
 // long-arabic (an ar-SA time with Latin digits and the Intl day period
 // words, hours at the right, and a column of Arabic words), disabled (a
 // disabled wheel, and a column with rows that cannot be chosen). No empty,
-// loading, error or readonly: a wheel always has rows and a value.
+// loading, error or readonly: a wheel always has rows and a value. The
+// copy and the locale follow the page language: with lang=ar every case
+// reads Arabic (ar-SA, and 24 hours where the English case shows en-GB).
 import { useMemo, useState, type CSSProperties } from 'react';
 import { wheelTimeColumns, wheelTimeFromValues, type WheelColumn, type WheelValue } from '@the-system/shared';
 import { DemoCase, DemoPage } from '../../demo';
+import { useTheme } from '../../theme/hooks';
+import { isArabic } from '../Popover/FloatingLayer';
 import { WheelPicker } from './index';
 
 const frame: CSSProperties = {
@@ -80,6 +84,22 @@ function ListWheel({ column, label, loop, disabled, chosen }: ListProps) {
   );
 }
 
+const snoozeAr: WheelColumn = {
+  id: 'snooze',
+  label: 'مدة الغفوة',
+  options: [5, 10, 15, 20, 30].map((m) => ({ value: m, label: m <= 10 ? `${m} دقائق` : `${m} دقيقة` })),
+  defaultValue: 10,
+};
+
+const seatsAr: WheelColumn = { id: 'seats', label: 'المقاعد', options: [1, 2, 3, 4].map((n) => ({ value: n, label: String(n) })), defaultValue: 2 };
+
+const distanceAr: WheelColumn = {
+  id: 'distance',
+  label: 'المسافة بالكيلومتر',
+  options: Array.from({ length: 300 }, (_, i) => ({ value: i + 1, label: `${i + 1} كم` })),
+  defaultValue: 42,
+};
+
 const snooze: WheelColumn = {
   id: 'snooze',
   label: 'Snooze length',
@@ -134,31 +154,91 @@ const slots: WheelColumn = {
   defaultValue: '18:30',
 };
 
+const slotsAr: WheelColumn = { ...slots, label: 'وقت الطاولة' };
+
+const words = {
+  en: {
+    locale: 'en-US',
+    locale24: 'en-GB',
+    cycle24: undefined,
+    snooze,
+    seats,
+    distance,
+    repeat: repeatEn,
+    slots,
+    alarm: 'Alarm time',
+    alarmAt: 'Alarm at',
+    reminder: 'Reminder time',
+    reminderAt: 'Reminder at',
+    snoozeLabel: 'Snooze',
+    snoozeFor: 'Snooze for',
+    seatsLabel: 'Seats',
+    seatsChosen: 'Seats:',
+    departure: 'Departure time',
+    departs: 'Departs at',
+    distanceLabel: 'Distance',
+    distanceChosen: 'Distance:',
+    repeatLabel: 'Repeat',
+    repeats: 'Repeats:',
+    snoozeOff: 'Snooze, not available',
+    table: 'Table time',
+    tableAt: 'Table at',
+  },
+  ar: {
+    locale: 'ar-SA',
+    locale24: 'ar-SA',
+    cycle24: 24,
+    snooze: snoozeAr,
+    seats: seatsAr,
+    distance: distanceAr,
+    repeat: repeatAr,
+    slots: slotsAr,
+    alarm: 'وقت المنبه',
+    alarmAt: 'المنبه الساعة',
+    reminder: 'وقت التذكير',
+    reminderAt: 'التذكير الساعة',
+    snoozeLabel: 'الغفوة',
+    snoozeFor: 'الغفوة لمدة',
+    seatsLabel: 'المقاعد',
+    seatsChosen: 'المقاعد:',
+    departure: 'وقت المغادرة',
+    departs: 'المغادرة الساعة',
+    distanceLabel: 'المسافة',
+    distanceChosen: 'المسافة:',
+    repeatLabel: 'التكرار',
+    repeats: 'التكرار:',
+    snoozeOff: 'الغفوة، غير متاحة',
+    table: 'وقت الطاولة',
+    tableAt: 'الطاولة الساعة',
+  },
+} as const;
+
 export default function WheelPickerDemo() {
+  const w = words[isArabic(useTheme().lang) ? 'ar' : 'en'];
   return (
     <DemoPage>
       <DemoCase id="variants" title="A 12 hour time, a 24 hour time in 5 minute steps, one short column">
         <div style={row}>
-          <TimeWheel locale="en-US" start={{ hour: 9, minute: 41 }} label="Alarm time" chosen="Alarm at" />
-          <TimeWheel locale="en-GB" minuteStep={5} start={{ hour: 18, minute: 30 }} label="Reminder time" chosen="Reminder at" />
-          <ListWheel column={snooze} label="Snooze" chosen="Snooze for" />
+          <TimeWheel locale={w.locale} start={{ hour: 9, minute: 41 }} label={w.alarm} chosen={w.alarmAt} />
+          <TimeWheel locale={w.locale24} hourCycle={w.cycle24} minuteStep={5} start={{ hour: 18, minute: 30 }} label={w.reminder} chosen={w.reminderAt} />
+          <ListWheel column={w.snooze} label={w.snoozeLabel} chosen={w.snoozeFor} />
         </div>
       </DemoCase>
 
       <DemoCase id="one" title="One column of four values">
-        <ListWheel column={seats} label="Seats" chosen="Seats:" />
+        <ListWheel column={w.seats} label={w.seatsLabel} chosen={w.seatsChosen} />
       </DemoCase>
 
       <DemoCase id="many" title="A 24 hour time with every minute: both columns loop">
-        <TimeWheel locale="en-GB" start={{ hour: 23, minute: 58 }} label="Departure time" chosen="Departs at" />
+        <TimeWheel locale={w.locale24} hourCycle={w.cycle24} start={{ hour: 23, minute: 58 }} label={w.departure} chosen={w.departs} />
       </DemoCase>
 
       <DemoCase id="too-many" title="300 values that do not loop">
-        <ListWheel column={distance} label="Distance" chosen="Distance:" />
+        <ListWheel column={w.distance} label={w.distanceLabel} chosen={w.distanceChosen} />
       </DemoCase>
 
       <DemoCase id="long-text" title="Rows longer than the column end with an ellipsis">
-        <ListWheel column={repeatEn} label="Repeat" chosen="Repeats:" />
+        <ListWheel column={w.repeat} label={w.repeatLabel} chosen={w.repeats} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic, ar-SA: Latin digits, the Intl day period, hours at the right" lang="ar">
@@ -170,8 +250,8 @@ export default function WheelPickerDemo() {
 
       <DemoCase id="disabled" title="A disabled wheel, and a column with times that are taken">
         <div style={row}>
-          <ListWheel column={snooze} label="Snooze, not available" disabled chosen="Snooze for" />
-          <ListWheel column={slots} label="Table time" chosen="Table at" />
+          <ListWheel column={w.snooze} label={w.snoozeOff} disabled chosen={w.snoozeFor} />
+          <ListWheel column={w.slots} label={w.table} chosen={w.tableAt} />
         </div>
       </DemoCase>
     </DemoPage>

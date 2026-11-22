@@ -527,6 +527,39 @@ describe('Dialog', () => {
       await waitFor(() => expect(rootEl()).toBeNull());
     });
 
+    it.each(['ios', 'android'] as const)('Desk on %s: the title bar carries the CloseButton, so the platform CSS can hide the lights', async (platform) => {
+      const user = userEvent.setup();
+      render(
+        <Theme style="desk" platform={platform}>
+          <Basic />
+        </Theme>,
+      );
+      await open(user);
+      const bar = part('titlebar');
+      const close = bar?.querySelector<HTMLElement>('[data-ds="close-button"][data-part="close"]');
+      expect(close).not.toBeNull();
+      expect(close?.closest('[data-ds="window-controls"]')).toBeNull();
+      expect(close?.getAttribute('aria-label')).toBe('Close dialog');
+      // The lights stay in the markup; ios.css hides them once the bar has a CloseButton.
+      expect(bar?.querySelector('[data-ds="window-controls"]')).not.toBeNull();
+      await user.click(close as HTMLElement);
+      await waitFor(() => expect(rootEl()).toBeNull());
+    });
+
+    it('Desk on web and macos: no CloseButton beside the lights', async () => {
+      const user = userEvent.setup();
+      for (const platform of ['web', 'macos'] as const) {
+        render(
+          <Theme style="desk" platform={platform}>
+            <Basic />
+          </Theme>,
+        );
+        await open(user);
+        expect(part('titlebar')?.querySelector('[data-ds="close-button"]')).toBeNull();
+        cleanupDialogs();
+      }
+    });
+
     it('Desk with no title: no empty heading in the title bar, and a warning in development', async () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
       render(

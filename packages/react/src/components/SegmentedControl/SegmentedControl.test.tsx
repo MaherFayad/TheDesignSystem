@@ -64,6 +64,30 @@ describe('SegmentedControl', () => {
     expect(onValueChange.mock.calls.map((c) => c[0])).toEqual(['week']);
   });
 
+  it('a pointer selects on release: press, move off, release cancels (WCAG 2.5.2)', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<Range onValueChange={onValueChange} />);
+    const day = screen.getByRole('radio', { name: 'Day' });
+    const week = screen.getByRole('radio', { name: 'Week' });
+    // Press on Week (the press gives it focus), move off, release outside.
+    await user.pointer({ keys: '[MouseLeft>]', target: week });
+    expect(document.activeElement).toBe(week);
+    expect(week.getAttribute('data-state')).toBe('off');
+    await user.pointer({ pointerName: 'mouse', target: document.body });
+    await user.pointer({ keys: '[/MouseLeft]', target: document.body });
+    expect(week.getAttribute('data-state')).toBe('off');
+    expect(day.getAttribute('data-state')).toBe('on');
+    expect(onValueChange).not.toHaveBeenCalled();
+    // After that release the keyboard still selects on focus.
+    await user.keyboard('{ArrowRight}');
+    expect(screen.getByRole('radio', { name: 'Month' }).getAttribute('data-state')).toBe('on');
+    // A full press and release on an item selects it.
+    await user.click(week);
+    expect(week.getAttribute('data-state')).toBe('on');
+    expect(onValueChange.mock.calls.map((c) => c[0])).toEqual(['month', 'week']);
+  });
+
   it('selection follows focus: the arrows select, Home and End too, and wrap', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();

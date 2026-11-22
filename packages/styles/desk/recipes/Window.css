@@ -49,4 +49,16 @@
   [data-style='desk'][data-ds='theme'][data-scheme][data-contrast='more'] {
     background-image: none;
   }
+
+  /*
+   * Order P2 F6 (proposed): selected text takes Desk's yellow with the ink
+   * of the yellow, as every other Desk selection does, not the base black
+   * inverse pair. The ink keeps 4.5:1 on the yellow in both schemes. Forced
+   * colors paint selection in the system colors by themselves.
+   */
+  [data-style='desk'][data-ds='theme']::selection,
+  [data-style='desk'] ::selection {
+    background-color: var(--ds-color-primary-fill);
+    color: var(--ds-color-primary-text);
+  }
 }

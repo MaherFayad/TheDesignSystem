@@ -166,6 +166,19 @@
       inset 0 0 0 calc(var(--ds-border-width-strong) * 2) var(--ds-color-focus-halo);
   }
 
+  /*
+   * Focus on the selected cell (Q5 F6). Where the focus ring has the ink of
+   * the selection ring (Studio, Desk light) the two rings above were the
+   * same pixels. Here the focus ring is twice as wide, so it also covers the
+   * gap band of the selection ring: that band turns from the surface to the
+   * focus ring color, 3:1 or more in every style, then the halo.
+   */
+  [data-ds='color-swatch-picker'][data-layout='grid'] [data-part='item'][data-selected]:focus-visible > [data-part='swatch'] {
+    --_color-swatch-ring:
+      inset 0 0 0 max(calc(var(--ds-border-width-strong) * 2), calc(var(--_color-swatch-picker-ring-width) * 2)) var(--ds-color-focus-ring),
+      inset 0 0 0 calc(max(calc(var(--ds-border-width-strong) * 2), calc(var(--_color-swatch-picker-ring-width) * 2)) + var(--ds-border-width-strong)) var(--ds-color-focus-halo);
+  }
+
   /* Row: discs in targets, then the add button. */
   [data-ds='color-swatch-picker'][data-layout='row'] > [data-part='list'] {
     display: flex;

@@ -40,7 +40,7 @@ export const bannerLabels = {
   ar: {
     region: 'إعلان',
     close: 'إغلاق الإعلان',
-    tone: { neutral: 'إشعار', accent: 'إشعار', info: 'معلومة', success: 'نجاح', warning: 'تنبيه', danger: 'خطأ' },
+    tone: { neutral: 'إشعار', accent: 'إشعار', info: 'معلومة', success: 'نجاح', warning: 'تحذير', danger: 'خطأ' },
   },
 } as const;
 

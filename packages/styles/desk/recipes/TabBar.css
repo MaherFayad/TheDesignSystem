@@ -6,9 +6,88 @@
  * same mark, so the bar reads as Desk's and not as the base gray. The
  * current item keeps its bolder weight and the pill behind its icon, so
  * color is never the only cue. Forced colors set the text by themselves.
+ *
+ * Order P2 F6 (proposed):
+ * - Web and the desktop platforms: the bar is a Desk glass pill on the
+ *   desk, not the base square strip: the glass material and its blur, the
+ *   glass hairline all round, the light edge on top and the soft window
+ *   lift, inset from the edges. ios and android draw their own bar shape
+ *   (ds.chrome) and keep it; under reduced transparency and more contrast
+ *   the glass turns solid.
+ * - The pill behind the current icon is Desk's yellow (the one selected
+ *   mark), with the gold edge: the yellow alone is about 1.07:1 against the
+ *   light desk, the edge keeps 3:1 (WCAG 1.4.11). The icon on it takes the
+ *   ink of the yellow. ios keeps its lens and draws no pill.
+ * - The search field placeholder takes the muted text in dark: the subtle
+ *   text was 3.28:1 on the field well over the glass (WCAG 1.4.3).
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='tab-bar'] {
     --_tab-bar-fg-active: var(--ds-color-primary-on-surface);
+  }
+
+  [data-style='desk']:not([data-platform='ios'], [data-platform='android']) [data-ds='tab-bar'] {
+    --_tab-bar-bg: var(--ds-color-material-glass);
+    --_tab-bar-border-color: var(--ds-color-material-glass-border);
+
+    inline-size: calc(100% - 2 * var(--ds-space-s));
+    margin-inline: auto;
+    padding: var(--ds-space-3xs);
+    border: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+    border-radius: var(--ds-radius-control);
+    box-shadow: var(--ds-elevation-window-soft), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge);
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /* A bar of two rows (the accessory above the items) is a window, not a pill: the pill corner would cut into the accessory. */
+  [data-style='desk']:not([data-platform='ios'], [data-platform='android']) [data-ds='tab-bar']:has(> [data-part='accessory']):not([data-compact]) {
+    border-radius: var(--ds-radius-card);
+  }
+
+  [data-style='desk']:not([data-platform='ios'], [data-platform='android']) [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search']) {
+    border-radius: var(--ds-radius-control);
+  }
+
+  [data-style='desk']:not([data-platform='ios']) [data-ds='tab-bar'] {
+    --_tab-bar-pill-bg: var(--ds-color-primary-fill);
+  }
+
+  [data-style='desk']:not([data-platform='ios']) [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > [data-part='item-icon'] {
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-primary-border);
+    color: var(--ds-color-primary-text);
+  }
+
+  [data-style='desk'][data-scheme='dark'] [data-ds='tab-bar'] [data-ds='input'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-muted);
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk']:not([data-platform='ios'], [data-platform='android']) [data-ds='tab-bar'] {
+      --_tab-bar-bg: var(--ds-color-material-glass-solid);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more']:not([data-platform='ios'], [data-platform='android']) [data-ds='tab-bar'] {
+    --_tab-bar-bg: var(--ds-color-material-glass-solid);
+    --_tab-bar-border-color: var(--ds-color-border-control);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='tab-bar'] {
+      --_tab-bar-bg: Canvas;
+      --_tab-bar-border-color: CanvasText;
+    }
+
+    [data-style='desk'] [data-ds='tab-bar'] > :is([data-part='item'], [data-part='search'])[data-active] > [data-part='item-icon'] {
+      box-shadow: none;
+      color: inherit;
+    }
   }
 }

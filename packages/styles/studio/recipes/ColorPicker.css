@@ -8,8 +8,7 @@
  * tabs lift the active segment with a card shadow. Studio sets a square
  * segment on the list, which the triggers and the indicator read from,
  * keeps the list itself at the mark corner, and draws the
- * active segment with its 1px edge only, no shadow. The 3:1 edge of the
- * soft emphasis stays (Tabs.css).
+ * active segment as the inverted cell, no shadow.
  *
  * The trigger and the eyedropper are IconButtons with the pill shape from
  * the markup; Studio sets the corners Button reads after it.
@@ -24,7 +23,23 @@
     box-shadow: none;
   }
 
-  [data-style='studio'] [data-ds='color-picker'] > :is([data-part='trigger'], [data-part='footer'] > [data-part='eyedropper']) {
+  /*
+   * Order P2 F5 (Q1 F05, F06): the selected view is Studio's selection
+   * mark, the inverted cell, as in SegmentedControl, TabBar, Calendar and
+   * the DatePicker calendar switch: the bright fill and edge with body
+   * colored text, on a plain track.
+   */
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='color-picker'] > [data-part='views'] {
+      --_tabs-indicator-bg: var(--ds-color-text-bright);
+      --_tabs-indicator-border-color: var(--ds-color-text-bright);
+      --_tabs-fg-active: var(--ds-color-bg-body);
+    }
+  }
+
+  /* The eyedropper is a child of the footer, not of the root (order P2 F5, Q1 F14: the old selector never matched). */
+  [data-style='studio'] [data-ds='color-picker'] > [data-part='trigger'],
+  [data-style='studio'] [data-ds='color-picker'] > [data-part='footer'] > [data-part='eyedropper'] {
     --_button-radius: var(--ds-radius-control);
     --_button-radius-start-start: var(--ds-radius-control);
     --_button-radius-start-end: var(--ds-radius-control);

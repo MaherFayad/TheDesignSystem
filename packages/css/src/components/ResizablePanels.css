@@ -85,6 +85,16 @@
     overflow: hidden;
   }
 
+  /*
+   * The panel clips (overflow hidden), so the outline of a focusable element
+   * that fills it, such as a scroll pane with tabindex 0, would be cut on
+   * every side (Q5 F5). A direct child that is not a system component draws
+   * its outline inside its own box. Components keep the rings they draw.
+   */
+  :is([data-ds='resizable-panels'] > [data-part='panel'], [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary'])) > :focus-visible:not([data-ds]) {
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
   /* A collapsed panel at size 0 draws nothing; its content is inert. */
   :is([data-ds='resizable-panels'] > [data-part='panel'], [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']))[data-collapsed][inert] {
     visibility: hidden;

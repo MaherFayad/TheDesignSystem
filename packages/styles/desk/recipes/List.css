@@ -1,0 +1,16 @@
+/*
+ * Desk recipe for List (order P2 F6, proposed). Desk marks a selection in
+ * its yellow (Tabs, SegmentedControl, TabBar, Calendar, the Select menu),
+ * so the current row takes the yellow too, not the base gray overlay,
+ * through the selected mark properties of List.css: the yellow fill, the
+ * ink of the yellow, and the gold edge round the row. The yellow alone is
+ * close to the light desk (about 1.07:1); the edge keeps 3:1 against the
+ * rows around it (WCAG 1.4.11).
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='list'] {
+    --_list-item-bg-active: var(--ds-color-primary-fill);
+    --_list-item-fg-active: var(--ds-color-primary-text);
+    --_list-item-edge-active: var(--ds-color-primary-border);
+  }
+}

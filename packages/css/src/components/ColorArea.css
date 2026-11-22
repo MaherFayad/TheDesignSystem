@@ -17,7 +17,10 @@
  *   --_color-area-border-color the edge around the area and the thumb,
  *                              color.border.control, 3:1 or more (1.4.11)
  *   --_color-area-thumb        the thumb, never under size.target-min (2.5.8)
- *   --_color-area-ring         the focus ring around the thumb
+ *   --_color-area-ring         the focus ring around the thumb: the halo, the ring
+ *                              and a band in the bright text color, so one band is
+ *                              near white and one near black and the ring holds 3:1
+ *                              over any part of the area (1.4.11, Q5 F8)
  *   --_color-area-lift         how much the thumb's ring grows while dragged (pattern press); 0px turns it off
  *   --_color-area-lift-now     the working growth the dragging state sets
  *   --_color-area-duration, --_color-area-ease   the lift and its settle
@@ -57,7 +60,10 @@
     --_color-area-thumb-bg: transparent;
     --_color-area-fill: none;
     --_color-area-blend: normal;
-    --_color-area-ring: var(--ds-focus-shadow-ring);
+    --_color-area-ring:
+      0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-halo),
+      0 0 0 calc(var(--ds-border-width-strong) * 2) var(--ds-color-focus-ring),
+      0 0 0 calc(var(--ds-border-width-strong) * 3) var(--ds-color-text-bright);
     --_color-area-lift: var(--ds-border-width-strong);
     --_color-area-lift-now: 0px;
     --_color-area-duration: var(--ds-duration-base);

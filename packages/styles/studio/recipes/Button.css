@@ -76,6 +76,39 @@
       --_button-border-color: var(--_button-bg-active);
     }
 
+    /*
+     * Order P2 F5 (Q1 F09): every other button inverts on press too, as the
+     * neutral one does, so a press is never a second veil. The neutral icon
+     * and close buttons and the neutral solid buttons turn into the bright
+     * cell with body colored ink; the close button's bloom is that cell. Only the press values are set, so
+     * the base state rules still swap them in.
+     */
+    [data-style='studio'] :is([data-ds='icon-button'], [data-ds='close-button'])[data-tone='neutral']:not([data-emphasis='link']),
+    [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='neutral'][data-emphasis='solid'] {
+      --_button-bg-active: var(--ds-color-text-bright);
+      --_button-fg-active: var(--ds-color-bg-body);
+    }
+
+    [data-style='studio'] :is([data-ds='icon-button'], [data-ds='close-button'])[data-tone='neutral']:not([data-emphasis='link']):is(:active, [data-pressed]):not([data-disabled], [data-loading]) {
+      --_button-border-color: var(--ds-color-text-bright);
+      --_close-button-bloom: var(--ds-color-text-bright);
+    }
+
+    /*
+     * The tone soft buttons (danger, success, warning, info) and the accent
+     * tints: hover is the stronger tint, press the tone's own solid cell, so
+     * the two can be told apart (the base gives both the same tint).
+     */
+    [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='close-button'], [data-ds='copy-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='soft'] {
+      --_button-bg-active: var(--_button-tone-solid);
+      --_button-fg-active: var(--_button-tone-on-solid);
+    }
+
+    [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='close-button'], [data-ds='copy-button'])[data-tone='accent']:not([data-emphasis='solid'], [data-emphasis='link']) {
+      --_button-bg-active: var(--ds-color-primary-fill);
+      --_button-fg-active: var(--ds-color-primary-text);
+    }
+
     /* The primary, pressed: its own outline, the fill cut out. */
     [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='solid'] {
       --_button-bg-active: var(--ds-color-bg-body);

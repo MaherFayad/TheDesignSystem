@@ -6,7 +6,10 @@
 // `render` prop, drop its class names and its "true" valued data
 // attributes, and stamp our own parts and states (anatomy.md).
 //
-//   div [data-part=input] role=group              React Aria's DateInput
+//   div [data-part=input] role=group dir           React Aria's DateInput
+//     dir comes from the locale (rtl for Arabic, else ltr), not the page: an
+//     English value on an Arabic page keeps its order ("9:41 AM"), and an
+//     Arabic value keeps its own (order P2 F4).
 //     span [data-part=segment][data-type=day] role=spinbutton [data-placeholder]?
 //       data-type is React Aria's segment type in kebab case: day, month, year,
 //       era, hour, minute, day-period
@@ -113,6 +116,7 @@ export function SegmentRow({ arabic }: { arabic: boolean }): ReactElement {
             else if (ref) (ref as { current: HTMLDivElement | null }).current = node;
           }}
           data-part="input"
+          dir={arabic ? 'rtl' : 'ltr'}
         />
       );
     },

@@ -139,7 +139,7 @@ const words = {
     alertTitle: (venue: string) => `حجز طاولة في ${venue}؟`,
     alertBody: (when: string, guests: string) => `${when}، ${guests}. نحفظ لك الطاولة 15 دقيقة بعد وقت الحجز.`,
     cancel: 'إلغاء',
-    booked: 'تم حجز الطاولة',
+    booked: 'الطاولة محجوزة',
     bookedBody: (when: string) => `نشوفك ${when}.`,
   },
 } as const;

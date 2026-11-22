@@ -15,7 +15,16 @@
  *                                            attached ButtonGroup) can square
  *                                            one side
  *   --_button-shadow                         an elevation or an inner ring,
- *                                            under the focus ring
+ *                                            drawn at rest. It is not drawn
+ *                                            while focused: the focus rule
+ *                                            draws the ring alone, so a
+ *                                            style that sets it to none can
+ *                                            never drop the ring (Q5 F1)
+ *   --_button-select                         the color of the 2px inner ring
+ *                                            of an on toggle, drawn over the
+ *                                            focus ring while focused, so
+ *                                            pressed keeps a second cue.
+ *                                            transparent elsewhere
  *   --_button-bg, -fg, -border-color         at rest
  *   --_button-bg-hover, -fg-hover, -border-color-hover
  *   --_button-bg-active, -fg-active
@@ -167,6 +176,7 @@
     --_button-fg-active: var(--ds-color-text-bright);
     --_button-ring: var(--ds-focus-shadow-ring);
     --_button-shadow: 0 0 transparent;
+    --_button-select: transparent;
     --_button-decoration: var(--ds-color-border-control);
     --_button-decoration-hover: currentColor;
     --_button-duration: var(--ds-duration-spring-snappy);
@@ -647,6 +657,7 @@
     --_toggle-on-fg: var(--ds-color-text-bright);
     --_toggle-on-ring: var(--ds-color-bg-overlay-50);
     --_button-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--_toggle-on-ring);
+    --_button-select: var(--_toggle-on-ring);
   }
 
   [data-ds='toggle-button'][data-state='on'][data-tone='accent'] {
@@ -1031,7 +1042,13 @@
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-strong);
-    box-shadow: var(--_button-shadow), var(--_button-ring);
+    /*
+     * The ring alone, never in a list with --_button-shadow: none is valid
+     * alone but not in a list, and an invalid list would drop the ring. The
+     * on toggle's inner ring is a color here, so any value a style gives it
+     * keeps the list valid.
+     */
+    box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--_button-select), var(--_button-ring);
   }
 
   /* Disabled keeps focus (aria-disabled), dims and stops reacting. */
@@ -1129,6 +1146,7 @@
      */
     [data-ds='toggle-button'][data-state='on'] {
       --_button-shadow: inset 0 0 0 var(--ds-border-width-strong) HighlightText;
+      --_button-select: HighlightText;
 
       forced-color-adjust: none;
       background-color: Highlight;

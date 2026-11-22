@@ -1,0 +1,35 @@
+/*
+ * Desk recipe for Banner (order P2 F6, proposed). Desk's neutral soft and
+ * solid button is a glass pill in the page's text color (Button.css of this
+ * pack), and that rule sits in this layer, so on a solid banner it took back
+ * the banner's ink: dark text on the red and orange fills in light, light
+ * text on them in dark, 2.15:1 (WCAG 1.4.3). Here the actions of a solid
+ * banner take the banner's ink again on a clear pill, outlined in that ink
+ * by Banner.css, with Desk's light edge on top. Hover and press lay a veil
+ * of the ink, as Banner.css does. Studio's twin is studio/recipes/Banner.css.
+ */
+@layer ds.recipes {
+  @media (forced-colors: none) {
+    [data-style='desk'] [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] :is([data-ds='button'], [data-ds='copy-button']) {
+      --_button-bg: transparent;
+      --_button-bg-hover: color-mix(in srgb, var(--_banner-tone-on-solid) 12%, transparent);
+      --_button-bg-active: color-mix(in srgb, var(--_banner-tone-on-solid) 20%, transparent);
+      --_button-fg: var(--_banner-tone-on-solid);
+      --_button-fg-hover: var(--_banner-tone-on-solid);
+      --_button-fg-active: var(--_banner-tone-on-solid);
+      --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+
+      background-image: none;
+    }
+
+    @media (hover: hover) {
+      [data-style='desk'] [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] :is([data-ds='button'], [data-ds='copy-button']):hover:not([data-disabled], [data-loading]) {
+        --_button-bg: var(--_button-bg-hover);
+      }
+    }
+
+    [data-style='desk'] [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] :is([data-ds='button'], [data-ds='copy-button']):is(:active, [data-pressed]):not([data-disabled], [data-loading]) {
+      --_button-bg: var(--_button-bg-active);
+    }
+  }
+}
