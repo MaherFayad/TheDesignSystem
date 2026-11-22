@@ -692,6 +692,11 @@
     --_search-field-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
   }
 
+  /* A password field is the 56dp field, as an Input is, at every size; its nested Input fills it. */
+  [data-platform='android'] [data-ds='password-field'] {
+    --_password-field-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+  }
+
   /* A floating label rests in the 56dp box at its 16dp side, and rises on focus or with a value. */
   [data-platform='android'] [data-ds='field'][data-floating] {
     --_field-float-box: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));

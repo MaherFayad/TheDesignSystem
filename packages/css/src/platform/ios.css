@@ -307,6 +307,18 @@
     [data-platform='ios'][data-scheme='dark'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
       box-shadow: 0 var(--ds-border-width-strong) var(--ds-space-fixed-s) 0 color-mix(in srgb, var(--ds-color-glass-backdrop-dark) 36%, transparent);
     }
+
+    /*
+     * Order P2 F1: under forced colors the white capsule drew as a Canvas
+     * band with no edge across the thumb's Highlight disc, so the thumb read
+     * as two caps. The capsule steps aside and the thumb is the system's
+     * Highlight disc of Slider.css alone.
+     */
+    @media (forced-colors: active) {
+      [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+        display: none;
+      }
+    }
   }
 
   /* ------------------------------------------------------------ segmented control: a lifted segment that slides */
@@ -820,6 +832,17 @@
   [data-platform='ios'] [data-ds='stepper'] {
     --_stepper-font-size: var(--ds-font-size-xl);
     --_stepper-description-size: var(--ds-font-size-l);
+  }
+
+  /*
+   * Order P2 F1: the number in the disc is the small body size, not the
+   * title size, so two digits fit the 24 disc (Desk's 17 spilled onto the
+   * ring at 10 and up). A style with glass keeps the size it has.
+   */
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='stepper'] > [data-part='step'] > [data-part='indicator'] {
+      font-size: var(--ds-type-body-small-font-size);
+    }
   }
 
   /* ------------------------------------------------------------ menus: DropdownMenu, ContextMenu, the Select list. Compact, 250pt, grows from the source */
@@ -2718,10 +2741,10 @@
     --_color-slider-thickness: var(--ds-size-control-sm);
   }
 
+  /* The label stays in sentence case as written (order P2 F1): no uppercase transform. */
   [data-platform='ios'] [data-ds='color-slider'] > [data-part='label'],
   [data-platform='ios'] [data-ds='color-picker'] > [data-part='opacity'] > [data-part='label'] {
     font-size: var(--ds-type-label-small-font-size);
-    text-transform: uppercase;
   }
 
   [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='row'] {
@@ -3683,6 +3706,17 @@
 
     padding-block: calc(2 * var(--ds-space-fixed-m)) 0;
     padding-inline: calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs));
+  }
+
+  /*
+   * Order P2 F1: the well is content inside the alert, not the alert: in a
+   * style with no glass its corner is never rounder than the style's card
+   * (Studio draws its wells square). The alert keeps the platform's corner.
+   */
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] {
+      --_fieldset-card-radius: min(calc(var(--_dialog-radius) - var(--ds-space-fixed-xl) - var(--ds-space-fixed-4xs)), var(--ds-radius-card));
+    }
   }
 
   [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='body'][data-ds='fieldset'] > [data-part='body'] > [data-ds='field'] {
