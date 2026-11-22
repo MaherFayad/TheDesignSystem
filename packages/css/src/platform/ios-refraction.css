@@ -70,7 +70,8 @@
     /* The navigation and sheet buttons (order G2): a lower saturation than the bar, so a button over one strong colour reads as clear glass and not as a pill of that colour. */
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
-    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']) {
       -webkit-backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.15);
       backdrop-filter: blur(calc(var(--ds-blur-backdrop) * 0.5)) saturate(1.15);
     }
@@ -120,7 +121,8 @@
     /* The navigation and sheet buttons (order G2): a lower saturation than the bar, so a button over one strong colour reads as clear glass and not as a pill of that colour. */
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']) {
       -webkit-backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.15);
       backdrop-filter: var(--_ios-refraction,) blur(calc(var(--ds-blur-backdrop) * 0.25)) saturate(1.15);
     }
@@ -218,6 +220,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
@@ -242,7 +245,9 @@
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
@@ -265,6 +270,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu']),
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='action-sheet'] [data-part='panel'],
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='toast'],
@@ -352,7 +358,8 @@
      */
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::before,
     :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
-    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before {
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+    :root:not([data-refraction='true']) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before {
       content: '';
       display: block;
       position: absolute;
@@ -397,7 +404,8 @@
     /* Tier 1: no sheen over the bend. */
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::before,
     :root[data-refraction='true'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
-    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before {
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+    :root[data-refraction='true'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before {
       opacity: 0;
     }
 
@@ -440,6 +448,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
@@ -470,7 +479,9 @@
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+    :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
     :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-contrast='more'][data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
@@ -494,6 +505,7 @@
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid'], [data-ds='button-group'][data-attached] > *)::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']::before,
+      :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='segmented-control'] > [data-part='indicator']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch'][data-pressed]:not([data-disabled], [data-readonly], [data-released]) > [data-part='control'] > [data-part='track'] > [data-part='thumb']::before,
       :root:is([data-refraction='true'], :not([data-refraction='true'])) [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly], [data-released]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']::before {
