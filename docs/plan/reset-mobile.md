@@ -477,3 +477,65 @@ TimeField, WheelPicker, Stepper, Slider. Z1 and Z2 keep the rest and the
 test screens. One recipe file per component, so no two agents share a file.
 The steps and acceptance are those of Z1. Reports:
 `docs/reports/lanes/reset-Z3.md`, `reset-Z4.md`.
+
+## Rounds to finish Studio and Desk on mobile (owner, 2026-11-22)
+
+Owner: "go on enhancement and audit rounds with 8 different sub agents
+until you get this perfect". Each round runs eight agents with no shared
+files: three fix lanes and five audit lanes. The lead runs the full check
+and the contract runs after each round, then writes the next round from the
+audit reports. The two open decisions are taken at the lead's
+recommendation and stay proposed: picker shapes leave `ds.chrome`; in
+Studio on iOS the bars and sheets keep the platform capsule and the buttons
+inside them take the style's corner.
+
+Mobile set: ActionSheet, AlertDialog, Banner, Calendar, ColorArea,
+ColorField, ColorPicker, ColorSlider, ColorSwatch, ColorSwatchPicker,
+DateField, DatePicker, TimeField, WheelPicker, List, SectionIndex,
+SelectionMenu, SharePanel, Stepper, SwipeActions, TabBar, Navbar,
+PageShell, Pager, Sheet, Dialog, Toast, Slider, RangeSlider,
+SegmentedControl, SearchField, SplitView, and the screens under
+`/screens/ios/`.
+
+### Round 1
+
+- E1 platform CSS (ds-style). Only `packages/css/src/platform/*.css`.
+  1. Move the picker shape rules (ios.css about 3639 to 3727) out of
+     `ds.chrome` into `ds.platform`, so a recipe in `ds.recipes` wins.
+     Liquid and Neutral must look the same after.
+  2. The slider thumb disc and shadow (about line 258) apply only where the
+     style has not set its own thumb.
+  3. Dialog on iOS hides the window lights (about 3232); the Dialog title
+     keeps room for the close control (about 3170).
+  4. In Studio on iOS, buttons inside sheets, alerts, action sheets and
+     bars take the style's control corner; the bars and panels keep the
+     capsule.
+- E2 component CSS (ds-component). Only `packages/css/src/components/*.css`.
+  1. Radius properties in place of hard coded pills: Slider, ColorSlider,
+     ColorArea, Stepper, ColorSwatchPicker, NumberField stepper. Defaults
+     stay as today.
+  2. Bidi isolation for date and time values (DatePicker, DateField,
+     TimeField).
+  3. TitleBar in Arabic on iOS (line 103); the wrapped Navbar brand
+     (Link.css line 275).
+- E3 React and shared (ds-component). Only `packages/react`,
+  `packages/shared`, `apps/gallery-react`.
+  1. TabBar demo: the two side column search fields overlap; the accessory
+     row overlaps its label.
+  2. Navbar `title-wrap` demo squeezes the Arabic shell to 2 px.
+  3. The sheet header action joins `REFRACTION_PARTS`.
+  4. SplitView while folded does not keep an even split.
+- Q1 audit Studio, Q2 audit Desk (ds-qa): the mobile set on ios and web,
+  with hover, press, focus, disabled, invalid and every overlay open.
+- Q3 audit android (ds-qa): the mobile set in all four styles on
+  `platform=android`.
+- Q4 audit Arabic (ds-qa): the mobile set in all four styles in Arabic:
+  mirroring, bidi, clipping, digits, copy register.
+- Q5 audit access (ds-qa): the mobile set in all four styles against
+  WCAG 2.2 AA: keyboard, focus order and visibility, names, target size,
+  contrast in states, reduced motion, forced colors.
+
+Audit lanes change no file but their report
+(`docs/reports/lanes/reset-P1-<lane>.md`). Each finding: component, axes,
+what, measured value, file and line of the cause, severity (blocker, major,
+minor).
