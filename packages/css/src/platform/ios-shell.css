@@ -956,8 +956,10 @@
    * - Portrait (one above the other): an alert or a dialog centres in the
    *   bottom segment, where the hands are (S6); the drawer stays in it.
    *   Plain toasts already sit at the top, in the top segment.
-   * - SplitView: the list and the detail split at the band with even widths,
-   *   the band left between them, so no control sits in the fold.
+   * - SplitView: the list and the detail split at the band, the band left
+   *   between them, so no control sits in the fold. SplitView writes the
+   *   pane sizes from the fold itself, so a root off centre still splits
+   *   at the band.
    *
    * The band in env() terms is the start of the second segment less the end
    * of the first. Percentages in padding read the root's width (a fixed root
@@ -991,9 +993,7 @@
       column-gap: calc((env(viewport-segment-left 1 0, 50%) - env(viewport-segment-right 0 0, 50%)) / 2);
     }
 
-    :root [data-platform='ios'] [data-ds='split-view'][data-state='split'] > :is([data-part='primary'], [data-part='secondary']) {
-      flex: 1 1 0;
-    }
+    /* The panes take the sizes SplitView writes from the fold (foldSplit, order P1 E3), not an even split of the root. */
   }
 
   :root [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-segment='start']:dir(ltr) {
