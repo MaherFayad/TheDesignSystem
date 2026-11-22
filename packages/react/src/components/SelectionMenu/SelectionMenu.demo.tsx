@@ -12,9 +12,10 @@
 // actions say what ran in the status line. The text is made up. The copy
 // follows the page language: with lang=ar every case reads Arabic.
 //
-// "Select a phrase" and the chips open the menu as a menu button does: focus
-// moves to the first action. A pointer selection in the text keeps focus
-// where it is, and Shift+F10 on the text moves focus in.
+// "Select a phrase" and the chips open the menu as a menu button does: from
+// the keyboard (Enter or Space, a click with detail 0) focus moves to the
+// first action. A pointer press and a pointer selection in the text keep
+// focus where it is, and Shift+F10 on the text moves focus in.
 import { useRef, useState } from 'react';
 import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
 import { useTheme } from '../../theme/hooks';
@@ -114,12 +115,12 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
   const w = words[lang];
   const ownerRef = useRef<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
-  // True while the menu is open from the button: focus moves into it.
-  const [fromButton, setFromButton] = useState(false);
+  // True while the menu is open from the button pressed with the keyboard: focus moves into it.
+  const [fromKeys, setFromKeys] = useState(false);
   const [status, setStatus] = useState('');
   const change = (next: boolean) => {
     setOpen(next);
-    if (!next) setFromButton(false);
+    if (!next) setFromKeys(false);
   };
   const say = (what: string) => setStatus(w.ran(what));
   const items: SelectionMenuItem[] = only
@@ -147,9 +148,9 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
         <Button
           size="sm"
           data-demo-trigger=""
-          onClick={() => {
+          onClick={(event) => {
             if (!ownerRef.current || !selectPhrase(ownerRef.current, w.phrase)) return;
-            setFromButton(true);
+            setFromKeys(event.detail === 0);
             setOpen(true);
           }}
         >
@@ -159,7 +160,7 @@ function TextMenu({ lang = 'en', extra, only, region }: TextMenuProps) {
       <p role="status" style={{ margin: 0, minBlockSize: '1.5em', color: 'var(--ds-color-text-muted)' }}>
         {status}
       </p>
-      <SelectionMenu owner={ownerRef} open={open} onOpenChange={change} focusOnOpen={fromButton || undefined} items={items} />
+      <SelectionMenu owner={ownerRef} open={open} onOpenChange={change} focusOnOpen={fromKeys || undefined} items={items} />
     </div>
   );
 }
@@ -173,10 +174,20 @@ interface ChipMenuProps {
 function ChipMenu({ label, items }: ChipMenuProps) {
   const chipRef = useRef<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false);
+  // True while the menu is open from the chip pressed with the keyboard: focus moves into it.
+  const [fromKeys, setFromKeys] = useState(false);
   const [status, setStatus] = useState('');
   return (
     <div style={{ display: 'grid', gap: 'var(--ds-space-s)', justifyItems: 'start' }}>
-      <Chip ref={chipRef} selected={open} data-demo-trigger="" onClick={() => setOpen(true)}>
+      <Chip
+        ref={chipRef}
+        selected={open}
+        data-demo-trigger=""
+        onClick={(event) => {
+          setFromKeys(event.detail === 0);
+          setOpen(true);
+        }}
+      >
         {label}
       </Chip>
       <p role="status" style={{ margin: 0, minBlockSize: '1.5em', color: 'var(--ds-color-text-muted)' }}>
@@ -184,8 +195,11 @@ function ChipMenu({ label, items }: ChipMenuProps) {
       </p>
       <SelectionMenu
         open={open}
-        onOpenChange={setOpen}
-        focusOnOpen
+        onOpenChange={(next) => {
+          setOpen(next);
+          if (!next) setFromKeys(false);
+        }}
+        focusOnOpen={fromKeys || undefined}
         owner={chipRef}
         anchor={() => chipRef.current?.getBoundingClientRect() ?? null}
         items={items((what) => setStatus(`${what}: ${label}`))}

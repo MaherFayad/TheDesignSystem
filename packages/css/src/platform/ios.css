@@ -3393,9 +3393,11 @@
     line-height: var(--ds-type-body-medium-line-height);
   }
 
+  /* Order P2 F1: the actions stretch, so a stacked column is one width and a pair is one height when a label wraps. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
     display: flex;
     flex-wrap: nowrap;
+    align-items: stretch;
     gap: var(--ds-space-fixed-m);
     /* Order F1: the capsules sit 14 in from the card's edges, as in the kit. */
     padding-block: calc(2 * var(--ds-space-fixed-l)) calc(var(--ds-space-fixed-xl) + var(--ds-space-fixed-4xs));
@@ -3460,6 +3462,16 @@
    */
   [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-radius: calc(var(--ds-shape-corner-extra-large) + var(--ds-space-fixed-l));
+  }
+
+  /*
+   * Order P2 F1: a Sidebar in a phone drawer (the PageShell's navigation)
+   * is the drawer's content, not a desktop column: it takes the drawer's
+   * width and draws no end rule, so no empty column is left beside it.
+   */
+  [data-platform='ios'] [data-ds='drawer'] [data-ds='sidebar'] {
+    --_sidebar-width: 100%;
+    --_sidebar-border-end-color: transparent;
   }
 
   [data-platform='ios'] [data-ds='sheet'] {
