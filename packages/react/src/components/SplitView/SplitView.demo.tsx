@@ -1,7 +1,13 @@
+// SplitView demo. The copy follows the page language: with lang=ar every
+// case reads Arabic. Subjects, senders and bodies are user content, so their
+// text sits in an element with dir="auto": an English message in an Arabic
+// app keeps its full stop at its own end.
 import { useState, type CSSProperties } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
 import { Theme } from '../../theme/Theme';
+import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
+import { isArabic } from '../Popover/FloatingLayer';
 import { SplitView, type SplitViewLayout } from './index';
 
 interface Mail {
@@ -47,7 +53,7 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
   const chosen = open === null ? undefined : mails[open];
   const t =
     lang === 'ar'
-      ? { list: 'الرسائل', detail: 'الرسالة', text: 'نص الرسالة', none: 'ما فيه رسالة مختارة. اختار رسالة من القائمة.', empty: 'ما فيه رسائل.' }
+      ? { list: 'الرسائل', detail: 'الرسالة', text: 'نص الرسالة', none: 'ما فيه رسالة مختارة. اختر رسالة من القائمة.', empty: 'ما فيه رسائل.' }
       : { list: 'Messages', detail: 'Message', text: 'Message text', none: 'No message selected. Choose one from the list.', empty: 'No messages yet.' };
   return (
     <SplitView
@@ -73,7 +79,7 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
                     setShow(true);
                   }}
                 >
-                  {m.subject}
+                  <span dir="auto">{m.subject}</span>
                 </Button>
               </li>
             ))}
@@ -86,9 +92,13 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
         <div style={detailStyle} {...(chosen ? { tabIndex: 0, role: 'region', 'aria-label': t.text } : {})}>
           {chosen ? (
             <>
-              <strong style={{ display: 'block' }}>{chosen.subject}</strong>
-              <p data-demo="label">{chosen.from}</p>
-              <p>{chosen.body}</p>
+              <strong style={{ display: 'block' }} dir="auto">
+                {chosen.subject}
+              </strong>
+              <p data-demo="label" dir="auto">
+                {chosen.from}
+              </p>
+              <p dir="auto">{chosen.body}</p>
             </>
           ) : (
             <p>{t.none}</p>
@@ -111,20 +121,42 @@ const tooMany: Mail[] = Array.from({ length: 150 }, (_, i) => ({
   body: `Build ${i + 1} passed in 4 minutes.`,
 }));
 
+/** The Arabic set gets a fourth message whose sender wrote in English: its text keeps its own direction. */
+const arAll: Mail[] = [...ar, { from: 'Lina Saleh', subject: 'Interview notes', body: 'Notes from the five interviews are in the research folder.' }];
+
+const manyAr: Mail[] = Array.from({ length: 12 }, (_, i) => ({
+  from: 'الإشعارات',
+  subject: `${sample.ar.items[i]}: الملخص الأسبوعي`,
+  body: `ملخصك الأسبوعي لمجلد ${sample.ar.items[i]}.`,
+}));
+
+const tooManyAr: Mail[] = Array.from({ length: 150 }, (_, i) => ({
+  from: 'خادم البناء',
+  subject: `البناء ${i + 1} نجح`,
+  body: `البناء ${i + 1} نجح في 4 دقائق.`,
+}));
+
+const sets = {
+  en: { mails: en, many, tooMany, long: { from: sample.en.word, subject: sample.en.long, body: `${sample.en.long} ${sample.en.long}` } },
+  ar: { mails: arAll, many: manyAr, tooMany: tooManyAr, long: { from: sample.ar.word, subject: sample.ar.long, body: `${sample.ar.long} ${sample.ar.long}` } },
+};
+
 /** SplitView in every content case. */
 export default function SplitViewDemo() {
+  const lang = isArabic(useTheme().lang) ? 'ar' : 'en';
+  const set = sets[lang];
   return (
     <DemoPage>
       <DemoCase id="variants" title="Split, and stacked on narrow widths">
-        <MailReader mails={en} startOpen={0} />
+        <MailReader mails={set.mails} lang={lang} startOpen={0} />
         <DemoRow label="Stacked, list">
           <div style={{ inlineSize: '20rem' }}>
-            <MailReader mails={en} layout="stacked" />
+            <MailReader mails={set.mails} lang={lang} layout="stacked" />
           </div>
         </DemoRow>
         <DemoRow label="Stacked, detail">
           <div style={{ inlineSize: '20rem' }}>
-            <MailReader mails={en} layout="stacked" startOpen={1} />
+            <MailReader mails={set.mails} lang={lang} layout="stacked" startOpen={1} />
           </div>
         </DemoRow>
         <Theme lang="ar">
@@ -142,23 +174,23 @@ export default function SplitViewDemo() {
       </DemoCase>
 
       <DemoCase id="empty" title="No messages">
-        <MailReader mails={[]} blockSize="10rem" />
+        <MailReader mails={[]} lang={lang} blockSize="10rem" />
       </DemoCase>
 
       <DemoCase id="one" title="One message">
-        <MailReader mails={en.slice(0, 1)} blockSize="10rem" />
+        <MailReader mails={set.mails.slice(0, 1)} lang={lang} blockSize="10rem" />
       </DemoCase>
 
       <DemoCase id="many" title="Twelve messages">
-        <MailReader mails={many} startOpen={3} />
+        <MailReader mails={set.many} lang={lang} startOpen={3} />
       </DemoCase>
 
       <DemoCase id="too-many" title="A hundred and fifty messages">
-        <MailReader mails={tooMany} startOpen={0} />
+        <MailReader mails={set.tooMany} lang={lang} startOpen={0} />
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
-        <MailReader mails={[{ from: sample.en.word, subject: sample.en.long, body: `${sample.en.long} ${sample.en.long}` }]} startOpen={0} />
+        <MailReader mails={[set.long]} lang={lang} startOpen={0} />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">

@@ -75,7 +75,7 @@ const words = {
   },
 };
 
-type Words = (typeof words)['en'];
+type Words = (typeof words)[keyof typeof words];
 
 /** A search that filters a list as the person types. */
 function FilteredList({ w }: { w: Words }) {

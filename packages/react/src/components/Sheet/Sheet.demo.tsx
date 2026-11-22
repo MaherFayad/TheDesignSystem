@@ -38,7 +38,7 @@ function ShareSheet({ trigger, label, ...props }: SheetProps & { trigger: string
         <SheetDescription>People with the link can view the board.</SheetDescription>
         <SheetBody>
           <Field label="Invite by email">
-            <Input placeholder="name@example.com" />
+            <Input type="email" placeholder="name@example.com" />
           </Field>
         </SheetBody>
         <SheetFooter>
@@ -66,8 +66,8 @@ function ArabicSheet({ trigger, long = false }: { trigger: string; long?: boolea
         <SheetTitle>{long ? 'مشاركة لوحة إطلاق الربيع مع فريق التصميم وكل المراجعين' : 'مشاركة اللوحة'}</SheetTitle>
         <SheetDescription>{long ? sample.ar.long : 'اللي عندهم الرابط يقدرون يشوفون اللوحة.'}</SheetDescription>
         <SheetBody>
-          <Field label="الدعوة بالإيميل">
-            <Input placeholder="name@example.com" />
+          <Field label="الدعوة بالبريد">
+            <Input type="email" placeholder="name@example.com" />
           </Field>
         </SheetBody>
         <SheetFooter>
@@ -370,8 +370,8 @@ export default function SheetDemo() {
               <SheetTrigger>
                 <Button data-demo-trigger="detents-arabic">مشاركة اللوحة</Button>
               </SheetTrigger>
-              <SheetContent title="مشاركة إطلاق الربيع" description="يمكن لمن لديه الرابط عرض اللوحة.">
-                <SheetBody>اسحب المقبض أو استخدم مفاتيح الأسهم لتغيير الارتفاع.</SheetBody>
+              <SheetContent title="مشاركة إطلاق الربيع" description="اللي عندهم الرابط يقدرون يشوفون اللوحة.">
+                <SheetBody>اسحب المقبض أو استخدم الأسهم عشان تغير الارتفاع.</SheetBody>
               </SheetContent>
             </Sheet>
           </Theme>
