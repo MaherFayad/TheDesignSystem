@@ -927,6 +927,11 @@
           "target": "@components/ds/styles/desk/recipes/Tour.css"
         },
         {
+          "path": "packages/styles/desk/recipes/WheelPicker.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/WheelPicker.css"
+        },
+        {
           "path": "packages/styles/desk/recipes/Window.css",
           "type": "registry:file",
           "target": "@components/ds/styles/desk/recipes/Window.css"
@@ -5425,6 +5430,8 @@
       "description": "A list and its detail side by side with a resize handle, stacked one at a time with a back Button under breakpoint.tablet, as in a mail reader.",
       "registryDependencies": [
         "@ds/button",
+        "@ds/core",
+        "@ds/popover",
         "@ds/resizable-panels",
         "@ds/theme"
       ],
