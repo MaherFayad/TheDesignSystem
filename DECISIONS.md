@@ -479,3 +479,13 @@ geometry of R0.15 (the alert grid, the square full width tab bar, the edge
 to edge sheet) is withdrawn: the current references show a floating capsule
 tab bar, round glass bar buttons, inset grouped lists with large corners,
 compact alerts with stacked capsule actions, and wide capsule switches.
+
+## Styles on iOS: who owns which shape (owner, 2026-11-22)
+
+1. In Studio on iOS the bars, sheets and panels keep the platform capsule.
+   The buttons inside them take the style's control corner. The bar shape is
+   the platform's; the button shape is the style's.
+2. Picker shapes (date chips, the wheel band, the colour field, the colour
+   picker view switch, slider and swatch shapes) are not locked in
+   `ds.chrome`. The platform sets them as defaults and a style may override
+   them through radius properties.

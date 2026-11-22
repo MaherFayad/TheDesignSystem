@@ -49,11 +49,13 @@ to `reset-Z4.md`. All looks are proposed until the owner signs.
 - Not checked: Android, macos, the foldable frames, Angular, React Native,
   hover and press states, a real device. Not merged to `main`, no docs
   deploy for this round.
-- Waiting on the owner:
-  1. Studio on iOS: keep the capsule chrome of ruling 16, or make it square.
-  2. Whether the picker shapes move out of `ds.chrome` so styles can set
-     them. The lead recommends yes, as radius properties the platform
-     defaults and a style overrides.
+- Owner answers (2026-11-22): bars and sheets keep the capsule in Studio on
+  iOS and the buttons inside go square; picker shapes move out of
+  `ds.chrome` into radius properties (`DECISIONS.md`). Then: "go on
+  enhancement and audit rounds with 8 different sub agents until you get
+  this perfect". Round 1 is running: fix lanes E1 to E3, audit lanes Q1 to
+  Q5 (`docs/plan/reset-mobile.md`, reports `reset-P1-*.md`). Eight agents
+  at once by the owner's word.
 
 ## Closed stretch (2026-11-21)
 
