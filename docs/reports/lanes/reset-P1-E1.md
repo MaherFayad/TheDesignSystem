@@ -167,7 +167,28 @@ Raw before, after, diff and style files are in the folders next to `sheets/`
 
 ## Contract
 
-CONTRACT_RESULTS
+`DS_CONTRACT_WORKERS=1 npm run contract -- --framework react --platform ios
+--component <Name>`, run after the last edit, every one exit 0, no failure:
+
+| Component | Result |
+| --- | --- |
+| Sheet | 63 passed |
+| SplitView | 43 passed |
+| Dialog | 63 passed |
+| DatePicker | 63 passed |
+| WheelPicker | 43 passed |
+| ColorField | 43 passed |
+| ActionSheet | 63 passed |
+| AlertDialog | 63 passed |
+| Navbar | 43 passed, 20 skipped |
+| Slider | 43 passed |
+
+Not run: Calendar, DateField, TimeField, ColorSlider, ColorSwatchPicker,
+ColorPicker, ColorArea, RangeSlider, Toolbar. A first run with all 19 in one
+call was too slow under the shared load (axe cases near 15 s each) and was
+stopped during Calendar with every test passed up to then (158). For these
+nine the A/B shows 0 changed computed styles in Liquid and Neutral, and in
+Studio and Desk only the corners listed above.
 
 ## Not done
 
