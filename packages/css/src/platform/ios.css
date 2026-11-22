@@ -2623,8 +2623,6 @@
     --_button-height: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-l));
     --_button-radius: var(--ds-shape-corner-small);
     --_button-padding-inline: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
-
-    font-weight: var(--ds-font-weight-regular);
   }
 
   [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] {
@@ -3350,7 +3348,7 @@
    * they go. Once Dialog renders its close control on a phone, as Sheet
    * does, the rule above hides the lights in full.
    */
-  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] > :is([data-part='minimize'], [data-part='zoom']) {
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] > [data-ds='window-controls'] > :is([data-part='minimize'], [data-part='zoom']) {
     display: none;
   }
 
@@ -3761,11 +3759,13 @@
 
   /*
    * The chip's shape moved to ds.platform with the other picker rules, so a
-   * style sets it. Its label size stays here: the kit's 17 in every style,
-   * as before, over a style's own button label size.
+   * style sets it. Its label size and weight stay here: the kit's 17
+   * regular in every style, as before, over a style's own button type.
    */
   [data-platform='ios'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
     --_button-font-size: var(--ds-type-body-large-font-size);
+
+    font-weight: var(--ds-font-weight-regular);
   }
 
   /* ------------------------------------------------------------ buttons in bars, sheets and alerts: the style's control corner (order P1 E1, proposed) */
