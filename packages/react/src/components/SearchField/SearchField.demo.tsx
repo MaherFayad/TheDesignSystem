@@ -49,7 +49,7 @@ const words = {
     none: 'ما فيه مجلدات مطابقة.',
     sep: '، ',
     boards: 'البحث في اللوحات',
-    boardsAt: (size: string, shape: string) => `البحث في اللوحات، ${size}، ${shape}`,
+    boardsAt: (size: string, shape: string) => `البحث في اللوحات، ${size}، ${shape === 'pill' ? 'كبسولة' : 'عادي'}`,
     launch: 'الإطلاق',
     members: 'البحث في الأعضاء',
     filterMembers: 'فلترة الأعضاء',

@@ -5,7 +5,9 @@
 // Order C2: the top bar is the Navbar's pushed screen form (a back button and
 // a group of bar buttons, the large title under them), the mini player is
 // the TabBar's accessory in its compact form, and Play and Shuffle are soft
-// buttons with a neutral fill.
+// accent buttons. The neutral fill (fill="neutral") put Desk's gold ink on
+// a gray capsule at 4.21:1 (reset-P1-Q2, the music library finding); the
+// accent tint passes in every style and scheme (lowest 5.06:1, Desk light).
 // On the folding iPhone's inner screen in landscape the library also shows
 // its Sidebar.
 //
@@ -346,10 +348,10 @@ export function Screen({ variant, lang }: ScreenProps) {
     >
       <div data-gallery="ml-page">
         <div data-gallery="ml-actions">
-          <Button start="play" tone="accent" emphasis="soft" fill="neutral" shape="pill" fullWidth wrap>
+          <Button start="play" tone="accent" emphasis="soft" shape="pill" fullWidth wrap>
             {w.play}
           </Button>
-          <Button start="shuffle" tone="accent" emphasis="soft" fill="neutral" shape="pill" fullWidth wrap>
+          <Button start="shuffle" tone="accent" emphasis="soft" shape="pill" fullWidth wrap>
             {w.shuffle}
           </Button>
         </div>

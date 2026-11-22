@@ -312,7 +312,7 @@
      * Order P2 F1: under forced colors the white capsule drew as a Canvas
      * band with no edge across the thumb's Highlight disc, so the thumb read
      * as two caps. The capsule steps aside and the thumb is the system's
-     * Highlight disc of Slider.css alone.
+     * Highlight disc of Slider.css, alone.
      */
     @media (forced-colors: active) {
       [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
@@ -3160,8 +3160,10 @@
    * accessory capsule takes the rest of the platter; the search disc stays
    * beside it.
    */
+  /* Order P2 F1: min 0, so a grid or flex parent can hold the bar to its room; the song in the capsule then shortens (below). */
   [data-platform='ios'] [data-ds='tab-bar'][data-compact] {
     gap: var(--ds-space-fixed-2xs);
+    min-inline-size: 0;
   }
 
   [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='item'][data-active] {
@@ -3195,7 +3197,14 @@
     min-inline-size: 0;
   }
 
+  /*
+   * Order P2 F1: the compact capsule shrinks with what it holds (min 0), so
+   * the bar never grows past the room it leaves for the search disc; the
+   * disc ran off a 390 screen when the song kept its whole length.
+   */
   [data-platform='ios'] [data-ds='tab-bar'][data-compact] > [data-part='accessory'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
     box-sizing: border-box;
     block-size: var(--_tab-bar-item-height);
     padding-block: 0;

@@ -90,7 +90,7 @@ const words = {
     checkout: checkoutAr,
     many: manyAr,
     tooMany: tooManyAr,
-    steps: (size: string, orientation: string) => `خطوات الطلب، ${size} ${orientation}`,
+    steps: (size: string, orientation: string) => `خطوات الطلب، ${size} ${orientation === 'vertical' ? 'عمودي' : 'أفقي'}`,
     links: 'خطوات الطلب كروابط',
     one: [{ title: 'المراجعة', description: 'تأكد من الطلب قبل إرساله' }],
     order: 'خطوات الطلب',
@@ -123,7 +123,7 @@ function Navigable({ steps, mode, lang }: { steps: StepperStep[]; mode: StepperM
       completed={mode === 'free' ? [0, 1] : undefined}
       mode={mode}
       onStepSelect={setCurrent}
-      aria-label={lang === 'ar' ? `خطوات الطلب، ${mode}` : `Checkout steps, ${mode}`}
+      aria-label={lang === 'ar' ? `خطوات الطلب، ${mode === 'free' ? 'بأي ترتيب' : 'بالترتيب'}` : `Checkout steps, ${mode}`}
     />
   );
 }

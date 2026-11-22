@@ -115,6 +115,9 @@ function VolumeRow({ lang = 'en' }: { lang?: 'en' | 'ar' }) {
   );
 }
 
+/** Variant names for the Arabic list names. */
+const variantAr: Record<string, string> = { plain: 'عادية', divided: 'بفواصل', inset: 'داخل إطار', flush: 'بدون هوامش' };
+
 const words = {
   en: {
     mail,
@@ -183,8 +186,8 @@ const words = {
   ar: {
     mail: mailArAll,
     songs: [...songsAr, { id: 'cardamom-ar', title: 'صباح الهيل', artist: 'ثلاثي العرعر' }],
-    inbox: (variant: string, size: string) => `الوارد، ${variant}، ${size}`,
-    sections: (variant: string) => `الإعدادات في أقسام، ${variant}`,
+    inbox: (variant: string, size: string) => `الوارد، ${variantAr[variant]}، ${size}`,
+    sections: (variant: string) => `الإعدادات في أقسام، ${variantAr[variant]}`,
     notifications: 'الإشعارات',
     previewsFooter: 'المعاينة تعرض أول سطر من كل رسالة.',
     previews: 'عرض المعاينة',
