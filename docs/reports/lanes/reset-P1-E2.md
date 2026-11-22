@@ -116,7 +116,25 @@ round has some "Loading the demo" pages; those were taken again.
 - Contract, react, `DS_CONTRACT_WORKERS=1`, components Slider, RangeSlider,
   ColorSlider, ColorArea, Stepper, ColorSwatchPicker, NumberField,
   DatePicker, DateField, TimeField, TitleBar, Link:
-  CONTRACT_RESULTS
+  exit 0 on both platforms, 0 failures.
+
+  | Component | ios | web |
+  | --- | --- | --- |
+  | ColorArea | 43 passed | 43 passed |
+  | ColorSlider | 43 passed | 43 passed |
+  | ColorSwatchPicker | 43 passed | 43 passed |
+  | DateField | 42 passed, 1 skipped | 43 passed |
+  | DatePicker | 63 passed | 63 passed |
+  | Link | 43 passed | 43 passed |
+  | NumberField | 43 passed | 43 passed |
+  | RangeSlider | 43 passed | 43 passed |
+  | Slider | 43 passed | 43 passed |
+  | Stepper | 43 passed | 43 passed |
+  | TimeField | 43 passed | 43 passed |
+  | TitleBar | 43 passed | 43 passed |
+
+  Sheet, AlertDialog and Navbar were checked by measurement and
+  screenshots (above), not by the contract.
 
 ## Not done
 
