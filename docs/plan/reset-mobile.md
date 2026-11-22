@@ -539,3 +539,62 @@ Audit lanes change no file but their report
 (`docs/reports/lanes/reset-P1-<lane>.md`). Each finding: component, axes,
 what, measured value, file and line of the cause, severity (blocker, major,
 minor).
+
+### Round 2 (eight fix lanes, from the round 1 audits)
+
+Sources: `docs/reports/lanes/reset-P1-Q1.md` to `Q5.md`, and the "not
+done" lists of `reset-P1-E1.md` to `E3.md`. Each lane takes every finding
+whose cause is in its files, blockers and majors first, then minors. A
+finding a lane cannot fix in its files is passed on in its report with file
+and line. Reports: `docs/reports/lanes/reset-P2-<lane>.md`, with one line
+per finding taken: fixed, not a defect (with proof), or passed on.
+
+- F1 `packages/css/src/platform/ios*.css` (ds-style): the focus ring lost
+  after `--_button-shadow: none` (Q5 F2, F3, lines 721 and 1903); press
+  opacity 0.55 (Q5 F11); body size and the toolbar capsule edge for styles
+  without glass (Q1 F04, F10); segmented track contrast in Desk light
+  (Q2 4); the Desk dark search placeholder (Q5 F10); the alert field well
+  (Q1 F12); stepper digits (Q2 13); slider thumb under forced colors
+  (Q5 F13); the uppercase ColorSlider label (Q4 15); the clipped search
+  item in the music library tab bar (Q1 F11).
+- F2 `packages/css/src/platform/android.css` (ds-style): every Q3 finding
+  with its cause there (inputs inside SearchField and TabBar, Dialog
+  lights, icon button glyphs, segmented shape, action sheet corners and
+  Cancel, the time dialog focus fill, 48 targets, the half height sheet
+  footer).
+- F3 `packages/css/src/components/*.css` (ds-component): the Button ring
+  made safe against `none` (Button.css 1034) and a lint test for it; the
+  focused segment in DateField and TimeField (Q5 F7); focus against
+  selection in ColorSwatchPicker (Q5 F6); ring contrast in ColorArea, Tabs,
+  TabBar (Q5 F8, F9, F4); the placeholder ellipsis (Q4 12); selected mark
+  properties for List and Sidebar so a style can set them (Q1 F05, Q2 10);
+  the SplitView pane ring clip (Q5 F5).
+- F4 `packages/react/src` without demos, `packages/shared` (ds-component):
+  Dialog renders a close control on phones, then all three lights hide
+  (E1 note); `dir` from the locale on the DateField input (E2 note); no
+  empty Popover title bar (Q2 6); the Sheet title bar controls at 44
+  (Q2 7); selection on pointer up in SegmentedControl (Q5 F12); every
+  built in string of the Q4 fix table (SearchField, Toast, Banner,
+  SharePanel, PageShell, WheelPicker, SelectionMenu, TabBar badge, Calendar
+  heading, RangeSlider join).
+- F5 `packages/styles/studio` (ds-style): Q1 findings in the pack (Switch
+  on and off, press on IconButton, CloseButton and soft buttons, one
+  selected mark, Toast avatar, Dialog and AlertDialog padding, ColorPicker
+  views and the eyedropper, ActionSheet, Chip, Navbar dropdown rule), the
+  TabBar ring colour (Q5 F4), and the recipes moved to E2's radius
+  properties (Slider first).
+- F6 `packages/styles/desk` (ds-style): Q2 findings in the pack (Banner
+  action ink, DatePicker chip states, fields in a grouped well, danger text
+  on dark windows, TabBar on web, the yellow selected mark, text selection
+  colour, the grabber head), and the Desk causes in Q3 (Input on android,
+  the TimeField band, selected states at 1.07:1).
+- F7 `packages/styles/neutral`, `packages/styles/liquid` (ds-style): the
+  Neutral Button shadow (Q5 F1); the Liquid light slider handle on android
+  (Q3 5); every Q1 to Q5 finding marked shared with Liquid or Neutral whose
+  cause is in these packs.
+- F8 `packages/react/src/**/*.demo.tsx`, `apps/gallery-react`
+  (ds-component): the demo and screen rows of the Q4 fix table; demos that
+  ignore the language get Arabic copy for their Arabic cases; the Sheet
+  demo email field; the SplitView demo pane; SelectionMenu demo focus
+  (Q5 F14); the music library buttons (Q2 8); the screens take
+  `platform=android` from the query (Q3 note).
