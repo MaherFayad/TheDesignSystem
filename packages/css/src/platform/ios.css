@@ -254,15 +254,22 @@
     --_slider-font-size: var(--ds-font-size-2xl);
   }
 
-  /* A large disc with an edge and a shadow; its color stays the style's. */
-  [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
-    content: '';
-    position: absolute;
-    inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
-    border: var(--ds-border-width-default) solid var(--ds-color-border-default);
-    border-radius: var(--ds-radius-pill);
-    box-shadow: var(--ds-elevation-card-hover);
-    pointer-events: none;
+  /*
+   * A large disc with an edge and a shadow; its color stays the style's.
+   * Only where the style keeps the pill thumb of Slider.css (order P1 E1):
+   * a style that sets its own thumb through --_slider-thumb-radius keeps
+   * its own edge, with no disc edge and no shadow from here.
+   */
+  @container style(--_slider-thumb-radius: var(--ds-radius-pill)) {
+    [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+      content: '';
+      position: absolute;
+      inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
+      border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+      border-radius: var(--ds-radius-pill);
+      box-shadow: var(--ds-elevation-card-hover);
+      pointer-events: none;
+    }
   }
 
   /*
@@ -2590,6 +2597,98 @@
       backdrop-filter: none;
     }
   }
+
+  /* ------------------------------------------------------------ dates, wheels and colours (order F3, from the M9.15 to M9.20 requests, proposed) */
+
+  /*
+   * The kit's sizes, in every style. Calendar: 44 days and the title at 17.
+   * DatePicker: the chips 34 tall with a small control corner, 11 of side
+   * room, 17 regular; the inline form's time row 11 above and under its
+   * hairline; a date or time field the 44 of a grouped row's field. Wheel:
+   * the large digits, a column wider than its row, a small band corner.
+   * Colour: the kit's thin track, a small label in capitals, smaller row
+   * discs, a small corner on the grid; the picker's views as a short
+   * segmented row and a tall area.
+   *
+   * These are controls (anatomy.md, ruling 16), so they sit in ds.platform
+   * (order P1 E1): a style recipe that sets the same corner or size wins.
+   */
+  [data-platform='ios'] [data-ds='calendar'] {
+    --_calendar-size: var(--ds-size-touch-ios);
+    --_calendar-font-size: var(--ds-font-size-l);
+    --_calendar-title-font-size: var(--ds-font-size-l);
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
+    --_button-height: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-l));
+    --_button-radius: var(--ds-shape-corner-small);
+    --_button-padding-inline: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
+
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] {
+    --_date-picker-padding-block: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
+  }
+
+  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] > [data-part='time-label'] {
+    font-size: var(--ds-type-body-large-font-size);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* The date popover fits its calendar and has no arrow. */
+  [data-platform='ios'] [data-ds='popover']:has(> [data-part='body'] > [data-ds='calendar']:only-child) > [data-part='arrow'] {
+    display: none;
+  }
+
+  [data-platform='ios'] :is([data-ds='date-field'], [data-ds='time-field']) {
+    --_date-field-height: var(--ds-size-touch-ios);
+    --_date-field-font-size: var(--ds-type-body-large-font-size);
+  }
+
+  [data-platform='ios'] [data-ds='wheel-picker'] {
+    --_wheel-picker-font-size: var(--ds-font-size-4xl);
+    --_wheel-picker-width: calc(var(--_wheel-picker-row) * 1.75);
+    --_wheel-picker-radius: var(--ds-radius-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-slider'] {
+    --_color-slider-thickness: var(--ds-size-control-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-slider'] > [data-part='label'],
+  [data-platform='ios'] [data-ds='color-picker'] > [data-part='opacity'] > [data-part='label'] {
+    font-size: var(--ds-type-label-small-font-size);
+    text-transform: uppercase;
+  }
+
+  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='row'] {
+    --_color-swatch-picker-size: var(--ds-size-control-xs);
+  }
+
+  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='grid'] {
+    --_color-swatch-picker-radius: var(--ds-shape-corner-small);
+  }
+
+  [data-platform='ios'] [data-ds='color-field'] {
+    --_color-field-height: var(--ds-size-touch-ios);
+    --_color-field-font-size: var(--ds-font-size-2xl);
+    --_color-field-radius: var(--ds-radius-panel);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] > [data-part='views'] {
+    --_tabs-height: var(--ds-size-control-sm);
+    --_tabs-radius: var(--ds-radius-pill);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] {
+    --_color-area-height: calc(var(--ds-size-control-lg) * 6);
+    --_color-area-radius: var(--ds-radius-sm);
+  }
+
+  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] > [data-part='thumb'] {
+    --_color-area-thumb: var(--ds-size-control-md);
+  }
 }
 
 /*
@@ -3177,6 +3276,16 @@
     line-height: var(--ds-type-title-large-line-height);
   }
 
+  /*
+   * The close control sits at the inline end of the title's first line
+   * (Dialog.css), so a long title wraps before it (order P1 E1), never
+   * under it. The reserve is the one Dialog.css keeps, and never less than
+   * the platform's own side room.
+   */
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel']:has(> [data-part='close']) > [data-part='title'] {
+    padding-inline-end: max(var(--_dialog-padding), calc(var(--_dialog-band-padding-inline) + var(--ds-size-control-sm) + var(--ds-space-s)));
+  }
+
   /* A style that draws the title in a title bar: the same title size there. */
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='titlebar'] {
     --_title-bar-font-size: var(--ds-type-title-large-font-size);
@@ -3229,7 +3338,19 @@
   /* ------------------------------------------------------------ window controls: none in a phone sheet or alert */
 
   /* A style that draws a window title bar on its alerts and sheets keeps the bar, without the lights. */
-  [data-platform='ios'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+  [data-platform='ios'] :is([data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'],
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar']:has([data-ds='close-button']) > [data-part='controls'] {
+    display: none;
+  }
+
+  /*
+   * Order P1 E1: a Dialog whose title bar has the lights and no close
+   * control of its own keeps the close light as its way out on a phone (no
+   * Escape key, WCAG 2.1.1). Minimize and zoom do nothing on a phone, so
+   * they go. Once Dialog renders its close control on a phone, as Sheet
+   * does, the rule above hides the lights in full.
+   */
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] > :is([data-part='minimize'], [data-part='zoom']) {
     display: none;
   }
 
@@ -3636,93 +3757,45 @@
     font-weight: var(--ds-font-weight-regular);
   }
 
-  /* ------------------------------------------------------------ dates, wheels and colours (order F3, from the M9.15 to M9.20 requests, proposed) */
+  /* ------------------------------------------------------------ date chips: the kit's label size (order P1 E1) */
 
   /*
-   * The kit's sizes, in every style. Calendar: 44 days and the title at 17.
-   * DatePicker: the chips 34 tall with a small control corner, 11 of side
-   * room, 17 regular; the inline form's time row 11 above and under its
-   * hairline; a date or time field the 44 of a grouped row's field. Wheel:
-   * the large digits, a column wider than its row, a small band corner.
-   * Colour: the kit's thin track, a small label in capitals, smaller row
-   * discs, a small corner on the grid; the picker's views as a short
-   * segmented row and a tall area.
+   * The chip's shape moved to ds.platform with the other picker rules, so a
+   * style sets it. Its label size stays here: the kit's 17 in every style,
+   * as before, over a style's own button label size.
    */
-  [data-platform='ios'] [data-ds='calendar'] {
-    --_calendar-size: var(--ds-size-touch-ios);
-    --_calendar-font-size: var(--ds-font-size-l);
-    --_calendar-title-font-size: var(--ds-font-size-l);
-  }
-
   [data-platform='ios'] [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) {
-    --_button-height: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-l));
-    --_button-radius: var(--ds-shape-corner-small);
-    --_button-padding-inline: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
     --_button-font-size: var(--ds-type-body-large-font-size);
-
-    font-weight: var(--ds-font-weight-regular);
   }
 
-  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] {
-    --_date-picker-padding-block: calc(var(--ds-space-fixed-l) + var(--ds-border-width-default));
-  }
+  /* ------------------------------------------------------------ buttons in bars, sheets and alerts: the style's control corner (order P1 E1, proposed) */
 
-  [data-platform='ios'] [data-ds='date-picker'][data-variant='inline'] > [data-part='time-row'] > [data-part='time-label'] {
-    font-size: var(--ds-type-body-large-font-size);
-    font-weight: var(--ds-font-weight-regular);
-  }
+  /*
+   * Owner decision, round P1: a style that does not take the platform's
+   * look in full (it sets no --_ios-glass: Studio and Desk) keeps its own
+   * control corner on the buttons inside a bar, a sheet, an alert and an
+   * action sheet. The bars, sheets, alerts and panels keep the platform's
+   * capsule and corners, and the sizes and places above stand. Studio's
+   * control corner is radius.xs; Desk's is the pill, as before.
+   */
+  @container not (style(--_ios-glass: clear) or style(--_ios-glass: regular) or style(--_ios-glass: frosted)) {
+    [data-platform='ios'] [data-ds='navbar'] > :is([data-part='start'], [data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']),
+    [data-platform='ios'] [data-ds='navbar'] > [data-part='menu-button'],
+    [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']),
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='confirm'],
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button']),
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
+      --_button-radius: var(--ds-radius-control);
+    }
 
-  /* The date popover fits its calendar and has no arrow. */
-  [data-platform='ios'] [data-ds='popover']:has(> [data-part='body'] > [data-ds='calendar']:only-child) > [data-part='arrow'] {
-    display: none;
-  }
+    /* The bar group stays a capsule; the buttons in it take the corner. */
+    [data-platform='ios'] :is([data-ds='navbar'] > :is([data-part='start'], [data-part='end']), [data-ds='toolbar']:not([data-part='accessory'] > *)) > [data-ds='button-group'][data-attached] > * {
+      border-radius: var(--ds-radius-control);
+    }
 
-  [data-platform='ios'] :is([data-ds='date-field'], [data-ds='time-field']) {
-    --_date-field-height: var(--ds-size-touch-ios);
-    --_date-field-font-size: var(--ds-type-body-large-font-size);
-  }
-
-  [data-platform='ios'] [data-ds='wheel-picker'] {
-    --_wheel-picker-font-size: var(--ds-font-size-4xl);
-    --_wheel-picker-width: calc(var(--_wheel-picker-row) * 1.75);
-    --_wheel-picker-radius: var(--ds-radius-sm);
-  }
-
-  [data-platform='ios'] [data-ds='color-slider'] {
-    --_color-slider-thickness: var(--ds-size-control-sm);
-  }
-
-  [data-platform='ios'] [data-ds='color-slider'] > [data-part='label'],
-  [data-platform='ios'] [data-ds='color-picker'] > [data-part='opacity'] > [data-part='label'] {
-    font-size: var(--ds-type-label-small-font-size);
-    text-transform: uppercase;
-  }
-
-  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='row'] {
-    --_color-swatch-picker-size: var(--ds-size-control-xs);
-  }
-
-  [data-platform='ios'] [data-ds='color-swatch-picker'][data-layout='grid'] {
-    --_color-swatch-picker-radius: var(--ds-shape-corner-small);
-  }
-
-  [data-platform='ios'] [data-ds='color-field'] {
-    --_color-field-height: var(--ds-size-touch-ios);
-    --_color-field-font-size: var(--ds-font-size-2xl);
-    --_color-field-radius: var(--ds-radius-panel);
-  }
-
-  [data-platform='ios'] [data-ds='color-picker'] > [data-part='views'] {
-    --_tabs-height: var(--ds-size-control-sm);
-    --_tabs-radius: var(--ds-radius-pill);
-  }
-
-  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] {
-    --_color-area-height: calc(var(--ds-size-control-lg) * 6);
-    --_color-area-radius: var(--ds-radius-sm);
-  }
-
-  [data-platform='ios'] [data-ds='color-picker'] [data-ds='color-area'] > [data-part='thumb'] {
-    --_color-area-thumb: var(--ds-size-control-md);
+    [data-platform='ios'] [data-ds='action-sheet']:not([data-placement='bottom']) {
+      --_action-sheet-item-radius: var(--ds-radius-control);
+    }
   }
 }

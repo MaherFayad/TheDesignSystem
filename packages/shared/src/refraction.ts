@@ -34,8 +34,8 @@ export const REFRACTION_ID_PREFIX = 'ds-refraction';
  * `packages/css/src/platform/ios-refraction.css`: the tab bar, the lens of
  * its current tab, its search disc and its accessory, the navigation bar
  * buttons at either end (the back button among them) and their group
- * capsule, the sheet buttons,
- * the menu and the selection menu, the action sheet's panel, the toast
+ * capsule, the sheet buttons (the close disc and the header action's
+ * disc, order P1 E3), the menu and the selection menu, the action sheet's panel, the toast
  * banner and the segmented thumb. The held switch thumb is not on it: it
  * grows and stretches while held, and the bend drew a ragged edge on the
  * track's end there (Chromium 153), so it keeps the CSS only band.
@@ -49,6 +49,7 @@ export const REFRACTION_PARTS: readonly string[] = [
   "[data-ds='tab-bar'] > [data-part='accessory']",
   "[data-ds='navbar'] > [data-part='menu-button']",
   "[data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='close']",
+  "[data-ds='sheet'] > [data-part='panel'] > [data-part='header'] > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])",
   ":is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='selection-menu'])",
   "[data-ds='action-sheet'] [data-part='panel']",
   "[data-ds='toast']",

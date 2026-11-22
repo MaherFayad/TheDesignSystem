@@ -1,5 +1,6 @@
 import type { IconName } from '@the-system/icons';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { useTheme } from '../../theme/hooks';
 import { Theme } from '../../theme/Theme';
 import { SearchField } from '../SearchField';
 import { Toolbar, ToolbarButton } from '../Toolbar';
@@ -48,8 +49,19 @@ function AppBar({
 }) {
   // The search item takes the place of the Search tab.
   const tabs = search ? dests.filter((d) => d.icon !== 'search') : dests;
+  // On ios the accessory of a bottom bar is its own capsule drawn above the
+  // bar's box: the row keeps that room (one rail item and the gap) so the
+  // capsule never covers the label or the case above it.
+  const { platform } = useTheme();
+  const room = platform === 'ios' && accessory && !compact && placement !== 'side';
   return (
-    <div style={{ inlineSize: '100%', maxInlineSize: 'calc(var(--ds-menu-width-min) * 2)' }}>
+    <div
+      style={{
+        inlineSize: '100%',
+        maxInlineSize: 'calc(var(--ds-menu-width-min) * 2)',
+        paddingBlockStart: room ? 'calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs) + var(--ds-space-fixed-m))' : undefined,
+      }}
+    >
       <TabBar
         aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main'}
         size={size}
@@ -85,6 +97,28 @@ function MiniPlayer({ lang }: { lang: 'en' | 'ar' }) {
       <ToolbarButton icon="pause" label={w.pause} />
       <ToolbarButton icon="next-track" label={w.next} />
     </Toolbar>
+  );
+}
+
+/**
+ * A compact bar in the side column whose search item is the current page.
+ * On ios the bar hides and its field is drawn beside the column's foot,
+ * out of the bar's box, so each bar gets a block as tall as the field and
+ * sits at its end: the field stays inside its own case.
+ */
+function SideSearch({ lang }: { lang: 'en' | 'ar' }) {
+  const t =
+    lang === 'ar'
+      ? { bar: 'الموسيقى', home: 'الرئيسية', library: 'المكتبة', search: 'البحث', field: 'أغاني وفنانين' }
+      : { bar: 'Music', home: 'Home', library: 'Library', search: 'Search', field: 'Songs and artists' };
+  return (
+    <div style={{ display: 'grid', alignContent: 'end', minBlockSize: 'calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-2xs))' }}>
+      <TabBar aria-label={t.bar} placement="side" compact>
+        <TabBarItem href="#home" icon="home" label={t.home} />
+        <TabBarItem href="#library" icon="library" label={t.library} />
+        <TabBarSearch href="#search" label={t.search} active field={<SearchField shape="pill" placeholder={t.field} />} />
+      </TabBar>
+    </div>
   );
 }
 
@@ -210,20 +244,10 @@ export default function TabBarDemo() {
       </DemoCase>
 
       <DemoCase id="search-side" title="The search field while the bar sits in the side column: on ios the field leaves the column for the foot of the content">
-        <DemoRow>
-          <TabBar aria-label="Music" placement="side" compact>
-            <TabBarItem href="#home" icon="home" label="Home" />
-            <TabBarItem href="#library" icon="library" label="Library" />
-            <TabBarSearch href="#search" label="Search" active field={<SearchField shape="pill" placeholder="Songs and artists" />} />
-          </TabBar>
-          <Theme lang="ar" dir="rtl" data-demo="content">
-            <TabBar aria-label="الموسيقى" placement="side" compact>
-              <TabBarItem href="#home" icon="home" label="الرئيسية" />
-              <TabBarItem href="#library" icon="library" label="المكتبة" />
-              <TabBarSearch href="#search" label="البحث" active field={<SearchField shape="pill" placeholder="أغاني وفنانين" />} />
-            </TabBar>
-          </Theme>
-        </DemoRow>
+        <SideSearch lang="en" />
+        <Theme lang="ar" dir="rtl" data-demo="content">
+          <SideSearch lang="ar" />
+        </Theme>
       </DemoCase>
     </DemoPage>
   );

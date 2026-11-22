@@ -23,6 +23,9 @@
  *   --_color-swatch-picker-check-bg, --_color-swatch-picker-check-fg   the
  *     small disc the check sits on, so the check reads on any colour
  *   --_color-swatch-picker-check-size  that disc
+ *   --_color-swatch-picker-check-radius  the corner of that disc (order P1 E2; default the pill)
+ *   --_color-swatch-picker-item-radius   in row: the corner of a swatch's target, which
+ *     the focus ring follows (order P1 E2; default the pill)
  *
  * grid (data-layout='grid'): a mosaic of square cells with no gap, as many
  * columns as the prop says, each cell at least size.target-min (24px, WCAG
@@ -57,6 +60,8 @@
     --_color-swatch-picker-check-bg: var(--ds-color-bg-surface);
     --_color-swatch-picker-check-fg: var(--ds-color-text-bright);
     --_color-swatch-picker-check-size: var(--ds-size-icon-md);
+    --_color-swatch-picker-check-radius: var(--ds-radius-pill);
+    --_color-swatch-picker-item-radius: var(--ds-radius-pill);
     --_color-swatch-picker-duration: var(--ds-duration-base);
     --_color-swatch-picker-ease: var(--ds-ease-default);
 
@@ -112,7 +117,7 @@
     inline-size: var(--_color-swatch-picker-check-size);
     block-size: var(--_color-swatch-picker-check-size);
     padding: var(--ds-border-width-strong);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_color-swatch-picker-check-radius);
     background-color: var(--_color-swatch-picker-check-bg);
     color: var(--_color-swatch-picker-check-fg);
   }
@@ -179,7 +184,7 @@
   [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] {
     inline-size: var(--_color-swatch-picker-item-size);
     block-size: var(--_color-swatch-picker-item-size);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_color-swatch-picker-item-radius);
   }
 
   [data-ds='color-swatch-picker'][data-layout='row'] [data-part='item'] > [data-part='swatch'] {

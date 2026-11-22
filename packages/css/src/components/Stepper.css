@@ -15,6 +15,9 @@
  *   --_stepper-connector-min      horizontal: the shortest line
  *   --_stepper-connector-color    the track
  *   --_stepper-connector-fill     the part of the line after a complete step
+ *   --_stepper-indicator-radius   the corner of the indicator (order P1 E2; default the pill)
+ *   --_stepper-travel-radius      the corner of the travel ring (order P1 E2); default
+ *                                 the indicator's corner
  *
  * Per step, set by the state rules on the step part:
  *
@@ -53,6 +56,8 @@
     --_stepper-connector-min: var(--ds-space-xl);
     --_stepper-connector-color: var(--ds-color-border-default);
     --_stepper-connector-fill: var(--ds-color-primary-on-surface);
+    --_stepper-indicator-radius: var(--ds-radius-pill);
+    --_stepper-travel-radius: var(--_stepper-indicator-radius);
 
     display: flex;
     flex-direction: row;
@@ -138,7 +143,7 @@
     block-size: var(--_stepper-indicator-size);
     position: relative;
     border: var(--ds-border-width-strong) solid var(--_stepper-indicator-border-color);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_stepper-indicator-radius);
     background-color: var(--_stepper-indicator-bg);
     color: var(--_stepper-indicator-fg);
     font-size: var(--_stepper-font-size);
@@ -209,7 +214,7 @@
     inset: calc(-2 * var(--ds-border-width-strong));
     box-sizing: border-box;
     border: var(--ds-border-width-strong) solid var(--ds-color-primary-on-surface);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_stepper-travel-radius);
     opacity: 0;
     pointer-events: none;
   }

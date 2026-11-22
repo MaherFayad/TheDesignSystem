@@ -3,11 +3,11 @@
  * Studio's square corners: the compact trigger and the swatch in it, the
  * eyedropper, and the views row (a Tabs root in the soft emphasis).
  *
- * The views row: on ios a rule in the ds.chrome layer sets --_tabs-radius
- * to the pill on the views part, which a recipe there cannot beat, though
- * the picker is a control (anatomy.md, ruling 16), and the ios soft tabs
- * lift the active segment with a card shadow. Studio sets the corner on the
- * list, which the triggers and the indicator read from, and draws the
+ * The views row: on ios the platform file sets --_tabs-radius to the pill
+ * on the views part (in ds.platform since order P1 E1), and the ios soft
+ * tabs lift the active segment with a card shadow. Studio sets a square
+ * segment on the list, which the triggers and the indicator read from,
+ * keeps the list itself at the mark corner, and draws the
  * active segment with its 1px edge only, no shadow. The 3:1 edge of the
  * soft emphasis stays (Tabs.css).
  *

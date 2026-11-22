@@ -25,9 +25,12 @@
  * value), with the base name fg.
  *
  * Chips keep Button's own size, press and focus ring. A chip reads its
- * text in tabular digits, so a new time does not move the chips. Right to
- * left needs no rule: the row and the chips follow dir, so in Arabic the
- * date chip sits at the right and the time chip at its left.
+ * text in tabular digits, so a new time does not move the chips. The row
+ * and the chips follow dir, so in Arabic the date chip sits at the right
+ * and the time chip at its left. A chip's text takes its direction from its
+ * own first strong letter (order P1 E2, unicode-bidi plaintext, as Badge and
+ * Chip): 9:41 AM keeps its order on an Arabic page, and 9:41 ص still reads
+ * right to left.
  *
  * A popover that holds only a calendar fits it, instead of Popover's fixed
  * width; one that holds only a time wheel keeps the sm width. Both take a
@@ -73,6 +76,10 @@
   [data-ds='date-picker'] [data-part='time'] {
     flex: none;
     font-variant-numeric: tabular-nums;
+  }
+
+  [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time']) > [data-part='label'] {
+    unicode-bidi: plaintext;
   }
 
   [data-ds='date-picker'] [data-ds='button']:is([data-part='date'], [data-part='time'])[data-placeholder] {

@@ -233,6 +233,12 @@ describe('refraction filter', () => {
     expect(REFRACTION_SELECTOR).toContain("[data-ds='selection-menu']");
     expect(REFRACTION_SELECTOR).toContain("[data-platform='ios'] [data-ds='action-sheet'] [data-part='panel']");
   });
+
+  it('bends the sheet header action disc as the close disc', () => {
+    const header = "[data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='header']";
+    expect(REFRACTION_SELECTOR).toContain(`${header} > [data-part='close']`);
+    expect(REFRACTION_SELECTOR).toContain(`${header} > [data-part='header-action'] > :is([data-ds='button'], [data-ds='icon-button'])`);
+  });
 });
 
 describe('refraction probe', () => {

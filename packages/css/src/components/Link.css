@@ -269,11 +269,14 @@
 
   /* ------------------------------------------------------------ standalone: a 24px target on its own line */
 
-  /* Each line is a target tall. An inline block, not flex, so the external icon follows the last word when the text wraps. */
+  /*
+   * Each line is a target tall. An inline block, not flex, so the external icon follows the last word when the text wraps.
+   * Text larger than a target (a large Navbar brand) keeps its own tight leading, so wrapped lines never overlap (order P1 E2).
+   */
   [data-ds='link'][data-standalone] {
     display: inline-block;
     max-inline-size: 100%;
-    line-height: var(--ds-size-target-min);
+    line-height: max(var(--ds-size-target-min), var(--_link-font-size) * var(--ds-font-leading-tight));
     vertical-align: middle;
   }
 

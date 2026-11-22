@@ -1,4 +1,4 @@
-import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
 import { Button } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
@@ -210,12 +210,13 @@ export default function NavbarDemo() {
       </DemoCase>
 
       <DemoCase id="title-wrap" title="A long large title on a 320 wide shell: two lines, not an ellipsis; scroll to collapse it">
-        <DemoRow>
+        {/* A grid cell, not a flex row: the Arabic Theme takes the cell's width, so its shell is 320 wide and not squeezed to its content. */}
+        <DemoGrid min="20rem">
           <NarrowShell lang="en" />
           <Theme lang="ar" dir="rtl" data-demo="content">
             <NarrowShell lang="ar" />
           </Theme>
-        </DemoRow>
+        </DemoGrid>
       </DemoCase>
 
       <DemoCase id="empty" title="No links yet: brand and actions only, no menu button">

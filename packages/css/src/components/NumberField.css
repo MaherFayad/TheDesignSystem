@@ -48,6 +48,9 @@
  *   --_number-field-stepper-width    the inline size of one capsule half
  *   --_number-field-stepper-divider  the hairline between the halves
  *   --_number-field-control-bg-focus the quiet fill of the value while focused
+ *   --_number-field-stepper-radius   the outer corners of the capsule (order P1 E2).
+ *                                    Default the pill, the corner the halves took from
+ *                                    their pill shape; the inner corners stay square.
  */
 @layer ds.base {
   [data-ds='number-field'] {
@@ -266,6 +269,7 @@
     --_number-field-bloom-spread: 0px;
     --_number-field-stepper-divider: var(--ds-color-border-control);
     --_number-field-control-bg-focus: var(--ds-color-bg-overlay-5);
+    --_number-field-stepper-radius: var(--ds-radius-pill);
 
     inline-size: fit-content;
     max-inline-size: 100%;
@@ -293,6 +297,7 @@
   /* The two halves of the capsule: wider than tall, the inner corners square, no inset from a box edge. */
   [data-ds='number-field'][data-variant='stepper'] > [data-ds='icon-button']:is([data-part='decrement'], [data-part='increment']) {
     --_number-field-stepper-width: calc(var(--_button-height) + var(--ds-space-m));
+    --_button-radius: var(--_number-field-stepper-radius);
 
     inline-size: var(--_number-field-stepper-width);
     margin-inline: 0;

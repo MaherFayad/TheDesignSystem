@@ -99,26 +99,29 @@
    * Right to left with lights: as macOS draws it and as the source does, the
    * lights stay at the top left in their usual order and the title sits in
    * the middle, read right to left. A bar without lights mirrors as usual.
+   * So does the bar of a dialog, an alert or a sheet on ios and android
+   * (order P1 E2): the platform files hide its lights there, and a hidden
+   * part still matches :has(), so those bars are left out by name.
    */
-  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) {
+  [data-ds='title-bar']:has(> [data-part='controls']):not(:is([data-platform='ios'], [data-platform='android']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > *):dir(rtl) {
     display: grid;
     grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
     direction: ltr;
   }
 
-  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='controls'] {
+  [data-ds='title-bar']:has(> [data-part='controls']):not(:is([data-platform='ios'], [data-platform='android']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > *):dir(rtl) > [data-part='controls'] {
     grid-column: 1;
     justify-self: start;
   }
 
-  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > :is([data-part='title'], [data-part='move']) {
+  [data-ds='title-bar']:has(> [data-part='controls']):not(:is([data-platform='ios'], [data-platform='android']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > *):dir(rtl) > :is([data-part='title'], [data-part='move']) {
     grid-column: 2;
     justify-content: center;
     direction: rtl;
     text-align: center;
   }
 
-  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='actions'] {
+  [data-ds='title-bar']:has(> [data-part='controls']):not(:is([data-platform='ios'], [data-platform='android']) :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > *):dir(rtl) > [data-part='actions'] {
     grid-column: 3;
     justify-self: end;
     direction: rtl;

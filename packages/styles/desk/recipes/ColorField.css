@@ -8,8 +8,16 @@
  * The placeholder takes the muted text: the placeholder color fell under
  * 4.5:1 on the fill (WCAG 1.4.3). No private property covers it, so the
  * placeholder rule is restated.
+ *
+ * Order P1 E1: the field keeps Desk's control corner, the pill, as the date
+ * and time fields do. On ios the platform file sets the panel corner in
+ * ds.platform, which this recipe now wins over (ruling 16, controls).
  */
 @layer ds.recipes {
+  [data-style='desk'] [data-ds='color-field'] {
+    --_color-field-radius: var(--ds-radius-control);
+  }
+
   [data-style='desk'] [data-ds='color-field']:not([data-readonly]) {
     --_color-field-bg: var(--ds-control-fill-default);
   }

@@ -70,6 +70,11 @@
  *   --_slider-stretch-now          the working value the dragging rule sets
  *   --_slider-glide                1 lets keys and presses glide the fill and thumb
  *                                  (slider-fill, read by Slider.tsx); 0 jumps
+ *
+ * Corners (order P1 E2), each defaults to the pill it drew before:
+ *   --_slider-track-radius   the track and the fill on it (the fill's clip rounds by it too)
+ *   --_slider-thumb-radius   the thumb circle, its focus glow and its edge
+ *   --_slider-bubble-radius  the value bubble over a held thumb
  * - slider-fill: the fill is the track's ::before, a clip-path over the whole
  *   track. The Radix range stays as the part, with no paint. A clip-path
  *   change is not a layout change, so Slider.tsx glides the fill (and the
@@ -122,6 +127,9 @@
     --_slider-stretch: 1;
     --_slider-stretch-now: 1;
     --_slider-glide: 1;
+    --_slider-track-radius: var(--ds-radius-pill);
+    --_slider-thumb-radius: var(--ds-radius-pill);
+    --_slider-bubble-radius: var(--ds-radius-pill);
 
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -186,7 +194,7 @@
     block-size: var(--_slider-thickness);
     /* Radix keeps each thumb center half a target from the end: the track starts and ends there, so the range meets the thumb centers. */
     margin-inline: calc(var(--_slider-target) / 2);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-track-radius);
     background-color: var(--_slider-bg);
   }
 
@@ -208,9 +216,9 @@
     position: absolute;
     inset-block: 0;
     inset-inline: 0;
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-track-radius);
     background-color: var(--_slider-fill);
-    clip-path: inset(0 var(--_slider-clip-right) 0 var(--_slider-clip-left) round var(--ds-radius-pill));
+    clip-path: inset(0 var(--_slider-clip-right) 0 var(--_slider-clip-left) round var(--_slider-track-radius));
     pointer-events: none;
   }
 
@@ -224,7 +232,7 @@
     inline-size: var(--_slider-target);
     block-size: var(--_slider-target);
     padding: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-thumb-radius);
     background-color: var(--_slider-thumb-bg);
     background-clip: content-box;
     cursor: grab;
@@ -247,7 +255,7 @@
     content: '';
     position: absolute;
     inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-thumb-radius);
     box-shadow: var(--_slider-ring);
     opacity: 0;
     pointer-events: none;
@@ -261,7 +269,7 @@
     content: '';
     position: absolute;
     inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-thumb-radius);
     box-shadow:
       0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
       0 0 0 var(--_slider-halo-now) var(--_slider-halo);
@@ -305,7 +313,7 @@
     min-inline-size: var(--_slider-target);
     padding-block: var(--ds-space-4xs);
     padding-inline: var(--ds-space-2xs);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_slider-bubble-radius);
     border: var(--ds-border-width-default) solid var(--ds-color-border-default);
     background-color: var(--ds-color-bg-surface);
     box-shadow: var(--ds-elevation-tooltip);
@@ -416,7 +424,7 @@
   :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track']::before {
     inset-block: 0;
     inset-inline: 0;
-    clip-path: inset(calc((1 - var(--_slider-to)) * 100%) 0 calc(var(--_slider-from) * 100%) 0 round var(--ds-radius-pill));
+    clip-path: inset(calc((1 - var(--_slider-to)) * 100%) 0 calc(var(--_slider-from) * 100%) 0 round var(--_slider-track-radius));
   }
 
   :is([data-ds='slider'], [data-ds='range-slider'])[data-invalid] {

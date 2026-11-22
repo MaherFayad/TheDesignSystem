@@ -168,3 +168,22 @@ export function paddingOf(value: number | Partial<PhysicalPadding> | undefined):
   if (typeof value === 'number') return { top: value, right: value, bottom: value, left: value };
   return { top: value?.top ?? 0, right: value?.right ?? 0, bottom: value?.bottom ?? 0, left: value?.left ?? 0 };
 }
+
+/**
+ * The sizes, in percent, of a list and its detail side by side (SplitView)
+ * that put the divide in the band (reset-duo.md 5.2): each pane takes the
+ * part of its own segment the box covers. `box` is the room the panes share,
+ * in viewport px (the root's content box). The first pane is at the inline
+ * start: the left segment in `ltr`, the right one in `rtl`. Null without a
+ * side by side fold, or when the band is not inside the box (then nothing
+ * changes the split).
+ */
+export function foldSplit(fold: Fold | null, box: { left: number; right: number }, dir: string = 'ltr'): [number, number] | null {
+  if (!fold || fold.layout !== 'columns') return null;
+  const left = fold.band.x - box.left;
+  const right = box.right - (fold.band.x + fold.band.width);
+  if (!(left > 0) || !(right > 0)) return null;
+  const [first, second] = dir === 'rtl' ? [right, left] : [left, right];
+  const firstShare = Math.round((first / (first + second)) * 10000) / 100;
+  return [firstShare, Math.round((100 - firstShare) * 100) / 100];
+}

@@ -25,8 +25,17 @@
  * Names outside the list in anatomy.md: the parts above with a base name.
  *
  * Digits are tabular, so a value does not shift as it is typed. Each
- * segment keeps its own direction from React Aria (numbers left to right),
- * and the row follows dir: in Arabic the day sits at the right.
+ * segment keeps its own direction from React Aria (numbers left to right).
+ *
+ * Bidi (order P1 E2): a value keeps its part order whatever the page
+ * direction. React Aria isolates the row (unicode-bidi isolate, set inline
+ * on the input part), so the row takes the direction of its own dir and
+ * never the order of the text around it. The row is a flex row: it lays the
+ * parts out in its own direction, so an Arabic date (dir rtl) has the day at
+ * the right and a Latin date (dir ltr) the day at the left. For that the
+ * markup sets dir on the input part from the locale (asked of the React
+ * lane in order P1 E2); until it does, the row takes the page direction.
+ * TimeField.css keeps the hour and the minute left to right.
  *
  * Motion: the border color and the focused segment fill swap on
  * duration.base. Under reduced motion every duration token is 0ms, and the

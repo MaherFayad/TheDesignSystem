@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { foldFrom, foldPadding, overlaySegment, paddingOf, readFold, sameFold, segmentAt } from './fold';
+import { foldFrom, foldPadding, foldSplit, overlaySegment, paddingOf, readFold, sameFold, segmentAt } from './fold';
 
 // The inner screen in landscape, the fold at 455 with a 40 band (reset-duo.md 7).
 const book = [
@@ -105,5 +105,30 @@ describe('foldPadding', () => {
   it('reads padding from a number or a partial object', () => {
     expect(paddingOf(undefined)).toEqual({ top: 0, right: 0, bottom: 0, left: 0 });
     expect(paddingOf({ top: 4 })).toEqual({ top: 4, right: 0, bottom: 0, left: 0 });
+  });
+});
+
+describe('foldSplit (SplitView at the band)', () => {
+  it('gives each pane the part of its own segment, even when the box spans the screen', () => {
+    expect(foldSplit(foldFrom(book), { left: 0, right: 951 })).toEqual([49.95, 50.05]);
+  });
+
+  it('follows the segments when the box is not centred on the band', () => {
+    // A side column of 84 at the right: the box ends at 867, so the list is wider.
+    const [a, b] = foldSplit(foldFrom(book), { left: 16, right: 851 })!;
+    expect(a).toBeCloseTo((439 / 795) * 100, 1);
+    expect(a + b).toBeCloseTo(100, 5);
+  });
+
+  it('puts the first pane in the right segment in rtl', () => {
+    const [a] = foldSplit(foldFrom(book), { left: 16, right: 851 }, 'rtl')!;
+    expect(a).toBeCloseTo((356 / 795) * 100, 1);
+  });
+
+  it('changes nothing without a fold, with the fold across, or when the band is outside the box', () => {
+    expect(foldSplit(null, { left: 0, right: 951 })).toBeNull();
+    expect(foldSplit(foldFrom(laptop), { left: 0, right: 669 })).toBeNull();
+    expect(foldSplit(foldFrom(book), { left: 500, right: 951 })).toBeNull();
+    expect(foldSplit(foldFrom(book), { left: 0, right: 455 })).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 // Order C5 (item 3): SheetHeaderAction, one more action in the header.
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { REFRACTION_SELECTOR } from '@the-system/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
@@ -149,5 +150,33 @@ describe('SheetHeaderAction (order C5)', () => {
       ),
     ).toThrow(/inside a Sheet/);
     error.mockRestore();
+  });
+});
+
+describe('SheetHeaderAction on the ios glass (order P1 E3)', () => {
+  it('is one of the refraction parts, as the close disc', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme platform="ios">
+        <Sheet>
+          <SheetTrigger>
+            <Button>Pass details</Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetTitle>Pass details</SheetTitle>
+            <SheetHeaderAction>
+              <IconButton icon="share" label="Share pass" />
+            </SheetHeaderAction>
+            <SheetBody>Body</SheetBody>
+          </SheetContent>
+        </Sheet>
+      </Theme>,
+    );
+    const panel = await open(user);
+    const close = panel.querySelector(':scope > [data-part="header"] > [data-part="close"]');
+    expect(close?.matches(REFRACTION_SELECTOR)).toBe(true);
+    expect(screen.getByRole('button', { name: 'Share pass' }).matches(REFRACTION_SELECTOR)).toBe(true);
+    // The part itself is a layout box, not the disc: only the button bends.
+    expect(panel.querySelector('[data-part="header-action"]')?.matches(REFRACTION_SELECTOR)).toBe(false);
   });
 });

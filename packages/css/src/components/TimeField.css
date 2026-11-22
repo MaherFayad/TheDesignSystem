@@ -3,10 +3,32 @@
  * the segments, the states and the motion come from DateField.css, which
  * styles [data-ds='time-field'] with [data-ds='date-field'] (one CSS file
  * per data-ds, with the base exception in docs/contracts/anatomy.md).
+ *
+ * Bidi (order P1 E2): the hour and the minute always read left to right,
+ * as Intl isolates them (the row stays a flex row, so the platform files
+ * can space its boxes). On a right to left row the day period moves to the
+ * left of the time, as an Arabic time reads (9:41 with ص at its left).
+ * Which side the day period takes follows the row's dir (see the bidi
+ * note in DateField.css): a Latin value on an Arabic page keeps its order
+ * once the markup sets dir ltr on the row for a left to right locale.
  */
 @layer ds.base {
   /* The day period (AM, PM, ص, م) is a word, not a number: it sits at the start of its box. */
   [data-ds='time-field'] [data-part='segment'][data-type='day-period'] {
     justify-content: start;
+  }
+
+  [data-ds='time-field'] > [data-part='input'] {
+    direction: ltr;
+  }
+
+  /* The day period, and the space Intl writes before it, at the left; the word keeps its own direction. */
+  [data-ds='time-field'] > [data-part='input']:dir(rtl) > [data-part='segment'][data-type='day-period'] {
+    order: -2;
+    direction: rtl;
+  }
+
+  [data-ds='time-field'] > [data-part='input']:dir(rtl) > [data-part='literal']:has(+ [data-part='segment'][data-type='day-period']) {
+    order: -1;
   }
 }

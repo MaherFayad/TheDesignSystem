@@ -1,0 +1,12 @@
+/*
+ * Desk recipe for WheelPicker. Order P1 E1 (proposed). The band under the
+ * picked row and the focus ring keep Desk's control corner, the pill, on
+ * every platform. On ios the platform file sets a small band corner in
+ * ds.platform; WheelPicker is a control (anatomy.md, ruling 16), so the
+ * style restates its own corner here.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='wheel-picker'] {
+    --_wheel-picker-radius: var(--ds-radius-control);
+  }
+}

@@ -29,8 +29,20 @@
 // focus to the element that had focus when the detail opened (the list
 // item, the last element focused inside the list), else to the primary pane.
 // The first render, before the width is measured and on the server, is split.
+//
+// The fold (order P1 E3, reset-duo.md 5.2): split on a screen folded like a
+// book (two viewport segments side by side) with the band inside the root,
+// the panes follow the segments: each takes the part of its own segment the
+// root covers (foldSplit in shared), so the divide sits in the band whatever
+// the root's place on the screen. The sizes go through the group as any
+// size, so the handle still resizes; the limits widen to let them in. When
+// the fold goes, the sizes from before it come back. onLayout is not called
+// for them: they are the screen's, not the reader's. Without the viewport
+// segments API nothing changes.
 import { useCallback, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { foldSplit } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
+import { useFold } from '../Popover/FloatingLayer';
 import { Button } from '../Button';
 import { useControllable } from '../../internal/useControllable';
 import { PanelGroup, ResizableHandle, ResizablePanel } from '../ResizablePanels/ResizablePanels';
@@ -109,7 +121,7 @@ export function SplitView({
   ref,
   ...rest
 }: SplitViewProps) {
-  const { lang } = useTheme();
+  const { lang, dir } = useTheme();
   const labels = lang === 'ar' || lang.startsWith('ar-') ? splitViewLabels.ar : splitViewLabels.en;
   const [show, setShow] = useControllable(showProp, defaultShowSecondary, onShowSecondaryChange);
   const root = useRef<HTMLDivElement | null>(null);
@@ -140,6 +152,44 @@ export function SplitView({
 
   const state = splitViewState(layout, width, MEDIA_REM_PX, show);
   const stacked = state !== 'split';
+
+  // The sizes live here, so the fold can set them and the handle still moves them.
+  const [sizes, setSizes] = useState<number[]>(defaultSizes);
+  const fold = useFold(!stacked);
+  const [foldSizes, setFoldSizes] = useState<[number, number] | null>(null);
+  useLayoutEffect(() => {
+    const el = root.current;
+    let next: [number, number] | null = null;
+    if (fold && el && typeof getComputedStyle === 'function') {
+      const rect = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
+      const px = (v: string) => Number.parseFloat(v) || 0;
+      next = foldSplit(
+        fold,
+        {
+          left: rect.left + px(cs.borderLeftWidth) + px(cs.paddingLeft),
+          right: rect.right - px(cs.borderRightWidth) - px(cs.paddingRight),
+        },
+        dir,
+      );
+    }
+    setFoldSizes((prev) => (prev && next && prev[0] === next[0] && prev[1] === next[1] ? prev : next));
+  }, [fold, width, dir]);
+
+  // The sizes from before the fold, put back when it goes.
+  const beforeFold = useRef<number[] | null>(null);
+  useLayoutEffect(() => {
+    if (foldSizes) {
+      setSizes((prev) => {
+        beforeFold.current ??= prev;
+        return foldSizes;
+      });
+    } else if (beforeFold.current) {
+      const back = beforeFold.current;
+      beforeFold.current = null;
+      setSizes(back);
+    }
+  }, [foldSizes]);
 
   // Focus follows the stacked pane: into the detail when it opens, back to
   // the item that opened it when it closes.
@@ -172,13 +222,14 @@ export function SplitView({
       ds="split-view"
       data-state={state}
       panelParts={['primary', 'secondary']}
-      defaultSizes={defaultSizes}
+      sizes={sizes}
+      onSizesChange={setSizes}
       onLayout={onLayout}
     >
       <ResizablePanel
         ref={primaryRef}
-        min={primaryMin}
-        max={primaryMax}
+        min={foldSizes ? Math.min(primaryMin, foldSizes[0]) : primaryMin}
+        max={foldSizes ? Math.max(primaryMax, foldSizes[0]) : primaryMax}
         tabIndex={-1}
         hidden={state === 'secondary'}
         role="region"
@@ -193,7 +244,7 @@ export function SplitView({
       {!stacked && <ResizableHandle label={handleLabel ?? labels.handle} />}
       <ResizablePanel
         ref={secondaryRef}
-        min={secondaryMin}
+        min={foldSizes ? Math.min(secondaryMin, foldSizes[1]) : secondaryMin}
         tabIndex={-1}
         hidden={state === 'primary'}
         role="region"

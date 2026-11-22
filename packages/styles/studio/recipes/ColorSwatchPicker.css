@@ -4,17 +4,16 @@
  * chip the check sits on and the add button take the mark and control
  * corners. The selection ring follows the square with the same gap.
  *
- * The grid mosaic takes the mark corner too. On ios a rule in the ds.chrome
- * layer sets --_color-swatch-picker-radius on the root to the platform's
- * small corner, which a recipe on the root cannot beat, though the picker is
- * a control (anatomy.md, ruling 16). Studio sets it on the list, the part
- * that reads it, as the DatePicker recipe does for its chips.
+ * The grid mosaic takes the mark corner too. On ios the platform file sets
+ * --_color-swatch-picker-radius on the root to the platform's small corner
+ * in ds.platform (order P1 E1), which this recipe wins over: the picker is
+ * a control (anatomy.md, ruling 16).
  *
  * The add button is an IconButton with the pill shape from the markup;
  * Studio sets the corners Button reads after it.
  */
 @layer ds.recipes {
-  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='grid'] > [data-part='list'] {
+  [data-style='studio'] [data-ds='color-swatch-picker'][data-layout='grid'] {
     --_color-swatch-picker-radius: var(--ds-radius-xs);
   }
 
